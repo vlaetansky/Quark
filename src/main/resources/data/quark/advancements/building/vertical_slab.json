@@ -1,0 +1,38 @@
+{
+	"parent": "quark:root",
+	"conditions": [{
+      "type": "quark:flag",
+      "flag": "vertical_slabs"
+    }],
+	"display": {
+		"icon": {
+			"item": "quark:smooth_stone_vertical_slab"
+		},
+		"title": {
+			"translate": "advancements.quark.vertical_slab"
+		},
+		"description": {
+			"translate": "advancements.quark.vertical_slab.desc"
+		},
+		"frame": "task",
+		"show_toast": true,
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"vertical_slab": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+				  {
+					"tag": "quark:vanilla_vertical_slabs"
+				  }
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"vertical_slab"
+		]
+	]
+}

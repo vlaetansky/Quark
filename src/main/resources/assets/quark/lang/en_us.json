@@ -826,6 +826,21 @@
 	"entity.quark.crab": "Crab",
 	"entity.quark.foxhound": "Foxhound",
 	"entity.quark.wrapped": "Wrapped",
-	"entity.quark.toretoise": "Toretoise"
-	
+	"entity.quark.toretoise": "Toretoise",
+
+	"advancements.quark.root": "Quark",
+	"advancements.quark.root.desc": "Hopefully you downloaded from Curseforge",
+	"advancements.quark.crabkill": "Crustacean Annihilation",
+	"advancements.quark.crabkill.desc": "Kill a crab. CRAB IS GONE! :crabrave:",
+	"advancements.quark.crabbrew": "Crustacean Imitation",
+	"advancements.quark.crabbrew.desc": "Brew a Resistance Potion with a Crab Shell",
+	"advancements.quark.candle": "Candlelit Dinner",
+	"advancements.quark.candle.desc": "Craft a candle out of tallow",
+	"advancements.quark.vertical_slab": "Hinders Creativity",
+	"advancements.quark.vertical_slab.desc": "Craft a Vertical Slab (out of vanilla materials)",
+	"advancements.quark.chute": "Aw, Chute",
+	"advancements.quark.chute.desc": "Craft a chute, which will drop items piped into it",
+	"advancements.quark.tome": "Tome Me About It",
+	"advancements.quark.tome.desc": "Find an Ancient Tome, which can be used to create enchantments above their max level"
+
 }

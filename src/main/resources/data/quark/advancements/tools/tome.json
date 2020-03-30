@@ -1,0 +1,38 @@
+{
+	"parent": "quark:root",
+	"conditions": [{
+      "type": "quark:flag",
+      "flag": "ancient_tomes"
+    }],
+	"display": {
+		"icon": {
+			"item": "quark:ancient_tome"
+		},
+		"title": {
+			"translate": "advancements.quark.tome"
+		},
+		"description": {
+			"translate": "advancements.quark.tome.desc"
+		},
+		"frame": "task",
+		"show_toast": true,
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"tome": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+				  {
+					"item": "quark:ancient_tome"
+				  }
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"tome"
+		]
+	]
+}

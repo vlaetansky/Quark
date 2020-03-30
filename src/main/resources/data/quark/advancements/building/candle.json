@@ -1,0 +1,38 @@
+{
+	"parent": "quark:root",
+	"conditions": [{
+      "type": "quark:flag",
+      "flag": "tallow_and_candles"
+    }],
+	"display": {
+		"icon": {
+			"item": "quark:white_candle"
+		},
+		"title": {
+			"translate": "advancements.quark.candle"
+		},
+		"description": {
+			"translate": "advancements.quark.candle.desc"
+		},
+		"frame": "task",
+		"show_toast": true,
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"candle": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+				  {
+					"tag": "quark:candles"
+				  }
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"candle"
+		]
+	]
+}

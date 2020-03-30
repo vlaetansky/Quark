@@ -1,0 +1,38 @@
+{
+	"parent": "quark:root",
+	"conditions": [{
+      "type": "quark:flag",
+      "flag": "chute"
+    }],
+	"display": {
+		"icon": {
+			"item": "quark:chute"
+		},
+		"title": {
+			"translate": "advancements.quark.chute"
+		},
+		"description": {
+			"translate": "advancements.quark.chute.desc"
+		},
+		"frame": "task",
+		"show_toast": true,
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"chute": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+				  {
+					"item": "quark:chute"
+				  }
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"chute"
+		]
+	]
+}

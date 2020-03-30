@@ -1,0 +1,39 @@
+{
+	"parent": "quark:mobs/crabkill",
+	"conditions": [{
+		"type": "quark:flag",
+		"flag": "crab_brewing"
+	}],
+	"display": {
+		"icon": {
+			"item": "quark:crab_shell"
+		},
+		"title": {
+			"translate": "advancements.quark.crabbrew"
+		},
+		"description": {
+			"translate": "advancements.quark.crabbrew.desc"
+		},
+		"frame": "task",
+		"show_toast": true,
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"crabbrew": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+				  {
+					"item": "minecraft:potion",
+					"potion": "quark:resilience"
+				  }
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"crabbrew"
+		]
+	]
+}
