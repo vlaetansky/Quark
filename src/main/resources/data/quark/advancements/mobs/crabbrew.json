@@ -1,5 +1,5 @@
 {
-	"parent": "quark:mobs/crabkill",
+	"parent": "minecraft:q_mobs/q_crabkill",
 	"conditions": [{
 		"type": "quark:flag",
 		"flag": "crab_brewing"

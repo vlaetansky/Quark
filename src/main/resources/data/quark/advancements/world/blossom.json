@@ -1,0 +1,82 @@
+{
+	"parent": "minecraft:adventure/root",
+	"conditions": [{
+      "type": "quark:flag",
+      "flag": "blossom_trees"
+    }],
+	"display": {
+		"icon": {
+			"item": "quark:yellow_blossom_sapling"
+		},
+		"title": {
+			"translate": "advancements.quark.blossom"
+		},
+		"description": {
+			"translate": "advancements.quark.blossom.desc"
+		},
+		"frame": "challenge",
+		"show_toast": true,
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"blue": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+				  {
+					"item": "quark:blue_blossom_sapling"
+				  }
+				]
+			}
+		},
+		"lavender": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+				  {
+					"item": "quark:lavender_blossom_sapling"
+				  }
+				]
+			}
+		},
+		"orange": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+				  {
+					"item": "quark:orange_blossom_sapling"
+				  }
+				]
+			}
+		},
+		"pink": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+				  {
+					"item": "quark:pink_blossom_sapling"
+				  }
+				]
+			}
+		},
+		"yellow": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+				  {
+					"item": "quark:yellow_blossom_sapling"
+				  }
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"blue",
+			"lavender",
+			"orange",
+			"pink",
+			"yellow"
+		]
+	]
+}

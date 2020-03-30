@@ -1,0 +1,37 @@
+{
+  "parent": "minecraft:nether/root",
+  "conditions": [{
+		"type": "quark:flag",
+		"flag": "foxhound"
+	}],
+  "display": {
+    "icon": {
+      "item": "minecraft:coal"
+    },
+    "title": {
+			"translate": "advancements.quark.tame_foxhound"
+		},
+		"description": {
+			"translate": "advancements.quark.tame_foxhound.desc"
+		},
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "tame_foxhound": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+		"entity":{
+			"type": "quark:foxhound"
+		}
+	  }
+    }
+  },
+  "requirements": [
+    [
+      "tame_foxhound"
+    ]
+  ]
+}

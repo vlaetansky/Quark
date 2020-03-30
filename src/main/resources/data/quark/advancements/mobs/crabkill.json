@@ -1,5 +1,5 @@
 {
-	"parent": "quark:root",
+	"parent": "minecraft:adventure/kill_a_mob",
 	"conditions": [{
 		"type": "quark:flag",
 		"flag": "crabs"

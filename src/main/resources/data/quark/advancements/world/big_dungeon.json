@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:adventure/root",
+  "conditions": [{
+      "type": "quark:flag",
+      "flag": "big_dungeon"
+    }],
+  "display": {
+    "icon": {
+      "item": "minecraft:mossy_cobblestone"
+    },
+    "title": {
+			"translate": "advancements.quark.big_dungeon"
+		},
+		"description": {
+			"translate": "advancements.quark.big_dungeon.desc"
+		},
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "big_dungeon": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "feature": "quark:big_dungeon"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "big_dungeon"
+    ]
+  ]
+}

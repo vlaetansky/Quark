@@ -1,30 +1,30 @@
 {
-	"parent": "minecraft:story/root",
+	"parent": "minecraft:end/kill_dragon",
 	"conditions": [{
       "type": "quark:flag",
-      "flag": "chute"
+      "flag": "biotite"
     }],
 	"display": {
 		"icon": {
-			"item": "quark:chute"
+			"item": "quark:biotite"
 		},
 		"title": {
-			"translate": "advancements.quark.chute"
+			"translate": "advancements.quark.biotite"
 		},
 		"description": {
-			"translate": "advancements.quark.chute.desc"
+			"translate": "advancements.quark.biotite.desc"
 		},
 		"frame": "task",
 		"show_toast": true,
 		"announce_to_chat": true
 	},
 	"criteria": {
-		"chute": {
+		"biotite": {
 			"trigger": "minecraft:inventory_changed",
 			"conditions": {
 				"items": [
 				  {
-					"item": "quark:chute"
+					"item": "quark:biotite"
 				  }
 				]
 			}
@@ -32,7 +32,7 @@
 	},
 	"requirements": [
 		[
-			"chute"
+			"biotite"
 		]
 	]
 }

@@ -1,5 +1,5 @@
 {
-	"parent": "quark:root",
+	"parent": "minecraft:story/enchant_item",
 	"conditions": [{
       "type": "quark:flag",
       "flag": "ancient_tomes"
