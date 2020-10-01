@@ -45,7 +45,7 @@ public class MonsterBoxTileEntity extends TileMod implements ITickableTileEntity
 		if(!doBreak) {
 			List<? extends PlayerEntity> players = world.getPlayers();
 			for(PlayerEntity p : players)
-				if(p.getDistanceSq(x + 0.5, y + 0.5, z + 0.5) < 6.25) {
+				if(p.getDistanceSq(x + 0.5, y + 0.5, z + 0.5) < 6.25 && !p.isSpectator()) {
 					doBreak = true;
 					break;
 				}
