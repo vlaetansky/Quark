@@ -71,7 +71,7 @@ public class EmoteSound extends LocatableSound implements ITickableSound {
 	public void tick() {
 		PlayerEntity player = this.player.get();
 
-		if (player == null || player.isAlive())
+		if (player == null || !player.isAlive())
 			donePlaying = true;
 		else {
 			EmoteBase emote = EmoteHandler.getPlayerEmote(player);
