@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -90,7 +91,15 @@ public final class ConfigObjectSerializer {
 		}
 		
 		boolean isStatic = Modifier.isStatic(field.getModifiers());
-		Object defaultValue = isStatic ? field.get(null) : field.get(object);
+		Supplier<Object> supplier = () -> {
+			try {
+				return isStatic ? field.get(null) : field.get(object);
+			} catch(IllegalAccessException e) {
+				throw new RuntimeException(e);
+			}
+		};
+		
+		Object defaultValue = supplier.get();
 		if(type == float.class)
 			throw new IllegalArgumentException("Floats can't be used in config, use double instead. Offender: " + field);
 		
@@ -109,8 +118,8 @@ public final class ConfigObjectSerializer {
 		boolean useFlag = object instanceof Module && !flag.isEmpty();
 			
 		ForgeConfigSpec.ConfigValue<?> value = (defaultValue instanceof List) ?
-				builder.defineList(name, (List<?>) defaultValue, restrict(restriction, min, max)) :
-				builder.defineObj(name, defaultValue, restrict(restriction, min, max));
+				builder.defineList(name, (List<?>) defaultValue, supplier, restrict(restriction, min, max)) :
+				builder.defineObj(name, defaultValue, supplier, restrict(restriction, min, max));
 				
 		callbacks.add(() -> {
 			try {

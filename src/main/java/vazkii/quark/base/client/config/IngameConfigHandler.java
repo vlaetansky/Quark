@@ -6,6 +6,7 @@ import java.io.PrintStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -43,9 +44,9 @@ public final class IngameConfigHandler implements IConfigCallback {
 	}
 
 	@Override
-	public void addEntry(String name, Object default_, String comment, Predicate<Object> restriction) {
+	public <T> void addEntry(String name, T default_, Supplier<T> getter, String comment, Predicate<Object> restriction) {
 		if(currCategory != null)
-			currCategory.addObject(name, default_, comment, restriction);
+			currCategory.addObject(name, default_, getter, comment, restriction);
 	}
 
 	public void debug() {

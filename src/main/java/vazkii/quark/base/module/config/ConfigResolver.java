@@ -60,7 +60,7 @@ public class ConfigResolver {
 	@SuppressWarnings("deprecation")
 	private void buildCategoryList(IConfigBuilder builder) { 
 		for(ModuleCategory category : ModuleCategory.values()) {
-			ForgeConfigSpec.ConfigValue<Boolean> value = builder.defineBool(WordUtils.capitalizeFully(category.name), true);
+			ForgeConfigSpec.ConfigValue<Boolean> value = builder.defineBool(WordUtils.capitalizeFully(category.name), () -> category.enabled, true);
 			refreshRunnables.add(() -> category.enabled = value.get());
 		}
 	}
@@ -72,7 +72,7 @@ public class ConfigResolver {
 		Map<Module, Runnable> setEnabledRunnables = new HashMap<>();
 		
 		for(Module module : modules) {
-			ForgeConfigSpec.ConfigValue<Boolean> value = builder.defineBool(module.displayName, module.enabledByDefault);
+			ForgeConfigSpec.ConfigValue<Boolean> value = builder.defineBool(module.displayName, () -> module.enabled, module.enabledByDefault);
 			setEnabledRunnables.put(module, () -> {
 				module.setEnabled(value.get() && category.enabled);
 				flagManager.putEnabledFlag(module);
@@ -115,7 +115,7 @@ public class ConfigResolver {
 		String descStr = desc.toString();
 		
 		builder.comment(descStr);
-		ForgeConfigSpec.ConfigValue<Boolean> value = builder.defineBool("Ignore Anti Overlap", false);
+		ForgeConfigSpec.ConfigValue<Boolean> value = builder.defineBool("Ignore Anti Overlap", () -> module.ignoreAntiOverlap, false);
 		refreshRunnables.add(() -> module.ignoreAntiOverlap = !GeneralConfig.useAntiOverlap || value.get());
 	}
 	

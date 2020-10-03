@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class ConfigCategory extends AbstractConfigElement {
 
@@ -31,8 +32,8 @@ public class ConfigCategory extends AbstractConfigElement {
 		return newCategory;
 	}
 	
-	public void addObject(String name, Object default_, String comment, Predicate<Object> restriction) {
-		subElements.add(new ConfigObject(name, comment, default_, this));
+	public <T> void addObject(String name, T default_, Supplier<T> getter, String comment, Predicate<Object> restriction) {
+		subElements.add(new ConfigObject<T>(name, comment, default_, getter, this));
 	}
 	
 	public void close() {

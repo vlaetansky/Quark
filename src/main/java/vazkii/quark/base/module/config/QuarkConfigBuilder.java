@@ -3,6 +3,7 @@ package vazkii.quark.base.module.config;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import com.google.common.base.Predicates;
 
@@ -46,37 +47,37 @@ public class QuarkConfigBuilder implements IConfigBuilder {
 	}
 
 	@Override
-	public ConfigValue<?> defineList(String name, List<?> default_, Predicate<Object> predicate) {
-		onDefine(name, default_, predicate);
+	public ConfigValue<?> defineList(String name, List<?> default_, Supplier<Object> getter, Predicate<Object> predicate) {
+		onDefine(name, default_, getter, predicate);
 		return parent.defineList(name, default_, predicate);
 	}
 
 	@Override
-	public ConfigValue<?> defineObj(String name, Object default_, Predicate<Object> predicate) {
-		onDefine(name, default_, predicate);
+	public ConfigValue<?> defineObj(String name, Object default_, Supplier<Object> getter, Predicate<Object> predicate) {
+		onDefine(name, default_, getter, predicate);
 		return parent.define(name, default_, predicate);
 	}
 
 	@Override
-	public ConfigValue<Boolean> defineBool(String name, boolean default_) {
-		onDefine(name, default_, Predicates.alwaysTrue());
+	public ConfigValue<Boolean> defineBool(String name, Supplier<Boolean> getter, boolean default_) {
+		onDefine(name, default_, getter, Predicates.alwaysTrue());
 		return parent.define(name, default_);
 	}
 
 	@Override
-	public ConfigValue<Integer> defineInt(String name, int default_) {
-		onDefine(name, default_, Predicates.alwaysTrue());
+	public ConfigValue<Integer> defineInt(String name, Supplier<Integer> getter, int default_) {
+		onDefine(name, default_, getter, Predicates.alwaysTrue());
 		return parent.define(name, default_);
 	}
 	
 	@Override
-	public ConfigValue<Double> defineDouble(String name, double default_) {
-		onDefine(name, default_, Predicates.alwaysTrue());
+	public ConfigValue<Double> defineDouble(String name, Supplier<Double> getter, double default_) {
+		onDefine(name, default_, getter, Predicates.alwaysTrue());
 		return parent.define(name, default_);
 	}
 	
-	private void onDefine(String name, Object default_, Predicate<Object> predicate) {
-		callback.addEntry(name, default_, currComment, predicate);
+	private <T> void onDefine(String name, T default_, Supplier<T> getter, Predicate<Object> predicate) {
+		callback.addEntry(name, default_, getter, currComment, predicate);
 		currComment = "";
 	}
 
