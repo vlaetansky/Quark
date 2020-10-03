@@ -48,6 +48,10 @@ public final class IngameConfigHandler implements IConfigCallback {
 		if(currCategory != null)
 			currCategory.addObject(name, default_, getter, comment, restriction);
 	}
+	
+	public void refresh() {
+		topLevelCategories.values().forEach(IConfigElement::refresh);
+	}
 
 	public void debug() {
 		if(!Quark.DEBUG_MODE)

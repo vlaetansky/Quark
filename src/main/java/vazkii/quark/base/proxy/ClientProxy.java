@@ -67,6 +67,7 @@ public class ClientProxy extends CommonProxy {
 		super.handleQuarkConfigChange();
 
 		ModuleLoader.INSTANCE.configChangedClient();
+		IngameConfigHandler.INSTANCE.refresh();
 
 		Minecraft mc = Minecraft.getInstance();
 		mc.runAsync(() -> {

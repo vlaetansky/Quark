@@ -10,6 +10,9 @@ public class ConfigObject<T> extends AbstractConfigElement {
 	private final Supplier<T> objectGetter;
 	private final String displayName;
 	
+	public T loadedObj;
+	public T currentObj;
+	
 	public ConfigObject(String name, String comment, T defaultObj, Supplier<T> objGetter, ConfigCategory parent) {
 		super(name, comment, parent);
 		this.defaultObj = defaultObj;
@@ -21,18 +24,29 @@ public class ConfigObject<T> extends AbstractConfigElement {
 	}
 
 	@Override
+	public void refresh() {
+		currentObj = objectGetter.get();
+		
+		if(loadedObj == null)
+			loadedObj = currentObj;
+	}
+	
+	@Override
+	public void reset(boolean hard) {
+		currentObj = hard ? defaultObj : loadedObj;
+	}
+	
+	@Override
 	public void debug(String pad, PrintStream out) {
 		super.debug(pad, out);
 		
 		String objStr = null;
-		Object curr = objectGetter.get();
-		
-		if(curr instanceof List<?>) {
+		if(currentObj instanceof List<?>) {
 			StringBuilder builder = new StringBuilder();
 			builder.append("[");
 			
 			boolean first = true;
-			for(Object obj : (List<?>) curr) {
+			for(Object obj : (List<?>) currentObj) {
 				if(!first)
 					builder.append(", ");
 				
@@ -45,9 +59,9 @@ public class ConfigObject<T> extends AbstractConfigElement {
 			
 			builder.append("]");
 			objStr = builder.toString();
-		} else if(curr instanceof String) {
-			objStr = String.format("\"%s\"", curr);
-		} else objStr = curr.toString();
+		} else if(currentObj instanceof String) {
+			objStr = String.format("\"%s\"", currentObj);
+		} else objStr = currentObj.toString();
 		
 		out.printf("%s%s = %s%n", pad, displayName, objStr);
 	}

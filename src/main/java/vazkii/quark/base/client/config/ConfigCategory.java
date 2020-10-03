@@ -26,6 +26,16 @@ public class ConfigCategory extends AbstractConfigElement {
 		}
 	}
 	
+	@Override
+	public void refresh() {
+		subElements.forEach(IConfigElement::refresh);
+	}
+	
+	@Override
+	public void reset(boolean hard) {
+		subElements.forEach(e -> e.reset(hard));		
+	}
+	
 	public ConfigCategory addCategory(String name, String comment) {
 		ConfigCategory newCategory = new ConfigCategory(name, comment, this);
 		subElements.add(newCategory);
