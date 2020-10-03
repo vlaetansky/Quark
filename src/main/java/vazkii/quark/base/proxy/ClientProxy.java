@@ -2,7 +2,6 @@ package vazkii.quark.base.proxy;
 
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.UUID;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -10,14 +9,14 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import vazkii.quark.base.client.GoVoteHandler;
+import vazkii.quark.base.client.config.IngameConfigHandler;
 import vazkii.quark.base.handler.ContributorRewardHandler;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.module.ModuleLoader;
+import vazkii.quark.base.module.config.IConfigCallback;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientProxy extends CommonProxy {
@@ -80,6 +79,11 @@ public class ClientProxy extends CommonProxy {
 	protected void initContributorRewards() {
 		ContributorRewardHandler.getLocalName();
 		super.initContributorRewards();
+	}
+	
+	@Override
+	public IConfigCallback getConfigCallback() {
+		return IngameConfigHandler.INSTANCE;
 	}
 
 }

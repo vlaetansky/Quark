@@ -88,7 +88,7 @@ public class QButtonHandler {
 		
 		public static void click(Button b) {
 			Minecraft.getInstance().displayGuiScreen(new QButtonInfoScreen(Minecraft.getInstance().currentScreen));
-			IngameConfigHandler.debug();
+			IngameConfigHandler.INSTANCE.debug();
 		}
 		
 	}

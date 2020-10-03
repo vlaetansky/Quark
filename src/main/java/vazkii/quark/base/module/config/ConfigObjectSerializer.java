@@ -104,7 +104,6 @@ public final class ConfigObjectSerializer {
 			
 			return;
 		}
-
 		
 		String flag = config.flag();
 		boolean useFlag = object instanceof Module && !flag.isEmpty();
@@ -112,6 +111,7 @@ public final class ConfigObjectSerializer {
 		ForgeConfigSpec.ConfigValue<?> value = (defaultValue instanceof List) ?
 				builder.defineList(name, (List<?>) defaultValue, restrict(restriction, min, max)) :
 				builder.defineObj(name, defaultValue, restrict(restriction, min, max));
+				
 		callbacks.add(() -> {
 			try {
 				Object setObj = value.get();

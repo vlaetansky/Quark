@@ -19,6 +19,7 @@ import vazkii.quark.base.handler.ContributorRewardHandler;
 import vazkii.quark.base.handler.FuelHandler;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.base.module.ModuleLoader;
+import vazkii.quark.base.module.config.IConfigCallback;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.recipe.ExclusionRecipe;
 import vazkii.quark.base.world.EntitySpawnHandler;
@@ -79,6 +80,10 @@ public class CommonProxy {
 	
 	protected void initContributorRewards() {
 		ContributorRewardHandler.init();
+	}
+	
+	public IConfigCallback getConfigCallback() {
+		return new IConfigCallback.Dummy();
 	}
 
 }

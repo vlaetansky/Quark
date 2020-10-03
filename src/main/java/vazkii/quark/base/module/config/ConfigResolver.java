@@ -10,6 +10,7 @@ import org.apache.commons.lang3.text.WordUtils;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
+import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.GeneralConfig;
 import vazkii.quark.base.module.Module;
 import vazkii.quark.base.module.ModuleCategory;
@@ -26,7 +27,8 @@ public class ConfigResolver {
 	
 	public void makeSpec() {
 		ForgeConfigSpec.Builder forgeBuilder = new ForgeConfigSpec.Builder();
-		IConfigBuilder builder = new QuarkConfigBuilder(forgeBuilder);
+		IConfigCallback callback = Quark.proxy.getConfigCallback();
+		IConfigBuilder builder = new QuarkConfigBuilder(forgeBuilder, callback);
 		
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, builder.configure(this::build));
 	}
