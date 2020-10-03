@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.IConfigCallback;
 
 @OnlyIn(Dist.CLIENT)
@@ -47,6 +48,10 @@ public final class IngameConfigHandler implements IConfigCallback {
 	public <T> void addEntry(String name, T default_, Supplier<T> getter, String comment, Predicate<Object> restriction) {
 		if(currCategory != null)
 			currCategory.addObject(name, default_, getter, comment, restriction);
+	}
+	
+	public ConfigObject<Boolean> getCategoryEnabledObject(ModuleCategory category) {
+		return topLevelCategories.get("categories").getModuleOption(category);
 	}
 	
 	public void refresh() {

@@ -25,7 +25,7 @@ import net.minecraftforge.fml.loading.FMLPaths;
 import vazkii.arl.util.ClientTicker;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.config.IngameConfigHandler;
-import vazkii.quark.base.client.screen.QButtonInfoScreen;
+import vazkii.quark.base.client.screen.QHomeScreen;
 import vazkii.quark.base.handler.ContributorRewardHandler;
 import vazkii.quark.base.handler.GeneralConfig;
 import vazkii.quark.base.handler.MiscUtil;
@@ -51,7 +51,6 @@ public class QButtonHandler {
 				}
 		}
 	}
-	
 	
 	public static void openFile() {
 		Util.getOSType().openFile(FMLPaths.CONFIGDIR.get().toFile());
@@ -87,7 +86,7 @@ public class QButtonHandler {
 		}
 		
 		public static void click(Button b) {
-			Minecraft.getInstance().displayGuiScreen(new QButtonInfoScreen(Minecraft.getInstance().currentScreen));
+			Minecraft.getInstance().displayGuiScreen(new QHomeScreen(Minecraft.getInstance().currentScreen));
 			IngameConfigHandler.INSTANCE.debug();
 		}
 		

@@ -2,14 +2,22 @@ package vazkii.quark.base.client.config;
 
 import java.io.PrintStream;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+
+import org.apache.commons.lang3.text.WordUtils;
+
+import vazkii.quark.base.module.ModuleCategory;
 
 public class ConfigCategory extends AbstractConfigElement {
 
 	private List<IConfigElement> subElements = new LinkedList<>();
+	
+	private Map<String, ConfigObject<Boolean>> moduleOptions = new HashMap<>();
 	
 	private final String path;
 	private final int depth;
@@ -42,8 +50,18 @@ public class ConfigCategory extends AbstractConfigElement {
 		return newCategory;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public <T> void addObject(String name, T default_, Supplier<T> getter, String comment, Predicate<Object> restriction) {
-		subElements.add(new ConfigObject<T>(name, comment, default_, getter, this));
+		ConfigObject<T> obj = new ConfigObject<T>(name, comment, default_, getter, this); 
+		subElements.add(obj);
+		
+		if(parent == null && default_ instanceof Boolean)
+			moduleOptions.put(name, (ConfigObject<Boolean>) obj);
+	}
+	
+	@SuppressWarnings("deprecation")
+	public ConfigObject<Boolean> getModuleOption(ModuleCategory category) {
+		return moduleOptions.get(WordUtils.capitalizeFully(category.name));
 	}
 	
 	public void close() {
