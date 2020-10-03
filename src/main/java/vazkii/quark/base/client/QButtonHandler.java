@@ -24,6 +24,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.loading.FMLPaths;
 import vazkii.arl.util.ClientTicker;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.client.config.IngameConfigHandler;
 import vazkii.quark.base.client.screen.QButtonInfoScreen;
 import vazkii.quark.base.handler.ContributorRewardHandler;
 import vazkii.quark.base.handler.GeneralConfig;
@@ -87,6 +88,7 @@ public class QButtonHandler {
 		
 		public static void click(Button b) {
 			Minecraft.getInstance().displayGuiScreen(new QButtonInfoScreen(Minecraft.getInstance().currentScreen));
+			IngameConfigHandler.debug();
 		}
 		
 	}

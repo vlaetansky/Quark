@@ -1,10 +1,11 @@
-package vazkii.quark.base.module;
+package vazkii.quark.base.module.config;
 
 import net.minecraft.loot.LootConditionType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.module.Module;
 import vazkii.quark.base.recipe.FlagIngredient;
 import vazkii.quark.base.recipe.PotionIngredient;
 

@@ -1,9 +1,4 @@
-package vazkii.quark.base.module;
-
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.config.ModConfig;
-import vazkii.quark.base.handler.GeneralConfig;
+package vazkii.quark.base.module.config;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -11,6 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.text.WordUtils;
+
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.config.ModConfig;
+import vazkii.quark.base.handler.GeneralConfig;
+import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.ModuleCategory;
 
 public class ConfigResolver {
 
@@ -23,8 +25,10 @@ public class ConfigResolver {
 	}
 	
 	public void makeSpec() {
-		ForgeConfigSpec spec = new ForgeConfigSpec.Builder().configure(this::build).getRight();
-		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, spec);
+		ForgeConfigSpec.Builder forgeBuilder = new ForgeConfigSpec.Builder();
+		IConfigBuilder builder = new QuarkConfigBuilder(forgeBuilder);
+		
+		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, builder.configure(this::build));
 	}
 	
 	public void configChanged() {
@@ -32,7 +36,7 @@ public class ConfigResolver {
 		refreshRunnables.forEach(Runnable::run);
 	}
 	
-	private Void build(ForgeConfigSpec.Builder builder) {
+	private Void build(IConfigBuilder builder) {
 		builder.push("general");
 		try {
 			ConfigObjectSerializer.serialize(builder, flagManager, refreshRunnables, GeneralConfig.INSTANCE);
@@ -52,21 +56,21 @@ public class ConfigResolver {
 	}
 	
 	@SuppressWarnings("deprecation")
-	private void buildCategoryList(ForgeConfigSpec.Builder builder) { 
+	private void buildCategoryList(IConfigBuilder builder) { 
 		for(ModuleCategory category : ModuleCategory.values()) {
-			ForgeConfigSpec.ConfigValue<Boolean> value = builder.define(WordUtils.capitalizeFully(category.name), true);
+			ForgeConfigSpec.ConfigValue<Boolean> value = builder.defineBool(WordUtils.capitalizeFully(category.name), true);
 			refreshRunnables.add(() -> category.enabled = value.get());
 		}
 	}
 	
-	private void buildCategory(ForgeConfigSpec.Builder builder, ModuleCategory category) {
+	private void buildCategory(IConfigBuilder builder, ModuleCategory category) {
 		builder.push(category.name);
 		
 		List<Module> modules = category.getOwnedModules();
 		Map<Module, Runnable> setEnabledRunnables = new HashMap<>();
 		
 		for(Module module : modules) {
-			ForgeConfigSpec.ConfigValue<Boolean> value = builder.define(module.displayName, module.enabledByDefault);
+			ForgeConfigSpec.ConfigValue<Boolean> value = builder.defineBool(module.displayName, module.enabledByDefault);
 			setEnabledRunnables.put(module, () -> {
 				module.setEnabled(value.get() && category.enabled);
 				flagManager.putEnabledFlag(module);
@@ -79,7 +83,7 @@ public class ConfigResolver {
 		builder.pop();
 	}
 	
-	private void buildModule(ForgeConfigSpec.Builder builder, Module module, Runnable setEnabled) {
+	private void buildModule(IConfigBuilder builder, Module module, Runnable setEnabled) {
 		if(!module.description.isEmpty())
 			builder.comment(module.description);
 		
@@ -97,12 +101,11 @@ public class ConfigResolver {
 		}
 		
 		refreshRunnables.add(() -> module.pushFlags(flagManager));
-		module.buildConfigSpec(builder, refreshRunnables);
 		
 		builder.pop();
 	}
 	
-	private void addModuleAntiOverlap(ForgeConfigSpec.Builder builder, Module module) {
+	private void addModuleAntiOverlap(IConfigBuilder builder, Module module) {
 		StringBuilder desc = new StringBuilder("This feature disables itself if any of the following mods are loaded: \n");
 		for(String s : module.antiOverlap)
 			desc.append(" - ").append(s).append("\n");
@@ -110,7 +113,7 @@ public class ConfigResolver {
 		String descStr = desc.toString();
 		
 		builder.comment(descStr);
-		ForgeConfigSpec.ConfigValue<Boolean> value = builder.define("Ignore Anti Overlap", false);
+		ForgeConfigSpec.ConfigValue<Boolean> value = builder.defineBool("Ignore Anti Overlap", false);
 		refreshRunnables.add(() -> module.ignoreAntiOverlap = !GeneralConfig.useAntiOverlap || value.get());
 	}
 	

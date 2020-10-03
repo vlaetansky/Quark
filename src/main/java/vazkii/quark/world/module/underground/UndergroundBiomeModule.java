@@ -1,8 +1,8 @@
 package vazkii.quark.world.module.underground;
 
 import net.minecraft.world.gen.GenerationStage.Decoration;
-import vazkii.quark.base.module.Config;
 import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.world.WorldGenHandler;
 import vazkii.quark.base.world.WorldGenWeights;
 import vazkii.quark.base.world.generator.Generator;

@@ -28,10 +28,10 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.Quark;
-import vazkii.quark.base.module.Config;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.Module;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.config.Config;
 import vazkii.quark.building.module.VariantLaddersModule;
 
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)

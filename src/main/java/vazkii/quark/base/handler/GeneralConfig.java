@@ -1,10 +1,10 @@
 package vazkii.quark.base.handler;
 
-import vazkii.quark.base.module.Config;
-
 import java.util.List;
 
 import com.google.common.collect.Lists;
+
+import vazkii.quark.base.module.config.Config;
 
 public class GeneralConfig {
 

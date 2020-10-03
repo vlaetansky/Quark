@@ -14,10 +14,10 @@ import net.minecraft.world.IWorldReader;
 import vazkii.quark.base.handler.FuelHandler;
 import vazkii.quark.base.handler.ItemOverrideHandler;
 import vazkii.quark.base.handler.MiscUtil;
-import vazkii.quark.base.module.Config;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.Module;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.config.Config;
 import vazkii.quark.building.block.IronLadderBlock;
 import vazkii.quark.building.block.VariantLadderBlock;
 

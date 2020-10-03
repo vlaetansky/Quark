@@ -1,4 +1,4 @@
-package vazkii.quark.base.module;
+package vazkii.quark.base.module.config;
 
 public interface IConfigType {
 

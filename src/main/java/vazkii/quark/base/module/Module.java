@@ -1,18 +1,20 @@
 package vazkii.quark.base.module;
 
+import java.util.List;
+
 import com.google.common.collect.Lists;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import vazkii.quark.api.event.ModuleLoadedEvent;
 import vazkii.quark.api.event.ModuleStateChangedEvent;
 import vazkii.quark.base.Quark;
-
-import java.util.List;
+import vazkii.quark.base.module.config.ConfigFlagManager;
+import vazkii.quark.base.module.config.IConfigBuilder;
 
 public class Module {
 
@@ -39,10 +41,6 @@ public class Module {
 	}
 
 	public void modulesStarted() {
-		// NO-OP
-	}
-	
-	public void buildConfigSpec(ForgeConfigSpec.Builder builder, List<Runnable> callbacks) {
 		// NO-OP
 	}
 	

@@ -1,7 +1,7 @@
 package vazkii.quark.world.config;
 
-import vazkii.quark.base.module.Config;
-import vazkii.quark.base.module.IConfigType;
+import vazkii.quark.base.module.config.Config;
+import vazkii.quark.base.module.config.IConfigType;
 import vazkii.quark.base.world.config.DimensionConfig;
 import vazkii.quark.base.world.config.OrePocketConfig;
 

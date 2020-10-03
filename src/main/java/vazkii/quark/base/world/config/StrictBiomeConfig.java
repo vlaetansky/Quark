@@ -5,8 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.world.biome.Biome;
-import vazkii.quark.base.module.Config;
-import vazkii.quark.base.module.ConfigFlagManager;
+import vazkii.quark.base.module.config.Config;
+import vazkii.quark.base.module.config.ConfigFlagManager;
 
 public class StrictBiomeConfig implements IBiomeConfig {
 

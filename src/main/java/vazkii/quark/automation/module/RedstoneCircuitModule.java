@@ -6,10 +6,10 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemGroup;
 import vazkii.quark.automation.block.RedstoneInductorBlock;
 import vazkii.quark.automation.block.RedstoneRandomizerBlock;
-import vazkii.quark.base.module.Config;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.Module;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.config.Config;
 
 /**
  * @author WireSegal

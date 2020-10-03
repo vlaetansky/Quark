@@ -4,6 +4,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.module.config.ConfigResolver;
 
 import java.util.HashMap;
 import java.util.Map;

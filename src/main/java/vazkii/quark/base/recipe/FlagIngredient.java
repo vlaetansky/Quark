@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
-import vazkii.quark.base.module.ConfigFlagManager;
+import vazkii.quark.base.module.config.ConfigFlagManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

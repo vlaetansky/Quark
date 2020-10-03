@@ -6,8 +6,8 @@ import java.util.List;
 
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import vazkii.quark.base.module.Config;
-import vazkii.quark.base.module.IConfigType;
+import vazkii.quark.base.module.config.Config;
+import vazkii.quark.base.module.config.IConfigType;
 
 public class DimensionConfig implements IConfigType {
 

@@ -1,7 +1,4 @@
-package vazkii.quark.base.module;
-
-import net.minecraftforge.common.ForgeConfigSpec;
-import org.apache.commons.lang3.text.WordUtils;
+package vazkii.quark.base.module.config;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -13,10 +10,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Predicate;
 
+import org.apache.commons.lang3.text.WordUtils;
+
+import net.minecraftforge.common.ForgeConfigSpec;
+import vazkii.quark.base.module.Module;
+
 @SuppressWarnings("deprecation")
 public final class ConfigObjectSerializer {
 	
-	public static void serialize(ForgeConfigSpec.Builder builder, ConfigFlagManager flagManager, List<Runnable> callbacks, Object object) throws ReflectiveOperationException {
+	public static void serialize(IConfigBuilder builder, ConfigFlagManager flagManager, List<Runnable> callbacks, Object object) throws ReflectiveOperationException {
 		List<Field> fields = recursivelyGetFields(object.getClass());
 		for(Field f : fields) {
 			Config config = f.getDeclaredAnnotation(Config.class);
@@ -37,7 +39,7 @@ public final class ConfigObjectSerializer {
 		return list;
 	}
 	
-	private static void pushConfig(ForgeConfigSpec.Builder builder, ConfigFlagManager flagManager, List<Runnable> callbacks, Object object, Field field, Config config) throws ReflectiveOperationException {
+	private static void pushConfig(IConfigBuilder builder, ConfigFlagManager flagManager, List<Runnable> callbacks, Object object, Field field, Config config) throws ReflectiveOperationException {
 		field.setAccessible(true);
 		
 		String name = config.name();
@@ -109,7 +111,7 @@ public final class ConfigObjectSerializer {
 			
 		ForgeConfigSpec.ConfigValue<?> value = (defaultValue instanceof List) ?
 				builder.defineList(name, (List<?>) defaultValue, restrict(restriction, min, max)) :
-				builder.define(name, defaultValue, restrict(restriction, min, max));
+				builder.defineObj(name, defaultValue, restrict(restriction, min, max));
 		callbacks.add(() -> {
 			try {
 				Object setObj = value.get();

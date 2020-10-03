@@ -2,10 +2,10 @@ package vazkii.quark.world.module;
 
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraftforge.common.BiomeDictionary.Type;
-import vazkii.quark.base.module.Config;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.Module;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.world.WorldGenHandler;
 import vazkii.quark.base.world.WorldGenWeights;
 import vazkii.quark.base.world.config.ClusterSizeConfig;
