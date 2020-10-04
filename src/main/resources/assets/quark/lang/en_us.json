@@ -189,7 +189,10 @@
 	"quark.misc.saturation2": "Meal",
 	"quark.misc.saturation3": "Light Meal",
 	"quark.misc.saturation4": "Light Snack",
-	"quark.misc.reloaded": "Your quark config has been reloaded. If you changed anything that would change recipes, please run /reload.",
+
+	"quark.misc.reloaded0": "Your quark config has been reloaded.",
+	"quark.misc.reloaded1": "- If you changed anything that would change recipes, please run /reload.",
+	"quark.misc.reloaded2": "- If your changes aren't applied, try restarting the game.",
 
 	"quark.container.feeding_trough": "Feeding Trough",
 

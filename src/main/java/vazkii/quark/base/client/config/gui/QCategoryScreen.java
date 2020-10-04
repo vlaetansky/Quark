@@ -85,11 +85,10 @@ public class QCategoryScreen extends QScreen {
 		
 		super.render(mstack, mouseX, mouseY, pticks);
 		
-		GL11.glEnable(GL11.GL_SCISSOR_TEST);
-		
 		MainWindow main = minecraft.getMainWindow();
 		int res = (int) main.getGuiScaleFactor();
-
+		
+		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 		GL11.glScissor(0, 40 * res, width * res, (height - 80) * res);
 		for(Widget w : visibleWidgets) {
 			w.visible = true;
