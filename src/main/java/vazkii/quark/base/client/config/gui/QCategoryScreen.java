@@ -24,6 +24,7 @@ public class QCategoryScreen extends QScreen {
 	
 	private ConfigElementList elementList;
 	private String breadcrumbs;
+	private Button resetButton;
 	
 	public QCategoryScreen(Screen parent, ConfigCategory category) {
 		super(parent);
@@ -56,9 +57,16 @@ public class QCategoryScreen extends QScreen {
 		int left = (width - (bWidth + pad) * 3) / 2;
 		int vStart = height - 30;
 		
-		addButton(new Button(left, vStart, bWidth, 20, new TranslationTextComponent("Set to Default"), b -> category.reset(true)));
-		addButton(new Button(left + bWidth + pad, vStart, bWidth, 20, new TranslationTextComponent("Discard Changes"), b -> category.reset(false)));
+		addButton(new Button(left, vStart, bWidth, 20, new TranslationTextComponent("quark.gui.config.default"), b -> category.reset(true)));
+		addButton(resetButton = new Button(left + bWidth + pad, vStart, bWidth, 20, new TranslationTextComponent("quark.gui.config.discard"), b -> category.reset(false)));
 		addButton(new Button(left + (bWidth + pad) * 2, vStart, bWidth, 20, new TranslationTextComponent("gui.done"), this::returnToParent));
+	}
+	
+	@Override
+	public void tick() {
+		super.tick();
+		
+		resetButton.active = category.isDirty();
 	}
 	
 	@Override
