@@ -5,9 +5,9 @@ import java.util.function.Supplier;
 
 import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.client.config.ConfigObject;
-import vazkii.quark.base.client.config.gui.PencilButton;
 import vazkii.quark.base.client.config.gui.QCategoryScreen;
 import vazkii.quark.base.client.config.gui.WidgetWrapper;
+import vazkii.quark.base.client.config.gui.widget.PencilButton;
 
 public class AbstractStringInputObject<T> extends ConfigObject<T> {
 

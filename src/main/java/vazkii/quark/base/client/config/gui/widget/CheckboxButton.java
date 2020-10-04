@@ -1,4 +1,4 @@
-package vazkii.quark.base.client.config.gui;
+package vazkii.quark.base.client.config.gui.widget;
 
 import java.util.function.Supplier;
 

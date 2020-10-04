@@ -12,9 +12,9 @@ import java.util.function.Supplier;
 import org.apache.commons.lang3.text.WordUtils;
 
 import net.minecraft.client.resources.I18n;
-import vazkii.quark.base.client.config.gui.PencilButton;
 import vazkii.quark.base.client.config.gui.QCategoryScreen;
 import vazkii.quark.base.client.config.gui.WidgetWrapper;
+import vazkii.quark.base.client.config.gui.widget.PencilButton;
 import vazkii.quark.base.module.ModuleCategory;
 
 public class ConfigCategory extends AbstractConfigElement {

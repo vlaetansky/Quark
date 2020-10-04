@@ -12,6 +12,9 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.client.config.IngameConfigHandler;
+import vazkii.quark.base.client.config.gui.widget.CheckboxButton;
+import vazkii.quark.base.client.config.gui.widget.ColorTextButton;
+import vazkii.quark.base.client.config.gui.widget.IconButton;
 import vazkii.quark.base.handler.ContributorRewardHandler;
 import vazkii.quark.base.module.ModuleCategory;
 

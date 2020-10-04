@@ -1,4 +1,4 @@
-package vazkii.quark.base.client.config.gui;
+package vazkii.quark.base.client.config.gui.widget;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -16,6 +16,8 @@ import vazkii.quark.base.client.TopLayerTooltipHandler;
 import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.client.config.ConfigObject;
 import vazkii.quark.base.client.config.IConfigElement;
+import vazkii.quark.base.client.config.gui.QCategoryScreen;
+import vazkii.quark.base.client.config.gui.WidgetWrapper;
 
 public class ConfigElementList extends ExtendedList<ConfigElementList.Entry> {
 

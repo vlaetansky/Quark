@@ -17,7 +17,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.loading.FMLPaths;
 import vazkii.quark.base.Quark;
-import vazkii.quark.base.client.config.gui.QButton;
+import vazkii.quark.base.client.config.gui.widget.QButton;
 import vazkii.quark.base.handler.GeneralConfig;
 
 @EventBusSubscriber(modid = Quark.MOD_ID, value = Dist.CLIENT)

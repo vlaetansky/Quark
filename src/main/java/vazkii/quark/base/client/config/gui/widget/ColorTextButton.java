@@ -1,4 +1,4 @@
-package vazkii.quark.base.client.config.gui;
+package vazkii.quark.base.client.config.gui.widget;
 
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.ITextComponent;

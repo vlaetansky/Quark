@@ -5,9 +5,9 @@ import java.util.function.Supplier;
 
 import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.client.config.ConfigObject;
-import vazkii.quark.base.client.config.gui.CheckboxButton;
 import vazkii.quark.base.client.config.gui.QCategoryScreen;
 import vazkii.quark.base.client.config.gui.WidgetWrapper;
+import vazkii.quark.base.client.config.gui.widget.CheckboxButton;
 
 public class BooleanObject extends ConfigObject<Boolean> {
 

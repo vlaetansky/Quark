@@ -15,6 +15,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import vazkii.quark.base.client.config.ConfigCategory;
+import vazkii.quark.base.client.config.gui.widget.ConfigElementList;
 
 public class QCategoryScreen extends QScreen {
 
