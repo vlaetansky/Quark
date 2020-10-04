@@ -1,4 +1,4 @@
-package vazkii.quark.base.client.screen;
+package vazkii.quark.base.client.config.gui;
 
 import java.util.LinkedList;
 import java.util.List;

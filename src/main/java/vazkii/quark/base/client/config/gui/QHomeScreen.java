@@ -1,4 +1,4 @@
-package vazkii.quark.base.client.screen;
+package vazkii.quark.base.client.config.gui;
 
 import org.apache.commons.lang3.text.WordUtils;
 

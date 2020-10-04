@@ -3,8 +3,8 @@ package vazkii.quark.base.client.config;
 import java.io.PrintStream;
 import java.util.List;
 
-import vazkii.quark.base.client.screen.QCategoryScreen;
-import vazkii.quark.base.client.screen.WidgetWrapper;
+import vazkii.quark.base.client.config.gui.QCategoryScreen;
+import vazkii.quark.base.client.config.gui.WidgetWrapper;
 
 public interface IConfigElement extends Comparable<IConfigElement> {
 

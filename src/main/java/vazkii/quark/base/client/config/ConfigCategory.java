@@ -15,9 +15,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.StringTextComponent;
-import vazkii.quark.base.client.screen.CheckboxButton;
-import vazkii.quark.base.client.screen.QCategoryScreen;
-import vazkii.quark.base.client.screen.WidgetWrapper;
+import vazkii.quark.base.client.config.gui.CheckboxButton;
+import vazkii.quark.base.client.config.gui.QCategoryScreen;
+import vazkii.quark.base.client.config.gui.WidgetWrapper;
 import vazkii.quark.base.module.ModuleCategory;
 
 public class ConfigCategory extends AbstractConfigElement {

@@ -1,4 +1,4 @@
-package vazkii.quark.base.client;
+package vazkii.quark.base.client.config;
 
 import java.awt.Color;
 import java.util.Calendar;
@@ -24,8 +24,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.loading.FMLPaths;
 import vazkii.arl.util.ClientTicker;
 import vazkii.quark.base.Quark;
-import vazkii.quark.base.client.config.IngameConfigHandler;
-import vazkii.quark.base.client.screen.QHomeScreen;
+import vazkii.quark.base.client.config.gui.QHomeScreen;
 import vazkii.quark.base.handler.ContributorRewardHandler;
 import vazkii.quark.base.handler.GeneralConfig;
 import vazkii.quark.base.handler.MiscUtil;

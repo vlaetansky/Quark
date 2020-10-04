@@ -4,9 +4,9 @@ import java.io.PrintStream;
 import java.util.List;
 import java.util.function.Supplier;
 
-import vazkii.quark.base.client.screen.CheckboxButton;
-import vazkii.quark.base.client.screen.QCategoryScreen;
-import vazkii.quark.base.client.screen.WidgetWrapper;
+import vazkii.quark.base.client.config.gui.CheckboxButton;
+import vazkii.quark.base.client.config.gui.QCategoryScreen;
+import vazkii.quark.base.client.config.gui.WidgetWrapper;
 
 public class ConfigObject<T> extends AbstractConfigElement {
 
