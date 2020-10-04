@@ -11,6 +11,7 @@ import net.minecraft.client.MainWindow;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import vazkii.quark.base.client.config.ConfigCategory;
@@ -57,7 +58,7 @@ public class QCategoryScreen extends QScreen {
 		
 		addButton(new Button(left, vStart, bWidth, 20, new TranslationTextComponent("Set to Default"), b -> category.reset(true)));
 		addButton(new Button(left + bWidth + pad, vStart, bWidth, 20, new TranslationTextComponent("Discard Changes"), b -> category.reset(false)));
-		addButton(new Button(left + (bWidth + pad) * 2, vStart, bWidth, 20, new TranslationTextComponent("Done"), this::returnToParent));
+		addButton(new Button(left + (bWidth + pad) * 2, vStart, bWidth, 20, new TranslationTextComponent("gui.done"), this::returnToParent));
 	}
 	
 	@Override
@@ -89,7 +90,7 @@ public class QCategoryScreen extends QScreen {
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 		
 		int left = 20;
-		font.drawString(mstack, TextFormatting.BOLD + "Quark Configuration", left, 10, 0x48ddbc);
+		font.drawString(mstack, TextFormatting.BOLD + I18n.format("quark.gui.config.header"), left, 10, 0x48ddbc);
 		font.drawString(mstack, breadcrumbs, left, 20, 0xFFFFFF);
 	}
 

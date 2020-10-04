@@ -41,8 +41,6 @@ public class QButtonHandler {
 					? ImmutableSet.of(I18n.format("fml.menu.modoptions"), I18n.format("menu.online"))
 					: ImmutableSet.of(I18n.format("menu.options"), I18n.format("fml.menu.mods"));
 					
-			System.out.println(targets);
-					
 			List<Widget> widgets = event.getWidgetList();
 			for(Widget b : widgets)
 				if(targets.contains(b.getMessage().getString())) {

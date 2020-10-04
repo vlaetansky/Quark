@@ -6,6 +6,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -15,8 +16,6 @@ import vazkii.quark.base.handler.ContributorRewardHandler;
 import vazkii.quark.base.module.ModuleCategory;
 
 public class QHomeScreen extends QScreen {
-
-	// TODO localize all the strings
 
 	public QHomeScreen(Screen parent) {
 		super(parent);
@@ -39,7 +38,7 @@ public class QHomeScreen extends QScreen {
 				int y = vStart + (i / 2) * vpad;
 
 				ConfigCategory configCategory = IngameConfigHandler.INSTANCE.getConfigCategory(category);
-				String name = WordUtils.capitalizeFully(category.name);
+				String name = I18n.format("quark.category." + configCategory.name);
 
 				if(configCategory.isDirty())
 					name += TextFormatting.GOLD + "*";
@@ -51,22 +50,22 @@ public class QHomeScreen extends QScreen {
 
 		pad = 3;
 		vpad = 23;
-		bWidth = 121;
-		left = (width - (bWidth + pad) * 3) / 2;
+		bWidth = 182;
+		left = (width - (bWidth + pad) * 2) / 2;
 		vStart = height - 30;
 
-		addButton(new Button(left, vStart, bWidth, 20, new TranslationTextComponent("General Settings"), categoryLink(IngameConfigHandler.INSTANCE.getConfigCategory(null))));
-		addButton(new Button(left + bWidth + pad, vStart, bWidth, 20, new TranslationTextComponent("Import Config"), this::returnToParent)); // TODO
-		addButton(new Button(left + (bWidth + pad) * 2, vStart, bWidth, 20, new TranslationTextComponent("Save Changes"), this::commit));
+		addButton(new Button(left, vStart, bWidth, 20, new TranslationTextComponent("quark.gui.config.general"), categoryLink(IngameConfigHandler.INSTANCE.getConfigCategory(null))));
+//		addButton(new Button(left + bWidth + pad, vStart, bWidth, 20, new TranslationTextComponent("quark.gui.config.import"), this::returnToParent));
+		addButton(new Button(left + bWidth + pad, vStart, bWidth, 20, new TranslationTextComponent("quark.gui.config.save"), this::commit));
 
 		bWidth = 71;
 		left = (width - (bWidth + pad) * 5) / 2;
 
-		addButton(new ColorTextButton(left, vStart - vpad, bWidth, 20, new TranslationTextComponent("Quark Site"), 0x48ddbc, webLink("https://quark.vazkii.net")));
-		addButton(new ColorTextButton(left + bWidth + pad, vStart - vpad, bWidth, 20, new TranslationTextComponent("Discord"), 0x7289da, webLink("https://vazkii.net/discord")));
-		addButton(new ColorTextButton(left + (bWidth + pad) * 2, vStart - vpad, bWidth, 20, new TranslationTextComponent("Patreon"), 0xf96854, webLink("https://patreon.com/vazkii")));
-		addButton(new ColorTextButton(left + (bWidth + pad) * 3, vStart - vpad, bWidth, 20, new TranslationTextComponent("Reddit"), 0xff4400, webLink("https://reddit.com/r/quarkmod")));
-		addButton(new ColorTextButton(left + (bWidth + pad) * 4, vStart - vpad, bWidth, 20, new TranslationTextComponent("Twitter"), 0x1da1f2, webLink("https://twitter.com/VazkiiMods")));
+		addButton(new ColorTextButton(left, vStart - vpad, bWidth, 20, new TranslationTextComponent("quark.gui.config.social.website"), 0x48ddbc, webLink("https://quark.vazkii.net")));
+		addButton(new ColorTextButton(left + bWidth + pad, vStart - vpad, bWidth, 20, new TranslationTextComponent("quark.gui.config.social.discord"), 0x7289da, webLink("https://vazkii.net/discord")));
+		addButton(new ColorTextButton(left + (bWidth + pad) * 2, vStart - vpad, bWidth, 20, new TranslationTextComponent("quark.gui.config.social.patreon"), 0xf96854, webLink("https://patreon.com/vazkii")));
+		addButton(new ColorTextButton(left + (bWidth + pad) * 3, vStart - vpad, bWidth, 20, new TranslationTextComponent("quark.gui.config.social.reddit"), 0xff4400, webLink("https://reddit.com/r/quarkmod")));
+		addButton(new ColorTextButton(left + (bWidth + pad) * 4, vStart - vpad, bWidth, 20, new TranslationTextComponent("quark.gui.config.social.twitter"), 0x1da1f2, webLink("https://twitter.com/VazkiiMods")));
 	}
 	
 	public void commit(Button button) {
@@ -79,9 +78,9 @@ public class QHomeScreen extends QScreen {
 		renderBackground(mstack);
 		super.render(mstack, mouseX, mouseY, pticks);
 
-		drawCenteredString(mstack, font, TextFormatting.BOLD + "Quark Configuration", width / 2, 15, 0x48ddbc);
-		drawCenteredString(mstack, font, String.format("Quark is possible thanks to the support of %s%s%s and others.", TextFormatting.GOLD, ContributorRewardHandler.featuredPatron, TextFormatting.RESET), width / 2, 28, 0xf96854);
-		drawCenteredString(mstack, font, "Consider supporting us on Patreon for cool ingame rewards like this!", width / 2, 38, 0xf96854);
+		drawCenteredString(mstack, font, TextFormatting.BOLD + I18n.format("quark.gui.config.header"), width / 2, 15, 0x48ddbc);
+		drawCenteredString(mstack, font, I18n.format("quark.gui.config.subheader1", TextFormatting.GOLD, ContributorRewardHandler.featuredPatron, TextFormatting.RESET), width / 2, 28, 0xf96854);
+		drawCenteredString(mstack, font, I18n.format("quark.gui.config.subheader2"), width / 2, 38, 0xf96854);
 	}
 
 }

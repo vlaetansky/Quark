@@ -14,6 +14,7 @@ import org.apache.commons.lang3.text.WordUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.StringTextComponent;
 import vazkii.quark.base.client.config.gui.CheckboxButton;
 import vazkii.quark.base.client.config.gui.QCategoryScreen;
@@ -124,7 +125,7 @@ public class ConfigCategory extends AbstractConfigElement {
 	@Override
 	public String getSubtitle() {
 		int size = subElements.size();
-		return size == 1 ? "1 child" : String.format("%d children", subElements.size());
+		return size == 1 ? I18n.format("quark.gui.config.onechild") : I18n.format("quark.gui.config.nchildren", subElements.size());
 	}
 
 	@Override

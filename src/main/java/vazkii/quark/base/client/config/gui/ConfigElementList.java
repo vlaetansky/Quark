@@ -10,6 +10,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.list.ExtendedList;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 import vazkii.quark.base.client.TopLayerTooltipHandler;
 import vazkii.quark.base.client.config.ConfigCategory;
@@ -134,7 +135,7 @@ public class ConfigElementList extends ExtendedList<ConfigElementList.Entry> {
 				
 
 			} else {
-				String s = "------- Sub Categories -------";
+				String s = I18n.format("quark.gui.config.subcategories");
 				mc.fontRenderer.drawStringWithShadow(mstack, s, rowLeft + (rowWidth - mc.fontRenderer.getStringWidth(s)) / 2, rowTop + 7, 0x6666FF);
 			}
 		}

@@ -48,7 +48,7 @@ public class ContributorRewardHandler {
 	private static final Map<String, Integer> tiers = new HashMap<>();
 
 	public static int localPatronTier = 0;
-	public static String featuredPatron = "";
+	public static String featuredPatron = "N/A";
 
 	@OnlyIn(Dist.CLIENT)
 	public static void getLocalName() {
