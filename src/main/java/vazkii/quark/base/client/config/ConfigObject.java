@@ -4,18 +4,20 @@ import java.io.PrintStream;
 import java.util.List;
 import java.util.function.Supplier;
 
-import vazkii.quark.base.client.config.gui.CheckboxButton;
-import vazkii.quark.base.client.config.gui.QCategoryScreen;
-import vazkii.quark.base.client.config.gui.WidgetWrapper;
+import vazkii.quark.base.client.config.obj.BooleanObject;
+import vazkii.quark.base.client.config.obj.DoubleObject;
+import vazkii.quark.base.client.config.obj.IntegerObject;
+import vazkii.quark.base.client.config.obj.ListObject;
+import vazkii.quark.base.client.config.obj.StringObject;
 
-public class ConfigObject<T> extends AbstractConfigElement {
+public abstract class ConfigObject<T> extends AbstractConfigElement {
 
-	private final T defaultObj;
-	private final Supplier<T> objectGetter;
-	private final String displayName;
+	protected final T defaultObj;
+	protected final Supplier<T> objectGetter;
+	protected final String displayName;
 	
-	private T loadedObj;
-	private T currentObj;
+	protected T loadedObj;
+	protected T currentObj;
 	
 	public ConfigObject(String name, String comment, T defaultObj, Supplier<T> objGetter, ConfigCategory parent) {
 		super(name, comment, parent);
@@ -25,6 +27,26 @@ public class ConfigObject<T> extends AbstractConfigElement {
 		if(name.contains(" "))
 			displayName = String.format("\"%s\"", name);
 		else displayName = name;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> ConfigObject<?> create(String name, String comment, T defaultObj, Supplier<T> objGetter, ConfigCategory parent) {
+		if(defaultObj instanceof Boolean)
+			return new BooleanObject(name, comment, (Boolean) defaultObj, (Supplier<Boolean>) objGetter, parent);
+		
+		else if(defaultObj instanceof String)
+			return new StringObject(name, comment, (String) defaultObj, (Supplier<String>) objGetter, parent);
+
+		else if(defaultObj instanceof Integer)
+			return new IntegerObject(name, comment, (Integer) defaultObj, (Supplier<Integer>) objGetter, parent);
+		
+		else if(defaultObj instanceof Double)
+			return new DoubleObject(name, comment, (Double) defaultObj, (Supplier<Double>) objGetter, parent);
+		
+		else if(defaultObj instanceof List<?>)
+			return new ListObject(name, comment, (List<?>) defaultObj, (Supplier<List<?>>) objGetter, parent);
+		
+		else throw new IllegalArgumentException(defaultObj + " isn't a valid config object.");
 	}
 	
 	@Override
@@ -58,14 +80,6 @@ public class ConfigObject<T> extends AbstractConfigElement {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public void addWidgets(QCategoryScreen parent, List<WidgetWrapper> widgets) {
-		if(currentObj instanceof Boolean) {
-			widgets.add(new WidgetWrapper(new CheckboxButton(230, 3, (ConfigObject<Boolean>) this)));
-		} // TODO non-boolean support
-	}
-	
-	@Override
 	public String getSubtitle() {
 		String str = currentObj.toString();
 		if(str.length() > 30)
@@ -82,30 +96,12 @@ public class ConfigObject<T> extends AbstractConfigElement {
 	public void print(String pad, PrintStream out) {
 		super.print(pad, out);
 		
-		String objStr = null;
-		if(currentObj instanceof List<?>) {
-			StringBuilder builder = new StringBuilder();
-			builder.append("[");
-			
-			boolean first = true;
-			for(Object obj : (List<?>) currentObj) {
-				if(!first)
-					builder.append(", ");
-				
-				builder.append("\"");
-				builder.append(obj);
-				builder.append("\"");
-				
-				first = false;
-			}
-			
-			builder.append("]");
-			objStr = builder.toString();
-		} else if(currentObj instanceof String) {
-			objStr = String.format("\"%s\"", currentObj);
-		} else objStr = currentObj.toString();
-		
+		String objStr = computeObjectString();;
 		out.printf("%s%s = %s%n", pad, displayName, objStr);
+	}
+	
+	protected String computeObjectString() {
+		return currentObj.toString();
 	}
 
 	@Override
