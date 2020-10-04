@@ -373,7 +373,7 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 			ticksInPipe++;
 			timeInWorld++;
 
-			if(!pipe.world.isRemote && ticksInPipe == PipesModule.pipeSpeed / 2 - 1) {
+			if(!pipe.world.isRemote && ticksInPipe == PipesModule.effectivePipeSpeed / 2 - 1) {
 				Direction target = getTargetFace(pipe);
 				if (outgoingFace != target)
 					pipe.needsSync = true;
@@ -385,7 +385,7 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 				return true;
 			}
 
-			return ticksInPipe >= PipesModule.pipeSpeed;
+			return ticksInPipe >= PipesModule.effectivePipeSpeed;
 		}
 
 		protected Direction getTargetFace(PipeTileEntity pipe) {
@@ -422,7 +422,7 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 		}
 
 		public float getTimeFract(float partial) {
-			return (ticksInPipe + partial) / PipesModule.pipeSpeed;
+			return (ticksInPipe + partial) / PipesModule.effectivePipeSpeed;
 		}
 
 		public void writeToNBT(CompoundNBT cmp) {

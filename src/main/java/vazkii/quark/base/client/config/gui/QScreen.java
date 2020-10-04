@@ -8,6 +8,7 @@ import net.minecraft.client.gui.widget.button.Button.IPressable;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.StringTextComponent;
 import vazkii.quark.base.client.config.ConfigCategory;
+import vazkii.quark.base.client.config.obj.AbstractStringInputObject;
 
 public abstract class QScreen extends Screen {
 	
@@ -33,6 +34,10 @@ public abstract class QScreen extends Screen {
 	
 	public IPressable categoryLink(ConfigCategory category) {
 		return b -> minecraft.displayGuiScreen(new QCategoryScreen(this, category));
+	}
+	
+	public <T> IPressable stringInput(AbstractStringInputObject<T> object) {
+		return b -> minecraft.displayGuiScreen(new QStringInputScreen<T>(this, object));
 	}
 	
 

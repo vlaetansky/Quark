@@ -86,7 +86,7 @@ public class ConfigCategory extends AbstractConfigElement {
 	
 	@SuppressWarnings("unchecked")
 	public <T> void addObject(String name, T default_, Supplier<T> getter, String comment, Predicate<Object> restriction) {
-		ConfigObject<T> obj = (ConfigObject<T>) ConfigObject.create(name, comment, default_, getter, this); 
+		ConfigObject<T> obj = (ConfigObject<T>) ConfigObject.create(name, comment, default_, getter, restriction, this); 
 		subElements.add(obj);
 		
 		if(parent == null && default_ instanceof Boolean)

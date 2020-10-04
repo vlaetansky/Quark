@@ -1,6 +1,7 @@
 package vazkii.quark.base.client.config.obj;
 
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import vazkii.quark.base.client.config.ConfigCategory;
@@ -11,8 +12,8 @@ import vazkii.quark.base.client.config.gui.widget.PencilButton;
 
 public class ListObject extends ConfigObject<List<?>> {
 
-	public ListObject(String name, String comment, List<?> defaultObj, Supplier<List<?>> objGetter, ConfigCategory parent) {
-		super(name, comment, defaultObj, objGetter, parent);
+	public ListObject(String name, String comment, List<?> defaultObj, Supplier<List<?>> objGetter, Predicate<Object> restriction, ConfigCategory parent) {
+		super(name, comment, defaultObj, objGetter, restriction, parent);
 	}
 
 	@Override

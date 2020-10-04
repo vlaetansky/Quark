@@ -21,7 +21,7 @@ public class PipesModule extends Module {
     public static TileEntityType<PipeTileEntity> tileEntityType;
 
 	@Config(description = "How long it takes for an item to cross a pipe. Bigger = slower.") 
-	public static int pipeSpeed = 5;
+	private static int pipeSpeed = 5;
 	
 	@Config(description = "Set to 0 if you don't want pipes to have a max amount of items")
 	public static int maxPipeItems = 16;
@@ -29,6 +29,8 @@ public class PipesModule extends Module {
 	@Config(description = "When items eject or are absorbed by pipes, should they make sounds?")
 	public static boolean doPipesWhoosh = true;
     
+	public static int effectivePipeSpeed;
+	
     @Override
     public void construct() {
     	Block pipe = new PipeBlock(this);
@@ -39,7 +41,7 @@ public class PipesModule extends Module {
     
     @Override
     public void configChanged() {
-    	pipeSpeed = pipeSpeed * 2;
+    	effectivePipeSpeed = pipeSpeed * 2;
     }
 
 	@Override
