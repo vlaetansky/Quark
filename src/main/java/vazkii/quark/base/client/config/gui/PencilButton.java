@@ -1,28 +1,18 @@
 package vazkii.quark.base.client.config.gui;
 
-import java.util.function.Supplier;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.StringTextComponent;
-import vazkii.quark.base.client.config.ConfigObject;
 import vazkii.quark.base.handler.ContributorRewardHandler;
 import vazkii.quark.base.handler.MiscUtil;
 
-public class CheckboxButton extends Button {
+public class PencilButton extends Button {
 
-	private final Supplier<Boolean> checkedSupplier;
-	
-	public CheckboxButton(int x, int y, Supplier<Boolean> checkedSupplier, IPressable onClick) {
-		super(x, y, 20, 20, new StringTextComponent(""), onClick);
-		this.checkedSupplier = checkedSupplier;
-	}
-	
-	public CheckboxButton(int x, int y, ConfigObject<Boolean> configObj) {
-		this(x, y, () -> configObj.getCurrentObj(), (b) -> configObj.setCurrentObj(!configObj.getCurrentObj()));
+	public PencilButton(int x, int y, IPressable pressable) {
+		super(x, y, 20, 20, new StringTextComponent(""), pressable);
 	}
 	
 	@Override
@@ -31,13 +21,12 @@ public class CheckboxButton extends Button {
 		
 		if(ContributorRewardHandler.localPatronTier > 0) {
 			RenderSystem.color3f(1F, 1F, 1F);
-			boolean enabled = checkedSupplier.get();
-			int u = enabled ? 0 : 16;
+			int u = 32;
 			int v = 93;
 			
 			Minecraft.getInstance().textureManager.bindTexture(MiscUtil.GENERAL_ICONS);
 			blit(mstack, x + 2, y + 1, u, v, 16, 16);
 		}
 	}
-
+	
 }
