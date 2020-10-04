@@ -37,6 +37,7 @@
 	"quark.gui.config.onechild": "1 child",
 	"quark.gui.config.nchildren": "%d children",
 	"quark.gui.config.bday": "Happy Birthday to %s!",
+	"quark.gui.config.defaultvalue": "Default: %s",
 
 	"quark.category.automation": "Automation",
 	"quark.category.building": "Building",
