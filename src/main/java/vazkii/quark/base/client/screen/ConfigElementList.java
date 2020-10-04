@@ -1,6 +1,7 @@
 package vazkii.quark.base.client.screen;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -9,6 +10,8 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.list.ExtendedList;
+import net.minecraft.util.text.TextFormatting;
+import vazkii.quark.base.client.TopLayerTooltipHandler;
 import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.client.config.ConfigObject;
 import vazkii.quark.base.client.config.IConfigElement;
@@ -85,12 +88,51 @@ public class ConfigElementList extends ExtendedList<ConfigElementList.Entry> {
 
 				int left = rowLeft + 10;
 				int top = rowTop + 4;
-				mc.fontRenderer.drawStringWithShadow(mstack, element.getName(), left, top, 0xFFFFFF);
+				
+				String name = element.getGuiDisplayName();
+				if(element.isDirty())
+					name += TextFormatting.GOLD + "*";
+				
+				
+				int len = mc.fontRenderer.getStringWidth(name);
+				int maxLen = rowWidth - 85;
+				String originalName = null;
+				if(len > maxLen) {
+					originalName = name;
+					do {
+						name = name.substring(0, name.length() - 1);
+						len = mc.fontRenderer.getStringWidth(name);
+					} while(len > maxLen);
+					
+					name += "...";
+				}
+				
+				List<String> tooltip = element.getTooltip();
+				if(originalName != null) {
+					if(tooltip == null) {
+						tooltip = new LinkedList<>();
+						tooltip.add(originalName);
+					} else {
+						tooltip.add(0, "");
+						tooltip.add(0, originalName);
+					}
+				}
+				
+				if(tooltip != null) {
+					int hoverLeft = left + mc.fontRenderer.getStringWidth(name + " ");
+					int hoverRight = hoverLeft + mc.fontRenderer.getStringWidth("(?)");
+					
+					name += (TextFormatting.AQUA + " (?)");
+					if(mouseX >= hoverLeft && mouseX < hoverRight && mouseY >= top && mouseY < (top + 10))
+						TopLayerTooltipHandler.setTooltip(tooltip, mouseX, mouseY);
+				}
+				
+				mc.fontRenderer.drawStringWithShadow(mstack, name, left, top, 0xFFFFFF);
 				mc.fontRenderer.drawStringWithShadow(mstack, element.getSubtitle(), left, top + 10, 0x999999);
 				
 				children.forEach(c -> c.updatePosition(rowLeft, rowTop));
 				
-				// TODO description tooltip
+
 			} else {
 				String s = "------- Sub Categories -------";
 				mc.fontRenderer.drawStringWithShadow(mstack, s, rowLeft + (rowWidth - mc.fontRenderer.getStringWidth(s)) / 2, rowTop + 7, 0x6666FF);

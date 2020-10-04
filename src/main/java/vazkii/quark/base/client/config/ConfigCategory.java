@@ -28,6 +28,7 @@ public class ConfigCategory extends AbstractConfigElement {
 	
 	private final String path;
 	private final int depth;
+	private boolean dirty = false;
 	
 	public ConfigCategory(String name, String comment, ConfigCategory parent) {
 		super(name, comment, parent);
@@ -39,6 +40,35 @@ public class ConfigCategory extends AbstractConfigElement {
 			path = String.format("%s.%s", parent.path, name);
 			depth = 1 + parent.depth;
 		}
+	}
+	
+	@Override
+	@SuppressWarnings("deprecation")
+	public String getGuiDisplayName() {
+		return WordUtils.capitalize(getName().replaceAll("_", " "));
+	}
+
+	public void updateDirty() {
+		dirty = false;
+		for(IConfigElement sub : subElements)
+			if(sub.isDirty()) {
+				dirty = true;
+				break;
+			}
+	
+		if(parent != null)
+			parent.updateDirty();
+	}
+
+	@Override
+	public void clean() {
+		subElements.forEach(IConfigElement::clean);
+		dirty = false;
+	}
+	
+	@Override
+	public boolean isDirty() {
+		return dirty;
 	}
 	
 	@Override

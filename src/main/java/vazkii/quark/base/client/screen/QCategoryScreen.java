@@ -55,9 +55,9 @@ public class QCategoryScreen extends QScreen {
 		int left = (width - (bWidth + pad) * 3) / 2;
 		int vStart = height - 30;
 		
-		addButton(new Button(left, vStart, bWidth, 20, new TranslationTextComponent("Set to Default"), this::returnToParent));
-		addButton(new Button(left + bWidth + pad, vStart, bWidth, 20, new TranslationTextComponent("Discard Changes"), this::returnToParent));
-		addButton(new Button(left + (bWidth + pad) * 2, vStart, bWidth, 20, new TranslationTextComponent("Save Changes"), this::returnToParent));
+		addButton(new Button(left, vStart, bWidth, 20, new TranslationTextComponent("Set to Default"), b -> category.reset(true)));
+		addButton(new Button(left + bWidth + pad, vStart, bWidth, 20, new TranslationTextComponent("Discard Changes"), b -> category.reset(false)));
+		addButton(new Button(left + (bWidth + pad) * 2, vStart, bWidth, 20, new TranslationTextComponent("Done"), this::returnToParent));
 	}
 	
 	@Override

@@ -55,7 +55,7 @@ public final class IngameConfigHandler implements IConfigCallback {
 	}
 	
 	public ConfigCategory getConfigCategory(ModuleCategory category) {
-		return topLevelCategories.get(category.name);
+		return topLevelCategories.get(category == null ? "general" : category.name);
 	}
 	
 	public void refresh() {
@@ -66,8 +66,26 @@ public final class IngameConfigHandler implements IConfigCallback {
 		if(!Quark.DEBUG_MODE)
 			return;
 		
+		writeToFile(new File("config", "quark-common.toml-generated"));
+	}
+	
+	public void commit() {
+		for(ConfigCategory c : topLevelCategories.values()) {
+			if(c.isDirty()) {
+				save();
+				return;
+			}
+		}
+	}
+	
+	private void save() {
+		writeToFile(new File("config", "quark-common.toml"));
+		for(ConfigCategory c1 : topLevelCategories.values())
+			c1.clean();
+	}
+	
+	private void writeToFile(File file) {
 		try {
-			File file = new File("config", "quark-common.toml-generated");
 			file.createNewFile();
 			PrintStream stream = new PrintStream(file);
 			

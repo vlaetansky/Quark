@@ -39,8 +39,10 @@ public class QButtonHandler {
 		
 		if(GeneralConfig.enableQButton && (gui instanceof MainMenuScreen || gui instanceof IngameMenuScreen)) {
 			ImmutableSet<String> targets = GeneralConfig.qButtonOnRight 
-					? ImmutableSet.of(I18n.format("fml.menu.modoptions"), I18n.format("menu.online").replace("Minecraft", "").trim())
+					? ImmutableSet.of(I18n.format("fml.menu.modoptions"), I18n.format("menu.online"))
 					: ImmutableSet.of(I18n.format("menu.options"), I18n.format("fml.menu.mods"));
+					
+			System.out.println(targets);
 					
 			List<Widget> widgets = event.getWidgetList();
 			for(Widget b : widgets)

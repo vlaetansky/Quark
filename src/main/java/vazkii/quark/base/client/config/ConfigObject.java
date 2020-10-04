@@ -14,8 +14,8 @@ public class ConfigObject<T> extends AbstractConfigElement {
 	private final Supplier<T> objectGetter;
 	private final String displayName;
 	
-	public T loadedObj;
-	public T currentObj;
+	private T loadedObj;
+	private T currentObj;
 	
 	public ConfigObject(String name, String comment, T defaultObj, Supplier<T> objGetter, ConfigCategory parent) {
 		super(name, comment, parent);
@@ -26,18 +26,35 @@ public class ConfigObject<T> extends AbstractConfigElement {
 			displayName = String.format("\"%s\"", name);
 		else displayName = name;
 	}
+	
+	@Override
+	public String getGuiDisplayName() {
+		return name;
+	}
 
 	@Override
 	public void refresh() {
 		currentObj = objectGetter.get();
-		
-		if(loadedObj == null)
-			loadedObj = currentObj;
+		loadedObj = currentObj;
+	}
+	
+	@Override
+	public void clean() {
+		loadedObj = currentObj;
 	}
 	
 	@Override
 	public void reset(boolean hard) {
-		currentObj = hard ? defaultObj : loadedObj;
+		setCurrentObj(hard ? defaultObj : loadedObj);
+	}
+	
+	public T getCurrentObj() {
+		return currentObj;
+	}
+	
+	public void setCurrentObj(T currentObj) {
+		this.currentObj = currentObj;
+		parent.updateDirty();
 	}
 
 	@Override
@@ -45,7 +62,7 @@ public class ConfigObject<T> extends AbstractConfigElement {
 	public void addWidgets(QCategoryScreen parent, List<WidgetWrapper> widgets) {
 		if(currentObj instanceof Boolean) {
 			widgets.add(new WidgetWrapper(new CheckboxButton(230, 3, (ConfigObject<Boolean>) this)));
-		}
+		} // TODO non-boolean support
 	}
 	
 	@Override
@@ -54,6 +71,11 @@ public class ConfigObject<T> extends AbstractConfigElement {
 		if(str.length() > 30)
 			str = str.substring(0, 27) + "...";
 		return str;
+	}
+	
+	@Override
+	public boolean isDirty() {
+		return !loadedObj.equals(currentObj);
 	}
 	
 	@Override

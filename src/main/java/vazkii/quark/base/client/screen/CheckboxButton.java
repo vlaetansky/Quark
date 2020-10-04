@@ -17,7 +17,7 @@ public class CheckboxButton extends Button {
 	}
 	
 	public CheckboxButton(int x, int y, ConfigObject<Boolean> configObj) {
-		this(x, y, () -> configObj.currentObj, (b) -> configObj.currentObj = !configObj.currentObj);
+		this(x, y, () -> configObj.getCurrentObj(), (b) -> configObj.setCurrentObj(!configObj.getCurrentObj()));
 	}
 	
 	// TODO proper icons
