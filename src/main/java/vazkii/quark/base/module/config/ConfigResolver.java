@@ -72,7 +72,7 @@ public class ConfigResolver {
 		Map<Module, Runnable> setEnabledRunnables = new HashMap<>();
 		
 		for(Module module : modules) {
-			ForgeConfigSpec.ConfigValue<Boolean> value = builder.defineBool(module.displayName, () -> module.enabled, module.enabledByDefault);
+			ForgeConfigSpec.ConfigValue<Boolean> value = builder.defineBool(module.displayName, () -> module.configEnabled, module.enabledByDefault);
 			setEnabledRunnables.put(module, () -> {
 				module.setEnabled(value.get() && category.enabled);
 				flagManager.putEnabledFlag(module);

@@ -28,6 +28,7 @@ public class Module {
 	
 	private boolean firstLoad = true;
 	public boolean enabled = false;
+	public boolean configEnabled = false;
 	public boolean ignoreAntiOverlap = false;
 
 	public void construct() {
@@ -89,6 +90,7 @@ public class Module {
 	}
 	
 	public final void setEnabled(boolean enabled) {
+		configEnabled = enabled;
 		if(firstLoad) {
 			Quark.LOG.info("Loading Module " + displayName);
 			MinecraftForge.EVENT_BUS.post(new ModuleLoadedEvent(lowercaseName));
