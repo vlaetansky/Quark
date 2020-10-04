@@ -37,8 +37,8 @@ public class QHomeScreen extends QScreen {
 				int x = left + (bWidth + pad) * (i % 2);
 				int y = vStart + (i / 2) * vpad;
 				
-				addButton(new IconButton(x, y, bWidth - 20, 20, new TranslationTextComponent(WordUtils.capitalizeFully(category.name)), new ItemStack(category.item), this::returnToParent));
-				addButton(new CheckboxButton(x + bWidth - 20, y, 20, 20, IngameConfigHandler.INSTANCE.getCategoryEnabledObject(category)));
+				addButton(new IconButton(x, y, bWidth - 20, 20, new TranslationTextComponent(WordUtils.capitalizeFully(category.name)), new ItemStack(category.item), categoryLink(IngameConfigHandler.INSTANCE.getConfigCategory(category))));
+				addButton(new CheckboxButton(x + bWidth - 20, y, IngameConfigHandler.INSTANCE.getCategoryEnabledObject(category)));
 				i++;
 			}
 
@@ -64,6 +64,7 @@ public class QHomeScreen extends QScreen {
 	
 	@Override
 	public void render(MatrixStack mstack, int mouseX, int mouseY, float pticks) {
+		renderBackground(mstack);
 		super.render(mstack, mouseX, mouseY, pticks);
 		
 		drawCenteredString(mstack, font, TextFormatting.BOLD + "Quark Configuration", width / 2, 15, 0x48ddbc);

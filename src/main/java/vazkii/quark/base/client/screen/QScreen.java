@@ -7,6 +7,7 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.Button.IPressable;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.StringTextComponent;
+import vazkii.quark.base.client.config.ConfigCategory;
 
 public abstract class QScreen extends Screen {
 	
@@ -19,7 +20,6 @@ public abstract class QScreen extends Screen {
 	
 	@Override
 	public void render(MatrixStack mstack, int mouseX, int mouseY, float pticks) {
-		renderBackground(mstack);
 		super.render(mstack, mouseX, mouseY, pticks);
 	}
 	
@@ -27,8 +27,12 @@ public abstract class QScreen extends Screen {
 		minecraft.displayGuiScreen(parent);
 	}
 	
-	protected IPressable webLink(String url) {
+	public IPressable webLink(String url) {
 		return b -> Util.getOSType().openURI(url);
+	}
+	
+	public IPressable categoryLink(ConfigCategory category) {
+		return b -> minecraft.displayGuiScreen(new QCategoryScreen(this, category));
 	}
 	
 

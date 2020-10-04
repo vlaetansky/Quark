@@ -11,13 +11,13 @@ public class CheckboxButton extends Button {
 
 	private final Supplier<Boolean> checkedSupplier;
 	
-	public CheckboxButton(int x, int y, int w, int h, Supplier<Boolean> checkedSupplier, IPressable onClick) {
-		super(x, y, w, h, new StringTextComponent(""), onClick);
+	public CheckboxButton(int x, int y, Supplier<Boolean> checkedSupplier, IPressable onClick) {
+		super(x, y, 20, 20, new StringTextComponent(""), onClick);
 		this.checkedSupplier = checkedSupplier;
 	}
 	
-	public CheckboxButton(int x, int y, int w, int h, ConfigObject<Boolean> configObj) {
-		this(x, y, w, h, () -> configObj.currentObj, (b) -> configObj.currentObj = !configObj.currentObj);
+	public CheckboxButton(int x, int y, ConfigObject<Boolean> configObj) {
+		this(x, y, () -> configObj.currentObj, (b) -> configObj.currentObj = !configObj.currentObj);
 	}
 	
 	// TODO proper icons

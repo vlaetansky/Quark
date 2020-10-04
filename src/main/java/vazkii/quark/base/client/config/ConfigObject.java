@@ -4,6 +4,10 @@ import java.io.PrintStream;
 import java.util.List;
 import java.util.function.Supplier;
 
+import vazkii.quark.base.client.screen.CheckboxButton;
+import vazkii.quark.base.client.screen.QCategoryScreen;
+import vazkii.quark.base.client.screen.WidgetWrapper;
+
 public class ConfigObject<T> extends AbstractConfigElement {
 
 	private final T defaultObj;
@@ -35,10 +39,26 @@ public class ConfigObject<T> extends AbstractConfigElement {
 	public void reset(boolean hard) {
 		currentObj = hard ? defaultObj : loadedObj;
 	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void addWidgets(QCategoryScreen parent, List<WidgetWrapper> widgets) {
+		if(currentObj instanceof Boolean) {
+			widgets.add(new WidgetWrapper(new CheckboxButton(230, 3, (ConfigObject<Boolean>) this)));
+		}
+	}
 	
 	@Override
-	public void debug(String pad, PrintStream out) {
-		super.debug(pad, out);
+	public String getSubtitle() {
+		String str = currentObj.toString();
+		if(str.length() > 30)
+			str = str.substring(0, 27) + "...";
+		return str;
+	}
+	
+	@Override
+	public void print(String pad, PrintStream out) {
+		super.print(pad, out);
 		
 		String objStr = null;
 		if(currentObj instanceof List<?>) {
@@ -73,7 +93,7 @@ public class ConfigObject<T> extends AbstractConfigElement {
 		if(!(o instanceof ConfigObject))
 			return -1;
 		
-		return ((ConfigObject<?>) o).name.compareTo(name);
+		return name.compareTo(((ConfigObject<?>) o).name);
 	}
 	
 }

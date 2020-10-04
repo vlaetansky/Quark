@@ -11,11 +11,18 @@ import java.util.function.Supplier;
 
 import org.apache.commons.lang3.text.WordUtils;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.util.text.StringTextComponent;
+import vazkii.quark.base.client.screen.CheckboxButton;
+import vazkii.quark.base.client.screen.QCategoryScreen;
+import vazkii.quark.base.client.screen.WidgetWrapper;
 import vazkii.quark.base.module.ModuleCategory;
 
 public class ConfigCategory extends AbstractConfigElement {
 
-	private List<IConfigElement> subElements = new LinkedList<>();
+	public final List<IConfigElement> subElements = new LinkedList<>();
 	
 	private Map<String, ConfigObject<Boolean>> moduleOptions = new HashMap<>();
 	
@@ -70,23 +77,34 @@ public class ConfigCategory extends AbstractConfigElement {
 	}
 
 	@Override
+	public void addWidgets(QCategoryScreen parent, List<WidgetWrapper> widgets) {
+		widgets.add(new WidgetWrapper(new Button(230, 3, 20, 20, new StringTextComponent("->"), parent.categoryLink(this))));
+	}
+
+	@Override
+	public void print(String pad, PrintStream stream) {
+		stream.println();
+		super.print(pad, stream);
+		stream.printf("%s[%s]%n", pad, path);
+		
+		final String newPad = String.format("\t%s", pad);
+		subElements.forEach(e -> e.print(newPad, stream));
+	}
+	
+	@Override
+	public String getSubtitle() {
+		int size = subElements.size();
+		return size == 1 ? "1 child" : String.format("%d children", subElements.size());
+	}
+
+	@Override
 	public int compareTo(IConfigElement o) {
 		if(o == this)
 			return 0;
 		if(!(o instanceof ConfigCategory))
 			return 1;
 		
-		return ((ConfigCategory) o).name.compareTo(name);
+		return name.compareTo(((ConfigCategory) o).name);
 	}
 
-	@Override
-	public void debug(String pad, PrintStream stream) {
-		stream.println();
-		super.debug(pad, stream);
-		stream.printf("%s[%s]%n", pad, path);
-		
-		final String newPad = String.format("\t%s", pad);
-		subElements.forEach(e -> e.debug(newPad, stream));
-	}
-	
 }

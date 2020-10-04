@@ -54,6 +54,10 @@ public final class IngameConfigHandler implements IConfigCallback {
 		return topLevelCategories.get("categories").getModuleOption(category);
 	}
 	
+	public ConfigCategory getConfigCategory(ModuleCategory category) {
+		return topLevelCategories.get(category.name);
+	}
+	
 	public void refresh() {
 		topLevelCategories.values().forEach(IConfigElement::refresh);
 	}
@@ -68,7 +72,7 @@ public final class IngameConfigHandler implements IConfigCallback {
 			PrintStream stream = new PrintStream(file);
 			
 			for(String name : topLevelCategories.keySet())
-				topLevelCategories.get(name).debug("", stream);
+				topLevelCategories.get(name).print("", stream);
 			
 			stream.close();
 		} catch (IOException e) {
