@@ -38,6 +38,7 @@
 	"quark.gui.config.nchildren": "%d children",
 	"quark.gui.config.bday": "Happy Birthday to %s!",
 	"quark.gui.config.defaultvalue": "Default: %s",
+	"quark.gui.config.missingaddon": "You're missing the necessary addon mod for this category",
 
 	"quark.category.automation": "Automation",
 	"quark.category.building": "Building",

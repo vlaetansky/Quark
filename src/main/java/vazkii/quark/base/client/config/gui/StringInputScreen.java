@@ -11,7 +11,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import vazkii.quark.base.client.config.obj.AbstractStringInputObject;
 
-public class QStringInputScreen<T> extends QScreen {
+public class StringInputScreen<T> extends AbstractQScreen {
 
 	private final AbstractStringInputObject<T> object;
 	
@@ -19,7 +19,7 @@ public class QStringInputScreen<T> extends QScreen {
 	private Button resetButton, doneButton;
 	private boolean errored = false;
 	
-	public QStringInputScreen(Screen parent, AbstractStringInputObject<T> object) {
+	public StringInputScreen(Screen parent, AbstractStringInputObject<T> object) {
 		super(parent);
 		this.object = object;
 	}
@@ -78,6 +78,14 @@ public class QStringInputScreen<T> extends QScreen {
 		}
 		
 		return super.keyPressed(key, mouseX, mouseY);
+	}
+	
+	@Override
+	public boolean mouseClicked(double x, double y, int button) {
+		if(input.mouseClicked(x, y, button))
+			return true;
+		
+		return super.mouseClicked(x, y, button);
 	}
 	
 	private void setDefault(Button button) {

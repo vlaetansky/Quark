@@ -1,6 +1,5 @@
 package vazkii.quark.base.client.config.gui.widget;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -9,28 +8,22 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.list.ExtendedList;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 import vazkii.quark.base.client.TopLayerTooltipHandler;
 import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.client.config.ConfigObject;
 import vazkii.quark.base.client.config.IConfigElement;
-import vazkii.quark.base.client.config.gui.QCategoryScreen;
-import vazkii.quark.base.client.config.gui.WidgetWrapper;
+import vazkii.quark.base.client.config.gui.CategoryScreen;
 
-public class ConfigElementList extends ExtendedList<ConfigElementList.Entry> {
+public class ConfigElementList extends ScrollableWidgetList<CategoryScreen, ConfigElementList.Entry> {
 
-	private final QCategoryScreen parent;
-
-	public ConfigElementList(QCategoryScreen parent, Consumer<Widget> widgetConsumer) {
-		super(Minecraft.getInstance(), parent.width, parent.height, 40, parent.height - 40, 30);
-		this.parent = parent;
-		
-		populate(widgetConsumer);
+	public ConfigElementList(CategoryScreen parent) {
+		super(parent);
 	}
-	
-	private void populate(Consumer<Widget> widgetConsumer) {
+
+	@Override
+	protected void findEntries() {
 		boolean isObject = true;
 		for(IConfigElement elm : parent.category.subElements) {
 			boolean wasObject = isObject;
@@ -41,61 +34,38 @@ public class ConfigElementList extends ExtendedList<ConfigElementList.Entry> {
 			
 			Entry entry = new Entry(parent, elm); 
 			addEntry(entry);
-			entry.commitWidgets(widgetConsumer);
-		}
+		}		
 	}
 
-	@Override
-	protected int getScrollbarPosition() {
-		return super.getScrollbarPosition() + 20;
-	}
-
-	@Override
-	public int getRowWidth() {
-		return super.getRowWidth() + 50;
-	}
-
-	@Override
-	protected boolean isFocused() {
-		return false;
-	}
-
-	public static final class Entry extends ExtendedList.AbstractListEntry<Entry> {
+	public static final class Entry extends ScrollableWidgetList.Entry<Entry> {
 
 		private final IConfigElement element;
-		
-		private List<WidgetWrapper> children = new ArrayList<>();
 
-		public Entry(QCategoryScreen parent, IConfigElement element) {
+		public Entry(CategoryScreen parent, IConfigElement element) {
 			this.element = element;
 			
 			if(element != null)
 				element.addWidgets(parent, children);
 		}
 		
-		public void commitWidgets(Consumer<Widget> consumer) {
-			children.stream().map(c -> c.widget).forEach(consumer);
-		}
-		
 		@Override
 		public void render(MatrixStack mstack, int index, int rowTop, int rowLeft, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float pticks) {
+			super.render(mstack, index, rowTop, rowLeft, rowWidth, rowHeight, mouseX, mouseY, hovered, pticks);
+			
 			Minecraft mc = Minecraft.getInstance();
 			
 			if(element != null) {
+				int left = rowLeft + 10;
+				int top = rowTop + 4;
+				
 				int effIndex = index + 1;
 				if(element instanceof ConfigCategory)
 					effIndex--; // compensate for the divider
-				
-				if(effIndex % 2 == 0)
-					fill(mstack, rowLeft, rowTop, rowLeft + rowWidth, rowTop + rowHeight, 0x66000000);
-
-				int left = rowLeft + 10;
-				int top = rowTop + 4;
+				drawBackground(mstack, effIndex, rowTop, rowLeft, rowWidth, rowHeight, mouseX, mouseY, hovered);
 				
 				String name = element.getGuiDisplayName();
 				if(element.isDirty())
 					name += TextFormatting.GOLD + "*";
-				
 				
 				int len = mc.fontRenderer.getStringWidth(name);
 				int maxLen = rowWidth - 85;
@@ -132,10 +102,6 @@ public class ConfigElementList extends ExtendedList<ConfigElementList.Entry> {
 				
 				mc.fontRenderer.drawStringWithShadow(mstack, name, left, top, 0xFFFFFF);
 				mc.fontRenderer.drawStringWithShadow(mstack, element.getSubtitle(), left, top + 10, 0x999999);
-				
-				children.forEach(c -> c.updatePosition(rowLeft, rowTop));
-				
-
 			} else {
 				String s = I18n.format("quark.gui.config.subcategories");
 				mc.fontRenderer.drawStringWithShadow(mstack, s, rowLeft + (rowWidth - mc.fontRenderer.getStringWidth(s)) / 2, rowTop + 7, 0x6666FF);

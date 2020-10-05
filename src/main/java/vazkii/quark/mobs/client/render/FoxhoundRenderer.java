@@ -22,9 +22,14 @@ import vazkii.quark.mobs.client.model.FoxhoundModel;
 import vazkii.quark.mobs.entity.FoxhoundEntity;
 
 public class FoxhoundRenderer extends MobRenderer<FoxhoundEntity, FoxhoundModel> {
-	private static final ResourceLocation FOXHOUND_IDLE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/foxhound/idle.png");
-	private static final ResourceLocation FOXHOUND_HOSTILE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/foxhound/hostile.png");
-	private static final ResourceLocation FOXHOUND_SLEEPING = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/foxhound/sleeping.png");
+	
+	private static final ResourceLocation FOXHOUND_IDLE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/foxhound/red/idle.png");
+	private static final ResourceLocation FOXHOUND_HOSTILE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/foxhound/red/hostile.png");
+	private static final ResourceLocation FOXHOUND_SLEEPING = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/foxhound/red/sleeping.png");
+	
+	private static final ResourceLocation SOULHOUND_IDLE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/foxhound/blue/idle.png");
+	private static final ResourceLocation SOULHOUND_HOSTILE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/foxhound/blue/hostile.png");
+	private static final ResourceLocation SOULHOUND_SLEEPING = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/foxhound/blue/sleeping.png");
 
 	public FoxhoundRenderer(EntityRendererManager render) {
 		super(render, new FoxhoundModel(), 0.5F);
@@ -34,6 +39,9 @@ public class FoxhoundRenderer extends MobRenderer<FoxhoundEntity, FoxhoundModel>
 	@Nullable
 	@Override
 	public ResourceLocation getEntityTexture(@Nonnull FoxhoundEntity entity) {
+		if(entity.isBlue())
+			return entity.isSleeping() ? SOULHOUND_SLEEPING : (entity.func_230256_F__() > 0 ? SOULHOUND_HOSTILE : SOULHOUND_IDLE);
+
 		return entity.isSleeping() ? FOXHOUND_SLEEPING : (entity.func_230256_F__() > 0 ? FOXHOUND_HOSTILE : FOXHOUND_IDLE);
 	}
 }

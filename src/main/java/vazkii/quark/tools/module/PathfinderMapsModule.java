@@ -59,7 +59,6 @@ public class PathfinderMapsModule extends Module {
 	@Config
 	public static int xpFromTrade = 5;
 
-
 	private static String getBiomeDescriptor(Biome biome) {
 		ResourceLocation rl = biome.getRegistryName();
 		if(rl == null)
@@ -69,20 +68,18 @@ public class PathfinderMapsModule extends Module {
 
 	@Override
 	public void construct() {
-		loadTradeInfo(Biomes.SNOWY_TUNDRA, true, 2, 8, 14, 0x7FE4FF);
-		loadTradeInfo(Biomes.MOUNTAINS, true, 2, 8, 14, 0x8A8A8A);
-		loadTradeInfo(Biomes.DARK_FOREST, true, 2, 8, 14, 0x00590A);
-		loadTradeInfo(Biomes.DESERT, true, 2, 8, 14, 0xCCB94E);
-		loadTradeInfo(Biomes.SAVANNA, true, 2, 8, 14, 0x9BA562);
-
-		loadTradeInfo(Biomes.SWAMP, true, 3, 12, 18, 0x22370F);
-		loadTradeInfo(Biomes.GIANT_TREE_TAIGA, true, 3, 12, 18, 0x5B421F);
-		loadTradeInfo(Biomes.FLOWER_FOREST, true, 3, 12, 18, 0xDC7BEA);
-
-		loadTradeInfo(Biomes.JUNGLE, true, 4, 16, 22, 0x22B600);
-		loadTradeInfo(Biomes.BAMBOO_JUNGLE, true, 4, 16, 22, 0x3DE217);
-		loadTradeInfo(Biomes.BADLANDS, true, 4, 16, 22, 0xC67F22);
-
+		loadTradeInfo(Biomes.SNOWY_TUNDRA, true, 4, 8, 14, 0x7FE4FF);
+		loadTradeInfo(Biomes.MOUNTAINS, true, 4, 8, 14, 0x8A8A8A);
+		loadTradeInfo(Biomes.DARK_FOREST, true, 4, 8, 14, 0x00590A);
+		loadTradeInfo(Biomes.DESERT, true, 4, 8, 14, 0xCCB94E);
+		loadTradeInfo(Biomes.SAVANNA, true, 4, 8, 14, 0x9BA562);
+		loadTradeInfo(Biomes.SWAMP, true, 4, 12, 18, 0x22370F);
+		loadTradeInfo(Biomes.GIANT_TREE_TAIGA, true, 4, 12, 18, 0x5B421F);
+		
+		loadTradeInfo(Biomes.FLOWER_FOREST, true, 5, 12, 18, 0xDC7BEA);
+		loadTradeInfo(Biomes.JUNGLE, true, 5, 16, 22, 0x22B600);
+		loadTradeInfo(Biomes.BAMBOO_JUNGLE, true, 5, 16, 22, 0x3DE217);
+		loadTradeInfo(Biomes.BADLANDS, true, 5, 16, 22, 0xC67F22);
 		loadTradeInfo(Biomes.MUSHROOM_FIELDS, true, 5, 20, 26, 0x4D4273);
 		loadTradeInfo(Biomes.ICE_SPIKES, true, 5, 20, 26, 0x41D6C9);
 	}

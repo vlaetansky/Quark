@@ -6,19 +6,19 @@ import java.util.function.Supplier;
 
 import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.client.config.ConfigObject;
-import vazkii.quark.base.client.config.gui.QCategoryScreen;
+import vazkii.quark.base.client.config.gui.CategoryScreen;
 import vazkii.quark.base.client.config.gui.WidgetWrapper;
 import vazkii.quark.base.client.config.gui.widget.PencilButton;
 
-public class ListObject extends ConfigObject<List<?>> {
+public class ListObject extends ConfigObject<List<String>> {
 
-	public ListObject(String name, String comment, List<?> defaultObj, Supplier<List<?>> objGetter, Predicate<Object> restriction, ConfigCategory parent) {
+	public ListObject(String name, String comment, List<String> defaultObj, Supplier<List<String>> objGetter, Predicate<Object> restriction, ConfigCategory parent) {
 		super(name, comment, defaultObj, objGetter, restriction, parent);
 	}
 
 	@Override
-	public void addWidgets(QCategoryScreen parent, List<WidgetWrapper> widgets) {
-		widgets.add(new WidgetWrapper(new PencilButton(230, 3, b -> {}))); // TODO
+	public void addWidgets(CategoryScreen parent, List<WidgetWrapper> widgets) {
+		widgets.add(new WidgetWrapper(new PencilButton(230, 3, parent.listInput(this))));
 	}
 	
 	@Override
@@ -27,7 +27,7 @@ public class ListObject extends ConfigObject<List<?>> {
 		builder.append("[");
 		
 		boolean first = true;
-		for(Object obj : currentObj) {
+		for(String obj : currentObj) {
 			if(!first)
 				builder.append(", ");
 			

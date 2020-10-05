@@ -41,6 +41,7 @@ public class CrabsModule extends Module {
 
 	public static EntityType<CrabEntity> crabType;
 
+	@Config
 	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(5, 1, 3, new BiomeTypeConfig(false, BiomeDictionary.Type.BEACH));
 
 	@Config(flag = "crab_brewing")

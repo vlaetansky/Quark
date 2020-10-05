@@ -9,12 +9,13 @@ import net.minecraft.util.Util;
 import net.minecraft.util.text.StringTextComponent;
 import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.client.config.obj.AbstractStringInputObject;
+import vazkii.quark.base.client.config.obj.ListObject;
 
-public abstract class QScreen extends Screen {
+public abstract class AbstractQScreen extends Screen {
 	
 	private final Screen parent;
 	
-	public QScreen(Screen parent) {
+	public AbstractQScreen(Screen parent) {
 		super(new StringTextComponent(""));
 		this.parent = parent;
 	}
@@ -33,12 +34,15 @@ public abstract class QScreen extends Screen {
 	}
 	
 	public IPressable categoryLink(ConfigCategory category) {
-		return b -> minecraft.displayGuiScreen(new QCategoryScreen(this, category));
+		return b -> minecraft.displayGuiScreen(new CategoryScreen(this, category));
 	}
 	
 	public <T> IPressable stringInput(AbstractStringInputObject<T> object) {
-		return b -> minecraft.displayGuiScreen(new QStringInputScreen<T>(this, object));
+		return b -> minecraft.displayGuiScreen(new StringInputScreen<T>(this, object));
 	}
 	
+	public IPressable listInput(ListObject object) {
+		return b -> minecraft.displayGuiScreen(new ListInputScreen(this, object));
+	}
 
 }

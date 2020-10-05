@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 
 import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.client.config.ConfigObject;
-import vazkii.quark.base.client.config.gui.QCategoryScreen;
+import vazkii.quark.base.client.config.gui.CategoryScreen;
 import vazkii.quark.base.client.config.gui.WidgetWrapper;
 import vazkii.quark.base.client.config.gui.widget.PencilButton;
 
@@ -19,7 +19,7 @@ public abstract class AbstractStringInputObject<T> extends ConfigObject<T> {
 	}
 
 	@Override
-	public void addWidgets(QCategoryScreen parent, List<WidgetWrapper> widgets) {
+	public void addWidgets(CategoryScreen parent, List<WidgetWrapper> widgets) {
 		widgets.add(new WidgetWrapper(new PencilButton(230, 3, parent.stringInput(this))));
 	}
 	

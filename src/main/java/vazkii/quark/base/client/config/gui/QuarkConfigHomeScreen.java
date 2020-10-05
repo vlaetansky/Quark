@@ -1,7 +1,5 @@
 package vazkii.quark.base.client.config.gui;
 
-import org.apache.commons.lang3.text.WordUtils;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.gui.screen.Screen;
@@ -10,6 +8,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.fml.ModList;
 import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.client.config.IngameConfigHandler;
 import vazkii.quark.base.client.config.gui.widget.CheckboxButton;
@@ -18,9 +17,9 @@ import vazkii.quark.base.client.config.gui.widget.IconButton;
 import vazkii.quark.base.handler.ContributorRewardHandler;
 import vazkii.quark.base.module.ModuleCategory;
 
-public class QHomeScreen extends QScreen {
+public class QuarkConfigHomeScreen extends AbstractQScreen {
 
-	public QHomeScreen(Screen parent) {
+	public QuarkConfigHomeScreen(Screen parent) {
 		super(parent);
 	}
 
@@ -35,21 +34,29 @@ public class QHomeScreen extends QScreen {
 		int vStart = 60; 
 
 		int i = 0;
-		for(ModuleCategory category : ModuleCategory.values())
-			if(category.showInGui) {
-				int x = left + (bWidth + pad) * (i % 2);
-				int y = vStart + (i / 2) * vpad;
+		for(ModuleCategory category : ModuleCategory.values()) {
+			int x = left + (bWidth + pad) * (i % 2);
+			int y = vStart + (i / 2) * vpad;
 
-				ConfigCategory configCategory = IngameConfigHandler.INSTANCE.getConfigCategory(category);
-				String name = I18n.format("quark.category." + configCategory.name);
+			ConfigCategory configCategory = IngameConfigHandler.INSTANCE.getConfigCategory(category);
+			String name = I18n.format("quark.category." + configCategory.name);
 
-				if(configCategory.isDirty())
-					name += TextFormatting.GOLD + "*";
+			if(configCategory.isDirty())
+				name += TextFormatting.GOLD + "*";
+			
+			Button icon = new IconButton(x, y, bWidth - 20, 20, new TranslationTextComponent(name), new ItemStack(category.item), categoryLink(configCategory));
+			Button checkbox = new CheckboxButton(x + bWidth - 20, y, IngameConfigHandler.INSTANCE.getCategoryEnabledObject(category)); 
 
-				addButton(new IconButton(x, y, bWidth - 20, 20, new TranslationTextComponent(name), new ItemStack(category.item), categoryLink(configCategory)));
-				addButton(new CheckboxButton(x + bWidth - 20, y, IngameConfigHandler.INSTANCE.getCategoryEnabledObject(category)));
-				i++;
+			addButton(icon);
+			addButton(checkbox);
+			
+			if(category.requiredMod != null && !ModList.get().isLoaded(category.requiredMod)) {
+				icon.active = false;
+				checkbox.active = false;
 			}
+			
+			i++;
+		}
 
 		pad = 3;
 		vpad = 23;
@@ -58,7 +65,7 @@ public class QHomeScreen extends QScreen {
 		vStart = height - 30;
 
 		addButton(new Button(left, vStart, bWidth, 20, new TranslationTextComponent("quark.gui.config.general"), categoryLink(IngameConfigHandler.INSTANCE.getConfigCategory(null))));
-//		addButton(new Button(left + bWidth + pad, vStart, bWidth, 20, new TranslationTextComponent("quark.gui.config.import"), this::returnToParent));
+		//		addButton(new Button(left + bWidth + pad, vStart, bWidth, 20, new TranslationTextComponent("quark.gui.config.import"), this::returnToParent));
 		addButton(new Button(left + bWidth + pad, vStart, bWidth, 20, new TranslationTextComponent("quark.gui.config.save"), this::commit));
 
 		bWidth = 71;
@@ -70,12 +77,12 @@ public class QHomeScreen extends QScreen {
 		addButton(new ColorTextButton(left + (bWidth + pad) * 3, vStart - vpad, bWidth, 20, new TranslationTextComponent("quark.gui.config.social.reddit"), 0xff4400, webLink("https://reddit.com/r/quarkmod")));
 		addButton(new ColorTextButton(left + (bWidth + pad) * 4, vStart - vpad, bWidth, 20, new TranslationTextComponent("quark.gui.config.social.twitter"), 0x1da1f2, webLink("https://twitter.com/VazkiiMods")));
 	}
-	
+
 	public void commit(Button button) {
 		IngameConfigHandler.INSTANCE.commit();
 		returnToParent(button);
 	}
-	
+
 	@Override
 	public void render(MatrixStack mstack, int mouseX, int mouseY, float pticks) {
 		renderBackground(mstack);

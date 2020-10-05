@@ -1,10 +1,13 @@
 package vazkii.quark.mobs.module;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.WolfEntity;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ITag;
 import net.minecraft.entity.EntityType;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.api.distmarker.Dist;
@@ -14,6 +17,7 @@ import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
+import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.Module;
 import vazkii.quark.base.module.ModuleCategory;
@@ -39,7 +43,9 @@ public class FoxhoundModule extends Module {
 	public static double tameChance = 0.05;
 
 	@Config
-	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(30, 1, 2, new StrictBiomeConfig(false, "minecraft:nether_wastes", "minecraft:basalt_deltas"));
+	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(30, 1, 2, new StrictBiomeConfig(false, "minecraft:nether_wastes", "minecraft:basalt_deltas", "minecraft:soul_sand_valley"));
+	
+	public static ITag<Block> foxhoundSpawnableTag;
 	
 	@Override
 	public void construct() {
@@ -60,8 +66,10 @@ public class FoxhoundModule extends Module {
 	@Override
 	public void setup() {
 		GlobalEntityTypeAttributes.put(foxhoundType, WolfEntity.func_234233_eS_().func_233813_a_());
+		
+		foxhoundSpawnableTag = BlockTags.makeWrapperTag(Quark.MOD_ID + ":foxhound_spawnable");
 	}
-
+	
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
