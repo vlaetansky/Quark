@@ -2,7 +2,6 @@ package vazkii.quark.base.client.config.gui;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import org.lwjgl.opengl.GL11;
 
@@ -30,13 +29,9 @@ public abstract class AbstractScrollingWidgetScreen extends AbstractQScreen {
 	protected void init() {
 		super.init();
 
-		elementList = createWidgetList(w -> {
-			children.add(w);
-			scrollingWidgets.add(w);
-			if(w instanceof Button)
-				addButton(w);
-		});
+		elementList = createWidgetList();
 		children.add(elementList);
+		refresh();
 		
 		int pad = 3;
 		int bWidth = 121;
@@ -55,7 +50,19 @@ public abstract class AbstractScrollingWidgetScreen extends AbstractQScreen {
 		resetButton.active = isDirty();
 	}
 	
-	@Override
+	public void refresh() {
+		children.removeIf(scrollingWidgets::contains);
+		buttons.removeIf(scrollingWidgets::contains);
+		scrollingWidgets.clear();
+		
+		elementList.populate(w -> {
+			children.add(w);
+			scrollingWidgets.add(w);
+			if(w instanceof Button)
+				addButton(w);
+		});
+	}
+	
 	public void render(MatrixStack mstack, int mouseX, int mouseY, float pticks) {
 		scrollingWidgets.forEach(w -> w.visible = false);
 		
@@ -83,7 +90,12 @@ public abstract class AbstractScrollingWidgetScreen extends AbstractQScreen {
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 	}
 	
-	protected abstract ScrollableWidgetList<?, ?> createWidgetList(Consumer<Widget> consumer);
+	@Override
+	public boolean mouseClicked(double x, double y, int button) {
+		return super.mouseClicked(x, y, button);
+	}
+	
+	protected abstract ScrollableWidgetList<?, ?> createWidgetList();
 	protected abstract void onClickDefault(Button b);
 	protected abstract void onClickDiscard(Button b);
 	protected abstract boolean isDirty();

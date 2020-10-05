@@ -18,8 +18,8 @@ import vazkii.quark.base.client.config.gui.CategoryScreen;
 
 public class ConfigElementList extends ScrollableWidgetList<CategoryScreen, ConfigElementList.Entry> {
 
-	public ConfigElementList(CategoryScreen parent, Consumer<Widget> widgetConsumer) {
-		super(parent, widgetConsumer);
+	public ConfigElementList(CategoryScreen parent) {
+		super(parent);
 	}
 
 	@Override
@@ -35,21 +35,6 @@ public class ConfigElementList extends ScrollableWidgetList<CategoryScreen, Conf
 			Entry entry = new Entry(parent, elm); 
 			addEntry(entry);
 		}		
-	}
-
-	@Override
-	protected int getScrollbarPosition() {
-		return super.getScrollbarPosition() + 20;
-	}
-
-	@Override
-	public int getRowWidth() {
-		return super.getRowWidth() + 50;
-	}
-
-	@Override
-	protected boolean isFocused() {
-		return false;
 	}
 
 	public static final class Entry extends ScrollableWidgetList.Entry<Entry> {
@@ -70,15 +55,13 @@ public class ConfigElementList extends ScrollableWidgetList<CategoryScreen, Conf
 			Minecraft mc = Minecraft.getInstance();
 			
 			if(element != null) {
+				int left = rowLeft + 10;
+				int top = rowTop + 4;
+				
 				int effIndex = index + 1;
 				if(element instanceof ConfigCategory)
 					effIndex--; // compensate for the divider
-				
-				if(effIndex % 2 == 0)
-					fill(mstack, rowLeft, rowTop, rowLeft + rowWidth, rowTop + rowHeight, 0x66000000);
-
-				int left = rowLeft + 10;
-				int top = rowTop + 4;
+				drawBackground(mstack, effIndex, rowTop, rowLeft, rowWidth, rowHeight, mouseX, mouseY, hovered);
 				
 				String name = element.getGuiDisplayName();
 				if(element.isDirty())

@@ -1,11 +1,8 @@
 package vazkii.quark.base.client.config.gui;
 
-import java.util.function.Consumer;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
@@ -46,8 +43,8 @@ public class CategoryScreen extends AbstractScrollingWidgetScreen {
 	}
 
 	@Override
-	protected ScrollableWidgetList<?, ?> createWidgetList(Consumer<Widget> consumer) {
-		return new ConfigElementList(this, consumer);
+	protected ScrollableWidgetList<?, ?> createWidgetList() {
+		return new ConfigElementList(this);
 	}
 
 	@Override

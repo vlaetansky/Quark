@@ -80,6 +80,14 @@ public class StringInputScreen<T> extends AbstractQScreen {
 		return super.keyPressed(key, mouseX, mouseY);
 	}
 	
+	@Override
+	public boolean mouseClicked(double x, double y, int button) {
+		if(input.mouseClicked(x, y, button))
+			return true;
+		
+		return super.mouseClicked(x, y, button);
+	}
+	
 	private void setDefault(Button button) {
 		object.reset(true);
 		update();

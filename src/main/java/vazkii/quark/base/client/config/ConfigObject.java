@@ -46,8 +46,8 @@ public abstract class ConfigObject<T> extends AbstractConfigElement {
 		else if(defaultObj instanceof Double)
 			return new DoubleObject(name, comment, (Double) defaultObj, (Supplier<Double>) objGetter, restriction, parent);
 		
-		else if(defaultObj instanceof List<?>)
-			return new ListObject(name, comment, (List<?>) defaultObj, (Supplier<List<?>>) objGetter, restriction, parent);
+		else if(defaultObj instanceof List)
+			return new ListObject(name, comment, (List<String>) defaultObj, (Supplier<List<String>>) objGetter, restriction, parent);
 		
 		else throw new IllegalArgumentException(defaultObj + " isn't a valid config object.");
 	}

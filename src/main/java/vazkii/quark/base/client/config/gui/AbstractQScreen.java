@@ -9,6 +9,7 @@ import net.minecraft.util.Util;
 import net.minecraft.util.text.StringTextComponent;
 import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.client.config.obj.AbstractStringInputObject;
+import vazkii.quark.base.client.config.obj.ListObject;
 
 public abstract class AbstractQScreen extends Screen {
 	
@@ -40,5 +41,8 @@ public abstract class AbstractQScreen extends Screen {
 		return b -> minecraft.displayGuiScreen(new StringInputScreen<T>(this, object));
 	}
 	
+	public IPressable listInput(ListObject object) {
+		return b -> minecraft.displayGuiScreen(new ListInputScreen(this, object));
+	}
 
 }
