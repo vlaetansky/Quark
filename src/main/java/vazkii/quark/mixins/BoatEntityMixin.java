@@ -19,12 +19,12 @@ public class BoatEntityMixin {
 	}
 
 	@Inject(method = "attackEntityFrom", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/item/BoatEntity;remove()V"))
-	private void onRemove0(CallbackInfoReturnable<Boolean> callbackInfo) {
+	private void attackEntityFrom$dropChain(CallbackInfoReturnable<Boolean> callbackInfo) {
 		AsmHooks.dropChain((BoatEntity) (Object) this);
 	}
 
 	@Inject(method = "updateFallState", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/item/BoatEntity;remove()V"))
-	private void onRemove1(CallbackInfo callbackInfo) {
+	private void updateFallState$dropChain(CallbackInfo callbackInfo) {
 		AsmHooks.dropChain((BoatEntity) (Object) this);
 	}
 }

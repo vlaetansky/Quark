@@ -15,7 +15,7 @@ import vazkii.quark.base.handler.AsmHooks;
 public class RenderTypeBuffersMixin {
 
 	@Inject(method = "put", at = @At("HEAD"))
-	private static void put(Object2ObjectLinkedOpenHashMap<RenderType, BufferBuilder> mapBuildersIn, RenderType renderTypeIn, CallbackInfo callbackInfo) {
+	private static void addGlintTypes(Object2ObjectLinkedOpenHashMap<RenderType, BufferBuilder> mapBuildersIn, RenderType renderTypeIn, CallbackInfo callbackInfo) {
 		AsmHooks.addGlintTypes(mapBuildersIn);
 	}
 }

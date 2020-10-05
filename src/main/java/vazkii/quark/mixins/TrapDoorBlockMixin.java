@@ -16,7 +16,7 @@ import vazkii.quark.base.handler.AsmHooks;
 public class TrapDoorBlockMixin {
 
 	@Inject(method = "isLadder", at = @At("RETURN"), cancellable = true, remap = false)
-	private void isLadder(BlockState state, IWorldReader world, BlockPos pos, LivingEntity entity, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
+	private void isTrapdoorLadder(BlockState state, IWorldReader world, BlockPos pos, LivingEntity entity, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
 		callbackInfoReturnable.setReturnValue(AsmHooks.isTrapdoorLadder(callbackInfoReturnable.getReturnValue(), world, pos));
 	}
 }

@@ -23,7 +23,7 @@ public class ServerWorldMixin {
 	}
 
 	@Inject(method = "playEvent", at = @At("HEAD"))
-	private void playEvent(PlayerEntity player, int type, BlockPos pos, int data, CallbackInfo callbackInfo) {
+	private void rave(PlayerEntity player, int type, BlockPos pos, int data, CallbackInfo callbackInfo) {
 		AsmHooks.rave((ServerWorld) (Object) this, pos, type, data);
 	}
 }

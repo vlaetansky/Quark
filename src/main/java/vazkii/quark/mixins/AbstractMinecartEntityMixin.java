@@ -18,12 +18,12 @@ public class AbstractMinecartEntityMixin {
 	}
 
 	@Inject(method = "attackEntityFrom", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/item/minecart/AbstractMinecartEntity;remove()V"))
-	private void recordMotion0(CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
+	private void attackEntityFrom$recordMotion(CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
 		AsmHooks.recordMotion((AbstractMinecartEntity) (Object) this);
 	}
 
 	@Inject(method = "killMinecart", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/item/minecart/AbstractMinecartEntity;remove()V"))
-	private void recordMotion1(CallbackInfo callbackInfo) {
+	private void killMinecart$recordMotion(CallbackInfo callbackInfo) {
 		AsmHooks.recordMotion((AbstractMinecartEntity) (Object) this);
 	}
 }

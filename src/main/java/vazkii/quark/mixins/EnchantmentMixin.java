@@ -13,7 +13,7 @@ import vazkii.quark.base.handler.AsmHooks;
 public class EnchantmentMixin {
 
 	@Inject(method = "canApply", at = @At("RETURN"), cancellable = true)
-	private void canPiercingApply(ItemStack stack, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
+	private void canApply(ItemStack stack, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
 		if (!callbackInfoReturnable.getReturnValue()) {
 			Enchantment enchantment = (Enchantment) (Object) this;
 			callbackInfoReturnable.setReturnValue(AsmHooks.canPiercingApply(enchantment, stack) || AsmHooks.canFortuneApply(enchantment, stack));

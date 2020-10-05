@@ -13,7 +13,7 @@ import vazkii.quark.base.handler.AsmHooks;
 public class PiercingEnchantmentMixin {
 
 	@Inject(method = "canApplyTogether", at = @At("RETURN"), cancellable = true)
-	private void canApplyTogether(Enchantment enchantment, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
+	private void isNotEfficiency(Enchantment enchantment, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
 		if (callbackInfoReturnable.getReturnValue()) {
 			callbackInfoReturnable.setReturnValue(AsmHooks.isNotEfficiency(enchantment));
 		}
