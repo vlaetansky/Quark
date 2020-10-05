@@ -43,7 +43,7 @@ public class TallowAndCandlesModule extends Module {
 	@Config
 	@Config.Min(0)
 	@Config.Max(15)
-	public static double enchantPower = 0.5;
+	public static double enchantPower = 1;
 
 	public static Item tallow;
 	public static Block tallow_block;
