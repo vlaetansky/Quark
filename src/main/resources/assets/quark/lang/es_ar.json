@@ -38,7 +38,7 @@
 	"quark.gui.config.nchildren": "%d críos",
 	"quark.gui.config.bday": "¡Feliz cumpleaños a %s!",
 	"quark.gui.config.defaultvalue": "Por defecto: %s",
-	"quark.gui.config.missingaddon": "No tienes el addon necesario para esta caregoría",
+	"quark.gui.config.missingaddon": "No tenés el addon necesario para esta caregoría",
 
 	"quark.category.automation": "Automatización",
 	"quark.category.building": "Construcción",
