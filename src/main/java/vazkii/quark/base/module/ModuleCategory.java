@@ -5,34 +5,39 @@ import java.util.List;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import vazkii.quark.base.Quark;
 
 public enum ModuleCategory {
 
 	// Categories
-	AUTOMATION("automation", true, Items.REDSTONE),
-	BUILDING("building", true, Items.BRICKS),
-	MANAGEMENT("management", true, Items.CHEST),
-	TOOLS("tools", true, Items.IRON_PICKAXE),
-	TWEAKS("tweaks", true, Items.NAUTILUS_SHELL),
-	WORLD("world", true, Items.GRASS_BLOCK),
-	MOBS("mobs", true, Items.PIG_SPAWN_EGG),
-	CLIENT("client", true, Items.ENDER_EYE),
-	ODDITIES("oddities", true, Items.CHORUS_FRUIT),
-	EXPERIMENTAL("experimental", true, Items.TNT);
+	AUTOMATION("automation", Items.REDSTONE),
+	BUILDING("building", Items.BRICKS),
+	MANAGEMENT("management", Items.CHEST),
+	TOOLS("tools", Items.IRON_PICKAXE),
+	TWEAKS("tweaks", Items.NAUTILUS_SHELL),
+	WORLD("world", Items.GRASS_BLOCK),
+	MOBS("mobs", Items.PIG_SPAWN_EGG),
+	CLIENT("client", Items.ENDER_EYE),
+	ODDITIES("oddities", Items.CHORUS_FRUIT, Quark.ODDITIES_ID),
+	EXPERIMENTAL("experimental", Items.TNT);
 	
 	public final String name;
-	public final boolean showInGui;
 	public final Item item;
+	public final String requiredMod;
 	
 	public boolean enabled;
 	
 	private List<Module> ownedModules = new ArrayList<>();
 	
-	ModuleCategory(String name, boolean showInGui, Item item) {
+	ModuleCategory(String name, Item item, String requiredMod) {
 		this.name = name;
-		this.showInGui = showInGui;
 		this.item = item;
+		this.requiredMod = requiredMod;
 		this.enabled = true;
+	}
+	
+	ModuleCategory(String name, Item item) {
+		this(name, item, null);
 	}
 	
 	public void addModule(Module module) {

@@ -31,7 +31,7 @@ public class CheckboxButton extends Button {
 		
 		if(ContributorRewardHandler.localPatronTier > 0) {
 			RenderSystem.color3f(1F, 1F, 1F);
-			boolean enabled = checkedSupplier.get();
+			boolean enabled = checkedSupplier.get() && active;
 			int u = enabled ? 0 : 16;
 			int v = 93;
 			
