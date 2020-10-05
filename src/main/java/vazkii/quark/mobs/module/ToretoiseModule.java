@@ -36,7 +36,7 @@ public class ToretoiseModule extends Module {
 	public static DimensionConfig dimensions = DimensionConfig.overworld(false);
 	
 	@Config 
-	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(40, 1, 1, new BiomeTypeConfig(true, BiomeDictionary.Type.VOID, BiomeDictionary.Type.NETHER, BiomeDictionary.Type.END));
+	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(100, 1, 1, new BiomeTypeConfig(true, BiomeDictionary.Type.VOID, BiomeDictionary.Type.NETHER, BiomeDictionary.Type.END));
 	
 	@Override
 	public void construct() {
