@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 
 import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.client.config.ConfigObject;
-import vazkii.quark.base.client.config.gui.QCategoryScreen;
+import vazkii.quark.base.client.config.gui.CategoryScreen;
 import vazkii.quark.base.client.config.gui.WidgetWrapper;
 import vazkii.quark.base.client.config.gui.widget.PencilButton;
 
@@ -17,7 +17,7 @@ public class ListObject extends ConfigObject<List<?>> {
 	}
 
 	@Override
-	public void addWidgets(QCategoryScreen parent, List<WidgetWrapper> widgets) {
+	public void addWidgets(CategoryScreen parent, List<WidgetWrapper> widgets) {
 		widgets.add(new WidgetWrapper(new PencilButton(230, 3, b -> {}))); // TODO
 	}
 	

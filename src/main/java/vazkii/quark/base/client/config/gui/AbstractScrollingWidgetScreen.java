@@ -15,14 +15,14 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.TranslationTextComponent;
 import vazkii.quark.base.client.config.gui.widget.ScrollableWidgetList;
 
-public abstract class QScrollingWidgetScreen extends QScreen {
+public abstract class AbstractScrollingWidgetScreen extends AbstractQScreen {
 
 	private List<Widget> scrollingWidgets = new LinkedList<>();
 	private ScrollableWidgetList<?, ?> elementList;
 	
 	private Button resetButton;
 	
-	public QScrollingWidgetScreen(Screen parent) {
+	public AbstractScrollingWidgetScreen(Screen parent) {
 		super(parent);
 	}
 	

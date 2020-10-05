@@ -14,11 +14,11 @@ import vazkii.quark.base.client.TopLayerTooltipHandler;
 import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.client.config.ConfigObject;
 import vazkii.quark.base.client.config.IConfigElement;
-import vazkii.quark.base.client.config.gui.QCategoryScreen;
+import vazkii.quark.base.client.config.gui.CategoryScreen;
 
-public class ConfigElementList extends ScrollableWidgetList<QCategoryScreen, ConfigElementList.Entry> {
+public class ConfigElementList extends ScrollableWidgetList<CategoryScreen, ConfigElementList.Entry> {
 
-	public ConfigElementList(QCategoryScreen parent, Consumer<Widget> widgetConsumer) {
+	public ConfigElementList(CategoryScreen parent, Consumer<Widget> widgetConsumer) {
 		super(parent, widgetConsumer);
 	}
 
@@ -56,7 +56,7 @@ public class ConfigElementList extends ScrollableWidgetList<QCategoryScreen, Con
 
 		private final IConfigElement element;
 
-		public Entry(QCategoryScreen parent, IConfigElement element) {
+		public Entry(CategoryScreen parent, IConfigElement element) {
 			this.element = element;
 			
 			if(element != null)

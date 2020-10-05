@@ -13,12 +13,12 @@ import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.client.config.gui.widget.ConfigElementList;
 import vazkii.quark.base.client.config.gui.widget.ScrollableWidgetList;
 
-public class QCategoryScreen extends QScrollingWidgetScreen {
+public class CategoryScreen extends AbstractScrollingWidgetScreen {
 
 	public final ConfigCategory category;
 	private String breadcrumbs;
 	
-	public QCategoryScreen(Screen parent, ConfigCategory category) {
+	public CategoryScreen(Screen parent, ConfigCategory category) {
 		super(parent);
 		this.category = category;
 	}

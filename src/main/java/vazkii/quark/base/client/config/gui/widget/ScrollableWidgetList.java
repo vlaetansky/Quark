@@ -9,10 +9,10 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.list.ExtendedList;
-import vazkii.quark.base.client.config.gui.QScrollingWidgetScreen;
+import vazkii.quark.base.client.config.gui.AbstractScrollingWidgetScreen;
 import vazkii.quark.base.client.config.gui.WidgetWrapper;
 
-public abstract class ScrollableWidgetList<S extends QScrollingWidgetScreen, E extends ScrollableWidgetList.Entry<E>> extends ExtendedList<E> {
+public abstract class ScrollableWidgetList<S extends AbstractScrollingWidgetScreen, E extends ScrollableWidgetList.Entry<E>> extends ExtendedList<E> {
 
 	public final S parent;
 	

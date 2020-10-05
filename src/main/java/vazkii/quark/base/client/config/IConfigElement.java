@@ -3,7 +3,7 @@ package vazkii.quark.base.client.config;
 import java.io.PrintStream;
 import java.util.List;
 
-import vazkii.quark.base.client.config.gui.QCategoryScreen;
+import vazkii.quark.base.client.config.gui.CategoryScreen;
 import vazkii.quark.base.client.config.gui.WidgetWrapper;
 
 public interface IConfigElement extends Comparable<IConfigElement> {
@@ -20,6 +20,6 @@ public interface IConfigElement extends Comparable<IConfigElement> {
 	public void reset(boolean hard);
 	public void print(String pad, PrintStream out);
 	
-	public void addWidgets(QCategoryScreen parent, List<WidgetWrapper> widgets);
+	public void addWidgets(CategoryScreen parent, List<WidgetWrapper> widgets);
 	
 }

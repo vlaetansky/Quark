@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 import org.apache.commons.lang3.text.WordUtils;
 
 import net.minecraft.client.resources.I18n;
-import vazkii.quark.base.client.config.gui.QCategoryScreen;
+import vazkii.quark.base.client.config.gui.CategoryScreen;
 import vazkii.quark.base.client.config.gui.WidgetWrapper;
 import vazkii.quark.base.client.config.gui.widget.PencilButton;
 import vazkii.quark.base.module.ModuleCategory;
@@ -104,7 +104,7 @@ public class ConfigCategory extends AbstractConfigElement {
 	}
 
 	@Override
-	public void addWidgets(QCategoryScreen parent, List<WidgetWrapper> widgets) {
+	public void addWidgets(CategoryScreen parent, List<WidgetWrapper> widgets) {
 		widgets.add(new WidgetWrapper(new PencilButton(230, 3, parent.categoryLink(this))));
 	}
 

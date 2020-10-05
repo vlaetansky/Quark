@@ -20,7 +20,7 @@ import net.minecraft.util.text.TextFormatting;
 import vazkii.arl.util.ClientTicker;
 import vazkii.quark.base.client.TopLayerTooltipHandler;
 import vazkii.quark.base.client.config.IngameConfigHandler;
-import vazkii.quark.base.client.config.gui.QHomeScreen;
+import vazkii.quark.base.client.config.gui.QuarkConfigHomeScreen;
 import vazkii.quark.base.handler.ContributorRewardHandler;
 import vazkii.quark.base.handler.MiscUtil;
 
@@ -102,7 +102,7 @@ public class QButton extends Button {
 	}
 	
 	public static void click(Button b) {
-		Minecraft.getInstance().displayGuiScreen(new QHomeScreen(Minecraft.getInstance().currentScreen));
+		Minecraft.getInstance().displayGuiScreen(new QuarkConfigHomeScreen(Minecraft.getInstance().currentScreen));
 		IngameConfigHandler.INSTANCE.debug();
 	}
 	
