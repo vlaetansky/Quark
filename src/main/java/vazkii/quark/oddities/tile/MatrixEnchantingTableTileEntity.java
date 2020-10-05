@@ -28,6 +28,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.api.IEnchantmentInfluencer;
+import vazkii.quark.api.IVariableEnchantmentInfluencer;
 import vazkii.quark.building.block.CandleBlock;
 import vazkii.quark.oddities.container.EnchantmentMatrix;
 import vazkii.quark.oddities.container.EnchantmentMatrix.Piece;
@@ -263,13 +264,16 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 			Block block = state.getBlock();
 			if(block instanceof IEnchantmentInfluencer) {
 				DyeColor ord = ((IEnchantmentInfluencer) state.getBlock()).getEnchantmentInfluenceColor(world, pos, state);
+				int count = 1;
+				if(block instanceof IVariableEnchantmentInfluencer)
+					count = ((IVariableEnchantmentInfluencer) block).getInfluenceStack(world, pos, state);
 				
 				if(ord != null) {
 					List<Enchantment> influencedEnchants = MatrixEnchantingModule.candleInfluences.get(ord);
 					for(Enchantment e : influencedEnchants) {
 						int curr = influences.getOrDefault(e, 0);
 						if(curr < MatrixEnchantingModule.influenceMax)
-							influences.put(e, curr + 1);
+							influences.put(e, Math.min(MatrixEnchantingModule.influenceMax, curr + count));
 					}
 				}
 			}
