@@ -315,7 +315,7 @@
 			"desc": [
 				"In an attempt to make pigs be useful in any way, they drop Tallow. Tallow can be crafted alongside String to create Candles, or as a furnace fuel.",
 				"Candles come in all 16 colors of the spectrum, and emit as much light as torches. Candles will also fall like sand if there's no block under them, which can have many fun uses.",
-				"Lastly, for Enchanting Table purposes, two candles equal one bookshelf."
+				"1.16+ Only: Lastly, for Enchanting Table purposes, a candle equals one bookshelf."
 			]
 		},
 		{
@@ -419,6 +419,23 @@
 			"desc": [
 				"Right clicking with a Hoe on a Path block creates a new Shallow Dirt block. This block has the same texture as dirt, and is 14 pixels high, as opposed to Path, which is 15 pixels high.",
 				"Additionally, and perhaps more importantly, Shallow Dirt can be waterlogged, to create a cool puddle effect, as you can see in the image."
+			]
+		},
+		{
+			"name": "Bamboo Mats",
+			"image": "bamboo-mats.jpg",
+			"versions": "1.16+",
+			"desc": [
+				"Bamboo and Sticks can now be crafted into Bamboo Mats. These blocks can be placed in all horizontal directions, as well as vertically to create a \"box\" look."
+			]
+		},
+		{
+			"name": "Tie Leads to Fences",
+			"image": "tie-leads-to-fences.jpg",
+			"versions": "1.16+",
+			"desc": [
+				"Leads can now be tied directly between two fences, rather than only fence-animal.",
+				"Additionally, if Paper Lanterns are enabled, you can also right click on one first, and then a fence, to tie the lantern to the fence."
 			]
 		}
 	],
@@ -583,7 +600,8 @@
                 "Foxhounds are new hostile mobs that spawn in the Nether. These fierce doggos will attack you and set you on fire.",
                 "If you're brave enough, drink a fire resistance potion and feed them some Coal to tame them. Tamed Foxhounds work just like regular wolves, but with a few extra tidbits:",
                 "*They'll sleep on hot blocks like magma.",
-                "*If put on top of a furnace, they'll make the furnace faster. You can't put multiple doggos on a furnace to speed it up more, though."
+                "*If put on top of a furnace, they'll make the furnace faster. You can't put multiple doggos on a furnace to speed it up more, though.",
+                "*1.16+: If one would spawn in a Soul Sand Valley, you'll get one with blue soul fire particles and a blue texture."
             ]
 		},
 		{
@@ -657,8 +675,8 @@
 			"versions": "1.14+",
 			"desc": [
 				"Cartographer Villagers will now sell Pathfinder Maps, new maps that will take you to certain biomes. Each Cartographer will stock a random assortment of them, and the possible trades are as follows by default:",
-				"*Apprentice: Snowy Tundra, Mountains, Dark Forest, Desert, Savanna",
-				"*Journeyman: Swamp, Giant Tree Taiga, Flower Forest",
+				"*Apprentice (Expert in 1.16+): Snowy Tundra, Mountains, Dark Forest, Desert, Savanna",
+				"*Journeyman (Master in 1.16+): Swamp, Giant Tree Taiga, Flower Forest",
 				"*Expert: Jungle, Bamboo Jungle, Badlands",
 				"*Master: Mushroom Fields, Ice Spikes",
 				"If you're using mods that add more biomes, more maps can be added in the config file."
