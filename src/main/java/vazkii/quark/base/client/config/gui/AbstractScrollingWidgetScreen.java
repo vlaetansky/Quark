@@ -21,6 +21,9 @@ public abstract class AbstractScrollingWidgetScreen extends AbstractQScreen {
 	
 	private Button resetButton;
 	
+	private boolean needsScrollUpdate = false;
+	private double currentScroll = 0;
+	
 	public AbstractScrollingWidgetScreen(Screen parent) {
 		super(parent);
 	}
@@ -32,6 +35,7 @@ public abstract class AbstractScrollingWidgetScreen extends AbstractQScreen {
 		elementList = createWidgetList();
 		children.add(elementList);
 		refresh();
+		needsScrollUpdate = true;
 		
 		int pad = 3;
 		int bWidth = 121;
@@ -64,6 +68,13 @@ public abstract class AbstractScrollingWidgetScreen extends AbstractQScreen {
 	}
 	
 	public void render(MatrixStack mstack, int mouseX, int mouseY, float pticks) {
+		if(needsScrollUpdate) {
+			elementList.setScrollAmount(currentScroll);
+			needsScrollUpdate = false;
+		}
+		
+		currentScroll = elementList.getScrollAmount();
+		
 		scrollingWidgets.forEach(w -> w.visible = false);
 		
 		renderBackground(mstack);

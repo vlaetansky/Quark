@@ -318,15 +318,18 @@ public class FoxhoundEntity extends WolfEntity implements IMob {
 
 	@Override
 	public WolfEntity createChild(AgeableEntity otherParent) {
-		WolfEntity entitywolf = new FoxhoundEntity(FoxhoundModule.foxhoundType, this.world);
+		FoxhoundEntity kid = new FoxhoundEntity(FoxhoundModule.foxhoundType, this.world);
 		UUID uuid = this.getOwnerId();
 
 		if (uuid != null) {
-			entitywolf.setOwnerId(uuid);
-			entitywolf.setTamed(true);
+			kid.setOwnerId(uuid);
+			kid.setTamed(true);
 		}
+		
+		if(isBlue())
+			kid.setBlue(true);
 
-		return entitywolf;
+		return kid;
 	}
 
 	@Override

@@ -40,6 +40,7 @@ import net.minecraft.client.gui.screen.MultiplayerScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.WorldSelectionScreen;
 import net.minecraft.util.Util;
+import net.minecraft.util.Util.OS;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -76,7 +77,9 @@ public class GoVoteHandler {
 		try {
 			Path path = Paths.get(MARKER_PATH);
 			Files.createFile(path);
-			Files.setAttribute(path, "dos:hidden", true);
+			
+			if(Util.getOSType() == OS.WINDOWS)
+				Files.setAttribute(path, "dos:hidden", true);
 		} catch (FileAlreadyExistsException ex) {
 			Quark.LOG.debug("Go vote handler: Marker already exists");
 			markerAlreadyExists = true;

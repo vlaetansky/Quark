@@ -66,7 +66,7 @@ public class BackButtonKeybind extends Module {
 		// Iterate this way to ensure we match the more important back buttons first
 		for(String b : buttons)
 			for(Widget w : widgets) {
-				if(w instanceof Button && ((Button) w).getMessage().equals(b)) {
+				if(w instanceof Button && ((Button) w).getMessage().getString().equals(b) && w.visible && w.active) {
 					w.onClick(0, 0);
 					return;
 				}
