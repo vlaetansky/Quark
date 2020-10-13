@@ -30,7 +30,7 @@ public class EntityMixin {
 		AsmHooks.recordMotion((Entity) (Object) this);
 	}
 
-	@Inject(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;doBlockCollisions()V", shift = At.Shift.AFTER), locals = LocalCapture.PRINT)
+	@Inject(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;doBlockCollisions()V"), locals = LocalCapture.CAPTURE_FAILHARD)
 	private void applyCollisionLogic(MoverType typeIn, Vector3d pos, CallbackInfo callbackInfo, Vector3d vector3d) {
 		AsmHooks.applyCollisionLogic((Entity) (Object) this, pos, vector3d);
 	}
