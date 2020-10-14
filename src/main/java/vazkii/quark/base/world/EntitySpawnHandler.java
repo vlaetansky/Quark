@@ -23,6 +23,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.item.QuarkSpawnEggItem;
 import vazkii.quark.base.module.Module;
+import vazkii.quark.base.world.config.CostSensitiveEntitySpawnConfig;
 import vazkii.quark.base.world.config.EntitySpawnConfig;
 
 @EventBusSubscriber(modid = Quark.MOD_ID)
@@ -33,6 +34,10 @@ public class EntitySpawnHandler {
 	public static <T extends MobEntity> void registerSpawn(Module module, EntityType<T> entityType, EntityClassification classification, PlacementType placementType, Heightmap.Type heightMapType, IPlacementPredicate<T> placementPredicate, EntitySpawnConfig config) {
 		EntitySpawnPlacementRegistry.register(entityType, placementType, heightMapType, placementPredicate);
 
+		track(module, entityType, classification, config);
+	}
+	
+	public static <T extends MobEntity> void track(Module module, EntityType<T> entityType, EntityClassification classification, EntitySpawnConfig config) {
 		config.setModule(module);
 		trackedSpawnConfigs.add(new TrackedSpawnConfig(entityType, classification, config));
 	}
@@ -52,13 +57,16 @@ public class EntitySpawnHandler {
 		MobSpawnInfoBuilder builder = ev.getSpawns();
 
 		for(TrackedSpawnConfig c : trackedSpawnConfigs) {
-			boolean enabled = c.config.isEnabled();
-
 			List<MobSpawnInfo.Spawners> l = builder.getSpawner(c.classification);
 			l.removeIf(e -> e.type.equals(c.entityType));
-
-			if(enabled && c.config.biomes.canSpawn(ev.getName(), ev.getCategory()))
+			
+			if(c.config.isEnabled() && c.config.biomes.canSpawn(ev.getName(), ev.getCategory()))
 				l.add(c.entry);
+				
+			if(c.config instanceof CostSensitiveEntitySpawnConfig) {
+				CostSensitiveEntitySpawnConfig csc = (CostSensitiveEntitySpawnConfig) c.config;
+				builder.withSpawnCost(c.entityType, csc.spawnCost, csc.maxCost);
+			}
 		}
 	}
 

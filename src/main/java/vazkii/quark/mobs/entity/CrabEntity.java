@@ -180,10 +180,10 @@ public class CrabEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 				.createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 0.5D);
 	}
 
-	@Override
-	public boolean isEntityInsideOpaqueBlock() {
-		return MiscUtil.isEntityInsideOpaqueBlock(this);
-	}
+//	@Override
+//	public boolean isEntityInsideOpaqueBlock() {
+//		return MiscUtil.isEntityInsideOpaqueBlock(this);
+//	}
 
 	@Override
 	public void tick() {

@@ -140,11 +140,11 @@ public class FrogEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 	protected float getStandingEyeHeight(@Nonnull Pose pose, EntitySize size) {
 		return 0.2f * size.height;
 	}
-
-	@Override
-	public boolean isEntityInsideOpaqueBlock() {
-		return MiscUtil.isEntityInsideOpaqueBlock(this);
-	}
+//
+//	@Override
+//	public boolean isEntityInsideOpaqueBlock() {
+//		return MiscUtil.isEntityInsideOpaqueBlock(this);
+//	}
 
 	public int getTalkTime() {
 		return dataManager.get(TALK_TIME);

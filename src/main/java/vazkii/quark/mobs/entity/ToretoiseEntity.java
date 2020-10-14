@@ -137,11 +137,11 @@ public class ToretoiseEntity extends AnimalEntity {
 	public SoundEvent getEatSound(ItemStack itemStackIn) {
 		return null;
 	}
-
-	@Override
-	public boolean isEntityInsideOpaqueBlock() {
-		return MiscUtil.isEntityInsideOpaqueBlock(this);
-	}
+//
+//	@Override
+//	public boolean isEntityInsideOpaqueBlock() {
+//		return MiscUtil.isEntityInsideOpaqueBlock(this);
+//	}
 
 	@Override
 	public void tick() {

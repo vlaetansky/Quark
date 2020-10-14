@@ -22,6 +22,7 @@ import vazkii.quark.base.module.Module;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.world.EntitySpawnHandler;
+import vazkii.quark.base.world.config.CostSensitiveEntitySpawnConfig;
 import vazkii.quark.base.world.config.EntitySpawnConfig;
 import vazkii.quark.base.world.config.StrictBiomeConfig;
 import vazkii.quark.mobs.client.render.FoxhoundRenderer;
@@ -40,7 +41,10 @@ public class FoxhoundModule extends Module {
 	public static double tameChance = 0.05;
 
 	@Config
-	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(30, 1, 2, new StrictBiomeConfig(false, "minecraft:nether_wastes", "minecraft:basalt_deltas", "minecraft:soul_sand_valley"));
+	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(30, 1, 2, new StrictBiomeConfig(false, "minecraft:nether_wastes", "minecraft:basalt_deltas"));
+	
+	@Config
+	public static EntitySpawnConfig lesserSpawnConfig = new CostSensitiveEntitySpawnConfig(2, 1, 1, 0.7, 0.15, new StrictBiomeConfig(false, "minecraft:soul_sand_valley"));
 	
 	public static ITag<Block> foxhoundSpawnableTag;
 	
@@ -57,6 +61,8 @@ public class FoxhoundModule extends Module {
 		RegistryHelper.register(foxhoundType, "foxhound");
 
 		EntitySpawnHandler.registerSpawn(this, foxhoundType, EntityClassification.MONSTER, PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, FoxhoundEntity::spawnPredicate, spawnConfig);
+		EntitySpawnHandler.track(this, foxhoundType, EntityClassification.MONSTER, lesserSpawnConfig);
+		
 		EntitySpawnHandler.addEgg(foxhoundType, 0x890d0d, 0xf2af4b, spawnConfig);
 	}
 
