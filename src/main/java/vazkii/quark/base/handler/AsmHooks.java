@@ -31,6 +31,8 @@ import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.automation.client.render.ChainRenderer;
@@ -38,6 +40,7 @@ import vazkii.quark.automation.client.render.PistonTileEntityRenderer;
 import vazkii.quark.automation.module.ChainLinkageModule;
 import vazkii.quark.automation.module.FeedingTroughModule;
 import vazkii.quark.automation.module.PistonsMoveTileEntitiesModule;
+import vazkii.quark.building.module.VariantChestsModule;
 import vazkii.quark.building.module.VariantLaddersModule;
 import vazkii.quark.client.tooltip.EnchantedBookTooltips;
 import vazkii.quark.management.entity.ChestPassengerEntity;
@@ -279,4 +282,15 @@ public class AsmHooks {
 		return VariantLaddersModule.isTrapdoorLadder(defaultValue, world, pos);
 	}
 	
+	// ==========================================================================
+	// Variant Chests
+	// ==========================================================================
+
+	public static void setActiveStructure(Structure<?> structure) {
+		VariantChestsModule.setActiveStructure(structure);
+	}
+	
+	public static BlockState getGenerationChestBlockState(BlockState current) {
+		return VariantChestsModule.getGenerationChestBlockState(current);
+	}
 }

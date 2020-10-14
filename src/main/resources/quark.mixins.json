@@ -19,7 +19,10 @@
     "PistonTileEntityMixin",
     "ServerWorldMixin",
     "TemptGoalMixin",
-    "TrapDoorBlockMixin"
+    "TrapDoorBlockMixin",
+    "StructurePieceMixin",
+    "StructureStartMixin",
+    "TemplateMixin"
   ],
   "client": [
     "BipedArmorLayerMixin",

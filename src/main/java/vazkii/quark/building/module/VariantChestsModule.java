@@ -8,7 +8,9 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableSet;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.ChestBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.horse.AbstractChestedHorseEntity;
@@ -18,6 +20,8 @@ import net.minecraft.item.Items;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -32,6 +36,7 @@ import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.Module;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.config.Config;
 import vazkii.quark.building.block.VariantChestBlock;
 import vazkii.quark.building.block.VariantTrappedChestBlock;
 import vazkii.quark.building.client.render.VariantChestTileEntityRenderer;
@@ -54,8 +59,14 @@ public class VariantChestsModule extends Module {
 	private static List<Supplier<Block>> chestTypes = new LinkedList<>();
 	private static List<Supplier<Block>> trappedChestTypes = new LinkedList<>();
 	
+	// TODO track trapped chests too
 	private static List<Block> allChests = new LinkedList<>();
 
+	private static Structure<?> currentStructure;
+	
+	@Config
+	private static boolean replaceWorldgenChests = true;
+	
 	@Override
 	public void construct() {
 		OVERWORLD_WOODS.forEach(s -> addChest(s, Blocks.CHEST));
@@ -79,6 +90,48 @@ public class VariantChestsModule extends Module {
 	public void clientSetup() {
 		ClientRegistry.bindTileEntityRenderer(chestTEType, VariantChestTileEntityRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(trappedChestTEType, VariantChestTileEntityRenderer::new);
+	}
+	
+	public static void setActiveStructure(Structure<?> structure) {
+		currentStructure = structure;
+	}
+	
+	public static BlockState getGenerationChestBlockState(BlockState current) {
+		if(replaceWorldgenChests && current.getBlock() == Blocks.CHEST && currentStructure != null) {
+			ResourceLocation name = currentStructure.getRegistryName();
+			
+			int index = -1;
+			switch(name.toString()) {
+			case "minecraft:igloo":
+				index = 1; // spruce
+				break;
+			case "minecraft:desert_pyramid":
+				index = 2; // birch
+				break;
+			case "minecraft:jungle_pyramid":
+				index = 3; // jungle
+				break;
+			case "minecraft:mansion":
+			case "minecraft:pillager_outpost":
+				index = 5; // dark oak
+				break;
+			case "minecraft:ruined_portal":
+			case "minecraft:bastion_remnant":
+				index = 6; // crimson
+				break;
+			case "minecraft:fortress":
+				index = 8; // nether brick
+				break;
+			case "minecraft:endcity":
+				index = 9; // purpur
+				break;
+			}
+			
+			if(index != -1)
+				return allChests.get(index).getDefaultState().with(ChestBlock.FACING, current.get(ChestBlock.FACING));
+		}
+		
+		return current;
 	}
 
 	private void addChest(String name, Block from) {
