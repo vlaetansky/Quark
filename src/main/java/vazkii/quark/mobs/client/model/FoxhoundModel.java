@@ -76,7 +76,7 @@ public class FoxhoundModel extends EntityModel<FoxhoundEntity> {
 	@Override
 	public void setLivingAnimations(FoxhoundEntity hound, float limbSwing, float limbSwingAmount, float partialTickTime) {
 		this.entity = hound;
-		if (hound.isSitting() || hound.func_230256_F__() > 0)
+		if (hound.isSitting() || hound.getAngerTime() > 0)
 			this.tail.rotateAngleX = -0.6544984695F;
 		else
 			this.tail.rotateAngleX = -1.3089969389957472F + MathHelper.cos(limbSwing * 0.6662F) * limbSwingAmount;

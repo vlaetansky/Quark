@@ -83,13 +83,15 @@ public class JigsawRegistryHelper {
 		@SuppressWarnings("deprecation")
 		public void register(JigsawPattern.PlacementBehaviour placementBehaviour) {
 			ResourceLocation resource = new ResourceLocation(Quark.MOD_ID, namespace + "/" + name);
+
+			// TODO fix me
 			
-			List<Pair<JigsawPiece, Integer>> createdPieces = 
-			pieces.stream()
-			.map(proto -> Pair.of((JigsawPiece) new SingleJigsawPiece((Quark.MOD_ID + ":" + namespace + "/" + proto.name), proto.processors), proto.weight))
-			.collect(ImmutableList.toImmutableList());
-			
-			JigsawManager.REGISTRY.register(new JigsawPattern(resource, new ResourceLocation("empty"), createdPieces, placementBehaviour));
+//			List<Pair<JigsawPiece, Integer>> createdPieces = 
+//			pieces.stream()
+//			.map(proto -> Pair.of((JigsawPiece) new SingleJigsawPiece((Quark.MOD_ID + ":" + namespace + "/" + proto.name), proto.processors), proto.weight))
+//			.collect(ImmutableList.toImmutableList());
+//			
+//			JigsawManager.REGISTRY.register(new JigsawPattern(resource, new ResourceLocation("empty"), createdPieces, placementBehaviour));
 		}
  		
 		private class PiecePrototype {

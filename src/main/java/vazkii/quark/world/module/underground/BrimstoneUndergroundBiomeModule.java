@@ -5,8 +5,8 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.ToolType;
-import net.minecraftforge.common.BiomeDictionary.Type;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.LoadModule;
@@ -23,7 +23,7 @@ public class BrimstoneUndergroundBiomeModule extends UndergroundBiomeModule {
 	public void construct() {
 		brimstone = new QuarkBlock("brimstone", this, ItemGroup.BUILDING_BLOCKS, 
 				Block.Properties.create(Material.ROCK, MaterialColor.RED)
-				.func_235861_h_() // needs tool
+				.setRequiresTool()
         		.harvestTool(ToolType.PICKAXE)
 				.hardnessAndResistance(1.5F, 10F)
 				.sound(SoundType.STONE));
@@ -41,7 +41,7 @@ public class BrimstoneUndergroundBiomeModule extends UndergroundBiomeModule {
 	
 	@Override
 	protected UndergroundBiomeConfig getBiomeConfig() {
-		return new UndergroundBiomeConfig(new BrimstoneUndergroundBiome(), 80, Type.MESA);
+		return new UndergroundBiomeConfig(new BrimstoneUndergroundBiome(), 80, Biome.Category.MESA);
 	}
 
 }

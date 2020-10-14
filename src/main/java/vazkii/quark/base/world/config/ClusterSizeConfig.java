@@ -1,6 +1,6 @@
 package vazkii.quark.base.world.config;
 
-import net.minecraftforge.common.BiomeDictionary;
+import net.minecraft.world.biome.Biome;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.IConfigType;
 
@@ -42,13 +42,13 @@ public class ClusterSizeConfig implements IConfigType {
 	@Config.Min(0)
 	public int verticalVariation;
 	
-	public ClusterSizeConfig(int rarity, int horizontal, int vertical, int horizontalVariation, int verticalVariation, boolean isBlacklist, BiomeDictionary.Type... types) {
+	public ClusterSizeConfig(int rarity, int horizontal, int vertical, int horizontalVariation, int verticalVariation, boolean isBlacklist, Biome.Category... categories) {
 		this.rarity = rarity;
 		this.horizontalSize = horizontal;
 		this.verticalSize = vertical;
 		this.horizontalVariation = horizontalVariation;
 		this.verticalVariation = verticalVariation;
-		biomes = new BiomeTypeConfig(isBlacklist, types);
+		biomes = new BiomeTypeConfig(isBlacklist, categories);
 	}
 	
 	public ClusterSizeConfig setYLevels(int min, int max) {

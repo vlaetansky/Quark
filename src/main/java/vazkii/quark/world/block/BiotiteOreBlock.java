@@ -18,7 +18,7 @@ public class BiotiteOreBlock extends QuarkBlock {
 	public BiotiteOreBlock(Module module) {
 		super("biotite_ore", module, ItemGroup.BUILDING_BLOCKS, 
 				Block.Properties.create(Material.ROCK, MaterialColor.SAND)
-				.func_235861_h_() // needs tool
+				.setRequiresTool() // needs tool
         		.harvestTool(ToolType.PICKAXE)
 				.hardnessAndResistance(3.2F, 15F)
 				.sound(SoundType.STONE));

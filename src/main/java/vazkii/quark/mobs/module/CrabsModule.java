@@ -12,10 +12,10 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectType;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.Heightmap.Type;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.effect.QuarkEffect;
@@ -42,7 +42,7 @@ public class CrabsModule extends Module {
 	public static EntityType<CrabEntity> crabType;
 
 	@Config
-	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(5, 1, 3, new BiomeTypeConfig(false, BiomeDictionary.Type.BEACH));
+	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(5, 1, 3, new BiomeTypeConfig(false, Biome.Category.BEACH));
 
 	@Config(flag = "crab_brewing")
 	public static boolean enableBrewing = true;

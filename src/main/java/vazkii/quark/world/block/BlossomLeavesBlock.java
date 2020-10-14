@@ -38,9 +38,9 @@ public class BlossomLeavesBlock extends LeavesBlock implements IQuarkBlock {
 				.sound(SoundType.PLANT)
 				.harvestTool(ToolType.HOE)
 				.notSolid()
-				.func_235827_a_((s, r, p, t) -> false)
-				.func_235842_b_((s, r, p) -> false)
-				.func_235847_c_((s, r, p) -> false));
+				.setAllowsSpawn((s, r, p, t) -> false)
+				.setSuffocates((s, r, p) -> false)
+				.setBlocksVision((s, r, p) -> false));
 		
 		this.module = module;
 

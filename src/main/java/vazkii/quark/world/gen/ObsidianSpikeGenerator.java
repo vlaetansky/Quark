@@ -14,7 +14,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.WorldGenRegion;
-import net.minecraft.world.gen.feature.structure.StructureManager;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.world.config.DimensionConfig;
@@ -29,7 +28,7 @@ public class ObsidianSpikeGenerator extends Generator {
 	}
 
 	@Override
-	public void generateChunk(WorldGenRegion world, ChunkGenerator generator, StructureManager structureManager, Random rand, BlockPos chunkCorner) {
+	public void generateChunk(WorldGenRegion world, ChunkGenerator generator, Random rand, BlockPos chunkCorner) {
 		if(rand.nextFloat() < NetherObsidianSpikesModule.chancePerChunk) {
 			for(int i = 0; i < NetherObsidianSpikesModule.triesPerChunk; i++) {
 				BlockPos pos = chunkCorner.add(rand.nextInt(16), 50, rand.nextInt(16));

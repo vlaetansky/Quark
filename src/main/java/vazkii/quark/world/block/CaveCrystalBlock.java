@@ -40,9 +40,9 @@ public class CaveCrystalBlock extends QuarkGlassBlock {
 				Block.Properties.create(Material.GLASS, materialColor)
 				.hardnessAndResistance(0.3F, 0F)
 				.sound(SoundType.GLASS)
-				.func_235838_a_(b -> 11) // lightValue
+				.setLightLevel(b -> 11)
 				.harvestTool(ToolType.PICKAXE)
-				.func_235861_h_() // needs tool
+				.setRequiresTool()
 				.harvestLevel(0)
 				.tickRandomly()
 				.notSolid());

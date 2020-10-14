@@ -235,12 +235,12 @@ public class FoxhoundEntity extends WolfEntity implements IMob {
 		this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, AbstractSkeletonEntity.class, false));
 	}
 
-	@Override
-	public int func_230256_F__() {
-		if (!isTamed() && world.getDifficulty() != Difficulty.PEACEFUL)
-			return 0;
-		return super.func_230256_F__();
-	}
+//	@Override TODO tf is this
+//	public int func_230256_F__() {
+//		if (!isTamed() && world.getDifficulty() != Difficulty.PEACEFUL)
+//			return 0;
+//		return super.func_230256_F__();
+//	}
 
 	@Override
 	public boolean attackEntityAsMob(Entity entityIn) {
@@ -251,7 +251,7 @@ public class FoxhoundEntity extends WolfEntity implements IMob {
 		}
 
 		boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this).setFireDamage(),
-				((int)this.func_233637_b_(Attributes.field_233823_f_)));
+				((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
 
 		if (flag) {
 			entityIn.setFire(5);

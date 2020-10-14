@@ -31,7 +31,7 @@ public class HugeGlowshroomBlock extends HugeMushroomBlock {
 
 	public HugeGlowshroomBlock(String name, Module module) {
 		super(Block.Properties.from(Blocks.RED_MUSHROOM_BLOCK)
-				.func_235838_a_(b -> 14) // lightValue
+				.setLightLevel(b -> 14)
 				.tickRandomly()
 				.notSolid());
 

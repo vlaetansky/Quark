@@ -3,51 +3,46 @@ package vazkii.quark.base.world.config;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import net.minecraft.world.biome.Biome;
-import net.minecraftforge.common.BiomeDictionary;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.ConfigFlagManager;
-import vazkii.quark.base.module.config.IConfigType;
 
 public class BiomeTypeConfig implements IBiomeConfig {
 
-	@Config(name = "Biome Types")
-	@Config.Restriction({"HOT", "COLD", "SPARSE", "DENSE", "WET", "SAVANNA", "CONIFEROUS", "JUNGLE", "SPOOKY", "DEAD",
-			"LUSH", "NETHER", "END", "MUSHROOM", "MAGICAL", "RARE", "OCEAN", "RIVER", "WATER", "MESA", "FOREST",
-			"PLAINS", "MOUNTAIN", "HILLS", "SWAMP", "SANDY", "SNOWY", "WASTELAND", "BEACH", "VOID"})
-	private List<String> typeStrings;
+	@Config(name = "Biome Categories")
+	@Config.Restriction({"NONE", "TAIGA", "EXTREME_HILLS", "JUNGLE", "MESA", "PLAINS", "SAVANNA", "THEEND", "BEACH", "FOREST",
+			"OCEAN", "DESERT", "RIVER", "SWAMP", "MUSHROOM", "NETHER"})
+	private List<String> categoryStrings;
 
 	@Config
 	private boolean isBlacklist;
 
-	private List<BiomeDictionary.Type> types;
+	private List<Biome.Category> categories;
 
-	public BiomeTypeConfig(boolean isBlacklist, BiomeDictionary.Type... types) {
+	public BiomeTypeConfig(boolean isBlacklist, Biome.Category... categories) {
 		this.isBlacklist = isBlacklist;
 
-		typeStrings = new LinkedList<>();
-		for (BiomeDictionary.Type s : types)
-			typeStrings.add(s.getName());
+		categoryStrings = new LinkedList<>();
+		for (Biome.Category c : categories)
+			categoryStrings.add(c.getName());
 	}
 
-	public BiomeTypeConfig(boolean isBlacklist, String... types) {
+	public BiomeTypeConfig(boolean isBlacklist, String... categories) {
 		this.isBlacklist = isBlacklist;
 
-		typeStrings = new LinkedList<>();
-		typeStrings.addAll(Arrays.asList(types));
+		categoryStrings = new LinkedList<>();
+		categoryStrings.addAll(Arrays.asList(categories));
 	}
 	
 	@Override
 	public boolean canSpawn(Biome b) {
-		if (types == null)
+		if (categories == null)
 			updateTypes();
 
-		Set<BiomeDictionary.Type> currentTypes = BiomeDictionary.getTypes(b);
-
-		for (BiomeDictionary.Type type : types)
-			if (currentTypes.contains(type))
+		Biome.Category category = b.getCategory();
+		for (Biome.Category c : categories)
+			if(c == category)
 				return !isBlacklist;
 
 		return isBlacklist;
@@ -59,11 +54,12 @@ public class BiomeTypeConfig implements IBiomeConfig {
 	}
 	
 	public void updateTypes() {
-		types = new LinkedList<>();
-		for (String s : typeStrings) {
-			BiomeDictionary.Type type = BiomeDictionary.Type.getType(s);
-			if (type != null)
-				types.add(type);
+		categories = new LinkedList<>();
+		for (String s : categoryStrings) {
+			Biome.Category category = Biome.Category.byName(s);
+			
+			if (category != null)
+				categories.add(category);
 		}
 	}
 }

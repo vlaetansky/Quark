@@ -1,7 +1,6 @@
 package vazkii.quark.world.gen;
 
 import java.util.Random;
-import java.util.Set;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -10,10 +9,9 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.Category;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.WorldGenRegion;
-import net.minecraft.world.gen.feature.structure.StructureManager;
-import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.Tags;
 import vazkii.quark.base.world.config.DimensionConfig;
 import vazkii.quark.base.world.generator.Generator;
@@ -26,17 +24,18 @@ public class FairyRingGenerator extends Generator {
 	}
 	
 	@Override
-	public void generateChunk(WorldGenRegion worldIn, ChunkGenerator generator, StructureManager structureManager, Random rand, BlockPos corner) {
+	public void generateChunk(WorldGenRegion worldIn, ChunkGenerator generator, Random rand, BlockPos corner) {
 		int x = corner.getX() + rand.nextInt(16);
 		int z = corner.getZ() + rand.nextInt(16);
 		BlockPos center = new BlockPos(x, 128, z);
 		
 		Biome biome = getBiome(worldIn, center);
-		Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(biome);
+		
+		Biome.Category category = biome.getCategory();
 		double chance = 0;
-		if(types.contains(BiomeDictionary.Type.FOREST))
+		if(category == Category.FOREST)
 			chance = FairyRingsModule.forestChance;
-		else if(types.contains(BiomeDictionary.Type.PLAINS))
+		else if(category == Category.PLAINS)
 			chance = FairyRingsModule.plainsChance;
 		
 		if(rand.nextDouble() < chance) {

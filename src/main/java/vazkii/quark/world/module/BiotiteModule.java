@@ -51,7 +51,7 @@ public class BiotiteModule extends Module {
 		WorldGenHandler.addGenerator(this, oregen, Decoration.UNDERGROUND_ORES, WorldGenWeights.BIOTITE);
 		
 		Block.Properties props = Block.Properties.create(Material.ROCK, MaterialColor.BLACK)
-				.func_235861_h_() // needs tool
+				.setRequiresTool() // needs tool
         		.harvestTool(ToolType.PICKAXE)
         		.hardnessAndResistance(0.8F);
 		
@@ -70,7 +70,7 @@ public class BiotiteModule extends Module {
 			
 			if(dragon.deathTicks > 0 && dragon.deathTicks % dragonTicksPerCluster == 0) {
 				Random rand = world.rand;
-				BlockPos basePos = dragon.func_233580_cy_(); // getPosition
+				BlockPos basePos = dragon.getPosition();
 				basePos = new BlockPos(basePos.getX() - 128, 0, basePos.getZ() -128);
 
 				for(int i = 0; i < clustersPerDragonTick; i++) {

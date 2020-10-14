@@ -15,10 +15,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.spawner.WorldEntitySpawner;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.effect.QuarkEffect;
@@ -70,7 +70,7 @@ public class GlowshroomUndergroundBiomeModule extends UndergroundBiomeModule {
 		BrewingHandler.addPotionMix("glowshroom_danger_sight",
 				() -> Ingredient.fromItems(glowshroom), dangerSight, 3600, 9600, -1);
 
-		VariantHandler.addFlowerPot(glowshroom, "glowshroom", p -> p.func_235838_a_(b -> 14)); // lightValue
+		VariantHandler.addFlowerPot(glowshroom, "glowshroom", p -> p.setLightLevel(b -> 14));
 
 		super.construct();
 	}
@@ -92,7 +92,7 @@ public class GlowshroomUndergroundBiomeModule extends UndergroundBiomeModule {
 		if(enableDangerSight && event.phase == TickEvent.Phase.START && mc.player != null && mc.player.getActivePotionEffect(dangerSight) != null && !mc.isGamePaused()) {
 			int range = 12;
 			World world = mc.world;
-			Stream<BlockPos> positions = BlockPos.getAllInBox(mc.player.func_233580_cy_().add(-range, -range, -range), mc.player.func_233580_cy_().add(range, range, range));
+			Stream<BlockPos> positions = BlockPos.getAllInBox(mc.player.getPosition().add(-range, -range, -range), mc.player.getPosition().add(range, range, range));
 
 			positions.forEach((pos) -> {
 				if(world.rand.nextFloat() < 0.1 && canSpawnOn(EntityType.ZOMBIE, world, pos)) { 
@@ -113,7 +113,7 @@ public class GlowshroomUndergroundBiomeModule extends UndergroundBiomeModule {
 				&& worldIn.getLightFor(LightType.BLOCK, pos) <= 7
 				&& worldIn.getBlockState(testPos).canEntitySpawn(worldIn, testPos, typeIn)
 				&& WorldEntitySpawner.canSpawnAtBody(EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, worldIn, pos, EntityType.ZOMBIE)
-				&& ((World) worldIn).hasNoCollisions(EntityType.ZOMBIE.func_220328_a(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5));
+				&& ((World) worldIn).hasNoCollisions(EntityType.ZOMBIE.getBoundingBoxWithSizeApplied(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5));
 	}
 
 	@Override
@@ -123,7 +123,7 @@ public class GlowshroomUndergroundBiomeModule extends UndergroundBiomeModule {
 
 	@Override
 	protected UndergroundBiomeConfig getBiomeConfig() {
-		return new UndergroundBiomeConfig(new GlowshroomUndergroundBiome(), 80, Type.MOUNTAIN, Type.MUSHROOM);
+		return new UndergroundBiomeConfig(new GlowshroomUndergroundBiome(), 80, Biome.Category.EXTREME_HILLS, Biome.Category.MUSHROOM);
 	}
 
 }

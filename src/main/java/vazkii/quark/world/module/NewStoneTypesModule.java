@@ -5,21 +5,14 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.function.BooleanSupplier;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.tags.ITag;
-import net.minecraft.tags.Tag;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.GenerationStage.Decoration;
 import net.minecraftforge.common.ToolType;
-import net.minecraftforge.event.TagsUpdatedEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.LoadModule;
@@ -68,7 +61,7 @@ public class NewStoneTypesModule extends Module {
 	private Block makeStone(String name, StoneTypeConfig config, BigStoneClusterConfig bigConfig, BooleanSupplier enabledCond, MaterialColor color) {
 		BooleanSupplier trueEnabledCond = () -> !bigConfig.enabled && enabledCond.getAsBoolean();
 		Block.Properties props = Block.Properties.create(Material.ROCK, color)
-				.func_235861_h_() // needs tool
+				.setRequiresTool() // needs tool
 				.harvestTool(ToolType.PICKAXE)
 				.hardnessAndResistance(1.5F, 6.0F); 
 		

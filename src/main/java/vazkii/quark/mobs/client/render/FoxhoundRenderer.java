@@ -40,8 +40,8 @@ public class FoxhoundRenderer extends MobRenderer<FoxhoundEntity, FoxhoundModel>
 	@Override
 	public ResourceLocation getEntityTexture(@Nonnull FoxhoundEntity entity) {
 		if(entity.isBlue())
-			return entity.isSleeping() ? SOULHOUND_SLEEPING : (entity.func_230256_F__() > 0 ? SOULHOUND_HOSTILE : SOULHOUND_IDLE);
+			return entity.isSleeping() ? SOULHOUND_SLEEPING : (entity.getAngerTime() > 0 ? SOULHOUND_HOSTILE : SOULHOUND_IDLE); 
 
-		return entity.isSleeping() ? FOXHOUND_SLEEPING : (entity.func_230256_F__() > 0 ? FOXHOUND_HOSTILE : FOXHOUND_IDLE);
+		return entity.isSleeping() ? FOXHOUND_SLEEPING : (entity.getAngerTime() > 0 ? FOXHOUND_HOSTILE : FOXHOUND_IDLE);
 	}
 }

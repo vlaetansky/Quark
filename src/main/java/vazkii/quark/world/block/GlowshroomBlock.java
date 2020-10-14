@@ -37,7 +37,7 @@ public class GlowshroomBlock extends MushroomBlock implements IQuarkBlock {
 
 	public GlowshroomBlock(Module module) {
 		super(Block.Properties.from(Blocks.RED_MUSHROOM)
-				.func_235838_a_(b -> 14) // lightValue
+				.setLightLevel(b -> 14)
 				.tickRandomly());
 		
 		this.module = module;

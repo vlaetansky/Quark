@@ -10,8 +10,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.Potions;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.Heightmap.Type;
-import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.BrewingHandler;
@@ -33,7 +33,7 @@ public class FrogsModule extends Module {
 	public static EntityType<FrogEntity> frogType;
 
 	@Config
-	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(40, 1, 3, new BiomeTypeConfig(false, BiomeDictionary.Type.SWAMP));
+	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(40, 1, 3, new BiomeTypeConfig(false, Biome.Category.SWAMP));
 
 	@Config(flag = "frog_brewing") 
 	public static boolean enableBrewing = true;

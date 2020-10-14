@@ -5,10 +5,10 @@ import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.Items;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.Heightmap.Type;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -36,7 +36,7 @@ public class ToretoiseModule extends Module {
 	public static DimensionConfig dimensions = DimensionConfig.overworld(false);
 	
 	@Config 
-	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(100, 1, 1, new BiomeTypeConfig(true, BiomeDictionary.Type.VOID, BiomeDictionary.Type.NETHER, BiomeDictionary.Type.END));
+	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(100, 1, 1, new BiomeTypeConfig(true, Biome.Category.NONE, Biome.Category.NETHER, Biome.Category.THEEND));
 	
 	@Override
 	public void construct() {
