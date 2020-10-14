@@ -1,49 +1,46 @@
 package vazkii.quark.world.gen.structure;
 
+import java.util.List;
+import java.util.Set;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
+
 import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Rotation;
 import net.minecraft.util.SharedSeedRandom;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
+import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biome.SpawnListEntry;
+import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage.Decoration;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.gen.feature.jigsaw.JigsawManager;
+import net.minecraft.world.gen.feature.jigsaw.JigsawPattern;
 import net.minecraft.world.gen.feature.jigsaw.JigsawPattern.PlacementBehaviour;
-import net.minecraft.world.gen.feature.jigsaw.JigsawPiece;
-import net.minecraft.world.gen.feature.structure.AbstractVillagePiece;
-import net.minecraft.world.gen.feature.structure.IStructurePieceType;
-import net.minecraft.world.gen.feature.structure.MarginedStructureStart;
+import net.minecraft.world.gen.feature.structure.JigsawStructure;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.feature.template.IStructureProcessorType;
 import net.minecraft.world.gen.feature.template.TemplateManager;
+import net.minecraft.world.gen.settings.StructureSeparationSettings;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.world.JigsawRegistryHelper;
 import vazkii.quark.world.gen.structure.processor.BigDungeonChestProcessor;
 import vazkii.quark.world.gen.structure.processor.BigDungeonSpawnerProcessor;
 import vazkii.quark.world.module.BigDungeonModule;
 
-import java.util.List;
-import java.util.Set;
+public class BigDungeonStructure extends JigsawStructure {
 
-public class BigDungeonStructure extends Structure<NoFeatureConfig> {
-
-	private static final List<Biome.SpawnListEntry> ENEMIES = Lists.newArrayList(
-			new Biome.SpawnListEntry(EntityType.ZOMBIE, 8, 1, 3),
-			new Biome.SpawnListEntry(EntityType.SKELETON, 8, 1, 3),
-			new Biome.SpawnListEntry(EntityType.CREEPER, 8, 1, 3),
-			new Biome.SpawnListEntry(EntityType.WITCH, 4, 1, 1),
-			new Biome.SpawnListEntry(EntityType.ILLUSIONER, 10, 1, 1)
+	private static final List<MobSpawnInfo.Spawners> ENEMIES = Lists.newArrayList(
+			new MobSpawnInfo.Spawners(EntityType.ZOMBIE, 8, 1, 3),
+			new MobSpawnInfo.Spawners(EntityType.SKELETON, 8, 1, 3),
+			new MobSpawnInfo.Spawners(EntityType.CREEPER, 8, 1, 3),
+			new MobSpawnInfo.Spawners(EntityType.WITCH, 4, 1, 1),
+			new MobSpawnInfo.Spawners(EntityType.ILLUSIONER, 10, 1, 1)
 			);
 
 	private static final String NAMESPACE = "big_dungeon";
@@ -73,19 +70,19 @@ public class BigDungeonStructure extends Structure<NoFeatureConfig> {
 
 	private static final String ENDPOINT = "misc/endpoint";
 
-	private static final ResourceLocation START_POOL = new ResourceLocation(Quark.MOD_ID, NAMESPACE + "/" + STARTS_DIR);
-
+	public static JigsawPattern startPattern;
+	
 	private static final BigDungeonChestProcessor CHEST_PROCESSOR = new BigDungeonChestProcessor();
 	private static final BigDungeonSpawnerProcessor SPAWN_PROCESSOR = new BigDungeonSpawnerProcessor();
-	
+
 	private static Codec<BigDungeonChestProcessor> CHEST_CODEC = Codec.unit(CHEST_PROCESSOR);
 	private static Codec<BigDungeonSpawnerProcessor> SPAWN_CODEC = Codec.unit(SPAWN_PROCESSOR);
-	
+
 	public static IStructureProcessorType<BigDungeonChestProcessor> CHEST_PROCESSOR_TYPE = () -> CHEST_CODEC;
 	public static IStructureProcessorType<BigDungeonSpawnerProcessor> SPAWN_PROCESSOR_TYPE = () -> SPAWN_CODEC;
-	
+
 	static {
-		JigsawRegistryHelper.pool(NAMESPACE, STARTS_DIR)
+		startPattern = JigsawRegistryHelper.pool(NAMESPACE, STARTS_DIR)
 		.processor(CHEST_PROCESSOR)
 		.addMult(STARTS_DIR, STARTS, 1)
 		.register(PlacementBehaviour.RIGID);
@@ -111,18 +108,18 @@ public class BigDungeonStructure extends Structure<NoFeatureConfig> {
 		.register(PlacementBehaviour.RIGID);
 	}
 
-	public BigDungeonStructure(Codec<NoFeatureConfig> codec) {
-		super(codec);
+	public BigDungeonStructure(Codec<VillageConfig> codec) {
+		super(codec, 40, false, true);
 		setRegistryName(Quark.MOD_ID, NAMESPACE);
 	}
-	
+
 	public void setup() {
 		Registry.register(Registry.STRUCTURE_PROCESSOR, Quark.MOD_ID + ":big_dungeon_chest", CHEST_PROCESSOR_TYPE);
 		Registry.register(Registry.STRUCTURE_PROCESSOR, Quark.MOD_ID + ":big_dungeon_spawner", SPAWN_PROCESSOR_TYPE);
 	}
 
 	@Override
-	public List<SpawnListEntry> getSpawnList() {
+	public List<MobSpawnInfo.Spawners> getSpawnList() {
 		return ENEMIES;
 	}
 
@@ -130,9 +127,9 @@ public class BigDungeonStructure extends Structure<NoFeatureConfig> {
 	public Decoration func_236396_f_() {
 		return Decoration.UNDERGROUND_STRUCTURES;
 	}
-	
+
 	@Override // hasStartAt
-	protected boolean func_230363_a_(ChunkGenerator chunkGen, BiomeProvider biomeProvider, long seed, SharedSeedRandom rand, int chunkPosX, int chunkPosZ, Biome biome, ChunkPos chunkpos, NoFeatureConfig config) { 
+	protected boolean func_230363_a_(ChunkGenerator chunkGen, BiomeProvider biomeProvider, long seed, SharedSeedRandom rand, int chunkPosX, int chunkPosZ, Biome biome, ChunkPos chunkpos, VillageConfig config) { 
 		if(chunkPosX == chunkpos.x && chunkPosZ == chunkpos.z && chunkGen.func_235957_b_().func_236195_a_().containsKey(this) && BigDungeonModule.biomeTypes.canSpawn(biome)) {
 			int i = chunkPosX >> 4;
 			int j = chunkPosZ >> 4;
@@ -140,38 +137,53 @@ public class BigDungeonStructure extends Structure<NoFeatureConfig> {
 			rand.nextInt();
 			return rand.nextDouble() < BigDungeonModule.spawnChance;
 		}
-		
-		return false;
+
+		return !func_242782_a(chunkGen, seed, rand, chunkPosX, chunkPosZ);
 	}
-	
+
+	// copy from PillagerOutpostStructure, seems to check village distancing
+	private boolean func_242782_a(ChunkGenerator p_242782_1_, long p_242782_2_, SharedSeedRandom p_242782_4_, int p_242782_5_, int p_242782_6_) {
+		StructureSeparationSettings structureseparationsettings = p_242782_1_.func_235957_b_().func_236197_a_(Structure.field_236381_q_);
+		if (structureseparationsettings == null) {
+			return false;
+		} else {
+			for(int i = p_242782_5_ - 10; i <= p_242782_5_ + 10; ++i) {
+				for(int j = p_242782_6_ - 10; j <= p_242782_6_ + 10; ++j) {
+					ChunkPos chunkpos = Structure.field_236381_q_.func_236392_a_(structureseparationsettings, p_242782_2_, p_242782_4_, i, j);
+					if (i == chunkpos.x && j == chunkpos.z) {
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+	}
+
 	@Override
-	public IStartFactory<NoFeatureConfig> getStartFactory() {
-		return Start::new;
+	public IStartFactory<VillageConfig> getStartFactory() {
+		return (s, x, z, bb, r, sd) -> new BigDungeonStructure.Start(this, x, z, bb, r, sd);
 	}
 
 	@Override
 	public String getStructureName() {
 		return getRegistryName().toString();
 	}
-	
+
 	//	@Override
 	//	public int getSize() {
 	//		return (int) Math.ceil((double) BigDungeonModule.maxRooms / 1.5);
 	//	}
 
-	public static class Start extends MarginedStructureStart<NoFeatureConfig> {
+	public static class Start extends JigsawStructure.Start {
 
-		public Start(Structure<NoFeatureConfig> structureIn, int chunkX, int chunkZ, MutableBoundingBox boundsIn, int referenceIn, long seed) {
+		public Start(JigsawStructure structureIn, int chunkX, int chunkZ, MutableBoundingBox boundsIn, int referenceIn, long seed) {
 			super(structureIn, chunkX, chunkZ, boundsIn, referenceIn, seed);
 		}
 
 		@Override // init
-		public void func_230364_a_(ChunkGenerator generator, TemplateManager templateManagerIn, int chunkX, int chunkZ, Biome biomeIn, NoFeatureConfig config) {
-			BlockPos blockpos = new BlockPos(chunkX * 16, 40, chunkZ * 16);
-			// First bool appears to be related to some sort of shifting upwards
-			// Second bool appears to shift objects with heightmaps
-			JigsawManager.func_236823_a_(START_POOL, BigDungeonModule.maxRooms, Piece::new, generator, templateManagerIn, blockpos, components, this.rand, false, true);
-			recalculateStructureSize();
+		public void func_230364_a_(DynamicRegistries dynreg, ChunkGenerator generator, TemplateManager templateManagerIn, int chunkX, int chunkZ, Biome biomeIn, VillageConfig config) {
+			super.func_230364_a_(dynreg, generator, templateManagerIn, chunkX, chunkZ, biomeIn, config);
 
 			int maxTop = 60;
 			if(bounds.maxY >= maxTop) {
@@ -191,18 +203,18 @@ public class BigDungeonStructure extends Structure<NoFeatureConfig> {
 
 	}
 
-	public static class Piece extends AbstractVillagePiece {
-
-		public static IStructurePieceType PIECE_TYPE = Registry.register(Registry.STRUCTURE_PIECE, "bigdungeon", BigDungeonStructure.Piece::new);
-
-		public Piece(TemplateManager templateManagerIn, JigsawPiece jigsawPieceIn, BlockPos posIn, int p_i50560_4_, Rotation rotationIn, MutableBoundingBox boundsIn) {
-			super(PIECE_TYPE, templateManagerIn, jigsawPieceIn, posIn, p_i50560_4_, rotationIn, boundsIn);
-		}
-
-		public Piece(TemplateManager templateManagerIn, CompoundNBT nbt) {
-			super(templateManagerIn, nbt, PIECE_TYPE);
-		}
-
-	}
+//	public static class Piece extends AbstractVillagePiece {
+//
+//		public static IStructurePieceType PIECE_TYPE = Registry.register(Registry.STRUCTURE_PIECE, "bigdungeon", BigDungeonStructure.Piece::new);
+//
+//		public Piece(TemplateManager templateManagerIn, JigsawPiece jigsawPieceIn, BlockPos posIn, int p_i50560_4_, Rotation rotationIn, MutableBoundingBox boundsIn) {
+//			super(PIECE_TYPE, templateManagerIn, jigsawPieceIn, posIn, p_i50560_4_, rotationIn, boundsIn);
+//		}
+//
+//		public Piece(TemplateManager templateManagerIn, CompoundNBT nbt) {
+//			super(templateManagerIn, nbt, PIECE_TYPE);
+//		}
+//
+//	}
 
 }

@@ -41,6 +41,10 @@ public class BiomeTypeConfig implements IBiomeConfig {
 			updateTypes();
 
 		Biome.Category category = b.getCategory();
+		return canSpawn(category);
+	}
+	
+	public boolean canSpawn(Biome.Category category) {
 		for (Biome.Category c : categories)
 			if(c == category)
 				return !isBlacklist;

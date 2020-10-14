@@ -63,7 +63,7 @@ public class AutomaticRecipeUnlockModule extends Module {
 	public void onInitGui(InitGuiEvent.Post event) {
 		Screen gui = event.getGui();
 		if(disableRecipeBook && gui instanceof IRecipeShownListener) {
-			Minecraft.getInstance().player.getRecipeBook().setGuiOpen(false);
+//			Minecraft.getInstance().player.getRecipeBook().setGuiOpen(false); TODO ???
 
 			List<Widget> widgets = event.getWidgetList();
 			for(Widget w : widgets)

@@ -17,7 +17,8 @@ public class RealisticGenScreen extends BiomeGeneratorTypeScreens {
 
 	@Override
 	protected ChunkGenerator func_241869_a(Registry<Biome> biomeRegistry, Registry<DimensionSettings> settings, long seed) {
-		return new RealisticChunkGenerator(new OverworldBiomeProvider(seed, false, false, biomeRegistry), seed, DimensionSettings.Preset.field_236122_b_.func_236137_b_());
+		return new RealisticChunkGenerator(new OverworldBiomeProvider(seed, false, false, biomeRegistry), seed,
+				() -> settings.getOrThrow(DimensionSettings.field_242734_c));
 	}
 
 }

@@ -1,11 +1,16 @@
 package vazkii.quark.experimental.module;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.gen.GenerationStage;
-import net.minecraftforge.registries.GameData;
+import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.Module;
 import vazkii.quark.base.module.ModuleCategory;
@@ -19,11 +24,6 @@ import vazkii.quark.base.world.generator.CombinedGenerator;
 import vazkii.quark.world.config.UndergroundBiomeConfig;
 import vazkii.quark.world.gen.UndergroundBiomeGenerator;
 import vazkii.quark.world.gen.underground.CustomUndergroundBiome;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author WireSegal
@@ -140,7 +140,7 @@ public class CustomUndergroundBiomeModule extends Module {
             ResourceLocation loc = new ResourceLocation(split[0]);
             int weight = split.length == 1 ? 1 : Integer.parseInt(split[1]);
 
-            Block block = GameData.getWrapper(Block.class).getOrDefault(loc);
+            Block block = ForgeRegistries.BLOCKS.getValue(loc);
             if (block != null)
                 list.add(block.getDefaultState(), weight);
         }

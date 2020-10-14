@@ -2,14 +2,16 @@ package vazkii.quark.world.module;
 
 import com.google.common.collect.ImmutableSet;
 
+import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.DimensionSettings;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.VillageConfig;
+import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
-import net.minecraftforge.common.BiomeDictionary.Type;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
@@ -19,7 +21,7 @@ import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.world.config.BiomeTypeConfig;
 import vazkii.quark.world.gen.structure.BigDungeonStructure;
 
-@LoadModule(category = ModuleCategory.WORLD)
+@LoadModule(category = ModuleCategory.WORLD, hasSubscriptions = true)
 public class BigDungeonModule extends Module {
 
 	@Config(description = "The chance that a big dungeon spawn candidate will be allowed to spawn. 0.2 is 20%, which is the same as the Pillager Outpost.")
@@ -35,37 +37,40 @@ public class BigDungeonModule extends Module {
 	public static double chestChance = 0.5;
 
 	@Config
-	public static BiomeTypeConfig biomeTypes = new BiomeTypeConfig(true, Type.OCEAN, Type.BEACH, Type.NETHER, Type.END);
+	public static BiomeTypeConfig biomeTypes = new BiomeTypeConfig(true, Biome.Category.OCEAN, Biome.Category.BEACH, Biome.Category.NETHER, Biome.Category.THEEND);
 
-	public static final BigDungeonStructure STRUCTURE = new BigDungeonStructure(NoFeatureConfig.field_236558_a_);
-	
+	public static final BigDungeonStructure STRUCTURE = new BigDungeonStructure(VillageConfig.field_236533_a_);
+	private static StructureFeature<?, ?> feature;
+
 	@Override
 	public void construct() {
 		//		new FloodFillItem(this);
 		RegistryHelper.register(STRUCTURE);
-		
+
 		Structure.field_236365_a_.put(Quark.MOD_ID + ":big_dungeon", STRUCTURE);
 	}
 
 	@Override
-	@SuppressWarnings({ "rawtypes" })
 	public void setup() {
 		STRUCTURE.setup();	
-		
+
 		StructureSeparationSettings settings = new StructureSeparationSettings(20, 11, 79234823);
-		
-		// Register separation settings for big dungeon in the settings presets
-		ImmutableSet.of(DimensionSettings.Preset.field_236122_b_, DimensionSettings.Preset.field_236123_c_, DimensionSettings.Preset.field_236124_d_, 
-				DimensionSettings.Preset.field_236125_e_, DimensionSettings.Preset.field_236126_f_, DimensionSettings.Preset.field_236127_g_)
-		.forEach(p -> p.func_236137_b_().func_236108_a_().func_236195_a_().put(STRUCTURE, settings));
 
-		StructureFeature structure = STRUCTURE.func_236391_a_(NoFeatureConfig.NO_FEATURE_CONFIG);
+		ImmutableSet.of(DimensionSettings.field_242734_c, DimensionSettings.field_242735_d, DimensionSettings.field_242736_e, 
+				DimensionSettings.field_242737_f, DimensionSettings.field_242738_g, DimensionSettings.field_242739_h)
+		.stream()
+		.map(WorldGenRegistries.NOISE_SETTINGS::getValueForKey)
+		.map(DimensionSettings::getStructures)
+		.map(DimensionStructuresSettings::func_236195_a_) // get map
+		.forEach(m -> m.put(STRUCTURE, settings));
 
-		if(enabled) 
-			for(Biome b : ForgeRegistries.BIOMES.getValues()) { 
-				if(biomeTypes.canSpawn(b))
-					b.func_235063_a_(structure);
-			}
+		feature = STRUCTURE.func_236391_a_(new VillageConfig(() -> BigDungeonStructure.startPattern, maxRooms));
+	}
+
+	@SubscribeEvent
+	public void onBiomeLoad(BiomeLoadingEvent event) {
+		if(biomeTypes.canSpawn(event.getCategory()))
+			event.getGeneration().getStructures().add(() -> feature);
 	}
 
 }

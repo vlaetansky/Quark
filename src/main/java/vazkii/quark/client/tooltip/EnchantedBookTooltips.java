@@ -28,6 +28,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.GameData;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.ModuleLoader;
@@ -225,7 +226,7 @@ public class EnchantedBookTooltips {
 		testItems = Lists.newArrayList();
 
 		for (String loc : ImprovedTooltipsModule.enchantingStacks) {
-			Item item = GameData.getWrapper(Item.class).getOrDefault(new ResourceLocation(loc));
+			Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(loc));
 			if (item != null)
 				testItems.add(new ItemStack(item));
 		}
@@ -242,12 +243,12 @@ public class EnchantedBookTooltips {
 			String left = tokens[0];
 			String right = tokens[1];
 
-			Enchantment ench = GameData.getWrapper(Enchantment.class).getOrDefault(new ResourceLocation(left));
+			Enchantment ench = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(left));
 			if(ench != null) {
 				tokens = right.split(",");
 
 				for(String itemId : tokens) {
-					Item item = GameData.getWrapper(Item.class).getOrDefault(new ResourceLocation(itemId));
+					Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId));
 					if(item != null)
 						additionalStacks.put(ench, new ItemStack(item));
 				}
