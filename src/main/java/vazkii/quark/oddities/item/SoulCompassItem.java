@@ -57,7 +57,7 @@ public class SoulCompassItem extends QuarkItem {
             double angle;
             BlockPos pos = getPos(stack);
 
-            if(getDim(stack).equals(world.getDimensionKey().getRegistryName().toString())) { // TODO works?
+            if(getDim(stack).equals(world.getDimensionKey().getLocation().toString())) { // TODO works?
                 double yaw = hasEntity ? entity.rotationYaw : getFrameRotation((ItemFrameEntity) entity);
                 yaw = MathHelper.positiveModulo(yaw / 360.0, 1.0);
                 double relAngle = getDeathToAngle(entity, pos) / (Math.PI * 2);

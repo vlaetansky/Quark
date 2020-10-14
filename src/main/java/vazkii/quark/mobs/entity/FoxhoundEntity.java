@@ -136,7 +136,7 @@ public class FoxhoundEntity extends WolfEntity implements IMob {
 	@Override
 	public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, ILivingEntityData spawnDataIn, CompoundNBT dataTag) {
 		Biome biome = worldIn.getBiome(new BlockPos(getPositionVec()));
-		if(biome.getRegistryName().equals(Biomes.SOUL_SAND_VALLEY.getRegistryName()))
+		if(biome.getRegistryName().equals(Biomes.SOUL_SAND_VALLEY.getLocation()))
 			setBlue(true);
 		
 		return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);

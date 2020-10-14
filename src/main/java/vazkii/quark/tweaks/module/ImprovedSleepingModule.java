@@ -152,7 +152,7 @@ public class ImprovedSleepingModule extends Module {
 		MinecraftServer server = world.getServer();
 
 		if (event.side == LogicalSide.CLIENT ||
-				!world.getDimensionKey().getRegistryName().equals(DimensionType.OVERWORLD) ||
+				!world.getDimensionKey().getLocation().equals(DimensionType.OVERWORLD.getLocation()) ||
 				event.phase != TickEvent.Phase.END ||
 				server == null)
 			return;

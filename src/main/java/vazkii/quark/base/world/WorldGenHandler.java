@@ -13,8 +13,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.BlockPos;
@@ -41,7 +42,8 @@ public class WorldGenHandler {
 
 	private static Map<GenerationStage.Decoration, Supplier<ConfiguredFeature<?, ?>>> defers = new HashMap<>();
 	private static Map<GenerationStage.Decoration, SortedSet<WeightedGenerator>> generators = new HashMap<>();
-	private static List<Consumer<BiomeLoadingEvent>> featureConditionalizers = new LinkedList<>();
+
+	private static Map<GenerationStage.Decoration, List<Pair<BiPredicate<Feature<? extends IFeatureConfig>, IFeatureConfig>, BooleanSupplier>>> featureConditionalizers = new HashMap<>();
 
 	public static void loadComplete() {
 		for(GenerationStage.Decoration stage : GenerationStage.Decoration.values()) {
@@ -49,15 +51,44 @@ public class WorldGenHandler {
 			defers.put(stage, () -> feature);
 		}
 	}
-	
+
 	@SubscribeEvent
-	public static void onBiomesLoaded(BiomeLoadingEvent event) {
-		for(GenerationStage.Decoration stage : GenerationStage.Decoration.values())
-			event.getGeneration().getFeatures(stage).add(defers.get(stage));
-		
-		featureConditionalizers.forEach(c -> c.accept(event));
+	public static void onBiomesLoaded(BiomeLoadingEvent ev) {
+		BiomeGenerationSettingsBuilder settings = ev.getGeneration();
+
+		for(GenerationStage.Decoration stage : GenerationStage.Decoration.values()) {
+			List<Supplier<ConfiguredFeature<?, ?>>> features = settings.getFeatures(stage);
+			features.add(defers.get(stage));
+
+			if(featureConditionalizers.containsKey(stage)) {
+				List<Pair<BiPredicate<Feature<? extends IFeatureConfig>, IFeatureConfig>, BooleanSupplier>> list = featureConditionalizers.get(stage);
+
+				for(int i = 0; i < features.size(); i++) {
+					ConfiguredFeature<?, ?> configuredFeature = features.get(i).get();
+
+					if(!(configuredFeature instanceof ConditionalConfiguredFeature)) {
+						Feature<?> feature = configuredFeature.feature;
+						IFeatureConfig config = configuredFeature.config;
+
+						while(config instanceof DecoratedFeatureConfig) {
+							DecoratedFeatureConfig dconfig = (DecoratedFeatureConfig) config;
+							feature = dconfig.feature.get().feature;
+							config = dconfig.feature.get().config;
+						}
+						
+						System.out.println(feature.getRegistryName());
+						
+						for(Pair<BiPredicate<Feature<? extends IFeatureConfig>, IFeatureConfig>, BooleanSupplier> pair : list)
+							if(pair.getLeft().test(feature, config)) {
+								ConditionalConfiguredFeature<?, ?> conditional = new ConditionalConfiguredFeature<>(configuredFeature, pair.getRight());
+								features.set(i, () -> conditional);
+							}
+					}
+				}
+			}
+		}
 	}
-	
+
 	public static void addGenerator(Module module, IGenerator generator, GenerationStage.Decoration stage, int weight) {
 		WeightedGenerator weighted = new WeightedGenerator(module, generator, weight);
 		if(!generators.containsKey(stage))
@@ -66,32 +97,12 @@ public class WorldGenHandler {
 		generators.get(stage).add(weighted);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static void conditionalizeFeatures(GenerationStage.Decoration stage, BiPredicate<Feature<? extends IFeatureConfig>, IFeatureConfig> pred, BooleanSupplier condition) {
-		featureConditionalizers.add(ev -> {
-			BiomeGenerationSettingsBuilder settings = ev.getGeneration();
-			List<Supplier<ConfiguredFeature<?, ?>>> features = settings.getFeatures(stage);
-
-			for(int i = 0; i < features.size(); i++) {
-				ConfiguredFeature<?, ?> configuredFeature = features.get(i).get();
-
-				if(!(configuredFeature instanceof ConditionalConfiguredFeature)) {
-					Feature<?> feature = configuredFeature.feature;
-					IFeatureConfig config = configuredFeature.config;
-
-					if(config instanceof DecoratedFeatureConfig) {
-						DecoratedFeatureConfig dconfig = (DecoratedFeatureConfig) config;
-						feature = dconfig.feature.get().feature;
-						config = dconfig.feature.get().config;
-					}
-
-					if(pred.test(feature, config)) {
-						ConditionalConfiguredFeature conditional = new ConditionalConfiguredFeature(configuredFeature, condition);
-						features.set(i, () -> conditional);
-					}
-				}
-			}
-		});
+		if(!featureConditionalizers.containsKey(stage))
+			featureConditionalizers.put(stage, new LinkedList<>());
+		
+		List<Pair<BiPredicate<Feature<? extends IFeatureConfig>, IFeatureConfig>, BooleanSupplier>> list = featureConditionalizers.get(stage);
+		list.add(Pair.of(pred, condition));
 	}
 
 	public static void generateChunk(ISeedReader seedReader, ChunkGenerator generator, BlockPos pos, GenerationStage.Decoration stage) {
@@ -118,17 +129,17 @@ public class WorldGenHandler {
 			}
 		}
 	}
-	
+
 	private static int watchdogRun(IGenerator gen, Callable<Integer> run, int time, TimeUnit unit) {
 		ExecutorService exec = Executors.newSingleThreadExecutor();
 		Future<Integer> future = exec.submit(run);
 		exec.shutdown();
-		
+
 		try {
 			return future.get(time, unit);
 		} catch(Exception e) {
 			throw new RuntimeException("Error generating " + gen, e);
 		} 
 	}
-	
+
 }

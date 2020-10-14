@@ -110,7 +110,7 @@ public class BigStoneClustersModule extends Module {
 						if(w == null)
 							return false;
 
-						return ((World) w).getDimensionKey().getRegistryName().toString().equals(dimFinal);
+						return ((World) w).getDimensionKey().getLocation().toString().equals(dimFinal);
 					});
 				}
 			}

@@ -93,15 +93,15 @@ public class CompassAngleGetter {
 			boolean calculate = false;
 			BlockPos target = new BlockPos(0, 0, 0);
 
-			ResourceLocation dimension = worldIn.getDimensionKey().getRegistryName();
+			ResourceLocation dimension = worldIn.getDimensionKey().getLocation();
 			BlockPos lodestonePos = CompassItem.func_234670_d_(stack) ? this.getLodestonePosition(worldIn, stack.getOrCreateTag()) : null;
 			
 			if(lodestonePos != null) {
 				calculate = true;
 				target = lodestonePos;
-			} else if(dimension.equals(Dimension.THE_END.getRegistryName()) && CompassesWorkEverywhereModule.enableEnd) 
+			} else if(dimension.equals(Dimension.THE_END.getLocation()) && CompassesWorkEverywhereModule.enableEnd) 
 				calculate = true;
-			else if(dimension.equals(Dimension.THE_END.getRegistryName()) && isCalculated(stack) && CompassesWorkEverywhereModule.enableNether) {
+			else if(dimension.equals(Dimension.THE_END.getLocation()) && isCalculated(stack) && CompassesWorkEverywhereModule.enableNether) {
 				boolean set = ItemNBTHelper.getBoolean(stack, TAG_POSITION_SET, false);
 				if(set) {
 					int x = ItemNBTHelper.getInt(stack, TAG_NETHER_TARGET_X, 0);

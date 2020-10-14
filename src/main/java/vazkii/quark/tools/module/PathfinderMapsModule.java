@@ -105,7 +105,7 @@ public class PathfinderMapsModule extends Module {
 	}
 
 	private void loadTradeInfo(RegistryKey<Biome> biome, boolean enabled, int level, int minPrice, int maxPrice, int color) {
-		builtinTrades.add(new TradeInfo(biome.getRegistryName(), enabled, level, minPrice, maxPrice, color));
+		builtinTrades.add(new TradeInfo(biome.getLocation(), enabled, level, minPrice, maxPrice, color));
 	}
 	
 	private void loadCustomTradeInfo(ResourceLocation biome, boolean enabled, int level, int minPrice, int maxPrice, int color, String name) {
