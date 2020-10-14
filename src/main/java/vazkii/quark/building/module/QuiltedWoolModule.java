@@ -1,5 +1,8 @@
 package vazkii.quark.building.module;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -14,6 +17,8 @@ import vazkii.quark.base.module.ModuleCategory;
 @LoadModule(category = ModuleCategory.BUILDING)
 public class QuiltedWoolModule extends Module {
 
+	private static List<Block> quiltedWoolColors = new LinkedList<>();
+	
 	@Override
 	public void construct() {
 		for(DyeColor dye : DyeColor.values()) {
@@ -22,8 +27,14 @@ public class QuiltedWoolModule extends Module {
 					.hardnessAndResistance(0.8F)
 					.sound(SoundType.CLOTH));
 			
-			FuelHandler.addFuel(b, 100);
+			quiltedWoolColors.add(b);
 		}
+	}
+	
+	@Override
+	public void setup() {
+		for(Block b : quiltedWoolColors)
+			FuelHandler.addFuel(b, 100);
 	}
 	
 }
