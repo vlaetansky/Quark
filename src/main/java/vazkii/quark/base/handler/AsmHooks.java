@@ -33,6 +33,7 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.automation.client.render.ChainRenderer;
@@ -286,8 +287,8 @@ public class AsmHooks {
 	// Variant Chests
 	// ==========================================================================
 
-	public static void setActiveStructure(Structure<?> structure) {
-		VariantChestsModule.setActiveStructure(structure);
+	public static void setActiveStructure(Structure<?> structure, List<StructurePiece> components) {
+		VariantChestsModule.setActiveStructure(structure, components);
 	}
 	
 	public static BlockState getGenerationChestBlockState(BlockState current) {

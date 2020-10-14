@@ -21,7 +21,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.gen.feature.jigsaw.JigsawPiece;
+import net.minecraft.world.gen.feature.jigsaw.LegacySingleJigsawPiece;
+import net.minecraft.world.gen.feature.structure.AbstractVillagePiece;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -63,6 +67,7 @@ public class VariantChestsModule extends Module {
 	private static List<Block> allChests = new LinkedList<>();
 
 	private static Structure<?> currentStructure;
+	private static List<StructurePiece> currentComponents;
 	
 	@Config
 	private static boolean replaceWorldgenChests = true;
@@ -92,24 +97,52 @@ public class VariantChestsModule extends Module {
 		ClientRegistry.bindTileEntityRenderer(trappedChestTEType, VariantChestTileEntityRenderer::new);
 	}
 	
-	public static void setActiveStructure(Structure<?> structure) {
+	public static void setActiveStructure(Structure<?> structure, List<StructurePiece> components) {
 		currentStructure = structure;
+		currentComponents = components;
 	}
 	
 	public static BlockState getGenerationChestBlockState(BlockState current) {
 		if(replaceWorldgenChests && current.getBlock() == Blocks.CHEST && currentStructure != null) {
-			ResourceLocation name = currentStructure.getRegistryName();
+			ResourceLocation res = currentStructure.getRegistryName();
+			if(res == null)
+				return current;
+			String name = res.toString();
+			
+			if("minecraft:village".equals(name)) {
+				if(currentComponents != null && currentComponents.size() > 0) {
+					StructurePiece first = currentComponents.get(0);
+					if(first instanceof AbstractVillagePiece) {
+						AbstractVillagePiece avp = (AbstractVillagePiece) first;
+						JigsawPiece jigsaw = avp.getJigsawPiece();
+						if(jigsaw instanceof LegacySingleJigsawPiece) {
+							LegacySingleJigsawPiece legacyJigsaw = (LegacySingleJigsawPiece) jigsaw;
+							String type = legacyJigsaw.toString().replaceAll("\\w+\\[\\w+\\[minecraft\\:village\\/(.+?)\\/.+\\]\\]", "_$1");
+							name += type;
+						}
+					}
+				}
+			}
 			
 			int index = -1;
-			switch(name.toString()) {
+			switch(name) {
+			case "minecraft:village_plains":
+				index = 0; // oak
+				break;
 			case "minecraft:igloo":
+			case "minecraft:village_snowy":
+			case "minecraft:village_taiga":
 				index = 1; // spruce
 				break;
 			case "minecraft:desert_pyramid":
 				index = 2; // birch
 				break;
 			case "minecraft:jungle_pyramid":
+			case "minecraft:village_desert":
 				index = 3; // jungle
+				break;
+			case "minecraft:village_savanna":
+				index = 2; // acacia
 				break;
 			case "minecraft:mansion":
 			case "minecraft:pillager_outpost":
