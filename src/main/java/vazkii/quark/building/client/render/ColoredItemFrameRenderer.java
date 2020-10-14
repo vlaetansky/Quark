@@ -62,8 +62,8 @@ public class ColoredItemFrameRenderer extends EntityRenderer<ColoredItemFrameEnt
 
 			
 			// func_176610_l = name()
-			LOCATIONS_MODEL.put(color, new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, color.func_176610_l() + "_frame_empty"), "inventory"));
-			LOCATIONS_MODEL_MAP.put(color, new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, color.func_176610_l() + "_frame_map"), "inventory"));
+			LOCATIONS_MODEL.put(color, new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, color.getString() + "_frame_empty"), "inventory"));
+			LOCATIONS_MODEL_MAP.put(color, new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, color.getString() + "_frame_map"), "inventory"));
 		}
 	}
 

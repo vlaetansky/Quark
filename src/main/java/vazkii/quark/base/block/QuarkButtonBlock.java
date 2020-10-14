@@ -1,17 +1,17 @@
 package vazkii.quark.base.block;
 
+import java.util.function.BooleanSupplier;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import net.minecraft.block.AbstractButtonBlock;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.world.IWorldReader;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.module.Module;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.function.BooleanSupplier;
 
 /**
  * @author WireSegal
@@ -35,8 +35,8 @@ public abstract class QuarkButtonBlock extends AbstractButtonBlock implements IQ
     @Override
     protected abstract SoundEvent getSoundEvent(boolean powered);
 
-    @Override // tickRate
-    public abstract int func_235471_c_();
+    @Override 
+    public abstract int getActiveDuration();
     
     @Override
     public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {

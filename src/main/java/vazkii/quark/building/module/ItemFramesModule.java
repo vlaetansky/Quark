@@ -100,8 +100,8 @@ public class ItemFramesModule extends Module {
     	// func_176610_l = name
         ModelLoader.addSpecialModel(new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, "glass_frame"), "inventory"));
         for (DyeColor color : DyeColor.values()) {
-            ModelLoader.addSpecialModel(new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, color.func_176610_l() + "_frame_empty"), "inventory"));
-            ModelLoader.addSpecialModel(new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, color.func_176610_l() + "_frame_map"), "inventory"));
+            ModelLoader.addSpecialModel(new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, color.getString() + "_frame_empty"), "inventory"));
+            ModelLoader.addSpecialModel(new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, color.getString() + "_frame_map"), "inventory"));
         }
     }
 }

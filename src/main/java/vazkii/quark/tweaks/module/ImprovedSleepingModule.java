@@ -71,12 +71,12 @@ public class ImprovedSleepingModule extends Module {
 			if(afk) {
 				player.getPersistentData().putBoolean(TAG_AFK, true);
 				TranslationTextComponent text = new TranslationTextComponent("quark.misc.now_afk");
-				text.func_240701_a_(TextFormatting.AQUA);
+				text.mergeStyle(TextFormatting.AQUA);
 				SpamlessChatMessage.sendToPlayer(player, AFK_MSG, text);
 			} else {
 				player.getPersistentData().putBoolean(TAG_AFK, false);
 				TranslationTextComponent text = new TranslationTextComponent("quark.misc.left_afk");
-				text.func_240701_a_(TextFormatting.AQUA);
+				text.mergeStyle(TextFormatting.AQUA);
 				SpamlessChatMessage.sendToPlayer(player, AFK_MSG, text);
 			}
 		}
@@ -111,7 +111,7 @@ public class ImprovedSleepingModule extends Module {
 		TranslationTextComponent message = new TranslationTextComponent(world.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE) ?
 				(isDay ? "quark.misc.day_has_passed" : ("quark.misc.night_has_passed" + msg)) :
 				(isDay ? "quark.misc.day_no_passage" : "quark.misc.night_no_passage"));
-		message.func_230530_a_(message.getStyle().func_240712_a_(TextFormatting.GOLD));
+		message.setStyle(message.getStyle().applyFormatting(TextFormatting.GOLD));
 
 		for (ServerPlayerEntity player : server.getPlayerList().getPlayers())
 			SpamlessChatMessage.sendToPlayer(player, SLEEP_MSG, message);
@@ -152,7 +152,7 @@ public class ImprovedSleepingModule extends Module {
 		MinecraftServer server = world.getServer();
 
 		if (event.side == LogicalSide.CLIENT ||
-				world.func_234922_V_() != DimensionType.field_235999_c_ ||
+				!world.getDimensionKey().getRegistryName().equals(DimensionType.OVERWORLD) ||
 				event.phase != TickEvent.Phase.END ||
 				server == null)
 			return;
@@ -200,7 +200,7 @@ public class ImprovedSleepingModule extends Module {
 		ImprovedSleepingModule.sleepingPlayers = sleepingPlayers;
 
 		if((!newSleepingPlayers.isEmpty() || !wasSleepingPlayers.isEmpty()) && world.getPlayers().size() != 1) {
-			boolean isDay = world.getCelestialAngle(0F) < 0.5;
+			boolean isDay = world.getCelestialAngleRadians(0F) < 0.5;
 
 			int requiredPlayers = Math.max((int) Math.ceil((legitPlayers * percentReq)), 0);
 
@@ -209,14 +209,14 @@ public class ImprovedSleepingModule extends Module {
 			StringTextComponent sleepingList = new StringTextComponent("");
 
 			for(String s : sleepingPlayers)
-				sleepingList.func_230529_a_(new StringTextComponent("\n\u2714 " + s).func_240701_a_(TextFormatting.GREEN));
+				sleepingList.append(new StringTextComponent("\n\u2714 " + s).mergeStyle(TextFormatting.GREEN));
 			for(String s : nonSleepingPlayers)
-				sleepingList.func_230529_a_(new StringTextComponent("\n\u2718 " + s).func_240701_a_(TextFormatting.RED));
+				sleepingList.append(new StringTextComponent("\n\u2718 " + s).mergeStyle(TextFormatting.RED));
 
 			TranslationTextComponent hoverText = new TranslationTextComponent("quark.misc.sleeping_list_header", sleepingList);
 
-			HoverEvent hover = new HoverEvent(Action.field_230550_a_, hoverText.func_230532_e_());
-			sibling.func_240703_c_(sibling.getStyle().func_240716_a_(hover));
+			HoverEvent hover = new HoverEvent(Action.SHOW_TEXT, hoverText.deepCopy());
+			sibling.setStyle(sibling.getStyle().setHoverEvent(hover));
 			sibling.getStyle().setUnderlined(true);
 
 			String newPlayer = newSleepingPlayers.isEmpty() ? wasSleepingPlayers.get(0) : newSleepingPlayers.get(0);
@@ -225,10 +225,10 @@ public class ImprovedSleepingModule extends Module {
 					(newSleepingPlayers.isEmpty() ? "quark.misc.person_not_sleeping" : "quark.misc.person_sleeping");
 
 			TranslationTextComponent message = new TranslationTextComponent(translationKey, newPlayer);
-			message.func_240701_a_(TextFormatting.GOLD);
-			message.func_240702_b_(" ");
+			message.mergeStyle(TextFormatting.GOLD);
+			message.appendString(" ");
 
-			message.func_230529_a_(sibling.func_230532_e_());
+			message.append(sibling.deepCopy());
 
 			for (ServerPlayerEntity player : server.getPlayerList().getPlayers())
 				SpamlessChatMessage.sendToPlayer(player, SLEEP_MSG, message);
@@ -244,7 +244,7 @@ public class ImprovedSleepingModule extends Module {
 			if(lastPlayer.getPersistentData().getBoolean(TAG_AFK)) {
 				lastPlayer.getPersistentData().putBoolean(TAG_AFK, false);
 				TranslationTextComponent text = new TranslationTextComponent("quark.misc.left_afk");
-				text.func_240701_a_(TextFormatting.AQUA);
+				text.mergeStyle(TextFormatting.AQUA);
 
 				if (lastPlayer instanceof ServerPlayerEntity)
 					SpamlessChatMessage.sendToPlayer(lastPlayer, AFK_MSG, text);

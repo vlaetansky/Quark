@@ -80,7 +80,7 @@ public class PickarangModule extends Module {
 			properties.maxDamage(durability);
 		
 		if(netherite)
-			properties.func_234689_a_();
+			properties.isImmuneToFire();
 		
 		return properties;
 	}

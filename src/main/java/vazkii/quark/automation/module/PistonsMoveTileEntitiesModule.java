@@ -57,7 +57,7 @@ public class PistonsMoveTileEntitiesModule extends Module {
 			return;
 
 		for (Pair<BlockPos, CompoundNBT> delay : delays) {
-			TileEntity tile = TileEntity.func_235657_b_(event.world.getBlockState(delay.getLeft()), delay.getRight()); // create
+			TileEntity tile = TileEntity.readTileEntity(event.world.getBlockState(delay.getLeft()), delay.getRight());
 			event.world.setTileEntity(delay.getLeft(), tile);
 			if (tile != null)
 				tile.updateContainingBlockInfo();
@@ -188,7 +188,7 @@ public class PistonsMoveTileEntitiesModule extends Module {
 		if (remove)
 			worldMovements.remove(pos);
 
-		return TileEntity.func_235657_b_(world.getBlockState(pos), ret); // create
+		return TileEntity.readTileEntity(world.getBlockState(pos), ret);
 	}
 
 	private static TileEntity getAndClearMovement(World world, BlockPos pos) {

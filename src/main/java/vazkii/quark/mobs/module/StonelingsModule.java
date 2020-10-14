@@ -64,7 +64,7 @@ public class StonelingsModule extends Module {
 	
 	@Override
 	public void setup() {
-		GlobalEntityTypeAttributes.put(stonelingType, StonelingEntity.prepareAttributes().func_233813_a_());
+		GlobalEntityTypeAttributes.put(stonelingType, StonelingEntity.prepareAttributes().create());
 	}
 
 	@Override

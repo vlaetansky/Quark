@@ -37,7 +37,7 @@ public class FormShulkerGoal extends RandomWalkingGoal {
 			Random random = endermite.getRNG();
 
 			if(random.nextDouble() < EndermitesFormShulkersModule.chance) {
-				facing = Direction.func_239631_a_(random); // random
+				facing = Direction.getRandomDirection(random);
 				Vector3d pos = endermite.getPositionVec();
 				BlockPos blockpos = (new BlockPos(pos.x, pos.y + 0.5D, pos.z)).offset(facing);
 				BlockState iblockstate = endermite.getEntityWorld().getBlockState(blockpos);

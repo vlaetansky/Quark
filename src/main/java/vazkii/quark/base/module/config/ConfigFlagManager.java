@@ -21,7 +21,7 @@ public final class ConfigFlagManager {
 	public ConfigFlagManager() {
 		CraftingHelper.register(new FlagRecipeCondition.Serializer(this, new ResourceLocation(Quark.MOD_ID, "flag")));
 		flagConditionType = new LootConditionType(new FlagLootCondition.Serializer(this));
-		Registry.register(Registry.field_239704_ba_, new ResourceLocation(Quark.MOD_ID, "flag"), flagConditionType);
+		Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation(Quark.MOD_ID, "flag"), flagConditionType);
 
 		CraftingHelper.register(new ResourceLocation(Quark.MOD_ID, "potion"), PotionIngredient.Serializer.INSTANCE);
 		CraftingHelper.register(new ResourceLocation(Quark.MOD_ID, "flag"),  new FlagIngredient.Serializer(this));

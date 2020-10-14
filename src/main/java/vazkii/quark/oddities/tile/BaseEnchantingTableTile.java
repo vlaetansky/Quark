@@ -51,11 +51,11 @@ public abstract class BaseEnchantingTableTile extends TileSimpleInventory implem
 	}
 
 	@Override 
-	public void func_230337_a_(BlockState p_230337_1_, CompoundNBT compound) { // read
-		super.func_230337_a_(p_230337_1_, compound);
+	public void read(BlockState p_230337_1_, CompoundNBT compound) {
+		super.read(p_230337_1_, compound);
 
 		if(compound.contains("CustomName", 8))
-			customName = ITextComponent.Serializer.func_240643_a_(compound.getString("CustomName"));
+			customName = ITextComponent.Serializer.getComponentFromJson(compound.getString("CustomName"));
 	}
 
 	@Override

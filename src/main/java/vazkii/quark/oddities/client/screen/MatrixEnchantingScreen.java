@@ -8,7 +8,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.RenderHelper;
@@ -17,7 +16,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -82,8 +80,8 @@ public class MatrixEnchantingScreen extends ContainerScreen<MatrixEnchantingCont
 		}
 	}
 
-	@Override // drawContainerGui
-	protected void func_230450_a_(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+	@Override
+	protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
 		Minecraft mc = getMinecraft();
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.getTextureManager().bindTexture(BACKGROUND);
@@ -122,9 +120,9 @@ public class MatrixEnchantingScreen extends ContainerScreen<MatrixEnchantingCont
 			font.drawString(stack, text, x, y, has ? 0xc8ff8f : 0xff8f8f);
 		}
 	}
-
-	@Override // drawContainerStrings 
-	protected void func_230451_b_(MatrixStack matrix, int mouseX, int mouseY) {
+	
+	@Override
+	protected void drawGuiContainerForegroundLayer(MatrixStack matrix, int mouseX, int mouseY) {
 		font.drawString(matrix, enchanter.getDisplayName().getString(), 12, 5, 4210752);
 		font.drawString(matrix, playerInv.getDisplayName().getString(), 8, ySize - 96 + 2, 4210752);
 
@@ -145,31 +143,31 @@ public class MatrixEnchantingScreen extends ContainerScreen<MatrixEnchantingCont
 			RenderHelper.disableStandardItemLighting();
 
 		if(hoveredPiece != null) {
-			List<ITextProperties> tooltip = new LinkedList<>();
-			tooltip.add(new TranslationTextComponent(hoveredPiece.enchant.getDisplayName(hoveredPiece.level).getString().replaceAll("\\u00A7.", "")).func_240701_a_(TextFormatting.GOLD));
+			List<ITextComponent> tooltip = new LinkedList<>();
+			tooltip.add(new TranslationTextComponent(hoveredPiece.enchant.getDisplayName(hoveredPiece.level).getString().replaceAll("\\u00A7.", "")).mergeStyle(TextFormatting.GOLD));
 
 			if(hoveredPiece.influence > 0)
-				tooltip.add(new TranslationTextComponent("quark.gui.enchanting.influence", (int) (hoveredPiece.influence * MatrixEnchantingModule.influencePower * 100)).func_240701_a_(TextFormatting.GRAY));
+				tooltip.add(new TranslationTextComponent("quark.gui.enchanting.influence", (int) (hoveredPiece.influence * MatrixEnchantingModule.influencePower * 100)).mergeStyle(TextFormatting.GRAY));
 
 			int max = hoveredPiece.getMaxXP();
 			if(max > 0)
-				tooltip.add(new TranslationTextComponent("quark.gui.enchanting.upgrade", hoveredPiece.xp, max).func_240701_a_(TextFormatting.GRAY));
+				tooltip.add(new TranslationTextComponent("quark.gui.enchanting.upgrade", hoveredPiece.xp, max).mergeStyle(TextFormatting.GRAY));
 
 			if(gridHoverX == -1) {
 				tooltip.add(new StringTextComponent(""));
-				tooltip.add(new TranslationTextComponent("quark.gui.enchanting.left_click").func_240701_a_(TextFormatting.GRAY));
-				tooltip.add(new TranslationTextComponent("quark.gui.enchanting.right_click").func_240701_a_(TextFormatting.GRAY));
+				tooltip.add(new TranslationTextComponent("quark.gui.enchanting.left_click").mergeStyle(TextFormatting.GRAY));
+				tooltip.add(new TranslationTextComponent("quark.gui.enchanting.right_click").mergeStyle(TextFormatting.GRAY));
 			} else if(selectedPiece != -1) {
 				Piece p = getPiece(selectedPiece);
 				if(p != null && p.enchant == hoveredPiece.enchant && hoveredPiece.level < hoveredPiece.enchant.getMaxLevel()) {
 					tooltip.add(new StringTextComponent(""));
-					tooltip.add(new TranslationTextComponent("quark.gui.enchanting.merge").func_240701_a_(TextFormatting.GRAY));
+					tooltip.add(new TranslationTextComponent("quark.gui.enchanting.merge").mergeStyle(TextFormatting.GRAY));
 				}
 			}
 
-			renderTooltip(stack, tooltip, mouseX, mouseY);
+			func_243308_b(stack, tooltip, mouseX, mouseY); // renderTooltip
 		} else 
-			func_230459_a_(stack, mouseX, mouseY); // renderHoveredTooltip
+			renderHoveredTooltip(stack, mouseX, mouseY);
 	}
 
 	@Override

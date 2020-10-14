@@ -30,10 +30,10 @@ public class CompassesWorkEverywhereModule extends Module {
 	public void clientSetup() {
 		// func_239418_a_ = addPropertyOverride
 		if(enabled && (enableCompassNerf || enableNether || enableEnd))
-			ItemModelsProperties.func_239418_a_(Items.COMPASS, new ResourceLocation("angle"), new CompassAngleGetter.Impl());
+			ItemModelsProperties.registerProperty(Items.COMPASS, new ResourceLocation("angle"), new CompassAngleGetter.Impl());
 		
 		if(enabled && enableClockNerf)
-			ItemModelsProperties.func_239418_a_(Items.CLOCK, new ResourceLocation("time"), new ClockTimeGetter.Impl());
+			ItemModelsProperties.registerProperty(Items.CLOCK, new ResourceLocation("time"), new ClockTimeGetter.Impl());
 	}
 	
 	@SubscribeEvent

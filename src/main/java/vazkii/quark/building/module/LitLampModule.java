@@ -18,6 +18,6 @@ public class LitLampModule extends Module {
     public void construct() {
         new QuarkBlock("lit_lamp", this, ItemGroup.DECORATIONS,
                 Block.Properties.from(Blocks.REDSTONE_LAMP)
-                .func_235838_a_(s -> 15)); // setLightValue
+                .setLightLevel(s -> 15));
     }
 }

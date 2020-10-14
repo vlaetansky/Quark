@@ -76,7 +76,7 @@ public class FoxhoundModel extends EntityModel<FoxhoundEntity> {
 	@Override
 	public void setLivingAnimations(FoxhoundEntity hound, float limbSwing, float limbSwingAmount, float partialTickTime) {
 		this.entity = hound;
-		if (hound.func_233684_eK_() || hound.func_230256_F__() > 0)
+		if (hound.isSitting() || hound.func_230256_F__() > 0)
 			this.tail.rotateAngleX = -0.6544984695F;
 		else
 			this.tail.rotateAngleX = -1.3089969389957472F + MathHelper.cos(limbSwing * 0.6662F) * limbSwingAmount;
@@ -103,7 +103,7 @@ public class FoxhoundModel extends EntityModel<FoxhoundEntity> {
 			this.setRotateAngle(leftFrontLeg, 0.0F, 0.0F, 1.3962634015954636F);
 			this.setRotateAngle(rightBackLeg, -1.0471975511965976F, -0.08726646259971647F, 1.48352986419518F);
 			this.setRotateAngle(leftBackLeg, -0.7853981633974483F, 0.0F, 1.2217304763960306F);
-		} else if (hound.func_233684_eK_()) {
+		} else if (hound.isSitting()) {
 			this.head.setRotationPoint(0.0F, 12.0F, 2.0F);
 			this.body.setRotationPoint(0.0F, 23.0F, 7.0F);
 			this.setRotateAngle(body, 0.7853981633974483F, this.body.rotateAngleY, 0F);
@@ -146,7 +146,7 @@ public class FoxhoundModel extends EntityModel<FoxhoundEntity> {
 	@Override
 	public void render(MatrixStack matrix, IVertexBuilder vb, int p_225598_3_, int p_225598_4_, float p_225598_5_, float p_225598_6_, float p_225598_7_, float p_225598_8_) {
 		matrix.push();
-		matrix.translate(0, 0, entity.func_233684_eK_() ? -0.25F : -0.35F);
+		matrix.translate(0, 0, entity.isSitting() ? -0.25F : -0.35F);
 
 		matrix.push();
 		

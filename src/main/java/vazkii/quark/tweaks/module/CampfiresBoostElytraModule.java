@@ -27,7 +27,7 @@ public class CampfiresBoostElytraModule extends Module {
 		if(player.isElytraFlying()) {
 			Vector3d motion = player.getMotion();
 			if(motion.getY() < maxSpeed) {
-				BlockPos pos = player.func_233580_cy_(); // getPosition
+				BlockPos pos = player.getPosition();
 				World world = player.world;
 				
 				int moves = 0;

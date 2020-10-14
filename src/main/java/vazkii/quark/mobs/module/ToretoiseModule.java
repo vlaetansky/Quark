@@ -57,7 +57,7 @@ public class ToretoiseModule extends Module {
 	
 	@Override
 	public void setup() {
-		GlobalEntityTypeAttributes.put(toretoiseType, ToretoiseEntity.prepareAttributes().func_233813_a_());
+		GlobalEntityTypeAttributes.put(toretoiseType, ToretoiseEntity.prepareAttributes().create());
 	}
 	
 	@Override

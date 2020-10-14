@@ -20,7 +20,7 @@ public class MagmaBrickBlock extends QuarkBlock implements IVariantsShouldBeEmis
 		super("magma_bricks", module, ItemGroup.BUILDING_BLOCKS, 
 				Block.Properties.from(Blocks.MAGMA_BLOCK)
 				.hardnessAndResistance(1.5F, 10F)
-				.func_235856_e_((s, r, p) -> true)); // emissive rendering
+				.setEmmisiveRendering((s, r, p) -> true));
 	}
 	
 	@Override

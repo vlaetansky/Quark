@@ -63,7 +63,7 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrameEntity>
 
 	public GlassItemFrameRenderer(EntityRendererManager renderManagerIn, ItemRenderer itemRendererIn) {
 		super(renderManagerIn);
-		bannerModel = BannerTileEntityRenderer.func_228836_a_();
+		bannerModel = BannerTileEntityRenderer.getModelRender();
 		this.itemRenderer = itemRendererIn;
 		this.defaultRenderer = (ItemFrameRenderer) renderManagerIn.renderers.get(EntityType.ITEM_FRAME);
 	}

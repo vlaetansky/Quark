@@ -245,7 +245,7 @@ public class MagnetizedBlockTileEntity extends TileEntity implements ITickableTi
             tileData.putInt("x", this.pos.getX());
             tileData.putInt("y", this.pos.getY());
             tileData.putInt("z", this.pos.getZ());
-            return TileEntity.func_235657_b_(magnetState, subTile); // create
+            return TileEntity.readTileEntity(magnetState, subTile);
         }
         
         return null;
@@ -310,8 +310,8 @@ public class MagnetizedBlockTileEntity extends TileEntity implements ITickableTi
     
     
     @Override
-    public void func_230337_a_(BlockState p_230337_1_, CompoundNBT compound) { // read
-    	super.func_230337_a_(p_230337_1_, compound);
+    public void read(BlockState p_230337_1_, CompoundNBT compound) {
+    	super.read(p_230337_1_, compound);
     	
         this.magnetState = NBTUtil.readBlockState(compound.getCompound("blockState"));
         this.magnetFacing = Direction.byIndex(compound.getInt("facing"));

@@ -92,7 +92,7 @@ public class GlintRenderType {
             .writeMask(RenderState.COLOR_WRITE)
             .cull(RenderState.CULL_DISABLED)
             .depthTest(RenderState.DEPTH_EQUAL)
-            .transparency(RenderState.field_239240_f_)
+            .transparency(RenderState.GLINT_TRANSPARENCY)
             .texturing(RenderState.GLINT_TEXTURING)
             .build(false));
     }
@@ -106,7 +106,7 @@ public class GlintRenderType {
             .writeMask(RenderState.COLOR_WRITE)
             .cull(RenderState.CULL_DISABLED)
             .depthTest(RenderState.DEPTH_EQUAL)
-            .transparency(RenderState.field_239240_f_)
+            .transparency(RenderState.GLINT_TRANSPARENCY)
             .texturing(RenderState.ENTITY_GLINT_TEXTURING)
             .build(false));
     }
@@ -119,7 +119,7 @@ public class GlintRenderType {
             .writeMask(RenderState.COLOR_WRITE)
             .cull(RenderState.CULL_DISABLED)
             .depthTest(RenderState.DEPTH_EQUAL)
-            .transparency(RenderState.field_239240_f_)
+            .transparency(RenderState.GLINT_TRANSPARENCY)
             .texturing(RenderState.ENTITY_GLINT_TEXTURING)
             .layer(RenderState.field_239235_M_)
             .build(false));
@@ -133,7 +133,7 @@ public class GlintRenderType {
             .writeMask(RenderState.COLOR_WRITE)
             .cull(RenderState.CULL_DISABLED)
             .depthTest(RenderState.DEPTH_EQUAL)
-            .transparency(RenderState.field_239240_f_)
+            .transparency(RenderState.GLINT_TRANSPARENCY)
             .texturing(RenderState.ENTITY_GLINT_TEXTURING)
             .layer(RenderState.field_239235_M_)
             .build(false));

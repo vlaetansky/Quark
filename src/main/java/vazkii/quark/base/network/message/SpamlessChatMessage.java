@@ -37,8 +37,8 @@ public class SpamlessChatMessage implements IMessage {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public boolean receive(NetworkEvent.Context context) {
-		context.enqueueWork(() -> Minecraft.getInstance().ingameGUI.getChatGUI()
-				.printChatMessageWithOptionalDeletion(message, id));
+//		context.enqueueWork(() -> Minecraft.getInstance().ingameGUI.getChatGUI()
+//				.printChatMessageWithOptionalDeletion(message, id)); TODO AT
 		return true;
 	}
 

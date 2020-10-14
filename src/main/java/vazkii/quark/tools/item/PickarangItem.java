@@ -124,8 +124,8 @@ public class PickarangItem extends QuarkItem {
 		Multimap<Attribute, AttributeModifier> multimap = Multimaps.newSetMultimap(new HashMap<>(), HashSet::new);
 
 		if (slot == EquipmentSlotType.MAINHAND) {
-			multimap.put(Attributes.field_233823_f_, new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 2, AttributeModifier.Operation.ADDITION)); // ATTACK_DAMAGE
-			multimap.put(Attributes.field_233825_h_, new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2.8, AttributeModifier.Operation.ADDITION)); // ATTACK_SPEED
+			multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 2, AttributeModifier.Operation.ADDITION)); 
+			multimap.put(Attributes.ATTACK_SPEED, new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2.8, AttributeModifier.Operation.ADDITION)); 
 		}
 
 		return multimap;

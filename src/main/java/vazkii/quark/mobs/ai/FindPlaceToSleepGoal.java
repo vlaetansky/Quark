@@ -36,7 +36,7 @@ public class FindPlaceToSleepGoal extends MoveToBlockGoal {
 
 	@Override
 	public boolean shouldExecute() {
-		return this.foxhound.isTamed() && !this.foxhound.func_233684_eK_() && super.shouldExecute();
+		return this.foxhound.isTamed() && !this.foxhound.isSitting() && super.shouldExecute();
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class FindPlaceToSleepGoal extends MoveToBlockGoal {
 	public void startExecuting() {
 		super.startExecuting();
 		hadSlept = false;
-		this.foxhound.func_233686_v_(false);
+		this.foxhound.func_233687_w_(false); // setSitting
 		this.foxhound.getSleepGoal().setSleeping(false);
 		this.foxhound.setSleeping(false);
 	}
@@ -57,7 +57,7 @@ public class FindPlaceToSleepGoal extends MoveToBlockGoal {
 	public void resetTask() {
 		super.resetTask();
 		hadSlept = false;
-		this.foxhound.func_233686_v_(false);
+		this.foxhound.func_233687_w_(false); // setSitting
 		this.foxhound.getSleepGoal().setSleeping(false);
 		this.foxhound.setSleeping(false);
 	}
@@ -69,11 +69,11 @@ public class FindPlaceToSleepGoal extends MoveToBlockGoal {
 		Vector3d motion = foxhound.getMotion();
 
 		if (!this.getIsAboveDestination() || motion.x > 0 || motion.z > 0) {
-			this.foxhound.func_233686_v_(false);
+			this.foxhound.func_233687_w_(false); // setSitting
 			this.foxhound.getSleepGoal().setSleeping(false);
 			this.foxhound.setSleeping(false);
-		} else if (!this.foxhound.func_233684_eK_()) {
-			this.foxhound.func_233686_v_(true);
+		} else if (!this.foxhound.isSitting()) {
+			this.foxhound.func_233687_w_(true); // setSitting
 			this.foxhound.getSleepGoal().setSleeping(true);
 			this.foxhound.setSleeping(true);
 			hadSlept = true;

@@ -25,7 +25,7 @@ public class WeatherSensorModule extends Module {
     public void construct() {
         Block weatherSensor = new WeatherSensorBlock("weather_sensor", this, ItemGroup.REDSTONE,
                 Block.Properties.create(Material.ROCK, MaterialColor.MAGENTA)
-                .func_235861_h_() // needs tool
+                .setRequiresTool()
         		.harvestTool(ToolType.PICKAXE)
         		.hardnessAndResistance(0.2F));
         

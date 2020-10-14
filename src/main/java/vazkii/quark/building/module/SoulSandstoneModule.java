@@ -17,7 +17,7 @@ public class SoulSandstoneModule extends Module {
 	@Override
 	public void construct() {
 		Block.Properties props = Block.Properties.create(Material.ROCK, MaterialColor.BROWN)
-				.func_235861_h_() // needs tool
+				.setRequiresTool()
         		.harvestTool(ToolType.PICKAXE)
         		.hardnessAndResistance(0.8F);
 		

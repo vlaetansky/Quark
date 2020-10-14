@@ -230,7 +230,7 @@ public class LockRotationModule extends Module {
 		else {
 			boolean locked = player.getPersistentData().getBoolean(TAG_LOCKED_ONCE);
 			if(!locked) {
-				ITextComponent keybind = new KeybindTextComponent("quark.keybind.lock_rotation").func_240701_a_(TextFormatting.AQUA);
+				ITextComponent keybind = new KeybindTextComponent("quark.keybind.lock_rotation").mergeStyle(TextFormatting.AQUA);
 				ITextComponent text = new TranslationTextComponent("quark.misc.rotation_lock", keybind);
 				player.sendMessage(text, UUID.randomUUID());
 

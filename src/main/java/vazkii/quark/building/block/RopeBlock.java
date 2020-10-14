@@ -206,7 +206,7 @@ public class RopeBlock extends QuarkBlock implements IBlockItemProvider {
 		
 		if(tile != null) {
 			tile.setPos(dstPos);
-			TileEntity target = TileEntity.func_235657_b_(state, tile.write(new CompoundNBT())); // create
+			TileEntity target = TileEntity.readTileEntity(state, tile.write(new CompoundNBT()));
 			if (target != null) {
 				world.setTileEntity(dstPos, target);
 

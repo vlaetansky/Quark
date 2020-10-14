@@ -45,6 +45,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -107,7 +108,7 @@ public class ToretoiseEntity extends AnimalEntity {
 	}
 
 	@Override
-	public ILivingEntityData onInitialSpawn(IWorld p_213386_1_, DifficultyInstance p_213386_2_, SpawnReason p_213386_3_, ILivingEntityData p_213386_4_, CompoundNBT p_213386_5_) {
+	public ILivingEntityData onInitialSpawn(IServerWorld p_213386_1_, DifficultyInstance p_213386_2_, SpawnReason p_213386_3_, ILivingEntityData p_213386_4_, CompoundNBT p_213386_5_) {
 		popOre(true);
 		return p_213386_4_;
 	}
@@ -327,7 +328,7 @@ public class ToretoiseEntity extends AnimalEntity {
 		return !isTamed;
 	}
 
-	public static boolean spawnPredicate(EntityType<? extends ToretoiseEntity> type, IWorld world, SpawnReason reason, BlockPos pos, Random rand) {
+	public static boolean spawnPredicate(EntityType<? extends ToretoiseEntity> type, IServerWorld world, SpawnReason reason, BlockPos pos, Random rand) {
 		return world.getDifficulty() != Difficulty.PEACEFUL && pos.getY() <= ToretoiseModule.maxYLevel && MiscUtil.validSpawnLight(world, pos, rand) && MiscUtil.validSpawnLocation(type, world, reason, pos);
 	}
 
@@ -404,13 +405,13 @@ public class ToretoiseEntity extends AnimalEntity {
 
     public static AttributeModifierMap.MutableAttribute prepareAttributes() {
         return MobEntity.func_233666_p_()
-                .func_233815_a_(Attributes.field_233818_a_, 60.0D) // MAX_HEALTH
-                .func_233815_a_(Attributes.field_233821_d_, 0.08D) // MOEVMENT_SPEED
-                .func_233815_a_(Attributes.field_233820_c_, 1.0D); // KNOCKBACK_RESISTANCE
+                .createMutableAttribute(Attributes.MAX_HEALTH, 60.0D)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.08D) 
+                .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1.0D);
     }
 
-	@Override
-	public AgeableEntity createChild(AgeableEntity arg0) {
+	@Override // createChild
+	public ToretoiseEntity func_241840_a(ServerWorld sworld, AgeableEntity otherParent) {
 		ToretoiseEntity e = new ToretoiseEntity(ToretoiseModule.toretoiseType, world);
 		e.remove(); // kill the entity cuz toretoise doesn't make babies
 		return e;

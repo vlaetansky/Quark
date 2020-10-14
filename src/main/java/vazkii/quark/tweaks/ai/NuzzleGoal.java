@@ -55,7 +55,7 @@ public class NuzzleGoal extends Goal {
 		LivingEntity living = this.creature.getOwner();
 
 		if (living == null || living.isSpectator() ||
-				this.creature.func_233684_eK_())
+				this.creature.isSitting())
 			return false;
 		else {
 			this.owner = living;
@@ -67,7 +67,7 @@ public class NuzzleGoal extends Goal {
 	public boolean shouldContinueExecuting() {
 		if (!WantLoveGoal.needsPets(creature))
 			return false;
-		return !this.petPathfinder.noPath() && this.creature.getDistanceSq(this.owner) > (this.maxDist * this.maxDist) && !this.creature.func_233684_eK_();
+		return !this.petPathfinder.noPath() && this.creature.getDistanceSq(this.owner) > (this.maxDist * this.maxDist) && !this.creature.isSitting();
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class NuzzleGoal extends Goal {
 	public void tick() {
 		this.creature.getLookController().setLookPositionWithEntity(this.owner, 10.0F, this.creature.getVerticalFaceSpeed());
 
-		if (!this.creature.func_233684_eK_()) {
+		if (!this.creature.isSitting()) {
 			if (--this.timeUntilRebuildPath <= 0) {
 				this.timeUntilRebuildPath = 10;
 

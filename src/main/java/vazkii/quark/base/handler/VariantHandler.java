@@ -64,7 +64,7 @@ public class VariantHandler {
 	public static AbstractBlock.Properties realStateCopy(IQuarkBlock parent) {
 		AbstractBlock.Properties props = AbstractBlock.Properties.from(parent.getBlock());
 		if(parent instanceof IVariantsShouldBeEmissive)
-			props = props.func_235856_e_((s, r, p) -> true);
+			props = props.setEmmisiveRendering((s, r, p) -> true);
 		
 		return props;
 	}

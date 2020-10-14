@@ -50,6 +50,7 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
@@ -112,8 +113,8 @@ public class StonelingEntity extends CreatureEntity {
 
 	public static AttributeModifierMap.MutableAttribute prepareAttributes() {
         return MobEntity.func_233666_p_()
-                .func_233815_a_(Attributes.field_233818_a_, 8.0D) // MAX_HEALTH
-                .func_233815_a_(Attributes.field_233820_c_, 1D); // KNOCKBACK_RESISTANCE
+                .createMutableAttribute(Attributes.MAX_HEALTH, 8.0D)
+                .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1D);
     }
 
 	@Override
@@ -250,7 +251,7 @@ public class StonelingEntity extends CreatureEntity {
 
 	@Nullable
 	@Override
-	public ILivingEntityData onInitialSpawn(IWorld world, DifficultyInstance difficulty, SpawnReason spawnReason, @Nullable ILivingEntityData data, @Nullable CompoundNBT compound) {
+	public ILivingEntityData onInitialSpawn(IServerWorld world, DifficultyInstance difficulty, SpawnReason spawnReason, @Nullable ILivingEntityData data, @Nullable CompoundNBT compound) {
 		byte variant;
 		if (data instanceof EnumStonelingVariant)
 			variant = ((EnumStonelingVariant) data).getIndex();
@@ -417,7 +418,7 @@ public class StonelingEntity extends CreatureEntity {
 		compound.putBoolean(TAG_PLAYER_MADE, isPlayerMade());
 	}
 
-	public static boolean spawnPredicate(EntityType<? extends StonelingEntity> type, IWorld world, SpawnReason reason, BlockPos pos, Random rand) {
+	public static boolean spawnPredicate(EntityType<? extends StonelingEntity> type, IServerWorld world, SpawnReason reason, BlockPos pos, Random rand) {
 		return world.getDifficulty() != Difficulty.PEACEFUL && pos.getY() <= StonelingsModule.maxYLevel && MiscUtil.validSpawnLight(world, pos, rand) && MiscUtil.validSpawnLocation(type, world, reason, pos);
 	}
 

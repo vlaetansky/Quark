@@ -71,7 +71,7 @@ public class CompressedBlocksModule extends Module {
 	public void construct() {
 		charcoal_block = new BurnForeverBlock("charcoal_block", this, ItemGroup.BUILDING_BLOCKS,
 				Block.Properties.create(Material.ROCK, MaterialColor.BLACK)
-						.func_235861_h_() // needs tool
+						.setRequiresTool()
 		        		.harvestTool(ToolType.PICKAXE)
 						.hardnessAndResistance(5F, 10F)
 						.sound(SoundType.STONE), true)
@@ -98,7 +98,7 @@ public class CompressedBlocksModule extends Module {
 				Block.Properties.create(Material.GLASS, DyeColor.YELLOW)
 				.hardnessAndResistance(0.3F)
 				.sound(SoundType.GLASS)
-				.func_235838_a_(b -> 15), false) // light value
+				.setLightLevel(b -> 15), false)
 		.setCondition(() -> enableBlazeLantern);
 		
 		new QuarkBlock("bonded_leather", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.create(Material.WOOL, DyeColor.ORANGE)

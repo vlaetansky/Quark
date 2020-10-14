@@ -54,7 +54,7 @@ public class TieLeadsToFencesModule extends Module {
 	
 	@Override
 	public void setup() {
-		GlobalEntityTypeAttributes.put(leashKnot2Entity, MobEntity.func_233666_p_().func_233813_a_());
+		GlobalEntityTypeAttributes.put(leashKnot2Entity, MobEntity.func_233666_p_().create());
 		
 		leadConnectableTag = BlockTags.makeWrapperTag(Quark.MOD_ID + ":lead_connectable");
 	}

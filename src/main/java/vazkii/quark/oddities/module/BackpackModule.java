@@ -84,7 +84,7 @@ public class BackpackModule extends Module {
 	public void clientSetup() {
 		ScreenManager.registerFactory(container, BackpackInventoryScreen::new);
 		
-		ItemModelsProperties.func_239418_a_(backpack, new ResourceLocation("has_items"), 
+		ItemModelsProperties.registerProperty(backpack, new ResourceLocation("has_items"), 
 				(stack, world, entity) -> (!BackpackModule.superOpMode && BackpackItem.doesBackpackHaveItems(stack)) ? 1 : 0);
 	}
 	

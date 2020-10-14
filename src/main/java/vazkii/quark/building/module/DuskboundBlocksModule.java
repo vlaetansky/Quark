@@ -18,7 +18,7 @@ public class DuskboundBlocksModule extends Module {
 		
 		new QuarkBlock("duskbound_lantern", this, ItemGroup.DECORATIONS, 
 				Block.Properties.from(Blocks.PURPUR_BLOCK)
-				.func_235838_a_(b -> 15)); // light value
+				.setLightLevel(b -> 15));
 	}
 	
 }

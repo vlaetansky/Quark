@@ -49,7 +49,7 @@ public class FoodTooltips {
 				}
 
 				ITextComponent spaces = new StringTextComponent(s.toString());
-				ITextComponent saturationText = new TranslationTextComponent("quark.misc.saturation" + saturationSimplified).func_240701_a_(TextFormatting.GRAY);
+				ITextComponent saturationText = new TranslationTextComponent("quark.misc.saturation" + saturationSimplified).mergeStyle(TextFormatting.GRAY);
 				List<ITextComponent> tooltip = event.getToolTip();
 
 				if (tooltip.isEmpty()) {

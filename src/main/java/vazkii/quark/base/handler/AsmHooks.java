@@ -122,9 +122,9 @@ public class AsmHooks {
 		return ItemSharingModule.createStackComponent(stack, parent);
 	}
 
-	public static int transformQuadRenderColor(int parent) {
-		return ItemSharingModule.transformColor(parent);
-	}
+//	public static int transformQuadRenderColor(int parent) { TODO wire
+//		return ItemSharingModule.transformColor(parent);
+//	}
 
 	// ==========================================================================
 	// Springy Slime

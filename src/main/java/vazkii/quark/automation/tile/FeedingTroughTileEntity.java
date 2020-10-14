@@ -186,8 +186,8 @@ public class FeedingTroughTileEntity extends LockableLootTileEntity implements I
     }
 
     @Override
-    public void func_230337_a_(BlockState state, CompoundNBT nbt) { // read
-    	super.func_230337_a_(state, nbt);
+    public void read(BlockState state, CompoundNBT nbt) {
+    	super.read(state, nbt);
     	
         this.cooldown = nbt.getInt("Cooldown");
         this.internalRng = nbt.getLong("rng");

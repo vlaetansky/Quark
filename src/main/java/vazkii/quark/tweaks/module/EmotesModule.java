@@ -20,13 +20,11 @@ import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.resources.ClientResourcePackInfo;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.resources.IPackFinder;
 import net.minecraft.resources.ResourcePackInfo;
-import net.minecraft.resources.ResourcePackInfo.IFactory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -108,11 +106,11 @@ public class EmotesModule extends Module {
 		mc.getResourcePackList().addPackFinder(new IPackFinder() {
 
 			@Override
-			public <T2 extends ResourcePackInfo> void func_230230_a_(Consumer<T2> packConsumer, IFactory<T2> packInfoFactory) {
+			public void findPacks(Consumer<ResourcePackInfo> packConsumer, ResourcePackInfo.IFactory packInfoFactory) {
 				resourcePack = new CustomEmoteIconResourcePack();
 				
 				String name = "quark:emote_resources";
-				T2 t = ResourcePackInfo.createResourcePack(name, true, () -> resourcePack, packInfoFactory, ResourcePackInfo.Priority.TOP, tx->tx);
+				ResourcePackInfo t = ResourcePackInfo.createResourcePack(name, true, () -> resourcePack, packInfoFactory, ResourcePackInfo.Priority.TOP, tx->tx);
 				packConsumer.accept(t);
 			}
 		});

@@ -12,6 +12,7 @@ import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -30,6 +31,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeMod;
@@ -112,9 +114,9 @@ public class FrogEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 
 	public static AttributeModifierMap.MutableAttribute prepareAttributes() {
         return MobEntity.func_233666_p_()
-                .func_233815_a_(Attributes.field_233818_a_, 10.0D) // MAX_HEALTH
-                .func_233815_a_(Attributes.field_233821_d_, 0.25D) // MOVEMENT_SPEED
-				.func_233814_a_(ForgeMod.ENTITY_GRAVITY.get());
+                .createMutableAttribute(Attributes.MAX_HEALTH, 10.0D)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25D)
+				.createMutableAttribute(ForgeMod.ENTITY_GRAVITY.get());
     }
 	
 	@Nonnull
@@ -306,9 +308,8 @@ public class FrogEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 		return Lists.newArrayList();
 	}
 
-	@Nullable
-	@Override
-	public AgeableEntity createChild(@Nonnull AgeableEntity otherParent) {
+	@Override // createChild
+	public FrogEntity func_241840_a(ServerWorld sworld, AgeableEntity otherParent) {
 		if (isDuplicate)
 			return null;
 
@@ -426,10 +427,10 @@ public class FrogEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 	public void setVoid(boolean jack) {
 		if (jack && this.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).getModifier(VOID_MODIFIER_UUID) == null)
 			this.getAttribute(ForgeMod.ENTITY_GRAVITY.get())
-					.func_233769_c_(new AttributeModifier(VOID_MODIFIER_UUID, "Void gravity", -2, AttributeModifier.Operation.MULTIPLY_BASE));
+					.applyPersistentModifier(new AttributeModifier(VOID_MODIFIER_UUID, "Void gravity", -2, AttributeModifier.Operation.MULTIPLY_BASE));
 		else
 			this.getAttribute(ForgeMod.ENTITY_GRAVITY.get())
-					.func_233770_c_(VOID_MODIFIER_UUID);
+					.removeModifier(VOID_MODIFIER_UUID);
 
 		dataManager.set(VOID, jack);
 	}

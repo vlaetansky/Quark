@@ -69,7 +69,7 @@ public class CrabsModule extends Module {
 				.setCondition(() -> enableBrewing);
 
 		Effect resilience = new QuarkEffect("resilience", EffectType.BENEFICIAL, 0x5b1a04);
-		resilience.addAttributesModifier(Attributes.field_233820_c_, "2ddf3f0a-f386-47b6-aeb0-6bd32851f215", 0.5, AttributeModifier.Operation.ADDITION);
+		resilience.addAttributesModifier(Attributes.KNOCKBACK_RESISTANCE, "2ddf3f0a-f386-47b6-aeb0-6bd32851f215", 0.5, AttributeModifier.Operation.ADDITION);
 
 		BrewingHandler.addPotionMix("crab_brewing",
 				() -> new FlagIngredient(Ingredient.fromItems(shell), "crabs"), resilience);
@@ -89,7 +89,7 @@ public class CrabsModule extends Module {
 
 	@Override
 	public void setup() {
-		GlobalEntityTypeAttributes.put(crabType, CrabEntity.prepareAttributes().func_233813_a_());
+		GlobalEntityTypeAttributes.put(crabType, CrabEntity.prepareAttributes().create());
 	}
 
 	@Override

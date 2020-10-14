@@ -27,7 +27,7 @@ public class EnchantTome extends LootFunction {
 
     @Override
     @Nonnull
-    public LootFunctionType func_230425_b_() {
+    public LootFunctionType getFunctionType() {
         return AncientTomesModule.tomeEnchantType;
     }
 

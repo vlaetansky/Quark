@@ -16,6 +16,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -53,7 +54,7 @@ public class DiamondHeartItem extends QuarkItem {
 				}
 
 				if (variant != null) {
-					if (!world.isRemote) {
+					if (!world.isRemote && world instanceof IServerWorld) {
 						world.setBlockState(pos, Blocks.AIR.getDefaultState());
 						world.playEvent(2001, pos, Block.getStateId(stateAt));
 
@@ -61,7 +62,7 @@ public class DiamondHeartItem extends QuarkItem {
 						stoneling.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 						stoneling.setPlayerMade(true);
 						stoneling.rotationYaw = player.rotationYaw + 180F;
-						stoneling.onInitialSpawn(world, world.getDifficultyForLocation(pos), SpawnReason.STRUCTURE, variant, null);
+						stoneling.onInitialSpawn((IServerWorld) world, world.getDifficultyForLocation(pos), SpawnReason.STRUCTURE, variant, null);
 						world.addEntity(stoneling);
 						
 						if(player instanceof ServerPlayerEntity)

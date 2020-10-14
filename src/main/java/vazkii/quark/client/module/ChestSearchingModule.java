@@ -226,7 +226,7 @@ public class ChestSearchingModule extends Module {
 					cmp = cmp.copy();
 					cmp.putString("id", "minecraft:shulker_box");
 				}
-				TileEntity te = TileEntity.func_235657_b_(((BlockItem) item).getBlock().getDefaultState(), cmp); // create
+				TileEntity te = TileEntity.readTileEntity(((BlockItem) item).getBlock().getDefaultState(), cmp); 
 				if (te != null) {
 					LazyOptional<IItemHandler> handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 					if (handler.isPresent()) {
@@ -280,7 +280,7 @@ public class ChestSearchingModule extends Module {
 		}
 
 		ItemGroup tab = item.getGroup();
-		if(tab != null && matcher.test(I18n.format(tab.getTranslationKey()).toLowerCase(Locale.ROOT), search))
+		if(tab != null && matcher.test(tab.getGroupName().getString().toLowerCase(Locale.ROOT), search))
 			return true;
 
 		//		if(search.matches("favou?rites?") && FavoriteItems.isItemFavorited(stack))

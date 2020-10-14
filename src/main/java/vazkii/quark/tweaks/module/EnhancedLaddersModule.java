@@ -114,7 +114,7 @@ public class EnhancedLaddersModule extends Module {
 		if(event.phase == TickEvent.Phase.START) {
 			PlayerEntity player = event.player;
 			if(player.isOnLadder() && player.world.isRemote) {
-				BlockPos playerPos = player.func_233580_cy_();
+				BlockPos playerPos = player.getPosition();
 				BlockPos downPos = playerPos.down();
 				
 				boolean scaffold = player.world.getBlockState(playerPos).getBlock() == Blocks.SCAFFOLDING;
