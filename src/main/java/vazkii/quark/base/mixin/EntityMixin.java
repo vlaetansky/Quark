@@ -20,7 +20,7 @@ public class EntityMixin {
 		AsmHooks.updateChain((Entity) (Object) this);
 	}
 
-	@Inject(method = "func_230279_az_", at = @At("RETURN"), cancellable = true)
+	@Inject(method = "isImmuneToFire", at = @At("RETURN"), cancellable = true)
 	private void isImmuneToFire(CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
 		callbackInfoReturnable.setReturnValue(AsmHooks.getIsFireResistant(callbackInfoReturnable.getReturnValue(), (Entity) (Object) this));
 	}
