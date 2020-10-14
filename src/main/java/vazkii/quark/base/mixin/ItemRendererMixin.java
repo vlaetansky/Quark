@@ -24,12 +24,12 @@ public class ItemRendererMixin {
 		AsmHooks.setColorRuneTargetStack(itemStackIn);
 	}
 
-	@Redirect(method = "func_239386_a_", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;func_239270_k_()Lnet/minecraft/client/renderer/RenderType;"))
+	@Redirect(method = "getArmorVertexBuilder", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;getArmorGlint()Lnet/minecraft/client/renderer/RenderType;"))
 	private static RenderType getArmorGlint() {
 		return AsmHooks.getArmorGlint();
 	}
 
-	@Redirect(method = "func_239386_a_", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;func_239271_l_()Lnet/minecraft/client/renderer/RenderType;"))
+	@Redirect(method = "getArmorVertexBuilder", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;getArmorEntityGlint()Lnet/minecraft/client/renderer/RenderType;"))
 	private static RenderType getArmorEntityGlint() {
 		return AsmHooks.getArmorEntityGlint();
 	}
@@ -44,12 +44,12 @@ public class ItemRendererMixin {
 		return AsmHooks.getEntityGlint();
 	}
 
-	@Redirect(method = "func_239391_c_", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;func_239273_n_()Lnet/minecraft/client/renderer/RenderType;"))
+	@Redirect(method = "getEntityGlintVertexBuilder", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;getGlintDirect()Lnet/minecraft/client/renderer/RenderType;"))
 	private static RenderType getGlintDirect() {
 		return AsmHooks.getGlintDirect();
 	}
 
-	@Redirect(method = "func_239391_c_", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;func_239274_p_()Lnet/minecraft/client/renderer/RenderType;"))
+	@Redirect(method = "getEntityGlintVertexBuilder", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;getEntityGlintDirect()Lnet/minecraft/client/renderer/RenderType;"))
 	private static RenderType getEntityGlintDirect() {
 		return AsmHooks.getEntityGlintDirect();
 	}
