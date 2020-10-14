@@ -1,4 +1,4 @@
-package vazkii.quark.mixins;
+package vazkii.quark.base.mixin;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.DamageSource;

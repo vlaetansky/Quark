@@ -1,4 +1,4 @@
-package vazkii.quark.mixins;
+package vazkii.quark.base.mixin;
 
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderType;

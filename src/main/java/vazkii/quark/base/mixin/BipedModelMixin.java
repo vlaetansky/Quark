@@ -1,4 +1,4 @@
-package vazkii.quark.mixins;
+package vazkii.quark.base.mixin;
 
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.LivingEntity;

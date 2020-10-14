@@ -1,4 +1,4 @@
-package vazkii.quark.mixins;
+package vazkii.quark.base.mixin;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.PiercingEnchantment;

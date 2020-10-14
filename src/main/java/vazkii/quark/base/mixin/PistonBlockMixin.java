@@ -1,4 +1,4 @@
-package vazkii.quark.mixins;
+package vazkii.quark.base.mixin;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PistonBlock;
