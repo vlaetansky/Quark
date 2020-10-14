@@ -1,7 +1,12 @@
 package vazkii.quark.building.module;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.google.common.base.Supplier;
@@ -35,6 +40,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
@@ -50,6 +56,8 @@ import vazkii.quark.building.tile.VariantTrappedChestTileEntity;
 @LoadModule(category = ModuleCategory.BUILDING, hasSubscriptions = true)
 public class VariantChestsModule extends Module {
 
+	private static final Pattern VILLAGE_PIECE_PATTERN = Pattern.compile("\\w+\\[\\w+\\[([a-z_]+)\\:village\\/(.+?)\\/.+\\]\\]");
+	
 	private static final String DONK_CHEST = "Quark:DonkChest";
 
 	private static final ImmutableSet<String> OVERWORLD_WOODS = ImmutableSet.copyOf(MiscUtil.OVERWORLD_WOOD_TYPES);
@@ -63,14 +71,31 @@ public class VariantChestsModule extends Module {
 	private static List<Supplier<Block>> chestTypes = new LinkedList<>();
 	private static List<Supplier<Block>> trappedChestTypes = new LinkedList<>();
 	
-	// TODO track trapped chests too
 	private static List<Block> allChests = new LinkedList<>();
+	private static Map<String, Block> chestMappings = new HashMap<>();
 
 	private static Structure<?> currentStructure;
 	private static List<StructurePiece> currentComponents;
 	
 	@Config
 	private static boolean replaceWorldgenChests = true;
+	
+	@Config(description =  "Chests to put in each structure. The format per entry is \"structure=chest\", where \"structure\" is a structure ID, and \"chest\" is a block ID, which must correspond to a standard chest block.")
+	public static List<String> structureChests = Arrays.asList(
+			 "minecraft:village_plains=quark:oak_chest",
+			 "minecraft:igloo=quark:spruce_chest",
+			 "minecraft:village_snowy=quark:spruce_chest",
+			 "minecraft:village_taiga=quark:spruce_chest",
+			 "minecraft:desert_pyramid=quark:birch_chest",
+			 "minecraft:jungle_pyramid=quark:jungle_chest",
+			 "minecraft:village_desert=quark:jungle_chest",
+			 "minecraft:village_savanna=quark:acacia_chest",
+			 "minecraft:mansion=quark:dark_oak_chest",
+			 "minecraft:pillager_outpost=quark:dark_oak_chest",
+			 "minecraft:ruined_portal=quark:crimson_chest",
+			 "minecraft:bastion_remnant=quark:crimson_chest",
+			 "minecraft:fortress=quark:nether_brick_chest",
+			 "minecraft:endcity=quark:purpur_chest");
 	
 	@Override
 	public void construct() {
@@ -97,6 +122,24 @@ public class VariantChestsModule extends Module {
 		ClientRegistry.bindTileEntityRenderer(trappedChestTEType, VariantChestTileEntityRenderer::new);
 	}
 	
+	@Override
+	public void configChanged() {
+		super.configChanged();
+		
+		chestMappings.clear();
+		for(String s : structureChests) {
+			String[] toks = s.split("=");
+			if(toks.length == 2) {
+				String left = toks[0];
+				String right = toks[1];
+				
+				Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(right));
+				if(block != null && block != Blocks.AIR)
+					chestMappings.put(left, block);
+			}
+		}
+	}
+	
 	public static void setActiveStructure(Structure<?> structure, List<StructurePiece> components) {
 		currentStructure = structure;
 		currentComponents = components;
@@ -117,51 +160,30 @@ public class VariantChestsModule extends Module {
 						JigsawPiece jigsaw = avp.getJigsawPiece();
 						if(jigsaw instanceof LegacySingleJigsawPiece) {
 							LegacySingleJigsawPiece legacyJigsaw = (LegacySingleJigsawPiece) jigsaw;
-							String type = legacyJigsaw.toString().replaceAll("\\w+\\[\\w+\\[minecraft\\:village\\/(.+?)\\/.+\\]\\]", "_$1");
-							name += type;
+							String type = legacyJigsaw.toString();
+							Matcher match = VILLAGE_PIECE_PATTERN.matcher(type);
+							if(match.matches()) {
+								String namespace = match.group(1);
+								String villageType = match.group(2);
+								
+								name += "_" + villageType;
+								if(!namespace.equals("minecraft"))
+									name = name.replace("minecraft\\:", namespace);
+							}
+							
 						}
 					}
 				}
 			}
 			
-			int index = -1;
-			switch(name) {
-			case "minecraft:village_plains":
-				index = 0; // oak
-				break;
-			case "minecraft:igloo":
-			case "minecraft:village_snowy":
-			case "minecraft:village_taiga":
-				index = 1; // spruce
-				break;
-			case "minecraft:desert_pyramid":
-				index = 2; // birch
-				break;
-			case "minecraft:jungle_pyramid":
-			case "minecraft:village_desert":
-				index = 3; // jungle
-				break;
-			case "minecraft:village_savanna":
-				index = 2; // acacia
-				break;
-			case "minecraft:mansion":
-			case "minecraft:pillager_outpost":
-				index = 5; // dark oak
-				break;
-			case "minecraft:ruined_portal":
-			case "minecraft:bastion_remnant":
-				index = 6; // crimson
-				break;
-			case "minecraft:fortress":
-				index = 8; // nether brick
-				break;
-			case "minecraft:endcity":
-				index = 9; // purpur
-				break;
+			if(chestMappings.containsKey(name)) {
+				Block block = chestMappings.get(name);
+				BlockState placeState = block.getDefaultState();
+				if(placeState.getProperties().contains(ChestBlock.TYPE)) {
+					placeState = placeState.with(ChestBlock.FACING, current.get(ChestBlock.FACING)).with(ChestBlock.TYPE, current.get(ChestBlock.TYPE)).with(ChestBlock.WATERLOGGED, current.get(ChestBlock.WATERLOGGED));
+					return placeState;
+				}
 			}
-			
-			if(index != -1)
-				return allChests.get(index).getDefaultState().with(ChestBlock.FACING, current.get(ChestBlock.FACING));
 		}
 		
 		return current;
