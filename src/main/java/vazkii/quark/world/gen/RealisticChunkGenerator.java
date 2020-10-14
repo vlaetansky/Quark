@@ -37,8 +37,8 @@ public class RealisticChunkGenerator extends NoiseChunkGenerator {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public ChunkGenerator func_230349_a_(long p_230349_1_) {
-		return new RealisticChunkGenerator(this.biomeProvider.getBiomeProvider(p_230349_1_), p_230349_1_, this.field_236080_h_);
+	public ChunkGenerator func_230349_a_(long seed) {
+		return new RealisticChunkGenerator(this.biomeProvider.getBiomeProvider(seed), seed, this.field_236080_h_);
 	}
 
 	@Override
@@ -120,6 +120,5 @@ public class RealisticChunkGenerator extends NoiseChunkGenerator {
 
 			noiseColumn[y] = noise;
 		}
-
 	}
 }

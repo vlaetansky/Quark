@@ -7,8 +7,12 @@ import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.dedicated.ServerProperties;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.DimensionType;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.provider.OverworldBiomeProvider;
+import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.DimensionSettings;
 import net.minecraft.world.gen.settings.DimensionGeneratorSettings;
 import net.minecraft.world.storage.ServerWorldInfo;
@@ -40,8 +44,15 @@ public class RealisticWorldGenModule extends Module {
 		new RealisticGenScreen();
 	}
 
-	private static DimensionGeneratorSettings createSettings(long seed, boolean generateFeatures, boolean generateBonusChest) {
-		return null; // TODO supercoder pls
+	private static ChunkGenerator createChunkGenerator(long seed, Registry<Biome> biomes, Registry<DimensionSettings> settings) {
+		return new RealisticChunkGenerator(new OverworldBiomeProvider(seed, false, false, biomes), seed, () -> settings.getOrThrow(DimensionSettings.field_242734_c));
+	}
+
+	private static DimensionGeneratorSettings createSettings(DynamicRegistries registries, long seed, boolean generateFeatures, boolean generateBonusChest) {
+		Registry<Biome> biomes = registries.getRegistry(Registry.BIOME_KEY);
+		Registry<DimensionSettings> settings = registries.getRegistry(Registry.NOISE_SETTINGS_KEY);
+		Registry<DimensionType> types = registries.getRegistry(Registry.DIMENSION_TYPE_KEY);
+		return new DimensionGeneratorSettings(seed, generateFeatures, generateBonusChest, DimensionGeneratorSettings.func_242749_a(types, DimensionType.getDefaultSimpleRegistry(types, biomes, settings, seed), createChunkGenerator(seed, biomes, settings)));
 	}
 
 	@SubscribeEvent
@@ -55,10 +66,10 @@ public class RealisticWorldGenModule extends Module {
 			if (levelType.equals("realistic")) {
 				if (server.func_240793_aU_() instanceof ServerWorldInfo) {
 					ServerWorldInfo worldInfo = (ServerWorldInfo)server.func_240793_aU_();
-					worldInfo.generatorSettings = createSettings(worldInfo.generatorSettings.getSeed(), worldInfo.generatorSettings.doesGenerateFeatures(), worldInfo.generatorSettings.hasBonusChest());
+					worldInfo.generatorSettings = createSettings(server.func_244267_aX(), worldInfo.generatorSettings.getSeed(), worldInfo.generatorSettings.doesGenerateFeatures(), worldInfo.generatorSettings.hasBonusChest());
 				}
 				ServerProperties properties = server.getServerProperties();
-				properties.field_241082_U_ = createSettings(properties.field_241082_U_.getSeed(), properties.field_241082_U_.doesGenerateFeatures(), properties.field_241082_U_.hasBonusChest());
+				properties.field_241082_U_ = createSettings(server.func_244267_aX(), properties.field_241082_U_.getSeed(), properties.field_241082_U_.doesGenerateFeatures(), properties.field_241082_U_.hasBonusChest());
 			}
 		}
 	}
