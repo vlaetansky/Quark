@@ -23,7 +23,6 @@ public class PistonBlockMixin {
 		return AsmHooks.shouldPistonMoveTE(blockStateIn.hasTileEntity(), blockStateIn);
 	}
 
-	// TODO: Capture locals
 	@Inject(method = "doMove", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/PistonBlockStructureHelper;getBlocksToMove()Ljava/util/List;"), locals = LocalCapture.CAPTURE_FAILHARD)
 	private void postPistonPush(World worldIn, BlockPos pos, Direction directionIn, boolean extending, CallbackInfoReturnable<Boolean> callbackInfoReturnable, BlockPos _pos, PistonBlockStructureHelper pistonBlockStructureHelper) {
 		AsmHooks.postPistonPush(pistonBlockStructureHelper, worldIn, directionIn, extending);

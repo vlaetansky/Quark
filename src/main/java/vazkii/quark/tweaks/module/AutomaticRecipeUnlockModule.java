@@ -18,6 +18,7 @@ import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.RecipeBookCategory;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.GameRules;
 import net.minecraftforge.api.distmarker.Dist;
@@ -63,7 +64,7 @@ public class AutomaticRecipeUnlockModule extends Module {
 	public void onInitGui(InitGuiEvent.Post event) {
 		Screen gui = event.getGui();
 		if(disableRecipeBook && gui instanceof IRecipeShownListener) {
-//			Minecraft.getInstance().player.getRecipeBook().setGuiOpen(false); TODO ???
+			Minecraft.getInstance().player.getRecipeBook().func_242139_a().func_242152_a(RecipeBookCategory.CRAFTING, false); 
 
 			List<Widget> widgets = event.getWidgetList();
 			for(Widget w : widgets)

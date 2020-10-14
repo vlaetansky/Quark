@@ -120,7 +120,7 @@ public class MovingMagnetizedBlock extends QuarkBlock {
 
 	@Nullable
 	private MagnetizedBlockTileEntity getMagnetTileEntity(IBlockReader world, Vector3d origin) {
-		BlockPos pos = new BlockPos(origin); // TODO does this work?
+		BlockPos pos = new BlockPos(origin);
 		return getMagnetTileEntity(world, pos);
 	}
 	

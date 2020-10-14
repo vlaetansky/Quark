@@ -11,6 +11,7 @@
 package vazkii.quark.base.network.message;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.IngameGui;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.ITextComponent;
@@ -37,8 +38,11 @@ public class SpamlessChatMessage implements IMessage {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public boolean receive(NetworkEvent.Context context) {
-//		context.enqueueWork(() -> Minecraft.getInstance().ingameGUI.getChatGUI()
-//				.printChatMessageWithOptionalDeletion(message, id)); TODO AT
+		context.enqueueWork(() -> {
+			IngameGui gui = Minecraft.getInstance().ingameGUI;
+			gui.getChatGUI().func_238493_a_(message, id, gui.getTicks(), false); // print message and delete if same ID, called by printChatMessageWithOptionalDeletion
+		});
+		
 		return true;
 	}
 

@@ -17,6 +17,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class RealisticChunkGenerator extends NoiseChunkGenerator {
+	
 	public static final Codec<RealisticChunkGenerator> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
 			BiomeProvider.CODEC.fieldOf("biome_source").forGetter(generator -> generator.biomeProvider),
 			Codec.LONG.fieldOf("seed").stable().forGetter(generator -> generator.seed),

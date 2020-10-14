@@ -235,13 +235,12 @@ public class FoxhoundEntity extends WolfEntity implements IMob {
 		this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, AbstractSkeletonEntity.class, false));
 	}
 
-//	@Override TODO tf is this
-//	public int func_230256_F__() {
-//		if (!isTamed() && world.getDifficulty() != Difficulty.PEACEFUL)
-//			return 0;
-//		return super.func_230256_F__();
-//	}
-
+	public int getAngerTime() {
+		if (!isTamed() && world.getDifficulty() != Difficulty.PEACEFUL)
+			return 0;
+		return super.getAngerTime();
+	}
+	
 	@Override
 	public boolean attackEntityAsMob(Entity entityIn) {
 		if (entityIn.getType().isImmuneToFire()) {

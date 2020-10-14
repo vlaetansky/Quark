@@ -238,7 +238,7 @@ public class PickarangEntity extends ProjectileEntity {
 					if (owner != null) {
 						ItemStack prev = owner.getHeldItemMainhand();
 						owner.setHeldItem(Hand.MAIN_HAND, pickarang);
-						owner.getAttributeManager().reapplyModifiers(modifiers); // TODO wire segal what thy fuck was this
+						owner.getAttributeManager().reapplyModifiers(modifiers); 
 
 						int ticksSinceLastSwing = owner.ticksSinceLastSwing;
 						owner.ticksSinceLastSwing = (int) (1.0 / owner.getAttributeValue(Attributes.ATTACK_SPEED) * 20.0) + 1;
@@ -287,7 +287,7 @@ public class PickarangEntity extends ProjectileEntity {
 						stack.attemptDamageItem(1, world.rand, null);
 						setStack(stack);
 						hit.attackEntityFrom(new IndirectEntityDamageSource("player", this, this).setProjectile(),
-								(float) manager.getAttributeValue(Attributes.ATTACK_DAMAGE)); // TODO WIREEEEEEEEEE
+								(float) manager.getAttributeValue(Attributes.ATTACK_DAMAGE));
 					}
 				}
 			}

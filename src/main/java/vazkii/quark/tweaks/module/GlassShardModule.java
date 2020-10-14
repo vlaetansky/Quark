@@ -62,28 +62,4 @@ public class GlassShardModule extends Module {
     public void setup() {
         shardTag = ItemTags.makeWrapperTag(Quark.MOD_ID + ":shards");
     }
-
-//    @SubscribeEvent(priority = EventPriority.LOW) TODO fuck
-//    public void onDrops(BlockEvent.HarvestDropsEvent event) {
-//        Block block = event.getState().getBlock();
-//        if(event.getDrops() != null && event.getDrops().isEmpty() && !event.isSilkTouching()) {
-//            Item item = null;
-//
-//            if (block == Blocks.GLASS)
-//                item = clearShard;
-//            else if (block == dirtyGlass)
-//                item = dirtyShard;
-//            else if (block instanceof StainedGlassBlock)
-//                item = shardColors.get(((StainedGlassBlock) block).getColor());
-//
-//            if (item == null)
-//                return;
-//
-//            Random rand = event.getWorld().getRandom();
-//
-//            int quantity = MathHelper.clamp(2 + rand.nextInt(3) + rand.nextInt(event.getFortuneLevel() + 1), 1, 4);
-//
-//            event.getDrops().add(new ItemStack(item, quantity));
-//        }
-//    }
 }

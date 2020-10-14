@@ -87,7 +87,7 @@ public class DispensersPlaceBlocksModule extends Module {
 
 		public NotStupidDirectionalPlaceContext(World worldIn, BlockPos p_i50051_2_, Direction p_i50051_3_, ItemStack p_i50051_4_, Direction against) {
 			super(worldIn, p_i50051_2_, p_i50051_3_, p_i50051_4_, against);
-//			replaceClicked = worldIn.getBlockState(rayTraceResult.getPos()).isReplaceable(this); TODO AT
+			replaceClicked = worldIn.getBlockState(func_242401_i().getPos()).isReplaceable(this); // func_242401_i = getRayTraceResult
 		}
 		
 		@Override
