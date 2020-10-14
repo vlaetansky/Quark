@@ -120,7 +120,7 @@ public class RootBlock extends VineBlock implements IQuarkBlock, IGrowable {
 
 	public static boolean isAcceptableNeighbor(IWorld world, BlockPos pos, Direction side) {
 		BlockState iblockstate = world.getBlockState(pos);
-		return Block.doesSideFillSquare(iblockstate.getCollisionShape(world, pos), side) && iblockstate.getMaterial() == Material.ROCK; // TODO works?
+		return Block.doesSideFillSquare(iblockstate.getCollisionShape(world, pos), side) && iblockstate.getMaterial() == Material.ROCK;
 	}
 	
 	@Override

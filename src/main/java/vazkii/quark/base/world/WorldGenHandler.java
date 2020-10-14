@@ -76,8 +76,6 @@ public class WorldGenHandler {
 							config = dconfig.feature.get().config;
 						}
 						
-						System.out.println(feature.getRegistryName());
-						
 						for(Pair<BiPredicate<Feature<? extends IFeatureConfig>, IFeatureConfig>, BooleanSupplier> pair : list)
 							if(pair.getLeft().test(feature, config)) {
 								ConditionalConfiguredFeature<?, ?> conditional = new ConditionalConfiguredFeature<>(configuredFeature, pair.getRight());

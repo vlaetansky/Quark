@@ -69,7 +69,7 @@ public class BigDungeonModule extends Module {
 
 	@SubscribeEvent
 	public void onBiomeLoad(BiomeLoadingEvent event) {
-		if(biomeTypes.canSpawn(event.getCategory()))
+		if(biomeTypes.canSpawn(event.getName(), event.getCategory()))
 			event.getGeneration().getStructures().add(() -> feature);
 	}
 

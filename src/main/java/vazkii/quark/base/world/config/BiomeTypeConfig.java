@@ -4,15 +4,17 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.Category;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.ConfigFlagManager;
 
 public class BiomeTypeConfig implements IBiomeConfig {
 
 	@Config(name = "Biome Categories")
-	@Config.Restriction({"NONE", "TAIGA", "EXTREME_HILLS", "JUNGLE", "MESA", "PLAINS", "SAVANNA", "THEEND", "BEACH", "FOREST",
-			"OCEAN", "DESERT", "RIVER", "SWAMP", "MUSHROOM", "NETHER"})
+	@Config.Restriction({"none", "taiga", "extreme_hills", "jungle", "mesa", "plains", "savanna", "theend", "beach", "forest",
+			"ocean", "desert", "river", "swamp", "mushroom", "nether"})
 	private List<String> categoryStrings;
 
 	@Config
@@ -34,19 +36,14 @@ public class BiomeTypeConfig implements IBiomeConfig {
 		categoryStrings = new LinkedList<>();
 		categoryStrings.addAll(Arrays.asList(categories));
 	}
-	
-	@Override
-	public boolean canSpawn(Biome b) {
-		if (categories == null)
-			updateTypes();
 
-		Biome.Category category = b.getCategory();
-		return canSpawn(category);
-	}
-	
-	public boolean canSpawn(Biome.Category category) {
-		for (Biome.Category c : categories)
-			if(c == category)
+	@Override
+	public boolean canSpawn(ResourceLocation res, Category category) {
+		if(categories == null)
+			updateTypes();
+		
+		for(Biome.Category c : categories)
+			if(c.equals(category))
 				return !isBlacklist;
 
 		return isBlacklist;
@@ -66,4 +63,5 @@ public class BiomeTypeConfig implements IBiomeConfig {
 				categories.add(category);
 		}
 	}
+
 }
