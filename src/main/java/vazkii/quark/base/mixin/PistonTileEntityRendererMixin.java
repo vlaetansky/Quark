@@ -17,7 +17,7 @@ public class PistonTileEntityRendererMixin {
 
 	@Inject(method = "render", at = @At("HEAD"), cancellable = true)
 	private void renderPistonBlock(PistonTileEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn, CallbackInfo callbackInfo) {
-		if (!AsmHooks.renderPistonBlock(tileEntityIn, partialTicks, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn)) {
+		if (AsmHooks.renderPistonBlock(tileEntityIn, partialTicks, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn)) {
 			callbackInfo.cancel();
 		}
 	}
