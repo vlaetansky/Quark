@@ -7,6 +7,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -37,13 +38,14 @@ public class PistonTileEntityRenderer {
 		Block block = state.getBlock();
 		String id = Objects.toString(block.getRegistryName());
 		
-		try {
-			if(tile == null || PistonsMoveTileEntitiesModule.renderBlacklist.contains(id))
-				return false;
+		MatrixStack.Entry currEntry = matrix.getLast();
+		render: try {
+			if(tile == null || (block == Blocks.PISTON_HEAD) || PistonsMoveTileEntitiesModule.renderBlacklist.contains(id))
+				break render;
 			
+			matrix.push();
 			TileEntityRenderer<TileEntity> tileentityrenderer = TileEntityRendererDispatcher.instance.getRenderer(tile);
 			if(tileentityrenderer != null) {
-				matrix.push();
 				tile.setWorldAndPos(sourceTE.getWorld(), sourceTE.getPos());
 				tile.validate();
 
@@ -51,14 +53,14 @@ public class PistonTileEntityRenderer {
 
 				tile.cachedBlockState = state;
 				tileentityrenderer.render(tile, pTicks, matrix, bufferIn, combinedLightIn, combinedOverlayIn);
-
-				
-				matrix.pop();
 			}
 		} catch(Throwable e) {
 			Quark.LOG.warn(id + " can't be rendered for piston TE moving", e);
 			PistonsMoveTileEntitiesModule.renderBlacklist.add(id);
 			return false;
+		} finally {
+			while(matrix.getLast() != currEntry)
+				matrix.pop();
 		}
 		
 		return state.getRenderType() != BlockRenderType.MODEL;
