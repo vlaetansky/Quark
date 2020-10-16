@@ -38,7 +38,7 @@ public class CompassAngleGetter {
 
 	public static void tickCompass(PlayerEntity player, ItemStack stack) {
 		boolean calculated = isCalculated(stack);
-		boolean nether = player.world.getDimensionKey().getRegistryName().equals(Dimension.THE_NETHER.getRegistryName());
+		boolean nether = player.world.getDimensionKey().getLocation().equals(Dimension.THE_NETHER.getLocation());
 		
 		if(calculated) {
 			boolean wasInNether = ItemNBTHelper.getBoolean(stack, TAG_WAS_IN_NETHER, false);
