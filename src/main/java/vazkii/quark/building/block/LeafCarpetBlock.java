@@ -9,6 +9,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -33,7 +34,7 @@ public class LeafCarpetBlock extends QuarkBlock implements IBlockColorProvider {
 	public LeafCarpetBlock(String name, Block base, Module module) {
 		super(name + "_leaf_carpet", module, ItemGroup.DECORATIONS, 
 				Block.Properties.create(Material.CARPET)
-				.hardnessAndResistance(0.2F)
+				.hardnessAndResistance(0F)
 				.sound(SoundType.PLANT)
 				.harvestTool(ToolType.HOE)
 				.notSolid());
@@ -41,6 +42,11 @@ public class LeafCarpetBlock extends QuarkBlock implements IBlockColorProvider {
 		baseState = base.getDefaultState();
 		
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT_MIPPED);
+	}
+	
+	@Override
+	public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
+		return true;
 	}
 	
 	@Nonnull
