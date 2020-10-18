@@ -56,6 +56,8 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrameEntity>
 
 	private static final ModelResourceLocation LOCATION_MODEL = new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, "glass_frame"), "inventory");
 
+	private static final List<Direction> SIGN_DIRECTIONS = Arrays.asList(new Direction[] { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST });
+	
 	private static BannerTileEntity banner = new BannerTileEntity();
 	private final ModelRenderer bannerModel;
 
@@ -129,8 +131,6 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrameEntity>
 			MapData mapdata = FilledMapItem.getMapData(stack, itemFrame.world);
 			
 			sign: if(itemFrame.isOnSign()) {
-				List<Direction> SIGN_DIRECTIONS = Arrays.asList(new Direction[] { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST });
-				
 				BlockPos back = itemFrame.getBehindPos();
 				BlockState state = itemFrame.world.getBlockState(back);
 				
