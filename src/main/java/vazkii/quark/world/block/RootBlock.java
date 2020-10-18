@@ -3,46 +3,28 @@ package vazkii.quark.world.block;
 import java.util.Random;
 import java.util.function.BooleanSupplier;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IGrowable;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.VineBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import vazkii.arl.util.RegistryHelper;
-import vazkii.quark.base.block.IQuarkBlock;
+import vazkii.quark.base.block.QuarkVineBlock;
 import vazkii.quark.base.handler.MiscUtil;
-import vazkii.quark.base.handler.RenderLayerHandler;
-import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.Module;
 
-public class RootBlock extends VineBlock implements IQuarkBlock, IGrowable {
-
-	private final Module module;
-	private BooleanSupplier enabledSupplier = () -> true;
+public class RootBlock extends QuarkVineBlock implements IGrowable {
 
 	public RootBlock(Module module) {
-		super(Block.Properties.create(Material.TALL_PLANTS).doesNotBlockMovement().tickRandomly().hardnessAndResistance(0.2F).sound(SoundType.PLANT));
-		this.module = module;
-
-		RegistryHelper.registerBlock(this, "root");
-		RegistryHelper.setCreativeTab(this, ItemGroup.DECORATIONS);
-		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
+		super(module, "root", true);
 	}
 	
 	@Override
@@ -53,16 +35,6 @@ public class RootBlock extends VineBlock implements IQuarkBlock, IGrowable {
 	@Override
 	public boolean isLadder(BlockState state, IWorldReader world, BlockPos pos, LivingEntity entity) {
 		return false;
-	}
-	
-	@Override
-	public boolean isFlammable(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
-		return true;
-	}
-	
-	@Override
-	public int getFlammability(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
-		return 300;
 	}
 	
 	@Override
@@ -121,29 +93,6 @@ public class RootBlock extends VineBlock implements IQuarkBlock, IGrowable {
 	public static boolean isAcceptableNeighbor(IWorld world, BlockPos pos, Direction side) {
 		BlockState iblockstate = world.getBlockState(pos);
 		return Block.doesSideFillSquare(iblockstate.getCollisionShape(world, pos), side) && iblockstate.getMaterial() == Material.ROCK;
-	}
-	
-	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-		if(isEnabled() || group == ItemGroup.SEARCH)
-			super.fillItemGroup(group, items);
-	}
-
-	@Nullable
-	@Override
-	public Module getModule() {
-		return module;
-	}
-
-	@Override
-	public RootBlock setCondition(BooleanSupplier enabledSupplier) {
-		this.enabledSupplier = enabledSupplier;
-		return this;
-	}
-
-	@Override
-	public boolean doesConditionApply() {
-		return enabledSupplier.getAsBoolean();
 	}
 
 	@Override
