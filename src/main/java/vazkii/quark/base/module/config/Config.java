@@ -13,15 +13,21 @@ public @interface Config {
 	String description() default "";
 	String flag() default "";
 
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
 	@interface Restriction {
 		String[] value();
 	}
 
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
 	@interface Min {
 		double value();
 		boolean exclusive() default false;
 	}
 
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
 	@interface Max {
 		double value();
 		boolean exclusive() default false;
