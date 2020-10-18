@@ -37,7 +37,7 @@ public class BurnVinesModule extends Module {
 	@SubscribeEvent
 	public void onRightClick(PlayerInteractEvent.RightClickBlock event) {
 		ItemStack stack = event.getItemStack();
-		if(stack.getItem() == Items.FLINT_AND_STEEL) {
+		if(stack.getItem() == Items.FLINT_AND_STEEL || stack.getItem() == Items.FIRE_CHARGE) {
 			BlockPos pos = event.getPos();
 			World world = event.getWorld();
 			BlockState state = world.getBlockState(pos);
