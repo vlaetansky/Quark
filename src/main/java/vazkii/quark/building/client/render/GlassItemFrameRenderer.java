@@ -1,11 +1,14 @@
 package vazkii.quark.building.client.render;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.datafixers.util.Pair;
 
+import io.netty.util.Signal;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.StandingSignBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -23,7 +26,6 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.tileentity.BannerTileEntityRenderer;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.item.ItemFrameEntity;
 import net.minecraft.item.BannerItem;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.FilledMapItem;
@@ -33,6 +35,7 @@ import net.minecraft.tileentity.BannerPattern;
 import net.minecraft.tileentity.BannerTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
@@ -56,7 +59,7 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrameEntity>
 
 	private static BannerTileEntity banner = new BannerTileEntity();
 	private final ModelRenderer bannerModel;
-	
+
 	private final Minecraft mc = Minecraft.getInstance();
 	private final ItemRenderer itemRenderer;
 	private final ItemFrameRenderer defaultRenderer;
@@ -121,12 +124,39 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrameEntity>
 		super.renderName(p_225629_1_, p_225629_1_.getDisplayedItem().getDisplayName(), p_225629_3_, p_225629_4_, p_225629_5_);
 	}
 
-	protected void renderItemStack(ItemFrameEntity itemFrame, float p_225623_2_, float p_225623_3_, MatrixStack matrix, IRenderTypeBuffer buff, int p_225623_6_, ItemStack stack) {
+	protected void renderItemStack(GlassItemFrameEntity itemFrame, float p_225623_2_, float p_225623_3_, MatrixStack matrix, IRenderTypeBuffer buff, int p_225623_6_, ItemStack stack) {
 		if (!stack.isEmpty()) {
 			matrix.push();
 			MapData mapdata = FilledMapItem.getMapData(stack, itemFrame.world);
+			
+			sign: if(itemFrame.isOnSign()) {
+				List<Direction> SIGN_DIRECTIONS = Arrays.asList(new Direction[] { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST });
+				
+				BlockPos back = itemFrame.getBehindPos();
+				BlockState state = itemFrame.world.getBlockState(back);
+				
+				Direction ourDirection = itemFrame.getHorizontalFacing().getOpposite();
+				
+				int signRotation = state.get(StandingSignBlock.ROTATION);
+				Direction signDirection = SIGN_DIRECTIONS.get(signRotation / 4);
+				if(signRotation % 4 == 0 ? (signDirection != ourDirection) : (signDirection.getOpposite() == ourDirection))
+					break sign;
+					
+				int ourRotation = SIGN_DIRECTIONS.indexOf(ourDirection) * 4;
+				int rotation = signRotation - ourRotation;
+				float angle = -rotation * 22.5F;
+
+				matrix.translate(0, 0.35, 0.8);
+				matrix.scale(0.4F, 0.4F, 0.4F);
+				matrix.translate(0, 0, 0.5);
+				matrix.rotate(Vector3f.YP.rotationDegrees(angle));
+				matrix.translate(0, 0, -0.5);
+				matrix.translate(0, 0, -0.085);
+			}
+			
 			int rotation = mapdata != null ? itemFrame.getRotation() % 4 * 2 : itemFrame.getRotation();
 			matrix.rotate(Vector3f.ZP.rotationDegrees((float) rotation * 360.0F / 8.0F));
+			
 			if (!MinecraftForge.EVENT_BUS.post(new RenderItemInFrameEvent(itemFrame, defaultRenderer, matrix, buff, p_225623_6_))) {
 				if (mapdata != null) {
 					matrix.rotate(Vector3f.ZP.rotationDegrees(180.0F));
