@@ -80,6 +80,8 @@ public class VariantChestsModule extends Module {
 	@Config
 	private static boolean replaceWorldgenChests = true;
 	
+	private static boolean staticEnabled = false;
+	
 	@Config(description =  "Chests to put in each structure. The format per entry is \"structure=chest\", where \"structure\" is a structure ID, and \"chest\" is a block ID, which must correspond to a standard chest block.")
 	public static List<String> structureChests = Arrays.asList(
 			 "minecraft:village_plains=quark:oak_chest",
@@ -126,6 +128,8 @@ public class VariantChestsModule extends Module {
 	public void configChanged() {
 		super.configChanged();
 		
+		staticEnabled = enabled;
+		
 		chestMappings.clear();
 		for(String s : structureChests) {
 			String[] toks = s.split("=");
@@ -146,7 +150,7 @@ public class VariantChestsModule extends Module {
 	}
 	
 	public static BlockState getGenerationChestBlockState(BlockState current) {
-		if(replaceWorldgenChests && current.getBlock() == Blocks.CHEST && currentStructure != null) {
+		if(replaceWorldgenChests && current.getBlock() == Blocks.CHEST && currentStructure != null && staticEnabled) {
 			ResourceLocation res = currentStructure.getRegistryName();
 			if(res == null)
 				return current;
