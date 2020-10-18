@@ -1,12 +1,12 @@
 package vazkii.quark.base.mixin;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.world.gen.feature.template.Template;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import vazkii.quark.base.handler.AsmHooks;
+
+import net.minecraft.block.BlockState;
+import net.minecraft.world.gen.feature.template.Template;
+import vazkii.quark.building.module.VariantChestsModule;
 
 @Mixin(Template.class)
 public class TemplateMixin {
@@ -15,6 +15,7 @@ public class TemplateMixin {
 			at = @At(value = "FIELD", target = "Lnet/minecraft/world/gen/feature/template/Template$BlockInfo;nbt:Lnet/minecraft/nbt/CompoundNBT;", ordinal = 0),
 			index = 21)
 	private BlockState captureLocalBlockstate(BlockState state) {
-		return AsmHooks.getGenerationChestBlockState(state);
+		return VariantChestsModule.getGenerationChestBlockState(state);
 	}
 }
+	

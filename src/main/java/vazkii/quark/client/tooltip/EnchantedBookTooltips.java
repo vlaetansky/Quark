@@ -82,7 +82,7 @@ public class EnchantedBookTooltips {
 	private static final ThreadLocal<Enchantment> clueHolder = new ThreadLocal<>();
 	private static final ThreadLocal<Integer> clueLevelHolder = ThreadLocal.withInitial(() -> 0);
 
-	@OnlyIn(Dist.CLIENT)
+	@OnlyIn(Dist.CLIENT) // TODO wire add this back
 	public static List<String> captureEnchantingData(List<String> list, EnchantmentScreen screen, Enchantment enchantment, int level) {
 		ItemStack last = screen.last;
 		if (!last.isEmpty() && last.getItem() == Items.BOOK) {

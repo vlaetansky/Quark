@@ -1,37 +1,39 @@
 package vazkii.quark.base.mixin;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.util.math.vector.Vector3d;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-import vazkii.quark.base.handler.AsmHooks;
+
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.MoverType;
+import net.minecraft.util.math.vector.Vector3d;
+import vazkii.quark.automation.module.ChainLinkageModule;
+import vazkii.quark.tools.module.PickarangModule;
+import vazkii.quark.tweaks.module.SpringySlimeModule;
 
 @Mixin(Entity.class)
 public class EntityMixin {
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	private void tick(CallbackInfo callbackInfo) {
-		AsmHooks.updateChain((Entity) (Object) this);
+		ChainLinkageModule.onEntityUpdate	((Entity) (Object) this);
 	}
 
 	@Inject(method = "isImmuneToFire", at = @At("RETURN"), cancellable = true)
 	private void isImmuneToFire(CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
-		callbackInfoReturnable.setReturnValue(AsmHooks.getIsFireResistant(callbackInfoReturnable.getReturnValue(), (Entity) (Object) this));
+		callbackInfoReturnable.setReturnValue(PickarangModule.getIsFireResistant(callbackInfoReturnable.getReturnValue(), (Entity) (Object) this));
 	}
 
 	@Inject(method = "move", at = @At("HEAD"))
 	private void recordMotion(CallbackInfo callbackInfo) {
-		AsmHooks.recordMotion((Entity) (Object) this);
+		SpringySlimeModule.recordMotion((Entity) (Object) this);
 	}
 
 	@Inject(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;doBlockCollisions()V"), locals = LocalCapture.CAPTURE_FAILHARD)
 	private void applyCollisionLogic(MoverType typeIn, Vector3d pos, CallbackInfo callbackInfo, Vector3d vector3d) {
-		AsmHooks.applyCollisionLogic((Entity) (Object) this, pos, vector3d);
+		SpringySlimeModule.onEntityCollision((Entity) (Object) this, pos, vector3d);
 	}
 }

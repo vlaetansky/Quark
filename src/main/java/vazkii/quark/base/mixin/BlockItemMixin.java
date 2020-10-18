@@ -2,15 +2,15 @@ package vazkii.quark.base.mixin;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import vazkii.quark.base.handler.AsmHooks;
+
+import net.minecraft.block.BlockState;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.BlockItemUseContext;
+import vazkii.quark.tweaks.module.LockRotationModule;
 
 @Mixin(BlockItem.class)
 public class BlockItemMixin {
@@ -21,6 +21,6 @@ public class BlockItemMixin {
 
 	@Redirect(method = "tryPlace", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/BlockItem;getStateForPlacement(Lnet/minecraft/item/BlockItemUseContext;)Lnet/minecraft/block/BlockState;"))
 	private BlockState alterPlacementState(BlockItem self, BlockItemUseContext context) {
-		return AsmHooks.alterPlacementState(getStateForPlacement(context), context);
+		return LockRotationModule.fixBlockRotation(getStateForPlacement(context), context);
 	}
 }

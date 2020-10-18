@@ -20,7 +20,7 @@ import vazkii.quark.automation.module.PistonsMoveTileEntitiesModule;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.ModuleLoader;
 
-public class PistonTileEntityRenderer {
+public class QuarkPistonTileEntityRenderer {
 
 	public static boolean renderPistonBlock(PistonTileEntity piston, float pTicks, MatrixStack matrix, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
 		if (!ModuleLoader.INSTANCE.isModuleEnabled(PistonsMoveTileEntitiesModule.class) || piston.getProgress(pTicks) > 1.0F)

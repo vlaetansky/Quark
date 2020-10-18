@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
-import vazkii.quark.base.handler.AsmHooks;
+import vazkii.quark.building.module.VariantChestsModule;
 
 @Mixin(StructurePiece.class)
 public class StructurePieceMixin {
@@ -17,7 +17,7 @@ public class StructurePieceMixin {
 		    index = 1
 		)
 	protected BlockState modifyBlockstate(BlockState state) {
-		return AsmHooks.getGenerationChestBlockState(state);
+		return VariantChestsModule.getGenerationChestBlockState(state);
 	}
 
 	
