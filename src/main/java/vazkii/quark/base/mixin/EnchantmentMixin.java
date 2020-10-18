@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.ItemStack;
-import vazkii.quark.base.handler.AsmHooks;
 import vazkii.quark.tools.item.PickarangItem;
 import vazkii.quark.tweaks.module.HoeHarvestingModule;
 

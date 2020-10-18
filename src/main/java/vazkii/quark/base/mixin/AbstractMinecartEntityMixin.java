@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import vazkii.quark.automation.module.ChainLinkageModule;
-import vazkii.quark.base.handler.AsmHooks;
 import vazkii.quark.tweaks.module.SpringySlimeModule;
 
 @Mixin(AbstractMinecartEntity.class)
