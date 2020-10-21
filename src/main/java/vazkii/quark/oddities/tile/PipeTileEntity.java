@@ -55,7 +55,6 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 	}
 	private static final String TAG_PIPE_ITEMS = "pipeItems";
 
-	private boolean needsSync = false;
 	private boolean iterating = false;
 	public final List<PipeItem> pipeItems = new LinkedList<>();
 	public final List<PipeItem> queuedItems = new LinkedList<>();
@@ -127,12 +126,10 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 
 			ListIterator<PipeItem> itemItr = pipeItems.listIterator();
 			iterating = true;
-//			needsSync = false;
 			while(itemItr.hasNext()) {
 				PipeItem item = itemItr.next();
 				Direction lastFacing = item.outgoingFace;
 				if(item.tick(this)) {
-//					needsSync = true;
 					itemItr.remove();
 
 					if (item.valid)
@@ -145,9 +142,6 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 			iterating = false;
 
 			pipeItems.addAll(queuedItems);
-//			if(needsSync || !queuedItems.isEmpty())
-//				sync();
-//			needsSync = false;
 			queuedItems.clear();
 		}
 
