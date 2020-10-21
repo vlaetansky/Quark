@@ -22,6 +22,8 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -40,6 +42,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import vazkii.arl.block.tile.TileSimpleInventory;
+import vazkii.quark.base.client.NetworkProfilingHandler;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.oddities.block.PipeBlock;
@@ -56,6 +59,8 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 	private boolean iterating = false;
 	public final List<PipeItem> pipeItems = new LinkedList<>();
 	public final List<PipeItem> queuedItems = new LinkedList<>();
+	
+	private boolean skipSync = false;
 
 	public static boolean isTheGoodDay(World world) {
 		Calendar calendar = Calendar.getInstance();
@@ -80,7 +85,7 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 
 					Direction opposite = side.getOpposite();
 
-					boolean any = false;
+					boolean pickedItemsUp = false;
 					Predicate<ItemEntity> predicate = entity -> {
 						if(entity == null || !entity.isAlive())
 							return false;
@@ -101,11 +106,11 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 								world.playSound(null, item.getPosX(), item.getPosY(), item.getPosZ(), QuarkSounds.BLOCK_PIPE_PICKUP, SoundCategory.BLOCKS, 1f, 1f);
 						}
 
-						any = true;
+						pickedItemsUp = true;
 						item.remove();
 					}
 
-					if (any)
+					if(pickedItemsUp)
 						sync();
 				}
 			}
@@ -122,12 +127,12 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 
 			ListIterator<PipeItem> itemItr = pipeItems.listIterator();
 			iterating = true;
-			needsSync = false;
+//			needsSync = false;
 			while(itemItr.hasNext()) {
 				PipeItem item = itemItr.next();
 				Direction lastFacing = item.outgoingFace;
 				if(item.tick(this)) {
-					needsSync = true;
+//					needsSync = true;
 					itemItr.remove();
 
 					if (item.valid)
@@ -140,9 +145,9 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 			iterating = false;
 
 			pipeItems.addAll(queuedItems);
-			if(needsSync || !queuedItems.isEmpty())
-				sync();
-			needsSync = false;
+//			if(needsSync || !queuedItems.isEmpty())
+//				sync();
+//			needsSync = false;
 			queuedItems.clear();
 		}
 
@@ -183,7 +188,7 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 		if(tile != null) {
 			if(tile instanceof PipeTileEntity)
 				did = ((PipeTileEntity) tile).passIn(item.stack, item.outgoingFace.getOpposite(), null, item.rngSeed, item.timeInWorld);
-			else if (!world.isRemote) {
+			else {
 				ItemStack result = putIntoInv(item.stack, tile, item.outgoingFace.getOpposite(), false);
 				if(result.getCount() != item.stack.getCount()) {
 					did = true;
@@ -198,8 +203,10 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 	}
 
 	private void bounceBack(PipeItem item, ItemStack stack) {
-		if(!world.isRemote)
+		if(!world.isRemote) {
 			passIn(stack == null ? item.stack : stack, item.outgoingFace, item.incomingFace, item.rngSeed, item.timeInWorld);
+			sync();
+		}
 	}
 
 	public void dropItem(ItemStack stack) {
@@ -247,6 +254,12 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 			world.addEntity(entity);
 		}
 	}
+	
+	@Override
+	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
+		super.onDataPacket(net, packet);
+		NetworkProfilingHandler.receive("pipe");
+	}
 
 	public void dropAllItems() {
 		for(PipeItem item : pipeItems)
@@ -256,7 +269,9 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 
 	@Override
 	public void readSharedNBT(CompoundNBT cmp) {
+		skipSync = true;
 		super.readSharedNBT(cmp);
+		skipSync = false;
 
 		ListNBT pipeItemList = cmp.getList(TAG_PIPE_ITEMS, cmp.getId());
 		pipeItems.clear();
@@ -323,7 +338,9 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 		if(!itemstack.isEmpty()) {
 			Direction side = Direction.values()[i];
 			passIn(itemstack, side);
-			sync();
+			
+			if(!world.isRemote && !skipSync)
+				sync();
 		}
 	}
 
@@ -373,10 +390,8 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 			ticksInPipe++;
 			timeInWorld++;
 
-			if(!pipe.world.isRemote && ticksInPipe == PipesModule.effectivePipeSpeed / 2 - 1) {
+			if(ticksInPipe == PipesModule.effectivePipeSpeed / 2 - 1) {
 				Direction target = getTargetFace(pipe);
-				if (outgoingFace != target)
-					pipe.needsSync = true;
 				outgoingFace = target;
 			}
 
