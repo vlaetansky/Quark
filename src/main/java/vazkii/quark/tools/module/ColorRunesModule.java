@@ -9,6 +9,7 @@ import net.minecraft.loot.LootTables;
 import net.minecraft.loot.TagLootEntry;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -116,8 +117,8 @@ public class ColorRunesModule extends Module {
 
     @Override
     public void setup() {
-        runesTag = ItemTags.makeWrapperTag(Quark.MOD_ID + ":runes");
-        runesLootableTag = ItemTags.makeWrapperTag(Quark.MOD_ID + ":runes_lootable");
+        runesTag = ItemTags.createOptional(new ResourceLocation(Quark.MOD_ID, "runes"));
+        runesLootableTag = ItemTags.createOptional(new ResourceLocation(Quark.MOD_ID, "runes_lootable"));
     }
 
     @SubscribeEvent

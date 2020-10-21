@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.biome.Biome;
 import vazkii.quark.base.Quark;
@@ -64,7 +65,7 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 	@Override
 	public void setup() {
 		super.setup();
-		crystalTag = BlockTags.makeWrapperTag(Quark.MOD_ID + ":crystal");
+		crystalTag = BlockTags.createOptional(new ResourceLocation(Quark.MOD_ID, "crystal"));
 	}
 	
 	@Override

@@ -15,6 +15,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.MovementInput;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -45,7 +46,7 @@ public class EnhancedLaddersModule extends Module {
 	
 	@Override
 	public void setup() {
-		laddersTag = ItemTags.makeWrapperTag(Quark.MOD_ID + ":ladders");
+		laddersTag = ItemTags.createOptional(new ResourceLocation(Quark.MOD_ID, "ladders"));
 	}
 	
 	@SuppressWarnings("deprecation")

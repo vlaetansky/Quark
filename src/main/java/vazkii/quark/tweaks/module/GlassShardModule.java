@@ -2,24 +2,17 @@ package vazkii.quark.tweaks.module;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.StainedGlassBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraft.util.ResourceLocation;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.block.QuarkInheritedPaneBlock;
@@ -60,6 +53,6 @@ public class GlassShardModule extends Module {
 
     @Override
     public void setup() {
-        shardTag = ItemTags.makeWrapperTag(Quark.MOD_ID + ":shards");
+        shardTag = ItemTags.createOptional(new ResourceLocation(Quark.MOD_ID, "shards"));
     }
 }

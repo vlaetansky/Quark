@@ -9,6 +9,7 @@ import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -70,7 +71,7 @@ public class FoxhoundModule extends Module {
 	public void setup() {
 		GlobalEntityTypeAttributes.put(foxhoundType, WolfEntity.func_234233_eS_().create());
 		
-		foxhoundSpawnableTag = BlockTags.makeWrapperTag(Quark.MOD_ID + ":foxhound_spawnable");
+		foxhoundSpawnableTag = BlockTags.createOptional(new ResourceLocation(Quark.MOD_ID, "foxhound_spawnable"));
 	}
 	
 	@Override
