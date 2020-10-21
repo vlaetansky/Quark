@@ -14,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
+import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.item.QuarkSpawnEggItem;
@@ -53,6 +54,9 @@ public class EntitySpawnHandler {
 				
 				if(enabled && c.config.biomes.canSpawn(b))
 					l.add(c.entry);
+			
+				if(b == Biomes.field_235252_ay_) // soul sand valley
+					b.func_235059_a_(c.entityType, 0.7, 0.15); // apply entity density
 			}
 		}
 	}
