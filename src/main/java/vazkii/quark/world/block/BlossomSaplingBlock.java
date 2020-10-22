@@ -17,6 +17,8 @@ import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
 import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.FeatureSpread;
+import net.minecraft.world.gen.feature.Features;
 import net.minecraft.world.gen.feature.TwoLayerFeature;
 import net.minecraft.world.gen.foliageplacer.FancyFoliagePlacer;
 import net.minecraft.world.gen.trunkplacer.FancyTrunkPlacer;
@@ -76,10 +78,11 @@ public class BlossomSaplingBlock extends SaplingBlock implements IQuarkBlock {
 			config = (new BaseTreeFeatureConfig.Builder(
 					new SimpleBlockStateProvider(Blocks.SPRUCE_LOG.getDefaultState()),
 					new SimpleBlockStateProvider(leafBlock.getDefaultState()), 
-					new FancyFoliagePlacer(2, 0, 4, 0, 4), 
+					new FancyFoliagePlacer(FeatureSpread.func_242252_a(2), FeatureSpread.func_242252_a(4), 4), // <- Copy of what Features.FANCY_OAK uses
 					new FancyTrunkPlacer(3, 11, 0), 
 					new TwoLayerFeature(0, 0, 0, OptionalInt.of(4))))
-					.func_236700_a_().func_236702_a_(Heightmap.Type.MOTION_BLOCKING)
+					.setIgnoreVines()
+					.func_236702_a_(Heightmap.Type.MOTION_BLOCKING)
 					.build();
 			
 			leaf = leafBlock.getDefaultState();
@@ -87,7 +90,7 @@ public class BlossomSaplingBlock extends SaplingBlock implements IQuarkBlock {
 
 		@Override
 		protected ConfiguredFeature<BaseTreeFeatureConfig, ?> getTreeFeature(Random rand, boolean hjskfsd) {
-			return Feature.field_236291_c_.withConfiguration(config); // tree
+			return Feature.TREE.withConfiguration(config);
 		}
 		
 	}

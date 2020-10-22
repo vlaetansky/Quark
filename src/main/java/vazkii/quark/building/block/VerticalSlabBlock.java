@@ -174,7 +174,7 @@ public class VerticalSlabBlock extends QuarkBlock implements IWaterLoggable, IBl
 		public final VoxelShape shape;
 
 		VerticalSlabType(Direction direction) {
-			this.name = direction == null ? "double" : direction.func_176610_l(); // name()
+			this.name = direction == null ? "double" : direction.getString();
 			this.direction = direction;
 
 			if(direction == null)
@@ -200,7 +200,7 @@ public class VerticalSlabBlock extends QuarkBlock implements IWaterLoggable, IBl
 
 		@Nonnull
 		@Override
-		public String func_176610_l() { // getName
+		public String getString() {
 			return name;
 		}
 

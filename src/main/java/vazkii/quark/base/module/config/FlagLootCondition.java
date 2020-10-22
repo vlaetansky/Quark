@@ -44,15 +44,14 @@ public class FlagLootCondition implements ILootCondition {
             this.manager = manager;
         }
 
-
         @Override
-        public void func_230424_a_(@Nonnull JsonObject json, @Nonnull FlagLootCondition value, @Nonnull JsonSerializationContext context) {
+        public void serialize(@Nonnull JsonObject json, @Nonnull FlagLootCondition value, @Nonnull JsonSerializationContext context) {
             json.addProperty("flag", value.flag);
         }
 
         @Nonnull
         @Override
-        public FlagLootCondition func_230423_a_(@Nonnull JsonObject json, @Nonnull JsonDeserializationContext context) {
+        public FlagLootCondition deserialize(@Nonnull JsonObject json, @Nonnull JsonDeserializationContext context) {
             return new FlagLootCondition(manager, json.getAsJsonPrimitive("flag").getAsString());
         }
     }

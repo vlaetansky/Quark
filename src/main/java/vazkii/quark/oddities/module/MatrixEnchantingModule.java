@@ -16,7 +16,6 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -153,7 +152,7 @@ public class MatrixEnchantingModule extends Module {
 	public void onTooltip(ItemTooltipEvent event) {
 		ItemStack stack = event.getItemStack();
 		if(showTooltip && ItemNBTHelper.verifyExistence(stack, MatrixEnchantingTableTileEntity.TAG_STACK_MATRIX))
-			event.getToolTip().add(new TranslationTextComponent("quark.gui.enchanting.pending").func_240701_a_(TextFormatting.AQUA));
+			event.getToolTip().add(new TranslationTextComponent("quark.gui.enchanting.pending").mergeStyle(TextFormatting.AQUA));
 	}
 
 	@Override

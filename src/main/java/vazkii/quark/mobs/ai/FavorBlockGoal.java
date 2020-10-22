@@ -42,7 +42,7 @@ public class FavorBlockGoal extends Goal {
 	}
 
 	public FavorBlockGoal(CreatureEntity creature, double speed, Tag<Block> tag) {
-		this(creature, speed, (state) -> tag.func_230235_a_(state.getBlock())); // contains
+		this(creature, speed, (state) -> tag.contains(state.getBlock()));
 	}
 
 	public FavorBlockGoal(CreatureEntity creature, double speed, Block block) {
@@ -86,7 +86,7 @@ public class FavorBlockGoal extends Goal {
 	}
 
 	private boolean searchForDestination() {
-		double followRange = creature.getAttribute(Attributes.field_233819_b_).getValue(); // FOLLOW_RANGE
+		double followRange = creature.getAttribute(Attributes.FOLLOW_RANGE).getValue();
 		Vector3d cpos = creature.getPositionVec();
 		double xBase = cpos.x;
 		double yBase = cpos.y;

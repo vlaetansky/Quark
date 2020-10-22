@@ -37,6 +37,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.LightType;
 import net.minecraft.world.biome.Biome;
@@ -173,11 +174,11 @@ public class MiscUtil {
 	}
 
 	public static boolean isEntityInsideOpaqueBlock(Entity entity) {
-		BlockPos pos = entity.func_233580_cy_(); // getPosition
+		BlockPos pos = entity.getPosition();
 		return !entity.noClip && entity.world.getBlockState(pos).isSuffocating(entity.world, pos);
 	}
 
-	public static boolean validSpawnLight(IWorld world, BlockPos pos, Random rand) {
+	public static boolean validSpawnLight(IServerWorld world, BlockPos pos, Random rand) {
 		if (world.getLightFor(LightType.SKY, pos) > rand.nextInt(32)) {
 			return false;
 		} else {

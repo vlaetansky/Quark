@@ -14,6 +14,7 @@ import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.MerchantOffer;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -59,10 +60,10 @@ public class PathfinderMapsModule extends Module {
 	@Config
 	public static int xpFromTrade = 5;
 
-	private static String getBiomeDescriptor(Biome biome) {
-		ResourceLocation rl = biome.getRegistryName();
+	private static String getBiomeDescriptor(ResourceLocation rl) {
 		if(rl == null)
 			return "unknown";
+		
 		return rl.getPath();
 	}
 
@@ -103,11 +104,11 @@ public class PathfinderMapsModule extends Module {
 		tradeList.addAll(customTrades);
 	}
 
-	private void loadTradeInfo(Biome biome, boolean enabled, int level, int minPrice, int maxPrice, int color) {
-		builtinTrades.add(new TradeInfo(biome, enabled, level, minPrice, maxPrice, color));
+	private void loadTradeInfo(RegistryKey<Biome> biome, boolean enabled, int level, int minPrice, int maxPrice, int color) {
+		builtinTrades.add(new TradeInfo(biome.getLocation(), enabled, level, minPrice, maxPrice, color));
 	}
 	
-	private void loadCustomTradeInfo(Biome biome, boolean enabled, int level, int minPrice, int maxPrice, int color, String name) {
+	private void loadCustomTradeInfo(ResourceLocation biome, boolean enabled, int level, int minPrice, int maxPrice, int color, String name) {
 		customTrades.add(new TradeInfo(biome, enabled, level, minPrice, maxPrice, color, name));
 	}
 
@@ -117,17 +118,13 @@ public class PathfinderMapsModule extends Module {
 			throw new IllegalArgumentException("Wrong number of parameters " + tokens.length + " (expected 6)");
 
 		ResourceLocation biomeName = new ResourceLocation(tokens[0]);
-		if(!ForgeRegistries.BIOMES.containsKey(biomeName))
-			throw new IllegalArgumentException("No biome exists with name " + biomeName);
-
-		Biome biome = ForgeRegistries.BIOMES.getValue(biomeName);
 		int level = Integer.parseInt(tokens[1]);
 		int minPrice = Integer.parseInt(tokens[2]);
 		int maxPrice = Integer.parseInt(tokens[3]);
 		int color = Integer.parseInt(tokens[4], 16);
 		String name = tokens[5];
 
-		loadCustomTradeInfo(biome, true, level, minPrice, maxPrice, color, name);
+		loadCustomTradeInfo(biomeName, true, level, minPrice, maxPrice, color, name);
 	}
 
 	private void loadCustomMaps(Iterable<String> lines) {
@@ -144,7 +141,9 @@ public class PathfinderMapsModule extends Module {
 		if(!(world instanceof ServerWorld))
 			return ItemStack.EMPTY;
 
-		BlockPos biomePos = MiscUtil.locateBiome((ServerWorld) world, info.biome, pos);
+		Biome biome = ForgeRegistries.BIOMES.getValue(info.biome);
+		BlockPos biomePos = MiscUtil.locateBiome((ServerWorld) world, biome, pos);
+		
 		if(biomePos == null)
 			return ItemStack.EMPTY;
 			
@@ -172,7 +171,7 @@ public class PathfinderMapsModule extends Module {
 			
 			int i = random.nextInt(info.maxPrice - info.minPrice + 1) + info.minPrice;
 
-			ItemStack itemstack = createMap(entity.world, entity.func_233580_cy_(), info); // getPosition 
+			ItemStack itemstack = createMap(entity.world, entity.getPosition(), info); // getPosition 
 			if(itemstack.isEmpty())
 				return null;
 			
@@ -182,7 +181,7 @@ public class PathfinderMapsModule extends Module {
 
 	public static class TradeInfo implements IConfigType {
 
-		public final Biome biome;
+		public final ResourceLocation biome;
 		public final int color;
 		public final String name;
 
@@ -191,11 +190,11 @@ public class PathfinderMapsModule extends Module {
 		@Config public final int minPrice;
 		@Config public final int maxPrice;
 
-		TradeInfo(Biome biome, boolean enabled, int level, int minPrice, int maxPrice, int color) {
+		TradeInfo(ResourceLocation biome, boolean enabled, int level, int minPrice, int maxPrice, int color) {
 			this(biome, enabled, level, minPrice, maxPrice, color, "item.quark.biome_map." + getBiomeDescriptor(biome));
 		}
 
-		TradeInfo(Biome biome, boolean enabled, int level, int minPrice, int maxPrice, int color, String name) {
+		TradeInfo(ResourceLocation biome, boolean enabled, int level, int minPrice, int maxPrice, int color, String name) {
 			this.biome = biome;
 
 			this.enabled = enabled;

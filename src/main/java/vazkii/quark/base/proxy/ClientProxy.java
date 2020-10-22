@@ -74,7 +74,7 @@ public class ClientProxy extends CommonProxy {
 		mc.runAsync(() -> {
 			if(mc.isSingleplayer() && mc.player != null && mc.getIntegratedServer() != null)
 				for(int i = 0; i < 3; i++)
-					mc.player.sendMessage(new TranslationTextComponent("quark.misc.reloaded" + i).func_240701_a_(i == 0 ? TextFormatting.AQUA : TextFormatting.WHITE), null);
+					mc.player.sendMessage(new TranslationTextComponent("quark.misc.reloaded" + i).mergeStyle(i == 0 ? TextFormatting.AQUA : TextFormatting.WHITE), null);
 		});
 	}
 	

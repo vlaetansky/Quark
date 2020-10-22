@@ -87,7 +87,7 @@ public class TotemOfHoldingModule extends Module {
     public void clientSetup() {
         RenderingRegistry.registerEntityRenderingHandler(totemType, TotemOfHoldingRenderer::new);
         
-		ItemModelsProperties.func_239418_a_(soulCompass, new ResourceLocation("angle"), SoulCompassItem::angle);
+		ItemModelsProperties.registerProperty(soulCompass, new ResourceLocation("angle"), SoulCompassItem::angle);
     }
 
     @Override
@@ -127,10 +127,10 @@ public class TotemOfHoldingModule extends Module {
                 event.setCanceled(true);
             } else persistent.putString(TAG_LAST_TOTEM, "");
 
-            BlockPos pos = player.func_233580_cy_(); // getPosition
+            BlockPos pos = player.getPosition(); // getPosition
             persistent.putInt(TAG_DEATH_X, pos.getX());
             persistent.putInt(TAG_DEATH_Z, pos.getZ());
-            persistent.putString(TAG_DEATH_DIM, player.world.func_234922_V_().func_240901_a_().toString()); // getDimensionType().resourceLocation
+            persistent.putString(TAG_DEATH_DIM, player.world.getDimensionKey().getLocation().toString());
 
             if(!data.contains(PlayerEntity.PERSISTED_NBT_TAG))
                 data.put(PlayerEntity.PERSISTED_NBT_TAG, persistent);

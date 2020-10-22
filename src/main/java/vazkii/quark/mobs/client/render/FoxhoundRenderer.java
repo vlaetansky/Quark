@@ -10,6 +10,8 @@
  */
 package vazkii.quark.mobs.client.render;
 
+import java.util.UUID;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -31,6 +33,12 @@ public class FoxhoundRenderer extends MobRenderer<FoxhoundEntity, FoxhoundModel>
 	private static final ResourceLocation SOULHOUND_HOSTILE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/foxhound/blue/hostile.png");
 	private static final ResourceLocation SOULHOUND_SLEEPING = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/foxhound/blue/sleeping.png");
 
+	private static final ResourceLocation BASALT_FOXHOUND_IDLE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/foxhound/black/idle.png");
+	private static final ResourceLocation BASALT_FOXHOUND_HOSTILE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/foxhound/black/hostile.png");
+	private static final ResourceLocation BASALT_FOXHOUND_SLEEPING = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/foxhound/black/sleeping.png");
+	
+	private static final int SHINY_CHANCE = 256;
+	
 	public FoxhoundRenderer(EntityRendererManager render) {
 		super(render, new FoxhoundModel(), 0.5F);
 		addLayer(new FoxhoundCollarLayer(this));
@@ -40,8 +48,13 @@ public class FoxhoundRenderer extends MobRenderer<FoxhoundEntity, FoxhoundModel>
 	@Override
 	public ResourceLocation getEntityTexture(@Nonnull FoxhoundEntity entity) {
 		if(entity.isBlue())
-			return entity.isSleeping() ? SOULHOUND_SLEEPING : (entity.func_230256_F__() > 0 ? SOULHOUND_HOSTILE : SOULHOUND_IDLE);
+			return entity.isSleeping() ? SOULHOUND_SLEEPING : (entity.getAngerTime() > 0 ? SOULHOUND_HOSTILE : SOULHOUND_IDLE); 
 
-		return entity.isSleeping() ? FOXHOUND_SLEEPING : (entity.func_230256_F__() > 0 ? FOXHOUND_HOSTILE : FOXHOUND_IDLE);
+		UUID id = entity.getUniqueID();
+		long most = id.getMostSignificantBits();
+		if(SHINY_CHANCE > 0 && (most % SHINY_CHANCE) == 0)
+			return entity.isSleeping() ? BASALT_FOXHOUND_SLEEPING : (entity.getAngerTime() > 0 ? BASALT_FOXHOUND_HOSTILE : BASALT_FOXHOUND_IDLE);
+		
+		return entity.isSleeping() ? FOXHOUND_SLEEPING : (entity.getAngerTime() > 0 ? FOXHOUND_HOSTILE : FOXHOUND_IDLE);
 	}
 }

@@ -19,7 +19,7 @@ public class MovableFakePlayer extends FakePlayer {
 	}
 	
 	@Override
-	public BlockPos func_233580_cy_() {
+	public BlockPos getPosition() {
 		return new BlockPos((int) getPosX(), (int) getPosY(), (int) getPosZ());
 	}
 	

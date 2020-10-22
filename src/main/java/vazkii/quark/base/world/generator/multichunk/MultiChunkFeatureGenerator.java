@@ -21,7 +21,7 @@ public abstract class MultiChunkFeatureGenerator extends Generator {
 	}
 
 	@Override
-	public final void generateChunk(WorldGenRegion world, ChunkGenerator generator, StructureManager structureManager, Random rand, BlockPos pos) {
+	public final void generateChunk(WorldGenRegion world, ChunkGenerator generator, Random rand, BlockPos pos) {
 		int radius = getFeatureRadius();
 		if(radius <= 0)
 			return;

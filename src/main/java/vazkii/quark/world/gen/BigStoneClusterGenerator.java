@@ -5,7 +5,7 @@ import java.util.function.BooleanSupplier;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.WorldGenRegion;
 import vazkii.quark.base.world.generator.multichunk.ClusterBasedGenerator;
@@ -58,7 +58,7 @@ public class BigStoneClusterGenerator extends ClusterBasedGenerator {
 		};
 	}
 	
-	private boolean canPlaceBlock(IWorld world, BlockPos pos) {
+	private boolean canPlaceBlock(IServerWorld world, BlockPos pos) {
 		return BigStoneClustersModule.blockReplacePredicate.test(world.getWorld(), world.getBlockState(pos).getBlock());
 	}
 	

@@ -68,8 +68,10 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 
 		ItemStack item = getStackInSlot(0);
 		if(item.isEmpty()) {
-			matrix = null;
-			matrixDirty = true;
+			if(matrix != null) {
+				matrixDirty = true;
+				matrix = null;
+			}
 		} else {
 			loadMatrix(item);
 

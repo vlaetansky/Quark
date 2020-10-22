@@ -2,24 +2,17 @@ package vazkii.quark.tweaks.module;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.StainedGlassBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraft.util.ResourceLocation;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.block.QuarkInheritedPaneBlock;
@@ -55,35 +48,11 @@ public class GlassShardModule extends Module {
         dirtyShard = new QuarkItem("dirty_shard", this, new Item.Properties().group(ItemGroup.MATERIALS));
 
         for(DyeColor color : DyeColor.values())
-            shardColors.put(color, new QuarkItem(color.func_176610_l() + "_shard", this, new Item.Properties().group(ItemGroup.MATERIALS)));
+            shardColors.put(color, new QuarkItem(color.getString() + "_shard", this, new Item.Properties().group(ItemGroup.MATERIALS)));
     }
 
     @Override
     public void setup() {
-        shardTag = ItemTags.makeWrapperTag(Quark.MOD_ID + ":shards");
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public void onDrops(BlockEvent.HarvestDropsEvent event) {
-        Block block = event.getState().getBlock();
-        if(event.getDrops() != null && event.getDrops().isEmpty() && !event.isSilkTouching()) {
-            Item item = null;
-
-            if (block == Blocks.GLASS)
-                item = clearShard;
-            else if (block == dirtyGlass)
-                item = dirtyShard;
-            else if (block instanceof StainedGlassBlock)
-                item = shardColors.get(((StainedGlassBlock) block).getColor());
-
-            if (item == null)
-                return;
-
-            Random rand = event.getWorld().getRandom();
-
-            int quantity = MathHelper.clamp(2 + rand.nextInt(3) + rand.nextInt(event.getFortuneLevel() + 1), 1, 4);
-
-            event.getDrops().add(new ItemStack(item, quantity));
-        }
+        shardTag = ItemTags.createOptional(new ResourceLocation(Quark.MOD_ID, "shards"));
     }
 }

@@ -120,7 +120,7 @@ public class SpeleothemBlock extends QuarkBlock implements IWaterLoggable {
 		public final VoxelShape shape;
 
 		@Override
-		public String func_176610_l() { // getName
+		public String getString() { 
 			return name().toLowerCase(Locale.ROOT);
 		}
 		

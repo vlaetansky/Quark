@@ -66,14 +66,19 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.registry.DynamicRegistries;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeRegistry;
 import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.mobs.ai.FindPlaceToSleepGoal;
@@ -128,15 +133,17 @@ public class FoxhoundEntity extends WolfEntity implements IMob {
 		return !isTamed();
 	}
 
-	@Override
-	public boolean isEntityInsideOpaqueBlock() {
-		return MiscUtil.isEntityInsideOpaqueBlock(this);
-	}
+//	@Override
+//	public boolean isEntityInsideOpaqueBlock() {
+//		return MiscUtil.isEntityInsideOpaqueBlock(this);
+//	}
 	
 	@Override
-	public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, ILivingEntityData spawnDataIn, CompoundNBT dataTag) {
+	public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, ILivingEntityData spawnDataIn, CompoundNBT dataTag) {
 		Biome biome = worldIn.getBiome(new BlockPos(getPositionVec()));
-		if(biome == Biomes.field_235252_ay_) // soul sand valley
+		ResourceLocation res = worldIn.getWorld().func_241828_r().getRegistry(Registry.BIOME_KEY).getKey(biome);
+		
+		if(res.equals(Biomes.SOUL_SAND_VALLEY.getLocation()))
 			setBlue(true);
 		
 		return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
@@ -165,7 +172,7 @@ public class FoxhoundEntity extends WolfEntity implements IMob {
 
 		if (WantLoveGoal.needsPets(this)) {
 			Entity owner = getOwner();
-			if (owner != null && owner.getDistanceSq(this) < 1 && !owner.isInWater() && !owner.func_230279_az_() && (!(owner instanceof PlayerEntity) || !((PlayerEntity) owner).isCreative()))
+			if (owner != null && owner.getDistanceSq(this) < 1 && !owner.isInWater() && !owner.isImmuneToFire() && (!(owner instanceof PlayerEntity) || !((PlayerEntity) owner).isCreative()))
 				owner.setFire(5);
 		}
 
@@ -175,19 +182,19 @@ public class FoxhoundEntity extends WolfEntity implements IMob {
 			if(isSleeping())
 				particle = ParticleTypes.SMOKE;
 			else if(isBlue())
-				particle = ParticleTypes.field_239811_B_; // soul fire
+				particle = ParticleTypes.SOUL_FIRE_FLAME;
 			
 			this.world.addParticle(particle, pos.x + (this.rand.nextDouble() - 0.5D) * this.getWidth(), pos.y + (this.rand.nextDouble() - 0.5D) * this.getHeight(), pos.z + (this.rand.nextDouble() - 0.5D) * this.getWidth(), 0.0D, 0.0D, 0.0D);
 		}
 
 		if(isTamed()) {
-			BlockPos below = func_233580_cy_().down(); // getPosition
+			BlockPos below = getPosition().down();
 			TileEntity tile = world.getTileEntity(below);
 			if (tile instanceof AbstractFurnaceTileEntity) {
 				AbstractFurnaceTileEntity furnace = (AbstractFurnaceTileEntity) tile;
 				int cookTime = furnace.cookTime;
 				if (cookTime > 0 && cookTime % 3 == 0) {
-					List<FoxhoundEntity> foxhounds = world.getEntitiesWithinAABB(FoxhoundEntity.class, new AxisAlignedBB(func_233580_cy_()),
+					List<FoxhoundEntity> foxhounds = world.getEntitiesWithinAABB(FoxhoundEntity.class, new AxisAlignedBB(getPosition()),
 							(fox) -> fox != null && fox.isTamed());
 					if(!foxhounds.isEmpty() && foxhounds.get(0) == this)
 						furnace.cookTime = furnace.cookTime == 3 ? 5 :Math.min(furnace.cookTimeTotal - 1, cookTime + 1);
@@ -232,16 +239,15 @@ public class FoxhoundEntity extends WolfEntity implements IMob {
 				target -> target instanceof SheepEntity || target instanceof RabbitEntity));
 		this.targetSelector.addGoal(4, new NonTamedTargetGoal<>(this, PlayerEntity.class, false,
 				target -> !isTamed()));
-		this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, AbstractSkeletonEntity.class, false));
+//		this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, AbstractSkeletonEntity.class, false));
 	}
 
-	@Override
-	public int func_230256_F__() {
+	public int getAngerTime() {
 		if (!isTamed() && world.getDifficulty() != Difficulty.PEACEFUL)
 			return 0;
-		return super.func_230256_F__();
+		return super.getAngerTime();
 	}
-
+	
 	@Override
 	public boolean attackEntityAsMob(Entity entityIn) {
 		if (entityIn.getType().isImmuneToFire()) {
@@ -251,7 +257,7 @@ public class FoxhoundEntity extends WolfEntity implements IMob {
 		}
 
 		boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this).setFireDamage(),
-				((int)this.func_233637_b_(Attributes.field_233823_f_)));
+				((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
 
 		if (flag) {
 			entityIn.setFire(5);
@@ -316,8 +322,8 @@ public class FoxhoundEntity extends WolfEntity implements IMob {
 		return super.canMateWith(otherAnimal) && otherAnimal instanceof FoxhoundEntity;
 	}
 
-	@Override
-	public WolfEntity createChild(AgeableEntity otherParent) {
+	@Override // createChild
+	public WolfEntity func_241840_a(ServerWorld sworld, AgeableEntity otherParent) {
 		FoxhoundEntity kid = new FoxhoundEntity(FoxhoundModule.foxhoundType, this.world);
 		UUID uuid = this.getOwnerId();
 
@@ -372,22 +378,22 @@ public class FoxhoundEntity extends WolfEntity implements IMob {
 		dataManager.set(IS_BLUE, blue);
 	}
 
-	public static boolean canSpawnHere(IWorld world, BlockPos pos, Random rand) {
-		if (world.getLightFor(LightType.SKY, pos) > rand.nextInt(32)) {
-			return false;
-		} else {
-			int light = world.getWorld().isThundering() ? world.getNeighborAwareLightSubtracted(pos, 10) : world.getLight(pos);
-			return light <= rand.nextInt(8);
-		}
-	}
+//	public static boolean canSpawnHere(IServerWorld world, BlockPos pos, Random rand) {
+//		if (world.getLightFor(LightType.SKY, pos) > rand.nextInt(32)) {
+//			return false;
+//		} else {
+//			int light = world.getWorld().isThundering() ? world.getNeighborAwareLightSubtracted(pos, 10) : world.getLight(pos);
+//			return light <= rand.nextInt(8);
+//		}
+//	}
 
 	@Override
 	public float getBlockPathWeight(BlockPos pos, IWorldReader worldIn) {
 		return worldIn.getBlockState(pos.down()).getBlock().isIn(FoxhoundModule.foxhoundSpawnableTag) ? 10.0F : worldIn.getBrightness(pos) - 0.5F;
 	}
-
-	public static boolean spawnPredicate(EntityType<? extends FoxhoundEntity> type, IWorld world, SpawnReason reason, BlockPos pos, Random rand) {
-		return world.getDifficulty() != Difficulty.PEACEFUL && canSpawnHere(world, pos, rand);
+	
+	public static boolean spawnPredicate(EntityType<? extends FoxhoundEntity> type, IServerWorld world, SpawnReason reason, BlockPos pos, Random rand) {
+		return world.getDifficulty() != Difficulty.PEACEFUL && world.getBlockState(pos.down()).isIn(FoxhoundModule.foxhoundSpawnableTag);
 	}
 
 	public SleepGoal getSleepGoal() {

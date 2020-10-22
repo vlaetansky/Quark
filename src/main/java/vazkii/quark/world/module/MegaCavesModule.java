@@ -1,7 +1,7 @@
 package vazkii.quark.world.module;
 
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;
-import net.minecraftforge.common.BiomeDictionary.Type;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.Module;
 import vazkii.quark.base.module.ModuleCategory;
@@ -16,7 +16,7 @@ import vazkii.quark.world.gen.UndergroundSpaceGenerator;
 public class MegaCavesModule extends Module {
 
 	@Config public DimensionConfig dimensions = DimensionConfig.overworld(false);
-	@Config public ClusterSizeConfig spawnSettings = new ClusterSizeConfig(800, 80, 25, 30, 10, true, Type.OCEAN, Type.BEACH)
+	@Config public ClusterSizeConfig spawnSettings = new ClusterSizeConfig(800, 80, 25, 30, 10, true, Biome.Category.OCEAN, Biome.Category.BEACH)
 			.setYLevels(10, 20);
 	
 	@Override

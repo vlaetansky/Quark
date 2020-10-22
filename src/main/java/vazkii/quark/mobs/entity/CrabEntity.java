@@ -65,6 +65,7 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -172,17 +173,17 @@ public class CrabEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 
 	public static AttributeModifierMap.MutableAttribute prepareAttributes() {
 		return MobEntity.func_233666_p_()
-				.func_233815_a_(Attributes.field_233818_a_, 20.0D) // MAX_HEALTH
-				.func_233815_a_(Attributes.field_233821_d_, 0.25D) // MOEVMENT_SPEED
-				.func_233815_a_(Attributes.field_233826_i_, 3.0D) // ARMOR
-				.func_233815_a_(Attributes.field_233827_j_, 2.0D) // ARMOR_TOUGHNESS
-				.func_233815_a_(Attributes.field_233820_c_, 0.5D); // KNOCKBACK_RESISTANCE
+				.createMutableAttribute(Attributes.MAX_HEALTH, 20.0D)
+				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25D)
+				.createMutableAttribute(Attributes.ARMOR, 3.0D)
+				.createMutableAttribute(Attributes.ARMOR_TOUGHNESS, 2.0D)
+				.createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 0.5D);
 	}
 
-	@Override
-	public boolean isEntityInsideOpaqueBlock() {
-		return MiscUtil.isEntityInsideOpaqueBlock(this);
-	}
+//	@Override
+//	public boolean isEntityInsideOpaqueBlock() {
+//		return MiscUtil.isEntityInsideOpaqueBlock(this);
+//	}
 
 	@Override
 	public void tick() {
@@ -212,7 +213,7 @@ public class CrabEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 			party(null, false);
 
 		if(isRaving() && world.isRemote && ticksExisted % 10 == 0) {
-			BlockPos below = func_233580_cy_().down(); // getPosition
+			BlockPos below = getPosition().down();
 			BlockState belowState = world.getBlockState(below);
 			if(belowState.getMaterial() == Material.SAND)
 				world.playEvent(2001, below, Block.getStateId(belowState));
@@ -241,19 +242,18 @@ public class CrabEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 				source == DamageSource.LIGHTNING_BOLT ||
 				getSizeModifier() > 1 && source.isFireDamage();
 	}
-
+	
 	@Override
-	public void onStruckByLightning(LightningBoltEntity lightningBolt) {
+	public void func_241841_a(ServerWorld sworld, LightningBoltEntity lightningBolt) { // onStruckByLightning
 		if (lightningCooldown > 0 || world.isRemote)
 			return;
 
 		float sizeMod = getSizeModifier();
 		if (sizeMod <= 15) {
 
-			// func_233767_b_ = applyModifier
-			this.getAttribute(Attributes.field_233818_a_).func_233767_b_(new AttributeModifier("Lightning Bonus", 0.5, Operation.ADDITION)); // MAX_HEALTH
-			this.getAttribute(Attributes.field_233821_d_).func_233767_b_(new AttributeModifier("Lightning Debuff", -0.05, Operation.ADDITION)); // MOVEMENT_SPEED
-			this.getAttribute(Attributes.field_233826_i_).func_233767_b_(new AttributeModifier("Lightning Bonus", 0.125, Operation.ADDITION)); // ARMOR
+			this.getAttribute(Attributes.MAX_HEALTH).applyPersistentModifier(new AttributeModifier("Lightning Bonus", 0.5, Operation.ADDITION));
+			this.getAttribute(Attributes.MOVEMENT_SPEED).applyPersistentModifier(new AttributeModifier("Lightning Debuff", -0.05, Operation.ADDITION));
+			this.getAttribute(Attributes.ARMOR).applyPersistentModifier(new AttributeModifier("Lightning Bonus", 0.125, Operation.ADDITION));
 
 			float sizeModifier = Math.min(sizeMod + 1, 16);
 			this.dataManager.set(SIZE_MODIFIER, sizeModifier);
@@ -294,11 +294,11 @@ public class CrabEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 	}
 
 	@Nullable
-	@Override
-	public AgeableEntity createChild(@Nonnull AgeableEntity other) {
+	@Override // createChild
+	public AgeableEntity func_241840_a(ServerWorld sworld, @Nonnull AgeableEntity other) {
 		return new CrabEntity(CrabsModule.crabType, world);
 	}
-
+	
 	@Nonnull
 	@Override
 	protected ResourceLocation getLootTable() {
@@ -371,5 +371,6 @@ public class CrabEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 		compound.putInt("LightningCooldown", lightningCooldown);
 		compound.putInt("Variant", dataManager.get(VARIANT));
 	}
+
 
 }

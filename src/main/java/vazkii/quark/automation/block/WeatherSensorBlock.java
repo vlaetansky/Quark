@@ -82,7 +82,7 @@ public class WeatherSensorBlock extends QuarkBlock {
     }
 
     public static void updatePower(BlockState state, World world, BlockPos pos) {
-        if (world.func_230315_m_().hasSkyLight()) { // getDimension
+        if (world.getDimensionType().hasSkyLight()) {
             boolean inverted = state.get(INVERTED);
 
             if (world.isThundering())

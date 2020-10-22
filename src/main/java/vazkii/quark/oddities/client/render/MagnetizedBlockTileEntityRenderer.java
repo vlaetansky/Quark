@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ForgeHooksClient;
-import vazkii.quark.automation.client.render.PistonTileEntityRenderer;
+import vazkii.quark.automation.client.render.QuarkPistonTileEntityRenderer;
 import vazkii.quark.oddities.tile.MagnetizedBlockTileEntity;
 
 @OnlyIn(Dist.CLIENT)
@@ -45,7 +45,7 @@ public class MagnetizedBlockTileEntityRenderer extends TileEntityRenderer<Magnet
 			if (!blockstate.isAir() && !(tileEntityIn.getProgress(partialTicks) >= 1.0F)) {
 				TileEntity subTile = tileEntityIn.getSubTile();
 				Vector3d offset = new Vector3d(tileEntityIn.getOffsetX(partialTicks), tileEntityIn.getOffsetY(partialTicks), tileEntityIn.getOffsetZ(partialTicks));
-				if(PistonTileEntityRenderer.renderTESafely(world, truepos, blockstate, subTile, tileEntityIn, partialTicks, offset, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn))
+				if(QuarkPistonTileEntityRenderer.renderTESafely(world, truepos, blockstate, subTile, tileEntityIn, partialTicks, offset, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn))
 					return;
 				
 				BlockModelRenderer.enableCache();

@@ -219,7 +219,7 @@ public class RedstoneInductorBlock extends QuarkBlock implements IBlockColorProv
     @Override
     @OnlyIn(Dist.CLIENT)
     public IBlockColor getBlockColor() {
-        return (state, world, pos, index) -> index == 1 ? RedstoneWireBlock.func_235550_b_(state.get(POWER)) : -1; // colorMultiplier
+        return (state, world, pos, index) -> index == 1 ? RedstoneWireBlock.getRGBByPower(state.get(POWER)) : -1;
     }
 
     @Override

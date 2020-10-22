@@ -30,7 +30,7 @@ public class StringInputScreen<T> extends AbstractQScreen {
 
 		super.render(mstack, mouseX, mouseY, pticks);
 		
-		drawCenteredString(mstack, font, new StringTextComponent(object.getGuiDisplayName()).func_240701_a_(TextFormatting.BOLD), width / 2, 20, 0xFFFFFF);
+		drawCenteredString(mstack, font, new StringTextComponent(object.getGuiDisplayName()).mergeStyle(TextFormatting.BOLD), width / 2, 20, 0xFFFFFF);
 		drawCenteredString(mstack, font, I18n.format("quark.gui.config.defaultvalue", object.defaultObj),  width / 2, 30, 0xFFFFFF);
 		
 		input.render(mstack, mouseX, mouseY, pticks);

@@ -76,8 +76,8 @@ public class SlimeInABucketItem extends QuarkItem {
 			if(data != null)
 				slime.read(data);
 			else {
-				slime.getAttribute(Attributes.field_233818_a_).setBaseValue(1.0); // MAX_HEALTH
-				slime.getAttribute(Attributes.field_233821_d_).setBaseValue(0.3); // MOVEMENT_SPEED
+				slime.getAttribute(Attributes.MAX_HEALTH).setBaseValue(1.0);
+				slime.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.3);
 				slime.setHealth(slime.getMaxHealth());
 			}
 				
@@ -99,7 +99,7 @@ public class SlimeInABucketItem extends QuarkItem {
 		if(stack.hasTag()) {
 			CompoundNBT cmp = ItemNBTHelper.getCompound(stack, TAG_ENTITY_DATA, false);
 			if(cmp != null && cmp.contains("CustomName")) {
-				ITextComponent custom = ITextComponent.Serializer.func_240643_a_(cmp.getString("CustomName"));
+				ITextComponent custom = ITextComponent.Serializer.getComponentFromJson(cmp.getString("CustomName"));
 				return new TranslationTextComponent("item.quark.slime_in_a_bucket.named", custom);
 			}
 		}

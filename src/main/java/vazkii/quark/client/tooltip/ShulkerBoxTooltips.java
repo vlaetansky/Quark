@@ -49,7 +49,7 @@ public class ShulkerBoxTooltips {
 					cmp.putString("id", "minecraft:shulker_box");
 				}
 				
-				TileEntity te = TileEntity.func_235657_b_(((BlockItem) event.getItemStack().getItem()).getBlock().getDefaultState(), cmp); // create
+				TileEntity te = TileEntity.readTileEntity(((BlockItem) event.getItemStack().getItem()).getBlock().getDefaultState(), cmp);
 				if (te != null && te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
 					List<ITextComponent> tooltip = event.getToolTip();
 					List<ITextComponent> tooltipCopy = new ArrayList<>(tooltip);
@@ -80,7 +80,7 @@ public class ShulkerBoxTooltips {
 					cmp = cmp.copy();
 					cmp.putString("id", "minecraft:shulker_box");
 				}
-				TileEntity te = TileEntity.func_235657_b_(((BlockItem) event.getStack().getItem()).getBlock().getDefaultState(), cmp); // create
+				TileEntity te = TileEntity.readTileEntity(((BlockItem) event.getStack().getItem()).getBlock().getDefaultState(), cmp);
 				if (te != null) {
 					if(te instanceof LockableLootTileEntity)
 						((LockableLootTileEntity) te).setLootTable(null, 0);

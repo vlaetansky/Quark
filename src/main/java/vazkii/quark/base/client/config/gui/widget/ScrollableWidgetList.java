@@ -23,7 +23,7 @@ public abstract class ScrollableWidgetList<S extends AbstractScrollingWidgetScre
 	}
 	
 	public void populate(Consumer<Widget> widgetConsumer) {
-		List<E> children = children();
+		List<E> children = getEventListeners();
 		children.clear();
 
 		findEntries();

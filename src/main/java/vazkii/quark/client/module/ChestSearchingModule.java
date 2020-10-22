@@ -46,6 +46,7 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.EmptyHandler;
+import vazkii.arl.util.ClientTicker;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.api.IQuarkButtonIgnored;
 import vazkii.quark.base.client.InventoryButtonHandler;
@@ -67,7 +68,6 @@ public class ChestSearchingModule extends Module {
 	
 	private static String text = "";
 	private static boolean searchEnabled = false;
-	private static boolean skip;
 	private static long lastClick;
 	private static int matched;
 
@@ -147,22 +147,12 @@ public class ChestSearchingModule extends Module {
 
 	@SubscribeEvent
 	public void onRender(GuiScreenEvent.DrawScreenEvent.Post event) {
-		if(searchBar != null && !skip && searchEnabled)
+		if(searchBar != null && searchEnabled)
 			renderElements(event.getMatrixStack(), event.getGui());
-		skip = false;
-	}
-
-	@SubscribeEvent
-	public void drawTooltipEvent(RenderTooltipEvent.Pre event) {
-		if(searchBar != null && searchEnabled) {
-			renderElements(event.getMatrixStack(), Minecraft.getInstance().currentScreen);
-			skip = true;
-		}
 	}
 
 	private void renderElements(MatrixStack matrix, Screen gui) {
 		RenderSystem.pushMatrix();
-		RenderSystem.translated(0, 0, 500);
 		drawBackground(matrix, gui, searchBar.x - 11, searchBar.y - 3);
 
 		if(!text.isEmpty()) {
@@ -226,7 +216,7 @@ public class ChestSearchingModule extends Module {
 					cmp = cmp.copy();
 					cmp.putString("id", "minecraft:shulker_box");
 				}
-				TileEntity te = TileEntity.func_235657_b_(((BlockItem) item).getBlock().getDefaultState(), cmp); // create
+				TileEntity te = TileEntity.readTileEntity(((BlockItem) item).getBlock().getDefaultState(), cmp); 
 				if (te != null) {
 					LazyOptional<IItemHandler> handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 					if (handler.isPresent()) {
@@ -280,7 +270,7 @@ public class ChestSearchingModule extends Module {
 		}
 
 		ItemGroup tab = item.getGroup();
-		if(tab != null && matcher.test(I18n.format(tab.getTranslationKey()).toLowerCase(Locale.ROOT), search))
+		if(tab != null && matcher.test(tab.getGroupName().getString().toLowerCase(Locale.ROOT), search))
 			return true;
 
 		//		if(search.matches("favou?rites?") && FavoriteItems.isItemFavorited(stack))

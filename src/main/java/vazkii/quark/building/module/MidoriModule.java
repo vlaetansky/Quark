@@ -22,7 +22,7 @@ public class MidoriModule extends Module {
 		new QuarkItem("cactus_paste", this, new Item.Properties().group(ItemGroup.MATERIALS));
 		
 		Block.Properties props = Block.Properties.create(Material.ROCK, MaterialColor.LIME)
-				.func_235861_h_() // needs tool
+				.setRequiresTool()
         		.harvestTool(ToolType.PICKAXE)
         		.hardnessAndResistance(1.5F, 6.0F);
 		

@@ -23,10 +23,10 @@ public class QuarkGlassBlock extends QuarkBlock {
     public QuarkGlassBlock(String regname, Module module, ItemGroup creativeTab, Properties properties) {
         super(regname, module, creativeTab, properties
                 .notSolid()
-                .func_235827_a_((state, world, pos, entityType) -> false)
-                .func_235828_a_((state, world, pos) -> false)
-                .func_235842_b_((state, world, pos) -> false)
-                .func_235847_c_((state, world, pos) -> false));
+                .setAllowsSpawn((state, world, pos, entityType) -> false)
+                .setOpaque((state, world, pos) -> false)
+                .setSuffocates((state, world, pos) -> false)
+                .setBlocksVision((state, world, pos) -> false));
     }
 
     @Override
@@ -39,7 +39,7 @@ public class QuarkGlassBlock extends QuarkBlock {
     @Override
     @Nonnull
     @SuppressWarnings("deprecation")
-    public VoxelShape func_230322_a_(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, @Nonnull ISelectionContext context) {
+    public VoxelShape getRayTraceShape(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, @Nonnull ISelectionContext context) {
         return VoxelShapes.empty();
     }
 

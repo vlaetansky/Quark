@@ -21,7 +21,6 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.PlantType;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.module.Module;
@@ -33,7 +32,7 @@ public class GlowceliumBlock extends QuarkBlock {
 				Block.Properties.create(Material.ORGANIC, MaterialColor.LIGHT_BLUE)
 						.tickRandomly()
 						.hardnessAndResistance(0.5F)
-						.func_235838_a_(b -> 7)
+						.setLightLevel(b -> 7)
 						.harvestTool(ToolType.SHOVEL)
 						.sound(SoundType.PLANT));
 	}

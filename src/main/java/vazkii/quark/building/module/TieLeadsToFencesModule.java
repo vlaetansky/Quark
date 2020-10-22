@@ -2,19 +2,17 @@ package vazkii.quark.building.module;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.FenceBlock;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
-import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -54,9 +52,9 @@ public class TieLeadsToFencesModule extends Module {
 	
 	@Override
 	public void setup() {
-		GlobalEntityTypeAttributes.put(leashKnot2Entity, MobEntity.func_233666_p_().func_233813_a_());
+		GlobalEntityTypeAttributes.put(leashKnot2Entity, MobEntity.func_233666_p_().create());
 		
-		leadConnectableTag = BlockTags.makeWrapperTag(Quark.MOD_ID + ":lead_connectable");
+		leadConnectableTag = BlockTags.createOptional(new ResourceLocation(Quark.MOD_ID, "lead_connectable"));
 	}
 	
     @Override

@@ -1,9 +1,11 @@
 package vazkii.quark.tweaks.module;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CampfireBlock;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -27,7 +29,7 @@ public class CampfiresBoostElytraModule extends Module {
 		if(player.isElytraFlying()) {
 			Vector3d motion = player.getMotion();
 			if(motion.getY() < maxSpeed) {
-				BlockPos pos = player.func_233580_cy_(); // getPosition
+				BlockPos pos = player.getPosition();
 				World world = player.world;
 				
 				int moves = 0;
@@ -37,10 +39,15 @@ public class CampfiresBoostElytraModule extends Module {
 				}
 				
 				BlockState state = world.getBlockState(pos);
-				if(state.getBlock() == Blocks.CAMPFIRE && state.get(CampfireBlock.LIT) && state.get(CampfireBlock.SIGNAL_FIRE)) {
+				Block block = state.getBlock();
+				boolean isCampfire = block.isIn(BlockTags.CAMPFIRES);
+				if(isCampfire && block instanceof CampfireBlock && state.get(CampfireBlock.LIT) && state.get(CampfireBlock.SIGNAL_FIRE)) {
 					double force = boostStrength;
 					if(moves > 16)
 						force -= (force * (1.0 - ((double) moves - 16.0) / 4.0));
+					
+					if(block == Blocks.SOUL_CAMPFIRE)
+						force *= -1.5;
 					
 					player.setMotion(motion.getX(), Math.min(maxSpeed, motion.getY() + force), motion.getZ());
 				}

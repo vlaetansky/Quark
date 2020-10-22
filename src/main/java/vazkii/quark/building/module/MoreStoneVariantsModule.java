@@ -49,7 +49,7 @@ public class MoreStoneVariantsModule extends Module {
 	
 	private void add(String name, MaterialColor color, BooleanSupplier cond) {
 		Block.Properties props = Block.Properties.create(Material.ROCK, color)
-				.func_235861_h_() // needs tool
+				.setRequiresTool()
         		.harvestTool(ToolType.PICKAXE)
         		.hardnessAndResistance(1.5F, 6.0F);
 		

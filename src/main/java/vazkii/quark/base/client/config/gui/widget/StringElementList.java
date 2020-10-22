@@ -47,9 +47,9 @@ public class StringElementList extends ScrollableWidgetList<ListInputScreen, Str
 				field.setResponder(str -> parent.list.set(index, str));
 				children.add(new WidgetWrapper(field));
 				
-				children.add(new WidgetWrapper(new Button(230, 3, 20, 20, new StringTextComponent("-").func_240701_a_(TextFormatting.RED), b -> parent.remove(index)))); 
+				children.add(new WidgetWrapper(new Button(230, 3, 20, 20, new StringTextComponent("-").mergeStyle(TextFormatting.RED), b -> parent.remove(index)))); 
 			} else {
-				children.add(new WidgetWrapper(new Button(10, 3, 20, 20, new StringTextComponent("+").func_240701_a_(TextFormatting.GREEN), b -> parent.addNew())));
+				children.add(new WidgetWrapper(new Button(10, 3, 20, 20, new StringTextComponent("+").mergeStyle(TextFormatting.GREEN), b -> parent.addNew())));
 			}
 		}
 		

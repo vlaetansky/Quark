@@ -84,7 +84,7 @@ public class AncientTomesModule extends Module {
 		ancient_tome = new AncientTomeItem(this);
 
 		tomeEnchantType = new LootFunctionType(new EnchantTome.Serializer());
-		Registry.register(Registry.field_239694_aZ_, new ResourceLocation(Quark.MOD_ID, "tome_enchant"), tomeEnchantType);
+		Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(Quark.MOD_ID, "tome_enchant"), tomeEnchantType);
 
 	}
 

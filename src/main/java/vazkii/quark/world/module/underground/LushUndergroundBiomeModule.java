@@ -1,6 +1,6 @@
 package vazkii.quark.world.module.underground;
 
-import net.minecraftforge.common.BiomeDictionary.Type;
+import net.minecraft.world.biome.Biome;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.world.config.UndergroundBiomeConfig;
@@ -11,7 +11,7 @@ public class LushUndergroundBiomeModule extends UndergroundBiomeModule {
 
 	@Override
 	protected UndergroundBiomeConfig getBiomeConfig() {
-		return new UndergroundBiomeConfig(new LushUndergroundBiome(), 80, Type.JUNGLE);
+		return new UndergroundBiomeConfig(new LushUndergroundBiome(), 80, Biome.Category.JUNGLE);
 	}
 
 	@Override

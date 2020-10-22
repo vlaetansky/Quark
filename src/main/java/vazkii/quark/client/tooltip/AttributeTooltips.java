@@ -50,14 +50,14 @@ import vazkii.quark.base.handler.MiscUtil;
  */
 public class AttributeTooltips {
 
-	private static final Attribute MAX_HEALTH = Attributes.field_233818_a_;
-	private static final Attribute KNOCKBACK_RESISTANCE = Attributes.field_233820_c_;
-	private static final Attribute MOVEMENT_SPEED = Attributes.field_233821_d_;
-	private static final Attribute ATTACK_DAMAGE = Attributes.field_233823_f_;
-	private static final Attribute ATTACK_SPEED = Attributes.field_233825_h_;
-	private static final Attribute ARMOR = Attributes.field_233826_i_;
-	private static final Attribute ARMOR_TOUGHNESS = Attributes.field_233827_j_;
-	private static final Attribute LUCK = Attributes.field_233828_k_;
+	private static final Attribute MAX_HEALTH = Attributes.MAX_HEALTH;
+	private static final Attribute KNOCKBACK_RESISTANCE = Attributes.KNOCKBACK_RESISTANCE;
+	private static final Attribute MOVEMENT_SPEED = Attributes.MOVEMENT_SPEED;
+	private static final Attribute ATTACK_DAMAGE = Attributes.ATTACK_DAMAGE;
+	private static final Attribute ATTACK_SPEED = Attributes.ATTACK_SPEED;
+	private static final Attribute ARMOR = Attributes.ARMOR;
+	private static final Attribute ARMOR_TOUGHNESS = Attributes.ARMOR_TOUGHNESS;
+	private static final Attribute LUCK = Attributes.LUCK;
 	private static final Attribute REACH_DISTANCE = ForgeMod.REACH_DISTANCE.get();
 
 	public static final ImmutableSet<Attribute> VALID_ATTRIBUTES = ImmutableSet.of(
@@ -293,7 +293,7 @@ public class AttributeTooltips {
 
 	@OnlyIn(Dist.CLIENT)
 	private static boolean isAttributeLine(ITextComponent lineRaw, Attribute attr) {
-		String attNamePattern = attr.func_233754_c_();
+		String attNamePattern = attr.getAttributeName();
 
 		for (String att : ATTRIBUTE_FORMATS) {
 			for (int mod = 0; mod < 3; mod++) {

@@ -1,5 +1,9 @@
 package vazkii.quark.building.entity;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.item.ItemFrameEntity;
@@ -7,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -15,21 +20,32 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import vazkii.quark.building.module.ItemFramesModule;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 public class GlassItemFrameEntity extends ItemFrameEntity implements IEntityAdditionalSpawnData {
 
 	private boolean didHackery = false;
-	
+
 	public GlassItemFrameEntity(EntityType<? extends GlassItemFrameEntity> type, World worldIn) {
 		super(type, worldIn);
 	}
-	
+
 	public GlassItemFrameEntity(World worldIn, BlockPos blockPos, Direction face) {
 		super(ItemFramesModule.glassFrameEntity, worldIn);
 		hangingPosition = blockPos;
 		this.updateFacingWithBoundingBox(face);
+	}
+
+	@Override
+	public boolean onValidSurface() {
+		return super.onValidSurface() || isOnSign();
+	}
+
+	public BlockPos getBehindPos() {
+		return hangingPosition.offset(facingDirection.getOpposite());
+	}
+	
+	public boolean isOnSign() {
+		BlockState blockstate = world.getBlockState(getBehindPos());
+		return blockstate.getBlock().isIn(BlockTags.STANDING_SIGNS);
 	}
 
 	@Nullable
@@ -39,7 +55,7 @@ public class GlassItemFrameEntity extends ItemFrameEntity implements IEntityAddi
 			stack = new ItemStack(ItemFramesModule.glassFrame);
 			didHackery = true;
 		}
-			
+
 		return super.entityDropItem(stack, offset);
 	}
 

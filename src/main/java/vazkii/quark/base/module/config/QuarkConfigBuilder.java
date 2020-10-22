@@ -42,8 +42,7 @@ public class QuarkConfigBuilder implements IConfigBuilder {
 
 	@Override
 	public void comment(String s) {
-		parent.comment(s);
-		currComment = s;
+		currComment += s;
 	}
 
 	@Override
@@ -77,6 +76,9 @@ public class QuarkConfigBuilder implements IConfigBuilder {
 	}
 	
 	private <T> void onDefine(String name, T default_, Supplier<T> getter, Predicate<Object> predicate) {
+		if(currComment.length() > 0)
+			parent.comment(currComment);
+		
 		callback.addEntry(name, default_, getter, currComment, predicate);
 		currComment = "";
 	}

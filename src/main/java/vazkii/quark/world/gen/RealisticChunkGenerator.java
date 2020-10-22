@@ -1,5 +1,7 @@
 package vazkii.quark.world.gen;
 
+import java.util.function.Supplier;
+
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
@@ -15,14 +17,15 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class RealisticChunkGenerator extends NoiseChunkGenerator {
+	
 	public static final Codec<RealisticChunkGenerator> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-			BiomeProvider.field_235202_a_.fieldOf("biome_source").forGetter(generator -> generator.biomeProvider),
+			BiomeProvider.CODEC.fieldOf("biome_source").forGetter(generator -> generator.biomeProvider),
 			Codec.LONG.fieldOf("seed").stable().forGetter(generator -> generator.seed),
 			DimensionSettings.field_236098_b_.fieldOf("settings").forGetter(generator -> generator.field_236080_h_))
 			.apply(instance, instance.stable(RealisticChunkGenerator::new)));
 	private final long seed;
 
-	public RealisticChunkGenerator(BiomeProvider biomeProvider, long seed, DimensionSettings settings) {
+	public RealisticChunkGenerator(BiomeProvider biomeProvider, long seed, Supplier<DimensionSettings> settings) {
 		super(biomeProvider, seed, settings);
 		this.seed = seed;
 	}
@@ -34,17 +37,17 @@ public class RealisticChunkGenerator extends NoiseChunkGenerator {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public ChunkGenerator func_230349_a_(long p_230349_1_) {
-		return new RealisticChunkGenerator(this.biomeProvider.func_230320_a_(p_230349_1_), p_230349_1_, this.field_236080_h_);
+	public ChunkGenerator func_230349_a_(long seed) {
+		return new RealisticChunkGenerator(this.biomeProvider.getBiomeProvider(seed), seed, this.field_236080_h_);
 	}
 
 	@Override
 	public void fillNoiseColumn(double[] noiseColumn, int noiseX, int noiseZ) {
-		NoiseSettings settings = this.field_236080_h_.func_236113_b_();
+		NoiseSettings settings = this.field_236080_h_.get().getNoise();
 		double densityMax;
 		double variance;
 		if (this.field_236083_v_ != null) {
-			densityMax = EndBiomeProvider.func_235317_a_(this.field_236083_v_, noiseX, noiseZ) - 8.0F;
+			densityMax = EndBiomeProvider.getRandomNoise(this.field_236083_v_, noiseX, noiseZ) - 8.0F;
 			if (densityMax > 0.0D) {
 				variance = 0.25D;
 			} else {
@@ -117,6 +120,5 @@ public class RealisticChunkGenerator extends NoiseChunkGenerator {
 
 			noiseColumn[y] = noise;
 		}
-
 	}
 }

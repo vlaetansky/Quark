@@ -20,7 +20,7 @@ public class ObsidianPlateModule extends Module {
     public void construct() {
         new ObsidianPressurePlateBlock("obsidian_pressure_plate", this, ItemGroup.REDSTONE,
                 Block.Properties.create(Material.ROCK, MaterialColor.BLACK)
-                		.func_235861_h_() // needs tool
+                		.setRequiresTool()
                 		.harvestTool(ToolType.PICKAXE)
                         .doesNotBlockMovement()
                         .hardnessAndResistance(2F, 1200.0F));

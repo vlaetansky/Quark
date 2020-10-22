@@ -15,12 +15,12 @@ import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -55,7 +55,7 @@ public class ChestsInBoatsModule extends Module {
 	
     @Override
     public void setup() {
-    	boatableChestsTag = ItemTags.makeWrapperTag(Quark.MOD_ID + ":boatable_chests");
+    	boatableChestsTag = ItemTags.createOptional(new ResourceLocation(Quark.MOD_ID, "boatable_chests"));
     }
 
 	@Override

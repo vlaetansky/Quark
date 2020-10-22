@@ -1,8 +1,8 @@
 package vazkii.quark.mobs.module;
 
 import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.item.Food;
@@ -10,8 +10,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.Potions;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.Heightmap.Type;
-import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.BrewingHandler;
@@ -25,7 +25,6 @@ import vazkii.quark.base.world.EntitySpawnHandler;
 import vazkii.quark.base.world.config.BiomeTypeConfig;
 import vazkii.quark.base.world.config.EntitySpawnConfig;
 import vazkii.quark.mobs.client.render.FrogRenderer;
-import vazkii.quark.mobs.entity.CrabEntity;
 import vazkii.quark.mobs.entity.FrogEntity;
 
 @LoadModule(category = ModuleCategory.MOBS, hasSubscriptions = true)
@@ -34,7 +33,7 @@ public class FrogsModule extends Module {
 	public static EntityType<FrogEntity> frogType;
 
 	@Config
-	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(40, 1, 3, new BiomeTypeConfig(false, BiomeDictionary.Type.SWAMP));
+	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(40, 1, 3, new BiomeTypeConfig(false, Biome.Category.SWAMP));
 
 	@Config(flag = "frog_brewing") 
 	public static boolean enableBrewing = true;
@@ -87,7 +86,7 @@ public class FrogsModule extends Module {
 	
 	@Override
 	public void setup() {
-		GlobalEntityTypeAttributes.put(frogType, FrogEntity.prepareAttributes().func_233813_a_());
+		GlobalEntityTypeAttributes.put(frogType, FrogEntity.prepareAttributes().create());
 	}
 	
 	@Override

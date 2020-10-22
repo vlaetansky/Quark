@@ -4,19 +4,18 @@ import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
 
-import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.GenerationStage.Decoration;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.OreFeatureConfig;
-import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.Module;
@@ -31,14 +30,14 @@ import vazkii.quark.world.gen.BigStoneClusterGenerator;
 @LoadModule(category = ModuleCategory.WORLD)
 public class BigStoneClustersModule extends Module {
 
-	@Config public static BigStoneClusterConfig granite = new BigStoneClusterConfig(Type.MOUNTAIN, Type.HILLS);
-	@Config public static BigStoneClusterConfig diorite = new BigStoneClusterConfig(Type.SAVANNA, Type.JUNGLE, Type.MUSHROOM);
-	@Config public static BigStoneClusterConfig andesite = new BigStoneClusterConfig(Type.FOREST);
-	@Config public static BigStoneClusterConfig marble = new BigStoneClusterConfig(Type.PLAINS);
-	@Config public static BigStoneClusterConfig limestone = new BigStoneClusterConfig(Type.SWAMP, Type.OCEAN);
-	@Config public static BigStoneClusterConfig jasper = new BigStoneClusterConfig(Type.MESA, Type.SANDY);
-	@Config public static BigStoneClusterConfig slate = new BigStoneClusterConfig(Type.COLD);
-	@Config public static BigStoneClusterConfig voidstone = new BigStoneClusterConfig(DimensionConfig.end(false), 19, 6, 20, 0, 40, Type.END);
+	@Config public static BigStoneClusterConfig granite = new BigStoneClusterConfig(Biome.Category.EXTREME_HILLS);
+	@Config public static BigStoneClusterConfig diorite = new BigStoneClusterConfig(Biome.Category.SAVANNA, Biome.Category.JUNGLE, Biome.Category.MUSHROOM);
+	@Config public static BigStoneClusterConfig andesite = new BigStoneClusterConfig(Biome.Category.FOREST);
+	@Config public static BigStoneClusterConfig marble = new BigStoneClusterConfig(Biome.Category.PLAINS);
+	@Config public static BigStoneClusterConfig limestone = new BigStoneClusterConfig(Biome.Category.SWAMP, Biome.Category.OCEAN);
+	@Config public static BigStoneClusterConfig jasper = new BigStoneClusterConfig(Biome.Category.MESA, Biome.Category.DESERT);
+	@Config public static BigStoneClusterConfig slate = new BigStoneClusterConfig(Biome.Category.ICY);
+	@Config public static BigStoneClusterConfig voidstone = new BigStoneClusterConfig(DimensionConfig.end(false), 19, 6, 20, 0, 40, Biome.Category.THEEND);
 	
 	@Config(description = "Blocks that stone clusters can replace. If you want to make it so it only replaces in one dimension,\n"
 			+ "do \"block|dimension\", as we do for netherrack and end stone by default.") 
@@ -111,7 +110,7 @@ public class BigStoneClustersModule extends Module {
 						if(w == null)
 							return false;
 
-						return ((World) w).func_234923_W_().func_240901_a_().toString().equals(dimFinal);
+						return ((World) w).getDimensionKey().getLocation().toString().equals(dimFinal);
 					});
 				}
 			}

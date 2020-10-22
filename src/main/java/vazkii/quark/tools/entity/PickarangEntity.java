@@ -238,10 +238,10 @@ public class PickarangEntity extends ProjectileEntity {
 					if (owner != null) {
 						ItemStack prev = owner.getHeldItemMainhand();
 						owner.setHeldItem(Hand.MAIN_HAND, pickarang);
-						owner.func_233645_dx_().func_233793_b_(modifiers);
+						owner.getAttributeManager().reapplyModifiers(modifiers); 
 
 						int ticksSinceLastSwing = owner.ticksSinceLastSwing;
-						owner.ticksSinceLastSwing = (int) (1.0 / owner.func_233637_b_(Attributes.field_233825_h_) * 20.0) + 1; // ATTACK_SPEED
+						owner.ticksSinceLastSwing = (int) (1.0 / owner.getAttributeValue(Attributes.ATTACK_SPEED) * 20.0) + 1;
 
 						float prevHealth = hit instanceof LivingEntity ? ((LivingEntity) hit).getHealth() : 0;
 
@@ -275,18 +275,19 @@ public class PickarangEntity extends ProjectileEntity {
 
 						setStack(owner.getHeldItemMainhand());
 						owner.setHeldItem(Hand.MAIN_HAND, prev);
-						owner.func_233645_dx_().func_233785_a_(modifiers);
+						owner.getAttributeManager().reapplyModifiers(modifiers);
 					} else {
 						MutableAttribute mapBuilder = new MutableAttribute();
-						mapBuilder.func_233815_a_(Attributes.field_233823_f_, 1); // ATTACK_DAMAGE
-						AttributeModifierMap map = mapBuilder.func_233813_a_();
+						mapBuilder.createMutableAttribute(Attributes.ATTACK_DAMAGE, 1); 
+						AttributeModifierMap map = mapBuilder.create();
 						AttributeModifierManager manager = new AttributeModifierManager(map);
-						manager.func_233793_b_(modifiers);
+						manager.reapplyModifiers(modifiers);
+						
 						ItemStack stack = getStack();
 						stack.attemptDamageItem(1, world.rand, null);
 						setStack(stack);
 						hit.attackEntityFrom(new IndirectEntityDamageSource("player", this, this).setProjectile(),
-								(float) manager.func_233795_c_(Attributes.field_233825_h_));
+								(float) manager.getAttributeValue(Attributes.ATTACK_DAMAGE));
 					}
 				}
 			}

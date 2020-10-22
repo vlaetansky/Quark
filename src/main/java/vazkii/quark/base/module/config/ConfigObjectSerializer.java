@@ -51,10 +51,12 @@ public final class ConfigObjectSerializer {
 		Config.Min min = field.getDeclaredAnnotation(Config.Min.class);
 		Config.Max max = field.getDeclaredAnnotation(Config.Max.class);
 
-
+		String nl = "";
 		Class<?> type = field.getType();
-		if(!config.description().isEmpty())
+		if(!config.description().isEmpty()) {
 			builder.comment(config.description());
+			nl = "\n";
+		}
 
 		if (restriction != null) {
 			StringBuilder arrStr = new StringBuilder("[");
@@ -80,14 +82,14 @@ public final class ConfigObjectSerializer {
 				}
 			}
 
-			builder.comment("Allowed values: " + arrStr.toString());
+			builder.comment(nl + "Allowed values: " + arrStr.toString());
 		}
 
 		if (min != null || max != null) {
 			NumberFormat format = DecimalFormat.getNumberInstance(Locale.ROOT);
 			String minPart = min == null ? "(" : ((min.exclusive() ? "(" : "[") + format.format(min.value()));
 			String maxPart = max == null ? ")" : (format.format(max.value()) + (max.exclusive() ? ")" : "]"));
-			builder.comment("Allowed values: " + minPart + "," + maxPart);
+			builder.comment(nl + "Allowed values: " + minPart + "," + maxPart);
 		}
 		
 		boolean isStatic = Modifier.isStatic(field.getModifiers());

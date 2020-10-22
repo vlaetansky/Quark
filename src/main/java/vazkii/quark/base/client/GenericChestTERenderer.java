@@ -93,13 +93,13 @@ public abstract class GenericChestTERenderer<T extends TileEntity & IChestLid> e
 			p_225616_3_.translate(-0.5D, -0.5D, -0.5D);
 			TileEntityMerger.ICallbackWrapper<? extends ChestTileEntity> icallbackwrapper;
 			if (flag) {
-				icallbackwrapper = abstractchestblock.func_225536_a_(blockstate, world, p_225616_1_.getPos(), true); // getBlockEntitySource
+				icallbackwrapper = abstractchestblock.combine(blockstate, world, p_225616_1_.getPos(), true);
 			} else {
 				icallbackwrapper = TileEntityMerger.ICallback::func_225537_b_; // getFallback
 			}
 			
 			// getAnimationProgressRetreiver
-			float f1 = icallbackwrapper.apply(ChestBlock.func_226917_a_((IChestLid)p_225616_1_)).get(p_225616_2_);
+			float f1 = icallbackwrapper.apply(ChestBlock.getLidRotationCallback((IChestLid)p_225616_1_)).get(p_225616_2_);
 			f1 = 1.0F - f1;
 			f1 = 1.0F - f1 * f1 * f1;
 			int i = icallbackwrapper.apply(new DualBrightnessCallback<>()).applyAsInt(p_225616_5_);

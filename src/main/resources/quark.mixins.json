@@ -3,7 +3,7 @@
   "required": true,
   "compatibilityLevel": "JAVA_8",
   "refmap": "quark.mixins.refmap.json",
-  "package": "vazkii.quark.mixins",
+  "package": "vazkii.quark.base.mixin",
   "mixins": [
     "AbstractMinecartEntityMixin",
     "BlockItemMixin",
@@ -19,7 +19,10 @@
     "PistonTileEntityMixin",
     "ServerWorldMixin",
     "TemptGoalMixin",
-    "TrapDoorBlockMixin"
+    "TrapDoorBlockMixin",
+    "StructurePieceMixin",
+    "StructureStartMixin",
+    "TemplateMixin"
   ],
   "client": [
     "BipedArmorLayerMixin",

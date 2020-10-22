@@ -91,7 +91,7 @@ public class QuarkJeiPlugin implements IModPlugin {
 		}
 
 		List<Object> recipes = new ArrayList<>();
-		for (Item rune : ColorRunesModule.runesTag.func_230236_b_()) { // getAllElements
+		for (Item rune : ColorRunesModule.runesTag.getAllElements()) { 
 			ItemStack runeStack = new ItemStack(rune);
 			recipes.add(factory.createAnvilRecipe(used, Collections.singletonList(runeStack),
 				used.stream().map(stack -> {

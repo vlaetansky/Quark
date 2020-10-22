@@ -28,8 +28,8 @@ public class MetalButtonBlock extends QuarkButtonBlock {
         this.speed = speed;
     }
 
-    @Override // tickRate
-    public int func_235471_c_() {
+    @Override
+    public int getActiveDuration() {
         return speed;
     }
 

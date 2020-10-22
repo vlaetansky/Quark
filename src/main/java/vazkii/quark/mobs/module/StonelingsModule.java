@@ -6,10 +6,10 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.Heightmap.Type;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.module.LoadModule;
@@ -21,7 +21,6 @@ import vazkii.quark.base.world.config.BiomeTypeConfig;
 import vazkii.quark.base.world.config.DimensionConfig;
 import vazkii.quark.base.world.config.EntitySpawnConfig;
 import vazkii.quark.mobs.client.render.StonelingRenderer;
-import vazkii.quark.mobs.entity.CrabEntity;
 import vazkii.quark.mobs.entity.StonelingEntity;
 import vazkii.quark.mobs.item.DiamondHeartItem;
 
@@ -35,7 +34,7 @@ public class StonelingsModule extends Module {
 	@Config
 	public static DimensionConfig dimensions = DimensionConfig.overworld(false);
 	@Config 
-	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(80, 1, 1, new BiomeTypeConfig(true, BiomeDictionary.Type.VOID, BiomeDictionary.Type.NETHER, BiomeDictionary.Type.END));
+	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(80, 1, 1, new BiomeTypeConfig(true, Biome.Category.NONE, Biome.Category.NETHER, Biome.Category.THEEND));
 	@Config(flag = "stoneling_drop_diamond_heart")
 	public static boolean enableDiamondHeart = true;
 	@Config
@@ -64,7 +63,7 @@ public class StonelingsModule extends Module {
 	
 	@Override
 	public void setup() {
-		GlobalEntityTypeAttributes.put(stonelingType, StonelingEntity.prepareAttributes().func_233813_a_());
+		GlobalEntityTypeAttributes.put(stonelingType, StonelingEntity.prepareAttributes().create());
 	}
 
 	@Override

@@ -14,10 +14,10 @@ import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
-import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -47,7 +47,7 @@ public class SpiderNestUndergroundBiomeModule extends UndergroundBiomeModule {
 	public void construct() {
 		cobbedstone = new QuarkBlock("cobbedstone", this, ItemGroup.BUILDING_BLOCKS, 
 				Block.Properties.create(Material.ROCK, MaterialColor.GRAY)
-				.func_235861_h_() // needs tool
+				.setRequiresTool() // needs tool
         		.harvestTool(ToolType.PICKAXE)
 				.hardnessAndResistance(1.5F, 10F)
 				.sound(SoundType.STONE));
@@ -68,7 +68,7 @@ public class SpiderNestUndergroundBiomeModule extends UndergroundBiomeModule {
 	
 	@Override
 	public void setup() {
-		GlobalEntityTypeAttributes.put(wrappedType, ZombieEntity.func_234342_eQ_().func_233813_a_());
+		GlobalEntityTypeAttributes.put(wrappedType, ZombieEntity.func_234342_eQ_().create());
 	}
 
 	@Override
@@ -99,7 +99,7 @@ public class SpiderNestUndergroundBiomeModule extends UndergroundBiomeModule {
 	}
 	
 	private static boolean changeToWrapped(Entity entity) {
-		BlockPos pos = entity.func_233580_cy_(); // getPosition
+		BlockPos pos = entity.getPosition();
 		int i = 0;
 
 		while(i < 4) {
@@ -125,7 +125,7 @@ public class SpiderNestUndergroundBiomeModule extends UndergroundBiomeModule {
 
 	@Override
 	protected UndergroundBiomeConfig getBiomeConfig() {
-		return new UndergroundBiomeConfig(new SpiderNestUndergroundBiome(), 80, Type.PLAINS);
+		return new UndergroundBiomeConfig(new SpiderNestUndergroundBiome(), 80, Biome.Category.PLAINS);
 	}
 
 	@Override

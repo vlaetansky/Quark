@@ -43,7 +43,7 @@ public class ShulkerBoxDropIn extends AbstractDropIn {
 				BlockState defaultState = shulkerBoxBlock.getDefaultState();
 				if (shulkerBoxBlock.hasTileEntity(defaultState)) {
 					te = shulkerBoxBlock.createTileEntity(defaultState, null);
-					te.func_230337_a_(defaultState, cmp); // read
+					te.read(defaultState, cmp);
 				}
 			}
 

@@ -15,7 +15,7 @@ public class SturdyStoneBlock extends QuarkBlock {
 	public SturdyStoneBlock(Module module) {
 		super("sturdy_stone", module, ItemGroup.BUILDING_BLOCKS,
 				Block.Properties.create(Material.ROCK)
-				.func_235861_h_() // needs tool
+				.setRequiresTool()
         		.harvestTool(ToolType.PICKAXE)
 				.hardnessAndResistance(4F, 10F)
 				.sound(SoundType.STONE));

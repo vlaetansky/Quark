@@ -33,7 +33,7 @@ public class SlimeInABucketModule extends Module {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		ItemModelsProperties.func_239418_a_(slime_in_a_bucket, new ResourceLocation("excited"), 
+		ItemModelsProperties.registerProperty(slime_in_a_bucket, new ResourceLocation("excited"), 
 				(stack, world, e) -> ItemNBTHelper.getBoolean(stack, SlimeInABucketItem.TAG_EXCITED, false) ? 1 : 0);
 	}
 	

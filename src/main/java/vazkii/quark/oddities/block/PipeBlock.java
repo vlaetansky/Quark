@@ -282,7 +282,7 @@ public class PipeBlock extends QuarkBlock implements IWaterLoggable {
 		public final boolean isSolid, allowsItems, isFlared;
 
 		@Override
-		public String func_176610_l() { // getName
+		public String getString() { // getName
 			return name().toLowerCase(Locale.ROOT);
 		}
 

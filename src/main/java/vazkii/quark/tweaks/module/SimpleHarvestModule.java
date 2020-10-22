@@ -161,7 +161,7 @@ public class SimpleHarvestModule extends Module {
 	        	if(!stack.isEmpty())
 	        		Block.spawnAsEntity(world, pos, stack);
 	        });
-	        inWorld.spawnAdditionalDrops(world, pos, copy);
+	        inWorld.spawnAdditionalDrops((ServerWorld) world, pos, copy);
 
 			if (!world.isRemote) {
 				world.playEvent(2001, pos, Block.getStateId(newBlock));

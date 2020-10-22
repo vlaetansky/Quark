@@ -38,11 +38,11 @@ public class CompassAngleGetter {
 
 	public static void tickCompass(PlayerEntity player, ItemStack stack) {
 		boolean calculated = isCalculated(stack);
-		boolean nether = player.world.func_234922_V_().func_240901_a_().equals(Dimension.field_236054_c_.func_240901_a_()); // getDimensionType().resourceLocation, THE_NETHER_KEY.resourceLocation()
+		boolean nether = player.world.getDimensionKey().getLocation().equals(Dimension.THE_NETHER.getLocation());
 		
 		if(calculated) {
 			boolean wasInNether = ItemNBTHelper.getBoolean(stack, TAG_WAS_IN_NETHER, false);
-			BlockPos pos = player.func_233580_cy_(); // getPosition
+			BlockPos pos = player.getPosition(); 
 			boolean isInPortal = player.world.getBlockState(pos).getBlock() == Blocks.NETHER_PORTAL;
 			
 			if(nether && !wasInNether && isInPortal) {
@@ -93,15 +93,15 @@ public class CompassAngleGetter {
 			boolean calculate = false;
 			BlockPos target = new BlockPos(0, 0, 0);
 
-			ResourceLocation dimension = worldIn.func_234922_V_().func_240901_a_();
+			ResourceLocation dimension = worldIn.getDimensionKey().getLocation();
 			BlockPos lodestonePos = CompassItem.func_234670_d_(stack) ? this.getLodestonePosition(worldIn, stack.getOrCreateTag()) : null;
 			
 			if(lodestonePos != null) {
 				calculate = true;
 				target = lodestonePos;
-			} else if(dimension.equals(Dimension.field_236055_d_.func_240901_a_()) && CompassesWorkEverywhereModule.enableEnd) // resourceLocation, THE_END_KEY.getResourceLocation()
+			} else if(dimension.equals(Dimension.THE_END.getLocation()) && CompassesWorkEverywhereModule.enableEnd) 
 				calculate = true;
-			else if(dimension.equals(Dimension.field_236054_c_.func_240901_a_()) && isCalculated(stack) && CompassesWorkEverywhereModule.enableNether) { // resourceLocation, THE_END_KEY.getResourceLocation()
+			else if(dimension.equals(Dimension.THE_END.getLocation()) && isCalculated(stack) && CompassesWorkEverywhereModule.enableNether) {
 				boolean set = ItemNBTHelper.getBoolean(stack, TAG_POSITION_SET, false);
 				if(set) {
 					int x = ItemNBTHelper.getInt(stack, TAG_NETHER_TARGET_X, 0);
@@ -109,7 +109,7 @@ public class CompassAngleGetter {
 					calculate = true;
 					target = new BlockPos(x, 0, z);
 				}
-			} else if(worldIn.func_230315_m_().func_236043_f_()) { // isSurfaceWorld
+			} else if(worldIn.getDimensionType().isNatural()) {
 				calculate = true;
 				target = getWorldSpawn(worldIn);
 			}
@@ -153,7 +153,7 @@ public class CompassAngleGetter {
 			boolean flag1 = p_239442_2_.contains("LodestoneDimension");
 			if (flag && flag1) {
 				Optional<RegistryKey<World>> optional = CompassItem.func_234667_a_(p_239442_2_);
-				if (optional.isPresent() && p_239442_1_.func_234923_W_() == optional.get()) {
+				if (optional.isPresent() && p_239442_1_.getDimensionKey().equals(optional.get())) {
 					return NBTUtil.readBlockPos(p_239442_2_.getCompound("LodestonePos"));
 				}
 			}
@@ -163,7 +163,7 @@ public class CompassAngleGetter {
 		
 		@Nullable
 		private BlockPos getWorldSpawn(ClientWorld p_239444_1_) {
-			return p_239444_1_.func_230315_m_().func_236043_f_() ? p_239444_1_.func_239140_u_() : null;
+			return p_239444_1_.getDimensionType().isNatural() ? p_239444_1_.func_239140_u_() : null;
 		}
 	
 		@OnlyIn(Dist.CLIENT)

@@ -29,6 +29,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import vazkii.quark.base.block.QuarkBlock;
@@ -100,7 +101,7 @@ public class MovingMagnetizedBlock extends QuarkBlock {
 	@Override
 	@Nonnull
 	public List<ItemStack> getDrops(@Nonnull BlockState state, @Nonnull LootContext.Builder builder) {
-		MagnetizedBlockTileEntity tile = this.getMagnetTileEntity(builder.getWorld(), builder.assertPresent(LootParameters.POSITION));
+		MagnetizedBlockTileEntity tile = this.getMagnetTileEntity(builder.getWorld(), builder.assertPresent(LootParameters.field_237457_g_)); // origin
 		return tile == null ? Collections.emptyList() : tile.getMagnetState().getDrops(builder);
 	}
 
@@ -117,6 +118,12 @@ public class MovingMagnetizedBlock extends QuarkBlock {
 		return tile != null ? tile.getCollisionShape(worldIn, pos) : VoxelShapes.empty();
 	}
 
+	@Nullable
+	private MagnetizedBlockTileEntity getMagnetTileEntity(IBlockReader world, Vector3d origin) {
+		BlockPos pos = new BlockPos(origin);
+		return getMagnetTileEntity(world, pos);
+	}
+	
 	@Nullable
 	private MagnetizedBlockTileEntity getMagnetTileEntity(IBlockReader world, BlockPos pos) {
 		TileEntity tile = world.getTileEntity(pos);

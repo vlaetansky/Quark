@@ -148,13 +148,13 @@ public class GoVoteHandler {
 					s("breakdown of political decorum, and fear,"));
 			addGroup(s("it is tempting to succumb to apathy,"),
 					s("to think that nothing you do will matter."));
-			addGroup(StringTextComponent.field_240750_d_, s("But power is still in the hands of We, the People."));
+			addGroup(StringTextComponent.EMPTY, s("But power is still in the hands of We, the People."));
 			addGroup(s("The Constitution and its amendments guarantee every citizen the right to vote."));
 			addGroup(s("And it is not only our right, but our ")
-					.func_230529_a_(s("responsibility").func_240701_a_(TextFormatting.ITALIC, TextFormatting.GOLD))
-					.func_230529_a_(s(" to do so.")));
+					.append(s("responsibility").mergeStyle(TextFormatting.ITALIC, TextFormatting.GOLD))
+					.append(s(" to do so.")));
 			addGroup(s("Your vote matters. Always."));
-			addGroup(StringTextComponent.field_240750_d_, s("Click anywhere to check if you are registered to vote."),
+			addGroup(StringTextComponent.EMPTY, s("Click anywhere to check if you are registered to vote."),
 					s("The website is an official government site, unaffiliated with " + BRAND + "."));
 			addGroup(s("Press ESC to exit. (This screen will not show up again.)"));
 		}
@@ -182,8 +182,8 @@ public class GoVoteHandler {
 			int middle = width / 2;
 			int dist = 12;
 
-			ITextComponent note1 = s("Note: If you can't vote in the United States,").func_240701_a_(TextFormatting.ITALIC);
-			ITextComponent note2 = s("Please press ESC and carry on.").func_240701_a_(TextFormatting.ITALIC);
+			ITextComponent note1 = s("Note: If you can't vote in the United States,").mergeStyle(TextFormatting.ITALIC);
+			ITextComponent note2 = s("Please press ESC and carry on.").mergeStyle(TextFormatting.ITALIC);
 			drawCenteredString(mstack, font, note1, middle, 10, 0xFFFFFF);
 			drawCenteredString(mstack, font, note2, middle, 22, 0xFFFFFF);
 
