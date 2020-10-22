@@ -24,6 +24,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TranslationTextComponent;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.ModuleLoader;
@@ -107,6 +108,7 @@ public class QuarkJeiPlugin implements IModPlugin {
 	// Runes only show up and can be only anvilled on enchanted items, so make some random enchanted items
 	private static ItemStack makeEnchantedDisplayItem(Item input, Random random) {
 		ItemStack stack = new ItemStack(input);
+		stack.setDisplayName(new TranslationTextComponent("quark.jei.any_enchanted"));
 		if (input.getItemEnchantability() <= 0) { // If it can't take anything in ench. tables...
 			stack.addEnchantment(Enchantments.UNBREAKING, 3); // it probably accepts unbreaking anyways
 			return stack;
