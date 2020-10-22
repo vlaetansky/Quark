@@ -11,9 +11,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ExtensionPoint;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import vazkii.quark.base.client.GoVoteHandler;
 import vazkii.quark.base.client.config.IngameConfigHandler;
+import vazkii.quark.base.client.config.gui.QuarkConfigHomeScreen;
 import vazkii.quark.base.handler.ContributorRewardHandler;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.module.ModuleLoader;
@@ -29,10 +32,13 @@ public class ClientProxy extends CommonProxy {
 		LocalDateTime now = LocalDateTime.now();
 		if(now.getMonth() == Month.DECEMBER && now.getDayOfMonth() >= 16 || now.getMonth() == Month.JANUARY && now.getDayOfMonth() <= 6)
 			jingleBellsMotherfucker = true;
-		
+
 		super.start();
 		
 		ModuleLoader.INSTANCE.clientStart();
+
+		ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY,
+				() -> (minecraft, screen) -> new QuarkConfigHomeScreen(screen));
 	}
 
 	@Override
@@ -63,7 +69,7 @@ public class ClientProxy extends CommonProxy {
 		ModuleLoader.INSTANCE.postTextureStitch(event);
 	}
 
-	@Override	
+	@Override
 	public void handleQuarkConfigChange() {
 		super.handleQuarkConfigChange();
 
