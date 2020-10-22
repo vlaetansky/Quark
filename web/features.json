@@ -445,8 +445,7 @@
 			"image": "burn-vine-tips.jpg",
 			"versions": "1.16.3+",
 			"desc": [
-				"Leads can now be tied directly between two fences, rather than only fence-animal.",
-				"Additionally, if Paper Lanterns are enabled, you can also right click on one first, and then a fence, to tie the lantern to the fence."
+				"The tip of a vine can now be burnt with a Flint and Steel. When you do so, the vine will no longer be able to grow."
 			]
 		}
 	],
