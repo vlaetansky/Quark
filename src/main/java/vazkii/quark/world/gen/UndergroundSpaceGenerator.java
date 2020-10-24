@@ -5,6 +5,8 @@ import java.util.Random;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.Category;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.FlatChunkGenerator;
 import net.minecraft.world.gen.WorldGenRegion;
@@ -25,7 +27,12 @@ public class UndergroundSpaceGenerator extends ClusterBasedGenerator {
 			if(state.getBlockHardness(world, pos) > -1) {
 				if(pos.getY() < 6)
 					world.setBlockState(pos, Blocks.LAVA.getDefaultState(), 1);
-				else world.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);
+				else {
+					Biome biome = getBiome(world, pos);
+					if(biome.getCategory() == Category.OCEAN || biome.getCategory() == Category.BEACH)
+						world.setBlockState(pos, Blocks.WATER.getDefaultState(), 2);
+					else world.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);	
+				}
 			}
 		};
 	}
