@@ -91,14 +91,13 @@ public class FeedingTroughModule extends Module {
         }
     }
 
-
     public static PlayerEntity temptWithTroughs(TemptGoal goal, PlayerEntity found) {
         if (!ModuleLoader.INSTANCE.isModuleEnabled(FeedingTroughModule.class) ||
                 (found != null && (goal.isTempting(found.getHeldItemMainhand()) || goal.isTempting(found.getHeldItemOffhand()))))
             return found;
 
         if (!(goal.creature instanceof AnimalEntity) ||
-                !((AnimalEntity) goal.creature).canBreed() ||
+                !((AnimalEntity) goal.creature).canFallInLove() ||
                 ((AnimalEntity) goal.creature).getGrowingAge() != 0)
             return found;
 

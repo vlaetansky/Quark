@@ -71,7 +71,7 @@ public class FeedingTroughTileEntity extends LockableLootTileEntity implements I
                 ItemStack stack = getStackInSlot(i);
                 if (goal.isTempting(stack) && entity.isBreedingItem(stack)) {
                     foodHolder.inventory.mainInventory.set(foodHolder.inventory.currentItem, stack);
-                    Vector3d position = new Vector3d(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0.5, 0.5);
+                    Vector3d position = new Vector3d(pos.getX(), pos.getY(), pos.getZ()).add(0.5, -1, 0.5);
                     Vector3d direction = goal.creature.getPositionVec().subtract(position).normalize();
                     Vector2f angles = MiscUtil.getMinecraftAngles(direction);
 
@@ -101,7 +101,7 @@ public class FeedingTroughTileEntity extends LockableLootTileEntity implements I
             	List<AnimalEntity> animals = world.getEntitiesWithinAABB(AnimalEntity.class, new AxisAlignedBB(pos).grow(1.5, 0, 1.5).contract(0, 0.75, 0));
             	
                 for (AnimalEntity creature : animals) {
-                    if (creature.canBreed() && creature.getGrowingAge() == 0) {
+                    if (creature.canFallInLove() && creature.getGrowingAge() == 0) {
                         for (int i = 0; i < getSizeInventory(); i++) {
                             ItemStack stack = getStackInSlot(i);
                             if (creature.isBreedingItem(stack)) {
