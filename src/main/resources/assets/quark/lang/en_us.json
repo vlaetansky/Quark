@@ -102,6 +102,7 @@
 	"quark.camera.greetings": "Greetings from %s!",
 
 	"quark.jei.makes_copy": "Makes Copy",
+	"quark.jei.any_enchanted": "Any Enchanted Item",
 	
 	"quark.keybind.change_hotbar": "Hotbar Swapper",
 	"quark.keybind.lock_rotation": "Rotation Lock",

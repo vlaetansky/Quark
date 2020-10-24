@@ -2,25 +2,26 @@ package vazkii.quark.tweaks.recipe;
 
 import javax.annotation.Nonnull;
 
-import com.google.gson.JsonObject;
-
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ElytraItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.item.crafting.SpecialRecipe;
+import net.minecraft.item.crafting.SpecialRecipeSerializer;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import vazkii.quark.tweaks.module.DragonScalesModule;
 
-public class ElytraDuplicationRecipe implements ICraftingRecipe {
+public class ElytraDuplicationRecipe extends SpecialRecipe {
 
-    public static final Serializer SERIALIZER = new Serializer();
+    public static final SpecialRecipeSerializer<?> SERIALIZER = new SpecialRecipeSerializer<>(ElytraDuplicationRecipe::new);
+
+	public ElytraDuplicationRecipe(ResourceLocation id) {
+		super(id);
+	}
 	
 	@Override
 	public boolean matches(@Nonnull CraftingInventory var1, @Nonnull World var2) {
@@ -93,39 +94,10 @@ public class ElytraDuplicationRecipe implements ICraftingRecipe {
 		list.set(1, Ingredient.fromStacks(new ItemStack(DragonScalesModule.dragon_scale)));
 		return list;
 	}
-	
-	
-	@Override
-	public ResourceLocation getId() {
-		return SERIALIZER.getRegistryName();
-	}
 
 	@Override
 	public IRecipeSerializer<?> getSerializer() {
 		return SERIALIZER;
 	}
-	
-    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ElytraDuplicationRecipe> {
-
-        public Serializer() {
-            setRegistryName("quark:elytra_duplication");
-        }
-    	
-		@Override
-		public ElytraDuplicationRecipe read(ResourceLocation recipeId, JsonObject json) {
-			return new ElytraDuplicationRecipe();
-		}
-
-		@Override
-		public ElytraDuplicationRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-			return new ElytraDuplicationRecipe();
-		}
-
-		@Override
-		public void write(PacketBuffer buffer, ElytraDuplicationRecipe recipe) {
-			// NO-OP
-		}
-    	
-    }
 
 }
