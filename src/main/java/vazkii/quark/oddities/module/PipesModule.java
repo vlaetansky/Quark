@@ -1,9 +1,12 @@
 package vazkii.quark.oddities.module;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
@@ -49,5 +52,11 @@ public class PipesModule extends Module {
 	public void clientSetup() {
 		ClientRegistry.bindTileEntityRenderer(tileEntityType, PipeTileEntityRenderer::new);
 	}
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void modelRegistry() {
+        ModelLoader.addSpecialModel(new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, "pipe_flare"), "inventory"));
+    }
 	
 }

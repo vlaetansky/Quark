@@ -85,19 +85,6 @@ public class ItemFramesModule extends Module {
     @Override
     @OnlyIn(Dist.CLIENT)
     public void modelRegistry() {
-        //reinstate when Forge fixes itself
-
-//        StateContainer<Block, BlockState> dummyContainer = new StateContainer.Builder<Block, BlockState>(Blocks.AIR)
-//                .add(BooleanProperty.create("map"))
-//                .create(BlockState::new);
-//        ModelLoader.addSpecialModel(new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, "glass_frame"), "normal"));
-//        for (DyeColor color : DyeColor.values()) {
-//            ResourceLocation coloredFrame = new ResourceLocation(Quark.MOD_ID, color.getName() + "_frame");
-//            for (BlockState state : dummyContainer.getValidStates())
-//                ModelLoader.addSpecialModel(BlockModelShapes.getModelLocation(coloredFrame, state));
-//        }
-
-    	// func_176610_l = name
         ModelLoader.addSpecialModel(new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, "glass_frame"), "inventory"));
         for (DyeColor color : DyeColor.values()) {
             ModelLoader.addSpecialModel(new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, color.getString() + "_frame_empty"), "inventory"));

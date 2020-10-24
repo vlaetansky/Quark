@@ -25,6 +25,7 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.particles.RedstoneParticleData;
+import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -33,6 +34,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.LazyOptional;
@@ -53,8 +55,9 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 	public PipeTileEntity() {
 		super(PipesModule.tileEntityType);
 	}
+	
 	private static final String TAG_PIPE_ITEMS = "pipeItems";
-
+	
 	private boolean iterating = false;
 	public final List<PipeItem> pipeItems = new LinkedList<>();
 	public final List<PipeItem> queuedItems = new LinkedList<>();
@@ -68,13 +71,14 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 
 	@Override
 	public void tick() {
-		if(!isPipeEnabled() && world.getGameTime() % 10 == 0 && world instanceof ServerWorld) 
+		boolean enabled = isPipeEnabled();
+		if(!enabled && world.getGameTime() % 10 == 0 && world instanceof ServerWorld) 
 			((ServerWorld) world).spawnParticle(new RedstoneParticleData(1.0F, 0.0F, 0.0F, 1.0F), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 3, 0.2, 0.2, 0.2, 0);
 
 		BlockState blockAt = world.getBlockState(pos);
-		if (isPipeEnabled() && blockAt.getBlock() instanceof PipeBlock) {
-			for (Direction side : Direction.values()) {
-				if (!world.isRemote && PipeBlock.getType(blockAt, side) == null) {
+		if(!world.isRemote && enabled && blockAt.getBlock() instanceof PipeBlock) {
+			for(Direction side : Direction.values()) {
+				if(getConnectionTo(world, pos, side) == ConnectionType.OPENING) {
 					double minX = pos.getX() + 0.25 + 0.5 * Math.min(0, side.getXOffset());
 					double minY = pos.getY() + 0.25 + 0.5 * Math.min(0, side.getYOffset());
 					double minZ = pos.getZ() + 0.25 + 0.5 * Math.min(0, side.getZOffset());
@@ -245,6 +249,7 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 				double mz = -facing.getZOffset() * velocityMod;
 				entity.setMotion(mx, my, mz);
 			}
+			
 			world.addEntity(entity);
 		}
 	}
@@ -303,7 +308,7 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 
 	protected boolean isPipeEnabled() {
 		BlockState state = world.getBlockState(pos);
-		return state.getBlock() instanceof PipeBlock && state.get(PipeBlock.ENABLED);
+		return state.getBlock() instanceof PipeBlock && !world.isBlockPowered(pos);
 	}
 
 	protected ItemStack putIntoInv(ItemStack stack, TileEntity tile, Direction face, boolean simulate) {
@@ -353,6 +358,39 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 		MiscUtil.syncTE(this);
 	}
 
+
+	public static ConnectionType getConnectionTo(IBlockReader world, BlockPos pos, Direction face) {
+		return getConnectionTo(world, pos, face, false);
+	}
+	
+	private static ConnectionType getConnectionTo(IBlockReader world, BlockPos pos, Direction face, boolean recursed) {
+		BlockPos truePos = pos.offset(face);
+		TileEntity tile = world.getTileEntity(truePos);
+		
+		if(tile != null) {
+			if(tile instanceof PipeTileEntity)
+				return ConnectionType.PIPE;
+			else if(tile instanceof IInventory || tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, face.getOpposite()).isPresent())
+				return tile instanceof ChestTileEntity ? ConnectionType.TERMINAL_OFFSET : ConnectionType.TERMINAL;
+		}
+		
+		checkSides: if(!recursed) {
+			ConnectionType other = getConnectionTo(world, pos, face.getOpposite(), true);
+			if(other.isSolid) {
+				for(Direction d : Direction.values())
+					if(d.getAxis() != face.getAxis()) {
+						other = getConnectionTo(world, pos, d, true);
+						if(other.isSolid)
+							break checkSides;
+					}
+				
+				return ConnectionType.OPENING;
+			}
+		}
+
+		return ConnectionType.NONE;
+	}
+	
 	public static class PipeItem {
 
 		private static final String TAG_TICKS = "ticksInPipe";
@@ -462,5 +500,25 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 
 	}
 
+	public enum ConnectionType {
+
+		NONE(false, false, false, 0),
+		PIPE(true, true, false, 0),
+		OPENING(false, true, true, -0.125),
+		TERMINAL(true, true, true, 0.125),
+		TERMINAL_OFFSET(true, true, true, 0.1875);
+
+		ConnectionType(boolean isSolid, boolean allowsItems, boolean isFlared, double flareShift) {
+			this.isSolid = isSolid;
+			this.allowsItems = allowsItems;
+			this.isFlared = isFlared;
+			this.flareShift = flareShift;
+		}
+
+		public final boolean isSolid, allowsItems, isFlared;
+		public final double flareShift;
+
+	}
+	
 }
 

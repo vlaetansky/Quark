@@ -6,20 +6,32 @@ import java.util.Random;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Atlases;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.model.ModelManager;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.vector.Vector3f;
+import vazkii.quark.base.Quark;
 import vazkii.quark.oddities.tile.PipeTileEntity;
+import vazkii.quark.oddities.tile.PipeTileEntity.ConnectionType;
 import vazkii.quark.oddities.tile.PipeTileEntity.PipeItem;
 
 public class PipeTileEntityRenderer extends TileEntityRenderer<PipeTileEntity> {
 
+	private static final ModelResourceLocation LOCATION_MODEL = new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, "pipe_flare"), "inventory");
+	
 	private Random random = new Random();
 	
 	public PipeTileEntityRenderer(TileEntityRendererDispatcher p_i226006_1_) {
@@ -35,7 +47,40 @@ public class PipeTileEntityRenderer extends TileEntityRenderer<PipeTileEntity> {
 
 		while(items.hasNext())
 			renderItem(items.next(), render, matrix, buffer, pticks, light, overlay);
+		
+		BlockRendererDispatcher blockrendererdispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
+		ModelManager modelmanager = blockrendererdispatcher.getBlockModelShapes().getModelManager();
+		IBakedModel model = modelmanager.getModel(LOCATION_MODEL);
+		for(Direction d : Direction.values())
+			renderFlare(te, blockrendererdispatcher, model, matrix, buffer, pticks, light, overlay, d);
+		
 		matrix.pop();
+	}
+	
+	@SuppressWarnings("deprecation")
+	private void renderFlare(PipeTileEntity te, BlockRendererDispatcher disp, IBakedModel model, MatrixStack matrix, IRenderTypeBuffer buffer, float partial, int light, int overlay, Direction dir) {
+		ConnectionType type = PipeTileEntity.getConnectionTo(te.getWorld(), te.getPos(), dir);
+		if(type.isFlared) {
+			matrix.push();
+			switch(dir.getAxis()) {
+			case X:
+				matrix.rotate(Vector3f.YP.rotationDegrees(-dir.getHorizontalAngle()));
+				break;
+			case Z:
+				matrix.rotate(Vector3f.YP.rotationDegrees(dir.getHorizontalAngle()));
+				break;
+			case Y:
+				matrix.rotate(Vector3f.XP.rotationDegrees(90F));
+				if(dir == Direction.UP)
+					matrix.rotate(Vector3f.YP.rotationDegrees(180F));
+				
+				break;
+			}
+			
+			matrix.translate(-0.5, -0.5, type.flareShift);
+			disp.getBlockModelRenderer().renderModelBrightnessColor(matrix.getLast(), buffer.getBuffer(Atlases.getCutoutBlockType()), null, model, 1.0F, 1.0F, 1.0F, light, OverlayTexture.NO_OVERLAY);
+			matrix.pop();
+		}
 	}
 	
 	private void renderItem(PipeItem item, ItemRenderer render, MatrixStack matrix, IRenderTypeBuffer buffer, float partial, int light, int overlay) {
