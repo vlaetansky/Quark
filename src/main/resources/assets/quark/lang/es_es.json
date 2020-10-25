@@ -102,6 +102,7 @@
 	"quark.camera.greetings": "¡Saludos desde %s!",
 	
 	"quark.jei.makes_copy": "Crea una copia",
+	"quark.jei.any_enchanted": "Cualquier objeto encantado",
 	
 	"quark.keybind.change_hotbar": "Intercambiar barra rápida",
 	"quark.keybind.lock_rotation": "Bloqueo de rotación",
