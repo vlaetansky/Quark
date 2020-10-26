@@ -14,12 +14,12 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import vazkii.arl.util.RegistryHelper;
-import vazkii.quark.api.INonSticky;
+import vazkii.quark.api.IConditionalSticky;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.Module;
 
-public class ColorSlimeBlock extends SlimeBlock implements INonSticky {
+public class ColorSlimeBlock extends SlimeBlock implements IConditionalSticky {
 
 	private final SlimeColor color;
 	private final Module module;

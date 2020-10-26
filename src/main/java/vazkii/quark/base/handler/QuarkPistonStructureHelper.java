@@ -1,8 +1,12 @@
 package vazkii.quark.base.handler;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Lists;
 
@@ -17,7 +21,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import vazkii.quark.api.ICollateralMover;
 import vazkii.quark.api.ICollateralMover.MoveResult;
-import vazkii.quark.api.INonSticky;
+import vazkii.quark.api.IConditionalSticky;
+import vazkii.quark.api.IIndirectConnector;
 
 public class QuarkPistonStructureHelper extends PistonBlockStructureHelper {
 
@@ -66,7 +71,7 @@ public class QuarkPistonStructureHelper extends PistonBlockStructureHelper {
 			for(int i = 0; i < toMove.size(); ++i) {
 				BlockPos blockpos = toMove.get(i);
 
-				if(isBlockBranching(world, blockpos) && addBranchingBlocks(world, blockpos) == MoveResult.PREVENT)
+				if(addBranchingBlocks(world, blockpos, isBlockBranching(world, blockpos)) == MoveResult.PREVENT)
 					return false;
 			}
 
@@ -154,12 +159,10 @@ public class QuarkPistonStructureHelper extends PistonBlockStructureHelper {
 						for(int l = 0; l <= k + i1; ++l) {
 							BlockPos blockpos2 = toMove.get(l);
 
-							if(isBlockBranching(world, blockpos2)) {
-								res = addBranchingBlocks(world, blockpos2);
-								
-								if(res == MoveResult.PREVENT)
-									return false;
-							}
+							res = addBranchingBlocks(world, blockpos2, isBlockBranching(world, blockpos2));
+							
+							if(res == MoveResult.PREVENT)
+								return false;
 						}
 
 						return true;
@@ -220,7 +223,7 @@ public class QuarkPistonStructureHelper extends PistonBlockStructureHelper {
 	}
 
 	@SuppressWarnings("incomplete-switch")
-	private MoveResult addBranchingBlocks(World world, BlockPos fromPos) {
+	private MoveResult addBranchingBlocks(World world, BlockPos fromPos, boolean isSourceBranching) {
 		BlockState state = world.getBlockState(fromPos);
 		Block block = state.getBlock();
 		
@@ -231,9 +234,17 @@ public class QuarkPistonStructureHelper extends PistonBlockStructureHelper {
 				BlockPos targetPos = fromPos.offset(face);
 				BlockState targetState = world.getBlockState(targetPos);
 				
-				if(block instanceof ICollateralMover)
-					res = ((ICollateralMover) block).getCollateralMovement(world, pistonPos, moveDirection, face, fromPos);
-				else res = getStickCompatibility(world, state, targetState, fromPos, targetPos, face);
+				if(!isSourceBranching) {
+					IIndirectConnector indirect = getIndirectStickiness(targetState);
+					if(indirect != null && indirect.isEnabled() && indirect.canConnectIndirectly(world, targetPos, fromPos, targetState, state))
+						res = getStickCompatibility(world, state, targetState, fromPos, targetPos, face);
+					else res = MoveResult.SKIP;
+				} 
+				else {
+					if(block instanceof ICollateralMover)
+						res = ((ICollateralMover) block).getCollateralMovement(world, pistonPos, moveDirection, face, fromPos);
+					else res = getStickCompatibility(world, state, targetState, fromPos, targetPos, face);
+				}
 				
 				switch(res) {
 				case PREVENT:
@@ -263,7 +274,7 @@ public class QuarkPistonStructureHelper extends PistonBlockStructureHelper {
 		BlockState state = world.getBlockState(pos);
 		Block block = state.getBlock();
 
-		return block instanceof ICollateralMover ? ((ICollateralMover) block).isCollateralMover(world, pistonPos, moveDirection, pos) : state.getBlock().isStickyBlock(state);
+		return block instanceof ICollateralMover ? ((ICollateralMover) block).isCollateralMover(world, pistonPos, moveDirection, pos) : isBlockSticky(state);
 	}
 	
 	private MoveResult getBranchResult(World world, BlockPos pos) {
@@ -277,7 +288,7 @@ public class QuarkPistonStructureHelper extends PistonBlockStructureHelper {
 	}
 	
 	private MoveResult getStickCompatibility(World world, BlockState state1, BlockState state2, BlockPos pos1, BlockPos pos2, Direction face) {
-		INonSticky stick = getStickCondition(state1);
+		IConditionalSticky stick = getStickCondition(state1);
 		if(stick != null && !stick.canStickToBlock(world, pistonPos, pos1, pos2, state1, state2, moveDirection))
 			return MoveResult.SKIP;
 		
@@ -288,13 +299,17 @@ public class QuarkPistonStructureHelper extends PistonBlockStructureHelper {
 		return MoveResult.MOVE;
 	}
 	
-	private INonSticky getStickCondition(BlockState state) {
+	private IConditionalSticky getStickCondition(BlockState state) {
 		Block block = state.getBlock();
 		if(block == Blocks.HONEY_BLOCK)
 			return HoneyStickCondition.INSTANCE;
 		
-		if(block instanceof INonSticky)
-			return (INonSticky) block;
+		if(block instanceof IConditionalSticky)
+			return (IConditionalSticky) block;
+		
+		IIndirectConnector indirect = getIndirectStickiness(state);
+		if(indirect != null && indirect.isEnabled())
+			return indirect.getStickyCondition();
 		
 		return null;
 	}
@@ -317,7 +332,23 @@ public class QuarkPistonStructureHelper extends PistonBlockStructureHelper {
 		return toDestroy;
 	}
 	
-	private static class HoneyStickCondition implements INonSticky {
+	private static IIndirectConnector getIndirectStickiness(BlockState state) {
+		for(Pair<Predicate<BlockState>, IIndirectConnector> p : IIndirectConnector.INDIRECT_STICKY_BLOCKS)
+			if(p.getLeft().test(state))
+				return p.getRight();
+		
+		return null;
+	}
+	
+	private static boolean isBlockSticky(BlockState state) {
+		if(state.isStickyBlock())
+			return true;
+		
+		IIndirectConnector indirect = getIndirectStickiness(state);
+		return indirect != null && indirect.isEnabled();
+	}
+	
+	private static class HoneyStickCondition implements IConditionalSticky {
 
 		private static final HoneyStickCondition INSTANCE = new HoneyStickCondition();
 		
@@ -325,6 +356,8 @@ public class QuarkPistonStructureHelper extends PistonBlockStructureHelper {
 		public boolean canStickToBlock(World world, BlockPos pistonPos, BlockPos pos, BlockPos slimePos, BlockState state, BlockState slimeState, Direction direction) {
 			Block block = state.getBlock();
 			Block slime = slimeState.getBlock();
+			
+			// specifically utilize the vanilla sticky definition as to not break honey connections with blocks like chains
 			return !slime.isStickyBlock(slimeState) || block == slime;
 		}
 		
