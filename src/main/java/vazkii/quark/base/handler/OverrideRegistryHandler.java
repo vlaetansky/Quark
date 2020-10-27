@@ -51,10 +51,6 @@ public final class OverrideRegistryHandler {
 		register(item, Items.class, baseName);
 	}
 
-	public static void registerBiome(Biome item, String baseName) {
-		register(item, Biomes.class, baseName);
-	}
-
 	public static <T extends ForgeRegistryEntry<T>> void register(T obj, Class<?> registryType, String baseName) {
 		ResourceLocation regName = new ResourceLocation("minecraft", baseName);
 		try {
