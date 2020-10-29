@@ -29,9 +29,13 @@ public class UndergroundSpaceGenerator extends ClusterBasedGenerator {
 					world.setBlockState(pos, Blocks.LAVA.getDefaultState(), 1);
 				else {
 					Biome biome = getBiome(world, pos);
-					if(biome.getCategory() == Category.OCEAN || biome.getCategory() == Category.BEACH)
-						world.setBlockState(pos, Blocks.WATER.getDefaultState(), 2);
-					else world.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);	
+					if(biome.getCategory() == Category.OCEAN || biome.getCategory() == Category.BEACH) {
+						BlockState curr = world.getBlockState(pos.up());
+						if(curr.getBlock() == Blocks.WATER)
+							return;
+					}
+					
+					world.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);	
 				}
 			}
 		};
