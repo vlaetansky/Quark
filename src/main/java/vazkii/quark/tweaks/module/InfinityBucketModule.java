@@ -32,7 +32,7 @@ import vazkii.quark.base.module.config.Config;
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
 public class InfinityBucketModule extends Module {
 
-	private static Map<Pair<PlayerEntity, Hand>, ItemStack> bukkitPlayers = new HashMap<>();
+	private static Map<Pair<PlayerEntity, Hand>, Pair<Integer, ItemStack>> bukkitPlayers = new HashMap<>();
 
 	@Config public static int cost = 10;
 	
@@ -96,13 +96,18 @@ public class InfinityBucketModule extends Module {
 			return;
 
 		PlayerEntity player = event.player;
+		int slot = player.inventory.currentItem;
+		
 		for(Hand hand : Hand.values()) {
 			Pair<PlayerEntity, Hand> pair = Pair.of(player, hand);
 
 			if(bukkitPlayers.containsKey(pair)) {
 				ItemStack curr = player.getHeldItem(hand);
-				if(curr.getItem() == Items.BUCKET)
-					player.setHeldItem(hand, bukkitPlayers.get(pair));
+				if(curr.getItem() == Items.BUCKET) {
+					Pair<Integer, ItemStack> resultPair = bukkitPlayers.get(pair);
+					if(resultPair.getLeft() == slot)
+						player.setHeldItem(hand, resultPair.getRight());
+				}
 
 				bukkitPlayers.remove(pair);
 			}
@@ -110,7 +115,7 @@ public class InfinityBucketModule extends Module {
 		for(Hand hand : Hand.values()) {
 			ItemStack stack = player.getHeldItem(hand);
 			if(stack.getItem() == Items.WATER_BUCKET && EnchantmentHelper.getEnchantmentLevel(Enchantments.INFINITY, stack) > 0)
-				bukkitPlayers.put(Pair.of(player, hand), stack.copy());
+				bukkitPlayers.put(Pair.of(player, hand), Pair.of(slot, stack.copy()));
 		}
 	}
 }
