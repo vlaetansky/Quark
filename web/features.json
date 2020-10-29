@@ -104,7 +104,7 @@
 			"versions": "1.14+",
 			"desc": [
 				"The Weather Sensor is crafted with Purpur Slabs, Biotite (from the World category, or Obsidian if not enabled) and Glass. It works like a Daylight Sensor, but it emits a full redstone signal if it's raining or snowing.",
-				"Right clicking it inverts its output."
+				"Similarly to the Daylight Sensor, right clicking it inverts its output. Lastly, if it's raining in the world, but the biome you're in has no rain, like a desert, the sensor will only emit a signal of 7."
 			]
 		},	   
 		{
@@ -130,6 +130,15 @@
 			"versions": "1.14+",
 			"desc": [
 				"Similarly to how a Silverfish can bury into stone, Endermites can now bury into Purpur. When they do so, they'll transform themselves and the block into a Shulker at that position, making Shulker Shells renewable."
+			]
+		},
+		{
+			"name": "Chains Connect Blocks",
+			"image": "chains-connect-blocks.jpg",
+			"versions": "1.16.3+",
+			"desc": [
+				"Chains can now connect blocks together when a piston moves them. As you can see in the image, the chain block itself doesn't have to be moved by the piston, and will attach indirectly to other moved blocks.",
+				"Additionally, the sticking behaviour for chains connecting to slime blocks and other sticky sources has been changed: Chains will now only connect to them if they do so visually, which allows for some extra cool trickery."
 			]
 		}
 	],
