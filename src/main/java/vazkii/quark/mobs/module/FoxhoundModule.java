@@ -62,7 +62,7 @@ public class FoxhoundModule extends Module {
 		RegistryHelper.register(foxhoundType, "foxhound");
 
 		EntitySpawnHandler.registerSpawn(this, foxhoundType, EntityClassification.MONSTER, PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, FoxhoundEntity::spawnPredicate, spawnConfig);
-		EntitySpawnHandler.track(this, foxhoundType, EntityClassification.MONSTER, lesserSpawnConfig);
+		EntitySpawnHandler.track(this, foxhoundType, EntityClassification.MONSTER, lesserSpawnConfig, true);
 		
 		EntitySpawnHandler.addEgg(foxhoundType, 0x890d0d, 0xf2af4b, spawnConfig);
 	}

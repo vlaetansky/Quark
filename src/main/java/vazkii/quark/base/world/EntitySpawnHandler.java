@@ -34,12 +34,12 @@ public class EntitySpawnHandler {
 	public static <T extends MobEntity> void registerSpawn(Module module, EntityType<T> entityType, EntityClassification classification, PlacementType placementType, Heightmap.Type heightMapType, IPlacementPredicate<T> placementPredicate, EntitySpawnConfig config) {
 		EntitySpawnPlacementRegistry.register(entityType, placementType, heightMapType, placementPredicate);
 
-		track(module, entityType, classification, config);
+		track(module, entityType, classification, config, false);
 	}
 	
-	public static <T extends MobEntity> void track(Module module, EntityType<T> entityType, EntityClassification classification, EntitySpawnConfig config) {
+	public static <T extends MobEntity> void track(Module module, EntityType<T> entityType, EntityClassification classification, EntitySpawnConfig config, boolean secondary) {
 		config.setModule(module);
-		trackedSpawnConfigs.add(new TrackedSpawnConfig(entityType, classification, config));
+		trackedSpawnConfigs.add(new TrackedSpawnConfig(entityType, classification, config, secondary));
 	}
 
 	public static void addEgg(EntityType<?> entityType, int color1, int color2, EntitySpawnConfig config) {
@@ -58,7 +58,8 @@ public class EntitySpawnHandler {
 
 		for(TrackedSpawnConfig c : trackedSpawnConfigs) {
 			List<MobSpawnInfo.Spawners> l = builder.getSpawner(c.classification);
-			l.removeIf(e -> e.type.equals(c.entityType));
+			if(!c.secondary)
+				l.removeIf(e -> e.type.equals(c.entityType));
 			
 			if(c.config.isEnabled() && c.config.biomes.canSpawn(ev.getName(), ev.getCategory()))
 				l.add(c.entry);
@@ -80,12 +81,14 @@ public class EntitySpawnHandler {
 		final EntityType<?> entityType;
 		final EntityClassification classification;
 		final EntitySpawnConfig config;
+		final boolean secondary;
 		MobSpawnInfo.Spawners entry;
 
-		TrackedSpawnConfig(EntityType<?> entityType, EntityClassification classification, EntitySpawnConfig config) {
+		TrackedSpawnConfig(EntityType<?> entityType, EntityClassification classification, EntitySpawnConfig config, boolean secondary) {
 			this.entityType = entityType;
 			this.classification = classification;
 			this.config = config;
+			this.secondary = secondary;
 			refresh();
 		}
 
