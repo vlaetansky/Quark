@@ -66,9 +66,10 @@ public class EnchantmentMatrix {
 			int maxCount = MatrixEnchantingModule.baseMaxPieceCountBook + bookshelfCount;
 			return count < maxCount;
 		} else {
-			int bookshelfCount = (Math.min(bookshelfPower, MatrixEnchantingModule.maxBookshelves) + 1) / 2;
-			int enchantabilityCount = (Math.min(bookshelfPower, enchantability)) / 2;
-			int maxCount = MatrixEnchantingModule.baseMaxPieceCount + bookshelfCount + enchantabilityCount;
+			int bookshelfCount = Math.min(bookshelfPower, MatrixEnchantingModule.maxBookshelves);
+			int enchantabilityCount = Math.round((float) enchantability * ((float) bookshelfCount / (float) MatrixEnchantingModule.maxBookshelves));
+			int maxCount = MatrixEnchantingModule.baseMaxPieceCount + ((bookshelfCount + 1) / 2) + (enchantabilityCount / 2);
+			
 			return count < maxCount;
 		}
 	}
