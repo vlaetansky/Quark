@@ -16,7 +16,6 @@ import vazkii.quark.base.handler.BrewingHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.security.InvalidParameterException;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -69,20 +68,16 @@ public class PotionIngredient extends Ingredient {
         @Nonnull
         @Override
         public PotionIngredient parse(@Nonnull PacketBuffer buffer) {
-            ResourceLocation itemName = buffer.readResourceLocation();
-            Item item = Registry.ITEM.getOptional(itemName).orElseThrow(() -> new InvalidParameterException("Could not find item with registry name '" + itemName + "'"));
-            ResourceLocation potionName = buffer.readResourceLocation();
-            Potion potion = Registry.POTION.getOptional(potionName).orElseThrow(() -> new InvalidParameterException("Could not find potion with registry name '" + potionName + "'"));
+            Item item = Registry.ITEM.getOptional(buffer.readResourceLocation()).get();
+            Potion potion = Registry.POTION.getOptional(buffer.readResourceLocation()).get();
             return new PotionIngredient(item, potion);
         }
 
         @Nonnull
         @Override
         public PotionIngredient parse(@Nonnull JsonObject json) {
-            ResourceLocation itemName = new ResourceLocation(json.getAsJsonPrimitive("item").getAsString());
-            Item item = Registry.ITEM.getOptional(itemName).orElseThrow(() -> new InvalidParameterException("Could not find item with registry name '" + itemName + "'"));
-            ResourceLocation potionName = new ResourceLocation(json.getAsJsonPrimitive("item").getAsString());
-            Potion potion = Registry.POTION.getOptional(potionName).orElseThrow(() -> new InvalidParameterException("Could not find potion with registry name '" + potionName + "'"));
+            Item item = Registry.ITEM.getOptional(new ResourceLocation(json.getAsJsonPrimitive("item").getAsString())).get();
+            Potion potion = Registry.POTION.getOptional(new ResourceLocation(json.getAsJsonPrimitive("item").getAsString())).get();
             return new PotionIngredient(item, potion);
         }
 
