@@ -42,7 +42,7 @@ public class DispensersPlaceBlocksModule extends Module {
 		Map<Item, IDispenseItemBehavior> registry = DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY;
 
 		Registry.BLOCK.forEach(block -> {
-			if(!blacklist.contains(Objects.toString(block.getRegistryName())))
+			if(!blacklist.contains(Objects.toString(Registry.BLOCK.getKey(block))))
 			{
 				Item item = block.asItem();
 				if(item instanceof BlockItem && !registry.containsKey(item))
