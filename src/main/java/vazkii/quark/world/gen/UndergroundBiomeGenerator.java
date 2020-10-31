@@ -78,7 +78,7 @@ public class UndergroundBiomeGenerator extends ClusterBasedGenerator {
 		}
 
 		@Override
-		public void consume(BlockPos pos) {
+		public void consume(BlockPos pos, double noise) {
 			info.biomeObj.fill(this, pos);			
 		}
 

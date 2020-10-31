@@ -25,36 +25,44 @@ public class ClusterShape {
 	}
 	
 	public boolean isInside(BlockPos pos) {
-		// normalize distances by the radius 
+		return noiseDiff(pos) > 0;
+	}
+
+	// For result of this method, positive result is the valid spots and negative is outside.
+	// 0 is edge of the cluster which is very useful for speedups in checks in
+	// UndergroundSpaceGenerator as some checks should happen only at edges of cave.
+	// You can use these kinds of tricks for speedups towards edge of other clusters as well.
+	public double noiseDiff(BlockPos pos) {
+		// normalize distances by the radius
 		double dx = (double) (pos.getX() - src.getX()) / radius.x;
 		double dy = (double) (pos.getY() - src.getY()) / radius.y;
 		double dz = (double) (pos.getZ() - src.getZ()) / radius.z;
-		
+
 		double r = Math.sqrt(dx * dx + dy * dy + dz * dz);
 		if(r > 1)
-			return false;
+			return -1;
 		if(GeneralConfig.useFastWorldgen)
-			return true;
-		
+			return 1;
+
 		// convert to spherical
 		double phi = Math.atan2(dz, dx);
 		double theta = r == 0 ? 0 : Math.acos(dy / r);
-		
+
 		// use phi, theta + the src pos to get noisemap uv
 		double xn = phi + src.getX();
 		double yn = theta + src.getZ();
 		double noise = noiseGenerator.noiseAt(xn, yn, false);
-		
+
 		// when nearing the end of the loop, lerp back to the start to prevent it cutting off
 		double cutoff = 0.75 * Math.PI;
 		if(phi > cutoff) {
-			double noise0 = noiseGenerator.noiseAt(-Math.PI + src.getX(), yn, false); 
+			double noise0 = noiseGenerator.noiseAt(-Math.PI + src.getX(), yn, false);
 			noise = MathHelper.lerp((phi - cutoff) / (Math.PI - cutoff), noise, noise0);
 		}
-		
+
 		// accept if within constrains
 		double maxR = noise + 0.5;
-		return r < maxR;
+		return maxR - r;
 	}
 
 	public int getUpperBound() {

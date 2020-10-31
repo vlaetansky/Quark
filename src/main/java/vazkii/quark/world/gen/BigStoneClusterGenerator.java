@@ -52,7 +52,7 @@ public class BigStoneClusterGenerator extends ClusterBasedGenerator {
 
 	@Override
 	public IGenerationContext createContext(BlockPos src, ChunkGenerator generator, Random random, BlockPos chunkCorner, WorldGenRegion world) {
-		return pos -> {
+		return (pos, noise) -> {
 			if(canPlaceBlock(world, pos))
 				world.setBlockState(pos, placeState, 0);
 		};
