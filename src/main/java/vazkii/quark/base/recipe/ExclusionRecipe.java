@@ -181,7 +181,8 @@ public class ExclusionRecipe implements ICraftingRecipe {
             }
             String trueType = buffer.readString(32767);
 
-            IRecipeSerializer serializer = Registry.RECIPE_SERIALIZER.getOptional(new ResourceLocation(trueType)).orElseThrow(() -> new IllegalArgumentException("Invalid or unsupported recipe type '" + trueType + "'"));
+            IRecipeSerializer serializer = Registry.RECIPE_SERIALIZER.getOptional(new ResourceLocation(trueType))
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid or unsupported recipe type '" + trueType + "'"));
             IRecipe parent = serializer.read(recipeId, buffer);
             if (!(parent instanceof ICraftingRecipe))
                 throw new IllegalArgumentException("Type '" + trueType + "' is not a crafting recipe");
