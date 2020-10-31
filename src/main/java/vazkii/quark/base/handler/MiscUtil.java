@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.base.Predicates;
 import com.google.common.base.Throwables;
 
 import net.minecraft.block.BlockState;
@@ -190,14 +192,7 @@ public class MiscUtil {
 	}
 
 	public static <T> List<T> massRegistryGet(Collection<String> coll, Registry<T> registry) {
-		List<T> collected = new ArrayList<>();
-		registry.forEach(obj -> {
-			ResourceLocation key = registry.getKey(obj);
-			if (key != null && coll.contains(key.toString())) {
-				collected.add(obj);
-			}
-		});
-		return collected;
+		return coll.stream().map(ResourceLocation::new).map(name -> registry.getOptional(name).get()).filter(Predicates.notNull()).collect(Collectors.toList());
 	}
 
 	public static void syncTE(TileEntity tile) {
