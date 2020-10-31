@@ -157,10 +157,10 @@ public class ExclusionRecipe implements ICraftingRecipe {
                     excludedRecipes.add(loc);
             }
 
-            IRecipeSerializer serializer = Registry.RECIPE_SERIALIZER.getOrDefault(new ResourceLocation(trueType));
-            if (serializer == null)
+            Optional<IRecipeSerializer<?>> serializer = Registry.RECIPE_SERIALIZER.getOptional(new ResourceLocation(trueType));
+            if (!serializer.isPresent())
                 throw new JsonSyntaxException("Invalid or unsupported recipe type '" + trueType + "'");
-            IRecipe parent = serializer.read(recipeId, json);
+            IRecipe<?> parent = serializer.get().read(recipeId, json);
             if (!(parent instanceof ICraftingRecipe))
                 throw new JsonSyntaxException("Type '" + trueType + "' is not a crafting recipe");
 
