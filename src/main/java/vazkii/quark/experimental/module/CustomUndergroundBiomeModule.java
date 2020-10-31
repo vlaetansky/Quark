@@ -5,12 +5,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.gen.GenerationStage;
-import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.Module;
 import vazkii.quark.base.module.ModuleCategory;
@@ -139,10 +138,8 @@ public class CustomUndergroundBiomeModule extends Module {
             String[] split = entry.split("@");
             ResourceLocation loc = new ResourceLocation(split[0]);
             int weight = split.length == 1 ? 1 : Integer.parseInt(split[1]);
-
-            Block block = ForgeRegistries.BLOCKS.getValue(loc);
-            if (block != null)
-                list.add(block.getDefaultState(), weight);
+    
+            Registry.BLOCK.getOptional(loc).ifPresent(block -> list.add(block.getDefaultState(), weight));
         }
 
         return list;

@@ -18,7 +18,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandom;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.util.registry.Registry;
 import vazkii.quark.oddities.module.MatrixEnchantingModule;
 
 public class EnchantmentMatrix {
@@ -130,7 +130,7 @@ public class EnchantmentMatrix {
 		List<Piece> marked = pieces.values().stream().filter(p -> p.marked).collect(Collectors.toList());
 		
 		List<EnchantmentDataWrapper> validEnchants = new ArrayList<>();
-		for(Enchantment enchantment : ForgeRegistries.ENCHANTMENTS.getValues()) {
+		Registry.ENCHANTMENT.forEach(enchantment -> {
 			if ((!enchantment.isTreasureEnchantment() || MatrixEnchantingModule.allowTreasures)
 					&& !MatrixEnchantingModule.disallowedEnchantments.contains(Objects.toString(enchantment.getRegistryName()))
 					&& (enchantment.canApplyAtEnchantingTable(target) || (book && enchantment.isAllowedOnBooks()))) {
@@ -143,19 +143,17 @@ public class EnchantmentMatrix {
 						}
 					}
 				}
-
+				
 				int valueAdded = getValue(enchantment, enchantLevel);
 				int currentValue = totalValue.getOrDefault(enchantment, 0);
-
-				if (valueAdded + currentValue > getValue(enchantment, enchantment.getMaxLevel()) +
-						getMaxXP(enchantment, enchantment.getMaxLevel()))
-					continue;
-
-				EnchantmentDataWrapper wrapper = new EnchantmentDataWrapper(enchantment, enchantLevel);
-				wrapper.normalizeRarity(influences, marked);
-				validEnchants.add(wrapper);
+				
+				if (valueAdded + currentValue <= getValue(enchantment, enchantment.getMaxLevel()) + getMaxXP(enchantment, enchantment.getMaxLevel())) {
+					EnchantmentDataWrapper wrapper = new EnchantmentDataWrapper(enchantment, enchantLevel);
+					wrapper.normalizeRarity(influences, marked);
+					validEnchants.add(wrapper);
+				}
 			}
-		}
+		});
 
 		if (validEnchants.isEmpty())
 			return null;
@@ -449,7 +447,7 @@ public class EnchantmentMatrix {
 		public void readFromNBT(CompoundNBT cmp) {
 			color = cmp.getInt(TAG_COLOR);
 			type = cmp.getInt(TAG_TYPE);
-			enchant = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(cmp.getString(TAG_ENCHANTMENT)));
+			enchant = Registry.ENCHANTMENT.getOptional(new ResourceLocation(cmp.getString(TAG_ENCHANTMENT))).get();
 			level = cmp.getInt(TAG_LEVEL);
 			x = cmp.getInt(TAG_X);
 			y = cmp.getInt(TAG_Y);

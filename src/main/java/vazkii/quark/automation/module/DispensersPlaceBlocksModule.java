@@ -16,6 +16,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.module.LoadModule;
@@ -40,14 +41,14 @@ public class DispensersPlaceBlocksModule extends Module {
 		
 		Map<Item, IDispenseItemBehavior> registry = DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY;
 
-		for(Block block : ForgeRegistries.BLOCKS.getValues()) {
-			if(blacklist.contains(Objects.toString(block.getRegistryName())))
-				continue;
-			
-			Item item = block.asItem();
-			if(item instanceof BlockItem && !registry.containsKey(item))
-				registry.put(item, new BlockBehaviour((BlockItem) item));
-		}
+		Registry.BLOCK.forEach(block -> {
+			if(!blacklist.contains(Objects.toString(block.getRegistryName())))
+			{
+				Item item = block.asItem();
+				if(item instanceof BlockItem && !registry.containsKey(item))
+					registry.put(item, new BlockBehaviour((BlockItem) item));
+			}
+		});
 	}
 
 	public static class BlockBehaviour extends OptionalDispenseBehavior {

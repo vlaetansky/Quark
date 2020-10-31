@@ -9,13 +9,14 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
-import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.handler.BrewingHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.security.InvalidParameterException;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -68,23 +69,27 @@ public class PotionIngredient extends Ingredient {
         @Nonnull
         @Override
         public PotionIngredient parse(@Nonnull PacketBuffer buffer) {
-            Item item = ForgeRegistries.ITEMS.getValue(buffer.readResourceLocation());
-            Potion potion = ForgeRegistries.POTION_TYPES.getValue(buffer.readResourceLocation());
+            ResourceLocation itemName = buffer.readResourceLocation();
+            Item item = Registry.ITEM.getOptional(itemName).orElseThrow(() -> new InvalidParameterException("Could not find item with registry name '" + itemName + "'"));
+            ResourceLocation potionName = buffer.readResourceLocation();
+            Potion potion = Registry.POTION.getOptional(potionName).orElseThrow(() -> new InvalidParameterException("Could not find potion with registry name '" + potionName + "'"));
             return new PotionIngredient(item, potion);
         }
 
         @Nonnull
         @Override
         public PotionIngredient parse(@Nonnull JsonObject json) {
-            Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(json.getAsJsonPrimitive("item").getAsString()));
-            Potion potion = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(json.getAsJsonPrimitive("item").getAsString()));
+            ResourceLocation itemName = new ResourceLocation(json.getAsJsonPrimitive("item").getAsString());
+            Item item = Registry.ITEM.getOptional(itemName).orElseThrow(() -> new InvalidParameterException("Could not find item with registry name '" + itemName + "'"));
+            ResourceLocation potionName = new ResourceLocation(json.getAsJsonPrimitive("item").getAsString());
+            Potion potion = Registry.POTION.getOptional(potionName).orElseThrow(() -> new InvalidParameterException("Could not find potion with registry name '" + potionName + "'"));
             return new PotionIngredient(item, potion);
         }
 
         @Override
         public void write(@Nonnull PacketBuffer buffer, @Nonnull PotionIngredient ingredient) {
-            buffer.writeString(Objects.toString(ingredient.item.getRegistryName()));
-            buffer.writeString(Objects.toString(ingredient.potion.getRegistryName()));
+            buffer.writeString(Objects.toString(Registry.ITEM.getId(ingredient.item)));
+            buffer.writeString(Objects.toString(Registry.POTION.getId(ingredient.potion)));
         }
     }
 }

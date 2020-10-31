@@ -11,6 +11,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -156,7 +157,7 @@ public class ExclusionRecipe implements ICraftingRecipe {
                     excludedRecipes.add(loc);
             }
 
-            IRecipeSerializer serializer = ForgeRegistries.RECIPE_SERIALIZERS.getValue(new ResourceLocation(trueType));
+            IRecipeSerializer serializer = Registry.RECIPE_SERIALIZER.getOrDefault(new ResourceLocation(trueType));
             if (serializer == null)
                 throw new JsonSyntaxException("Invalid or unsupported recipe type '" + trueType + "'");
             IRecipe parent = serializer.read(recipeId, json);
@@ -180,9 +181,7 @@ public class ExclusionRecipe implements ICraftingRecipe {
             }
             String trueType = buffer.readString(32767);
 
-            IRecipeSerializer serializer = ForgeRegistries.RECIPE_SERIALIZERS.getValue(new ResourceLocation(trueType));
-            if (serializer == null)
-                throw new IllegalArgumentException("Invalid or unsupported recipe type '" + trueType + "'");
+            IRecipeSerializer serializer = Registry.RECIPE_SERIALIZER.getOptional(new ResourceLocation(trueType)).orElseThrow(() -> new IllegalArgumentException("Invalid or unsupported recipe type '" + trueType + "'"));
             IRecipe parent = serializer.read(recipeId, buffer);
             if (!(parent instanceof ICraftingRecipe))
                 throw new IllegalArgumentException("Type '" + trueType + "' is not a crafting recipe");
