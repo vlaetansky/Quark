@@ -45,8 +45,9 @@ public class FairyRingsModule extends Module {
 			if (b.isPresent()) {
 				ores.add(b.get().getDefaultState());
 			}
-			else
+			else {
 				new IllegalArgumentException("Block " + s + " does not exist!").printStackTrace();
+			}
 		}
 	}
 
