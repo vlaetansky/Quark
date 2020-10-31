@@ -147,11 +147,11 @@ public class EnchantmentMatrix {
 				int valueAdded = getValue(enchantment, enchantLevel);
 				int currentValue = totalValue.getOrDefault(enchantment, 0);
 				
-				if (valueAdded + currentValue <= getValue(enchantment, enchantment.getMaxLevel()) + getMaxXP(enchantment, enchantment.getMaxLevel())) {
-					EnchantmentDataWrapper wrapper = new EnchantmentDataWrapper(enchantment, enchantLevel);
-					wrapper.normalizeRarity(influences, marked);
-					validEnchants.add(wrapper);
-				}
+				if (valueAdded + currentValue > getValue(enchantment, enchantment.getMaxLevel()) + getMaxXP(enchantment, enchantment.getMaxLevel()))
+					return;
+				EnchantmentDataWrapper wrapper = new EnchantmentDataWrapper(enchantment, enchantLevel);
+				wrapper.normalizeRarity(influences, marked);
+				validEnchants.add(wrapper);
 			}
 		});
 
