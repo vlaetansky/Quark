@@ -240,7 +240,7 @@ public class EnchantedBookTooltips {
 			String[] tokens = s.split("=");
 			String left = tokens[0];
 			String right = tokens[1];
-			
+
 			Optional<Enchantment> ench = Registry.ENCHANTMENT.getOptional(new ResourceLocation(left));
 			if(ench.isPresent()) {
 				tokens = right.split(",");

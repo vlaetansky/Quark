@@ -143,7 +143,7 @@ public class EnchantmentMatrix {
 						}
 					}
 				}
-				
+
 				int valueAdded = getValue(enchantment, enchantLevel);
 				int currentValue = totalValue.getOrDefault(enchantment, 0);
 				
