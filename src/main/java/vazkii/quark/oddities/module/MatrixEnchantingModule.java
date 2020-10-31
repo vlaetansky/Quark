@@ -180,8 +180,9 @@ public class MatrixEnchantingModule extends Module {
 				if (ench.isPresent()) {
 					list.add(ench.get());
 				}
-				else
+				else {
 					Quark.LOG.error("Matrix Enchanting Influencing: Enchantment " + enchStr + " does not exist!");
+				}
 			}
 		}
 	}
