@@ -34,8 +34,9 @@ public abstract class ClusterBasedGenerator extends MultiChunkFeatureGenerator {
 		final IGenerationContext context = createContext(src, generator, random, chunkCorner, world);
 		
 		forEachChunkBlock(chunkCorner, shape.getLowerBound(), shape.getUpperBound(), (pos) -> {
-			if(shape.isInside(pos))
-				context.consume(pos);
+			double noise = shape.noiseDiff(pos);
+			if(noise > 0)
+				context.consume(pos, noise);
 		});
 		
 		if(context instanceof IFinishableContext)
@@ -45,7 +46,7 @@ public abstract class ClusterBasedGenerator extends MultiChunkFeatureGenerator {
 	public abstract IGenerationContext createContext(BlockPos src, ChunkGenerator generator, Random random, BlockPos chunkCorner, WorldGenRegion world);
 	
 	public static abstract interface IGenerationContext {
-		public void consume(BlockPos pos);
+		public void consume(BlockPos pos, double noise);
 	}
 	
 	public static abstract interface IFinishableContext extends IGenerationContext {
