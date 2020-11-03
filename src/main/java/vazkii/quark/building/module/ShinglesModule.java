@@ -2,7 +2,6 @@ package vazkii.quark.building.module;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemGroup;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.VariantHandler;
@@ -17,6 +16,7 @@ public class ShinglesModule extends Module {
 	public void construct() {
 		VariantHandler.addSlabAndStairs(new QuarkBlock("shingles", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.TERRACOTTA)));
 
+		VariantHandler.addSlabAndStairs(new QuarkBlock("white_shingles", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.WHITE_TERRACOTTA)));
 		VariantHandler.addSlabAndStairs(new QuarkBlock("orange_shingles", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.ORANGE_TERRACOTTA)));
 		VariantHandler.addSlabAndStairs(new QuarkBlock("magenta_shingles", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.MAGENTA_TERRACOTTA)));
 		VariantHandler.addSlabAndStairs(new QuarkBlock("light_blue_shingles", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.LIGHT_BLUE_TERRACOTTA)));
