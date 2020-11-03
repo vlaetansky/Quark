@@ -17,8 +17,21 @@ public class ShinglesModule extends Module {
 	public void construct() {
 		VariantHandler.addSlabAndStairs(new QuarkBlock("shingles", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.TERRACOTTA)));
 
-		for(DyeColor dye : DyeColor.values())
-			VariantHandler.addSlabAndStairs(new QuarkBlock(dye.getTranslationKey() + "_shingles", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.TERRACOTTA)));
+		VariantHandler.addSlabAndStairs(new QuarkBlock("orange_shingles", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.ORANGE_TERRACOTTA)));
+		VariantHandler.addSlabAndStairs(new QuarkBlock("magenta_shingles", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.MAGENTA_TERRACOTTA)));
+		VariantHandler.addSlabAndStairs(new QuarkBlock("light_blue_shingles", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.LIGHT_BLUE_TERRACOTTA)));
+		VariantHandler.addSlabAndStairs(new QuarkBlock("yellow_shingles", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.YELLOW_TERRACOTTA)));
+		VariantHandler.addSlabAndStairs(new QuarkBlock("lime_shingles", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.LIME_TERRACOTTA)));
+		VariantHandler.addSlabAndStairs(new QuarkBlock("pink_shingles", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.PINK_TERRACOTTA)));
+		VariantHandler.addSlabAndStairs(new QuarkBlock("gray_shingles", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.GRAY_TERRACOTTA)));
+		VariantHandler.addSlabAndStairs(new QuarkBlock("light_gray_shingles", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.LIGHT_GRAY_TERRACOTTA)));
+		VariantHandler.addSlabAndStairs(new QuarkBlock("cyan_shingles", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.CYAN_TERRACOTTA)));
+		VariantHandler.addSlabAndStairs(new QuarkBlock("purple_shingles", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.PURPLE_TERRACOTTA)));
+		VariantHandler.addSlabAndStairs(new QuarkBlock("blue_shingles", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.BLUE_TERRACOTTA)));
+		VariantHandler.addSlabAndStairs(new QuarkBlock("brown_shingles", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.BROWN_TERRACOTTA)));
+		VariantHandler.addSlabAndStairs(new QuarkBlock("green_shingles", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.GREEN_TERRACOTTA)));
+		VariantHandler.addSlabAndStairs(new QuarkBlock("red_shingles", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.RED_TERRACOTTA)));
+		VariantHandler.addSlabAndStairs(new QuarkBlock("black_shingles", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.BLACK_TERRACOTTA)));
 	}
 
 }
