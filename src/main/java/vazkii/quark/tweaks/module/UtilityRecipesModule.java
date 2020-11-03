@@ -42,8 +42,6 @@ public class UtilityRecipesModule extends Module {
     @Config(description = "Can cookies, paper, and bread be crafted in a 2x2 crafting table?", flag = "bent_recipes")
     public static boolean bentRecipes = true;
 
-
-
     @Config(description = "Can Rotten Flesh and Poisonous Potatoes be composted?")
     public static boolean compostableToxins = true;
 
@@ -52,6 +50,9 @@ public class UtilityRecipesModule extends Module {
 
     @Config(description = "Can torches can be used as fuel in furnaces?")
     public static boolean torchesBurn = true;
+    
+    @Config(description = "Can bones be smelted down to bone meal?", flag = "bone_meal_utility")
+    public static boolean boneMealUtility = true;
 
     @Override
     public void configChanged() {
