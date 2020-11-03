@@ -187,6 +187,7 @@ jar {
     exclude "**/*.psd"
     exclude "**/*.exe"
     exclude "**/unused"
+    exclude "**/genscripts"
 }
 
 //artifacts {
