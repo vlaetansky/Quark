@@ -121,7 +121,8 @@ public class ReacharoundPlacingModule extends Module {
 			Hand hand = event.getHand();
 
 			ItemUseContext context = new ItemUseContext(player, hand, new BlockRayTraceResult(new Vector3d(0.5F, 1F, 0.5F), dir, pos, false));
-			ActionResultType res = stack.getItem().onItemUse(context);
+			boolean remote = player.world.isRemote;
+			ActionResultType res = remote ? ActionResultType.SUCCESS : stack.getItem().onItemUse(context);
 
 			if (res != ActionResultType.PASS) {
 				event.setCanceled(true);
@@ -130,7 +131,7 @@ public class ReacharoundPlacingModule extends Module {
 				if(res == ActionResultType.SUCCESS)
 					player.swingArm(hand);
 
-				if (player.isCreative() && stack.getCount() < count)
+				if(player.isCreative() && stack.getCount() < count && !remote)
 					stack.setCount(count);
 			}
 		}
