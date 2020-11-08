@@ -447,7 +447,7 @@ public class EnchantmentMatrix {
 		public void readFromNBT(CompoundNBT cmp) {
 			color = cmp.getInt(TAG_COLOR);
 			type = cmp.getInt(TAG_TYPE);
-			enchant = Registry.ENCHANTMENT.getOptional(new ResourceLocation(cmp.getString(TAG_ENCHANTMENT))).get();
+			enchant = Registry.ENCHANTMENT.getOrDefault(new ResourceLocation(cmp.getString(TAG_ENCHANTMENT)));
 			level = cmp.getInt(TAG_LEVEL);
 			x = cmp.getInt(TAG_X);
 			y = cmp.getInt(TAG_Y);
