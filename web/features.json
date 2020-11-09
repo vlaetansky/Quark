@@ -456,6 +456,14 @@
 			"desc": [
 				"The tip of a vine can now be burnt with a Flint and Steel. When you do so, the vine will no longer be able to grow."
 			]
+		},
+		{
+			"name": "Wooden Posts",
+			"image": "wooden-posts.jpg",
+			"versions": "1.16.3+",
+			"desc": [
+				"Wooden fences can now be crafted into Posts. Posts, like you can see in the image, are vertical styled blocks that don't connect to other blocks, allowing for new building patterns."
+			]
 		}
 	],
 	"client": [
