@@ -5,11 +5,11 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.item.*;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.Module;
 import vazkii.quark.tools.module.AncientTomesModule;
@@ -55,14 +55,14 @@ public class AncientTomeItem extends QuarkItem {
 	public void fillItemGroup(@Nonnull ItemGroup group, @Nonnull NonNullList<ItemStack> items) {
 		if (isEnabled() || group == ItemGroup.SEARCH) {
 			if (group == ItemGroup.SEARCH || group.getRelevantEnchantmentTypes().length != 0) {
-				for (Enchantment ench : ForgeRegistries.ENCHANTMENTS) {
+				Registry.ENCHANTMENT.forEach(ench -> {
 					if ((group == ItemGroup.SEARCH && ench.getMaxLevel() != 1) ||
 							AncientTomesModule.validEnchants.contains(ench)) {
 						if ((group == ItemGroup.SEARCH && ench.type != null) || group.hasRelevantEnchantmentType(ench.type)) {
 							items.add(getEnchantedItemStack(new EnchantmentData(ench, ench.getMaxLevel())));
 						}
 					}
-				}
+				});
 			}
 		}
 	}

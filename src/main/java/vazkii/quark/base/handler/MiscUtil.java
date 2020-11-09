@@ -37,6 +37,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.LightType;
@@ -49,9 +50,6 @@ import net.minecraftforge.client.event.GuiScreenEvent.KeyboardKeyPressedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 import vazkii.quark.base.Quark;
 
 @EventBusSubscriber(modid = Quark.MOD_ID)
@@ -155,10 +153,7 @@ public class MiscUtil {
 	public static void initializeEnchantmentList(Iterable<String> enchantNames, List<Enchantment> enchants) {
 		enchants.clear();
 		for(String s : enchantNames) {
-			ResourceLocation r = new ResourceLocation(s);
-			Enchantment e = ForgeRegistries.ENCHANTMENTS.getValue(r);
-			if(e != null)
-				enchants.add(e);
+			Registry.ENCHANTMENT.getOptional(new ResourceLocation(s)).ifPresent(enchants::add);
 		}
 	}
 
@@ -195,8 +190,8 @@ public class MiscUtil {
 		return state.getMaterial() == Material.ROCK && state.canEntitySpawn(world, below, type);
 	}
 
-	public static <T extends IForgeRegistryEntry<T>> List<T> massRegistryGet(Collection<String> coll, IForgeRegistry<T> registry) {
-		return coll.stream().map(ResourceLocation::new).map(registry::getValue).filter(Predicates.notNull()).collect(Collectors.toList());
+	public static <T> List<T> massRegistryGet(Collection<String> coll, Registry<T> registry) {
+		return coll.stream().map(ResourceLocation::new).map(name -> registry.getOptional(name).get()).filter(Predicates.notNull()).collect(Collectors.toList());
 	}
 
 	public static void syncTE(TileEntity tile) {

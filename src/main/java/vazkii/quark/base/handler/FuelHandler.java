@@ -7,10 +7,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
+import net.minecraft.util.registry.Registry;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.Quark;
 import vazkii.quark.building.block.VerticalSlabBlock;
 
@@ -35,12 +35,11 @@ public class FuelHandler {
 	}
 
 	public static void addAllWoods() {
-		ForgeRegistries.BLOCKS.getKeys()
-		.stream()
-		.filter(r -> r.getNamespace().equals(Quark.MOD_ID))
-		.map(ForgeRegistries.BLOCKS::getValue)
-		.filter(b -> b.material == Material.WOOD)
-		.forEach(FuelHandler::addWood);
+		Registry.BLOCK.forEach(block -> {
+			if (Registry.BLOCK.getKey(block).getNamespace().equals(Quark.MOD_ID) && block.material == Material.WOOD) {
+				addWood(block);
+			}
+		});
 	}
 
 	@SubscribeEvent

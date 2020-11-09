@@ -6,10 +6,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IRegistryDelegate;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.Module;
@@ -61,13 +61,13 @@ public class GreenerGrassModule extends Module {
 		Map<IRegistryDelegate<Block>, IBlockColor> map = ObfuscationReflectionHelper.getPrivateValue(BlockColors.class, colors, "field_186725_a"); // colors.colors;
 
 		for(String id : ids) {
-			Block b = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(id));
-			if(b == null || b.delegate == null)
-				return;
-			
-			IBlockColor color = map.get(b.delegate);
-			if(color != null)
-				colors.register(getGreenerColor(color, leaves), b);
+			Registry.BLOCK.getOptional(new ResourceLocation(id)).ifPresent(b -> {
+				if (b.delegate == null)
+					return;
+				IBlockColor color = map.get(b.delegate);
+				if(color != null)
+					colors.register(getGreenerColor(color, leaves), b);
+			});
 		}
 	}
 

@@ -9,9 +9,9 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
-import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.handler.BrewingHandler;
 
 import javax.annotation.Nonnull;
@@ -68,23 +68,23 @@ public class PotionIngredient extends Ingredient {
         @Nonnull
         @Override
         public PotionIngredient parse(@Nonnull PacketBuffer buffer) {
-            Item item = ForgeRegistries.ITEMS.getValue(buffer.readResourceLocation());
-            Potion potion = ForgeRegistries.POTION_TYPES.getValue(buffer.readResourceLocation());
+            Item item = Registry.ITEM.getOptional(buffer.readResourceLocation()).get();
+            Potion potion = Registry.POTION.getOptional(buffer.readResourceLocation()).get();
             return new PotionIngredient(item, potion);
         }
 
         @Nonnull
         @Override
         public PotionIngredient parse(@Nonnull JsonObject json) {
-            Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(json.getAsJsonPrimitive("item").getAsString()));
-            Potion potion = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(json.getAsJsonPrimitive("item").getAsString()));
+            Item item = Registry.ITEM.getOptional(new ResourceLocation(json.getAsJsonPrimitive("item").getAsString())).get();
+            Potion potion = Registry.POTION.getOptional(new ResourceLocation(json.getAsJsonPrimitive("item").getAsString())).get();
             return new PotionIngredient(item, potion);
         }
 
         @Override
         public void write(@Nonnull PacketBuffer buffer, @Nonnull PotionIngredient ingredient) {
-            buffer.writeString(Objects.toString(ingredient.item.getRegistryName()));
-            buffer.writeString(Objects.toString(ingredient.potion.getRegistryName()));
+            buffer.writeString(Objects.toString(Registry.ITEM.getId(ingredient.item)));
+            buffer.writeString(Objects.toString(Registry.POTION.getId(ingredient.potion)));
         }
     }
 }
