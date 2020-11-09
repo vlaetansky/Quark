@@ -9,6 +9,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;
@@ -16,7 +17,6 @@ import net.minecraft.world.gen.GenerationStage.Decoration;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.OreFeatureConfig;
-import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.Module;
 import vazkii.quark.base.module.ModuleCategory;
@@ -98,22 +98,22 @@ public class BigStoneClustersModule extends Module {
 			}
 			
 			String dimFinal = dimension;
-			Block blockObj = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(bname));
-			
-			if(blockObj != null && blockObj != Blocks.AIR) {
-				if(dimension == null)
-					blockReplacePredicate = blockReplacePredicate.or((w, b) -> blockObj == b);
-				else {
-					blockReplacePredicate = blockReplacePredicate.or((w, b) -> {
-						if(blockObj != b)
-							return false;
-						if(w == null)
-							return false;
-
-						return ((World) w).getDimensionKey().getLocation().toString().equals(dimFinal);
-					});
+			Registry.BLOCK.getOptional(new ResourceLocation(bname)).ifPresent(blockObj -> {
+				if(blockObj != Blocks.AIR) {
+					if(dimFinal == null)
+						blockReplacePredicate = blockReplacePredicate.or((w, b) -> blockObj == b);
+					else {
+						blockReplacePredicate = blockReplacePredicate.or((w, b) -> {
+							if(blockObj != b)
+								return false;
+							if(w == null)
+								return false;
+							
+							return w.getDimensionKey().getLocation().toString().equals(dimFinal);
+						});
+					}
 				}
-			}
+			});
 		}
 	}
 	

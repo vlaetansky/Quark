@@ -35,6 +35,7 @@ import net.minecraft.item.ToolItem;
 import net.minecraft.item.TridentItem;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -306,9 +307,7 @@ public final class SortingHandler {
 				else if (o instanceof ItemStack)
 					itemList.add(((ItemStack) o).getItem());
 				else if (o instanceof String) {
-					Item i = ForgeRegistries.ITEMS.getValue(new ResourceLocation((String) o));
-					if (i != null)
-						itemList.add(i);
+					Registry.ITEM.getOptional(new ResourceLocation((String) o)).ifPresent(itemList::add);
 				}
 			}
 

@@ -22,7 +22,6 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
@@ -243,8 +242,7 @@ public class AncientTomesModule extends Module {
 
 		for(int i = 0; i < listnbt.size(); ++i) {
 			CompoundNBT compoundnbt = listnbt.getCompound(i);
-			Enchantment e = ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.tryCreate(compoundnbt.getString("id")));
-			map.put(e, compoundnbt.getInt("lvl"));
+			Registry.ENCHANTMENT.getOptional(ResourceLocation.tryCreate(compoundnbt.getString("id"))).ifPresent(e -> map.put(e, compoundnbt.getInt("lvl")));
 		}
 
 		return map;

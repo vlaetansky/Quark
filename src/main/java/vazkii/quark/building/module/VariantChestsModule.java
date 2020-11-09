@@ -26,6 +26,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.gen.feature.jigsaw.JigsawPiece;
 import net.minecraft.world.gen.feature.jigsaw.LegacySingleJigsawPiece;
 import net.minecraft.world.gen.feature.structure.AbstractVillagePiece;
@@ -40,7 +41,6 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
@@ -137,9 +137,11 @@ public class VariantChestsModule extends Module {
 				String left = toks[0];
 				String right = toks[1];
 				
-				Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(right));
-				if(block != null && block != Blocks.AIR)
-					chestMappings.put(left, block);
+				Registry.BLOCK.getOptional(new ResourceLocation(right)).ifPresent(block -> {
+					if (block != Blocks.AIR) {
+						chestMappings.put(left, block);
+					}
+				});
 			}
 		}
 	}

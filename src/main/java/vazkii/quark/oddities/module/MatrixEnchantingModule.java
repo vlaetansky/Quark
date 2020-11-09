@@ -1,9 +1,6 @@
 package vazkii.quark.oddities.module;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.google.common.collect.Lists;
 
@@ -16,6 +13,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -24,7 +22,6 @@ import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
@@ -178,12 +175,14 @@ public class MatrixEnchantingModule extends Module {
 
 			for (String enchStr : tokens) {
 				enchStr = enchStr.trim();
-
-				Enchantment ench = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(enchStr));
-				if (ench == null)
+				
+				Optional<Enchantment> ench = Registry.ENCHANTMENT.getOptional(new ResourceLocation(enchStr));
+				if (ench.isPresent()) {
+					list.add(ench.get());
+				}
+				else {
 					Quark.LOG.error("Matrix Enchanting Influencing: Enchantment " + enchStr + " does not exist!");
-				else
-					list.add(ench);
+				}
 			}
 		}
 	}
