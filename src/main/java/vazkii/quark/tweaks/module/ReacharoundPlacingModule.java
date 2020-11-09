@@ -17,10 +17,13 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.tags.ITag;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext.BlockMode;
@@ -35,6 +38,7 @@ import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.RayTraceHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.Module;
@@ -60,6 +64,13 @@ public class ReacharoundPlacingModule extends Module {
 
 	private Pair<BlockPos, Direction> currentTarget;
 	private int ticksDisplayed;
+	
+    public static ITag<Item> reacharoundTag;
+
+    @Override
+    public void setup() {
+        reacharoundTag = ItemTags.createOptional(new ResourceLocation(Quark.MOD_ID, "reacharound_able"));
+    }
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
@@ -199,7 +210,7 @@ public class ReacharoundPlacingModule extends Module {
 
 	private boolean validateReacharoundStack(ItemStack stack) {
 		Item item = stack.getItem();
-		return item instanceof BlockItem || whitelist.contains(Objects.toString(item.getRegistryName()));
+		return item instanceof BlockItem || item.isIn(reacharoundTag) || whitelist.contains(Objects.toString(item.getRegistryName()));
 	}
 
 }
