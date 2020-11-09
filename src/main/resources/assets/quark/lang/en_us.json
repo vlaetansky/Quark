@@ -726,7 +726,7 @@
 	"block.quark.limestone_wall": "Limestone Wall",
 	"block.quark.marble_wall": "Marble Wall",
 	"block.quark.slate_wall": "Slate Wall",
-	"block.quark.weather_sensor": "Weather Sensor",
+	"block.quark.weather_sensor": "Weather Detector",
 	"block.quark.redstone_inductor": "Redstone Inductor",
 	"block.quark.redstone_randomizer": "Redstone Randomizer",
 	"block.quark.stone_speleothem": "Stone Speleothem",
