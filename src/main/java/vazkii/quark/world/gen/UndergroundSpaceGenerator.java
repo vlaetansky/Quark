@@ -75,9 +75,6 @@ public class UndergroundSpaceGenerator extends ClusterBasedGenerator {
 				BlockState neighborBlock = world.getBlockState(mutable);
 				if(neighborBlock.getMaterial() == Material.LAVA){
 					world.setBlockState(mutable, state, 3);
-
-					// Uncomment this if you rather have lava tick update instead of being walled in.
-					world.getPendingFluidTicks().scheduleTick(src, neighborBlock.getFluidState().getFluid(), 0);
 				}
 			}
 		}
