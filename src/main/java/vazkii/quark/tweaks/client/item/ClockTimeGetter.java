@@ -53,7 +53,7 @@ public class ClockTimeGetter {
 				double angle;
 
 				if (worldIn.getDimensionType().isNatural())
-					angle = worldIn.getCelestialAngleRadians(1.0F);
+					angle = worldIn.func_242415_f(1F); // getCelestrialAngleByTime
 				else
 					angle = Math.random();
 
