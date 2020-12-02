@@ -170,7 +170,6 @@ public class ChestSearchingModule extends QuarkModule {
 						int x = guiLeft + s.xPos;
 						int y = guiTop + s.yPos;
 
-						RenderSystem.disableDepthTest();
 						Screen.fill(matrix, x, y, x + 16, y + 16, 0xAA000000);
 					} else matched++;
 				}
