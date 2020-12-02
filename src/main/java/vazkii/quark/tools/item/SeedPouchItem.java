@@ -5,7 +5,6 @@ import java.util.function.Predicate;
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -19,16 +18,16 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.util.ItemNBTHelper;
+import vazkii.quark.api.ITrowelable;
 import vazkii.quark.api.IUsageTickerOverride;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.tools.module.SeedPouchModule;
 
-public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride {
+public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, ITrowelable {
 
 	public static final String TAG_STORED_ITEM = "storedItem";
 	public static final String TAG_COUNT = "itemCount";

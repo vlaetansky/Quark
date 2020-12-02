@@ -19,6 +19,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockRayTraceResult;
 import vazkii.arl.util.ItemNBTHelper;
+import vazkii.quark.api.ITrowelable;
 import vazkii.quark.api.IUsageTickerOverride;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.item.QuarkItem;
@@ -45,7 +46,7 @@ public class TrowelItem extends QuarkItem implements IUsageTickerOverride {
 		List<ItemStack> targets = new ArrayList<>();
 		for(int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
 			ItemStack stack = player.inventory.getStackInSlot(i);
-			if(!stack.isEmpty() && stack.getItem() instanceof BlockItem)
+			if(isValidTarget(stack))
 				targets.add(stack);
 		}
 		
@@ -74,13 +75,18 @@ public class TrowelItem extends QuarkItem implements IUsageTickerOverride {
 	}
 	
 	private ActionResultType placeBlock(ItemStack itemstack, ItemUseContext context) {
-		if(itemstack.getItem() instanceof BlockItem) {
-			BlockItem item = (BlockItem) itemstack.getItem();
+		if(isValidTarget(itemstack)) {
+			Item item = itemstack.getItem();
 			BlockItemUseContext newContext = new TrowelBlockItemUseContext(context, itemstack);
-			return item.tryPlace(newContext);
+			return item.onItemUse(newContext);
 		}
 
 		return ActionResultType.PASS;
+	}
+	
+	private static boolean isValidTarget(ItemStack stack) {
+		Item item = stack.getItem();
+		return !stack.isEmpty() && (item instanceof BlockItem || item instanceof ITrowelable);
 	}
 
 	public static ItemStack getLastStack(ItemStack stack) {
