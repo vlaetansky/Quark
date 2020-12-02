@@ -25,7 +25,7 @@ public class SimilarBlockTypeHandler {
     }
 
     public static boolean isShulkerBox(ItemStack stack) {
-        return !stack.isEmpty() && isShulkerBox(stack.getItem().getRegistryName());
+        return !stack.isEmpty() && stack.getMaxStackSize() == 1 && isShulkerBox(stack.getItem().getRegistryName());
     }
 
     public static boolean isShulkerBox(ResourceLocation loc) {
