@@ -19,13 +19,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.world.module.underground.GlowshroomUndergroundBiomeModule;
 
 public class HugeGlowshroomBlock extends HugeMushroomBlock {
 
-	private final Module module;
+	private final QuarkModule module;
 
-	public HugeGlowshroomBlock(String name, Module module) {
+	public HugeGlowshroomBlock(String name, QuarkModule module) {
 		super(Block.Properties.from(Blocks.RED_MUSHROOM_BLOCK)
 				.setLightLevel(b -> 14)
 				.tickRandomly()
