@@ -8,8 +8,11 @@ import com.google.common.collect.ImmutableSet;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.ItemStack;
@@ -18,16 +21,20 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
+import vazkii.quark.base.network.QuarkNetwork;
+import vazkii.quark.base.network.message.WithdrawSeedsMessage;
 import vazkii.quark.tools.capability.SeedPouchDropIn;
 import vazkii.quark.tools.item.SeedPouchItem;
 
@@ -39,6 +46,8 @@ public class SeedPouchModule extends QuarkModule {
 	public static Item seed_pouch;
 	
 	@Config public static int maxItems = 640;
+	
+	private static boolean shouldCancelNextRelease = false;
 	
 	@Override
 	public void construct() {
@@ -55,6 +64,49 @@ public class SeedPouchModule extends QuarkModule {
         if(event.getObject().getItem() == seed_pouch)
             event.addCapability(SEED_POUCH_CAP, new SeedPouchDropIn());
     }
+    
+	@SubscribeEvent 
+	@OnlyIn(Dist.CLIENT)
+	public void onRightClick(GuiScreenEvent.MouseClickedEvent.Pre event) {
+		Minecraft mc = Minecraft.getInstance();
+		Screen gui = mc.currentScreen;
+		if(gui instanceof ContainerScreen && event.getButton() == 1) {
+			ContainerScreen<?> container = (ContainerScreen<?>) gui;
+			Slot under = container.getSlotUnderMouse();
+			if(under != null) {
+				ItemStack underStack = under.getStack();
+				ItemStack held = mc.player.inventory.getItemStack();
+
+				if(underStack.getItem() == seed_pouch) {
+	    			Pair<ItemStack, Integer> contents = SeedPouchItem.getContents(underStack);
+	    			if(contents != null) {
+	    				ItemStack seed = contents.getLeft();
+	    				if(held.isEmpty()) {
+	    					int takeOut = Math.min(seed.getMaxStackSize(), contents.getRight());
+	    					
+	    					ItemStack result = seed.copy();
+	    					result.setCount(takeOut);
+	    					mc.player.inventory.setItemStack(result);
+	    					
+	    					QuarkNetwork.sendToServer(new WithdrawSeedsMessage(under.slotNumber));
+	    					
+	    					shouldCancelNextRelease = true;
+	    					event.setCanceled(true);
+	    				}
+	    			}
+				}
+			}
+		}
+	}
+	
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
+	@OnlyIn(Dist.CLIENT)
+	public void onRightClickRelease(GuiScreenEvent.MouseReleasedEvent.Pre event) {
+		if(shouldCancelNextRelease) {
+			shouldCancelNextRelease = false;
+			event.setCanceled(true);
+		}
+	}
     
     @SubscribeEvent
     public void onItemPickup(EntityItemPickupEvent event) {

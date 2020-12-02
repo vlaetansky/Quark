@@ -5,21 +5,21 @@ import java.util.function.Predicate;
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.util.ItemNBTHelper;
@@ -40,7 +40,7 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride {
 				.maxDamage(SeedPouchModule.maxItems + 1)
 				.group(ItemGroup.TOOLS));
 	}
-
+	
     @OnlyIn(Dist.CLIENT)
     public static float itemFraction(ItemStack stack, ClientWorld world, LivingEntity entityIn) {
 		Pair<ItemStack, Integer> contents = getContents(stack);
@@ -49,8 +49,8 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride {
 		
 		return (float) contents.getRight() / (float) SeedPouchModule.maxItems;
     }
-	
-	public static Pair<ItemStack, Integer> getContents(ItemStack stack) {
+
+    public static Pair<ItemStack, Integer> getContents(ItemStack stack) {
 		CompoundNBT nbt = ItemNBTHelper.getCompound(stack, TAG_STORED_ITEM, true);
 		if(nbt == null)
 			return null;
@@ -154,7 +154,6 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride {
 		return stack;
 	}
 	
-
 	@Override
 	public int getUsageTickerCountForItem(ItemStack stack, Predicate<ItemStack> target) {
 		Pair<ItemStack, Integer> contents = getContents(stack);
@@ -173,5 +172,4 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride {
 
 	}
 
-	
 }

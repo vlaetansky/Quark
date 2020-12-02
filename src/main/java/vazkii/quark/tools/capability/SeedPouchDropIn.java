@@ -25,9 +25,10 @@ public class SeedPouchDropIn extends AbstractDropIn {
 	public ItemStack dropItemIn(PlayerEntity player, ItemStack stack, ItemStack incoming) {
 		Pair<ItemStack, Integer> contents = SeedPouchItem.getContents(stack);
 
-		if(contents == null)
+		if(contents == null) {
 			SeedPouchItem.setItemStack(stack, incoming);
-		else {
+			incoming.setCount(0);
+		} else {
 			int curr = contents.getRight();
 			int missing = SeedPouchModule.maxItems - curr;
 			int incCount = incoming.getCount();
