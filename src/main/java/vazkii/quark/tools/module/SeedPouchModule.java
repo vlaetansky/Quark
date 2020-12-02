@@ -4,22 +4,23 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.collect.ImmutableSet;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.Quark;
@@ -44,10 +45,46 @@ public class SeedPouchModule extends QuarkModule {
 		seed_pouch = new SeedPouchItem(this);
 	}
 	
+    @OnlyIn(Dist.CLIENT)
+    public void clientSetup() {
+		ItemModelsProperties.registerProperty(seed_pouch, new ResourceLocation("pouch_items"), SeedPouchItem::itemFraction);
+    }
+	
     @SubscribeEvent
     public void onAttachCapability(AttachCapabilitiesEvent<ItemStack> event) {
         if(event.getObject().getItem() == seed_pouch)
             event.addCapability(SEED_POUCH_CAP, new SeedPouchDropIn());
+    }
+    
+    @SubscribeEvent
+    public void onItemPickup(EntityItemPickupEvent event) {
+    	PlayerEntity player = event.getPlayer();
+    	ItemStack stack = event.getItem().getItem();
+    	
+    	ItemStack main = player.getHeldItemMainhand();
+    	ItemStack off = player.getHeldItemOffhand();
+    	
+    	ImmutableSet<ItemStack> stacks = ImmutableSet.of(main, off);
+    	for(ItemStack heldStack : stacks)
+    		if(heldStack.getItem() == seed_pouch) {
+    			Pair<ItemStack, Integer> contents = SeedPouchItem.getContents(heldStack);
+    			if(contents != null) {
+    				ItemStack pouchStack = contents.getLeft();
+    				if(ItemStack.areItemsEqual(pouchStack, stack)) {
+    					int curr = contents.getRight();
+    					int missing = maxItems - curr;
+    					
+    					int count = stack.getCount();
+    					int toAdd = Math.min(missing, count);
+    					
+    					stack.setCount(count - toAdd);
+    					SeedPouchItem.setCount(heldStack, curr + toAdd);
+    					
+    					if(stack.getCount() == 0)
+    						break;
+    				}
+    			}
+    		}
     }
     
     @SubscribeEvent
@@ -111,12 +148,4 @@ public class SeedPouchModule extends QuarkModule {
 		}
     }
     
-    @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
-	public void onRenderHUD(RenderGameOverlayEvent.Pre event) {
-    	if(event.getType() == ElementType.POTION_ICONS) {
-    		
-    	}
-    }
-	
 }

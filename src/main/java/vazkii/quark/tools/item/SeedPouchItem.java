@@ -4,6 +4,8 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -18,6 +20,8 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.api.IUsageTickerOverride;
 import vazkii.quark.base.item.QuarkItem;
@@ -37,6 +41,15 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride {
 				.group(ItemGroup.TOOLS));
 	}
 
+    @OnlyIn(Dist.CLIENT)
+    public static float itemFraction(ItemStack stack, ClientWorld world, LivingEntity entityIn) {
+		Pair<ItemStack, Integer> contents = getContents(stack);
+		if(contents == null)
+			return 0;
+		
+		return (float) contents.getRight() / (float) SeedPouchModule.maxItems;
+    }
+	
 	public static Pair<ItemStack, Integer> getContents(ItemStack stack) {
 		CompoundNBT nbt = ItemNBTHelper.getCompound(stack, TAG_STORED_ITEM, true);
 		if(nbt == null)
@@ -131,26 +144,7 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride {
 		
 		return res;
 	}
-	
-	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-		super.fillItemGroup(group, items);
-		
-		if(isEnabled() || group == ItemGroup.SEARCH) {
-			items.add(makeOf(Items.WHEAT_SEEDS));
-			items.add(makeOf(Items.BEETROOT_SEEDS));
-			items.add(makeOf(Items.MELON_SEEDS));
-			items.add(makeOf(Items.PUMPKIN_SEEDS));
-		}
-	}
-	
-	private ItemStack makeOf(Item seed) {
-		ItemStack stack = new ItemStack(SeedPouchModule.seed_pouch);
-		setItemStack(stack, new ItemStack(seed));
-		setCount(stack, SeedPouchModule.maxItems);
-		return stack;
-	}
-	
+
 	@Override
 	public ItemStack getUsageTickerItem(ItemStack stack) {
 		Pair<ItemStack, Integer> contents = getContents(stack);
