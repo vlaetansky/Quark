@@ -1,5 +1,6 @@
 package vazkii.quark.tools.item;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -13,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.IFormattableTextComponent;
@@ -142,6 +144,21 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 			setCount(context.getItem(), total - diff);
 		
 		return res;
+	}
+	
+	@Override
+	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+		super.fillItemGroup(group, items);
+		
+		if(SeedPouchModule.showAllVariantsInCreative && isEnabled() && isInGroup(group)) {
+			List<Item> tagItems = SeedPouchModule.seedPouchHoldableTag.getAllElements();
+			for(Item i : tagItems) {
+				ItemStack stack = new ItemStack(this);
+				setItemStack(stack, new ItemStack(i));
+				setCount(stack, SeedPouchModule.maxItems);
+				items.add(stack);
+			}
+		}
 	}
 
 	@Override
