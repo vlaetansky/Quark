@@ -7,10 +7,12 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.EquipmentSlotType.Group;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.inventory.container.WorkbenchContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import vazkii.arl.util.InventoryIIH;
@@ -18,9 +20,12 @@ import vazkii.quark.oddities.module.BackpackModule;
 
 public class BackpackContainer extends PlayerContainer {
 
+	private final PlayerEntity player;
+	
 	public BackpackContainer(int windowId, PlayerEntity player) {
 		super(player.inventory, !player.world.isRemote, player);
 
+		this.player = player;
 		this.windowId = windowId;
 		
 		for(Slot slot : inventorySlots)
@@ -46,6 +51,12 @@ public class BackpackContainer extends PlayerContainer {
 	public static BackpackContainer fromNetwork(int windowId, PlayerInventory playerInventory, PacketBuffer buf) {
 		return new BackpackContainer(windowId, playerInventory.player);
 	}
+	
+	// override this so it doesn't trip FastWorkbench's hook
+	@Override
+	public void onCraftMatrixChanged(IInventory inventoryIn) {
+      WorkbenchContainer.updateCraftingResult(windowId, player.world, player, craftMatrix, craftResult);
+   }
 
 	@Nonnull
 	@Override
