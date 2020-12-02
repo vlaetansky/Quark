@@ -78,15 +78,18 @@ public class InfinityBucketModule extends Module {
 		ItemStack left = event.getLeft();
 		ItemStack right = event.getRight();
 
-		if(left.getItem() == Items.WATER_BUCKET && right.getItem() == Items.ENCHANTED_BOOK && EnchantmentHelper.getEnchantments(right).get(Enchantments.INFINITY) > 0) {
-			ItemStack result = left.copy();
+		if(left.getItem() == Items.WATER_BUCKET && right.getItem() == Items.ENCHANTED_BOOK) {
+			Map<Enchantment, Integer> enchs = EnchantmentHelper.getEnchantments(right);
+			if(enchs.containsKey(Enchantments.INFINITY) && enchs.get(Enchantments.INFINITY) > 0) {
+				ItemStack result = left.copy();
 
-			Map<Enchantment, Integer> map = new HashMap<>();
-			map.put(Enchantments.INFINITY, 1);
-			EnchantmentHelper.setEnchantments(map, result);
+				Map<Enchantment, Integer> map = new HashMap<>();
+				map.put(Enchantments.INFINITY, 1);
+				EnchantmentHelper.setEnchantments(map, result);
 
-			event.setOutput(result);
-			event.setCost(cost);
+				event.setOutput(result);
+				event.setCost(cost);
+			}
 		}
 	}
 
