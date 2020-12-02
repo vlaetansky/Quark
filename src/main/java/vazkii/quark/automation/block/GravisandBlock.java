@@ -14,11 +14,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import vazkii.quark.automation.entity.GravisandEntity;
 import vazkii.quark.base.block.QuarkBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class GravisandBlock extends QuarkBlock {
 
-	public GravisandBlock(String regname, Module module, ItemGroup creativeTab, Properties properties) {
+	public GravisandBlock(String regname, QuarkModule module, ItemGroup creativeTab, Properties properties) {
 		super(regname, module, creativeTab, properties);
 	}
 	

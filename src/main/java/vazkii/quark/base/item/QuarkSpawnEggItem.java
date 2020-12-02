@@ -6,17 +6,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.util.NonNullList;
 import vazkii.arl.util.RegistryHelper;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nonnull;
 import java.util.function.BooleanSupplier;
 
 public class QuarkSpawnEggItem extends SpawnEggItem {
 
-	private final Module module;
+	private final QuarkModule module;
 	private BooleanSupplier enabledSupplier = () -> true;
 
-	public QuarkSpawnEggItem(EntityType<?> type, int primaryColor, int secondaryColor, String regname, Module module, Properties properties) {
+	public QuarkSpawnEggItem(EntityType<?> type, int primaryColor, int secondaryColor, String regname, QuarkModule module, Properties properties) {
 		super(type, primaryColor, secondaryColor, properties);
 
 		RegistryHelper.registerItem(this, regname);

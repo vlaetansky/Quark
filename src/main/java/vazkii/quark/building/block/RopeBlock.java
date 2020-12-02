@@ -39,14 +39,14 @@ import vazkii.quark.automation.module.PistonsMoveTileEntitiesModule;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.building.module.RopeModule;
 
 public class RopeBlock extends QuarkBlock implements IBlockItemProvider {
 
 	private static final VoxelShape SHAPE = makeCuboidShape(6, 0, 6, 10, 16, 10);
 
-	public RopeBlock(String regname, Module module, ItemGroup creativeTab, Properties properties) {
+	public RopeBlock(String regname, QuarkModule module, ItemGroup creativeTab, Properties properties) {
 		super(regname, module, creativeTab, properties);
 		
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);

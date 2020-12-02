@@ -4,12 +4,12 @@ import com.google.common.collect.ImmutableList;
 
 import net.minecraft.block.Blocks;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.building.block.WoodPostBlock;
 
 @LoadModule(category = ModuleCategory.BUILDING)
-public class WoodenPostsModule extends Module {
+public class WoodenPostsModule extends QuarkModule {
 
 	@Override
 	public void construct() {

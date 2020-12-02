@@ -1,12 +1,12 @@
 package vazkii.quark.base.world.config;
 
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.IConfigType;
 
 public class EntitySpawnConfig implements IConfigType {
 
-	public Module module;
+	public QuarkModule module;
 
 	@Config
 	@Config.Min(value = 0, exclusive = true)
@@ -30,7 +30,7 @@ public class EntitySpawnConfig implements IConfigType {
 		this.biomes = biomes;
 	}
 	
-	public void setModule(Module module) {
+	public void setModule(QuarkModule module) {
 		this.module = module;
 	}
 

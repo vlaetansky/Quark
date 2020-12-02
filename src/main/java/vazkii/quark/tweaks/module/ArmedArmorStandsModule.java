@@ -4,7 +4,7 @@ import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 
 /**
@@ -12,7 +12,7 @@ import vazkii.quark.base.module.ModuleCategory;
  * Created at 8:40 AM on 8/27/19.
  */
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
-public class ArmedArmorStandsModule extends Module {
+public class ArmedArmorStandsModule extends QuarkModule {
     @SubscribeEvent
     public void entityConstruct(EntityEvent.EntityConstructing event) {
         if(event.getEntity() instanceof ArmorStandEntity) {

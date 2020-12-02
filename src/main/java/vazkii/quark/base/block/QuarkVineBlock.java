@@ -20,14 +20,14 @@ import net.minecraft.world.server.ServerWorld;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class QuarkVineBlock extends VineBlock implements IQuarkBlock {
 
-	private final Module module;
+	private final QuarkModule module;
 	private BooleanSupplier enabledSupplier = () -> true;
 	
-	public QuarkVineBlock(Module module, String name, boolean creative) {
+	public QuarkVineBlock(QuarkModule module, String name, boolean creative) {
 		super(Block.Properties.create(Material.TALL_PLANTS).doesNotBlockMovement().tickRandomly().hardnessAndResistance(0.2F).sound(SoundType.PLANT));
 		this.module = module;
 
@@ -61,7 +61,7 @@ public class QuarkVineBlock extends VineBlock implements IQuarkBlock {
 
 	@Nullable
 	@Override
-	public Module getModule() {
+	public QuarkModule getModule() {
 		return module;
 	}
 

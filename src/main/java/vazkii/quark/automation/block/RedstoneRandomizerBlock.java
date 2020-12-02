@@ -34,7 +34,7 @@ import vazkii.quark.automation.base.RandomizerPowerState;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 /**
  * @author WireSegal
@@ -48,7 +48,7 @@ public class RedstoneRandomizerBlock extends QuarkBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final EnumProperty<RandomizerPowerState> POWERED = EnumProperty.create("powered", RandomizerPowerState.class);
 
-    public RedstoneRandomizerBlock(String regname, Module module, ItemGroup creativeTab, Properties properties) {
+    public RedstoneRandomizerBlock(String regname, QuarkModule module, ItemGroup creativeTab, Properties properties) {
         super(regname, module, creativeTab, properties);
 
         setDefaultState(getDefaultState()

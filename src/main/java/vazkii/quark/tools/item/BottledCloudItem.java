@@ -16,12 +16,12 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import vazkii.quark.base.handler.RayTraceHandler;
 import vazkii.quark.base.item.QuarkItem;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.tools.module.BottledCloudModule;
 
 public class BottledCloudItem extends QuarkItem {
 
-	public BottledCloudItem(Module module) {
+	public BottledCloudItem(QuarkModule module) {
 		super("bottled_cloud", module, new Item.Properties().group(ItemGroup.TOOLS));
 	}
 	

@@ -33,14 +33,14 @@ import net.minecraftforge.fml.LogicalSide;
 import vazkii.quark.automation.base.ChainHandler;
 import vazkii.quark.automation.client.render.ChainRenderer;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.SyncChainMessage;
 
 @LoadModule(category = ModuleCategory.AUTOMATION, hasSubscriptions = true)
-public class ChainLinkageModule extends Module {
+public class ChainLinkageModule extends QuarkModule {
 
     @Config(description = "Can vehicle-linking chains be used for crafting chain armor?", flag = "chain_craft_armor")
     public static boolean craftsArmor = true;

@@ -26,7 +26,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.block.QuarkBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.oddities.magnetsystem.MagnetSystem;
 import vazkii.quark.oddities.module.MagnetsModule;
 import vazkii.quark.oddities.tile.MagnetTileEntity;
@@ -41,7 +41,7 @@ public class MagnetBlock extends QuarkBlock {
 	public static final DirectionProperty FACING = BlockStateProperties.FACING;
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-	public MagnetBlock(Module module) {
+	public MagnetBlock(QuarkModule module) {
 		super("magnet", module, ItemGroup.REDSTONE, Properties.from(Blocks.IRON_BLOCK));
 		setDefaultState(getDefaultState().with(FACING, Direction.DOWN).with(POWERED, false));
 		RegistryHelper.setCreativeTab(this, ItemGroup.REDSTONE);

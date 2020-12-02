@@ -27,15 +27,15 @@ import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.world.module.underground.GlowshroomUndergroundBiomeModule;
 
 public class GlowshroomBlock extends MushroomBlock implements IQuarkBlock {
 
-	private final Module module;
+	private final QuarkModule module;
 	private BooleanSupplier enabledSupplier = () -> true;
 
-	public GlowshroomBlock(Module module) {
+	public GlowshroomBlock(QuarkModule module) {
 		super(Block.Properties.from(Blocks.RED_MUSHROOM)
 				.setLightLevel(b -> 14)
 				.tickRandomly());
@@ -134,7 +134,7 @@ public class GlowshroomBlock extends MushroomBlock implements IQuarkBlock {
 
 	@Nullable
 	@Override
-	public Module getModule() {
+	public QuarkModule getModule() {
 		return module;
 	}
 }

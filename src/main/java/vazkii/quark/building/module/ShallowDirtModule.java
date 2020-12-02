@@ -6,13 +6,13 @@ import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.building.block.ShallowDirtBlock;
 import vazkii.quark.tweaks.module.DirtToPathModule;
 
 @LoadModule(category = ModuleCategory.BUILDING, hasSubscriptions = true)
-public class ShallowDirtModule extends Module {
+public class ShallowDirtModule extends QuarkModule {
 	
 	public static Block shallow_dirt;
 	

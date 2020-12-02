@@ -29,7 +29,7 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import vazkii.quark.automation.tile.FeedingTroughTileEntity;
 import vazkii.quark.base.block.QuarkBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 /**
  * @author WireSegal
@@ -49,7 +49,7 @@ public class FeedingTroughBlock extends QuarkBlock {
             makeCuboidShape(2, 6, 2, 14, 8, 14), IBooleanFunction.ONLY_FIRST);
 
 
-    public FeedingTroughBlock(String regname, Module module, ItemGroup creativeTab, Properties properties) {
+    public FeedingTroughBlock(String regname, QuarkModule module, ItemGroup creativeTab, Properties properties) {
         super(regname, module, creativeTab, properties);
         setDefaultState(getDefaultState().with(FULL, false));
     }

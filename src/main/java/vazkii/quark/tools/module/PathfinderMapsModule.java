@@ -30,13 +30,13 @@ import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.IConfigType;
 
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true)
-public class PathfinderMapsModule extends Module {
+public class PathfinderMapsModule extends QuarkModule {
 
 	public static List<TradeInfo> builtinTrades = new LinkedList<>();
 	public static List<TradeInfo> customTrades = new LinkedList<>();

@@ -10,14 +10,14 @@ import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.tweaks.client.item.ClockTimeGetter;
 import vazkii.quark.tweaks.client.item.CompassAngleGetter;
 
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
-public class CompassesWorkEverywhereModule extends Module {
+public class CompassesWorkEverywhereModule extends QuarkModule {
 
 	@Config public static boolean enableCompassNerf =  true;
 	@Config public static boolean enableClockNerf =  true;

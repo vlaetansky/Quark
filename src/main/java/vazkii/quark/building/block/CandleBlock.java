@@ -33,7 +33,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.api.IEnchantmentInfluencer;
 import vazkii.quark.base.block.QuarkBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.building.module.TallowAndCandlesModule;
 
 public class CandleBlock extends QuarkBlock implements IWaterLoggable, IEnchantmentInfluencer {
@@ -43,7 +43,7 @@ public class CandleBlock extends QuarkBlock implements IWaterLoggable, IEnchantm
 
 	private final DyeColor color;
 	
-	public CandleBlock(String regname, Module module, DyeColor color) {
+	public CandleBlock(String regname, QuarkModule module, DyeColor color) {
 		super(regname, module, ItemGroup.DECORATIONS, 
 				Block.Properties.create(Material.MISCELLANEOUS, color.getMapColor())
 				.hardnessAndResistance(0.2F)

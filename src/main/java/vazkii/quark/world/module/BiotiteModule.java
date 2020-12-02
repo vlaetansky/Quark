@@ -19,7 +19,7 @@ import vazkii.quark.base.block.QuarkPillarBlock;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.world.WorldGenHandler;
@@ -30,7 +30,7 @@ import vazkii.quark.base.world.generator.OreGenerator;
 import vazkii.quark.world.block.BiotiteOreBlock;
 
 @LoadModule(category = ModuleCategory.WORLD, hasSubscriptions = true)
-public class BiotiteModule extends Module {
+public class BiotiteModule extends QuarkModule {
 
 	@Config public boolean generateNaturally = false;
 	@Config public boolean generateOnDragonDeath = true;

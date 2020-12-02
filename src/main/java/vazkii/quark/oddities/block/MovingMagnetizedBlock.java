@@ -33,7 +33,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import vazkii.quark.base.block.QuarkBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.oddities.tile.MagnetizedBlockTileEntity;
 
 /**
@@ -43,7 +43,7 @@ import vazkii.quark.oddities.tile.MagnetizedBlockTileEntity;
 public class MovingMagnetizedBlock extends QuarkBlock {
 	public static final DirectionProperty FACING = PistonHeadBlock.FACING;
 
-	public MovingMagnetizedBlock(Module module) {
+	public MovingMagnetizedBlock(QuarkModule module) {
 		super("magnetized_block", module, null, Block.Properties.create(Material.PISTON).hardnessAndResistance(-1.0F).variableOpacity().noDrops().notSolid());
 		this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));
 	}

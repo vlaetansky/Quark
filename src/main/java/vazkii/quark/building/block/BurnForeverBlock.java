@@ -7,14 +7,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import vazkii.quark.base.block.QuarkBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.building.module.CompressedBlocksModule;
 
 public class BurnForeverBlock extends QuarkBlock {
 	
 	final boolean flammable;
 
-	public BurnForeverBlock(String regname, Module module, ItemGroup creativeTab, Properties properties, boolean flammable) {
+	public BurnForeverBlock(String regname, QuarkModule module, ItemGroup creativeTab, Properties properties, boolean flammable) {
 		super(regname, module, creativeTab, properties);
 		this.flammable = flammable;
 	}

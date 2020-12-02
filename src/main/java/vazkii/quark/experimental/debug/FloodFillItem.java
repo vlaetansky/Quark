@@ -14,11 +14,11 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import vazkii.quark.base.item.QuarkItem;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class FloodFillItem extends QuarkItem {
 
-	public FloodFillItem(Module module) {
+	public FloodFillItem(QuarkModule module) {
 		super("flood_filler", module, new Item.Properties());
 	}	
 	

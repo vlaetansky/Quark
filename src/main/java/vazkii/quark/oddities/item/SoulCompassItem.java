@@ -16,7 +16,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.base.item.QuarkItem;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.oddities.module.TotemOfHoldingModule;
 
 /**
@@ -35,7 +35,7 @@ public class SoulCompassItem extends QuarkItem {
     @OnlyIn(Dist.CLIENT)
     private static long lastUpdateTick;
 
-    public SoulCompassItem(Module module) {
+    public SoulCompassItem(QuarkModule module) {
         super("soul_compass", module, new Properties().group(ItemGroup.TOOLS).maxStackSize(1));
     }
     

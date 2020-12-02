@@ -22,7 +22,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.item.QuarkSpawnEggItem;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.world.config.CostSensitiveEntitySpawnConfig;
 import vazkii.quark.base.world.config.EntitySpawnConfig;
 
@@ -31,13 +31,13 @@ public class EntitySpawnHandler {
 
 	private static List<TrackedSpawnConfig> trackedSpawnConfigs = new LinkedList<>();
 
-	public static <T extends MobEntity> void registerSpawn(Module module, EntityType<T> entityType, EntityClassification classification, PlacementType placementType, Heightmap.Type heightMapType, IPlacementPredicate<T> placementPredicate, EntitySpawnConfig config) {
+	public static <T extends MobEntity> void registerSpawn(QuarkModule module, EntityType<T> entityType, EntityClassification classification, PlacementType placementType, Heightmap.Type heightMapType, IPlacementPredicate<T> placementPredicate, EntitySpawnConfig config) {
 		EntitySpawnPlacementRegistry.register(entityType, placementType, heightMapType, placementPredicate);
 
 		track(module, entityType, classification, config, false);
 	}
 	
-	public static <T extends MobEntity> void track(Module module, EntityType<T> entityType, EntityClassification classification, EntitySpawnConfig config, boolean secondary) {
+	public static <T extends MobEntity> void track(QuarkModule module, EntityType<T> entityType, EntityClassification classification, EntitySpawnConfig config, boolean secondary) {
 		config.setModule(module);
 		trackedSpawnConfigs.add(new TrackedSpawnConfig(entityType, classification, config, secondary));
 	}
@@ -46,7 +46,7 @@ public class EntitySpawnHandler {
 		addEgg(entityType, color1, color2, config.module, config::isEnabled);
 	}
 
-	public static void addEgg(EntityType<?> entityType, int color1, int color2, Module module, BooleanSupplier enabledSupplier) {
+	public static void addEgg(EntityType<?> entityType, int color1, int color2, QuarkModule module, BooleanSupplier enabledSupplier) {
 		new QuarkSpawnEggItem(entityType, color1,  color2, entityType.getRegistryName().getPath() + "_spawn_egg", module, 
 				new Item.Properties().group(ItemGroup.MISC))
 		.setCondition(enabledSupplier);

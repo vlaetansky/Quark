@@ -5,7 +5,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import vazkii.quark.base.Quark;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.recipe.FlagIngredient;
 import vazkii.quark.base.recipe.PotionIngredient;
 
@@ -31,11 +31,11 @@ public final class ConfigFlagManager {
 		flags.clear();
 	}
 	
-	public void putFlag(Module module, String flag, boolean value) {
+	public void putFlag(QuarkModule module, String flag, boolean value) {
 		flags.put(flag, value && module.enabled);
 	}
 	
-	public void putEnabledFlag(Module module) {
+	public void putEnabledFlag(QuarkModule module) {
 		flags.put(module.lowercaseName, module.enabled);
 	}
 	

@@ -31,7 +31,7 @@ import vazkii.quark.api.IQuarkButtonIgnored;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.GeneralConfig;
 import vazkii.quark.base.handler.InventoryTransferHandler;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.oddities.client.screen.BackpackInventoryScreen;
 
 @OnlyIn(Dist.CLIENT)
@@ -144,16 +144,16 @@ public final class InventoryButtonHandler {
 		}
 	}
 
-	public static void addButtonProvider(Module module, ButtonTargetType type, int priority, KeyBinding binding, Consumer<ContainerScreen<?>> onKeybind, ButtonProvider provider) {
+	public static void addButtonProvider(QuarkModule module, ButtonTargetType type, int priority, KeyBinding binding, Consumer<ContainerScreen<?>> onKeybind, ButtonProvider provider) {
 		providers.put(type, new ButtonProviderHolder(module, priority, provider,
 				binding, onKeybind));
 	}
 
-	public static void addButtonProvider(Module module, ButtonTargetType type, int priority, String keybindName, Consumer<ContainerScreen<?>> onKeybind, ButtonProvider provider) {
+	public static void addButtonProvider(QuarkModule module, ButtonTargetType type, int priority, String keybindName, Consumer<ContainerScreen<?>> onKeybind, ButtonProvider provider) {
 		addButtonProvider(module, type, priority, ModKeybindHandler.init(keybindName, null, ModKeybindHandler.INV_GROUP), onKeybind, provider);
 	}
 
-	public static void addButtonProvider(Module module, ButtonTargetType type, int priority, ButtonProvider provider) {
+	public static void addButtonProvider(QuarkModule module, ButtonTargetType type, int priority, ButtonProvider provider) {
 		providers.put(type, new ButtonProviderHolder(module, priority, provider));
 	}
 
@@ -170,13 +170,13 @@ public final class InventoryButtonHandler {
 	private static class ButtonProviderHolder implements Comparable<ButtonProviderHolder> {
 
 		private final int priority;
-		private final Module module;
+		private final QuarkModule module;
 		private final ButtonProvider provider;
 
 		private final KeyBinding keybind;
 		private final Consumer<ContainerScreen<?>> pressed;
 
-		public ButtonProviderHolder(Module module, int priority, ButtonProvider provider, KeyBinding keybind, Consumer<ContainerScreen<?>> onPressed) {
+		public ButtonProviderHolder(QuarkModule module, int priority, ButtonProvider provider, KeyBinding keybind, Consumer<ContainerScreen<?>> onPressed) {
 			this.module = module;
 			this.priority = priority;
 			this.provider = provider;
@@ -184,7 +184,7 @@ public final class InventoryButtonHandler {
 			this.pressed = onPressed;
 		}
 
-		public ButtonProviderHolder(Module module, int priority, ButtonProvider provider) {
+		public ButtonProviderHolder(QuarkModule module, int priority, ButtonProvider provider) {
 			this(module, priority, provider, null, (screen) -> {});
 		}
 

@@ -23,7 +23,7 @@ import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkGlassBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.world.module.underground.CaveCrystalUndergroundBiomeModule;
 
 /**
@@ -35,7 +35,7 @@ public class CaveCrystalBlock extends QuarkGlassBlock {
 	private final float[] colorComponents;
 	private final Vector3d colorVector;
 
-	public CaveCrystalBlock(String regname, int color, Module module, MaterialColor materialColor) {
+	public CaveCrystalBlock(String regname, int color, QuarkModule module, MaterialColor materialColor) {
 		super(regname, module, ItemGroup.DECORATIONS,
 				Block.Properties.create(Material.GLASS, materialColor)
 				.hardnessAndResistance(0.3F, 0F)

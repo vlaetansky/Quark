@@ -1,7 +1,7 @@
 package vazkii.quark.world.module.underground;
 
 import net.minecraft.world.gen.GenerationStage.Decoration;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.world.WorldGenHandler;
 import vazkii.quark.base.world.WorldGenWeights;
@@ -9,7 +9,7 @@ import vazkii.quark.base.world.generator.Generator;
 import vazkii.quark.world.config.UndergroundBiomeConfig;
 import vazkii.quark.world.gen.UndergroundBiomeGenerator;
 
-public abstract class UndergroundBiomeModule extends Module {
+public abstract class UndergroundBiomeModule extends QuarkModule {
 
 	@Config
 	public UndergroundBiomeConfig biomeSettings;

@@ -27,7 +27,7 @@ import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.OverrideRegistryHandler;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.oddities.block.MatrixEnchantingTableBlock;
@@ -37,7 +37,7 @@ import vazkii.quark.oddities.container.MatrixEnchantingContainer;
 import vazkii.quark.oddities.tile.MatrixEnchantingTableTileEntity;
 
 @LoadModule(category = ModuleCategory.ODDITIES, requiredMod = Quark.ODDITIES_ID, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
-public class MatrixEnchantingModule extends Module {
+public class MatrixEnchantingModule extends QuarkModule {
 
 	public static TileEntityType<MatrixEnchantingTableTileEntity> tileEntityType;
 	public static ContainerType<MatrixEnchantingContainer> containerType;

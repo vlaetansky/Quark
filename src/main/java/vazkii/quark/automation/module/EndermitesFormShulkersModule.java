@@ -6,12 +6,12 @@ import net.minecraftforge.event.entity.EntityEvent.EnteringChunk;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.automation.ai.FormShulkerGoal;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 
 @LoadModule(category = ModuleCategory.AUTOMATION, hasSubscriptions = true)
-public class EndermitesFormShulkersModule extends Module {
+public class EndermitesFormShulkersModule extends QuarkModule {
 
 	@Config public static double chance = 0.005;
 	

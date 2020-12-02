@@ -12,13 +12,13 @@ package vazkii.quark.building.module;
 
 import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.building.block.PaperLanternBlock;
 import vazkii.quark.building.block.PaperWallBlock;
 
 @LoadModule(category = ModuleCategory.BUILDING)
-public class PaperDecorModule extends Module {
+public class PaperDecorModule extends QuarkModule {
 
 	@Override
 	public void construct() {

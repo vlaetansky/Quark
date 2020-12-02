@@ -44,7 +44,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.building.block.VariantChestBlock;
@@ -54,7 +54,7 @@ import vazkii.quark.building.tile.VariantChestTileEntity;
 import vazkii.quark.building.tile.VariantTrappedChestTileEntity;
 
 @LoadModule(category = ModuleCategory.BUILDING, hasSubscriptions = true)
-public class VariantChestsModule extends Module {
+public class VariantChestsModule extends QuarkModule {
 
 	private static final Pattern VILLAGE_PIECE_PATTERN = Pattern.compile("\\w+\\[\\w+\\[([a-z_]+)\\:village\\/(.+?)\\/.+\\]\\]");
 	

@@ -23,7 +23,7 @@ import vazkii.quark.api.QuarkCapabilities;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.tools.client.GlintRenderType;
@@ -35,7 +35,7 @@ import vazkii.quark.tools.item.RuneItem;
  * Created at 1:52 PM on 8/17/19.
  */
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true)
-public class ColorRunesModule extends Module {
+public class ColorRunesModule extends QuarkModule {
 
     public static final String TAG_RUNE_ATTACHED = Quark.MOD_ID + ":RuneAttached";
     public static final String TAG_RUNE_COLOR = Quark.MOD_ID + ":RuneColor";

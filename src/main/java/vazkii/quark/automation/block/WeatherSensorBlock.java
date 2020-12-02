@@ -21,7 +21,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import vazkii.quark.automation.tile.WeatherSensorTileEntity;
 import vazkii.quark.base.block.QuarkBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,7 +35,7 @@ public class WeatherSensorBlock extends QuarkBlock {
     public static final BooleanProperty INVERTED = BlockStateProperties.INVERTED;
     public static final VoxelShape SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D);
 
-    public WeatherSensorBlock(String regname, Module module, ItemGroup creativeTab, Properties properties) {
+    public WeatherSensorBlock(String regname, QuarkModule module, ItemGroup creativeTab, Properties properties) {
         super(regname, module, creativeTab, properties);
         this.setDefaultState(this.stateContainer.getBaseState().with(POWER, 0).with(INVERTED, false));
     }

@@ -30,7 +30,7 @@ import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.automation.block.FeedingTroughBlock;
 import vazkii.quark.automation.tile.FeedingTroughTileEntity;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.config.Config;
@@ -40,7 +40,7 @@ import vazkii.quark.base.module.config.Config;
  * Created at 9:48 AM on 9/20/19.
  */
 @LoadModule(category = ModuleCategory.AUTOMATION, hasSubscriptions = true)
-public class FeedingTroughModule extends Module {
+public class FeedingTroughModule extends QuarkModule {
     public static TileEntityType<FeedingTroughTileEntity> tileEntityType;
 
     @Config(description = "How long, in game ticks, between animals being able to eat from the trough")

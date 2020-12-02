@@ -9,14 +9,14 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ComposterBlock;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.building.block.LeafCarpetBlock;
 import vazkii.quark.world.block.BlossomLeavesBlock;
 import vazkii.quark.world.module.BlossomTreesModule;
 
 @LoadModule(category = ModuleCategory.BUILDING)
-public class LeafCarpetModule extends Module {
+public class LeafCarpetModule extends QuarkModule {
 
 	public static List<LeafCarpetBlock> carpets = new LinkedList<>();
 	

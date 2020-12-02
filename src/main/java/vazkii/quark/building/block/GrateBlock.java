@@ -34,7 +34,7 @@ import net.minecraft.world.IBlockReader;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class GrateBlock extends QuarkBlock implements IWaterLoggable {
 
@@ -44,7 +44,7 @@ public class GrateBlock extends QuarkBlock implements IWaterLoggable {
 
 	public static BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-	public GrateBlock(Module module) {
+	public GrateBlock(QuarkModule module) {
 		super("grate", module, ItemGroup.DECORATIONS, 
 				Block.Properties.create(Material.IRON)
                 .hardnessAndResistance(5, 10)

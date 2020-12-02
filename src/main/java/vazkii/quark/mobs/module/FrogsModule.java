@@ -17,7 +17,7 @@ import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.BrewingHandler;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.recipe.FlagIngredient;
@@ -28,7 +28,7 @@ import vazkii.quark.mobs.client.render.FrogRenderer;
 import vazkii.quark.mobs.entity.FrogEntity;
 
 @LoadModule(category = ModuleCategory.MOBS, hasSubscriptions = true)
-public class FrogsModule extends Module {
+public class FrogsModule extends QuarkModule {
 
 	public static EntityType<FrogEntity> frogType;
 

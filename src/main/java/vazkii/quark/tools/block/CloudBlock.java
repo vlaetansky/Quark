@@ -22,13 +22,13 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import vazkii.quark.base.block.QuarkBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.tools.module.BottledCloudModule;
 import vazkii.quark.tools.tile.CloudTileEntity;
 
 public class CloudBlock extends QuarkBlock {
 
-	public CloudBlock(Module module) {
+	public CloudBlock(QuarkModule module) {
 		super("cloud", module, null, 
 				Block.Properties.create(Material.CLAY)
 				.sound(SoundType.CLOTH)

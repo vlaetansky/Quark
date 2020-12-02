@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.base.item.QuarkItem;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.tools.module.AncientTomesModule;
 
 import javax.annotation.Nonnull;
@@ -19,7 +19,7 @@ import java.util.List;
 
 public class AncientTomeItem extends QuarkItem {
 
-	public AncientTomeItem(Module module) {
+	public AncientTomeItem(QuarkModule module) {
 		super("ancient_tome", module, 
 				new Item.Properties().maxStackSize(1));
 	}

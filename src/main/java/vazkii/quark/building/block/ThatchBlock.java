@@ -10,12 +10,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkFlammableBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.building.module.ThatchModule;
 
 public class ThatchBlock extends QuarkFlammableBlock {
 
-	public ThatchBlock(Module module) {
+	public ThatchBlock(QuarkModule module) {
 		super("thatch", module, ItemGroup.BUILDING_BLOCKS, 300,
 				Block.Properties.create(Material.ORGANIC, MaterialColor.YELLOW)
 				.harvestTool(ToolType.HOE)

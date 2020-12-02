@@ -34,7 +34,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.GeneralConfig;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.world.generator.IGenerator;
 
 @EventBusSubscriber(modid = Quark.MOD_ID)
@@ -87,7 +87,7 @@ public class WorldGenHandler {
 		}
 	}
 
-	public static void addGenerator(Module module, IGenerator generator, GenerationStage.Decoration stage, int weight) {
+	public static void addGenerator(QuarkModule module, IGenerator generator, GenerationStage.Decoration stage, int weight) {
 		WeightedGenerator weighted = new WeightedGenerator(module, generator, weight);
 		if(!generators.containsKey(stage))
 			generators.put(stage, new TreeSet<>());

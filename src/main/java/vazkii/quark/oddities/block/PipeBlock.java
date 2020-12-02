@@ -27,7 +27,7 @@ import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.oddities.tile.PipeTileEntity;
 
 public class PipeBlock extends QuarkBlock implements IWaterLoggable {
@@ -60,7 +60,7 @@ public class PipeBlock extends QuarkBlock implements IWaterLoggable {
 
 	private static final VoxelShape[] shapeCache = new VoxelShape[64];
 
-	public PipeBlock(Module module) {
+	public PipeBlock(QuarkModule module) {
 		super("pipe", module, ItemGroup.REDSTONE, 
 				Block.Properties.create(Material.GLASS)
 				.hardnessAndResistance(3F, 10F)

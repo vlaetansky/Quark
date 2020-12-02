@@ -11,14 +11,14 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.building.module.VariantLaddersModule;
 
 public class IronLadderBlock extends VariantLadderBlock {
 
 	private static final SoundType SOUND_TYPE = new SoundType(1.0F, 1.0F, SoundEvents.BLOCK_METAL_BREAK, SoundEvents.BLOCK_LADDER_STEP, SoundEvents.BLOCK_METAL_PLACE, SoundEvents.BLOCK_METAL_HIT, SoundEvents.BLOCK_LADDER_FALL);
 
-	public IronLadderBlock(Module module) {
+	public IronLadderBlock(QuarkModule module) {
 		super("iron", module, Block.Properties.create(Material.MISCELLANEOUS)
 				.hardnessAndResistance(0.8F)
 				.sound(SOUND_TYPE)

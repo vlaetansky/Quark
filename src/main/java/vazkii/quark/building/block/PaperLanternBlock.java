@@ -14,7 +14,7 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nonnull;
 
@@ -24,7 +24,7 @@ public class PaperLanternBlock extends QuarkBlock {
 	private static final VoxelShape LANTERN_SHAPE = makeCuboidShape(2, 2, 2, 14, 14, 14);
 	private static final VoxelShape SHAPE = VoxelShapes.or(POST_SHAPE, LANTERN_SHAPE);
 
-	public PaperLanternBlock(String regname, Module module) {
+	public PaperLanternBlock(String regname, QuarkModule module) {
 		super(regname, module, ItemGroup.DECORATIONS,
 				Block.Properties.create(Material.WOOD, MaterialColor.SNOW)
 						.sound(SoundType.WOOD)

@@ -8,12 +8,12 @@ import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.block.QuarkInheritedPaneBlock;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.building.block.FramedGlassBlock;
 
 @LoadModule(category = ModuleCategory.BUILDING)
-public class FramedGlassModule extends Module {
+public class FramedGlassModule extends QuarkModule {
 
 	@Override
 	public void construct() {

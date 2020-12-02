@@ -15,14 +15,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.world.config.BiomeTypeConfig;
 import vazkii.quark.world.gen.structure.BigDungeonStructure;
 
 @LoadModule(category = ModuleCategory.WORLD, hasSubscriptions = true)
-public class BigDungeonModule extends Module {
+public class BigDungeonModule extends QuarkModule {
 
 	@Config(description = "The chance that a big dungeon spawn candidate will be allowed to spawn. 0.2 is 20%, which is the same as the Pillager Outpost.")
 	public static double spawnChance = 0.1;

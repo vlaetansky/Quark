@@ -14,11 +14,11 @@ import net.minecraftforge.event.world.NoteBlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
-public class NoteBlockMobSoundsModule extends Module {
+public class NoteBlockMobSoundsModule extends QuarkModule {
 
 	public static final Direction[] SKULL_SEARCH_FACINGS = new Direction[] {
 			Direction.NORTH,

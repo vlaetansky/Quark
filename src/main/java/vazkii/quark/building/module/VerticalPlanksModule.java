@@ -7,12 +7,12 @@ import net.minecraft.item.ItemGroup;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.ModuleLoader;
 
 @LoadModule(category = ModuleCategory.BUILDING)
-public class VerticalPlanksModule extends Module {
+public class VerticalPlanksModule extends QuarkModule {
 
 	@Override
 	public void construct() {

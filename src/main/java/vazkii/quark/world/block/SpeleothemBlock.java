@@ -28,14 +28,14 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import vazkii.quark.base.block.QuarkBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class SpeleothemBlock extends QuarkBlock implements IWaterLoggable {
 
 	public static final EnumProperty<SpeleothemSize> SIZE = EnumProperty.create("size", SpeleothemSize.class);
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 	
-	public SpeleothemBlock(String name, Module module, Block parent, boolean nether) {
+	public SpeleothemBlock(String name, QuarkModule module, Block parent, boolean nether) {
 		super(name + "_speleothem", module, ItemGroup.DECORATIONS, 
 				Block.Properties.from(parent)
 				.hardnessAndResistance(nether ? 0.4F : 1.5F)

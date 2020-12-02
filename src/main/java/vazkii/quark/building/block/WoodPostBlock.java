@@ -15,7 +15,7 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import vazkii.quark.base.block.QuarkBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class WoodPostBlock extends QuarkBlock implements IWaterLoggable {
 
@@ -23,7 +23,7 @@ public class WoodPostBlock extends QuarkBlock implements IWaterLoggable {
 
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-	public WoodPostBlock(Module module, Block parent) {
+	public WoodPostBlock(QuarkModule module, Block parent) {
 		super(parent.getRegistryName().getPath().replace("_fence", "_post"), module, ItemGroup.BUILDING_BLOCKS, Properties.from(parent));
 		setDefaultState(stateContainer.getBaseState().with(WATERLOGGED, false));
 	}

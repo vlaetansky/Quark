@@ -13,13 +13,13 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import vazkii.quark.base.block.QuarkBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class BambooMatBlock extends QuarkBlock {
 	
 	public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING_EXCEPT_UP;
 	
-	public BambooMatBlock(Module module) {
+	public BambooMatBlock(QuarkModule module) {
 		super("bamboo_mat", module, ItemGroup.BUILDING_BLOCKS,
 				Block.Properties.create(Material.WOOD, MaterialColor.YELLOW)
 				.hardnessAndResistance(0.5F)

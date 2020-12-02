@@ -5,11 +5,11 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldReader;
 import vazkii.quark.base.block.QuarkBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class ElderPrismarineBlock extends QuarkBlock {
 
-	public ElderPrismarineBlock(String regname, Module module, ItemGroup creativeTab, Properties properties) {
+	public ElderPrismarineBlock(String regname, QuarkModule module, ItemGroup creativeTab, Properties properties) {
 		super(regname, module, creativeTab, properties);
 	}
 	

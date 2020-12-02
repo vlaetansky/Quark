@@ -5,13 +5,13 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class QuarkFlammableBlock extends QuarkBlock {
 
 	final int flammability;
 	
-	public QuarkFlammableBlock(String regname, Module module, ItemGroup creativeTab, int flamability, Properties properties) {
+	public QuarkFlammableBlock(String regname, QuarkModule module, ItemGroup creativeTab, int flamability, Properties properties) {
 		super(regname, module, creativeTab, properties);
 		this.flammability = flamability;
 	}

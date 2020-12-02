@@ -26,16 +26,16 @@ import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class BlossomSaplingBlock extends SaplingBlock implements IQuarkBlock {
 
 	private static final BlockState SPRUCE_LOG = Blocks.SPRUCE_LOG.getDefaultState();
 
-	private final Module module;
+	private final QuarkModule module;
 	private BooleanSupplier enabledSupplier = () -> true;
 
-	public BlossomSaplingBlock(String colorName, Module module, BlossomTree tree, Block leaf) {
+	public BlossomSaplingBlock(String colorName, QuarkModule module, BlossomTree tree, Block leaf) {
 		super(tree, Block.Properties.from(Blocks.OAK_SAPLING));
 		this.module = module;
 
@@ -53,7 +53,7 @@ public class BlossomSaplingBlock extends SaplingBlock implements IQuarkBlock {
 	}
 
 	@Override
-	public Module getModule() {
+	public QuarkModule getModule() {
 		return module;
 	}
 

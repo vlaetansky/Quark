@@ -11,7 +11,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.gen.GenerationStage;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.util.WeightedSelector;
@@ -29,7 +29,7 @@ import vazkii.quark.world.gen.underground.CustomUndergroundBiome;
  * Created at 8:01 PM on 10/1/19.
  */
 @LoadModule(category = ModuleCategory.EXPERIMENTAL, enabledByDefault = false, description = "This feature is highly technical. Use only if you know what you're doing!")
-public class CustomUndergroundBiomeModule extends Module {
+public class CustomUndergroundBiomeModule extends QuarkModule {
 
     private static final String BIOME_OPTIONS = "HOT|COLD|SPARSE|DENSE|WET|SAVANNA|CONIFEROUS|JUNGLE|SPOOKY|DEAD|LUSH|NETHER|END|MUSHROOM|MAGICAL|RARE|OCEAN|RIVER|WATER|MESA|FOREST|PLAINS|MOUNTAIN|HILLS|SWAMP|SANDY|SNOWY|WASTELAND|BEACH|VOID";
     private static final String RL_PATTERN = "(?:\\w+:)?\\w+";

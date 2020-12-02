@@ -24,14 +24,14 @@ import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class BlossomLeavesBlock extends LeavesBlock implements IQuarkBlock {
 
-	private final Module module;
+	private final QuarkModule module;
 	private BooleanSupplier enabledSupplier = () -> true;
 	
-	public BlossomLeavesBlock(String colorName, Module module, MaterialColor color) {
+	public BlossomLeavesBlock(String colorName, QuarkModule module, MaterialColor color) {
 		super(Block.Properties.create(Material.LEAVES, color)
 				.hardnessAndResistance(0.2F)
 				.tickRandomly()
@@ -63,7 +63,7 @@ public class BlossomLeavesBlock extends LeavesBlock implements IQuarkBlock {
 
 	@Nullable
 	@Override
-	public Module getModule() {
+	public QuarkModule getModule() {
 		return module;
 	}
 

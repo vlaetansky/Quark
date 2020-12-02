@@ -14,7 +14,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.world.EntitySpawnHandler;
@@ -25,7 +25,7 @@ import vazkii.quark.mobs.client.render.ToretoiseRenderer;
 import vazkii.quark.mobs.entity.ToretoiseEntity;
 
 @LoadModule(category = ModuleCategory.MOBS, hasSubscriptions = true)
-public class ToretoiseModule extends Module {
+public class ToretoiseModule extends QuarkModule {
 
 	public static EntityType<ToretoiseEntity> toretoiseType;
 	

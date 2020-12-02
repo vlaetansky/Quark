@@ -22,7 +22,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import vazkii.quark.base.block.QuarkBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class ShallowDirtBlock extends QuarkBlock implements IWaterLoggable {
 
@@ -30,7 +30,7 @@ public class ShallowDirtBlock extends QuarkBlock implements IWaterLoggable {
 	
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 	
-	public ShallowDirtBlock(Module module) {
+	public ShallowDirtBlock(QuarkModule module) {
 		super("shallow_dirt", module, null, Properties.from(Blocks.DIRT).notSolid());
 		
 		setDefaultState(getDefaultState().with(WATERLOGGED, false));

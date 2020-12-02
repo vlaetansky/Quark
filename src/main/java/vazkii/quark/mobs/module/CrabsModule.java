@@ -22,7 +22,7 @@ import vazkii.quark.base.effect.QuarkEffect;
 import vazkii.quark.base.handler.BrewingHandler;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.recipe.FlagIngredient;
@@ -37,7 +37,7 @@ import vazkii.quark.mobs.entity.CrabEntity;
  * Created at 7:28 PM on 9/22/19.
  */
 @LoadModule(category = ModuleCategory.MOBS, hasSubscriptions = true)
-public class CrabsModule extends Module {
+public class CrabsModule extends QuarkModule {
 
 	public static EntityType<CrabEntity> crabType;
 

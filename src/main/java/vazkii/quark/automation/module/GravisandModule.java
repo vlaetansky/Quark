@@ -13,11 +13,11 @@ import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.automation.block.GravisandBlock;
 import vazkii.quark.automation.entity.GravisandEntity;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 
 @LoadModule(category = ModuleCategory.AUTOMATION)
-public class GravisandModule extends Module {
+public class GravisandModule extends QuarkModule {
 
 	public static EntityType<GravisandEntity> gravisandType;
 

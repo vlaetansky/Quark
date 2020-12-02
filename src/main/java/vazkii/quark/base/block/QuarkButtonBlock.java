@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundEvent;
 import vazkii.arl.util.RegistryHelper;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 /**
  * @author WireSegal
@@ -19,10 +19,10 @@ import vazkii.quark.base.module.Module;
  */
 public abstract class QuarkButtonBlock extends AbstractButtonBlock implements IQuarkBlock {
 
-    private final Module module;
+    private final QuarkModule module;
     private BooleanSupplier enabledSupplier = () -> true;
 
-    public QuarkButtonBlock(String regname, Module module, ItemGroup creativeTab, Properties properties) {
+    public QuarkButtonBlock(String regname, QuarkModule module, ItemGroup creativeTab, Properties properties) {
         super(false, properties);
         this.module = module;
 
@@ -57,7 +57,7 @@ public abstract class QuarkButtonBlock extends AbstractButtonBlock implements IQ
 
     @Nullable
     @Override
-    public Module getModule() {
+    public QuarkModule getModule() {
         return module;
     }
 

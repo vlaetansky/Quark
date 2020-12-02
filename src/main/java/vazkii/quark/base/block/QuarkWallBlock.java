@@ -22,7 +22,7 @@ import vazkii.arl.interf.IItemColorProvider;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.VariantHandler;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class QuarkWallBlock extends WallBlock implements IQuarkBlock, IBlockColorProvider {
 
@@ -47,7 +47,7 @@ public class QuarkWallBlock extends WallBlock implements IQuarkBlock, IBlockColo
 
 	@Nullable
 	@Override
-	public Module getModule() {
+	public QuarkModule getModule() {
 		return parent.getModule();
 	}
 

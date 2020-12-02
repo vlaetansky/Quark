@@ -37,7 +37,7 @@ import vazkii.arl.interf.IBlockColorProvider;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 /**
  * @author WireSegal
@@ -50,7 +50,7 @@ public class RedstoneInductorBlock extends QuarkBlock implements IBlockColorProv
     public static final BooleanProperty LOCKED = BlockStateProperties.LOCKED;
     public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
 
-    public RedstoneInductorBlock(String regname, Module module, ItemGroup creativeTab, Properties properties) {
+    public RedstoneInductorBlock(String regname, QuarkModule module, ItemGroup creativeTab, Properties properties) {
         super(regname, module, creativeTab, properties);
 
         setDefaultState(getDefaultState()

@@ -7,7 +7,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 
 /**
@@ -15,7 +15,7 @@ import vazkii.quark.base.module.ModuleCategory;
  * Created at 11:25 AM on 9/2/19.
  */
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
-public class VillagersFollowEmeraldsModule extends Module {
+public class VillagersFollowEmeraldsModule extends QuarkModule {
 
     @SubscribeEvent
     public void onVillagerAppear(EntityJoinWorldEvent event) {

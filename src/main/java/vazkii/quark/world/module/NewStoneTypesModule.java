@@ -16,7 +16,7 @@ import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.world.WorldGenHandler;
@@ -27,7 +27,7 @@ import vazkii.quark.world.config.BigStoneClusterConfig;
 import vazkii.quark.world.config.StoneTypeConfig;
 
 @LoadModule(category = ModuleCategory.WORLD, hasSubscriptions = true)
-public class NewStoneTypesModule extends Module {
+public class NewStoneTypesModule extends QuarkModule {
 
 	@Config(flag = "marble") private static boolean enableMarble = true;
 	@Config(flag = "limestone") private static boolean enableLimestone = true;

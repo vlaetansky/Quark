@@ -12,11 +12,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import vazkii.quark.api.IIndirectConnector;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 
 @LoadModule(category = ModuleCategory.AUTOMATION)
-public class ChainsConnectBlocksModule extends Module {
+public class ChainsConnectBlocksModule extends QuarkModule {
 
 	public static boolean staticEnabled;
 	

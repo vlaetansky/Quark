@@ -10,7 +10,7 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nonnull;
 
@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
  */
 public class QuarkGlassBlock extends QuarkBlock {
 
-    public QuarkGlassBlock(String regname, Module module, ItemGroup creativeTab, Properties properties) {
+    public QuarkGlassBlock(String regname, QuarkModule module, ItemGroup creativeTab, Properties properties) {
         super(regname, module, creativeTab, properties
                 .notSolid()
                 .setAllowsSpawn((state, world, pos, entityType) -> false)

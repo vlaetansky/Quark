@@ -15,7 +15,7 @@ import vazkii.quark.api.event.ModuleStateChangedEvent;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.config.ConfigFlagManager;
 
-public class Module {
+public class QuarkModule {
 
 	public String displayName = "";
 	public String lowercaseName = "";

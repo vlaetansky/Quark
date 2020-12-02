@@ -12,7 +12,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.oddities.block.MagnetBlock;
@@ -22,7 +22,7 @@ import vazkii.quark.oddities.tile.MagnetTileEntity;
 import vazkii.quark.oddities.tile.MagnetizedBlockTileEntity;
 
 @LoadModule(category = ModuleCategory.ODDITIES, requiredMod = Quark.ODDITIES_ID)
-public class MagnetsModule extends Module {
+public class MagnetsModule extends QuarkModule {
 	
     public static TileEntityType<MagnetTileEntity> magnetType;
     public static TileEntityType<MagnetizedBlockTileEntity> magnetizedBlockType;

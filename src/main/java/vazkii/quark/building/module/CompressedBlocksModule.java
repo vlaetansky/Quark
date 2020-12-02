@@ -18,13 +18,13 @@ import vazkii.quark.base.block.QuarkFlammableBlock;
 import vazkii.quark.base.block.QuarkFlammablePillarBlock;
 import vazkii.quark.base.handler.FuelHandler;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.building.block.BurnForeverBlock;
 
 @LoadModule(category = ModuleCategory.BUILDING)
-public class CompressedBlocksModule extends Module {
+public class CompressedBlocksModule extends QuarkModule {
 
 	@Config(name = "Charcoal Block and Blaze Lantern Stay On Fire Forever")
 	public static boolean burnsForever = true;

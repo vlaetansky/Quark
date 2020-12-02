@@ -7,11 +7,11 @@ import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
-public class AxeLeafHarvestingModule extends Module {
+public class AxeLeafHarvestingModule extends QuarkModule {
 
 	@SubscribeEvent
 	public void calcBreakSpeed(BreakSpeed event) {

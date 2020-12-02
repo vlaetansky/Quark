@@ -9,14 +9,14 @@ import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.building.block.MagmaBrickBlock;
 
 @LoadModule(category = ModuleCategory.BUILDING)
-public class MoreBrickTypesModule extends Module {
+public class MoreBrickTypesModule extends QuarkModule {
 
 	@Config(flag = "sandy_bricks") public boolean enableSandyBricks = true;
 	@Config(flag = "snow_bricks") public boolean enableSnowBricks = true;

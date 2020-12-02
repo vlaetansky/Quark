@@ -26,13 +26,13 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.building.client.render.LeashKnot2Renderer;
 import vazkii.quark.building.entity.LeashKnot2Entity;
 
 @LoadModule(category = ModuleCategory.BUILDING, hasSubscriptions = true)
-public class TieLeadsToFencesModule extends Module {
+public class TieLeadsToFencesModule extends QuarkModule {
 
     public static EntityType<LeashKnot2Entity> leashKnot2Entity;
     

@@ -17,14 +17,14 @@ import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.api.IConditionalSticky;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class ColorSlimeBlock extends SlimeBlock implements IConditionalSticky {
 
 	private final SlimeColor color;
-	private final Module module;
+	private final QuarkModule module;
 
-	public ColorSlimeBlock(SlimeColor color, Module module) {
+	public ColorSlimeBlock(SlimeColor color, QuarkModule module) {
 		super(Block.Properties.from(Blocks.SLIME_BLOCK));
 
 		RegistryHelper.registerBlock(this, color.name().toLowerCase(Locale.ROOT) + "_slime_block");

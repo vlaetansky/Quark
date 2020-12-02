@@ -18,15 +18,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.api.ICollateralMover;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class IronRodBlock extends EndRodBlock implements ICollateralMover {
 
-	private final Module module;
+	private final QuarkModule module;
 	
 	public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
 	
-	public IronRodBlock(Module module) {
+	public IronRodBlock(QuarkModule module) {
 		super(Block.Properties.create(Material.IRON, DyeColor.GRAY)
 				.hardnessAndResistance(5F, 10F)
 				.sound(SoundType.METAL));

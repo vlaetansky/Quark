@@ -15,7 +15,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.world.WorldGenHandler;
@@ -26,7 +26,7 @@ import vazkii.quark.world.gen.MonsterBoxGenerator;
 import vazkii.quark.world.tile.MonsterBoxTileEntity;
 	
 @LoadModule(category = ModuleCategory.WORLD, hasSubscriptions = true)
-public class MonsterBoxModule extends Module {
+public class MonsterBoxModule extends QuarkModule {
 
 	public static final String TAG_MONSTER_BOX_SPAWNED = "quark:monster_box_spawned";
 	public static final ResourceLocation MONSTER_BOX_LOOT_TABLE = new ResourceLocation(Quark.MOD_ID, "misc/monster_box");

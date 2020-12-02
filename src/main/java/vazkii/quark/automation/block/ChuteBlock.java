@@ -22,7 +22,7 @@ import vazkii.quark.automation.tile.ChuteTileEntity;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class ChuteBlock extends QuarkBlock {
 
@@ -33,7 +33,7 @@ public class ChuteBlock extends QuarkBlock {
 
 	public static final BooleanProperty ENABLED = BlockStateProperties.ENABLED;
 
-	public ChuteBlock(String regname, Module module, ItemGroup creativeTab, Properties properties) {
+	public ChuteBlock(String regname, QuarkModule module, ItemGroup creativeTab, Properties properties) {
 		super(regname, module, creativeTab, properties);
 		setDefaultState(getDefaultState().with(ENABLED, true));
 		

@@ -18,12 +18,12 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.tools.item.PickarangItem;
 
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
-public class DirtToPathModule extends Module {
+public class DirtToPathModule extends QuarkModule {
 
 	@SubscribeEvent
 	public void onRightClick(PlayerInteractEvent.RightClickBlock event) {

@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 import org.apache.commons.lang3.text.WordUtils;
 
 import net.minecraftforge.common.ForgeConfigSpec;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 @SuppressWarnings("deprecation")
 public final class ConfigObjectSerializer {
@@ -117,7 +117,7 @@ public final class ConfigObjectSerializer {
 		}
 		
 		String flag = config.flag();
-		boolean useFlag = object instanceof Module && !flag.isEmpty();
+		boolean useFlag = object instanceof QuarkModule && !flag.isEmpty();
 			
 		ForgeConfigSpec.ConfigValue<?> value = (defaultValue instanceof List) ?
 				builder.defineList(name, (List<?>) defaultValue, supplier, restrict(restriction, min, max)) :
@@ -131,7 +131,7 @@ public final class ConfigObjectSerializer {
 				else field.set(object, setObj);
 				
 				if(useFlag)
-					flagManager.putFlag((Module) object, flag, (boolean) setObj);
+					flagManager.putFlag((QuarkModule) object, flag, (boolean) setObj);
 			} catch(IllegalAccessException e) {
 				throw new RuntimeException(e);
 			}

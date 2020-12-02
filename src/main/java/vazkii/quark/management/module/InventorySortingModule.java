@@ -8,7 +8,7 @@ import vazkii.quark.base.client.ModKeybindHandler;
 import vazkii.quark.base.client.InventoryButtonHandler.ButtonProvider;
 import vazkii.quark.base.client.InventoryButtonHandler.ButtonTargetType;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.network.QuarkNetwork;
@@ -18,7 +18,7 @@ import vazkii.quark.management.client.gui.MiniInventoryButton;
 import java.util.function.BooleanSupplier;
 
 @LoadModule(category = ModuleCategory.MANAGEMENT)
-public class InventorySortingModule extends Module {
+public class InventorySortingModule extends QuarkModule {
 
 	@Config
 	public static boolean enablePlayerInventory = true;

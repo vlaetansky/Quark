@@ -17,11 +17,11 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.interf.IBlockColorProvider;
 import vazkii.quark.base.block.QuarkVineBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class BurntVineBlock extends QuarkVineBlock implements IBlockColorProvider {
 
-	public BurntVineBlock(Module module) {
+	public BurntVineBlock(QuarkModule module) {
 		super(module, "burnt_vine", false);
 	}
 

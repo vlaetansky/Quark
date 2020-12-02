@@ -11,11 +11,11 @@ import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
-public class SnowGolemPlayerHeadsModule extends Module {
+public class SnowGolemPlayerHeadsModule extends QuarkModule {
 
 	@SubscribeEvent
 	public void onDrops(LivingDropsEvent event) {

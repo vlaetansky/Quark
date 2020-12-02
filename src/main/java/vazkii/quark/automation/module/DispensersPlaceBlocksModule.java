@@ -20,7 +20,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 
@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @LoadModule(category = ModuleCategory.AUTOMATION)
-public class DispensersPlaceBlocksModule extends Module {
+public class DispensersPlaceBlocksModule extends QuarkModule {
 
 	@Config public static List<String> blacklist = Lists.newArrayList("minecraft:water", "minecraft:lava", "minecraft:fire");
 	

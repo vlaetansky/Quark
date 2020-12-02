@@ -39,7 +39,7 @@ import vazkii.arl.interf.IBlockColorProvider;
 import vazkii.arl.interf.IItemColorProvider;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.block.QuarkSlabBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class VerticalSlabBlock extends QuarkBlock implements IWaterLoggable, IBlockColorProvider {
 
@@ -48,7 +48,7 @@ public class VerticalSlabBlock extends QuarkBlock implements IWaterLoggable, IBl
 
 	public final Block parent;
 
-	public VerticalSlabBlock(Block parent, Module module) {
+	public VerticalSlabBlock(Block parent, QuarkModule module) {
 		super(parent.getRegistryName().getPath().replace("_slab", "_vertical_slab"), module, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(parent));
 		this.parent = parent;
 		

@@ -3,7 +3,7 @@ package vazkii.quark.world.module;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.world.WorldGenHandler;
@@ -13,7 +13,7 @@ import vazkii.quark.base.world.config.DimensionConfig;
 import vazkii.quark.world.gen.UndergroundSpaceGenerator;
 
 @LoadModule(category = ModuleCategory.WORLD)
-public class CrevicesModule extends Module {
+public class CrevicesModule extends QuarkModule {
 
 	@Config public DimensionConfig dimensions = DimensionConfig.overworld(false);
 	@Config public ClusterSizeConfig spawnSettings = new ClusterSizeConfig(120, 60, 4, 20, 1, true, Biome.Category.OCEAN, Biome.Category.BEACH).setYLevels(15, 50);

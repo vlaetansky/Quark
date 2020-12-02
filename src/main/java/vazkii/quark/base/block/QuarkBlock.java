@@ -5,17 +5,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import vazkii.arl.block.BasicBlock;
 import vazkii.arl.util.RegistryHelper;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nullable;
 import java.util.function.BooleanSupplier;
 
 public class QuarkBlock extends BasicBlock implements IQuarkBlock {
 	
-	private final Module module;
+	private final QuarkModule module;
 	private BooleanSupplier enabledSupplier = () -> true;
 
-	public QuarkBlock(String regname, Module module, ItemGroup creativeTab, Properties properties) {
+	public QuarkBlock(String regname, QuarkModule module, ItemGroup creativeTab, Properties properties) {
 		super(regname, properties);
 		this.module = module;
 		
@@ -42,7 +42,7 @@ public class QuarkBlock extends BasicBlock implements IQuarkBlock {
 
 	@Nullable
 	@Override
-	public Module getModule() {
+	public QuarkModule getModule() {
 		return module;
 	}
 

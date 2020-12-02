@@ -27,7 +27,7 @@ public enum ModuleCategory {
 	
 	public boolean enabled;
 	
-	private List<Module> ownedModules = new ArrayList<>();
+	private List<QuarkModule> ownedModules = new ArrayList<>();
 	
 	ModuleCategory(String name, Item item, String requiredMod) {
 		this.name = name;
@@ -40,11 +40,11 @@ public enum ModuleCategory {
 		this(name, item, null);
 	}
 	
-	public void addModule(Module module) {
+	public void addModule(QuarkModule module) {
 		ownedModules.add(module);
 	}
 	
-	public List<Module> getOwnedModules() {
+	public List<QuarkModule> getOwnedModules() {
 		return ownedModules;
 	}
 	

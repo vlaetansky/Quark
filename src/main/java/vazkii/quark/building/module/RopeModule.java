@@ -15,7 +15,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.building.block.RopeBlock;
@@ -23,7 +23,7 @@ import vazkii.quark.building.block.RopeBlock;
 import javax.annotation.Nonnull;
 
 @LoadModule(category = ModuleCategory.BUILDING)
-public class RopeModule extends Module {
+public class RopeModule extends QuarkModule {
 
 	public static Block rope;
 

@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.gen.GenerationStage.Decoration;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.world.WorldGenHandler;
@@ -21,7 +21,7 @@ import vazkii.quark.base.world.config.DimensionConfig;
 import vazkii.quark.world.gen.FairyRingGenerator;
 
 @LoadModule(category = ModuleCategory.WORLD)
-public class FairyRingsModule extends Module {
+public class FairyRingsModule extends QuarkModule {
 
 	@Config public static double forestChance = 0.00625;
 	@Config public static double  plainsChance = 0.0025;

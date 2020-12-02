@@ -10,7 +10,7 @@ import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.automation.block.WeatherSensorBlock;
 import vazkii.quark.automation.tile.WeatherSensorTileEntity;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 
 /**
@@ -18,7 +18,7 @@ import vazkii.quark.base.module.ModuleCategory;
  * Created at 9:11 AM on 8/26/19.
  */
 @LoadModule(category = ModuleCategory.AUTOMATION)
-public class WeatherSensorModule extends Module {
+public class WeatherSensorModule extends QuarkModule {
     public static TileEntityType<WeatherSensorTileEntity> weatherSensorTEType;
 
     @Override

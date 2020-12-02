@@ -48,7 +48,7 @@ import vazkii.arl.util.ItemNBTHelper;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.ProxiedItemStackHandler;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.oddities.client.model.BackpackModel;
 import vazkii.quark.oddities.container.BackpackContainer;
 import vazkii.quark.oddities.module.BackpackModule;
@@ -58,13 +58,13 @@ public class BackpackItem extends DyeableArmorItem implements IItemColorProvider
 	private static final String WORN_TEXTURE = Quark.MOD_ID + ":textures/misc/backpack_worn.png";
 	private static final String WORN_OVERLAY_TEXTURE = Quark.MOD_ID + ":textures/misc/backpack_worn_overlay.png";
 
-	private final Module module;
+	private final QuarkModule module;
 
 	@OnlyIn(Dist.CLIENT)
 	@SuppressWarnings("rawtypes")
 	private BipedModel model;
 
-	public BackpackItem(Module module) {
+	public BackpackItem(QuarkModule module) {
 		super(ArmorMaterial.LEATHER, EquipmentSlotType.CHEST, 
 				new Item.Properties()
 				.maxStackSize(1)

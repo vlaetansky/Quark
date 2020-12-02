@@ -11,11 +11,11 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IWorldReader;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class BiotiteOreBlock extends QuarkBlock {
 
-	public BiotiteOreBlock(Module module) {
+	public BiotiteOreBlock(QuarkModule module) {
 		super("biotite_ore", module, ItemGroup.BUILDING_BLOCKS, 
 				Block.Properties.create(Material.ROCK, MaterialColor.SAND)
 				.setRequiresTool() // needs tool

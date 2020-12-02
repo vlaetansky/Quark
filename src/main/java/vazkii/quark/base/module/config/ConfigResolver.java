@@ -12,7 +12,7 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.GeneralConfig;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 
 public class ConfigResolver {
@@ -68,10 +68,10 @@ public class ConfigResolver {
 	private void buildCategory(IConfigBuilder builder, ModuleCategory category) {
 		builder.push(category.name);
 		
-		List<Module> modules = category.getOwnedModules();
-		Map<Module, Runnable> setEnabledRunnables = new HashMap<>();
+		List<QuarkModule> modules = category.getOwnedModules();
+		Map<QuarkModule, Runnable> setEnabledRunnables = new HashMap<>();
 		
-		for(Module module : modules) {
+		for(QuarkModule module : modules) {
 			ForgeConfigSpec.ConfigValue<Boolean> value = builder.defineBool(module.displayName, () -> module.configEnabled, module.enabledByDefault);
 			setEnabledRunnables.put(module, () -> {
 				module.setEnabled(value.get() && category.enabled);
@@ -79,13 +79,13 @@ public class ConfigResolver {
 			});
 		}
 	
-		for(Module module : modules)
+		for(QuarkModule module : modules)
 			buildModule(builder, module, setEnabledRunnables.get(module));
 		
 		builder.pop();
 	}
 	
-	private void buildModule(IConfigBuilder builder, Module module, Runnable setEnabled) {
+	private void buildModule(IConfigBuilder builder, QuarkModule module, Runnable setEnabled) {
 		if(!module.description.isEmpty())
 			builder.comment(module.description);
 		
@@ -107,7 +107,7 @@ public class ConfigResolver {
 		builder.pop();
 	}
 	
-	private void addModuleAntiOverlap(IConfigBuilder builder, Module module) {
+	private void addModuleAntiOverlap(IConfigBuilder builder, QuarkModule module) {
 		StringBuilder desc = new StringBuilder("This feature disables itself if any of the following mods are loaded: \n");
 		for(String s : module.antiOverlap)
 			desc.append(" - ").append(s).append("\n");

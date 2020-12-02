@@ -9,7 +9,7 @@ import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.automation.block.ChuteBlock;
 import vazkii.quark.automation.tile.ChuteTileEntity;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 
 /**
@@ -17,7 +17,7 @@ import vazkii.quark.base.module.ModuleCategory;
  * Created at 10:25 AM on 9/29/19.
  */
 @LoadModule(category = ModuleCategory.AUTOMATION)
-public class ChuteModule extends Module {
+public class ChuteModule extends QuarkModule {
 
     public static TileEntityType<ChuteTileEntity> tileEntityType;
 

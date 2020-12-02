@@ -8,7 +8,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkFenceGateBlock;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 
 /**
@@ -16,7 +16,7 @@ import vazkii.quark.base.module.ModuleCategory;
  * Created at 10:51 AM on 10/9/19.
  */
 @LoadModule(category = ModuleCategory.BUILDING)
-public class NetherBrickFenceGateModule extends Module {
+public class NetherBrickFenceGateModule extends QuarkModule {
     @Override
     public void construct() {
         new QuarkFenceGateBlock("nether_brick_fence_gate", this, ItemGroup.REDSTONE,

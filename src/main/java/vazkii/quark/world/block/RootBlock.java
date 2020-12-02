@@ -19,11 +19,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import vazkii.quark.base.block.QuarkVineBlock;
 import vazkii.quark.base.handler.MiscUtil;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class RootBlock extends QuarkVineBlock implements IGrowable {
 
-	public RootBlock(Module module) {
+	public RootBlock(QuarkModule module) {
 		super(module, "root", true);
 	}
 	

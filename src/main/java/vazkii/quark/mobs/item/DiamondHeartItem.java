@@ -21,14 +21,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.base.item.QuarkItem;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.mobs.entity.EnumStonelingVariant;
 import vazkii.quark.mobs.entity.StonelingEntity;
 import vazkii.quark.mobs.module.StonelingsModule;
 
 public class DiamondHeartItem extends QuarkItem {
 
-	public DiamondHeartItem(String regname, Module module, Properties properties) {
+	public DiamondHeartItem(String regname, QuarkModule module, Properties properties) {
 		super(regname, module, properties);
 	}
 

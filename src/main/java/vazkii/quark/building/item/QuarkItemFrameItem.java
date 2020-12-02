@@ -12,7 +12,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import vazkii.quark.base.item.QuarkItem;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.util.TriFunction;
 
 import javax.annotation.Nonnull;
@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 public class QuarkItemFrameItem extends QuarkItem {
     private final TriFunction<? extends HangingEntity, World, BlockPos, Direction> entityProvider;
 
-    public QuarkItemFrameItem(String name, Module module, TriFunction<? extends HangingEntity, World, BlockPos, Direction> entityProvider, Item.Properties properties) {
+    public QuarkItemFrameItem(String name, QuarkModule module, TriFunction<? extends HangingEntity, World, BlockPos, Direction> entityProvider, Item.Properties properties) {
         super(name, module, properties);
         this.entityProvider = entityProvider;
     }

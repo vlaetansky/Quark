@@ -6,11 +6,11 @@ import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.automation.block.EnderWatcherBlock;
 import vazkii.quark.automation.tile.EnderWatcherTileEntity;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 
 @LoadModule(category = ModuleCategory.AUTOMATION)
-public class EnderWatcherModule extends Module {
+public class EnderWatcherModule extends QuarkModule {
 
 	public static TileEntityType<EnderWatcherTileEntity> enderWatcherTEType;
 

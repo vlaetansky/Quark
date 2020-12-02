@@ -31,7 +31,7 @@ import vazkii.arl.interf.IBlockItemProvider;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.block.IQuarkBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.building.block.VariantChestBlock.Compat;
 import vazkii.quark.building.module.VariantChestsModule.IChestTextureProvider;
 import vazkii.quark.building.tile.VariantTrappedChestTileEntity;
@@ -40,12 +40,12 @@ import vazkii.quark.building.tile.VariantTrappedChestTileEntity;
 public class VariantTrappedChestBlock extends ChestBlock implements IBlockItemProvider, IQuarkBlock, IChestTextureProvider {
 
 	public final String type;
-	private final Module module;
+	private final QuarkModule module;
 	private BooleanSupplier enabledSupplier = () -> true;
 
 	private String path;
 	
-	public VariantTrappedChestBlock(String type, Module module, Supplier<TileEntityType<? extends ChestTileEntity>> supplier, Properties props) {
+	public VariantTrappedChestBlock(String type, QuarkModule module, Supplier<TileEntityType<? extends ChestTileEntity>> supplier, Properties props) {
 		super(props, supplier);
 		RegistryHelper.registerBlock(this, type + "_trapped_chest");
 		RegistryHelper.setCreativeTab(this, ItemGroup.REDSTONE);
@@ -80,7 +80,7 @@ public class VariantTrappedChestBlock extends ChestBlock implements IBlockItemPr
 
 	@Nullable
 	@Override
-	public Module getModule() {
+	public QuarkModule getModule() {
 		return module;
 	}
 
@@ -98,7 +98,7 @@ public class VariantTrappedChestBlock extends ChestBlock implements IBlockItemPr
 
 	public static class Compat extends VariantTrappedChestBlock {
 
-		public Compat(String type, String mod, Module module, Supplier<TileEntityType<? extends ChestTileEntity>> supplier, Properties props) {
+		public Compat(String type, String mod, QuarkModule module, Supplier<TileEntityType<? extends ChestTileEntity>> supplier, Properties props) {
 			super(type, module, supplier, props);
 			setCondition(() -> ModList.get().isLoaded(mod));
 		}

@@ -22,7 +22,7 @@ import vazkii.arl.interf.IBlockColorProvider;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class LeafCarpetBlock extends QuarkBlock implements IBlockColorProvider {
 
@@ -31,7 +31,7 @@ public class LeafCarpetBlock extends QuarkBlock implements IBlockColorProvider {
 	private final BlockState baseState;
 	private ItemStack baseStack;
 	
-	public LeafCarpetBlock(String name, Block base, Module module) {
+	public LeafCarpetBlock(String name, Block base, QuarkModule module) {
 		super(name + "_leaf_carpet", module, ItemGroup.DECORATIONS, 
 				Block.Properties.create(Material.CARPET)
 				.hardnessAndResistance(0F)

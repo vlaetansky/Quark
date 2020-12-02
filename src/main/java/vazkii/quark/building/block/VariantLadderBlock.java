@@ -13,14 +13,14 @@ import net.minecraft.world.IBlockReader;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class VariantLadderBlock extends LadderBlock {
 
-	private final Module module;
+	private final QuarkModule module;
 	private final boolean flammable;
 	
-	public VariantLadderBlock(String type, Module module, Block.Properties props, boolean flammable) {
+	public VariantLadderBlock(String type, QuarkModule module, Block.Properties props, boolean flammable) {
 		super(props);
 		
 		RegistryHelper.registerBlock(this, type + "_ladder");
@@ -32,7 +32,7 @@ public class VariantLadderBlock extends LadderBlock {
 		this.flammable = flammable;
 	}
 	
-	public VariantLadderBlock(String type, Module module, boolean flammable) {
+	public VariantLadderBlock(String type, QuarkModule module, boolean flammable) {
 		this(type, module, Block.Properties.from(Blocks.LADDER), flammable);
 	}
 	

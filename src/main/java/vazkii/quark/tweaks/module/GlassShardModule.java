@@ -18,7 +18,7 @@ import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.block.QuarkInheritedPaneBlock;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.tweaks.block.DirtyGlassBlock;
 
@@ -27,7 +27,7 @@ import vazkii.quark.tweaks.block.DirtyGlassBlock;
  * Created at 12:26 PM on 8/24/19.
  */
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
-public class GlassShardModule extends Module {
+public class GlassShardModule extends QuarkModule {
 
     public static QuarkBlock dirtyGlass;
 

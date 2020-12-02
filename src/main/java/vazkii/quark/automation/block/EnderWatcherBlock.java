@@ -16,14 +16,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import vazkii.quark.automation.tile.EnderWatcherTileEntity;
 import vazkii.quark.base.block.QuarkBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class EnderWatcherBlock extends QuarkBlock {
 	
 	public static final BooleanProperty WATCHED = BooleanProperty.create("watched");
 	public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
 
-	public EnderWatcherBlock(Module module) {
+	public EnderWatcherBlock(QuarkModule module) {
 		super("ender_watcher", module, ItemGroup.REDSTONE, 
 				Block.Properties.create(Material.IRON, MaterialColor.GREEN)
 				.hardnessAndResistance(3F, 10F)

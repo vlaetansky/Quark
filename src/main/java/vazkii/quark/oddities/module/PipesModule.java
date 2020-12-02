@@ -11,7 +11,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.oddities.block.PipeBlock;
@@ -19,7 +19,7 @@ import vazkii.quark.oddities.client.render.PipeTileEntityRenderer;
 import vazkii.quark.oddities.tile.PipeTileEntity;
 
 @LoadModule(category = ModuleCategory.ODDITIES, requiredMod = Quark.ODDITIES_ID)
-public class PipesModule extends Module {
+public class PipesModule extends QuarkModule {
 
     public static TileEntityType<PipeTileEntity> tileEntityType;
 

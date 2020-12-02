@@ -31,11 +31,11 @@ import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.ModKeybindHandler;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
-public class CameraModule extends Module {
+public class CameraModule extends QuarkModule {
 
 	private static final int RULER_COLOR = 0x33000000;
 

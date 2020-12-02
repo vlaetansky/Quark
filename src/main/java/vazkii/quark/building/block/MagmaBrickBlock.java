@@ -12,11 +12,11 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.VariantHandler.IVariantsShouldBeEmissive;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class MagmaBrickBlock extends QuarkBlock implements IVariantsShouldBeEmissive {
 
-	public MagmaBrickBlock(Module module) {
+	public MagmaBrickBlock(QuarkModule module) {
 		super("magma_bricks", module, ItemGroup.BUILDING_BLOCKS, 
 				Block.Properties.from(Blocks.MAGMA_BLOCK)
 				.hardnessAndResistance(1.5F, 10F)

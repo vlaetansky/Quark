@@ -28,14 +28,14 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.base.item.QuarkItem;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class SlimeInABucketItem extends QuarkItem {
 
 	public static final String TAG_ENTITY_DATA = "slime_nbt";
 	public static final String TAG_EXCITED = "excited";
 
-	public SlimeInABucketItem(Module module) {
+	public SlimeInABucketItem(QuarkModule module) {
 		super("slime_in_a_bucket", module, 
 				new Item.Properties()
 				.maxStackSize(1)

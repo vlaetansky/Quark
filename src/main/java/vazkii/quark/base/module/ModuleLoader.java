@@ -14,7 +14,7 @@ public final class ModuleLoader {
 	
 	public static final ModuleLoader INSTANCE = new ModuleLoader(); 
 	
-	private Map<Class<? extends Module>, Module> foundModules = new HashMap<>();
+	private Map<Class<? extends QuarkModule>, QuarkModule> foundModules = new HashMap<>();
 	
 	private ConfigResolver config;
 	
@@ -22,14 +22,14 @@ public final class ModuleLoader {
 	
 	public void start() {
 		findModules();
-		dispatch(Module::construct);
-		dispatch(Module::modulesStarted);
+		dispatch(QuarkModule::construct);
+		dispatch(QuarkModule::modulesStarted);
 		resolveConfigSpec();
 	}
 	
 	@OnlyIn(Dist.CLIENT)
 	public void clientStart() {
-		dispatch(Module::constructClient);
+		dispatch(QuarkModule::constructClient);
 	}
 	
 	private void findModules() {
@@ -45,28 +45,28 @@ public final class ModuleLoader {
 	
 	public void configChanged() {
 		config.configChanged();
-		dispatch(Module::configChanged);
+		dispatch(QuarkModule::configChanged);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public void configChangedClient() {
-		dispatch(Module::configChangedClient);
+		dispatch(QuarkModule::configChangedClient);
 	}
 	
 	public void setup() {
-		dispatch(Module::earlySetup);
+		dispatch(QuarkModule::earlySetup);
 		Quark.proxy.handleQuarkConfigChange();
-		dispatch(Module::setup);
+		dispatch(QuarkModule::setup);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		dispatch(Module::clientSetup);
+		dispatch(QuarkModule::clientSetup);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public void modelRegistry() {
-		dispatch(Module::modelRegistry);
+		dispatch(QuarkModule::modelRegistry);
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -80,19 +80,19 @@ public final class ModuleLoader {
 	}
 	
 	public void loadComplete() {
-		dispatch(Module::loadComplete);
+		dispatch(QuarkModule::loadComplete);
 	}
 	
-	private void dispatch(Consumer<Module> run) {
+	private void dispatch(Consumer<QuarkModule> run) {
 		foundModules.values().forEach(run);
 	}
 	
-	public boolean isModuleEnabled(Class<? extends Module> moduleClazz) {
-		Module module = getModuleInstance(moduleClazz);
+	public boolean isModuleEnabled(Class<? extends QuarkModule> moduleClazz) {
+		QuarkModule module = getModuleInstance(moduleClazz);
 		return module != null && module.enabled;
 	}
 	
-	public Module getModuleInstance(Class<? extends Module> moduleClazz) {
+	public QuarkModule getModuleInstance(Class<? extends QuarkModule> moduleClazz) {
 		return foundModules.get(moduleClazz);
 	}
 	

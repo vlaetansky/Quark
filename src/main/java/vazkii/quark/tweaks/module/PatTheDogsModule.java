@@ -13,7 +13,7 @@ import net.minecraftforge.event.entity.living.AnimalTameEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.mobs.entity.FoxhoundEntity;
@@ -25,7 +25,7 @@ import vazkii.quark.tweaks.ai.WantLoveGoal;
  * Created at 11:25 AM on 9/2/19.
  */
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
-public class PatTheDogsModule extends Module {
+public class PatTheDogsModule extends QuarkModule {
     @Config(description = "How many ticks it takes for a dog to want affection after being pet/tamed; leave -1 to disable")
     public static int dogsWantLove = -1;
 

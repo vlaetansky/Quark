@@ -12,14 +12,14 @@ import net.minecraft.util.NonNullList;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class QuarkPaneBlock extends PaneBlock implements IQuarkBlock {
 	
-	public final Module module;
+	public final QuarkModule module;
 	private BooleanSupplier enabledSupplier = () -> true;
 
-	public QuarkPaneBlock(String name, Module module, Block.Properties properties, RenderTypeSkeleton renderType) {
+	public QuarkPaneBlock(String name, QuarkModule module, Block.Properties properties, RenderTypeSkeleton renderType) {
 		super(properties);
 
 		this.module = module;
@@ -38,7 +38,7 @@ public class QuarkPaneBlock extends PaneBlock implements IQuarkBlock {
 
 	@Nullable
 	@Override
-	public Module getModule() {
+	public QuarkModule getModule() {
 		return module;
 	}
 

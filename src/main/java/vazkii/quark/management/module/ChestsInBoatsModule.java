@@ -28,7 +28,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.OpenBoatChestMessage;
@@ -36,7 +36,7 @@ import vazkii.quark.management.client.render.ChestPassengerRenderer;
 import vazkii.quark.management.entity.ChestPassengerEntity;
 
 @LoadModule(category = ModuleCategory.MANAGEMENT, hasSubscriptions = true)
-public class ChestsInBoatsModule extends Module {
+public class ChestsInBoatsModule extends QuarkModule {
 
 	public static EntityType<ChestPassengerEntity> chestPassengerEntityType;
 

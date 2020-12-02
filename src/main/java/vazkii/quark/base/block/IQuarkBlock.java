@@ -7,7 +7,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.extensions.IForgeBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nullable;
 import java.util.function.BooleanSupplier;
@@ -19,14 +19,14 @@ import java.util.function.BooleanSupplier;
 public interface IQuarkBlock extends IForgeBlock {
 
     @Nullable
-    Module getModule();
+    QuarkModule getModule();
 
     IQuarkBlock setCondition(BooleanSupplier condition);
 
     boolean doesConditionApply();
 
     default boolean isEnabled() {
-        Module module = getModule();
+        QuarkModule module = getModule();
         return module != null && module.enabled && doesConditionApply();
     }
 

@@ -14,12 +14,12 @@ import net.minecraft.world.IBlockReader;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.world.tile.MonsterBoxTileEntity;
 
 public class MonsterBoxBlock extends QuarkBlock {
 
-	public MonsterBoxBlock(Module module) {
+	public MonsterBoxBlock(QuarkModule module) {
 		super("monster_box", module, null,
 				Block.Properties.create(Material.IRON)
 				.hardnessAndResistance(25F)

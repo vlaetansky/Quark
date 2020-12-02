@@ -12,7 +12,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.IRegistryDelegate;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @LoadModule(category = ModuleCategory.CLIENT)
-public class GreenerGrassModule extends Module {
+public class GreenerGrassModule extends QuarkModule {
 
 	@Config public static boolean affectLeaves = true;
 	@Config public static boolean alphaGrass = false;

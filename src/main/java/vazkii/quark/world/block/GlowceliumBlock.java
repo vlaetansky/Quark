@@ -23,11 +23,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class GlowceliumBlock extends QuarkBlock {
 
-	public GlowceliumBlock(Module module) {
+	public GlowceliumBlock(QuarkModule module) {
 		super("glowcelium", module, ItemGroup.BUILDING_BLOCKS,
 				Block.Properties.create(Material.ORGANIC, MaterialColor.LIGHT_BLUE)
 						.tickRandomly()

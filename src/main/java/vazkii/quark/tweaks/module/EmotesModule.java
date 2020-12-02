@@ -41,7 +41,7 @@ import vazkii.aurelienribon.tweenengine.Tween;
 import vazkii.quark.base.client.ModKeybindHandler;
 import vazkii.quark.base.handler.ContributorRewardHandler;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.network.QuarkNetwork;
@@ -55,7 +55,7 @@ import vazkii.quark.tweaks.client.gui.EmoteButton;
 import vazkii.quark.tweaks.client.gui.TranslucentButton;
 
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
-public class EmotesModule extends Module {
+public class EmotesModule extends QuarkModule {
 
 	private static final Set<String> DEFAULT_EMOTE_NAMES = ImmutableSet.of(
 			"no",

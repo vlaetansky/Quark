@@ -20,7 +20,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.building.client.render.ColoredItemFrameRenderer;
 import vazkii.quark.building.client.render.GlassItemFrameRenderer;
@@ -33,7 +33,7 @@ import vazkii.quark.building.item.QuarkItemFrameItem;
  * Created at 11:00 AM on 8/25/19.
  */
 @LoadModule(category = ModuleCategory.BUILDING)
-public class ItemFramesModule extends Module {
+public class ItemFramesModule extends QuarkModule {
     public static Item glassFrame;
     private static Map<DyeColor, Item> coloredFrames = Maps.newEnumMap(DyeColor.class);
 

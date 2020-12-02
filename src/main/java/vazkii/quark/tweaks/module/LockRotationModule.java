@@ -49,7 +49,7 @@ import vazkii.quark.api.IRotationLockable;
 import vazkii.quark.base.client.ModKeybindHandler;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.network.QuarkNetwork;
@@ -58,7 +58,7 @@ import vazkii.quark.building.block.VerticalSlabBlock;
 import vazkii.quark.building.block.VerticalSlabBlock.VerticalSlabType;
 
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
-public class LockRotationModule extends Module {
+public class LockRotationModule extends QuarkModule {
 
 	private static final String TAG_LOCKED_ONCE = "quark:locked_once";
 

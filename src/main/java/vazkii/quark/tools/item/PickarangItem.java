@@ -34,7 +34,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.base.item.QuarkItem;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.tools.entity.PickarangEntity;
 import vazkii.quark.tools.module.PickarangModule;
 
@@ -42,7 +42,7 @@ public class PickarangItem extends QuarkItem {
 
 	public final boolean isNetherite;
 	
-	public PickarangItem(String regname, Module module, Properties properties, boolean isNetherite) {
+	public PickarangItem(String regname, QuarkModule module, Properties properties, boolean isNetherite) {
 		super(regname, module, properties);
 		this.isNetherite = isNetherite;
 	}

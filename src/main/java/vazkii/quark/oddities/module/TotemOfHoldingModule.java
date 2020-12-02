@@ -26,7 +26,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.oddities.entity.TotemOfHoldingEntity;
@@ -38,7 +38,7 @@ import vazkii.quark.oddities.render.TotemOfHoldingRenderer;
  * Created at 1:21 PM on 3/30/20.
  */
 @LoadModule(category = ModuleCategory.ODDITIES, requiredMod = Quark.ODDITIES_ID, hasSubscriptions = true)
-public class TotemOfHoldingModule extends Module {
+public class TotemOfHoldingModule extends QuarkModule {
     private static final String TAG_LAST_TOTEM = "quark:lastTotemOfHolding";
 
     private static final String TAG_DEATH_X = "quark:deathX";

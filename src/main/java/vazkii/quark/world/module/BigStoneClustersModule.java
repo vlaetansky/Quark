@@ -18,7 +18,7 @@ import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.OreFeatureConfig;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.world.WorldGenHandler;
@@ -28,7 +28,7 @@ import vazkii.quark.world.config.BigStoneClusterConfig;
 import vazkii.quark.world.gen.BigStoneClusterGenerator;
 
 @LoadModule(category = ModuleCategory.WORLD)
-public class BigStoneClustersModule extends Module {
+public class BigStoneClustersModule extends QuarkModule {
 
 	@Config public static BigStoneClusterConfig granite = new BigStoneClusterConfig(Biome.Category.EXTREME_HILLS);
 	@Config public static BigStoneClusterConfig diorite = new BigStoneClusterConfig(Biome.Category.SAVANNA, Biome.Category.JUNGLE, Biome.Category.MUSHROOM);

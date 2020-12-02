@@ -21,7 +21,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.item.QuarkItem;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.tools.module.TrowelModule;
 
 public class TrowelItem extends QuarkItem {
@@ -29,7 +29,7 @@ public class TrowelItem extends QuarkItem {
 	private static final String TAG_PLACING_SEED = "placing_seed";
 	private static final String TAG_LAST_STACK = "last_stack";
 	
-	public TrowelItem(Module module) {
+	public TrowelItem(QuarkModule module) {
 		super("trowel", module, new Item.Properties()
 				.maxDamage(255)
 				.group(ItemGroup.TOOLS));

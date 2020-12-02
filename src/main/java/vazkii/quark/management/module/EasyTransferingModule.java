@@ -6,14 +6,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.base.client.InventoryButtonHandler;
 import vazkii.quark.base.client.InventoryButtonHandler.ButtonTargetType;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.InventoryTransferMessage;
 import vazkii.quark.management.client.gui.MiniInventoryButton;
 
 @LoadModule(category = ModuleCategory.MANAGEMENT)
-public class EasyTransferingModule extends Module {
+public class EasyTransferingModule extends QuarkModule {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)

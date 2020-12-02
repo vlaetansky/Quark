@@ -31,7 +31,7 @@ import net.minecraftforge.fml.ModList;
 import vazkii.arl.interf.IBlockItemProvider;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.block.IQuarkBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.building.client.render.VariantChestTileEntityRenderer;
 import vazkii.quark.building.module.VariantChestsModule.IChestTextureProvider;
 import vazkii.quark.building.tile.VariantChestTileEntity;
@@ -40,12 +40,12 @@ import vazkii.quark.building.tile.VariantChestTileEntity;
 public class VariantChestBlock extends ChestBlock implements IBlockItemProvider, IQuarkBlock, IChestTextureProvider {
 
 	public final String type;
-	private final Module module;
+	private final QuarkModule module;
 	private BooleanSupplier enabledSupplier = () -> true;
 	
 	private String path;
 
-	public VariantChestBlock(String type, Module module, Supplier<TileEntityType<? extends ChestTileEntity>> supplier, Properties props) {
+	public VariantChestBlock(String type, QuarkModule module, Supplier<TileEntityType<? extends ChestTileEntity>> supplier, Properties props) {
 		super(props, supplier);
 		RegistryHelper.registerBlock(this, type + "_chest");
 		RegistryHelper.setCreativeTab(this, ItemGroup.DECORATIONS);
@@ -80,7 +80,7 @@ public class VariantChestBlock extends ChestBlock implements IBlockItemProvider,
 
 	@Nullable
 	@Override
-	public Module getModule() {
+	public QuarkModule getModule() {
 		return module;
 	}
 
@@ -112,7 +112,7 @@ public class VariantChestBlock extends ChestBlock implements IBlockItemProvider,
 	
 	public static class Compat extends VariantChestBlock {
 
-		public Compat(String type, String mod, Module module, Supplier<TileEntityType<? extends ChestTileEntity>> supplier, Properties props) {
+		public Compat(String type, String mod, QuarkModule module, Supplier<TileEntityType<? extends ChestTileEntity>> supplier, Properties props) {
 			super(type, module, supplier, props);
 			setCondition(() -> ModList.get().isLoaded(mod));
 		}

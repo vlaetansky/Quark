@@ -15,7 +15,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.tools.client.render.PickarangRenderer;
@@ -23,7 +23,7 @@ import vazkii.quark.tools.entity.PickarangEntity;
 import vazkii.quark.tools.item.PickarangItem;
 
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true)
-public class PickarangModule extends Module {
+public class PickarangModule extends QuarkModule {
 	
 	public static EntityType<PickarangEntity> pickarangType;
 

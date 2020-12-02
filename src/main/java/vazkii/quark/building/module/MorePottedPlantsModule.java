@@ -6,11 +6,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 
 @LoadModule(category = ModuleCategory.BUILDING)
-public class MorePottedPlantsModule extends Module {
+public class MorePottedPlantsModule extends QuarkModule {
 
 	@Override
 	public void construct() {

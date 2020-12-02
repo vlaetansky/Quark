@@ -11,7 +11,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage.Decoration;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.world.WorldGenHandler;
@@ -23,7 +23,7 @@ import vazkii.quark.world.config.BlossomTreeConfig;
 import vazkii.quark.world.gen.BlossomTreeGenerator;
 
 @LoadModule(category = ModuleCategory.WORLD)
-public class BlossomTreesModule extends Module {
+public class BlossomTreesModule extends QuarkModule {
 
 	@Config BlossomTreeConfig blue = new BlossomTreeConfig(200, Biome.Category.ICY);
 	@Config BlossomTreeConfig lavender = new BlossomTreeConfig(100, Biome.Category.SWAMP); 

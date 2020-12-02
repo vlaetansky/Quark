@@ -6,7 +6,7 @@ import net.minecraft.item.ItemGroup;
 import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.building.block.TurfBlock;
 
@@ -15,7 +15,7 @@ import vazkii.quark.building.block.TurfBlock;
  * Created at 11:18 AM on 10/4/19.
  */
 @LoadModule(category = ModuleCategory.BUILDING)
-public class TurfModule extends Module {
+public class TurfModule extends QuarkModule {
     @Override
     public void construct() {
         IQuarkBlock turf = new TurfBlock("turf", this, ItemGroup.BUILDING_BLOCKS,

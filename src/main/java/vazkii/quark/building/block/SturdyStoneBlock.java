@@ -8,11 +8,11 @@ import net.minecraft.block.material.PushReaction;
 import net.minecraft.item.ItemGroup;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 public class SturdyStoneBlock extends QuarkBlock {
 
-	public SturdyStoneBlock(Module module) {
+	public SturdyStoneBlock(QuarkModule module) {
 		super("sturdy_stone", module, ItemGroup.BUILDING_BLOCKS,
 				Block.Properties.create(Material.ROCK)
 				.setRequiresTool()

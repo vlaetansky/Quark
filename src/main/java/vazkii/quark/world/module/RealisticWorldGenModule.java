@@ -21,13 +21,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.world.client.RealisticGenScreen;
 import vazkii.quark.world.gen.RealisticChunkGenerator;
 
 @LoadModule(category = ModuleCategory.WORLD, hasSubscriptions = true, subscribeOn = Dist.DEDICATED_SERVER)
-public class RealisticWorldGenModule extends Module {
+public class RealisticWorldGenModule extends QuarkModule {
 
 	public static final ResourceLocation REALISTIC_RES = new ResourceLocation("quark", "realistic");
 	public static final RegistryKey<DimensionSettings> REALISTIC_KEY = RegistryKey.getOrCreateKey(Registry.NOISE_SETTINGS_KEY, REALISTIC_RES);

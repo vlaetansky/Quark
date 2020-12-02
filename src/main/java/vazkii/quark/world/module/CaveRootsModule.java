@@ -11,7 +11,7 @@ import net.minecraft.world.gen.GenerationStage.Decoration;
 import vazkii.quark.base.handler.BrewingHandler;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.world.WorldGenHandler;
@@ -21,7 +21,7 @@ import vazkii.quark.world.block.RootBlock;
 import vazkii.quark.world.gen.CaveRootGenerator;
 
 @LoadModule(category = ModuleCategory.WORLD)
-public class CaveRootsModule extends Module {
+public class CaveRootsModule extends QuarkModule {
 
 	@Config public static int chunkAttempts = 300;
 	@Config public static int minY = 16;

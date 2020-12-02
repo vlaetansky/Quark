@@ -56,12 +56,12 @@ import vazkii.quark.base.handler.InventoryTransferHandler;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.handler.SimilarBlockTypeHandler;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.management.client.gui.MiniInventoryButton;
 
 @LoadModule(category = ModuleCategory.CLIENT, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
-public class ChestSearchingModule extends Module {
+public class ChestSearchingModule extends QuarkModule {
 
 	@OnlyIn(Dist.CLIENT) 
 	private static TextFieldWidget searchBar;

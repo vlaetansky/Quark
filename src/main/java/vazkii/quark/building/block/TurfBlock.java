@@ -14,14 +14,14 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.interf.IBlockColorProvider;
 import vazkii.quark.base.block.QuarkBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 /**
  * @author WireSegal
  * Created at 11:23 AM on 10/4/19.
  */
 public class TurfBlock extends QuarkBlock implements IBlockColorProvider {
-    public TurfBlock(String regname, Module module, ItemGroup creativeTab, Properties properties) {
+    public TurfBlock(String regname, QuarkModule module, ItemGroup creativeTab, Properties properties) {
         super(regname, module, creativeTab, properties);
     }
 

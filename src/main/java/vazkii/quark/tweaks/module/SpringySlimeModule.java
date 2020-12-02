@@ -26,14 +26,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import vazkii.quark.base.handler.OverrideRegistryHandler;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.tweaks.base.MutableVectorHolder;
 import vazkii.quark.tweaks.block.SpringySlimeBlock;
 
 @LoadModule(category = ModuleCategory.TWEAKS)
-public class SpringySlimeModule extends Module {
+public class SpringySlimeModule extends QuarkModule {
 
 	@Override
 	public void construct() {

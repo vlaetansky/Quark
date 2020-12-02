@@ -21,7 +21,7 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.client.render.variant.VariantBeeRenderer;
@@ -32,7 +32,7 @@ import vazkii.quark.client.render.variant.VariantPigRenderer;
 import vazkii.quark.client.render.variant.VariantRabbitRenderer;
 
 @LoadModule(category = ModuleCategory.CLIENT, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
-public class VariantAnimalTexturesModule extends Module {
+public class VariantAnimalTexturesModule extends QuarkModule {
 	
 	private static ListMultimap<VariantTextureType, ResourceLocation> textures;
 	private static Map<VariantTextureType, ResourceLocation> shinyTextures;

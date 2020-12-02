@@ -20,12 +20,12 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.building.block.BurntVineBlock;
 
 @LoadModule(category = ModuleCategory.BUILDING, hasSubscriptions = true)
-public class BurnVinesModule extends Module {
+public class BurnVinesModule extends QuarkModule {
 
 	public static Block burnt_vine;
 	

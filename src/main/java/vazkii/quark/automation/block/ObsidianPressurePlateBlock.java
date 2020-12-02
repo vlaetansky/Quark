@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import vazkii.quark.base.block.QuarkPressurePlateBlock;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -27,7 +27,7 @@ import java.util.List;
 public class ObsidianPressurePlateBlock extends QuarkPressurePlateBlock {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-    public ObsidianPressurePlateBlock(String regname, Module module, ItemGroup creativeTab, Properties properties) {
+    public ObsidianPressurePlateBlock(String regname, QuarkModule module, ItemGroup creativeTab, Properties properties) {
         super(regname, module, creativeTab, properties);
         this.setDefaultState(getDefaultState().with(POWERED, false));
     }

@@ -25,7 +25,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.tools.item.AncientTomeItem;
@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true)
-public class AncientTomesModule extends Module {
+public class AncientTomesModule extends QuarkModule {
 
 	@Config public static int dungeonWeight = 20;
 	@Config public static int libraryWeight = 30;

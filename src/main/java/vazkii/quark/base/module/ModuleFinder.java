@@ -24,7 +24,7 @@ public final class ModuleFinder {
 	
     private static final Type LOAD_MODULE_TYPE = Type.getType(LoadModule.class);
 
-	private Map<Class<? extends Module>, Module> foundModules = new HashMap<>();
+	private Map<Class<? extends QuarkModule>, QuarkModule> foundModules = new HashMap<>();
 
 	public void findModules() {
 		ModFileScanData scanData = ModList.get().getModFileById(Quark.MOD_ID).getFile().getScanResult();
@@ -38,7 +38,7 @@ public final class ModuleFinder {
 	private void loadModule(AnnotationData target) {
 		try {
 			Class<?> clazz = Class.forName(target.getClassType().getClassName());
-			Module moduleObj = (Module) clazz.newInstance();
+			QuarkModule moduleObj = (QuarkModule) clazz.newInstance();
 			
 			Map<String, Object> vals = target.getAnnotationData();
 			if(vals.containsKey("requiredMod")) {
@@ -78,7 +78,7 @@ public final class ModuleFinder {
 			ModuleCategory category = getOrMakeCategory((ModAnnotation.EnumHolder) vals.get("category"));
 			category.addModule(moduleObj);
 			
-			foundModules.put((Class<? extends Module>) clazz, moduleObj);
+			foundModules.put((Class<? extends QuarkModule>) clazz, moduleObj);
 		} catch(ReflectiveOperationException e) {
 			throw new RuntimeException("Failed to load Module " + target.toString(), e);
 		}
@@ -88,7 +88,7 @@ public final class ModuleFinder {
 		return ModuleCategory.valueOf(category.getValue());
 	}
 
-	public Map<Class<? extends Module>, Module> getFoundModules() {
+	public Map<Class<? extends QuarkModule>, QuarkModule> getFoundModules() {
 		return foundModules;
 	}
 	

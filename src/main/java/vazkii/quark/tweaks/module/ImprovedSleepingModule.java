@@ -31,7 +31,7 @@ import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.Module;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.config.Config;
@@ -40,7 +40,7 @@ import vazkii.quark.base.network.message.SpamlessChatMessage;
 import vazkii.quark.base.network.message.UpdateAfkMessage;
 
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
-public class ImprovedSleepingModule extends Module {
+public class ImprovedSleepingModule extends QuarkModule {
 
 	private int timeSinceKeystroke;
 	private static List<String> sleepingPlayers = new ArrayList<>();
