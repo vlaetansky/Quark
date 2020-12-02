@@ -20,13 +20,15 @@ import vazkii.quark.base.network.message.HandleBackpackMessage;
 import vazkii.quark.oddities.container.BackpackContainer;
 import vazkii.quark.oddities.module.BackpackModule;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class BackpackInventoryScreen extends InventoryScreen {
 	
 	private static final ResourceLocation BACKPACK_INVENTORY_BACKGROUND = new ResourceLocation(Quark.MOD_ID, "textures/misc/backpack_gui.png");
 	
 	private final PlayerEntity player;
-	private Button recipeButton;
-	private int recipeButtonY;
+	private final Map<Button, Integer> buttonYs = new HashMap<>();
 	
 	private boolean closeHack = false;
 	private static PlayerContainer oldContainer;
@@ -53,18 +55,15 @@ public class BackpackInventoryScreen extends InventoryScreen {
 		for(Widget widget : buttons)
 			if(widget instanceof ImageButton) {
 				widget.y -= 29;
-				
-				recipeButton = (Button) widget;
-				recipeButtonY = widget.y;
+				buttonYs.put((Button) widget, widget.y);
 			}
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
-		
-		if(recipeButton != null)
-			recipeButton.y = recipeButtonY;
+
+		buttonYs.forEach((button, y) -> button.y = y);
 		
 		if(!BackpackModule.isEntityWearingBackpack(player)) {
 			ItemStack curr = player.inventory.getItemStack();
