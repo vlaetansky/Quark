@@ -1,10 +1,9 @@
 package vazkii.quark.tools.item;
 
-import java.util.List;
+import java.util.function.Predicate;
 
-import com.mojang.datafixers.util.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -16,22 +15,26 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
 import vazkii.arl.util.ItemNBTHelper;
+import vazkii.quark.api.IUsageTickerOverride;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.tools.module.SeedPouchModule;
 
-public class SeedPouchItem extends QuarkItem {
+public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride {
 
 	public static final String TAG_STORED_ITEM = "storedItem";
 	public static final String TAG_COUNT = "itemCount";
 
 	public SeedPouchItem(QuarkModule module) {
-		super("seed_pouch", module, new Item.Properties().maxStackSize(1).group(ItemGroup.TOOLS));
+		super("seed_pouch", module, 
+				new Item.Properties()
+				.maxStackSize(1)
+				.maxDamage(SeedPouchModule.maxItems + 1)
+				.group(ItemGroup.TOOLS));
 	}
 
 	public static Pair<ItemStack, Integer> getContents(ItemStack stack) {
@@ -52,34 +55,43 @@ public class SeedPouchItem extends QuarkItem {
 		copy.write(nbt);
 
 		ItemNBTHelper.setCompound(stack, TAG_STORED_ITEM, nbt);
-		ItemNBTHelper.setInt(stack, TAG_COUNT, target.getCount());
+		setCount(stack, target.getCount());
 	}
 	
 	public static void setCount(ItemStack stack, int count) {
 		if(count <= 0) {
 			stack.getTag().remove(TAG_STORED_ITEM);
+			stack.setDamage(0);
+
 			return;
 		}
 		
 		ItemNBTHelper.setInt(stack, TAG_COUNT, count);
-	}
-
-	@Override
-	public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-		super.addInformation(stack, worldIn, tooltip, flagIn);
-
-		Pair<ItemStack, Integer> contents = getContents(stack);
-		if(contents != null)
-			tooltip.add(contents.getFirst().getDisplayName().deepCopy().append(new StringTextComponent(" x" + contents.getSecond())).mergeStyle(TextFormatting.GRAY));
+		stack.setDamage(SeedPouchModule.maxItems + 1 - count);
 	}
 	
+	@Override
+	public ITextComponent getDisplayName(ItemStack stack) {
+		ITextComponent base = super.getDisplayName(stack);
+	
+		Pair<ItemStack, Integer> contents = getContents(stack);
+		if(contents == null)
+			return base;
+		
+		IFormattableTextComponent comp = base.deepCopy();
+		comp.append(new StringTextComponent(" ("));
+		comp.append(contents.getLeft().getDisplayName());
+		comp.append(new StringTextComponent(")"));
+		return comp;
+}
+
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
 		ItemStack stack = context.getItem();
 		Pair<ItemStack, Integer> contents = getContents(stack);
 		if(contents != null) {
-			ItemStack target = contents.getFirst().copy();
-			int total = contents.getSecond();
+			ItemStack target = contents.getLeft().copy();
+			int total = contents.getRight();
 			
 			target.setCount(Math.min(target.getMaxStackSize(), total));
 			
@@ -98,7 +110,7 @@ public class SeedPouchItem extends QuarkItem {
 					contents = getContents(stack);
 					if(contents == null)
 						break;
-					total = contents.getSecond();
+					total = contents.getRight();
 					
 					if(!bestRes.isSuccessOrConsume())
 						bestRes = res;
@@ -135,8 +147,27 @@ public class SeedPouchItem extends QuarkItem {
 	private ItemStack makeOf(Item seed) {
 		ItemStack stack = new ItemStack(SeedPouchModule.seed_pouch);
 		setItemStack(stack, new ItemStack(seed));
-		setCount(stack, 999);
+		setCount(stack, SeedPouchModule.maxItems);
 		return stack;
+	}
+	
+	@Override
+	public ItemStack getUsageTickerItem(ItemStack stack) {
+		Pair<ItemStack, Integer> contents = getContents(stack);
+		if(contents != null)
+			return contents.getLeft();
+		
+		return stack;
+	}
+	
+
+	@Override
+	public int getUsageTickerCountForItem(ItemStack stack, Predicate<ItemStack> target) {
+		Pair<ItemStack, Integer> contents = getContents(stack);
+		if(contents != null && target.test(contents.getLeft()))
+			return contents.getRight();
+		
+		return 0;
 	}
 	
 	class PouchItemUseContext extends ItemUseContext {
@@ -147,5 +178,6 @@ public class SeedPouchItem extends QuarkItem {
 		}
 
 	}
+
 	
 }

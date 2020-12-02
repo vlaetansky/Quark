@@ -19,12 +19,13 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockRayTraceResult;
 import vazkii.arl.util.ItemNBTHelper;
+import vazkii.quark.api.IUsageTickerOverride;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.tools.module.TrowelModule;
 
-public class TrowelItem extends QuarkItem {
+public class TrowelItem extends QuarkItem implements IUsageTickerOverride {
 
 	private static final String TAG_PLACING_SEED = "placing_seed";
 	private static final String TAG_LAST_STACK = "last_stack";
@@ -90,6 +91,11 @@ public class TrowelItem extends QuarkItem {
 	@Override
 	public int getMaxDamage(ItemStack stack) {
 		return TrowelModule.maxDamage;
+	}
+	
+	@Override
+	public ItemStack getUsageTickerItem(ItemStack stack) {
+		return getLastStack(stack);
 	}
 	
 	class TrowelBlockItemUseContext extends BlockItemUseContext {

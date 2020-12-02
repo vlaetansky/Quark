@@ -28,11 +28,11 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import vazkii.quark.api.IUsageTickerOverride;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.tools.item.TrowelItem;
 
 @LoadModule(category = ModuleCategory.CLIENT, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class UsageTickerModule extends QuarkModule {
@@ -94,6 +94,7 @@ public class UsageTickerModule extends QuarkModule {
 		public int liveTicks;
 		public final EquipmentSlotType slot;
 		public ItemStack currStack = ItemStack.EMPTY;
+		public ItemStack currRealStack = ItemStack.EMPTY;
 		public int currCount;
 		
 		public TickerElement(EquipmentSlotType slot) {
@@ -102,15 +103,14 @@ public class UsageTickerModule extends QuarkModule {
 		
 		@OnlyIn(Dist.CLIENT)
 		public void tick(PlayerEntity player) {
-			ItemStack heldStack = getStack(player);
+			ItemStack realStack = getStack(player);
+			int count = getStackCount(player, realStack);
 			
-			int count = getStackCount(player, heldStack);
+			ItemStack displayedStack = getDisplayedStack(realStack, count);
 
-			heldStack = getDisplayedStack(heldStack, count);
-
-			if(heldStack.isEmpty())
+			if(displayedStack.isEmpty())
 				liveTicks = 0;
-			else if(shouldChange(heldStack, currStack, count, currCount)) {
+			else if(shouldChange(realStack, currRealStack, count, currCount) || shouldChange(displayedStack, currStack, count, currCount)) {
 				boolean done = liveTicks == 0;
 				boolean animatingIn = liveTicks > MAX_TIME - ANIM_TIME;
 				boolean animatingOut = liveTicks < ANIM_TIME && !done;
@@ -125,7 +125,8 @@ public class UsageTickerModule extends QuarkModule {
 				liveTicks--;
 				
 			currCount = count;
-			currStack = heldStack;
+			currStack = displayedStack;
+			currRealStack = realStack;
 		}
 		
 		@OnlyIn(Dist.CLIENT)
@@ -192,16 +193,20 @@ public class UsageTickerModule extends QuarkModule {
 				verifySize = false;
 			}
 			
-			if(stack.getItem() instanceof TrowelItem) {
-				stack = TrowelItem.getLastStack(stack);
-				verifySize = false;
+			else if(stack.getItem() instanceof IUsageTickerOverride) {
+				IUsageTickerOverride over = ((IUsageTickerOverride) stack.getItem());
+				
+				stack = over.getUsageTickerItem(stack);
+				verifySize = over.shouldUsageTickerCheckMatchSize(currStack);
+			} 
+			
+			else {
+				if(!stack.isStackable() && slot.getSlotType() == Group.HAND)
+					return ItemStack.EMPTY;
+				
+				if(verifySize && stack.isStackable() && count == stack.getCount())
+					return ItemStack.EMPTY;
 			}
-			
-			if(!stack.isStackable() && slot.getSlotType() == Group.HAND)
-				return ItemStack.EMPTY;
-			
-			if(verifySize && stack.isStackable() && count == stack.getCount())
-				return ItemStack.EMPTY;
 			
 			return stack;
 		}
@@ -233,11 +238,16 @@ public class UsageTickerModule extends QuarkModule {
 				ItemStack stackAt = player.inventory.getStackInSlot(i);
 				if(predicate.test(stackAt))
 					total += stackAt.getCount();
+				
+				else if(stackAt.getItem() instanceof IUsageTickerOverride) {
+					IUsageTickerOverride over = (IUsageTickerOverride) stackAt.getItem();
+					total += over.getUsageTickerCountForItem(stackAt, predicate);
+				}
 			}
 			
 			return total;
 		}
-				
+
 	}
 	
 }
