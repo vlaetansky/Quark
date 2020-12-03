@@ -753,6 +753,18 @@
                 "Using a Glass Bottle at the cloud levels (126-132 by default) will get you a Bottled Cloud.",
                 "The Bottled Cloud can be right clicked to produce a block floating in midair in front of you. The cloud block disappears after a few seconds, but you can right click it with any other block to replace the two. The cloud will go back in the bottle when you do this."
             ]
+		},
+		{
+			"name": "Seed Pouch",
+			"image": "seed-pouch.jpg",
+			"versions": "1.16.3+",
+            "desc": [
+                "The Seed Pouch is a new utility item that can store up to 10 stacks of any type of seed in it. To add seeds to the seed pouch, grab the seed you want to add in your inventory, and right click it onto the pouch. You can then right click the pouch to take a stack of seeds out.",
+                "There's also a small set of utility features included:",
+                "*Right clicking the pouch onto farmable soil will plant the seed. Shift-right clicking plants a 3x3.",
+                "*Holding the seed pouch in either hand will have picked up seeds of that type go directly in the bag.",
+                "*If the Usage Ticker feature is enabled, it'll show how many seeds you have left."
+            ]
 		}
 	],
 	"tweaks": [
