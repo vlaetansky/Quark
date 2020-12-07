@@ -11,6 +11,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.client.RequiredModTooltipHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -52,6 +53,9 @@ public class MagnetsModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
 		ClientRegistry.bindTileEntityRenderer(magnetizedBlockType, MagnetizedBlockTileEntityRenderer::new);
+		
+		RequiredModTooltipHandler.map(magnet, Quark.ODDITIES_ID);
+		RequiredModTooltipHandler.map(magnetized_block, Quark.ODDITIES_ID);
 	}
 	
 }

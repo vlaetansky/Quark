@@ -10,6 +10,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.client.RequiredModTooltipHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -32,11 +33,13 @@ public class PipesModule extends QuarkModule {
 	@Config(description = "When items eject or are absorbed by pipes, should they make sounds?")
 	public static boolean doPipesWhoosh = true;
     
+	public static Block pipe;
+	
 	public static int effectivePipeSpeed;
 	
     @Override
     public void construct() {
-    	Block pipe = new PipeBlock(this);
+    	pipe = new PipeBlock(this);
     	
     	tileEntityType = TileEntityType.Builder.create(PipeTileEntity::new, pipe).build(null);
 		RegistryHelper.register(tileEntityType, "pipe");
@@ -51,6 +54,8 @@ public class PipesModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
 		ClientRegistry.bindTileEntityRenderer(tileEntityType, PipeTileEntityRenderer::new);
+		
+		RequiredModTooltipHandler.map(pipe, Quark.ODDITIES_ID);
 	}
 
     @Override

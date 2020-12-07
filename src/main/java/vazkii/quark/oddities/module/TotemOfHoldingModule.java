@@ -25,6 +25,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.client.RequiredModTooltipHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -88,6 +89,8 @@ public class TotemOfHoldingModule extends QuarkModule {
         RenderingRegistry.registerEntityRenderingHandler(totemType, TotemOfHoldingRenderer::new);
         
 		ItemModelsProperties.registerProperty(soulCompass, new ResourceLocation("angle"), SoulCompassItem::angle);
+		
+		RequiredModTooltipHandler.map(soulCompass, Quark.ODDITIES_ID);
     }
 
     @Override

@@ -34,6 +34,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.block.QuarkBlock;
+import vazkii.quark.base.client.RequiredModTooltipHandler;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.QuarkModule;
@@ -60,6 +61,8 @@ public class BackpackModule extends QuarkModule {
 	public static Item backpack;
 	public static Item ravager_hide;
 	
+	public static Block bonded_ravager_hide;
+	
     public static ContainerType<BackpackContainer> container;
 
 	@OnlyIn(Dist.CLIENT)
@@ -73,7 +76,7 @@ public class BackpackModule extends QuarkModule {
 		container = IForgeContainerType.create(BackpackContainer::fromNetwork);
 		RegistryHelper.register(container, "backpack");
 		
-		new QuarkBlock("bonded_ravager_hide", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.create(Material.WOOL, DyeColor.BLACK)
+		bonded_ravager_hide = new QuarkBlock("bonded_ravager_hide", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.create(Material.WOOL, DyeColor.BLACK)
 				.hardnessAndResistance(1F)
 				.sound(SoundType.CLOTH))
 		.setCondition(() -> enableRavagerHide);
@@ -86,6 +89,10 @@ public class BackpackModule extends QuarkModule {
 		
 		ItemModelsProperties.registerProperty(backpack, new ResourceLocation("has_items"), 
 				(stack, world, entity) -> (!BackpackModule.superOpMode && BackpackItem.doesBackpackHaveItems(stack)) ? 1 : 0);
+		
+		RequiredModTooltipHandler.map(backpack, Quark.ODDITIES_ID);
+		RequiredModTooltipHandler.map(ravager_hide, Quark.ODDITIES_ID);
+		RequiredModTooltipHandler.map(bonded_ravager_hide, Quark.ODDITIES_ID);
 	}
 	
 	@SubscribeEvent
