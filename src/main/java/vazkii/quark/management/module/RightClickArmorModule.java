@@ -48,9 +48,10 @@ public class RightClickArmorModule extends QuarkModule {
 	}
 	
 	public static boolean swap(PlayerEntity player, int slot) {
-		ItemStack stack = player.openContainer.getSlot(slot).getStack();
+		Slot slotUnder = player.openContainer.getSlot(slot);
+		ItemStack stack = slotUnder.getStack();
 		
-		if(stack.getItem() instanceof ArmorItem) {
+		if(stack.getItem() instanceof ArmorItem && slotUnder.canTakeStack(player)) {
 			ArmorItem armor = (ArmorItem) stack.getItem();
 			
 			EquipmentSlotType equipSlot = armor.getEquipmentSlot();
