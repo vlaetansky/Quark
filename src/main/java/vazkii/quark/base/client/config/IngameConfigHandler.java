@@ -10,6 +10,8 @@ import java.util.function.Supplier;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import vazkii.quark.api.config.IConfigCategory;
+import vazkii.quark.api.config.IConfigElement;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.IConfigCallback;
@@ -19,18 +21,18 @@ public final class IngameConfigHandler implements IConfigCallback {
 
 	public static final IngameConfigHandler INSTANCE = new IngameConfigHandler();
 
-	public Map<String, ConfigCategory> topLevelCategories = new LinkedHashMap<>();
+	public Map<String, TopLevelCategory> topLevelCategories = new LinkedHashMap<>();
 	
-	private ConfigCategory currCategory = null;
+	private IConfigCategory currCategory = null;
 	
 	private IngameConfigHandler() {}
 	
 	@Override
 	public void push(String s, String comment) {
-		ConfigCategory newCategory = null;
+		IConfigCategory newCategory = null;
 		if(currCategory == null) {
-			newCategory = new ConfigCategory(s, comment, null);
-			topLevelCategories.put(s, newCategory);
+			newCategory = new TopLevelCategory(s, comment, null);
+			topLevelCategories.put(s, (TopLevelCategory) newCategory);
 		} else newCategory = currCategory.addCategory(s, comment);
 		
 		currCategory = newCategory;
@@ -47,14 +49,14 @@ public final class IngameConfigHandler implements IConfigCallback {
 	@Override
 	public <T> void addEntry(String name, T default_, Supplier<T> getter, String comment, Predicate<Object> restriction) {
 		if(currCategory != null)
-			currCategory.addObject(name, default_, getter, comment, restriction);
+			currCategory.addEntry(name, default_, getter, comment, restriction);
 	}
 	
 	public ConfigObject<Boolean> getCategoryEnabledObject(ModuleCategory category) {
 		return topLevelCategories.get("categories").getModuleOption(category);
 	}
 	
-	public ConfigCategory getConfigCategory(ModuleCategory category) {
+	public IConfigCategory getConfigCategory(ModuleCategory category) {
 		return topLevelCategories.get(category == null ? "general" : category.name);
 	}
 	
@@ -70,7 +72,7 @@ public final class IngameConfigHandler implements IConfigCallback {
 	}
 	
 	public void commit() {
-		for(ConfigCategory c : topLevelCategories.values()) {
+		for(IConfigCategory c : topLevelCategories.values()) {
 			if(c.isDirty()) {
 				save();
 				return;
@@ -80,7 +82,7 @@ public final class IngameConfigHandler implements IConfigCallback {
 	
 	private void save() {
 		writeToFile(new File("config", "quark-common.toml"));
-		for(ConfigCategory c1 : topLevelCategories.values())
+		for(IConfigCategory c1 : topLevelCategories.values())
 			c1.clean();
 	}
 	

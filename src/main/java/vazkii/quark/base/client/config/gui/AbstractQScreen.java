@@ -7,7 +7,7 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.Button.IPressable;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.StringTextComponent;
-import vazkii.quark.base.client.config.ConfigCategory;
+import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.base.client.config.obj.AbstractStringInputObject;
 import vazkii.quark.base.client.config.obj.ListObject;
 
@@ -33,7 +33,7 @@ public abstract class AbstractQScreen extends Screen {
 		return b -> Util.getOSType().openURI(url);
 	}
 	
-	public IPressable categoryLink(ConfigCategory category) {
+	public IPressable categoryLink(IConfigCategory category) {
 		return b -> minecraft.displayGuiScreen(new CategoryScreen(this, category));
 	}
 	

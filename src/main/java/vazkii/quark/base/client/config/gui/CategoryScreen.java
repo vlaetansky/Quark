@@ -6,16 +6,16 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
-import vazkii.quark.base.client.config.ConfigCategory;
+import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.base.client.config.gui.widget.ConfigElementList;
 import vazkii.quark.base.client.config.gui.widget.ScrollableWidgetList;
 
 public class CategoryScreen extends AbstractScrollingWidgetScreen {
 
-	public final ConfigCategory category;
+	public final IConfigCategory category;
 	private String breadcrumbs;
 	
-	public CategoryScreen(Screen parent, ConfigCategory category) {
+	public CategoryScreen(Screen parent, IConfigCategory category) {
 		super(parent);
 		this.category = category;
 	}
@@ -25,7 +25,7 @@ public class CategoryScreen extends AbstractScrollingWidgetScreen {
 		super.init();
 		
 		breadcrumbs = category.getName();
-		ConfigCategory currCategory = category.getParent();
+		IConfigCategory currCategory = category.getParent();
 		while(currCategory != null) {
 			breadcrumbs = String.format("%s > %s", currCategory.getName(), breadcrumbs);
 			currCategory = currCategory.getParent();

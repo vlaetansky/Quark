@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.ModList;
-import vazkii.quark.base.client.config.ConfigCategory;
+import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.base.client.config.IngameConfigHandler;
 import vazkii.quark.base.client.config.gui.widget.CheckboxButton;
 import vazkii.quark.base.client.config.gui.widget.ColorTextButton;
@@ -38,8 +38,8 @@ public class QuarkConfigHomeScreen extends AbstractQScreen {
 			int x = left + (bWidth + pad) * (i % 2);
 			int y = vStart + (i / 2) * vpad;
 
-			ConfigCategory configCategory = IngameConfigHandler.INSTANCE.getConfigCategory(category);
-			String name = I18n.format("quark.category." + configCategory.name);
+			IConfigCategory configCategory = IngameConfigHandler.INSTANCE.getConfigCategory(category);
+			String name = I18n.format("quark.category." + configCategory.getName());
 
 			if(configCategory.isDirty())
 				name += TextFormatting.GOLD + "*";

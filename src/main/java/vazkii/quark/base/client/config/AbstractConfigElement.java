@@ -4,13 +4,16 @@ import java.io.PrintStream;
 import java.util.LinkedList;
 import java.util.List;
 
+import vazkii.quark.api.config.IConfigCategory;
+import vazkii.quark.api.config.IConfigElement;
+
 public abstract class AbstractConfigElement implements IConfigElement {
 
 	public final String name;
 	public final String comment;
-	public final ConfigCategory parent;
+	public final IConfigCategory parent;
 	
-	public AbstractConfigElement(String name, String comment, ConfigCategory parent) {
+	public AbstractConfigElement(String name, String comment, IConfigCategory parent) {
 		this.name = name;
 		this.comment = comment;
 		this.parent = parent;
@@ -30,7 +33,7 @@ public abstract class AbstractConfigElement implements IConfigElement {
 	}
 	
 	@Override
-	public ConfigCategory getParent() {
+	public IConfigCategory getParent() {
 		return parent;
 	}
 	

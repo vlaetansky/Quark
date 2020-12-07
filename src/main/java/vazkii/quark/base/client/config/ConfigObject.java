@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import vazkii.quark.api.config.IConfigElement;
 import vazkii.quark.base.client.config.obj.BooleanObject;
 import vazkii.quark.base.client.config.obj.DoubleObject;
 import vazkii.quark.base.client.config.obj.IntegerObject;

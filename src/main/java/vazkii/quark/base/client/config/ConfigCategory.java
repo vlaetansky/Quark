@@ -2,41 +2,53 @@ package vazkii.quark.base.client.config;
 
 import java.io.PrintStream;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import org.apache.commons.lang3.text.WordUtils;
 
 import net.minecraft.client.resources.I18n;
+import vazkii.quark.api.config.IConfigCategory;
+import vazkii.quark.api.config.IConfigElement;
 import vazkii.quark.base.client.config.gui.CategoryScreen;
 import vazkii.quark.base.client.config.gui.WidgetWrapper;
 import vazkii.quark.base.client.config.gui.widget.PencilButton;
-import vazkii.quark.base.module.ModuleCategory;
 
-public class ConfigCategory extends AbstractConfigElement {
+public class ConfigCategory extends AbstractConfigElement implements IConfigCategory {
 
 	public final List<IConfigElement> subElements = new LinkedList<>();
-	
-	private Map<String, ConfigObject<Boolean>> moduleOptions = new HashMap<>();
 	
 	private final String path;
 	private final int depth;
 	private boolean dirty = false;
 	
-	public ConfigCategory(String name, String comment, ConfigCategory parent) {
+	public ConfigCategory(String name, String comment, IConfigCategory parent) {
 		super(name, comment, parent);
 		
 		if(parent == null) {
 			path = name;
 			depth = 0;
 		} else {
-			path = String.format("%s.%s", parent.path, name);
-			depth = 1 + parent.depth;
+			path = String.format("%s.%s", parent.getPath(), name);
+			depth = 1 + parent.getDepth();
 		}
+	}
+	
+	@Override
+	public String getPath() {
+		return path;
+	}
+	
+	@Override
+	public int getDepth() {
+		return depth;
+	}
+	
+	@Override
+	public List<IConfigElement> getSubElements() {
+		return subElements;
 	}
 	
 	@Override
@@ -45,6 +57,7 @@ public class ConfigCategory extends AbstractConfigElement {
 		return WordUtils.capitalize(getName().replaceAll("_", " "));
 	}
 
+	@Override
 	public void updateDirty() {
 		dirty = false;
 		for(IConfigElement sub : subElements)
@@ -78,26 +91,26 @@ public class ConfigCategory extends AbstractConfigElement {
 		subElements.forEach(e -> e.reset(hard));		
 	}
 	
+	@Override
 	public ConfigCategory addCategory(String name, String comment) {
 		ConfigCategory newCategory = new ConfigCategory(name, comment, this);
 		subElements.add(newCategory);
 		return newCategory;
 	}
 	
+	
+	@Override
 	@SuppressWarnings("unchecked")
-	public <T> void addObject(String name, T default_, Supplier<T> getter, String comment, Predicate<Object> restriction) {
+	public <T> void addEntry(String name, T default_, Supplier<T> getter, String comment, Predicate<Object> restriction) {
 		ConfigObject<T> obj = (ConfigObject<T>) ConfigObject.create(name, comment, default_, getter, restriction, this); 
+		addEntry(obj, default_);
+	}
+	
+	public <T> void addEntry(ConfigObject<T> obj, T default_) {
 		subElements.add(obj);
-		
-		if(parent == null && default_ instanceof Boolean)
-			moduleOptions.put(name, (ConfigObject<Boolean>) obj);
 	}
 	
-	@SuppressWarnings("deprecation")
-	public ConfigObject<Boolean> getModuleOption(ModuleCategory category) {
-		return moduleOptions.get(WordUtils.capitalizeFully(category.name));
-	}
-	
+	@Override
 	public void close() {
 		subElements.removeIf(e -> e instanceof ConfigCategory && ((ConfigCategory) e).subElements.isEmpty());
 		Collections.sort(subElements);

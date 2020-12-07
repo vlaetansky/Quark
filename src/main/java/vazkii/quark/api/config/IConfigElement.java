@@ -1,4 +1,4 @@
-package vazkii.quark.base.client.config;
+package vazkii.quark.api.config;
 
 import java.io.PrintStream;
 import java.util.List;
@@ -12,7 +12,7 @@ public interface IConfigElement extends Comparable<IConfigElement> {
 	public String getGuiDisplayName();
 	public List<String> getTooltip();
 	public String getSubtitle();
-	public ConfigCategory getParent();
+	public IConfigCategory getParent();
 	public boolean isDirty();
 	public void clean();
 	

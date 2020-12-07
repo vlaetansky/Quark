@@ -10,10 +10,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
+import vazkii.quark.api.config.IConfigElement;
 import vazkii.quark.base.client.TopLayerTooltipHandler;
 import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.client.config.ConfigObject;
-import vazkii.quark.base.client.config.IConfigElement;
 import vazkii.quark.base.client.config.gui.CategoryScreen;
 
 public class ConfigElementList extends ScrollableWidgetList<CategoryScreen, ConfigElementList.Entry> {
@@ -25,7 +25,7 @@ public class ConfigElementList extends ScrollableWidgetList<CategoryScreen, Conf
 	@Override
 	protected void findEntries() {
 		boolean isObject = true;
-		for(IConfigElement elm : parent.category.subElements) {
+		for(IConfigElement elm : parent.category.getSubElements()) {
 			boolean wasObject = isObject;
 			isObject = elm instanceof ConfigObject;
 			
