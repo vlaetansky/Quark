@@ -21,6 +21,7 @@ import vazkii.quark.base.network.message.RequestEmoteMessage;
 import vazkii.quark.base.network.message.SetLockProfileMessage;
 import vazkii.quark.base.network.message.SortInventoryMessage;
 import vazkii.quark.base.network.message.SpamlessChatMessage;
+import vazkii.quark.base.network.message.SwapArmorMessage;
 import vazkii.quark.base.network.message.SwapItemsMessage;
 import vazkii.quark.base.network.message.SyncChainMessage;
 import vazkii.quark.base.network.message.UpdateAfkMessage;
@@ -49,6 +50,7 @@ public final class QuarkNetwork {
 		network.register(HandleBackpackMessage.class, NetworkDirection.PLAY_TO_SERVER);
 		network.register(MatrixEnchanterOperationMessage.class, NetworkDirection.PLAY_TO_SERVER);
 		network.register(WithdrawSeedsMessage.class, NetworkDirection.PLAY_TO_SERVER);
+		network.register(SwapArmorMessage.class, NetworkDirection.PLAY_TO_SERVER);
 
 		network.register(DoEmoteMessage.class, NetworkDirection.PLAY_TO_CLIENT);
 		network.register(SpamlessChatMessage.class, NetworkDirection.PLAY_TO_CLIENT);
