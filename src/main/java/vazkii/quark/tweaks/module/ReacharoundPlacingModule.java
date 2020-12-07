@@ -127,10 +127,13 @@ public class ReacharoundPlacingModule extends QuarkModule {
 		PlayerEntity player = event.getPlayer();
 		Pair<BlockPos, Direction> pair = getPlayerReacharoundTarget(player);
 
-		if (pair != null) {
+		if(pair != null) {
 			BlockPos pos = pair.getLeft();
 			Direction dir = pair.getRight();
 
+			if(!player.canPlayerEdit(pos, dir, stack))
+				return;
+			
 			int count = stack.getCount();
 			Hand hand = event.getHand();
 
