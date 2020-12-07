@@ -24,16 +24,19 @@ public class ConfigElementList extends ScrollableWidgetList<CategoryScreen, Conf
 
 	@Override
 	protected void findEntries() {
+		boolean hadObjects = false;
 		boolean isObject = true;
 		for(IConfigElement elm : parent.category.getSubElements()) {
 			boolean wasObject = isObject;
 			isObject = elm instanceof ConfigObject;
 			
-			if(wasObject && !isObject)
+			if(wasObject && !isObject && hadObjects)
 				addEntry(new Entry(parent, null)); // separator
 			
 			Entry entry = new Entry(parent, elm); 
 			addEntry(entry);
+			
+			hadObjects = hadObjects || isObject;
 		}		
 	}
 

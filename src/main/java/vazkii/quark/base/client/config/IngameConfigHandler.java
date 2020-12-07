@@ -13,6 +13,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.api.config.IConfigElement;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.client.config.external.ExternalConfigHandler;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.IConfigCallback;
 
@@ -68,31 +69,36 @@ public final class IngameConfigHandler implements IConfigCallback {
 		if(!Quark.DEBUG_MODE)
 			return;
 		
-		writeToFile(new File("config", "quark-common.toml-generated"));
+		writeToFile(new File("config", "quark-common.toml-generated"), topLevelCategories);
 	}
 	
 	public void commit() {
-		for(IConfigCategory c : topLevelCategories.values()) {
+		commit(new File("config", "quark-common.toml"), topLevelCategories);
+		ExternalConfigHandler.instance.commit();
+	}
+
+	public static <T extends IConfigCategory> void commit(File file, Map<String, T> map) {
+		for(IConfigCategory c : map.values()) {
 			if(c.isDirty()) {
-				save();
+				save(file, map);
 				return;
 			}
 		}
 	}
 	
-	private void save() {
-		writeToFile(new File("config", "quark-common.toml"));
-		for(IConfigCategory c1 : topLevelCategories.values())
+	public static <T extends IConfigCategory> void save(File file, Map<String, T> map) {
+		writeToFile(file, map);
+		for(IConfigCategory c1 : map.values())
 			c1.clean();
 	}
 	
-	private void writeToFile(File file) {
+	public static <T extends IConfigCategory> void writeToFile(File file, Map<String, T> map) {
 		try {
 			file.createNewFile();
 			PrintStream stream = new PrintStream(file);
 			
-			for(String name : topLevelCategories.keySet())
-				topLevelCategories.get(name).print("", stream);
+			for(String name : map.keySet())
+				map.get(name).print("", stream);
 			
 			stream.close();
 		} catch (IOException e) {

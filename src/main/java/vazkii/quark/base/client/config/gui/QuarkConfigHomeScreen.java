@@ -11,6 +11,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.ModList;
 import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.base.client.config.IngameConfigHandler;
+import vazkii.quark.base.client.config.external.ExternalConfigHandler;
 import vazkii.quark.base.client.config.gui.widget.CheckboxButton;
 import vazkii.quark.base.client.config.gui.widget.ColorTextButton;
 import vazkii.quark.base.client.config.gui.widget.IconButton;
@@ -58,15 +59,25 @@ public class QuarkConfigHomeScreen extends AbstractQScreen {
 			i++;
 		}
 
+		boolean addExternal = ExternalConfigHandler.instance.hasAny();
+		int count = addExternal ? 3 : 2;
+		int pads = 0;
+		
 		pad = 3;
 		vpad = 23;
-		bWidth = 182;
-		left = (width - (bWidth + pad) * 2) / 2;
+		bWidth = (366 / count);
+		left = (width - (bWidth + pad) * count) / 2;
 		vStart = height - 30;
 
-		addButton(new Button(left, vStart, bWidth, 20, new TranslationTextComponent("quark.gui.config.general"), categoryLink(IngameConfigHandler.INSTANCE.getConfigCategory(null))));
-		//		addButton(new Button(left + bWidth + pad, vStart, bWidth, 20, new TranslationTextComponent("quark.gui.config.import"), this::returnToParent));
-		addButton(new Button(left + bWidth + pad, vStart, bWidth, 20, new TranslationTextComponent("quark.gui.config.save"), this::commit));
+		addButton(new Button(left + (bWidth + pad) * pads, vStart, bWidth, 20, new TranslationTextComponent("quark.gui.config.general"), categoryLink(IngameConfigHandler.INSTANCE.getConfigCategory(null))));
+		pads++;
+		
+		if(addExternal) {
+			addButton(new Button(left + (bWidth + pad) * pads, vStart, bWidth, 20, new TranslationTextComponent("quark.gui.config.friends"), categoryLink(ExternalConfigHandler.instance.mockCategory)));
+			pads++;
+		}
+		
+		addButton(new Button(left + (bWidth + pad) * pads, vStart, bWidth, 20, new TranslationTextComponent("quark.gui.config.save"), this::commit));
 
 		bWidth = 71;
 		left = (width - (bWidth + pad) * 5) / 2;
@@ -77,7 +88,7 @@ public class QuarkConfigHomeScreen extends AbstractQScreen {
 		addButton(new ColorTextButton(left + (bWidth + pad) * 3, vStart - vpad, bWidth, 20, new TranslationTextComponent("quark.gui.config.social.reddit"), 0xff4400, webLink("https://reddit.com/r/quarkmod")));
 		addButton(new ColorTextButton(left + (bWidth + pad) * 4, vStart - vpad, bWidth, 20, new TranslationTextComponent("quark.gui.config.social.twitter"), 0x1da1f2, webLink("https://twitter.com/VazkiiMods")));
 	}
-
+	
 	public void commit(Button button) {
 		IngameConfigHandler.INSTANCE.commit();
 		returnToParent(button);

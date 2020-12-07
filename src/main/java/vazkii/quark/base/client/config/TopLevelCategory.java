@@ -22,7 +22,7 @@ public class TopLevelCategory extends ConfigCategory {
 		super.addEntry(obj, default_);
 		
 		if(default_ instanceof Boolean)
-			moduleOptions.put(name, (ConfigObject<Boolean>) obj);
+			moduleOptions.put(obj.name, (ConfigObject<Boolean>) obj);
 	}
 	
 	@SuppressWarnings("deprecation")

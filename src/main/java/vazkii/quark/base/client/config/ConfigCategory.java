@@ -12,6 +12,7 @@ import org.apache.commons.lang3.text.WordUtils;
 import net.minecraft.client.resources.I18n;
 import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.api.config.IConfigElement;
+import vazkii.quark.base.client.config.external.ExternalCategory;
 import vazkii.quark.base.client.config.gui.CategoryScreen;
 import vazkii.quark.base.client.config.gui.WidgetWrapper;
 import vazkii.quark.base.client.config.gui.widget.PencilButton;
@@ -27,7 +28,7 @@ public class ConfigCategory extends AbstractConfigElement implements IConfigCate
 	public ConfigCategory(String name, String comment, IConfigCategory parent) {
 		super(name, comment, parent);
 		
-		if(parent == null) {
+		if(parent == null || (parent instanceof ExternalCategory)) {
 			path = name;
 			depth = 0;
 		} else {
@@ -92,12 +93,14 @@ public class ConfigCategory extends AbstractConfigElement implements IConfigCate
 	}
 	
 	@Override
-	public ConfigCategory addCategory(String name, String comment) {
-		ConfigCategory newCategory = new ConfigCategory(name, comment, this);
-		subElements.add(newCategory);
-		return newCategory;
+	public IConfigCategory addCategory(String name, String comment) {
+		return addCategory(new ConfigCategory(name, comment, this));
 	}
 	
+	public IConfigCategory addCategory(IConfigCategory category) {
+		subElements.add(category);
+		return category;
+	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
