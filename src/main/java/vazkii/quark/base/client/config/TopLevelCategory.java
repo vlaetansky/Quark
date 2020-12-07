@@ -6,11 +6,12 @@ import java.util.Map;
 import org.apache.commons.lang3.text.WordUtils;
 
 import vazkii.quark.api.config.IConfigCategory;
+import vazkii.quark.api.config.IConfigObject;
 import vazkii.quark.base.module.ModuleCategory;
 
 public class TopLevelCategory extends ConfigCategory {
 	
-	private Map<String, ConfigObject<Boolean>> moduleOptions = new HashMap<>();
+	private Map<String, IConfigObject<Boolean>> moduleOptions = new HashMap<>();
 
 	public TopLevelCategory(String name, String comment, IConfigCategory parent) {
 		super(name, comment, parent);
@@ -18,15 +19,15 @@ public class TopLevelCategory extends ConfigCategory {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> void addEntry(ConfigObject<T> obj, T default_) {
+	public <T> void addEntry(IConfigObject<T> obj, T default_) {
 		super.addEntry(obj, default_);
 		
 		if(default_ instanceof Boolean)
-			moduleOptions.put(obj.name, (ConfigObject<Boolean>) obj);
+			moduleOptions.put(obj.getName(), (IConfigObject<Boolean>) obj);
 	}
 	
 	@SuppressWarnings("deprecation")
-	public ConfigObject<Boolean> getModuleOption(ModuleCategory category) {
+	public IConfigObject<Boolean> getModuleOption(ModuleCategory category) {
 		return moduleOptions.get(WordUtils.capitalizeFully(category.name));
 	}
 

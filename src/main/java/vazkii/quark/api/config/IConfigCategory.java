@@ -16,7 +16,7 @@ import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 public interface IConfigCategory extends IConfigElement {
 
 	public IConfigCategory addCategory(String name, @Nonnull String comment);
-	public <T> void addEntry(String name, T default_, Supplier<T> getter, @Nonnull String comment, @Nonnull Predicate<Object> restriction);
+	public <T> IConfigElement addEntry(String name, T default_, Supplier<T> getter, @Nonnull String comment, @Nonnull Predicate<Object> restriction);
 
 	// defaults that you definitely want to use
 	public default <T> void addEntry(String name, T default_, Supplier<T> getter, String comment) {

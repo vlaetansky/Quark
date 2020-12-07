@@ -8,7 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.StringTextComponent;
-import vazkii.quark.base.client.config.ConfigObject;
+import vazkii.quark.api.config.IConfigObject;
 import vazkii.quark.base.handler.ContributorRewardHandler;
 import vazkii.quark.base.handler.MiscUtil;
 
@@ -21,7 +21,7 @@ public class CheckboxButton extends Button {
 		this.checkedSupplier = checkedSupplier;
 	}
 	
-	public CheckboxButton(int x, int y, ConfigObject<Boolean> configObj) {
+	public CheckboxButton(int x, int y, IConfigObject<Boolean> configObj) {
 		this(x, y, () -> configObj.getCurrentObj(), (b) -> configObj.setCurrentObj(!configObj.getCurrentObj()));
 	}
 	

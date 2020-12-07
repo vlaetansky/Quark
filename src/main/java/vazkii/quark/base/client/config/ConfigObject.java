@@ -6,13 +6,15 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import vazkii.quark.api.config.IConfigElement;
+import vazkii.quark.api.config.IConfigObject;
+import vazkii.quark.base.client.config.gui.widget.IWidgetProvider;
 import vazkii.quark.base.client.config.obj.BooleanObject;
 import vazkii.quark.base.client.config.obj.DoubleObject;
 import vazkii.quark.base.client.config.obj.IntegerObject;
 import vazkii.quark.base.client.config.obj.ListObject;
 import vazkii.quark.base.client.config.obj.StringObject;
 
-public abstract class ConfigObject<T> extends AbstractConfigElement {
+public abstract class ConfigObject<T> extends AbstractConfigElement implements IConfigObject<T>, IWidgetProvider {
 
 	public final T defaultObj;
 	public final Predicate<Object> restriction;
@@ -34,21 +36,21 @@ public abstract class ConfigObject<T> extends AbstractConfigElement {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> ConfigObject<?> create(String name, String comment, T defaultObj, Supplier<T> objGetter, Predicate<Object> restriction, ConfigCategory parent) {
+	public static <T> IConfigObject<T> create(String name, String comment, T defaultObj, Supplier<T> objGetter, Predicate<Object> restriction, ConfigCategory parent) {
 		if(defaultObj instanceof Boolean)
-			return new BooleanObject(name, comment, (Boolean) defaultObj, (Supplier<Boolean>) objGetter, restriction, parent);
+			return (IConfigObject<T>) new BooleanObject(name, comment, (Boolean) defaultObj, (Supplier<Boolean>) objGetter, restriction, parent);
 		
 		else if(defaultObj instanceof String)
-			return new StringObject(name, comment, (String) defaultObj, (Supplier<String>) objGetter, restriction, parent);
+			return (IConfigObject<T>) new StringObject(name, comment, (String) defaultObj, (Supplier<String>) objGetter, restriction, parent);
 
 		else if(defaultObj instanceof Integer)
-			return new IntegerObject(name, comment, (Integer) defaultObj, (Supplier<Integer>) objGetter, restriction, parent);
+			return (IConfigObject<T>) new IntegerObject(name, comment, (Integer) defaultObj, (Supplier<Integer>) objGetter, restriction, parent);
 		
 		else if(defaultObj instanceof Double)
-			return new DoubleObject(name, comment, (Double) defaultObj, (Supplier<Double>) objGetter, restriction, parent);
+			return (IConfigObject<T>) new DoubleObject(name, comment, (Double) defaultObj, (Supplier<Double>) objGetter, restriction, parent);
 		
 		else if(defaultObj instanceof List)
-			return new ListObject(name, comment, (List<String>) defaultObj, (Supplier<List<String>>) objGetter, restriction, parent);
+			return (IConfigObject<T>) new ListObject(name, comment, (List<String>) defaultObj, (Supplier<List<String>>) objGetter, restriction, parent);
 		
 		else throw new IllegalArgumentException(defaultObj + " isn't a valid config object.");
 	}
@@ -74,10 +76,12 @@ public abstract class ConfigObject<T> extends AbstractConfigElement {
 		setCurrentObj(hard ? defaultObj : loadedObj);
 	}
 	
+	@Override
 	public T getCurrentObj() {
 		return currentObj;
 	}
 	
+	@Override
 	public void setCurrentObj(T currentObj) {
 		this.currentObj = currentObj;
 		parent.updateDirty();
@@ -116,10 +120,10 @@ public abstract class ConfigObject<T> extends AbstractConfigElement {
 	public int compareTo(IConfigElement o) {
 		if(o == this)
 			return 0;
-		if(!(o instanceof ConfigObject))
+		if(!(o instanceof IConfigObject))
 			return -1;
 		
-		return name.compareTo(((ConfigObject<?>) o).name);
+		return getName().compareTo(o.getName());
 	}
 	
 }

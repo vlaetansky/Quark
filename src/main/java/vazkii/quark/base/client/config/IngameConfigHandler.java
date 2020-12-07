@@ -12,6 +12,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.api.config.IConfigElement;
+import vazkii.quark.api.config.IConfigObject;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.config.external.ExternalConfigHandler;
 import vazkii.quark.base.module.ModuleCategory;
@@ -53,7 +54,7 @@ public final class IngameConfigHandler implements IConfigCallback {
 			currCategory.addEntry(name, default_, getter, comment, restriction);
 	}
 	
-	public ConfigObject<Boolean> getCategoryEnabledObject(ModuleCategory category) {
+	public IConfigObject<Boolean> getCategoryEnabledObject(ModuleCategory category) {
 		return topLevelCategories.get("categories").getModuleOption(category);
 	}
 	

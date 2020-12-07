@@ -2,33 +2,32 @@ package vazkii.quark.base.client.config.gui.widget;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 import vazkii.quark.api.config.IConfigElement;
+import vazkii.quark.api.config.IConfigObject;
 import vazkii.quark.base.client.TopLayerTooltipHandler;
 import vazkii.quark.base.client.config.ConfigCategory;
-import vazkii.quark.base.client.config.ConfigObject;
 import vazkii.quark.base.client.config.gui.CategoryScreen;
 
-public class ConfigElementList extends ScrollableWidgetList<CategoryScreen, ConfigElementList.Entry> {
+public class ConfigElementList<T extends IConfigElement & IWidgetProvider> extends ScrollableWidgetList<CategoryScreen, ConfigElementList.Entry<T>> {
 
 	public ConfigElementList(CategoryScreen parent) {
 		super(parent);
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	protected void findEntries() {
 		boolean hadObjects = false;
 		boolean isObject = true;
 		for(IConfigElement elm : parent.category.getSubElements()) {
 			boolean wasObject = isObject;
-			isObject = elm instanceof ConfigObject;
+			isObject = elm instanceof IConfigObject;
 			
 			if(wasObject && !isObject && hadObjects)
 				addEntry(new Entry(parent, null)); // separator
@@ -40,11 +39,11 @@ public class ConfigElementList extends ScrollableWidgetList<CategoryScreen, Conf
 		}		
 	}
 
-	public static final class Entry extends ScrollableWidgetList.Entry<Entry> {
+	public static final class Entry<T extends IConfigElement & IWidgetProvider> extends ScrollableWidgetList.Entry<Entry<T>> {
 
 		private final IConfigElement element;
 
-		public Entry(CategoryScreen parent, IConfigElement element) {
+		public Entry(CategoryScreen parent, T element) {
 			this.element = element;
 			
 			if(element != null)

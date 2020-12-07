@@ -12,12 +12,14 @@ import org.apache.commons.lang3.text.WordUtils;
 import net.minecraft.client.resources.I18n;
 import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.api.config.IConfigElement;
+import vazkii.quark.api.config.IConfigObject;
 import vazkii.quark.base.client.config.external.ExternalCategory;
 import vazkii.quark.base.client.config.gui.CategoryScreen;
 import vazkii.quark.base.client.config.gui.WidgetWrapper;
+import vazkii.quark.base.client.config.gui.widget.IWidgetProvider;
 import vazkii.quark.base.client.config.gui.widget.PencilButton;
 
-public class ConfigCategory extends AbstractConfigElement implements IConfigCategory {
+public class ConfigCategory extends AbstractConfigElement implements IConfigCategory, IWidgetProvider {
 
 	public final List<IConfigElement> subElements = new LinkedList<>();
 	
@@ -103,13 +105,13 @@ public class ConfigCategory extends AbstractConfigElement implements IConfigCate
 	}
 	
 	@Override
-	@SuppressWarnings("unchecked")
-	public <T> void addEntry(String name, T default_, Supplier<T> getter, String comment, Predicate<Object> restriction) {
-		ConfigObject<T> obj = (ConfigObject<T>) ConfigObject.create(name, comment, default_, getter, restriction, this); 
+	public <T> IConfigObject<T> addEntry(String name, T default_, Supplier<T> getter, String comment, Predicate<Object> restriction) {
+		IConfigObject<T> obj = ConfigObject.create(name, comment, default_, getter, restriction, this); 
 		addEntry(obj, default_);
+		return obj;
 	}
 	
-	public <T> void addEntry(ConfigObject<T> obj, T default_) {
+	public <T> void addEntry(IConfigObject<T> obj, T default_) {
 		subElements.add(obj);
 	}
 	
