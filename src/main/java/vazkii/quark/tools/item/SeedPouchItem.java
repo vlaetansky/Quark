@@ -85,6 +85,11 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 	}
 	
 	@Override
+	public int getRGBDurabilityForDisplay(ItemStack stack) {
+		return 0x00FF00;
+	}
+	
+	@Override
 	public ITextComponent getDisplayName(ItemStack stack) {
 		ITextComponent base = super.getDisplayName(stack);
 	
