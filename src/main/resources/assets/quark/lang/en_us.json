@@ -20,8 +20,6 @@
 	"quark.gui.keygroup.inv": "Quark Inventory",
 	"quark.gui.keygroup.emote": "Quark Emotes",
 	
-	"quark.gui.config.general": "General Settings",	
-	"quark.gui.config.friends": "Friend Configs",	
 	"quark.gui.config.save": "Save Changes",
 	"quark.gui.config.social.website": "Quark Site",
 	"quark.gui.config.social.discord": "Discord",
@@ -40,6 +38,8 @@
 	"quark.gui.config.defaultvalue": "Default: %s",
 	"quark.gui.config.missingaddon": "You're missing the necessary addon mod for this category",
 
+	"quark.category.general": "General Settings",
+	"quark.category.friends": "Friend Configs",	
 	"quark.category.automation": "Automation",
 	"quark.category.building": "Building",
 	"quark.category.management": "Management",

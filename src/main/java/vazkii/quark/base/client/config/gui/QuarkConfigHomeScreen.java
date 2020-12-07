@@ -6,6 +6,8 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.ModList;
@@ -40,12 +42,9 @@ public class QuarkConfigHomeScreen extends AbstractQScreen {
 			int y = vStart + (i / 2) * vpad;
 
 			IConfigCategory configCategory = IngameConfigHandler.INSTANCE.getConfigCategory(category);
-			String name = I18n.format("quark.category." + configCategory.getName());
-
-			if(configCategory.isDirty())
-				name += TextFormatting.GOLD + "*";
+			ITextComponent comp = componentFor(configCategory);
 			
-			Button icon = new IconButton(x, y, bWidth - 20, 20, new TranslationTextComponent(name), new ItemStack(category.item), categoryLink(configCategory));
+			Button icon = new IconButton(x, y, bWidth - 20, 20, comp, new ItemStack(category.item), categoryLink(configCategory));
 			Button checkbox = new CheckboxButton(x + bWidth - 20, y, IngameConfigHandler.INSTANCE.getCategoryEnabledObject(category)); 
 
 			addButton(icon);
@@ -69,11 +68,13 @@ public class QuarkConfigHomeScreen extends AbstractQScreen {
 		left = (width - (bWidth + pad) * count) / 2;
 		vStart = height - 30;
 
-		addButton(new Button(left + (bWidth + pad) * pads, vStart, bWidth, 20, new TranslationTextComponent("quark.gui.config.general"), categoryLink(IngameConfigHandler.INSTANCE.getConfigCategory(null))));
+		IConfigCategory cat = IngameConfigHandler.INSTANCE.getConfigCategory(null);
+		addButton(new Button(left + (bWidth + pad) * pads, vStart, bWidth, 20, componentFor(cat), categoryLink(cat)));
 		pads++;
 		
 		if(addExternal) {
-			addButton(new Button(left + (bWidth + pad) * pads, vStart, bWidth, 20, new TranslationTextComponent("quark.gui.config.friends"), categoryLink(ExternalConfigHandler.instance.mockCategory)));
+			cat = ExternalConfigHandler.instance.mockCategory;
+			addButton(new Button(left + (bWidth + pad) * pads, vStart, bWidth, 20, componentFor(cat), categoryLink(cat)));
 			pads++;
 		}
 		
@@ -87,6 +88,15 @@ public class QuarkConfigHomeScreen extends AbstractQScreen {
 		addButton(new ColorTextButton(left + (bWidth + pad) * 2, vStart - vpad, bWidth, 20, new TranslationTextComponent("quark.gui.config.social.patreon"), 0xf96854, webLink("https://patreon.com/vazkii")));
 		addButton(new ColorTextButton(left + (bWidth + pad) * 3, vStart - vpad, bWidth, 20, new TranslationTextComponent("quark.gui.config.social.reddit"), 0xff4400, webLink("https://reddit.com/r/quarkmod")));
 		addButton(new ColorTextButton(left + (bWidth + pad) * 4, vStart - vpad, bWidth, 20, new TranslationTextComponent("quark.gui.config.social.twitter"), 0x1da1f2, webLink("https://twitter.com/VazkiiMods")));
+	}
+	
+	private static ITextComponent componentFor(IConfigCategory c) {
+		TranslationTextComponent comp = new TranslationTextComponent("quark.category." + c.getName());
+
+		if(c.isDirty())
+			comp.append(new StringTextComponent("*").mergeStyle(TextFormatting.GOLD));
+		
+		return comp;
 	}
 	
 	public void commit(Button button) {
