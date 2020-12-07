@@ -4,6 +4,7 @@ import java.util.function.BooleanSupplier;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemGroup;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkBlock;
@@ -49,7 +50,7 @@ public class MoreBrickTypesModule extends QuarkModule {
 				Block.Properties.from(parent)
 				.hardnessAndResistance(2F, 6F)
 				.setRequiresTool()
-				.harvestTool(ToolType.PICKAXE))
+				.harvestTool(parent.material == Material.SNOW ? ToolType.SHOVEL : ToolType.PICKAXE))
 				.setCondition(cond));
 	}
 	
