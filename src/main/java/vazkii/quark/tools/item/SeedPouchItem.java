@@ -22,6 +22,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.Tags;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.api.ITrowelable;
 import vazkii.quark.api.IUsageTickerOverride;
@@ -44,9 +45,17 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 	
     @OnlyIn(Dist.CLIENT)
     public static float itemFraction(ItemStack stack, ClientWorld world, LivingEntity entityIn) {
+    	if(entityIn instanceof PlayerEntity) {
+    		PlayerEntity player = (PlayerEntity) entityIn;
+    		ItemStack held = player.inventory.getItemStack();
+    		
+    		if(canTakeItem(stack, held))
+    			return 0F;
+    	} 
+    	
 		Pair<ItemStack, Integer> contents = getContents(stack);
 		if(contents == null)
-			return 0;
+			return 0F;
 		
 		return (float) contents.getRight() / (float) SeedPouchModule.maxItems;
     }
@@ -60,6 +69,15 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 		int count = ItemNBTHelper.getInt(stack, TAG_COUNT, 0);
 		return Pair.of(contained, count);
 	}
+    
+    public static boolean canTakeItem(ItemStack stack, ItemStack incoming) {
+		Pair<ItemStack, Integer> contents = getContents(stack);
+		
+		if(contents == null)
+			return incoming.getItem().isIn(Tags.Items.SEEDS);
+		
+		return contents.getRight() < SeedPouchModule.maxItems && ItemStack.areItemsEqual(incoming, contents.getLeft());
+    }
 
 	public static void setItemStack(ItemStack stack, ItemStack target) {
 		ItemStack copy = target.copy();

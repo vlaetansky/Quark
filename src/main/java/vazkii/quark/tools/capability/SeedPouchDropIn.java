@@ -13,12 +13,7 @@ public class SeedPouchDropIn extends AbstractDropIn {
 
 	@Override
 	public boolean canDropItemIn(PlayerEntity player, ItemStack stack, ItemStack incoming) {
-		Pair<ItemStack, Integer> contents = SeedPouchItem.getContents(stack);
-		
-		if(contents == null)
-			return incoming.getItem().isIn(Tags.Items.SEEDS);
-		
-		return contents.getRight() < SeedPouchModule.maxItems && ItemStack.areItemsEqual(incoming, contents.getLeft());
+		return SeedPouchItem.canTakeItem(stack, incoming);
 	}
 
 	@Override
