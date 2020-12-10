@@ -1,5 +1,8 @@
 package vazkii.quark.oddities.block;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.annotation.Nonnull;
 
 import net.minecraft.block.Block;
@@ -7,16 +10,22 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -79,6 +88,48 @@ public class PipeBlock extends QuarkBlock implements IWaterLoggable {
 	@Override
 	public boolean isToolEffective(BlockState state, ToolType tool) {
 		return tool == ToolType.PICKAXE;
+	}
+	
+	@Override
+	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+		ItemStack stack = player.getHeldItem(handIn);
+		
+		// fix pipes if they're ruined
+		if(stack.getItem() == Items.STICK) {
+			Set<BlockPos> found = new HashSet<>();
+			boolean fixedAny = false;
+			
+			Set<BlockPos> candidates = new HashSet<>();
+			Set<BlockPos> newCandidates = new HashSet<>();
+			
+			candidates.add(pos);
+			do {
+				for(BlockPos cand : candidates) {
+					for(Direction d : Direction.values()) {
+						BlockPos offPos = cand.offset(d);
+						BlockState offState = worldIn.getBlockState(offPos);
+						if(offState.getBlock() == this && !candidates.contains(offPos) && !found.contains(offPos))
+							newCandidates.add(offPos);
+					}
+					
+					BlockState curr = worldIn.getBlockState(cand);
+					BlockState target = getTargetState(worldIn, cand, curr.get(WATERLOGGED));
+					if(!target.equals(curr)) {
+						fixedAny = true;
+						worldIn.setBlockState(cand, target, 2 | 4);
+					}
+				}
+				
+				found.addAll(candidates);
+				candidates = newCandidates;
+				newCandidates = new HashSet<>();
+			} while(!candidates.isEmpty());
+			
+			if(fixedAny)
+				return ActionResultType.SUCCESS;
+		}
+		
+		return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
 	}
 	
 	@Nonnull
