@@ -4,8 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
-import com.google.common.base.Functions;
-
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -47,11 +45,11 @@ public class VariantHandler {
 		WALLS.add(new QuarkWallBlock(block));
 	}
 
-	public static void addFlowerPot(Block block, String name, Function<Block.Properties, Block.Properties> propertiesFunc) {
+	public static FlowerPotBlock addFlowerPot(Block block, String name, Function<Block.Properties, Block.Properties> propertiesFunc) {
 		Block.Properties props = Block.Properties.create(Material.MISCELLANEOUS).hardnessAndResistance(0F);
 		props = propertiesFunc.apply(props);
 		
-		Block potted = new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, block::getBlock, props);
+		FlowerPotBlock potted = new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, block::getBlock, props);
 		RenderLayerHandler.setRenderType(potted, RenderTypeSkeleton.CUTOUT);
 		ResourceLocation resLoc = block.getBlock().getRegistryName();
 		if (resLoc == null)
@@ -59,6 +57,8 @@ public class VariantHandler {
 		
 		RegistryHelper.registerBlock(potted, "potted_" + name, false);
 		((FlowerPotBlock)Blocks.FLOWER_POT).addPlant(resLoc, () -> potted);
+		
+		return potted;
 	}
 	
 	public static AbstractBlock.Properties realStateCopy(IQuarkBlock parent) {
