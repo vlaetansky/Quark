@@ -2,9 +2,11 @@ package vazkii.quark.tools.module;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.monster.PatrollerEntity;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
@@ -83,8 +85,9 @@ public class SkullPikesModule extends QuarkModule {
 	
     @SubscribeEvent
     public void onMonsterAppear(EntityJoinWorldEvent event) {
-        if(event.getEntity() instanceof MonsterEntity) {
-        	MonsterEntity monster = (MonsterEntity) event.getEntity();
+    	Entity e = event.getEntity();
+        if(e instanceof MonsterEntity && !(e instanceof PatrollerEntity) && e.isNonBoss()) {
+        	MonsterEntity monster = (MonsterEntity) e;
             boolean alreadySetUp = monster.goalSelector.goals.stream().anyMatch((goal) -> goal.getGoal() instanceof RunAwayFromPikesGoal);
 
             if (!alreadySetUp)
