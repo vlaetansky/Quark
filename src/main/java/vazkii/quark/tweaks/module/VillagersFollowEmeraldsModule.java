@@ -26,14 +26,5 @@ public class VillagersFollowEmeraldsModule extends QuarkModule {
             if (!alreadySetUp)
                 villager.goalSelector.addGoal(2, new TemptGoal(villager, 0.6, Ingredient.fromItems(Items.EMERALD_BLOCK), false));
         }
-
-
-//        if(event.getEntity() instanceof EntityArchaeologist) {
-//            EntityArchaeologist villager = (EntityArchaeologist) event.getEntity();
-//            boolean alreadySetUp = villager.goalSelector.goals.anyMatch((goal) -> goal.getGoal() instanceof TemptGoal);
-//
-//            if (!alreadySetUp)
-//                villager.goalSelector.addGoal(2, new TemptGoal(villager, 0.6, Ingredient.fromItems(Items.EMERALD_BLOCK, Items.BONE_BLOCK), false)));
-//        }
     }
 }
