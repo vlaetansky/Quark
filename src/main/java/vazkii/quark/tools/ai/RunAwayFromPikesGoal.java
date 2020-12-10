@@ -55,16 +55,19 @@ public class RunAwayFromPikesGoal extends Goal {
 	}
 
 	@Nullable
-	private SkullPikeEntity getClosestEntity(World world, @Nullable LivingEntity p_225318_3_, double p_225318_4_, double p_225318_6_, double p_225318_8_, AxisAlignedBB p_225318_10_) {
+	private SkullPikeEntity getClosestEntity(World world, LivingEntity p_225318_3_, double p_225318_4_, double p_225318_6_, double p_225318_8_, AxisAlignedBB p_225318_10_) {
 		return getClosestEntity(world.getLoadedEntitiesWithinAABB(SkullPikeEntity.class, p_225318_10_, null), p_225318_3_, p_225318_4_, p_225318_6_, p_225318_8_);
 	}
 
 	@Nullable
-	private SkullPikeEntity getClosestEntity(List<SkullPikeEntity> entities, @Nullable LivingEntity target, double x, double y, double z) {
+	private SkullPikeEntity getClosestEntity(List<SkullPikeEntity> entities, LivingEntity target, double x, double y, double z) {
 		double d0 = -1.0D;
 		SkullPikeEntity t = null;
 
 		for(SkullPikeEntity t1 : entities) {
+			if(!t1.isVisible(target))
+				continue;
+			
 			double d1 = t1.getDistanceSq(x, y, z);
 			if (d0 == -1.0D || d1 < d0) {
 				d0 = d1;

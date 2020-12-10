@@ -88,7 +88,7 @@ public class SkullPikesModule extends QuarkModule {
             boolean alreadySetUp = monster.goalSelector.goals.stream().anyMatch((goal) -> goal.getGoal() instanceof RunAwayFromPikesGoal);
 
             if (!alreadySetUp)
-            	monster.goalSelector.addGoal(2, new RunAwayFromPikesGoal(monster, (float) pikeRange, 1.0D, 1.2D));
+            	monster.goalSelector.addGoal(3, new RunAwayFromPikesGoal(monster, (float) pikeRange, 1.0D, 1.2D));
         }
     }
 }
