@@ -616,6 +616,14 @@
             "desc": [
                 "Pressing Shift+T (or whatever your Chat key is set to) while looking at an item in an inventory links that item to chat. Other players can hover over it to check it out."
             ]
+		},
+		{
+			"name": "Right Click Armor",
+			"image": "right-click-armor.jpg",
+			"versions": "1.16.3+",
+            "desc": [
+                "Right clicking an armor item in an inventory will swap it for whatever armor you're currently holding."
+            ]
 		}
 	],
 	"mobs": [
@@ -764,6 +772,15 @@
                 "*Right clicking the pouch onto farmable soil will plant the seed. Shift-right clicking plants a 3x3.",
                 "*Holding the seed pouch in either hand will have picked up seeds of that type go directly in the bag.",
                 "*If the Usage Ticker feature is enabled, it'll show how many seeds you have left."
+            ]
+		},
+		{
+			"name": "Skull Pikes",
+			"image": "skull-pikes.jpg",
+			"versions": "1.16.3+",
+            "desc": [
+                "Setting a Skeleton Skull, Zombie Head, or Creeper Head over a fence, as shown in the image, will create a skull pike. Nearby monsters in a 5 block range and with line of sight will notice it, and run away in cowardice.",
+                "Note that bosses and raiders are slightly more astute, and won't fall for your tricks. Additionally, everyone knows Wither Skeletons drop their heads all the time, and Dragon Heads are all cheap fakes, so those won't work either."
             ]
 		}
 	],
