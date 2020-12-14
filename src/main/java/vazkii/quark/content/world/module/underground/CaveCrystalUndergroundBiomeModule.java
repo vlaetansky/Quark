@@ -39,7 +39,7 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 
 	public static List<CaveCrystalBlock> crystals = Lists.newArrayList();
 	public static ITag<Block> crystalTag;
-
+	
 	public static Block crystal(int floorIdx) {
 		return crystals.get(MathHelper.clamp(floorIdx, 0, crystals.size() - 1));
 	}
