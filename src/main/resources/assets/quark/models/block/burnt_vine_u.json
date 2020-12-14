@@ -10,7 +10,7 @@
             "shade": false,
             "faces": {
                 "down":  { "uv": [ 0, 0, 16, 16 ], "texture": "#vine", "tintindex": 0 },
-                "up":    { "uv": [ 0, 0, 16, 16 ], "texture": "#vine", "tintindex": 0 }
+                "up":    { "uv": [ 0, 16, 16, 0 ], "texture": "#vine", "tintindex": 0 }
             }
         }
     ]
