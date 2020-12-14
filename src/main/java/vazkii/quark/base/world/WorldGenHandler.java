@@ -1,11 +1,6 @@
 package vazkii.quark.base.world;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -15,6 +10,18 @@ import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
+import com.google.gson.JsonElement;
+import com.mojang.serialization.JsonOps;
+import net.minecraft.util.RegistryKey;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.MutableRegistry;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.WorldGenRegistries;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.feature.*;
+import net.minecraft.world.gen.placement.ConfiguredPlacement;
+import net.minecraft.world.gen.placement.Placement;
+import net.minecraftforge.event.RegistryEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.util.SharedSeedRandom;
@@ -23,15 +30,12 @@ import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.WorldGenRegion;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.DecoratedFeatureConfig;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.placement.NoPlacementConfig;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.GeneralConfig;
 import vazkii.quark.base.module.QuarkModule;
@@ -40,15 +44,88 @@ import vazkii.quark.base.world.generator.IGenerator;
 @EventBusSubscriber(modid = Quark.MOD_ID)
 public class WorldGenHandler {
 
+	private static Map<GenerationStage.Decoration, Feature<NoFeatureConfig>> defersBaseFeature = new HashMap<>();
 	private static Map<GenerationStage.Decoration, Supplier<ConfiguredFeature<?, ?>>> defers = new HashMap<>();
 	private static Map<GenerationStage.Decoration, SortedSet<WeightedGenerator>> generators = new HashMap<>();
 
 	private static Map<GenerationStage.Decoration, List<Pair<BiPredicate<Feature<? extends IFeatureConfig>, IFeatureConfig>, BooleanSupplier>>> featureConditionalizers = new HashMap<>();
+	private static Map<String, Pair<GenerationStage.Decoration, ConditionalConfiguredFeature<?, ?>>> featureReplacers = new HashMap<>();
+
+	public static Placement<NoPlacementConfig> CHUNK_CORNER_PLACEMENT = new ChunkCornerPlacement();
+
+	// Placements should be registered just like Blocks, Features, or Structures
+	// You can move this elsewhere
+	public static void registerPlacements(){
+		CHUNK_CORNER_PLACEMENT.setRegistryName(Quark.MOD_ID, "chunk_corner_placement");
+		RegistryHelper.register(CHUNK_CORNER_PLACEMENT);
+	}
+
+	// Yeah base features should be registered too. Helps keeps down codec errors and logspam.
+	public static void registerFeatures(){
+		for(GenerationStage.Decoration stage : GenerationStage.Decoration.values()) {
+			Feature<NoFeatureConfig> deferredFeature = new DeferedFeature(stage);
+
+			// Always do .toLowerCase(Locale.ENGLISH) with that locale. If you leave it off, computers in
+			// countries like Turkey will use a special character instead of i and well, crash the ResourceLocation.
+			deferredFeature.setRegistryName(Quark.MOD_ID, "deferred_feature_" + stage.name().toLowerCase(Locale.ENGLISH));
+			RegistryHelper.register(deferredFeature);
+			defersBaseFeature.put(stage, deferredFeature);
+		}
+	}
 
 	public static void loadComplete() {
 		for(GenerationStage.Decoration stage : GenerationStage.Decoration.values()) {
-			ConfiguredFeature<?, ?> feature = new DeferedFeature(stage).withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).withPlacement(new ChunkCornerPlacement().configure(NoPlacementConfig.NO_PLACEMENT_CONFIG));
+			ConfiguredFeature<?, ?> feature = defersBaseFeature.get(stage).withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).withPlacement(CHUNK_CORNER_PLACEMENT.configure(NoPlacementConfig.NO_PLACEMENT_CONFIG));
+
+			// Register the configuredfeatures so that it doesn't cause mod incompat issues later.
+			// Always do .toLowerCase(Locale.ENGLISH) with that locale. If you leave it off, computers in
+			// countries like Turkey will use a special character instead of i and well, crash the ResourceLocation.
+			Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(Quark.MOD_ID, "deferred_feature_" + stage.name().toLowerCase(Locale.ENGLISH)), feature);
+
 			defers.put(stage, () -> feature);
+		}
+
+		setupConditionalizers();
+	}
+
+	public static void setupConditionalizers(){
+		// Store CFs we make so we can register after the main loop and prevent a CME error.
+		Set<ConfiguredFeature<?, ?>> quarkCfsToRegister = new HashSet<>();
+
+		for(Map.Entry<RegistryKey<ConfiguredFeature<?,?>>, ConfiguredFeature<?, ?>> cfEntry : WorldGenRegistries.CONFIGURED_FEATURE.getEntries()){
+			ConfiguredFeature<?,?> configuredFeature = cfEntry.getValue();
+
+			Feature<?> feature = configuredFeature.feature;
+			IFeatureConfig config = configuredFeature.config;
+
+			// Get the base feature of the CF. Will not get nested CFs such as trees in Feature.RANDOM_SELECTOR.
+			while(config instanceof DecoratedFeatureConfig) {
+				DecoratedFeatureConfig dconfig = (DecoratedFeatureConfig) config;
+				feature = dconfig.feature.get().feature;
+				config = dconfig.feature.get().config;
+			}
+
+			for(Map.Entry<GenerationStage.Decoration, List<Pair<BiPredicate<Feature<? extends IFeatureConfig>, IFeatureConfig>, BooleanSupplier>>> conditionalizerEntry : featureConditionalizers.entrySet())
+				for(Pair<BiPredicate<Feature<? extends IFeatureConfig>, IFeatureConfig>, BooleanSupplier> pair : conditionalizerEntry.getValue())
+					if(pair.getLeft().test(feature, config)) {
+						ConditionalConfiguredFeature<?, ?> conditionalConfiguredFeature = new ConditionalConfiguredFeature<>(configuredFeature, pair.getRight());
+						quarkCfsToRegister.add(conditionalConfiguredFeature);
+
+						// Turn into JSON so we can know what configuredfeature needs to be replaced in the biome.
+						// The CF in the biome in biomeLoadEvent is NOT the same object as in the WorldGenRegistries.
+						// That's why we need to compare using JSON so we know we replaced the right CF.
+						Optional<JsonElement> tempOptional = ConfiguredFeature.field_242763_a.encode(configuredFeature, JsonOps.INSTANCE, JsonOps.INSTANCE.empty()).get().left();
+						String cfJSON = tempOptional.isPresent() ? tempOptional.get().toString() : "";
+						featureReplacers.put(cfJSON, Pair.of(conditionalizerEntry.getKey(), conditionalConfiguredFeature));
+					}
+		}
+
+		// Done here to prevent a ConcurrentModificationException if we tried registering within the loop above.
+		int cfIdOffset = 1;
+		for(ConfiguredFeature<?,?> cfToRegister : quarkCfsToRegister){
+			// Done with cfIdOffset on the object itself so each newly made cf is unique and doesn't registry replace each other.
+			Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(Quark.MOD_ID, "conditional_configured_feature_"+cfIdOffset), cfToRegister);
+			cfIdOffset++;
 		}
 	}
 
@@ -60,27 +137,18 @@ public class WorldGenHandler {
 			List<Supplier<ConfiguredFeature<?, ?>>> features = settings.getFeatures(stage);
 			features.add(defers.get(stage));
 
+			// Only check generation stages that we are gonna replace stuff in
 			if(featureConditionalizers.containsKey(stage)) {
-				List<Pair<BiPredicate<Feature<? extends IFeatureConfig>, IFeatureConfig>, BooleanSupplier>> list = featureConditionalizers.get(stage);
 
 				for(int i = 0; i < features.size(); i++) {
+					// Turn current CF to JSON so we can check if we should replace it
 					ConfiguredFeature<?, ?> configuredFeature = features.get(i).get();
+					Optional<JsonElement> tempOptional = ConfiguredFeature.field_242763_a.encode(configuredFeature, JsonOps.INSTANCE, JsonOps.INSTANCE.empty()).get().left();
+					String cfTargetJSON = tempOptional.isPresent() ? tempOptional.get().toString(): "";
 
-					if(!(configuredFeature instanceof ConditionalConfiguredFeature)) {
-						Feature<?> feature = configuredFeature.feature;
-						IFeatureConfig config = configuredFeature.config;
-
-						while(config instanceof DecoratedFeatureConfig) {
-							DecoratedFeatureConfig dconfig = (DecoratedFeatureConfig) config;
-							feature = dconfig.feature.get().feature;
-							config = dconfig.feature.get().config;
-						}
-						
-						for(Pair<BiPredicate<Feature<? extends IFeatureConfig>, IFeatureConfig>, BooleanSupplier> pair : list)
-							if(pair.getLeft().test(feature, config)) {
-								ConditionalConfiguredFeature<?, ?> conditional = new ConditionalConfiguredFeature<>(configuredFeature, pair.getRight());
-								features.set(i, () -> conditional);
-							}
+					// If the CF does have a replacement entry and the generation stage matches, replace it.
+					if(featureReplacers.containsKey(cfTargetJSON) && featureReplacers.get(cfTargetJSON).getLeft() == stage) {
+						features.set(i, () -> featureReplacers.get(cfTargetJSON).getRight());
 					}
 				}
 			}

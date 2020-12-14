@@ -3,6 +3,7 @@ package vazkii.quark.base.proxy;
 import java.time.LocalDateTime;
 import java.time.Month;
 
+import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.config.ModConfig.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -37,6 +38,8 @@ public class CommonProxy {
 		
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		registerListeners(bus);
+		WorldGenHandler.registerPlacements(); // You can move this elsewhere
+		WorldGenHandler.registerFeatures(); // You can move this elsewhere
 
 		LocalDateTime now = LocalDateTime.now();
 		if (now.getMonth() == Month.DECEMBER && now.getDayOfMonth() >= 16 || now.getMonth() == Month.JANUARY && now.getDayOfMonth() <= 2)
