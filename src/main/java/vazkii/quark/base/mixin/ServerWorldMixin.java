@@ -9,8 +9,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
-import vazkii.quark.mobs.entity.CrabEntity;
-import vazkii.quark.tweaks.module.ImprovedSleepingModule;
+import vazkii.quark.content.mobs.entity.CrabEntity;
+import vazkii.quark.content.tweaks.module.ImprovedSleepingModule;
 
 @Mixin(ServerWorld.class)
 public class ServerWorldMixin {

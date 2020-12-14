@@ -19,6 +19,7 @@ public enum ModuleCategory {
 	MOBS("mobs", Items.PIG_SPAWN_EGG),
 	CLIENT("client", Items.ENDER_EYE),
 	ODDITIES("oddities", Items.CHORUS_FRUIT, Quark.ODDITIES_ID),
+	ODYSSEY("odyssey", Items.COMPASS, Quark.ODYSSEY_ID),
 	EXPERIMENTAL("experimental", Items.TNT);
 	
 	public final String name;

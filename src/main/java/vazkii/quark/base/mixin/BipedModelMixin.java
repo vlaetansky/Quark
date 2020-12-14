@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.LivingEntity;
-import vazkii.quark.tweaks.client.emote.EmoteHandler;
+import vazkii.quark.content.tweaks.client.emote.EmoteHandler;
 
 @Mixin(BipedModel.class)
 public class BipedModelMixin<T extends LivingEntity> {

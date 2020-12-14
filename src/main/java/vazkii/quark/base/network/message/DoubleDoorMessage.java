@@ -5,7 +5,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import vazkii.arl.network.IMessage;
-import vazkii.quark.tweaks.module.DoubleDoorOpeningModule;
+import vazkii.quark.content.tweaks.module.DoubleDoorOpeningModule;
 
 public class DoubleDoorMessage implements IMessage {
 

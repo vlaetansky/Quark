@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import net.minecraftforge.fml.network.NetworkHooks;
 import vazkii.arl.network.IMessage;
-import vazkii.quark.oddities.container.BackpackContainer;
+import vazkii.quark.addons.oddities.container.BackpackContainer;
 
 public class HandleBackpackMessage implements IMessage {
 

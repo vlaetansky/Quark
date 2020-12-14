@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
-import vazkii.quark.management.module.ItemSharingModule;
+import vazkii.quark.content.management.module.ItemSharingModule;
 
 @Mixin(ItemStack.class)
 public class ItemStackMixin {

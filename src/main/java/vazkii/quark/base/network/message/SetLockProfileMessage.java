@@ -2,8 +2,8 @@ package vazkii.quark.base.network.message;
 
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import vazkii.arl.network.IMessage;
-import vazkii.quark.tweaks.module.LockRotationModule;
-import vazkii.quark.tweaks.module.LockRotationModule.LockProfile;
+import vazkii.quark.content.tweaks.module.LockRotationModule;
+import vazkii.quark.content.tweaks.module.LockRotationModule.LockProfile;
 
 public class SetLockProfileMessage implements IMessage {
 

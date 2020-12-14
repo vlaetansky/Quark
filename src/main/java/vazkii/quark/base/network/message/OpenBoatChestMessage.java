@@ -11,7 +11,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
 import vazkii.arl.network.IMessage;
-import vazkii.quark.management.entity.ChestPassengerEntity;
+import vazkii.quark.content.management.entity.ChestPassengerEntity;
 
 import javax.annotation.Nonnull;
 import java.util.List;

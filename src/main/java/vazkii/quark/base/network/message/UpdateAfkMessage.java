@@ -2,7 +2,7 @@ package vazkii.quark.base.network.message;
 
 import net.minecraftforge.fml.network.NetworkEvent;
 import vazkii.arl.network.IMessage;
-import vazkii.quark.tweaks.module.ImprovedSleepingModule;
+import vazkii.quark.content.tweaks.module.ImprovedSleepingModule;
 
 public class UpdateAfkMessage implements IMessage {
 

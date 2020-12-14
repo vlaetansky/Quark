@@ -22,7 +22,7 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import vazkii.quark.api.ITransferManager;
 import vazkii.quark.api.QuarkCapabilities;
 import vazkii.quark.base.module.ModuleLoader;
-import vazkii.quark.management.module.EasyTransferingModule;
+import vazkii.quark.content.management.module.EasyTransferingModule;
 
 public class InventoryTransferHandler {
 

@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.world.gen.feature.template.Template;
-import vazkii.quark.building.module.VariantChestsModule;
+import vazkii.quark.content.building.module.VariantChestsModule;
 
 @Mixin(Template.class)
 public class TemplateMixin {

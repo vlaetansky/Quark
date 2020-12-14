@@ -10,7 +10,7 @@ import net.minecraft.block.TrapDoorBlock;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldReader;
-import vazkii.quark.building.module.VariantLaddersModule;
+import vazkii.quark.content.building.module.VariantLaddersModule;
 
 @Mixin(TrapDoorBlock.class)
 public class TrapDoorBlockMixin {

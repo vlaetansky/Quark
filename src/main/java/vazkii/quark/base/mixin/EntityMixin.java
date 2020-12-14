@@ -10,9 +10,9 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.util.math.vector.Vector3d;
-import vazkii.quark.automation.module.ChainLinkageModule;
-import vazkii.quark.tools.module.PickarangModule;
-import vazkii.quark.tweaks.module.SpringySlimeModule;
+import vazkii.quark.content.automation.module.ChainLinkageModule;
+import vazkii.quark.content.tools.module.PickarangModule;
+import vazkii.quark.content.tweaks.module.SpringySlimeModule;
 
 @Mixin(Entity.class)
 public class EntityMixin {

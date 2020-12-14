@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.DamageSource;
-import vazkii.quark.tools.module.PickarangModule;
+import vazkii.quark.content.tools.module.PickarangModule;
 
 @Mixin(DamageSource.class)
 public class DamageSourceMixin {

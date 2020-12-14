@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import vazkii.quark.tools.module.ColorRunesModule;
+import vazkii.quark.content.tools.module.ColorRunesModule;
 
 @Mixin(BipedArmorLayer.class)
 public class BipedArmorLayerMixin<T extends LivingEntity, M extends BipedModel<T>, A extends BipedModel<T>> {

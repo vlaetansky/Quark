@@ -27,12 +27,12 @@ import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import vazkii.quark.addons.oddities.client.screen.BackpackInventoryScreen;
 import vazkii.quark.api.IQuarkButtonIgnored;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.GeneralConfig;
 import vazkii.quark.base.handler.InventoryTransferHandler;
 import vazkii.quark.base.module.QuarkModule;
-import vazkii.quark.oddities.client.screen.BackpackInventoryScreen;
 
 @OnlyIn(Dist.CLIENT)
 @EventBusSubscriber(modid = Quark.MOD_ID, value = Dist.CLIENT)

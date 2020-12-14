@@ -6,8 +6,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import vazkii.arl.network.IMessage;
-import vazkii.quark.tools.item.SeedPouchItem;
-import vazkii.quark.tools.module.SeedPouchModule;
+import vazkii.quark.content.tools.item.SeedPouchItem;
+import vazkii.quark.content.tools.module.SeedPouchModule;
 
 public class WithdrawSeedsMessage implements IMessage {
 

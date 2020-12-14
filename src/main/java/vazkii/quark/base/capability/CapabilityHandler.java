@@ -16,13 +16,13 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import vazkii.quark.addons.oddities.capability.MagnetTracker;
 import vazkii.quark.api.*;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.capability.dummy.DummyMagnetTracker;
 import vazkii.quark.base.capability.dummy.DummyPistonCallback;
 import vazkii.quark.base.capability.dummy.DummyRuneColor;
 import vazkii.quark.base.capability.dummy.DummySorting;
-import vazkii.quark.oddities.capability.MagnetTracker;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
