@@ -22,5 +22,8 @@ public class WorldGenWeights {
 	public static final int FAIRY_RINGS = 0;
 	public static final int BLOSSOM_TREES = 1;
 	
+	// SURFACE_STRUCTURES (end)
+	public static final int SPIRAL_SPIRES = 0;
+	
 }
 
