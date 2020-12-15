@@ -36,7 +36,7 @@ public class MyaliteCrystalBlock extends QuarkGlassBlock implements IBlockColorP
 				.setLightLevel(b -> 14)
 				.harvestTool(ToolType.PICKAXE)
 				.setRequiresTool()
-				.harvestLevel(2)
+				.harvestLevel(3)
 				.tickRandomly()
 				.notSolid());
 
@@ -58,10 +58,10 @@ public class MyaliteCrystalBlock extends QuarkGlassBlock implements IBlockColorP
     }
     
     private static float[] decompColor(int color) {
-        int i = (color & 16711680) >> 16;
-        int j = (color & '\uff00') >> 8;
-        int k = (color & 255) >> 0;
-        return new float[] { (float) i / 255.0F, (float) j / 255.0F, (float) k / 255.0F };
+        int r = (color & 0xFF0000) >> 16;
+        int g = (color & 0xFF00) >> 8;
+        int b = color & 0xFF;
+        return new float[] { (float) r / 255.0F, (float) g / 255.0F, (float) b / 255.0F };
     }
     
 	@Nullable
