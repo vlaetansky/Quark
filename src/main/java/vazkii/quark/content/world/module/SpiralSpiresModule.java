@@ -41,6 +41,8 @@ public class SpiralSpiresModule extends QuarkModule {
 	@Config(description = "Set to 0 to turn off Myalite Conduits") 
 	public static int myaliteConduitDistance = 16;
 	
+	@Config public static boolean renewableMyalite = true;
+	
 	public static Block myalite_crystal;
 	
 	@Override

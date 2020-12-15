@@ -19,11 +19,13 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ToolType;
+import net.minecraftforge.common.ToolType;import vazkii.quark.api.event.ModuleLoadedEvent;
 import vazkii.quark.base.block.QuarkGlassBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
+import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
+import vazkii.quark.content.world.module.SpiralSpiresModule;
 import vazkii.quark.content.world.module.underground.CaveCrystalUndergroundBiomeModule;
 
 /**
@@ -68,8 +70,13 @@ public class CaveCrystalBlock extends QuarkGlassBlock {
 
 	@Override
 	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
-		if(canGrow(worldIn, pos) && random.nextInt(CaveCrystalUndergroundBiomeModule.caveCrystalGrowthChance) == 0)
+		if(canGrow(worldIn, pos) && random.nextInt(CaveCrystalUndergroundBiomeModule.caveCrystalGrowthChance) == 0) {
+			BlockState down = worldIn.getBlockState(pos.down());
 			worldIn.setBlockState(pos.up(), state);
+			
+			if(down.getBlock() == SpiralSpiresModule.myalite_crystal && ModuleLoader.INSTANCE.isModuleEnabled(SpiralSpiresModule.class) && SpiralSpiresModule.renewableMyalite)
+				worldIn.setBlockState(pos, SpiralSpiresModule.myalite_crystal.getDefaultState());
+		}
 	}
 
 	@Override
