@@ -39,7 +39,7 @@ public class SpiralSpiresModule extends QuarkModule {
 	@Config public static int radius = 15;
 	
 	@Config(description = "Set to 0 to turn off Myalite Conduits") 
-	public static int myaliteConduitDistance = 16;
+	public static int myaliteConduitDistance = 24;
 	
 	@Config public static boolean renewableMyalite = true;
 	
