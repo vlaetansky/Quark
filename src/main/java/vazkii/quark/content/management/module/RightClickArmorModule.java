@@ -31,7 +31,7 @@ public class RightClickArmorModule extends QuarkModule {
 	public void onRightClick(GuiScreenEvent.MouseClickedEvent.Pre event) {
 		Minecraft mc = Minecraft.getInstance();
 		Screen gui = mc.currentScreen;
-		if(gui instanceof ContainerScreen && event.getButton() == 1) {
+		if(gui instanceof ContainerScreen && event.getButton() == 1 && !Screen.hasShiftDown()) {
 			ContainerScreen<?> container = (ContainerScreen<?>) gui;
 			Slot under = container.getSlotUnderMouse();
 			if(under != null) {
@@ -51,18 +51,20 @@ public class RightClickArmorModule extends QuarkModule {
 		Slot slotUnder = player.openContainer.getSlot(slot);
 		ItemStack stack = slotUnder.getStack();
 		
-		if(stack.getItem() instanceof ArmorItem && slotUnder.canTakeStack(player)) {
+		if(stack.getItem() instanceof ArmorItem) {
 			ArmorItem armor = (ArmorItem) stack.getItem();
 			
 			EquipmentSlotType equipSlot = armor.getEquipmentSlot();
 			ItemStack currArmor = player.getItemStackFromSlot(equipSlot);
 			
-			if(currArmor.isEmpty() || (EnchantmentHelper.getEnchantmentLevel(Enchantments.BINDING_CURSE, currArmor) == 0 && currArmor != stack)) {
-				player.setItemStackToSlot(equipSlot, stack.copy());
-				
-				player.inventory.setInventorySlotContents(slotUnder.getSlotIndex(), currArmor.copy());
-				return true;
-			}
+			if(slotUnder.canTakeStack(player) && slotUnder.isItemValid(currArmor)) 
+				if(currArmor.isEmpty() || (EnchantmentHelper.getEnchantmentLevel(Enchantments.BINDING_CURSE, currArmor) == 0 && currArmor != stack)) {
+					player.setItemStackToSlot(equipSlot, stack.copy());
+					
+					player.inventory.setInventorySlotContents(slotUnder.getSlotIndex(), currArmor.copy());
+					slotUnder.onSlotChange(stack, currArmor);
+					return true;
+				}
 		}
 		
 		return false;
