@@ -11,7 +11,7 @@ import mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICraftingCategor
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import vazkii.quark.tweaks.recipe.ElytraDuplicationRecipe;
+import vazkii.quark.content.tweaks.recipe.ElytraDuplicationRecipe;
 
 public class ElytraDuplicationExtension implements ICraftingCategoryExtension {
 	private final ElytraDuplicationRecipe recipe;

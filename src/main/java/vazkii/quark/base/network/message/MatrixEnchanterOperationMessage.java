@@ -4,8 +4,8 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import vazkii.arl.network.IMessage;
-import vazkii.quark.oddities.container.MatrixEnchantingContainer;
-import vazkii.quark.oddities.tile.MatrixEnchantingTableTileEntity;
+import vazkii.quark.addons.oddities.container.MatrixEnchantingContainer;
+import vazkii.quark.addons.oddities.tile.MatrixEnchantingTableTileEntity;
 
 public class MatrixEnchanterOperationMessage implements IMessage {
 

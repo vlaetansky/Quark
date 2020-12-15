@@ -8,8 +8,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.ItemStack;
-import vazkii.quark.tools.item.PickarangItem;
-import vazkii.quark.tweaks.module.HoeHarvestingModule;
+import vazkii.quark.content.tools.item.PickarangItem;
+import vazkii.quark.content.tweaks.module.HoeHarvestingModule;
 
 @Mixin(Enchantment.class)
 public class EnchantmentMixin {

@@ -8,8 +8,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.BoatEntity;
-import vazkii.quark.automation.module.ChainLinkageModule;
-import vazkii.quark.management.entity.ChestPassengerEntity;
+import vazkii.quark.content.automation.module.ChainLinkageModule;
+import vazkii.quark.content.management.entity.ChestPassengerEntity;
 
 @Mixin(BoatEntity.class)
 public class BoatEntityMixin {

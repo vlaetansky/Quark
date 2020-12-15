@@ -3,7 +3,7 @@ package vazkii.quark.base.network.message;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.network.NetworkEvent;
 import vazkii.arl.network.IMessage;
-import vazkii.quark.management.module.ItemSharingModule;
+import vazkii.quark.content.management.module.ItemSharingModule;
 
 /**
  * @author WireSegal

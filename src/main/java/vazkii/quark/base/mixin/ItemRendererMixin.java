@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
-import vazkii.quark.tools.module.ColorRunesModule;
+import vazkii.quark.content.tools.module.ColorRunesModule;
 
 @Mixin(ItemRenderer.class)
 public class ItemRendererMixin {

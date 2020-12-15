@@ -3,7 +3,7 @@ package vazkii.quark.base.network.message;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import vazkii.arl.network.IMessage;
-import vazkii.quark.tweaks.module.SignEditingModule;
+import vazkii.quark.content.tweaks.module.SignEditingModule;
 
 public class EditSignMessage implements IMessage {
 

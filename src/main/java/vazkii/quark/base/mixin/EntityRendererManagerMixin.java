@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.entity.Entity;
-import vazkii.quark.automation.client.render.ChainRenderer;
+import vazkii.quark.content.automation.client.render.ChainRenderer;
 
 @Mixin(EntityRendererManager.class)
 public class EntityRendererManagerMixin {

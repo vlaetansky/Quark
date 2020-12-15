@@ -17,8 +17,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkEvent;
 import vazkii.arl.network.IMessage;
-import vazkii.quark.automation.base.ChainHandler;
-import vazkii.quark.automation.module.ChainLinkageModule;
+import vazkii.quark.content.automation.base.ChainHandler;
+import vazkii.quark.content.automation.module.ChainLinkageModule;
 
 import java.util.UUID;
 

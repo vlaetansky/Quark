@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
-import vazkii.quark.tools.module.AncientTomesModule;
+import vazkii.quark.content.tools.module.AncientTomesModule;
 
 @Mixin(EnchantmentHelper.class)
 public class EnchantmentHelperMixin {

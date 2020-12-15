@@ -43,7 +43,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.api.ICustomSorting;
 import vazkii.quark.api.QuarkCapabilities;
 import vazkii.quark.base.module.ModuleLoader;
-import vazkii.quark.management.module.InventorySortingModule;
+import vazkii.quark.content.management.module.InventorySortingModule;
 
 public final class SortingHandler {
 

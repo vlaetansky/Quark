@@ -12,7 +12,7 @@ import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import vazkii.quark.base.Quark;
-import vazkii.quark.building.block.VerticalSlabBlock;
+import vazkii.quark.content.building.block.VerticalSlabBlock;
 
 @EventBusSubscriber(modid = Quark.MOD_ID)
 public class FuelHandler {

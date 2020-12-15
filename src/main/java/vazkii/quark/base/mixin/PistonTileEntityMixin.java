@@ -8,7 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.PistonTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import vazkii.quark.automation.module.PistonsMoveTileEntitiesModule;
+import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 
 @Mixin(PistonTileEntity.class)
 public class PistonTileEntityMixin {

@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.enchantment.DamageEnchantment;
 import net.minecraft.item.ItemStack;
-import vazkii.quark.tools.item.PickarangItem;
+import vazkii.quark.content.tools.item.PickarangItem;
 
 @Mixin(DamageEnchantment.class)
 public class DamageEnchantmentMixin {

@@ -13,8 +13,8 @@ import net.minecraft.block.PistonBlockStructureHelper;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import vazkii.quark.automation.module.PistonsMoveTileEntitiesModule;
 import vazkii.quark.base.handler.QuarkPistonStructureHelper;
+import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 
 @Mixin(PistonBlock.class)
 public class PistonBlockMixin {

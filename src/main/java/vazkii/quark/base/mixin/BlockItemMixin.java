@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
-import vazkii.quark.tweaks.module.LockRotationModule;
+import vazkii.quark.content.tweaks.module.LockRotationModule;
 
 @Mixin(BlockItem.class)
 public class BlockItemMixin {

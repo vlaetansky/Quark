@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import vazkii.quark.tools.module.ColorRunesModule;
+import vazkii.quark.content.tools.module.ColorRunesModule;
 
 @Mixin(ElytraLayer.class)
 public class ElytraLayerMixin<T extends LivingEntity, M extends EntityModel<T>> {

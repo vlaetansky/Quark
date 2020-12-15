@@ -18,7 +18,7 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.StructureManager;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraft.world.gen.feature.structure.StructureStart;
-import vazkii.quark.building.module.VariantChestsModule;
+import vazkii.quark.content.building.module.VariantChestsModule;
 
 @Mixin(StructureStart.class)
 public class StructureStartMixin {

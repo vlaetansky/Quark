@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
-import vazkii.quark.building.module.VariantChestsModule;
+import vazkii.quark.content.building.module.VariantChestsModule;
 
 @Mixin(StructurePiece.class)
 public class StructurePieceMixin {

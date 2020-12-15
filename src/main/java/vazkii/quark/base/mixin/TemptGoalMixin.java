@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.entity.ai.goal.TemptGoal;
 import net.minecraft.entity.player.PlayerEntity;
-import vazkii.quark.automation.module.FeedingTroughModule;
+import vazkii.quark.content.automation.module.FeedingTroughModule;
 
 @Mixin(TemptGoal.class)
 public class TemptGoalMixin {

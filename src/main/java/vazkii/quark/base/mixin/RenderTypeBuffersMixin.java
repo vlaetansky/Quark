@@ -9,7 +9,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeBuffers;
-import vazkii.quark.tools.client.GlintRenderType;
+import vazkii.quark.content.tools.client.GlintRenderType;
 
 @Mixin(RenderTypeBuffers.class)
 public class RenderTypeBuffersMixin {

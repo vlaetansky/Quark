@@ -10,7 +10,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.PistonTileEntityRenderer;
 import net.minecraft.tileentity.PistonTileEntity;
-import vazkii.quark.automation.client.render.QuarkPistonTileEntityRenderer;
+import vazkii.quark.content.automation.client.render.QuarkPistonTileEntityRenderer;
 
 @Mixin(PistonTileEntityRenderer.class)
 public class PistonTileEntityRendererMixin {
