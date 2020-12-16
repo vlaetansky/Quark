@@ -98,6 +98,20 @@ public class VariantChestsModule extends QuarkModule {
 			 "minecraft:bastion_remnant=quark:crimson_chest",
 			 "minecraft:fortress=quark:nether_brick_chest",
 			 "minecraft:endcity=quark:purpur_chest",
+			 "bettermineshafts:mineshaft=quark:oak_chest",
+			 "cobbler:shulker_factory=quark:purpur_chest",
+			 "conjurer_illager:theatre=quark:dark_oak_chest",
+			 "dungeoncrawl:dungeon=quark:oak_chest",
+			 "dungeons_plus:bigger_dungeon=quark:oak_chest",
+			 "dungeons_plus:end_ruins=quark:purpur_chest",
+			 "dungeons_plus:leviathan=quark:jungle_chest",
+			 "dungeons_plus:snowy_temple=quark:spruce_chest",
+			 "dungeons_plus:soul_prison=quark:warped_chest",
+			 "dungeons_plus:tower=quark:oak_chest",
+			 "dungeons_plus:warped_garden=quark:warped__chest",
+			 "hunterillager:hunterhouse=quark:oak_chest",
+			 "iceandfire:gorgon_temple=quark:jungle_chest",
+			 "pandoras_creatures:end_prison=quark:purpur_chest", 
 			 "repurposed_structures:fortress_jungle=quark:jungle_chest",
 			 "repurposed_structures:igloo_grassy=quark:oak_chest",
 			 "repurposed_structures:igloo_stone=quark:spruce_chest",
@@ -145,7 +159,15 @@ public class VariantChestsModule extends QuarkModule {
 			 "repurposed_structures:village_mountains=quark:spruce_chest",
 			 "repurposed_structures:village_oak=quark:oak_chest",
  			 "repurposed_structures:village_swamp=quark:oak_chest",
-			 "repurposed_structures:village_warped=quark:warped_chest");
+			 "repurposed_structures:village_warped=quark:warped_chest",
+			 "valhelsia_structures:castle=quark:spruce_chest",
+			 "valhelsia_structures:castle_ruin=quark:oak_chest",
+			 "valhelsia_structures:desert_house=quark:spruce_chest",
+			 "valhelsia_structures:forge=quark:spruce_chest",
+			 "valhelsia_structures:player_house=quark:oak_chest",
+			 "valhelsia_structures:small_castle=quark:oak_chest",
+			 "valhelsia_structures:small_dungeon=quark:oak_chest",
+			 "valhelsia_structures:tower_ruin=quark:spruce_chest");
 	
 	@Override
 	public void construct() {
