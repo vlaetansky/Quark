@@ -41,10 +41,14 @@ public class MorePottedPlantsModule extends QuarkModule {
 		VariantHandler.addFlowerPot(Blocks.SEA_PICKLE, "sea_pickle", p -> p.setLightLevel(b -> 3));
 		Block sugarCane = add(Blocks.SUGAR_CANE, "sugar_cane");
 		add(Blocks.SUNFLOWER, "sunflower");
+		add(Blocks.TWISTING_VINES, "twisting_vines");
+		Block vine = add(Blocks.VINE, "vine");
+		add(Blocks.WEEPING_VINES, "weeping_vines");
 		add(Blocks.WHEAT, "wheat");
 		
 		tintedBlocks.put(grass, Blocks.GRASS);
 		tintedBlocks.put(sugarCane, Blocks.SUGAR_CANE);
+		tintedBlocks.put(vine, Blocks.VINE);
 	}
 	
 	private FlowerPotBlock add(Block block, String name) {
