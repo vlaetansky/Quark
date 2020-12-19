@@ -962,6 +962,13 @@
 	"block.quark.warped_post": "Warped Post",
 	"block.quark.crimson_post": "Crimson Post",
 	"block.quark.myalite_crystal": "Myalite Crystal",
+	
+	"block.quark.potted_tall_grass": "Potted Tall Grass",
+	"block.quark.potted_large_fern": "Potted Large Fern",
+	"block.quark.potted_nether_sprouts": "Potted Nether Sprouts",
+	"block.quark.potted_vine": "Potted Vines",
+	"block.quark.potted_weeping_vines": "Potted Weeping Vines",
+	"block.quark.potted_twisting_vines": "Potted Twisting Vines",
 
 	"item.quark.stoneling_spawn_egg": "Stoneling Spawn Egg",
 	"item.quark.frog_spawn_egg": "Frog Spawn Egg",
