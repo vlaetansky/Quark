@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/flower_pot_cross",
   "textures": {
-    "plant": "quark:block/potted/nether_sprouts"
+    "plant": "minecraft:block/twisting_vines"
   }
 }
