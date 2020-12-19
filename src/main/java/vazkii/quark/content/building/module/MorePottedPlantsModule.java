@@ -34,6 +34,7 @@ public class MorePottedPlantsModule extends QuarkModule {
 		add(Blocks.PEONY, "peony");
 		add(Blocks.LILAC, "lilac");
 		add(Blocks.MELON_STEM, "melon");
+		add(Blocks.NETHER_SPROUTS, "nether_sprouts");
 		add(Blocks.NETHER_WART, "nether_wart");
 		add(Blocks.POTATOES, "potato");
 		add(Blocks.PUMPKIN_STEM, "pumpkin");
