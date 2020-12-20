@@ -6,7 +6,21 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "quark:potted_weeping_vines"
+          "name": "minecraft:weeping_vines"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:flower_pot"
         }
       ],
       "conditions": [
