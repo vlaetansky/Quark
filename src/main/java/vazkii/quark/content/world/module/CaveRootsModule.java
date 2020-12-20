@@ -1,5 +1,7 @@
 package vazkii.quark.content.world.module;
 
+import com.google.common.base.Functions;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.ComposterBlock;
 import net.minecraft.item.Food;
@@ -9,10 +11,11 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.Effects;
 import net.minecraft.world.gen.GenerationStage.Decoration;
 import vazkii.quark.base.handler.BrewingHandler;
+import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.world.WorldGenHandler;
 import vazkii.quark.base.world.WorldGenWeights;
@@ -46,6 +49,8 @@ public class CaveRootsModule extends QuarkModule {
 		BrewingHandler.addPotionMix("cave_roots_brewing",
 				() -> Ingredient.fromItems(rootItem),
 				Effects.RESISTANCE);
+		
+		VariantHandler.addFlowerPot(root, "cave_root", Functions.identity());
 	}
 	
 	@Override
