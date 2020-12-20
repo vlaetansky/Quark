@@ -1,14 +1,16 @@
 package vazkii.quark.base.block;
 
+import java.util.function.BooleanSupplier;
+
+import javax.annotation.Nullable;
+
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import vazkii.arl.block.BasicBlock;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.module.QuarkModule;
-
-import javax.annotation.Nullable;
-import java.util.function.BooleanSupplier;
 
 public class QuarkBlock extends BasicBlock implements IQuarkBlock {
 	
@@ -46,4 +48,10 @@ public class QuarkBlock extends BasicBlock implements IQuarkBlock {
 		return module;
 	}
 
+	public static interface Constructor<T extends Block> {
+		
+		public T make(String regname, QuarkModule module, ItemGroup creativeTab, Properties properties);
+		
+	}
+	
 }

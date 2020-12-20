@@ -1,7 +1,5 @@
 package vazkii.quark.content.world.block;
 
-import java.awt.Color;
-
 import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
@@ -9,8 +7,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.math.BlockPos;
@@ -19,14 +15,12 @@ import net.minecraft.world.IWorldReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
-import vazkii.arl.interf.IBlockColorProvider;
-import vazkii.arl.util.ClientTicker;
 import vazkii.quark.base.block.QuarkGlassBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
 
-public class MyaliteCrystalBlock extends QuarkGlassBlock implements IBlockColorProvider {
+public class MyaliteCrystalBlock extends QuarkGlassBlock implements IMyaliteColorProvider {
 
 	public MyaliteCrystalBlock(QuarkModule module) {
 		super("myalite_crystal", module, ItemGroup.DECORATIONS,
@@ -42,20 +36,6 @@ public class MyaliteCrystalBlock extends QuarkGlassBlock implements IBlockColorP
 
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.TRANSLUCENT);
 	}
-	
-	private static int getColor(double t) {
-    	double sp = 0.05;
-    	double range = 0.28;
-    	double shift = -0.025;
-    	
-    	double h = (Math.sin(t * sp) + 1.0) * (range / 2) - range + shift;
-    	
-		return Color.HSBtoRGB((float) h, 0.7F, 0.8F);
-	}
-	
-    private static int getColor(BlockPos pos) {
-		return getColor(pos.getX() + pos.getY() + pos.getZ());
-    }
     
     private static float[] decompColor(int color) {
         int r = (color & 0xFF0000) >> 16;
@@ -67,26 +47,14 @@ public class MyaliteCrystalBlock extends QuarkGlassBlock implements IBlockColorP
 	@Nullable
 	@Override
 	public float[] getBeaconColorMultiplier(BlockState state, IWorldReader world, BlockPos pos, BlockPos beaconPos) {
-		return decompColor(getColor(pos));
+		return decompColor(IMyaliteColorProvider.getColor(pos, myaliteS(), myaliteB()));
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public Vector3d getFogColor(BlockState state, IWorldReader world, BlockPos pos, Entity entity, Vector3d originalColor, float partialTicks) {
-		float[] color = decompColor(getColor(pos));
+		float[] color = decompColor(IMyaliteColorProvider.getColor(pos, myaliteS(), myaliteB()));
 		return new Vector3d(color[0], color[1], color[2]);
-	}
-	
-	@Override
-    @OnlyIn(Dist.CLIENT)
-	public IBlockColor getBlockColor() {
-		return (state, world, pos, tintIndex) -> getColor(pos);
-	}
-	
-	@Override
-    @OnlyIn(Dist.CLIENT)
-	public IItemColor getItemColor() {
-		return (stack, tintIndex) -> getColor(ClientTicker.total);
 	}
 	
 }

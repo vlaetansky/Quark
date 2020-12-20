@@ -18,12 +18,14 @@ import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.OreFeatureConfig;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.world.WorldGenHandler;
 import vazkii.quark.base.world.WorldGenWeights;
 import vazkii.quark.base.world.config.DimensionConfig;
+import vazkii.quark.base.world.config.StrictBiomeConfig;
+import vazkii.quark.content.world.config.AirStoneClusterConfig;
 import vazkii.quark.content.world.config.BigStoneClusterConfig;
 import vazkii.quark.content.world.gen.BigStoneClusterGenerator;
 
@@ -37,8 +39,14 @@ public class BigStoneClustersModule extends QuarkModule {
 	@Config public static BigStoneClusterConfig limestone = new BigStoneClusterConfig(Biome.Category.SWAMP, Biome.Category.OCEAN);
 	@Config public static BigStoneClusterConfig jasper = new BigStoneClusterConfig(Biome.Category.MESA, Biome.Category.DESERT);
 	@Config public static BigStoneClusterConfig slate = new BigStoneClusterConfig(Biome.Category.ICY);
-	@Config public static BigStoneClusterConfig voidstone = new BigStoneClusterConfig(DimensionConfig.end(false), 19, 6, 20, 0, 40, Biome.Category.THEEND);
 	
+	@Config public static BigStoneClusterConfig voidstone = new BigStoneClusterConfig(DimensionConfig.end(false), 19, 6, 20, 0, 40, 
+			new StrictBiomeConfig(false, "minecraft:end_highlands", "minecraft:end_midlands", "minecraft:end_barrens"));
+	
+	@Config public static BigStoneClusterConfig myalite = new AirStoneClusterConfig(DimensionConfig.end(false), 20, 6, 100, 58, 62, 
+			new StrictBiomeConfig(false, "minecraft:end_highlands"))
+			.setVertical(40, 10);
+
 	@Config(description = "Blocks that stone clusters can replace. If you want to make it so it only replaces in one dimension,\n"
 			+ "do \"block|dimension\", as we do for netherrack and end stone by default.") 
 	public static List<String> blocksToReplace = Lists.newArrayList(
@@ -60,7 +68,8 @@ public class BigStoneClustersModule extends QuarkModule {
 		add(jasper, NewStoneTypesModule.jasperBlock, () -> NewStoneTypesModule.enabledWithJasper);
 		add(slate, NewStoneTypesModule.slateBlock, () -> NewStoneTypesModule.enabledWithSlate);
 		add(voidstone, NewStoneTypesModule.basaltBlock, () -> NewStoneTypesModule.enabledWithVoidstone);
-		
+		add(myalite, NewStoneTypesModule.myaliteBlock, () -> NewStoneTypesModule.enabledWithMyalite);
+
 		conditionalize(Blocks.GRANITE, () -> (!enabled || !granite.enabled));
 		conditionalize(Blocks.DIORITE, () -> (!enabled || !diorite.enabled));
 		conditionalize(Blocks.ANDESITE, () -> (!enabled || !andesite.enabled));

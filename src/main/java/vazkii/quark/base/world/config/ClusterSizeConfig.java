@@ -10,7 +10,7 @@ public class ClusterSizeConfig implements IConfigType {
 	public DimensionConfig dimensions = DimensionConfig.overworld(false);
 
 	@Config
-	public BiomeTypeConfig biomes;
+	public IBiomeConfig biomes;
 
 	@Config
 	@Config.Min(0)
@@ -43,12 +43,16 @@ public class ClusterSizeConfig implements IConfigType {
 	public int verticalVariation;
 	
 	public ClusterSizeConfig(int rarity, int horizontal, int vertical, int horizontalVariation, int verticalVariation, boolean isBlacklist, Biome.Category... categories) {
+		this(rarity, horizontal, vertical, horizontalVariation, verticalVariation, new BiomeTypeConfig(isBlacklist, categories));
+	}
+
+	public ClusterSizeConfig(int rarity, int horizontal, int vertical, int horizontalVariation, int verticalVariation, IBiomeConfig biomes) {
 		this.rarity = rarity;
 		this.horizontalSize = horizontal;
 		this.verticalSize = vertical;
 		this.horizontalVariation = horizontalVariation;
 		this.verticalVariation = verticalVariation;
-		biomes = new BiomeTypeConfig(isBlacklist, categories);
+		this.biomes = biomes;
 	}
 	
 	public ClusterSizeConfig setYLevels(int min, int max) {
@@ -56,6 +60,5 @@ public class ClusterSizeConfig implements IConfigType {
 		this.maxYLevel = max;
 		return this;
 	}
-
 	
 }

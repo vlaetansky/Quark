@@ -9,6 +9,7 @@ import net.minecraft.world.IServerWorld;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.WorldGenRegion;
 import vazkii.quark.base.world.generator.multichunk.ClusterBasedGenerator;
+import vazkii.quark.content.world.config.AirStoneClusterConfig;
 import vazkii.quark.content.world.config.BigStoneClusterConfig;
 import vazkii.quark.content.world.module.BigStoneClustersModule;
 
@@ -59,6 +60,9 @@ public class BigStoneClusterGenerator extends ClusterBasedGenerator {
 	}
 	
 	private boolean canPlaceBlock(IServerWorld world, BlockPos pos) {
+		if(config instanceof AirStoneClusterConfig && ((AirStoneClusterConfig) config).generateInAir)
+			return world.getBlockState(pos).isAir();
+		
 		return BigStoneClustersModule.blockReplacePredicate.test(world.getWorld(), world.getBlockState(pos).getBlock());
 	}
 	

@@ -5,6 +5,7 @@ import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.world.config.BiomeTypeConfig;
 import vazkii.quark.base.world.config.ClusterSizeConfig;
 import vazkii.quark.base.world.config.DimensionConfig;
+import vazkii.quark.base.world.config.IBiomeConfig;
 
 public class BigStoneClusterConfig extends ClusterSizeConfig {
 
@@ -12,16 +13,22 @@ public class BigStoneClusterConfig extends ClusterSizeConfig {
 	public boolean enabled = true;
 
 	public BigStoneClusterConfig(Biome.Category... types) {
-		this(DimensionConfig.overworld(false), 14, 9, 4, 20, 80, types);
+		this(DimensionConfig.overworld(false), 14, 9, 4, 20, 80, new BiomeTypeConfig(false, types));
 	}
 
-	public BigStoneClusterConfig(DimensionConfig dimensions, int clusterSize, int sizeVariation, int rarity, int minYLevel, int maxYLevel, Biome.Category... types) {
-		super(rarity, clusterSize, clusterSize, sizeVariation, sizeVariation, false, types);
+	public BigStoneClusterConfig(DimensionConfig dimensions, int clusterSize, int sizeVariation, int rarity, int minYLevel, int maxYLevel, IBiomeConfig biomes) {
+		super(rarity, clusterSize, clusterSize, sizeVariation, sizeVariation, biomes);
 		this.dimensions = dimensions;
-		biomes = new BiomeTypeConfig(false, types);
 		
 		this.minYLevel = minYLevel;
 		this.maxYLevel = maxYLevel;
 	}
+	
+	public BigStoneClusterConfig setVertical(int vertical, int verticalVariation) {
+		this.verticalSize = vertical;
+		this.verticalVariation = verticalVariation;
+		return this;
+	}
+	
 
 }
