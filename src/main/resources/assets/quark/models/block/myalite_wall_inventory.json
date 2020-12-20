@@ -1,5 +1,5 @@
 {
-    "parent": "block/wall_inventory",
+    "parent": "quark:block/wall_inventory_tinted",
     "textures": {
         "wall": "quark:block/myalite"
     }

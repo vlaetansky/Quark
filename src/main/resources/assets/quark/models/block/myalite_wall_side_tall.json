@@ -1,5 +1,5 @@
 {
-    "parent": "block/template_wall_side_tall",
+    "parent": "quark:block/wall_side_tall_tinted",
     "textures": {
         "wall": "quark:block/myalite"
     }
