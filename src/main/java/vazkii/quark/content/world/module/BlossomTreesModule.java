@@ -30,7 +30,8 @@ public class BlossomTreesModule extends QuarkModule {
 	@Config BlossomTreeConfig orange = new BlossomTreeConfig(100, Biome.Category.SAVANNA); 
 	@Config BlossomTreeConfig pink = new BlossomTreeConfig(100, Biome.Category.EXTREME_HILLS); 
 	@Config BlossomTreeConfig yellow = new BlossomTreeConfig(200, Biome.Category.PLAINS); 
-	
+	@Config BlossomTreeConfig red = new BlossomTreeConfig(30, Biome.Category.MESA); 
+
 	public static Map<BlossomTree, BlossomTreeConfig> trees = new HashMap<>();
 	
 	@Override
@@ -40,6 +41,7 @@ public class BlossomTreesModule extends QuarkModule {
 		add("orange", MaterialColor.ORANGE_TERRACOTTA, orange);
 		add("pink", MaterialColor.PINK, pink);
 		add("yellow", MaterialColor.YELLOW, yellow);
+		add("red", MaterialColor.RED, red);
 	}
 	
 	@Override
