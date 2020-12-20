@@ -32,8 +32,10 @@ public class MorePottedPlantsModule extends QuarkModule {
 		add(Blocks.COCOA, "cocoa_bean");
 		Block grass = add(Blocks.GRASS, "grass");
 		add(Blocks.PEONY, "peony");
+		Block largeFern = add(Blocks.LARGE_FERN, "large_fern");
 		add(Blocks.LILAC, "lilac");
 		add(Blocks.MELON_STEM, "melon");
+		add(Blocks.NETHER_SPROUTS, "nether_sprouts");
 		add(Blocks.NETHER_WART, "nether_wart");
 		add(Blocks.POTATOES, "potato");
 		add(Blocks.PUMPKIN_STEM, "pumpkin");
@@ -41,10 +43,17 @@ public class MorePottedPlantsModule extends QuarkModule {
 		VariantHandler.addFlowerPot(Blocks.SEA_PICKLE, "sea_pickle", p -> p.setLightLevel(b -> 3));
 		Block sugarCane = add(Blocks.SUGAR_CANE, "sugar_cane");
 		add(Blocks.SUNFLOWER, "sunflower");
+		Block tallGrass = add(Blocks.TALL_GRASS, "tall_grass");
+		add(Blocks.TWISTING_VINES, "twisting_vines");
+		Block vine = add(Blocks.VINE, "vine");
+		add(Blocks.WEEPING_VINES, "weeping_vines");
 		add(Blocks.WHEAT, "wheat");
 		
 		tintedBlocks.put(grass, Blocks.GRASS);
+		tintedBlocks.put(largeFern, Blocks.LARGE_FERN);
 		tintedBlocks.put(sugarCane, Blocks.SUGAR_CANE);
+		tintedBlocks.put(tallGrass, Blocks.TALL_GRASS);
+		tintedBlocks.put(vine, Blocks.VINE);
 	}
 	
 	private FlowerPotBlock add(Block block, String name) {
