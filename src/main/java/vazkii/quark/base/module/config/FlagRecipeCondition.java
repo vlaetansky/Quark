@@ -1,6 +1,7 @@
 package vazkii.quark.base.module.config;
 
 import com.google.gson.JsonObject;
+
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
@@ -29,6 +30,9 @@ public class FlagRecipeCondition implements ICondition {
 
     @Override
     public boolean test() {
+    	if(flag.contains("%"))
+    		throw new RuntimeException("Illegal flag: " + flag);
+    	
         return manager.getFlag(flag);
     }
 

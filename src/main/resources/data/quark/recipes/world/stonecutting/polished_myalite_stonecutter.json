@@ -1,9 +1,9 @@
 {
   "type": "minecraft:stonecutting",
   "ingredient": {
-    "item": "quark:myalite_bricks"
+    "item": "quark:myalite"
   },
-  "result": "quark:myalite_bricks_wall",
+  "result": "quark:polished_myalite",
   "count": 1,
   "conditions": [
     {
