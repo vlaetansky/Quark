@@ -32,7 +32,7 @@ public class ListObject extends ConfigObject<List<String>> {
 				builder.append(", ");
 			
 			builder.append("\"");
-			builder.append(obj);
+			builder.append(obj.replaceAll("\"", "\\\""));
 			builder.append("\"");
 			
 			first = false;
