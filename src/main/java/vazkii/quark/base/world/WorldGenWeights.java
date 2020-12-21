@@ -25,5 +25,8 @@ public class WorldGenWeights {
 	// SURFACE_STRUCTURES (end)
 	public static final int SPIRAL_SPIRES = 0;
 	
+	// VEGETAL_DECORATION (end)
+	public static final int CHORUS_VEGETATION = 0;
+	
 }
 
