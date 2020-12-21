@@ -14,13 +14,15 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.EndermanEntity;
 import net.minecraft.entity.monster.EndermiteEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.datafix.fixes.MinecartEntityTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -73,6 +75,35 @@ public class ChorusVegetationBlock extends QuarkBlock implements IGrowable, IFor
 				EndermiteEntity mite = new EndermiteEntity(EntityType.ENDERMITE, worldIn);
 				mite.setPosition(target.getX(), target.getY(), target.getZ());
 				worldIn.addEntity(mite);
+			}
+		}
+	}
+	
+	@Override
+	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
+		
+		if(worldIn instanceof ServerWorld)
+			runAwayFromWater(pos, worldIn.rand, (ServerWorld) worldIn, state);
+	}
+
+	@Override
+	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		super.onBlockAdded(state, worldIn, pos, oldState, isMoving);
+		
+		if(worldIn instanceof ServerWorld)
+			runAwayFromWater(pos, worldIn.rand, (ServerWorld) worldIn, state);
+	}
+	
+	private void runAwayFromWater(BlockPos pos, Random random, ServerWorld worldIn, BlockState state) {
+		for(Direction d : Direction.values()) {
+			BlockPos test = pos.offset(d);
+			FluidState fluid = worldIn.getFluidState(test);
+			if(fluid.getFluid() == Fluids.WATER || fluid.getFluid() == Fluids.FLOWING_WATER) {
+				for(int i = 0; i < 50; i++) 
+					if(teleport(pos, random, worldIn, state, 8, 1) != null)
+						break;
+				return;
 			}
 		}
 	}
