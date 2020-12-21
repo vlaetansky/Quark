@@ -36,6 +36,7 @@ import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
+import vazkii.quark.content.world.module.ChorusVegetationModule;
 
 public class ChorusVegetationBlock extends QuarkBlock implements IGrowable, IForgeShearable {
 
@@ -57,7 +58,7 @@ public class ChorusVegetationBlock extends QuarkBlock implements IGrowable, IFor
 	
 	@Override
 	public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
-		if(random.nextDouble() < 0.2)
+		if(random.nextDouble() < ChorusVegetationModule.passiveTeleportChance)
 			teleport(pos, random, worldIn, state);
 	}
 	
@@ -71,7 +72,7 @@ public class ChorusVegetationBlock extends QuarkBlock implements IGrowable, IFor
 		if(simple && worldIn instanceof ServerWorld && entity instanceof LivingEntity && !(entity instanceof EndermanEntity) && !(entity instanceof EndermiteEntity)) {
 			BlockPos target = teleport(pos, worldIn.rand, (ServerWorld) worldIn, state);
 			
-			if(target != null && worldIn.rand.nextDouble() < 0.01) {
+			if(target != null && worldIn.rand.nextDouble() < ChorusVegetationModule.endermiteSpawnChance) {
 				EndermiteEntity mite = new EndermiteEntity(EntityType.ENDERMITE, worldIn);
 				mite.setPosition(target.getX(), target.getY(), target.getZ());
 				worldIn.addEntity(mite);
@@ -109,7 +110,7 @@ public class ChorusVegetationBlock extends QuarkBlock implements IGrowable, IFor
 	}
 	
 	private BlockPos teleport(BlockPos pos, Random random, ServerWorld worldIn, BlockState state) {
-		return teleport(pos, random, worldIn, state, 4, 0.998);
+		return teleport(pos, random, worldIn, state, 4, (1.0 - ChorusVegetationModule.teleportDuplicationChance));
 	}
 	
 	private BlockPos teleport(BlockPos pos, Random random, ServerWorld worldIn, BlockState state, int range, double growthChance) {

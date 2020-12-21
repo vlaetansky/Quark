@@ -21,6 +21,10 @@ public class ChorusVegetationModule extends QuarkModule {
 	@Config public static double midlandsChance = 0.2;
 	@Config public static double otherEndBiomesChance = 0;
 	
+	@Config public static double passiveTeleportChance = 0.2;
+	@Config public static double endermiteSpawnChance = 0.01;
+	@Config public static double teleportDuplicationChance = 0.01;
+
 	public static Block chorus_weeds, chorus_twist;
 	
 	@Override
