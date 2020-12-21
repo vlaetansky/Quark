@@ -9,6 +9,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.command.impl.SetBlockCommand;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -87,23 +88,13 @@ public class ChorusVegetationBlock extends QuarkBlock implements IGrowable, IFor
 		if(worldIn instanceof ServerWorld)
 			runAwayFromWater(pos, worldIn.rand, (ServerWorld) worldIn, state);
 	}
-
-	@Override
-	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-		super.onBlockAdded(state, worldIn, pos, oldState, isMoving);
-		
-		if(worldIn instanceof ServerWorld)
-			runAwayFromWater(pos, worldIn.rand, (ServerWorld) worldIn, state);
-	}
 	
 	private void runAwayFromWater(BlockPos pos, Random random, ServerWorld worldIn, BlockState state) {
 		for(Direction d : Direction.values()) {
 			BlockPos test = pos.offset(d);
 			FluidState fluid = worldIn.getFluidState(test);
 			if(fluid.getFluid() == Fluids.WATER || fluid.getFluid() == Fluids.FLOWING_WATER) {
-				for(int i = 0; i < 50; i++) 
-					if(teleport(pos, random, worldIn, state, 8, 1) != null)
-						break;
+				teleport(pos, random, worldIn, state, 8, 1);
 				return;
 			}
 		}
