@@ -87,8 +87,9 @@ public class HoeHarvestingModule extends QuarkModule {
 			return type != PlantType.WATER && type != PlantType.DESERT;
 		}
 
-		return state.getMaterial() == Material.PLANTS && state.isReplaceable(new BlockItemUseContext(new ItemUseContext(player, Hand.MAIN_HAND,
-				new BlockRayTraceResult(new Vector3d(0.5, 0.5, 0.5), Direction.DOWN, pos, false))));
+		Material mat = state.getMaterial();
+		return (mat == Material.PLANTS || mat == Material.NETHER_PLANTS || mat == Material.TALL_PLANTS || mat == Material.OCEAN_PLANT) && 
+				state.isReplaceable(new BlockItemUseContext(new ItemUseContext(player, Hand.MAIN_HAND, new BlockRayTraceResult(new Vector3d(0.5, 0.5, 0.5), Direction.DOWN, pos, false))));
 	}
 
 }
