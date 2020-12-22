@@ -396,7 +396,7 @@
 			"versions": "1.14+",
 			"desc": [
 				"17 new blocks can now be added to Flower Pots. The feature image shows a bunch, but you can also add the vanilla 2 tall flowers, and nether wart.",
-				"Potted. Melon. That's it."
+				"1.16.3+: Twisted vines, warped vines, large ferns, tall grass, vines, and nether sprouts are also added."
 			]
 		},
 		{
@@ -1057,6 +1057,7 @@
 				"*Jasper will spawn in Mesa and Desert biomes.",
 				"*Slate will spawn in cold biomes.",
 				"*Voidstone will spawn in any end biome (Pre 1.16 it's Basalt, which spawns in any nether biome).",
+				"*1.16.3+: Myalite will spawn in end highlands.",
 				"Note that the distributions are for biome types, not specific biomes. For example, Andesite will also spawn in Birch Forests, Dark Forests, etc."
 			]
 		},
@@ -1086,10 +1087,10 @@
 			"desc": [
 				"Five new stone types are added to your world.",
 				"Pictured in the screenshot:",
-				"*Top layer: Slate, Voidstone",
+				"*Top layer: Slate, Voidstone, Myalite (1.16.3+ only)",
 				"*Bottom layer: Limestone, Marble, Jasper",
-				"Most of these generate in the overworld. Voidstone generates in the end and is immune to the dragon.",
-				"Note: Prior to 1.16, Voidstone was known as Basalt and spawned in the nether. The block ID in 1.16+ is still basalt, but the block was renamed to Voidstone after the update."
+				"Most of these generate in the overworld. Voidstone and Myalite generate in the end and are immune to the dragon.",
+				"Note: Prior to 1.16, Voidstone was known as Basalt and spawned in the nether."
 			]
 		},
 		{
@@ -1222,6 +1223,7 @@
 				"*Warm Blossom Trees (orange) spawn in savannas.",
 				"*Sweet Blossom Trees (pink) spawn in mountains.",
 				"*Sunny Blossom Trees (yellow) spawn in plains.",
+				"*1.16.3+: Fiery Blossom Trees (red) spawn in badlands.",
 				"The trees come with spruce wood and pretty leaves, as well as new saplings you can put in flower pots for decor."
 			]
 		},
@@ -1288,6 +1290,39 @@
 				"A new \"Quark Realistic\" world type is added at world selection, featuring somewhat realistic terrain while still feeling minecrafty. Expect rolling hills and tall mountains.",
 				"If you want to use it in a server, set your level type in the server properties to \"realistic\".",
 				"Credit where credit is due: This world type is based on Soniop's realistic preset, which you can find <a href='https://www.reddit.com/r/Minecraft/comments/4nfw3t/more_realistic_generation_preset_in_comment/'>here</a>, alongside an album of what you can expect! Additionally, the feature was re-implemented in the 1.16 system by SuperCoder79!"
+			]
+		},
+		{
+			"name": "Chorus Vegetation",
+			"image": "chorus-vegetation.jpg",
+			"versions": "1.16.3+",
+			"desc": [
+				"Uncommon patches of new Chorus Weeds and Chorus Twist blocks will now spawn on the outer end. These blocks may look unasumming, but have all sorts of ender properties.",
+				"*They randomly teleport every now and then, and when doing so, have a tiny chance to reproduce.",
+				"*When trampled by a living being that isn't an enderman or endermite, they'll always teleport. This has a tiny chance to spawn an endermite.",
+				"*When water is adjacent to them, they'll try and teleport out of the wet situation.",
+				"*Bone meal can be used to force the block to teleport with a guaranteed chance of reproducing itself."
+			]
+		},
+		{
+			"name": "Spiral Spires",
+			"image": "spiral-spires.jpg",
+			"versions": "1.16.3+",
+			"desc": [
+				"Spiral Spires are new uncommon setpieces that spawn in the outer end. Atop these large obsidian spires, you'll find new Myalite Crystal blocks arranged in a spiral.",
+				"Myalite Cystals can be used as a decoration, or to create Myalite Viaducts - a way to allow ender pearls to be used to phase through solid blocks. Click on More Info to see how they work.",
+				"Lastly, if the Crystal Cave feature is enabled, placing Myalite Crystals below any sort of cave crystal that can grow, has the myalite crystal grow instead."
+			],
+			"expand": [
+				"-",
+				"#Myalite Viaducts",
+				"Myalite Viaducts redirect ender teleportations (caused by ender pearls or endermen teleporting), if an ender teleportation would result in the target being placed on an edge of a Myalite Viaduct, said entity would instead end up at the other edge.",
+				"!img/features/world/spiral-spires/myalite-viaducts.jpg",
+				"Viaducts have some rules applied to determine where a teleport would end:",
+				"*Viadcuts longer than 24 blocks, or that would cause a loop are illegal, and will just have the teleport go through as normal.",
+				"*On a fork, the destination is chosen randomly.",
+				"*It's possible a fork can lead to an illegal viaduct on one side, and a legal one on the other side. The results are handled independently. (e.g. a fork with an illegal loop on the left and a normal end on the right has a 50% chance to teleport to the right, and a 50% to leave you at the start)",
+				"*Yes, you can move them with pistons."
 			]
 		}
 	],
