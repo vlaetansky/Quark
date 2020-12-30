@@ -7,7 +7,7 @@
 	"quark.gui.button.filter": "Filtrar",
 	"quark.gui.button.emotes": "Gestos",
 	"quark.gui.button.back": "Volver",
-	"quark.gui.button.shift_lock": "Bloqueo de Mayús."
+	"quark.gui.button.shift_lock": "Bloqueo de Mayús.",
 	
 	"quark.gui.enchanting.min": "Mín: %d",
 	"quark.gui.enchanting.influence": "Influencia de vela: +%d%%",
