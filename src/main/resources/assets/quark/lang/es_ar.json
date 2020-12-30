@@ -7,6 +7,7 @@
 	"quark.gui.button.filter": "Filtrar",
 	"quark.gui.button.emotes": "Gestos",
 	"quark.gui.button.back": "Atrás",
+	"quark.gui.button.shift_lock": "Bloqueo de shift"
 
 	"quark.gui.enchanting.min": "Mín: %d",
 	"quark.gui.enchanting.influence": "Influencia de vela: +%d%%",
@@ -16,9 +17,10 @@
 	"quark.gui.enchanting.merge": "Clic para mejorar",
 	"quark.gui.enchanting.pending": "Tiene encantamientos pendientes",
 
-	"quark.gui.keygroup.misc": "Quark varios",
-	"quark.gui.keygroup.inv": "Quark inventario",
-	"quark.gui.keygroup.emote": "Quark gestos",
+	"quark.gui.keygroup.misc": "Quark: varios",
+	"quark.gui.keygroup.inv": "Quark: inventario",
+	"quark.gui.keygroup.emote": "Quark: gestos",
+	"quark.gui.keygroup.accessibility": "Quark: accesibilidad",
 	
 	"quark.gui.config.save": "Guardar cambios",
 	"quark.gui.config.social.website": "Página de Quark",
@@ -74,6 +76,12 @@
 	"quark.camera.filter.pencil": "Lápiz",
 	"quark.camera.filter.watercolor": "Negativo",
 	"quark.camera.filter.sobel": "Sobel",
+	"quark.camera.filter.sobel": "Sobel",
+	"quark.camera.filter.sobel": "Sobel",
+	"quark.camera.filter.deutranopia": "Deuteranopia simulada",
+	"quark.camera.filter.protanopia": "Protanopia simulada",
+	"quark.camera.filter.tritanopia": "Tritanopia simulada",
+	"quark.camera.filter.achromatopsia": "Acromatopsia simulada",
 
 	"quark.camera.rulers": "Cuadrícula: ",
 	"quark.camera.rulers0": "Ninguna",
@@ -118,6 +126,14 @@
 	"quark.keybind.patreon_emote.zombie": "Zombi (Patreon)",
 	"quark.keybind.back": "Atrás",
 	"quark.keybind.camera_mode": "Modo cámara",
+	"quark.keybind.narrator_readout": "Lectura del narrador",
+	"quark.keybind.narrator_full_readout": "Lectura completa del narrador",
+
+	"quark.readout.looking": "Mirando a %s",
+	"quark.readout.holding": "Sosteniendo %dx %s",
+	"quark.readout.holding_with_off": "Sosteniendo %dx %s y %dx %s",
+	"quark.readout.health": "Salud %d",
+	"quark.readout.food": "Comida %d",
 
 	"quark.subtitles.meep": "Petrícola huye",
 	"quark.subtitles.give_stoneling": "Petrícola toma ítem",
