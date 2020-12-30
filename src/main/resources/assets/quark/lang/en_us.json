@@ -19,6 +19,7 @@
 	"quark.gui.keygroup.misc": "Quark Misc",
 	"quark.gui.keygroup.inv": "Quark Inventory",
 	"quark.gui.keygroup.emote": "Quark Emotes",
+	"quark.gui.keygroup.accessibility": "Quark Accessibility",
 	
 	"quark.gui.config.save": "Save Changes",
 	"quark.gui.config.social.website": "Quark Site",
@@ -118,6 +119,7 @@
 	"quark.keybind.patreon_emote.zombie": "Zombie (Patreon)",
 	"quark.keybind.back": "Back",
 	"quark.keybind.camera_mode": "Camera Mode",
+	"quark.keybind.narrator_readout": "Narrator Readout",
 
 	"quark.subtitles.meep": "Stoneling runs away",
 	"quark.subtitles.give_stoneling": "Stoneling takes item",

@@ -13,6 +13,7 @@ public class ModKeybindHandler {
 	public static final String MISC_GROUP = "quark.gui.keygroup.misc";
 	public static final String INV_GROUP = "quark.gui.keygroup.inv";
 	public static final String EMOTE_GROUP = "quark.gui.keygroup.emote";
+	public static final String ACCESSIBILITY_GROUP = "quark.gui.keygroup.accessibility";
 
 	public static KeyBinding init(String s, String key, String group) {
 		return init(s, key, "key.keyboard.", group, true);
