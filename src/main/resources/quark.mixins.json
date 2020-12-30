@@ -31,7 +31,9 @@
     "EntityRendererManagerMixin",
     "ItemRendererMixin",
     "PistonTileEntityRendererMixin",
-    "RenderTypeBuffersMixin"
+    "RenderTypeBuffersMixin",
+    "ScreenMixin",
+    "ContainerScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

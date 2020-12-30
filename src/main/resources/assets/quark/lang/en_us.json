@@ -7,6 +7,7 @@
 	"quark.gui.button.filter": "Filter",
 	"quark.gui.button.emotes": "Emotes",
 	"quark.gui.button.back": "Back",
+	"quark.gui.button.shift_lock": "Shift Lock",
 
 	"quark.gui.enchanting.min": "Min: %d",
 	"quark.gui.enchanting.influence": "Candle Influence: +%d%%",
