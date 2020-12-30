@@ -4,6 +4,7 @@ import com.mojang.text2speech.Narrator;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -27,11 +28,16 @@ public class NarratorReadoutModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	private KeyBinding keybind;
 	
+	@OnlyIn(Dist.CLIENT)
+	private KeyBinding keybindFull;
+	
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		if(enabled)
-			keybind = ModKeybindHandler.init("narrator_readout", "m", ModKeybindHandler.ACCESSIBILITY_GROUP);
+		if(enabled) {
+			keybind = ModKeybindHandler.init("narrator_readout", "n", ModKeybindHandler.ACCESSIBILITY_GROUP);
+			keybindFull = ModKeybindHandler.init("narrator_full_readout", "m", ModKeybindHandler.ACCESSIBILITY_GROUP);
+		}
 	}
 
 	@SubscribeEvent
@@ -48,10 +54,11 @@ public class NarratorReadoutModule extends QuarkModule {
 	
 	private void acceptInput() {
 		Minecraft mc = Minecraft.getInstance();
-		boolean down = keybind != null && keybind.isKeyDown();
+		boolean down = keybind != null && (keybind.isKeyDown() || keybindFull.isKeyDown());
+		
 		if(mc.isGameFocused() && down) {
 			Narrator narrator = Narrator.getNarrator();
-			String readout = getReadout(mc);
+			String readout = getReadout(mc, keybindFull.isKeyDown());
 			if(readout != null) {
 				narrator.say(readout, true);
 				if(mc.player != null)
@@ -60,7 +67,7 @@ public class NarratorReadoutModule extends QuarkModule {
 		}
 	}
 	
-	private String getReadout(Minecraft mc) {
+	private String getReadout(Minecraft mc, boolean full) {
 		PlayerEntity player = mc.player;
 		if(player == null)
 			return "Not ingame.";
@@ -74,23 +81,34 @@ public class NarratorReadoutModule extends QuarkModule {
 			
 			Item item = state.getBlock().asItem();
 			if(item != null) {
-				sb.append("Looking at ");
-				sb.append(item.getDisplayName(new ItemStack(item)).getString().trim());
-				sb.append(", ");
+				sb.append(I18n.format("quark.readout.looking", item.getDisplayName(new ItemStack(item)).getString()));
+				
+				if(full)
+					sb.append(", ");
 			}
 		}
 		
-		ItemStack stack = player.getHeldItemMainhand();
-		if(!stack.isEmpty()) {
-			sb.append("Holding ");
-			sb.append(stack.getDisplayName().getString().trim());
+		if(full) {
+			ItemStack stack = player.getHeldItemMainhand();
+			ItemStack stack2 = player.getHeldItemOffhand();
+			if(stack.isEmpty()) {
+				stack = stack2;
+				stack2 = ItemStack.EMPTY;
+			}
+			
+			if(!stack.isEmpty()) {
+				if(!stack2.isEmpty())
+					sb.append(I18n.format("quark.readout.holding_with_off", stack.getCount(), stack.getDisplayName().getString(), stack2.getCount(), stack2.getDisplayName().getString()));
+				else sb.append(I18n.format("quark.readout.holding", stack.getCount(), stack.getDisplayName().getString()));
+				
+				sb.append(", ");
+			}
+			
+			sb.append(I18n.format("quark.readout.health", (int) mc.player.getHealth()));
 			sb.append(", ");
+			
+			sb.append(I18n.format("quark.readout.food", mc.player.getFoodStats().getFoodLevel()));
 		}
-		
-		sb.append("Health ");
-		sb.append((int) mc.player.getHealth());
-		sb.append(", Food ");
-		sb.append(mc.player.getFoodStats().getFoodLevel());
 
 		return sb.toString();
 	}

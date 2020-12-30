@@ -75,6 +75,12 @@
 	"quark.camera.filter.pencil": "Pencil",
 	"quark.camera.filter.watercolor": "Negative",
 	"quark.camera.filter.sobel": "Sobel",
+	"quark.camera.filter.sobel": "Sobel",
+	"quark.camera.filter.sobel": "Sobel",
+	"quark.camera.filter.deutranopia": "Simulated Deutranopia",
+	"quark.camera.filter.protanopia": "Simulated Protanopia",
+	"quark.camera.filter.tritanopia": "Simulated Tritanopia",
+	"quark.camera.filter.achromatopsia": "Simulated Achromatopsia",
 
 	"quark.camera.rulers": "Rulers: ",
 	"quark.camera.rulers0": "None",
@@ -120,6 +126,13 @@
 	"quark.keybind.back": "Back",
 	"quark.keybind.camera_mode": "Camera Mode",
 	"quark.keybind.narrator_readout": "Narrator Readout",
+	"quark.keybind.narrator_full_readout": "Narrator Full Readout",
+
+	"quark.readout.looking": "Looking at %s",
+	"quark.readout.holding": "Holding %dx %s",
+	"quark.readout.holding_with_off": "Holding %dx %s and %dx %s",
+	"quark.readout.health": "Health %d",
+	"quark.readout.food": "Food %d",
 
 	"quark.subtitles.meep": "Stoneling runs away",
 	"quark.subtitles.give_stoneling": "Stoneling takes item",

@@ -32,7 +32,9 @@ import vazkii.quark.base.client.ModKeybindHandler;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.QuarkModule;
+import vazkii.quark.content.experimental.module.OverlayShaderModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.ModuleLoader;
 
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class CameraModule extends QuarkModule {
@@ -68,7 +70,12 @@ public class CameraModule extends QuarkModule {
 			new ResourceLocation("shaders/post/pencil.json"),
 			new ResourceLocation(Quark.MOD_ID, "shaders/post/watercolor.json"),
 			new ResourceLocation(Quark.MOD_ID, "shaders/post/monochrome.json"),
-			new ResourceLocation("shaders/post/sobel.json")
+			new ResourceLocation("shaders/post/sobel.json"),
+			
+			new ResourceLocation(Quark.MOD_ID, "shaders/post/colorblind/deutranopia.json"),
+			new ResourceLocation(Quark.MOD_ID, "shaders/post/colorblind/protanopia.json"),
+			new ResourceLocation(Quark.MOD_ID, "shaders/post/colorblind/tritanopia.json"),
+			new ResourceLocation(Quark.MOD_ID, "shaders/post/colorblind/achromatopsia.json")
 	};
 
 	@OnlyIn(Dist.CLIENT)
@@ -157,18 +164,18 @@ public class CameraModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void renderTick(RenderTickEvent event) {
 		Minecraft mc = Minecraft.getInstance();
-		
-		if(mc.world == null)
-			cameraMode = false;
 
 		PlayerEntity player = mc.player;
 		if(player != null && currentHeldItem != -1 && player.inventory.currentItem != currentHeldItem) {
 			player.inventory.currentItem = currentHeldItem;
 			currentHeldItem = -1;	
 		}
-
-		if(queuedRefresh)
-			refreshShader();
+		
+		if(mc.world == null) {
+			cameraMode = false;
+			queuedRefresh = true;
+		} else if(queuedRefresh)
+			refreshShader(); 
 
 		if(event.phase == Phase.END && cameraMode && mc.currentScreen == null) {
 			if(queueScreenshot)
@@ -380,7 +387,15 @@ public class CameraModule extends QuarkModule {
 				return;
 			}
 		} 
-
+		else if(ModuleLoader.INSTANCE.isModuleEnabled(OverlayShaderModule.class)) {
+			for(ResourceLocation l : SHADERS) {
+				if(l != null && l.getPath().contains(OverlayShaderModule.shader + ".json")) {
+					render.loadShader(l);
+					return;
+				}
+			}
+		} 
+		
 		render.loadEntityShader(null);
 	}
 
@@ -403,3 +418,4 @@ public class CameraModule extends QuarkModule {
 	}
 
 }
+
