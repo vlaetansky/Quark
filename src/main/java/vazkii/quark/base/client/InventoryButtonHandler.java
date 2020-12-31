@@ -96,7 +96,6 @@ public final class InventoryButtonHandler {
 				}
 			}
 		}
-
 	}
 
 	@SubscribeEvent

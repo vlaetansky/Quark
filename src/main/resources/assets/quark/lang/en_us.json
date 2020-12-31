@@ -130,11 +130,14 @@
 	"quark.keybind.narrator_full_readout": "Narrator Full Readout",
 	"quark.keybind.shift_lock": "Shift Lock",
 
+	"quark.readout.not_ingame": "Not ingame",
 	"quark.readout.looking": "Looking at %s",
 	"quark.readout.holding": "Holding %dx %s",
-	"quark.readout.holding_with_off": "Holding %dx %s and %dx %s",
+	"quark.readout.holding_with_off": "Holding %d %s and %d %s",
 	"quark.readout.health": "Health %d",
 	"quark.readout.food": "Food %d",
+	"quark.readout.sign_says": ". Sign Says ",
+	"quark.readout.no_item": "No item",
 
 	"quark.subtitles.meep": "Stoneling runs away",
 	"quark.subtitles.give_stoneling": "Stoneling takes item",
