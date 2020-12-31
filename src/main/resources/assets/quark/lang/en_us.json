@@ -128,6 +128,7 @@
 	"quark.keybind.camera_mode": "Camera Mode",
 	"quark.keybind.narrator_readout": "Narrator Readout",
 	"quark.keybind.narrator_full_readout": "Narrator Full Readout",
+	"quark.keybind.shift_lock": "Shift Lock",
 
 	"quark.readout.looking": "Looking at %s",
 	"quark.readout.holding": "Holding %dx %s",

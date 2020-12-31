@@ -24,6 +24,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
+import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -90,7 +91,7 @@ public final class InventoryButtonHandler {
 			for (ButtonProviderHolder holder : holders) {
 				if (holder.keybind != null &&
 						holder.keybind.matchesMouseKey(pressed.getButton()) &&
-						holder.keybind.getKeyModifier().isActive(KeyConflictContext.GUI)) {
+						(holder.keybind.getKeyModifier() == KeyModifier.NONE || holder.keybind.getKeyModifier().isActive(KeyConflictContext.GUI))) {
 					holder.pressed.accept(screen);
 				}
 			}
@@ -109,7 +110,7 @@ public final class InventoryButtonHandler {
 			for (ButtonProviderHolder holder : holders) {
 				if (holder.keybind != null &&
 						holder.keybind.matchesKey(pressed.getKeyCode(), pressed.getScanCode()) &&
-						holder.keybind.getKeyModifier().isActive(KeyConflictContext.GUI)) {
+						(holder.keybind.getKeyModifier() == KeyModifier.NONE || holder.keybind.getKeyModifier().isActive(KeyConflictContext.GUI))) {
 					holder.pressed.accept(screen);
 				}
 			}
