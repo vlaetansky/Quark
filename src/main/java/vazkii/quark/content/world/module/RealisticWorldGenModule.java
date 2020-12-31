@@ -30,8 +30,8 @@ import vazkii.quark.base.module.ModuleCategory;
 public class RealisticWorldGenModule extends QuarkModule {
 
 	public static final ResourceLocation REALISTIC_RES = new ResourceLocation("quark", "realistic");
-	public static final RegistryKey<DimensionSettings> REALISTIC_KEY = RegistryKey.getOrCreateKey(Registry.NOISE_SETTINGS_KEY, REALISTIC_RES);
 
+	public static final RegistryKey<DimensionSettings> REALISTIC_KEY = RegistryKey.getOrCreateKey(Registry.NOISE_SETTINGS_KEY, REALISTIC_RES);
 
 	@Override
 	public void construct() {
@@ -41,18 +41,19 @@ public class RealisticWorldGenModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void constructClient() {
-		new RealisticGenScreen();
+		new RealisticGenScreen("realistic", false);
+		new RealisticGenScreen("realistic_large_biomes", true);
 	}
 
-	private static ChunkGenerator createChunkGenerator(long seed, Registry<Biome> biomes, Registry<DimensionSettings> settings) {
-		return new RealisticChunkGenerator(new OverworldBiomeProvider(seed, false, false, biomes), seed, () -> settings.getOrThrow(DimensionSettings.field_242734_c));
+	private static ChunkGenerator createChunkGenerator(long seed, boolean largeBiomes, Registry<Biome> biomes, Registry<DimensionSettings> settings) {
+		return new RealisticChunkGenerator(new OverworldBiomeProvider(seed, false, largeBiomes, biomes), seed, () -> settings.getOrThrow(DimensionSettings.field_242734_c));
 	}
 
-	private static DimensionGeneratorSettings createSettings(DynamicRegistries registries, long seed, boolean generateFeatures, boolean generateBonusChest) {
+	private static DimensionGeneratorSettings createSettings(DynamicRegistries registries, long seed, boolean largeBiomes, boolean generateFeatures, boolean generateBonusChest) {
 		Registry<Biome> biomes = registries.getRegistry(Registry.BIOME_KEY);
 		Registry<DimensionSettings> settings = registries.getRegistry(Registry.NOISE_SETTINGS_KEY);
 		Registry<DimensionType> types = registries.getRegistry(Registry.DIMENSION_TYPE_KEY);
-		return new DimensionGeneratorSettings(seed, generateFeatures, generateBonusChest, DimensionGeneratorSettings.func_242749_a(types, DimensionType.getDefaultSimpleRegistry(types, biomes, settings, seed), createChunkGenerator(seed, biomes, settings)));
+		return new DimensionGeneratorSettings(seed, generateFeatures, generateBonusChest, DimensionGeneratorSettings.func_242749_a(types, DimensionType.getDefaultSimpleRegistry(types, biomes, settings, seed), createChunkGenerator(seed, largeBiomes, biomes, settings)));
 	}
 
 	@SubscribeEvent
@@ -63,13 +64,14 @@ public class RealisticWorldGenModule extends QuarkModule {
 			String levelType = Optional.ofNullable((String)server.getServerProperties().serverProperties.get("level-type")).map(str -> str.toLowerCase(Locale.ROOT)).orElse("default");
 
 			// If the world type is realistic, then replace the worldgen data
-			if (levelType.equals("realistic")) {
+			if (levelType.matches("realistic(_large_biomes)?")) {
+				boolean large = levelType.contains("large");
 				if (server.func_240793_aU_() instanceof ServerWorldInfo) {
 					ServerWorldInfo worldInfo = (ServerWorldInfo)server.func_240793_aU_();
-					worldInfo.generatorSettings = createSettings(server.func_244267_aX(), worldInfo.generatorSettings.getSeed(), worldInfo.generatorSettings.doesGenerateFeatures(), worldInfo.generatorSettings.hasBonusChest());
+					worldInfo.generatorSettings = createSettings(server.func_244267_aX(), worldInfo.generatorSettings.getSeed(), large, worldInfo.generatorSettings.doesGenerateFeatures(), worldInfo.generatorSettings.hasBonusChest());
 				}
 				ServerProperties properties = server.getServerProperties();
-				properties.field_241082_U_ = createSettings(server.func_244267_aX(), properties.field_241082_U_.getSeed(), properties.field_241082_U_.doesGenerateFeatures(), properties.field_241082_U_.hasBonusChest());
+				properties.field_241082_U_ = createSettings(server.func_244267_aX(), properties.field_241082_U_.getSeed(), large, properties.field_241082_U_.doesGenerateFeatures(), properties.field_241082_U_.hasBonusChest());
 			}
 		}
 	}

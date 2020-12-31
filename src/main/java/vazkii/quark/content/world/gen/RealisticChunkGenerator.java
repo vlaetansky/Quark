@@ -23,6 +23,8 @@ public class RealisticChunkGenerator extends NoiseChunkGenerator {
 			Codec.LONG.fieldOf("seed").stable().forGetter(generator -> generator.seed),
 			DimensionSettings.field_236098_b_.fieldOf("settings").forGetter(generator -> generator.field_236080_h_))
 			.apply(instance, instance.stable(RealisticChunkGenerator::new)));
+	
+	
 	private final long seed;
 
 	public RealisticChunkGenerator(BiomeProvider biomeProvider, long seed, Supplier<DimensionSettings> settings) {
