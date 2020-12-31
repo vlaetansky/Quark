@@ -50,7 +50,7 @@ public class MoreBrickTypesModule extends QuarkModule {
 				Block.Properties.from(parent)
 				.hardnessAndResistance(2F, 6F)
 				.setRequiresTool()
-				.harvestTool(parent.material == Material.SNOW ? ToolType.SHOVEL : ToolType.PICKAXE))
+				.harvestTool(parent.material == Material.SNOW_BLOCK ? ToolType.SHOVEL : ToolType.PICKAXE))
 				.setCondition(cond));
 	}
 	
