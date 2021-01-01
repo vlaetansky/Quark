@@ -10,6 +10,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
+import net.minecraftforge.common.ToolType;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
@@ -33,7 +34,10 @@ public class VariantLadderBlock extends LadderBlock {
 	}
 	
 	public VariantLadderBlock(String type, QuarkModule module, boolean flammable) {
-		this(type, module, Block.Properties.from(Blocks.LADDER), flammable);
+		this(type, module, 
+				Block.Properties.from(Blocks.LADDER)
+				.harvestTool(ToolType.AXE), 
+			flammable);
 	}
 	
 	@Override
