@@ -28,7 +28,7 @@ import vazkii.quark.addons.oddities.entity.TotemOfHoldingEntity;
 import vazkii.quark.addons.oddities.item.SoulCompassItem;
 import vazkii.quark.addons.oddities.render.TotemOfHoldingRenderer;
 import vazkii.quark.base.Quark;
-import vazkii.quark.base.client.RequiredModTooltipHandler;
+import vazkii.quark.base.client.handler.RequiredModTooltipHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;

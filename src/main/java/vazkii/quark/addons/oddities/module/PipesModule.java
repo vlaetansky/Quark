@@ -13,7 +13,7 @@ import vazkii.quark.addons.oddities.block.PipeBlock;
 import vazkii.quark.addons.oddities.client.render.PipeTileEntityRenderer;
 import vazkii.quark.addons.oddities.tile.PipeTileEntity;
 import vazkii.quark.base.Quark;
-import vazkii.quark.base.client.RequiredModTooltipHandler;
+import vazkii.quark.base.client.handler.RequiredModTooltipHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;

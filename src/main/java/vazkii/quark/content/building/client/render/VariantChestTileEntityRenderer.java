@@ -11,7 +11,7 @@ import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import vazkii.quark.base.Quark;
-import vazkii.quark.base.client.GenericChestTERenderer;
+import vazkii.quark.base.client.render.GenericChestTERenderer;
 import vazkii.quark.content.building.module.VariantChestsModule.IChestTextureProvider;
 
 public class VariantChestTileEntityRenderer extends GenericChestTERenderer<ChestTileEntity> {

@@ -37,7 +37,7 @@ import vazkii.quark.addons.oddities.container.BackpackContainer;
 import vazkii.quark.addons.oddities.item.BackpackItem;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.block.QuarkBlock;
-import vazkii.quark.base.client.RequiredModTooltipHandler;
+import vazkii.quark.base.client.handler.RequiredModTooltipHandler;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.QuarkModule;

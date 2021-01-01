@@ -28,7 +28,7 @@ import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.RenderTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.Quark;
-import vazkii.quark.base.client.ModKeybindHandler;
+import vazkii.quark.base.client.handler.ModKeybindHandler;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.QuarkModule;

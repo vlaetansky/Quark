@@ -12,7 +12,7 @@ import org.apache.commons.lang3.tuple.Triple;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.recipe.FlagIngredient;
-import vazkii.quark.base.reflect.PotionReflection;
+import vazkii.quark.base.util.PotionReflection;
 
 import javax.annotation.Nullable;
 import java.util.List;

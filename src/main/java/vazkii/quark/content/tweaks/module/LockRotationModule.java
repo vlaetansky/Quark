@@ -46,7 +46,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.arl.network.MessageSerializer;
 import vazkii.quark.api.IRotationLockable;
-import vazkii.quark.base.client.ModKeybindHandler;
+import vazkii.quark.base.client.handler.ModKeybindHandler;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.QuarkModule;

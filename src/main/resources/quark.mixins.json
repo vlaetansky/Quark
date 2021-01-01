@@ -3,7 +3,7 @@
   "required": true,
   "compatibilityLevel": "JAVA_8",
   "refmap": "quark.mixins.refmap.json",
-  "package": "vazkii.quark.base.mixin",
+  "package": "vazkii.quark.mixin",
   "mixins": [
     "AbstractMinecartEntityMixin",
     "BlockItemMixin",
@@ -25,15 +25,15 @@
     "TemplateMixin"
   ],
   "client": [
-    "BipedArmorLayerMixin",
-    "BipedModelMixin",
-    "ElytraLayerMixin",
-    "EntityRendererManagerMixin",
-    "ItemRendererMixin",
-    "PistonTileEntityRendererMixin",
-    "RenderTypeBuffersMixin",
-    "ScreenMixin",
-    "ContainerScreenMixin"
+    "client.BipedArmorLayerMixin",
+    "client.BipedModelMixin",
+    "client.ElytraLayerMixin",
+    "client.EntityRendererManagerMixin",
+    "client.ItemRendererMixin",
+    "client.PistonTileEntityRendererMixin",
+    "client.RenderTypeBuffersMixin",
+    "client.ScreenMixin",
+    "client.ContainerScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -38,7 +38,7 @@ import net.minecraftforge.event.TickEvent.RenderTickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.aurelienribon.tweenengine.Tween;
-import vazkii.quark.base.client.ModKeybindHandler;
+import vazkii.quark.base.client.handler.ModKeybindHandler;
 import vazkii.quark.base.handler.ContributorRewardHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.QuarkModule;

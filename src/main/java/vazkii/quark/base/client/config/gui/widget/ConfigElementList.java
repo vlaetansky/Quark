@@ -10,9 +10,9 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 import vazkii.quark.api.config.IConfigElement;
 import vazkii.quark.api.config.IConfigObject;
-import vazkii.quark.base.client.TopLayerTooltipHandler;
 import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.client.config.gui.CategoryScreen;
+import vazkii.quark.base.client.handler.TopLayerTooltipHandler;
 
 public class ConfigElementList<T extends IConfigElement & IWidgetProvider> extends ScrollableWidgetList<CategoryScreen, ConfigElementList.Entry<T>> {
 

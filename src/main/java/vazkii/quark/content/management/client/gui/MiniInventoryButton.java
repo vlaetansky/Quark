@@ -17,7 +17,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import vazkii.quark.base.client.TopLayerTooltipHandler;
+import vazkii.quark.base.client.handler.TopLayerTooltipHandler;
 import vazkii.quark.base.handler.MiscUtil;
 
 public class MiniInventoryButton extends Button {

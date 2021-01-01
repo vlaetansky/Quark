@@ -46,7 +46,7 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import vazkii.arl.block.tile.TileSimpleInventory;
 import vazkii.quark.addons.oddities.block.PipeBlock;
 import vazkii.quark.addons.oddities.module.PipesModule;
-import vazkii.quark.base.client.NetworkProfilingHandler;
+import vazkii.quark.base.client.handler.NetworkProfilingHandler;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.handler.QuarkSounds;
 

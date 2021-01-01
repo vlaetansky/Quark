@@ -2,13 +2,12 @@ package vazkii.quark.base;
 
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
+import vazkii.quark.base.client.ClientProxy;
 
 import java.lang.management.ManagementFactory;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import vazkii.quark.base.proxy.ClientProxy;
-import vazkii.quark.base.proxy.CommonProxy;
 
 @Mod(Quark.MOD_ID)
 public class Quark {
