@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ArmorItem;
+import net.minecraft.item.ElytraItem;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -51,10 +52,15 @@ public class RightClickArmorModule extends QuarkModule {
 		Slot slotUnder = player.openContainer.getSlot(slot);
 		ItemStack stack = slotUnder.getStack();
 		
+		EquipmentSlotType equipSlot = null;
+		
 		if(stack.getItem() instanceof ArmorItem) {
 			ArmorItem armor = (ArmorItem) stack.getItem();
-			
-			EquipmentSlotType equipSlot = armor.getEquipmentSlot();
+			equipSlot = armor.getEquipmentSlot();
+		} else if(stack.getItem() instanceof ElytraItem)
+			equipSlot = EquipmentSlotType.CHEST;
+		
+		if(equipSlot != null) {
 			ItemStack currArmor = player.getItemStackFromSlot(equipSlot);
 			
 			if(slotUnder.canTakeStack(player) && slotUnder.isItemValid(currArmor)) 
