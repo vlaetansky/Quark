@@ -18,16 +18,17 @@ public class AutoWalkKeybindModule extends QuarkModule {
 
 	@OnlyIn(Dist.CLIENT)
 	private KeyBinding keybind;
-	
+
 	private boolean autorunning;
-	
+	private boolean hadAutoJump;
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
 		if(enabled)
 			keybind = ModKeybindHandler.init("autorun", "caps.lock", ModKeybindHandler.ACCESSIBILITY_GROUP);
 	}
-	
+
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public void onMouseInput(InputEvent.MouseInputEvent event) {
@@ -39,12 +40,25 @@ public class AutoWalkKeybindModule extends QuarkModule {
 	public void onKeyInput(InputEvent.KeyInputEvent event) {
 		acceptInput();
 	}
-	
+
 	private void acceptInput() {
-		if(Minecraft.getInstance().gameSettings.keyBindForward.isKeyDown())
+		Minecraft mc = Minecraft.getInstance();
+
+		if(mc.gameSettings.keyBindForward.isKeyDown()) {
+			if(autorunning)
+				mc.gameSettings.autoJump = hadAutoJump;
+			
 			autorunning = false;
-		else if(keybind.isKeyDown())
+		}
+		
+		else if(keybind.isKeyDown()) {
 			autorunning = !autorunning;
+
+			if(autorunning) {
+				hadAutoJump = mc.gameSettings.autoJump;
+				mc.gameSettings.autoJump = true;
+			} else mc.gameSettings.autoJump = hadAutoJump;
+		}
 	}
 
 	@SubscribeEvent
@@ -56,5 +70,5 @@ public class AutoWalkKeybindModule extends QuarkModule {
 			event.getMovementInput().moveForward = 1F;
 		}
 	}
-	
+
 }
