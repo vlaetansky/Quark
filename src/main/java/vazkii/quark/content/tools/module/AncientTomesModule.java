@@ -155,10 +155,12 @@ public class AncientTomesModule extends QuarkModule {
 						EnchantmentHelper.setEnchantments(currentEnchants, out);
 						String name = event.getName();
 						int cost = applyCost;
-						if(name != null && !name.isEmpty()) {
+						
+						if(name != null && !name.isEmpty() && (!out.hasDisplayName() || !out.getDisplayName().getString().equals(name))) {
 							out.setDisplayName(new StringTextComponent(name));
 							cost++;
 						}
+						
 						event.setOutput(out);
 						event.setCost(cost);
 					} else {
