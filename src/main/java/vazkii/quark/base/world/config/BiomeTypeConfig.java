@@ -13,7 +13,7 @@ import vazkii.quark.base.module.config.ConfigFlagManager;
 public class BiomeTypeConfig implements IBiomeConfig {
 
 	@Config(name = "Biome Categories")
-	@Config.Restriction({"none", "taiga", "extreme_hills", "jungle", "mesa", "plains", "savanna", "the_end", "beach", "forest",
+	@Config.Restriction({"none", "taiga", "extreme_hills", "jungle", "mesa", "plains", "savanna", "icy", "the_end", "beach", "forest",
 			"ocean", "desert", "river", "swamp", "mushroom", "nether"})
 	private List<String> categoryStrings;
 
