@@ -106,7 +106,7 @@ public class InfinityBucketModule extends QuarkModule {
 
 			if(bukkitPlayers.containsKey(pair)) {
 				ItemStack curr = player.getHeldItem(hand);
-				if(curr.getItem() == Items.BUCKET || curr.getItem() == Items.WATER_BUCKET) {
+				if(curr.getItem() == Items.BUCKET) {
 					Pair<Integer, ItemStack> resultPair = bukkitPlayers.get(pair);
 					if(resultPair.getLeft() == slot)
 						player.setHeldItem(hand, resultPair.getRight());
