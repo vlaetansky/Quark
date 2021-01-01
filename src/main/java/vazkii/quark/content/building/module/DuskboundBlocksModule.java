@@ -14,9 +14,9 @@ public class DuskboundBlocksModule extends QuarkModule {
 
 	@Override
 	public void construct() {
-		VariantHandler.addSlabAndStairs(new QuarkBlock("duskbound_block", this, ItemGroup.DECORATIONS, Block.Properties.from(Blocks.PURPUR_BLOCK)));
+		VariantHandler.addSlabAndStairs(new QuarkBlock("duskbound_block", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.PURPUR_BLOCK)));
 		
-		new QuarkBlock("duskbound_lantern", this, ItemGroup.DECORATIONS, 
+		new QuarkBlock("duskbound_lantern", this, ItemGroup.BUILDING_BLOCKS, 
 				Block.Properties.from(Blocks.PURPUR_BLOCK)
 				.setLightLevel(b -> 15));
 	}
