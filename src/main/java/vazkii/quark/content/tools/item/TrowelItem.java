@@ -64,7 +64,7 @@ public class TrowelItem extends QuarkItem implements IUsageTickerOverride {
 		if(player.isCreative())
 			target.setCount(count);
 		
-		if(result == ActionResultType.SUCCESS) {
+		if(result.isSuccessOrConsume()) {
 			CompoundNBT cmp = target.serializeNBT();
 			ItemNBTHelper.setCompound(ourStack, TAG_LAST_STACK, cmp);
 			
