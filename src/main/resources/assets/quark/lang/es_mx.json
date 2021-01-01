@@ -7,7 +7,8 @@
 	"quark.gui.button.filter": "Filtrar",
 	"quark.gui.button.emotes": "Gestos",
 	"quark.gui.button.back": "Atrás",
-	"quark.gui.button.shift_lock": "Bloqueo de Mayús",
+	"quark.gui.button.shift_lock": "Bloquear Mayús",
+	"quark.keybind.autorun": "Caminar automáticamente",
 	
 	"quark.gui.enchanting.min": "Mín: %d",
 	"quark.gui.enchanting.influence": "Influencia de vela: +%d%%",
@@ -1033,9 +1034,10 @@
 	"block.quark.potted_tall_grass": "Maceta con pasto alto",
 	"block.quark.potted_vine": "Maceta con lianas",
 	"block.quark.potted_weeping_vines": "Maceta con lianas lloronas",
-	"block.quark.potted_twisting_vines": "Maceta con lianas retorcidas,
+	"block.quark.potted_twisting_vines": "Maceta con lianas retorcidas",
 	"block.quark.potted_wheat": "Maceta con trigo",
 	"block.quark.potted_yellow_blossom_sapling": "Maceta con retoño floral soleado",
 
-	"generator.quark.realistic": "Realista Quark"
+	"generator.quark.realistic": "Realista",
+	"generator.quark.realistic_large_biomes": "Superbiomas realistas"
 }
