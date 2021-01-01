@@ -68,6 +68,8 @@ public class SpiderNestUndergroundBiomeModule extends UndergroundBiomeModule {
 	
 	@Override
 	public void setup() {
+		super.setup();
+		
 		GlobalEntityTypeAttributes.put(wrappedType, ZombieEntity.func_234342_eQ_().create());
 	}
 
