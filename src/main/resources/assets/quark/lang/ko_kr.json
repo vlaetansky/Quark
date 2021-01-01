@@ -7,6 +7,7 @@
 	"quark.gui.button.filter": "필터",
 	"quark.gui.button.emotes": "감정표현",
 	"quark.gui.button.back": "돌아가기",
+	"quark.gui.button.shift_lock": "변속 잠금",
 
 	"quark.gui.enchanting.min": "분: %d",
 	"quark.gui.enchanting.influence": "양초 영향: +%d%%",
@@ -19,6 +20,7 @@
 	"quark.gui.keygroup.misc": "쿼크 기타",
 	"quark.gui.keygroup.inv": "쿼크 인벤토리",
 	"quark.gui.keygroup.emote": "쿼크 감정표현",
+	"quark.gui.keygroup.accessibility": "쿼크 접근성",
 	
 	"quark.gui.config.save": "변경 사항 저장",
 	"quark.gui.config.social.website": "쿼크 사이트",
@@ -74,6 +76,12 @@
 	"quark.camera.filter.pencil": "연필화",
 	"quark.camera.filter.watercolor": "네거티브",
 	"quark.camera.filter.sobel": "소벨",
+	"quark.camera.filter.sobel": "소벨",
+	"quark.camera.filter.sobel": "소벨",
+	"quark.camera.filter.deutranopia": "모의 녹색맹",
+	"quark.camera.filter.protanopia": "모의 적색맹",
+	"quark.camera.filter.tritanopia": "모의 청색맹",
+	"quark.camera.filter.achromatopsia": "모의 전색맹",
 
 	"quark.camera.rulers": "자: ",
 	"quark.camera.rulers0": "없음",
@@ -118,6 +126,19 @@
 	"quark.keybind.patreon_emote.zombie": "좀비 (패트리온)",
 	"quark.keybind.back": "돌아가기",
 	"quark.keybind.camera_mode": "카메라 모드",
+	"quark.keybind.narrator_readout": "내레이터 판독",
+	"quark.keybind.narrator_full_readout": "내레이터 전체 판독",
+	"quark.keybind.shift_lock": "변속 잠금",
+	"quark.keybind.autorun": "자동으로 걷기",
+
+	"quark.readout.not_ingame": "가망 없음",
+	"quark.readout.looking": "%s을(를) 살핌",
+	"quark.readout.holding": "%dx %s을(를) 유지",
+	"quark.readout.holding_with_off": "%d %s 및 %d %s을(를) 유지",
+	"quark.readout.health": "건강 %d",
+	"quark.readout.food": "음식 %d",
+	"quark.readout.sign_says": "표지판 가라사대",
+	"quark.readout.no_item": "아이템 없음",
 
 	"quark.subtitles.meep": "스톤링이 ​​도망칩니다.",
 	"quark.subtitles.give_stoneling": "스톤링이 아이템을 가져옵니다.",
@@ -1022,4 +1043,5 @@
 	"block.quark.potted_yellow_blossom_sapling": "화분에 심은 화창꽃나무 묘목",
 
 	"generator.quark.realistic": "현실적인 쿼크"
+	"generator.quark.realistic_large_biomes": "현실적인 큰 생물군계"
 }
