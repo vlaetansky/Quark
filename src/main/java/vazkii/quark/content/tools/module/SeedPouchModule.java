@@ -54,6 +54,7 @@ public class SeedPouchModule extends QuarkModule {
 	
 	@Config public static int maxItems = 640;
 	@Config public static boolean showAllVariantsInCreative = true;
+	@Config public static int shiftRange = 3;
 
 	private static boolean shouldCancelNextRelease = false;
 

@@ -139,9 +139,13 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 			else {
 				ActionResultType bestRes = ActionResultType.FAIL;
 				
-				for(int i = 0; i < 9; i++) {
-					int x = -1 + i % 3;
-					int z = -1 + i / 3;
+				int range = SeedPouchModule.shiftRange;
+				int blocks = range * range;
+				int shift = -((int) Math.floor(range / 2));
+						
+				for(int i = 0; i < blocks; i++) {
+					int x = shift + i % range;
+					int z = shift + i / range;
 					
 					ActionResultType res = placeSeed(context, target, context.getPos().add(x, 0, z), total);
 					contents = getContents(stack);
