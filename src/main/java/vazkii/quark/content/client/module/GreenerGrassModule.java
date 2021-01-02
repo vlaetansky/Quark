@@ -37,7 +37,12 @@ public class GreenerGrassModule extends QuarkModule {
 			"minecraft:fern",
 			"minecraft:grass",
 			"minecraft:potted_fern",
-			"minecraft:sugar_cane");
+			"minecraft:sugar_cane",
+			"environmental:duckweed",
+			"environmental:giant_tall_grass",
+			"farmersdelight:wild_carrots",
+			"farmersdelight:wild_rice"
+			);
 
 	@Config public static List<String> leavesList = Lists.newArrayList(
 			"minecraft:spruce_leaves", 
