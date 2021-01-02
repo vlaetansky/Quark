@@ -43,7 +43,11 @@ public class ShulkerBoxTooltips {
 	public static void makeTooltip(ItemTooltipEvent event) {
 		if(SimilarBlockTypeHandler.isShulkerBox(event.getItemStack()) && event.getItemStack().hasTag()) {
 			CompoundNBT cmp = ItemNBTHelper.getCompound(event.getItemStack(), "BlockEntityTag", true);
+			
 			if (cmp != null) {
+				if(cmp.contains("LootTable"))
+					return;
+				
 				if (!cmp.contains("id", Constants.NBT.TAG_STRING)) {
 					cmp = cmp.copy();
 					cmp.putString("id", "minecraft:shulker_box");
@@ -76,6 +80,9 @@ public class ShulkerBoxTooltips {
 
 			CompoundNBT cmp = ItemNBTHelper.getCompound(event.getStack(), "BlockEntityTag", true);
 			if (cmp != null) {
+				if(cmp.contains("LootTable"))
+					return;
+				
 				if (!cmp.contains("id", Constants.NBT.TAG_STRING)) {
 					cmp = cmp.copy();
 					cmp.putString("id", "minecraft:shulker_box");
