@@ -2,7 +2,8 @@ package vazkii.quark.base;
 
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
-import vazkii.quark.base.client.ClientProxy;
+import vazkii.quark.base.proxy.ClientProxy;
+import vazkii.quark.base.proxy.CommonProxy;
 
 import java.lang.management.ManagementFactory;
 
