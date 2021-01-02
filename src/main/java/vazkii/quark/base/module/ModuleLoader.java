@@ -1,5 +1,12 @@
 package vazkii.quark.base.module;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
+
+import net.minecraft.block.Block;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -7,13 +14,10 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.block.IQuarkBlock;
+import vazkii.quark.base.item.IQuarkItem;
 import vazkii.quark.base.module.config.ConfigResolver;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Consumer;
 
 public final class ModuleLoader {
 	
@@ -110,6 +114,25 @@ public final class ModuleLoader {
 	
 	public QuarkModule getModuleInstance(Class<? extends QuarkModule> moduleClazz) {
 		return foundModules.get(moduleClazz);
+	}
+	
+	public boolean isItemEnabled(Item i) {
+		if(i instanceof IQuarkItem) {
+			IQuarkItem qi = (IQuarkItem) i;
+			if(!qi.isEnabled())
+				return false;
+		}
+		else if(i instanceof BlockItem) {
+			BlockItem bi = (BlockItem) i;
+			Block b = bi.getBlock();
+			if(b instanceof IQuarkBlock) {
+				IQuarkBlock qb = (IQuarkBlock) b;
+				if(!qb.isEnabled())
+					return false;
+			}
+		}
+		
+		return true;
 	}
 	
 }

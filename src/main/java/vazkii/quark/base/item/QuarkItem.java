@@ -1,15 +1,16 @@
 package vazkii.quark.base.item;
 
+import java.util.function.BooleanSupplier;
+
+import javax.annotation.Nonnull;
+
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import vazkii.arl.item.BasicItem;
 import vazkii.quark.base.module.QuarkModule;
 
-import javax.annotation.Nonnull;
-import java.util.function.BooleanSupplier;
-
-public class QuarkItem extends BasicItem {
+public class QuarkItem extends BasicItem implements IQuarkItem {
 
 	private final QuarkModule module;
 	private BooleanSupplier enabledSupplier = () -> true;
@@ -25,13 +26,20 @@ public class QuarkItem extends BasicItem {
 			super.fillItemGroup(group, items);
 	}
 
+	@Override
 	public QuarkItem setCondition(BooleanSupplier enabledSupplier) {
 		this.enabledSupplier = enabledSupplier;
 		return this;
 	}
 
-	public boolean isEnabled() {
-		return module != null && module.enabled && enabledSupplier.getAsBoolean();
+	@Override
+	public QuarkModule getModule() {
+		return module;
+	}
+
+	@Override
+	public boolean doesConditionApply() {
+		return enabledSupplier.getAsBoolean();
 	}
 
 }

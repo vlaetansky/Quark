@@ -1,11 +1,11 @@
 package vazkii.quark.addons.oddities.item;
 
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 
@@ -51,9 +51,10 @@ import vazkii.quark.addons.oddities.container.BackpackContainer;
 import vazkii.quark.addons.oddities.module.BackpackModule;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.ProxiedItemStackHandler;
+import vazkii.quark.base.item.IQuarkItem;
 import vazkii.quark.base.module.QuarkModule;
 
-public class BackpackItem extends DyeableArmorItem implements IItemColorProvider, INamedContainerProvider {
+public class BackpackItem extends DyeableArmorItem implements IQuarkItem, IItemColorProvider, INamedContainerProvider {
 
 	private static final String WORN_TEXTURE = Quark.MOD_ID + ":textures/misc/backpack_worn.png";
 	private static final String WORN_OVERLAY_TEXTURE = Quark.MOD_ID + ":textures/misc/backpack_worn_overlay.png";
@@ -75,7 +76,12 @@ public class BackpackItem extends DyeableArmorItem implements IItemColorProvider
 		RegistryHelper.registerItem(this, "backpack");
 		this.module = module;
 	}
-	
+
+	@Override
+	public QuarkModule getModule() {
+		return module;
+	}
+
 	public static boolean doesBackpackHaveItems(ItemStack stack) {
 		LazyOptional<IItemHandler> handlerOpt  = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 
@@ -235,5 +241,6 @@ public class BackpackItem extends DyeableArmorItem implements IItemColorProvider
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getTranslationKey());
 	}
+
 
 }
