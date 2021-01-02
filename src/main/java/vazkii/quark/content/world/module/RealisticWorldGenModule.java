@@ -20,9 +20,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
+import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.QuarkModule;
-import vazkii.quark.content.world.client.RealisticGenScreen;
+import vazkii.quark.content.world.client.RealisticWorldType;
 import vazkii.quark.content.world.gen.RealisticChunkGenerator;
 import vazkii.quark.base.module.ModuleCategory;
 
@@ -41,38 +42,8 @@ public class RealisticWorldGenModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void constructClient() {
-		new RealisticGenScreen("realistic", false);
-		new RealisticGenScreen("realistic_large_biomes", true);
+		RegistryHelper.register(new RealisticWorldType("realistic", false));
+		RegistryHelper.register(new RealisticWorldType("realistic_large_biomes", true));
 	}
 
-	private static ChunkGenerator createChunkGenerator(long seed, boolean largeBiomes, Registry<Biome> biomes, Registry<DimensionSettings> settings) {
-		return new RealisticChunkGenerator(new OverworldBiomeProvider(seed, false, largeBiomes, biomes), seed, () -> settings.getOrThrow(DimensionSettings.field_242734_c));
-	}
-
-	private static DimensionGeneratorSettings createSettings(DynamicRegistries registries, long seed, boolean largeBiomes, boolean generateFeatures, boolean generateBonusChest) {
-		Registry<Biome> biomes = registries.getRegistry(Registry.BIOME_KEY);
-		Registry<DimensionSettings> settings = registries.getRegistry(Registry.NOISE_SETTINGS_KEY);
-		Registry<DimensionType> types = registries.getRegistry(Registry.DIMENSION_TYPE_KEY);
-		return new DimensionGeneratorSettings(seed, generateFeatures, generateBonusChest, DimensionGeneratorSettings.func_242749_a(types, DimensionType.getDefaultSimpleRegistry(types, biomes, settings, seed), createChunkGenerator(seed, largeBiomes, biomes, settings)));
-	}
-
-	@SubscribeEvent
-	public void onServerStart(FMLServerAboutToStartEvent event) {
-		// Check that we're on the dedicated server before checking the world type
-		if (event.getServer() instanceof DedicatedServer) {
-			DedicatedServer server = (DedicatedServer) event.getServer();
-			String levelType = Optional.ofNullable((String)server.getServerProperties().serverProperties.get("level-type")).map(str -> str.toLowerCase(Locale.ROOT)).orElse("default");
-
-			// If the world type is realistic, then replace the worldgen data
-			if (levelType.matches("realistic(_large_biomes)?")) {
-				boolean large = levelType.contains("large");
-				if (server.func_240793_aU_() instanceof ServerWorldInfo) {
-					ServerWorldInfo worldInfo = (ServerWorldInfo)server.func_240793_aU_();
-					worldInfo.generatorSettings = createSettings(server.func_244267_aX(), worldInfo.generatorSettings.getSeed(), large, worldInfo.generatorSettings.doesGenerateFeatures(), worldInfo.generatorSettings.hasBonusChest());
-				}
-				ServerProperties properties = server.getServerProperties();
-				properties.field_241082_U_ = createSettings(server.func_244267_aX(), properties.field_241082_U_.getSeed(), large, properties.field_241082_U_.doesGenerateFeatures(), properties.field_241082_U_.hasBonusChest());
-			}
-		}
-	}
 }
