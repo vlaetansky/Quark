@@ -217,10 +217,10 @@ public class MiscUtil {
 	@OnlyIn(Dist.CLIENT)
 	public static void onKeystroke(KeyboardKeyPressedEvent.Pre event) {
 		final String[] ids = new String[] {
-				"FCYE87P5L0","mybsDDymrsc","6a4BWpBJppI","thpTOAS1Vgg","ZNcBZM5SvbY","_qJEoSa3Ie0", 
+				"-FCYE87P5L0","mybsDDymrsc","6a4BWpBJppI","thpTOAS1Vgg","ZNcBZM5SvbY","_qJEoSa3Ie0", 
 				"RWeyOyY_puQ","VBbeuXW8Nko","LIDe-yTxda0","BVVfMFS3mgc","m5qwcYL8a0o","UkY8HvgvBJ8",
 				"4K4b9Z9lSwc","tyInv6RWL0Q","tIWpr3tHzII","AFJPFfnzZ7w","846cjX0ZTrk","XEOCbFJjRw0",
-				"GEo5bmUKFvI", "b6li05zh3Kg"
+				"GEo5bmUKFvI","b6li05zh3Kg"
 		};
 		final int[] keys = new int[] { 265, 265, 264, 264, 263, 262, 263, 262, 66, 65 };
 		if(event.getGui() instanceof AbstractQScreen) {
