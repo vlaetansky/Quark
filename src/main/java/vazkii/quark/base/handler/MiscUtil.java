@@ -16,7 +16,6 @@ import com.google.common.base.Throwables;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.gui.screen.MainMenuScreen;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -51,6 +50,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.client.config.gui.AbstractQScreen;
 
 @EventBusSubscriber(modid = Quark.MOD_ID)
 public class MiscUtil {
@@ -85,7 +85,7 @@ public class MiscUtil {
 			"acacia", 
 			"dark_oak"
 	};
-	
+
 	public static final String[] OVERWORLD_WOOD_TYPES = new String[] {
 			"oak",
 			"spruce",
@@ -94,7 +94,7 @@ public class MiscUtil {
 			"acacia", 
 			"dark_oak"
 	};
-	
+
 	public static final String[] NETHER_WOOD_TYPES = new String[] {
 			"crimson",
 			"warped"
@@ -203,9 +203,13 @@ public class MiscUtil {
 			.forEach(e -> e.connection.sendPacket(packet));
 		}
 	}
-	
-	public static BlockPos locateBiome(ServerWorld world, Biome biomeToFind, BlockPos start) {
-		return world.func_241116_a_(biomeToFind, start, 6400, 8); // magic numbers from LocateBiomeCommand
+
+	public static BlockPos locateBiome(ServerWorld world, ResourceLocation biomeToFind, BlockPos start) {
+		Biome biome = world.getServer().func_244267_aX().getRegistry(Registry.BIOME_KEY).getOptional(biomeToFind).orElseThrow(() -> {
+			return new RuntimeException("Couldn't find biome " + biomeToFind);
+		});
+
+		return world.func_241116_a_(biome, start, 6400, 8); // magic numbers from LocateBiomeCommand
 	}
 
 	private static int progress;
@@ -216,10 +220,10 @@ public class MiscUtil {
 				"FCYE87P5L0","mybsDDymrsc","6a4BWpBJppI","thpTOAS1Vgg","ZNcBZM5SvbY","_qJEoSa3Ie0", 
 				"RWeyOyY_puQ","VBbeuXW8Nko","LIDe-yTxda0","BVVfMFS3mgc","m5qwcYL8a0o","UkY8HvgvBJ8",
 				"4K4b9Z9lSwc","tyInv6RWL0Q","tIWpr3tHzII","AFJPFfnzZ7w","846cjX0ZTrk","XEOCbFJjRw0",
-				"8Vto_qUIjcA"
+				"GEo5bmUKFvI", "b6li05zh3Kg"
 		};
 		final int[] keys = new int[] { 265, 265, 264, 264, 263, 262, 263, 262, 66, 65 };
-		if(event.getGui() instanceof MainMenuScreen) {
+		if(event.getGui() instanceof AbstractQScreen) {
 			if(keys[progress] == event.getKeyCode()) {
 				progress++;
 
