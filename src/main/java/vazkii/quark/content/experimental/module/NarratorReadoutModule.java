@@ -71,6 +71,7 @@ public class NarratorReadoutModule extends QuarkModule {
 		acceptInput(down || full, down);
 	}
 	
+	@OnlyIn(Dist.CLIENT)
 	private boolean isDown(int key, int scancode, boolean mouse, KeyBinding keybind) {
 		Minecraft mc = Minecraft.getInstance();
 		if(mc.currentScreen != null) {
@@ -84,6 +85,7 @@ public class NarratorReadoutModule extends QuarkModule {
 		else return keybind.isKeyDown();
 	}
 	
+	@OnlyIn(Dist.CLIENT)
 	private void acceptInput(boolean down, boolean full) {
 		Minecraft mc = Minecraft.getInstance();
 		
@@ -98,6 +100,7 @@ public class NarratorReadoutModule extends QuarkModule {
 		}
 	}
 	
+	@OnlyIn(Dist.CLIENT)
 	private String getReadout(Minecraft mc, boolean full) {
 		PlayerEntity player = mc.player;
 		if(player == null)
