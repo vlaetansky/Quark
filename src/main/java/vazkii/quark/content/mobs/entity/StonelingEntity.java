@@ -419,7 +419,7 @@ public class StonelingEntity extends CreatureEntity {
 	}
 
 	public static boolean spawnPredicate(EntityType<? extends StonelingEntity> type, IServerWorld world, SpawnReason reason, BlockPos pos, Random rand) {
-		return world.getDifficulty() != Difficulty.PEACEFUL && pos.getY() <= StonelingsModule.maxYLevel && MiscUtil.validSpawnLight(world, pos, rand) && MiscUtil.validSpawnLocation(type, world, reason, pos);
+		return pos.getY() <= StonelingsModule.maxYLevel && MiscUtil.validSpawnLight(world, pos, rand) && MiscUtil.validSpawnLocation(type, world, reason, pos);
 	}
 
 	@Override
