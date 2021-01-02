@@ -72,7 +72,6 @@ public class MapTooltips {
 			immediateBuffer.finish();
 
 			RenderSystem.disableBlend();
-			RenderSystem.enableLighting();
 			RenderSystem.popMatrix();
 		}
 	}
