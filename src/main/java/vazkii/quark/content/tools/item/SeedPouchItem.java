@@ -185,7 +185,7 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 		if(SeedPouchModule.showAllVariantsInCreative && isEnabled() && isInGroup(group)) {
 			List<Item> tagItems = SeedPouchModule.seedPouchHoldableTag.getAllElements();
 			for(Item i : tagItems) {
-				if(ModuleLoader.INSTANCE.isItemEnabled(i))
+				if(!ModuleLoader.INSTANCE.isItemEnabled(i))
 					continue;
 				
 				ItemStack stack = new ItemStack(this);
