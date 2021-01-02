@@ -41,8 +41,8 @@ import vazkii.aurelienribon.tweenengine.Tween;
 import vazkii.quark.base.client.handler.ModKeybindHandler;
 import vazkii.quark.base.handler.ContributorRewardHandler;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.RequestEmoteMessage;
@@ -103,6 +103,10 @@ public class EmotesModule extends QuarkModule {
 	@Override
 	public void constructClient() {
 		Minecraft mc = Minecraft.getInstance();
+		emotesDir = new File(mc.gameDir, "/config/quark_emotes");
+		if(!emotesDir.exists())
+			emotesDir.mkdirs();
+		
 		mc.getResourcePackList().addPackFinder(new IPackFinder() {
 
 			@Override
