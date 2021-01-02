@@ -34,11 +34,10 @@ public class CommonProxy {
 
 		QuarkSounds.start();
 		ModuleLoader.INSTANCE.start();
+		WorldGenHandler.register();
 		
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		registerListeners(bus);
-		WorldGenHandler.registerPlacements(); // You can move this elsewhere
-		WorldGenHandler.registerFeatures(); // You can move this elsewhere
 
 		LocalDateTime now = LocalDateTime.now();
 		if (now.getMonth() == Month.DECEMBER && now.getDayOfMonth() >= 16 || now.getMonth() == Month.JANUARY && now.getDayOfMonth() <= 2)

@@ -53,15 +53,17 @@ public class WorldGenHandler {
 
 	public static Placement<NoPlacementConfig> CHUNK_CORNER_PLACEMENT = new ChunkCornerPlacement();
 
-	// Placements should be registered just like Blocks, Features, or Structures
-	// You can move this elsewhere
-	public static void registerPlacements(){
+	public static void register() {
+		registerPlacements();
+		registerFeatures();
+	}
+	
+	private static void registerPlacements(){
 		CHUNK_CORNER_PLACEMENT.setRegistryName(Quark.MOD_ID, "chunk_corner_placement");
 		RegistryHelper.register(CHUNK_CORNER_PLACEMENT);
 	}
 
-	// Yeah base features should be registered too. Helps keeps down codec errors and logspam.
-	public static void registerFeatures(){
+	private static void registerFeatures(){
 		for(GenerationStage.Decoration stage : GenerationStage.Decoration.values()) {
 			Feature<NoFeatureConfig> deferredFeature = new DeferedFeature(stage);
 
