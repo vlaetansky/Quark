@@ -64,6 +64,7 @@ public class BackpackModule extends QuarkModule {
 	public static Block bonded_ravager_hide;
 	
     public static ContainerType<BackpackContainer> container;
+    private static ItemStack heldStack = null;
 
 	@OnlyIn(Dist.CLIENT)
 	private static boolean backpackRequested;
@@ -129,11 +130,18 @@ public class BackpackModule extends QuarkModule {
 		if(isInventoryGUI(mc.currentScreen) && !backpackRequested && isEntityWearingBackpack(mc.player)) {
 			requestBackpack();
 			backpackRequested = true;
-		} else if(mc.currentScreen instanceof BackpackInventoryScreen)
+		} else if(mc.currentScreen instanceof BackpackInventoryScreen) {
+			if(heldStack != null) {
+				mc.player.inventory.setItemStack(heldStack);
+				heldStack = null;
+			}
+			
 			backpackRequested = false;
+		}
 	}
 
 	private void requestBackpack() {
+		heldStack = Minecraft.getInstance().player.inventory.getItemStack();
 		QuarkNetwork.sendToServer(new HandleBackpackMessage(true));
 	}
 
