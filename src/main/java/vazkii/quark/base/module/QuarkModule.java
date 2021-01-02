@@ -80,8 +80,13 @@ public class QuarkModule {
 	public void postTextureStitch(TextureStitchEvent.Post event) {
 		// NO-OP
 	}
-
+	
 	public void loadComplete() {
+		// NO-OP
+	}
+	
+	@OnlyIn(Dist.CLIENT)
+	public void firstClientTick() {
 		// NO-OP
 	}
 	

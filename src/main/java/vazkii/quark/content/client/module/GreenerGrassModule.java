@@ -49,7 +49,7 @@ public class GreenerGrassModule extends QuarkModule {
 			"minecraft:vine");
 	
 	@Override
-	public void clientSetup() {
+	public void firstClientTick() {
 		registerGreenerColor(blockList, false);
 		registerGreenerColor(leavesList, true);
 	}
@@ -58,7 +58,7 @@ public class GreenerGrassModule extends QuarkModule {
 	private void registerGreenerColor(Iterable<String> ids, boolean leaves) {
 		BlockColors colors = Minecraft.getInstance().getBlockColors();
 
-		Map<IRegistryDelegate<Block>, IBlockColor> map = ObfuscationReflectionHelper.getPrivateValue(BlockColors.class, colors, "field_186725_a"); // colors.colors;
+		Map<IRegistryDelegate<Block>, IBlockColor> map = colors.colors;
 
 		for(String id : ids) {
 			Registry.BLOCK.getOptional(new ResourceLocation(id)).ifPresent(b -> {

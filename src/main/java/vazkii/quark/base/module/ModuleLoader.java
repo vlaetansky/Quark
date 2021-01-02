@@ -3,6 +3,11 @@ package vazkii.quark.base.module;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
+import net.minecraftforge.event.TickEvent.Phase;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.config.ConfigResolver;
 
@@ -17,6 +22,7 @@ public final class ModuleLoader {
 	private Map<Class<? extends QuarkModule>, QuarkModule> foundModules = new HashMap<>();
 	
 	private ConfigResolver config;
+	private boolean clientTicked = false;
 	
 	private ModuleLoader() { }
 	
@@ -30,6 +36,7 @@ public final class ModuleLoader {
 	@OnlyIn(Dist.CLIENT)
 	public void clientStart() {
 		dispatch(QuarkModule::constructClient);
+		MinecraftForge.EVENT_BUS.register(this);
 	}
 	
 	private void findModules() {
@@ -81,6 +88,15 @@ public final class ModuleLoader {
 	
 	public void loadComplete() {
 		dispatch(QuarkModule::loadComplete);
+	}
+	
+	@OnlyIn(Dist.CLIENT)
+	@SubscribeEvent
+	public void firstClientTick(ClientTickEvent event) {
+		if(!clientTicked && event.phase == Phase.END) {
+			dispatch(m -> m.firstClientTick());
+			clientTicked = true;
+		}
 	}
 	
 	private void dispatch(Consumer<QuarkModule> run) {
