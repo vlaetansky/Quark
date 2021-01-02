@@ -98,9 +98,9 @@ public final class EmoteHandler {
 			String name = player.getGameProfile().getName();
 
 			if(player.getPose() == Pose.STANDING) {
-				resetPlayer(player);
-
 				if(playerEmotes.containsKey(name)) {
+					resetPlayer(player);
+					
 					EmoteBase emote = playerEmotes.get(name);
 					boolean done = emote.isDone();
 
@@ -108,7 +108,6 @@ public final class EmoteHandler {
 						emote.update();
 				}
 			}
-			
 		}
 	}
 
@@ -149,7 +148,7 @@ public final class EmoteHandler {
 					resetPlayer(player);
 				} else
 					emote.update();
-			} else resetPlayer(player);
+			}
 		}
 	}
 
