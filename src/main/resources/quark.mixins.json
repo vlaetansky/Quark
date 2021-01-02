@@ -33,7 +33,8 @@
     "client.PistonTileEntityRendererMixin",
     "client.RenderTypeBuffersMixin",
     "client.ScreenMixin",
-    "client.ContainerScreenMixin"
+    "client.ContainerScreenMixin",
+    "client.TridentRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
