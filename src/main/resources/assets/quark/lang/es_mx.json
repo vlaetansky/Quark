@@ -215,6 +215,7 @@
 	"quark.misc.reloaded0": "Se recargó tu configuración de Quark.",
 	"quark.misc.reloaded1": "- Si cambiaste algo que afecta las recetas, ejecuta /reload.",
 	"quark.misc.reloaded2": "- Prueba a reiniciar el juego si no se aplican los cambios.",
+	"quark.misc.repaired": "(fue reparado)",
 
 	"quark.container.feeding_trough": "Comedero",
 
