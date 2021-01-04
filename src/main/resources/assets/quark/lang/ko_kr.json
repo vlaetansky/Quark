@@ -215,6 +215,7 @@
 	"quark.misc.saturation3": "가벼운 식사",
 	"quark.misc.saturation4": "가벼운 간식",
 	"quark.misc.mod_disabled": "사용할 수 없습니다. %s을(를) 설치하여 활성화하십시오.",
+	"quark.misc.repaired": "(수리되었습니다.)",
 
 	"quark.misc.reloaded0": "쿼크 구성이 다시 로드되었습니다.",
 	"quark.misc.reloaded1": "- 조합법을 변경할 내용을 변경한 경우 /reload를 실행하십시오.",
@@ -1042,6 +1043,6 @@
 	"block.quark.potted_wheat": "화분에 심은 밀",
 	"block.quark.potted_yellow_blossom_sapling": "화분에 심은 화창꽃나무 묘목",
 
-	"generator.quark.realistic": "현실적인 쿼크"
-	"generator.quark.realistic_large_biomes": "현실적인 큰 생물군계"
+	"generator.quark.realistic": "현실판"
+	"generator.quark.realistic_large_biomes": "현실판 큰 생물군계"
 }
