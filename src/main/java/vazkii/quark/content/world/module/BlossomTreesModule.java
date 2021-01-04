@@ -47,8 +47,12 @@ public class BlossomTreesModule extends QuarkModule {
 	@Override
 	public void setup() {
 		trees.forEach((tree, config) -> {
-			ComposterBlock.CHANCES.put(tree.leaf.getBlock().asItem(), 0.3F);
-			ComposterBlock.CHANCES.put(tree.sapling.asItem(), 0.3F);
+			if (tree.leaf.getBlock().asItem() != null) {
+				ComposterBlock.CHANCES.put(tree.leaf.getBlock().asItem(), 0.3F);
+			}
+			if (tree.sapling.asItem() != null) {
+				ComposterBlock.CHANCES.put(tree.sapling.asItem(), 0.3F);
+			}
 			
 			WorldGenHandler.addGenerator(this, new BlossomTreeGenerator(config, tree), Decoration.TOP_LAYER_MODIFICATION, WorldGenWeights.BLOSSOM_TREES);
 		});
