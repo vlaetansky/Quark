@@ -39,7 +39,7 @@ public class DirtToPathModule extends QuarkModule {
 		ItemStack itemstack = player.getHeldItem(hand);
 		BlockState state = world.getBlockState(pos);
 
-		if(itemstack.getItem() instanceof PickarangItem || !itemstack.getItem().getToolTypes(itemstack).contains(tool) && itemstack.getDestroySpeed(state) > 0)
+		if(itemstack.getItem() instanceof PickarangItem || !itemstack.getItem().getToolTypes(itemstack).contains(tool) || itemstack.getDestroySpeed(state) < 1.0F)
 			return;
 
 		if(facing != null && player.canPlayerEdit(pos.offset(facing), facing, itemstack)) {
