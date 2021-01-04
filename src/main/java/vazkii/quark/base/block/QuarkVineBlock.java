@@ -40,7 +40,7 @@ public class QuarkVineBlock extends VineBlock implements IQuarkBlock {
 	
 	@Override
 	public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
-		// NO-OP
+		tick(state, worldIn, pos, random);
 	}
 
 	@Override
