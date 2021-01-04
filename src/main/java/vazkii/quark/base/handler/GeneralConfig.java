@@ -44,6 +44,7 @@ public class GeneralConfig {
 
 	@Config(description = "A list of screens that don't play well with quark's buttons. Use \"Print Screen Classnames\" to find the names of any others you'd want to add.")
 	public static List<String> ignoredScreens = Lists.newArrayList(
+			"blusunrize.immersiveengineering.client.gui.CraftingTableScreen",
 			"com.tfar.craftingstation.client.CraftingStationScreen",
 			"com.refinedmods.refinedstorage.screen.grid.GridScreen", 
 			"appeng.client.gui.implementations.CraftingTermScreen", 
