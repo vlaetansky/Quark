@@ -20,7 +20,14 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 public class PotionReflection {
     private static final MethodHandle CREATE_MIX_PREDICATE, GET_POTION_TYPE_CONVERSIONS;
-
+    
+    /**
+     * TO ANY ONLOOKERS, READ THIS
+     * 
+     * This class is incredibly cursed, but it's also essential, as ATs/Accessors can't be used to reproduce this
+     * behavior, due to the fact the classes referenced here are touched by Forge.
+     */
+    
     static {
         try {
             Class mixPredicate = Class.forName("net.minecraft.potion.PotionBrewing$MixPredicate");
