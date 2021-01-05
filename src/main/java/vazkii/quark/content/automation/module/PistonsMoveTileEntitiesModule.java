@@ -57,8 +57,12 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 			return;
 
 		for (Pair<BlockPos, CompoundNBT> delay : delays) {
-			TileEntity tile = TileEntity.readTileEntity(event.world.getBlockState(delay.getLeft()), delay.getRight());
-			event.world.setTileEntity(delay.getLeft(), tile);
+			BlockPos pos = delay.getLeft();
+			BlockState state = event.world.getBlockState(pos);
+			TileEntity tile = TileEntity.readTileEntity(state, delay.getRight());
+			
+			event.world.setTileEntity(pos, tile);
+			event.world.updateComparatorOutputLevel(pos, state.getBlock());
 			if (tile != null)
 				tile.updateContainingBlockInfo();
 		}
