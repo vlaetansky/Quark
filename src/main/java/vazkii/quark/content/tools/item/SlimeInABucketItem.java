@@ -18,6 +18,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedSeedRandom;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
@@ -80,12 +82,14 @@ public class SlimeInABucketItem extends QuarkItem {
 				slime.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.3);
 				slime.setHealth(slime.getMaxHealth());
 			}
-				
+			
 			slime.setPosition(x, y, z);
 
 			worldIn.addEntity(slime);
 			playerIn.swingArm(hand);
 		}
+		
+		worldIn.playSound(playerIn, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.NEUTRAL, 1.0F, 1.0F);
 
 		if(!playerIn.isCreative())
 			playerIn.setHeldItem(hand, new ItemStack(Items.BUCKET));

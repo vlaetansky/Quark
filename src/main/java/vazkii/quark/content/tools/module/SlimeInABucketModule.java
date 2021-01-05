@@ -10,6 +10,8 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -24,22 +26,22 @@ import vazkii.quark.base.module.ModuleCategory;
 public class SlimeInABucketModule extends QuarkModule {
 
 	public static Item slime_in_a_bucket;
-	
+
 	@Override
 	public void construct() {
 		slime_in_a_bucket = new SlimeInABucketItem(this);
 	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
 		ItemModelsProperties.registerProperty(slime_in_a_bucket, new ResourceLocation("excited"), 
 				(stack, world, e) -> ItemNBTHelper.getBoolean(stack, SlimeInABucketItem.TAG_EXCITED, false) ? 1 : 0);
 	}
-	
+
 	@SubscribeEvent
 	public void entityInteract(PlayerInteractEvent.EntityInteract event) {
-		if(event.getTarget() != null && !event.getWorld().isRemote) {
+		if(event.getTarget() != null) {
 			if(event.getTarget().getType() == EntityType.SLIME && ((SlimeEntity) event.getTarget()).getSlimeSize() == 1 && event.getTarget().isAlive()) {
 				PlayerEntity player = event.getPlayer();
 				Hand hand = Hand.MAIN_HAND;
@@ -50,25 +52,27 @@ public class SlimeInABucketModule extends QuarkModule {
 				}
 
 				if(!stack.isEmpty() && stack.getItem() == Items.BUCKET) {
-					ItemStack outStack = new ItemStack(slime_in_a_bucket);
-					CompoundNBT cmp = event.getTarget().serializeNBT();
-					ItemNBTHelper.setCompound(outStack, SlimeInABucketItem.TAG_ENTITY_DATA, cmp);
-					
-					if(stack.getCount() == 1)
-						player.setHeldItem(hand, outStack);
-					else {
-						stack.shrink(1);
-						if(stack.getCount() == 0)
+					if(!event.getWorld().isRemote) {
+						ItemStack outStack = new ItemStack(slime_in_a_bucket);
+						CompoundNBT cmp = event.getTarget().serializeNBT();
+						ItemNBTHelper.setCompound(outStack, SlimeInABucketItem.TAG_ENTITY_DATA, cmp);
+						
+						if(stack.getCount() == 1)
 							player.setHeldItem(hand, outStack);
-						else if(!player.inventory.addItemStackToInventory(outStack))
-							player.dropItem(outStack, false);
-					}
+						else {
+							stack.shrink(1);
+							if(stack.getCount() == 0)
+								player.setHeldItem(hand, outStack);
+							else if(!player.inventory.addItemStackToInventory(outStack))
+								player.dropItem(outStack, false);
+						}
 
-					player.swingArm(hand);
-					event.getTarget().remove();
+						event.getTarget().remove();
+					}
+					else player.swingArm(hand);
 				}
 			}
 		}
 	}
-	
+
 }
