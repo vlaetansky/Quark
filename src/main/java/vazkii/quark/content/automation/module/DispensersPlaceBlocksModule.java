@@ -35,22 +35,23 @@ import vazkii.quark.base.module.config.Config;
 public class DispensersPlaceBlocksModule extends QuarkModule {
 
 	@Config public static List<String> blacklist = Lists.newArrayList("minecraft:water", "minecraft:lava", "minecraft:fire");
-	
+
 	@Override
-	public void loadComplete() {
+	public void setup() {
 		if(!enabled)
 			return;
-		
-		Map<Item, IDispenseItemBehavior> registry = DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY;
 
-		for(Block b : ForgeRegistries.BLOCKS) {
-			ResourceLocation res = b.getRegistryName();
-			if(!blacklist.contains(Objects.toString(res))) {
-				Item item = b.asItem();
-				if(item instanceof BlockItem && !registry.containsKey(item))
-					registry.put(item, new BlockBehaviour((BlockItem) item));
+		enqueue(() -> {
+			Map<Item, IDispenseItemBehavior> registry = DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY;
+			for(Block b : ForgeRegistries.BLOCKS) {
+				ResourceLocation res = b.getRegistryName();
+				if(!blacklist.contains(Objects.toString(res))) {
+					Item item = b.asItem();
+					if(item instanceof BlockItem && !registry.containsKey(item))
+						registry.put(item, new BlockBehaviour((BlockItem) item));
+				}
 			}
-		}
+		});
 	}
 
 	public static class BlockBehaviour extends OptionalDispenseBehavior {
@@ -94,12 +95,12 @@ public class DispensersPlaceBlocksModule extends QuarkModule {
 			replaceClicked = worldIn.getBlockState(func_242401_i().getPos()).isReplaceable(this); // func_242401_i = getRayTraceResult
 			direction = p_i50051_3_;
 		}
-		
+
 		@Override
 		public boolean canPlace() {
 			return replaceClicked;
 		}
-		
+
 		@Override
 		public Direction getNearestLookingDirection() {
 			return direction.getOpposite();

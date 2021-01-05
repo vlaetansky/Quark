@@ -25,7 +25,7 @@ public class ThatchModule extends QuarkModule {
 	
 	@Override
 	public void loadComplete() {
-		ComposterBlock.CHANCES.put(thatch.asItem(), 0.65F);
+		enqueue(() -> ComposterBlock.CHANCES.put(thatch.asItem(), 0.65F));
 	}
 	
 }

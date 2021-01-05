@@ -48,16 +48,15 @@ public class BlossomTreesModule extends QuarkModule {
 	public void setup() {
 		for(BlossomTree tree : trees.keySet())
 			WorldGenHandler.addGenerator(this, new BlossomTreeGenerator(trees.get(tree), tree), Decoration.TOP_LAYER_MODIFICATION, WorldGenWeights.BLOSSOM_TREES);
-	}
-	
-	@Override
-	public void loadComplete() {
-		for(BlossomTree tree : trees.keySet()) {
-			if(tree.leaf.getBlock().asItem() != null)
-				ComposterBlock.CHANCES.put(tree.leaf.getBlock().asItem(), 0.3F);
-			if(tree.sapling.asItem() != null)
-				ComposterBlock.CHANCES.put(tree.sapling.asItem(), 0.3F);
-		}
+
+		enqueue(() -> {
+			for(BlossomTree tree : trees.keySet()) {
+				if(tree.leaf.getBlock().asItem() != null)
+					ComposterBlock.CHANCES.put(tree.leaf.getBlock().asItem(), 0.3F);
+				if(tree.sapling.asItem() != null)
+					ComposterBlock.CHANCES.put(tree.sapling.asItem(), 0.3F);
+			}
+		});
 	}
 	
 	private void add(String colorName, MaterialColor color, BlossomTreeConfig config) {

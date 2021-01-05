@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import com.google.common.base.Preconditions;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -14,6 +16,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.item.IQuarkItem;
@@ -27,6 +30,7 @@ public final class ModuleLoader {
 	
 	private ConfigResolver config;
 	private boolean clientTicked = false;
+	private ParallelDispatchEvent event;
 	
 	private ModuleLoader() { }
 	
@@ -64,15 +68,19 @@ public final class ModuleLoader {
 		dispatch(QuarkModule::configChangedClient);
 	}
 	
-	public void setup() {
+	public void setup(ParallelDispatchEvent event) {
+		this.event = event;
 		dispatch(QuarkModule::earlySetup);
 		Quark.proxy.handleQuarkConfigChange();
 		dispatch(QuarkModule::setup);
+		event = null;
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void clientSetup() {
+	public void clientSetup(ParallelDispatchEvent event) {
+		this.event = event;
 		dispatch(QuarkModule::clientSetup);
+		event = null;
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -90,8 +98,10 @@ public final class ModuleLoader {
 		dispatch(m -> m.postTextureStitch(event));
 	}
 	
-	public void loadComplete() {
+	public void loadComplete(ParallelDispatchEvent event) {
+		this.event = event;
 		dispatch(QuarkModule::loadComplete);
+		event = null;
 	}
 	
 	@OnlyIn(Dist.CLIENT)
@@ -105,6 +115,11 @@ public final class ModuleLoader {
 	
 	private void dispatch(Consumer<QuarkModule> run) {
 		foundModules.values().forEach(run);
+	}
+	
+	void enqueue(Runnable r) {
+		Preconditions.checkNotNull(event);
+		event.enqueueWork(r);
 	}
 	
 	public boolean isModuleEnabled(Class<? extends QuarkModule> moduleClazz) {

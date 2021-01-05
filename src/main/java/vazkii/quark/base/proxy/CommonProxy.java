@@ -55,12 +55,12 @@ public class CommonProxy {
 		BrewingHandler.setup();
 		CapabilityHandler.setup();
 		JigsawRegistryHelper.setup();
-		ModuleLoader.INSTANCE.setup();
+		ModuleLoader.INSTANCE.setup(event);
 		initContributorRewards();
 	}
 	
 	public void loadComplete(FMLLoadCompleteEvent event) {
-		ModuleLoader.INSTANCE.loadComplete();
+		ModuleLoader.INSTANCE.loadComplete(event);
 		WorldGenHandler.loadComplete();
 		FuelHandler.addAllWoods();
 	}

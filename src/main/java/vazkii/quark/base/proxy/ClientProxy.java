@@ -62,7 +62,7 @@ public class ClientProxy extends CommonProxy {
 
 	public void clientSetup(FMLClientSetupEvent event) {
 		RenderLayerHandler.init();
-		ModuleLoader.INSTANCE.clientSetup();
+		ModuleLoader.INSTANCE.clientSetup(event);
 	}
 
 	public void modelRegistry(ModelRegistryEvent event) {

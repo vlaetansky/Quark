@@ -94,6 +94,10 @@ public class QuarkModule {
 		// NO-OP
 	}
 	
+	protected void enqueue(Runnable r) {
+		ModuleLoader.INSTANCE.enqueue(r);
+	}
+	
 	public final void setEnabled(boolean enabled) {
 		configEnabled = enabled;
 		if(firstLoad) {
