@@ -17,6 +17,7 @@
     "PiercingEnchantmentMixin",
     "PistonBlockMixin",
     "PistonTileEntityMixin",
+    "PotionBrewingAccessor",
     "ServerWorldMixin",
     "TemptGoalMixin",
     "TrapDoorBlockMixin",
