@@ -22,10 +22,12 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ChatLine;
+import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.IngameGui;
 import net.minecraft.client.gui.NewChatGui;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.AtlasTexture;
@@ -41,10 +43,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -56,9 +56,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.ModuleLoader;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.LinkItemMessage;
@@ -76,8 +76,16 @@ public class ItemSharingModule extends QuarkModule {
 		GameSettings settings = mc.gameSettings;
 		if(InputMappings.isKeyDown(mc.getMainWindow().getHandle(), settings.keyBindChat.getKey().getKeyCode()) &&
 				event.getGui() instanceof ContainerScreen && Screen.hasShiftDown()) {
-			ContainerScreen gui = (ContainerScreen) event.getGui();
-
+			ContainerScreen<?> gui = (ContainerScreen<?>) event.getGui();
+			
+			List<? extends IGuiEventListener> children = gui.getEventListeners();
+			for(IGuiEventListener c : children)
+				if(c instanceof TextFieldWidget) {
+					TextFieldWidget tf = (TextFieldWidget) c;
+					if(tf.isFocused())
+						return;
+				}
+			
 			Slot slot = gui.getSlotUnderMouse();
 			if(slot != null && slot.inventory != null) {
 				ItemStack stack = slot.getStack();
