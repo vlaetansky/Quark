@@ -12,7 +12,7 @@ import org.apache.commons.lang3.tuple.Triple;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.recipe.FlagIngredient;
-import vazkii.quark.mixin.PotionBrewingAccessor;
+import vazkii.quark.base.util.PotionReflection;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -107,18 +107,14 @@ public class BrewingHandler {
     public static void setup() {
         isInjectionPrepared = true;
         for (Triple<Potion, Supplier<Ingredient>, Potion> triple : toRegister)
-            addPotionRecipe(triple.getLeft(), triple.getMiddle().get(), triple.getRight());
+            PotionReflection.addBrewingRecipe(triple.getLeft(), triple.getMiddle().get(), triple.getRight());
 
         toRegister.clear();
     }
 
-    public static final void addPotionRecipe(Potion base, Ingredient reagent, Potion result) {
-        PotionBrewingAccessor.getPotionTypeConversions().add(new PotionBrewing.MixPredicate(base, reagent, result));
-    }
-
     private static void add(String flag, Potion potion, Supplier<Ingredient> reagent, Potion to) {
         if (isInjectionPrepared)
-            addPotionRecipe(potion, new FlagIngredient(reagent.get(), flag), to);
+            PotionReflection.addBrewingRecipe(potion, new FlagIngredient(reagent.get(), flag), to);
         else
             toRegister.add(new ImmutableTriple<>(potion, () -> new FlagIngredient(reagent.get(), flag), to));
     }
