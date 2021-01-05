@@ -54,12 +54,21 @@ public class SpiralSpireGenerator extends MultiChunkFeatureGenerator {
 		return new BlockPos[0];
 	}
 	
-	public boolean makeSpike(WorldGenRegion world, ChunkGenerator chunk, Random rand, BlockPos pos) {
+	public void makeSpike(WorldGenRegion world, ChunkGenerator chunk, Random rand, BlockPos pos) {
 		int height = 50 + rand.nextInt(20);
 		double heightComposition = 5 + rand.nextDouble() * 1;
-		int y = -5;
+		int start = -5;
+		int y = start;
 		
 		Supplier<BlockState> prov = () -> (rand.nextFloat() < 0.05 ? Blocks.CRYING_OBSIDIAN : Blocks.OBSIDIAN).getDefaultState();
+		
+		for(; y < height; y++) {
+			BlockPos test = pos.up(y);
+			BlockState state = world.getBlockState(test);
+			if(!state.isAir() && !(state.getBlock() == Blocks.END_STONE || state.getBlock() == Blocks.CRYING_OBSIDIAN || state.getBlock() == Blocks.OBSIDIAN || state.getBlock() == SpiralSpiresModule.myalite_crystal))
+				return;
+		}
+		y = start;
 		
 		for(; y < height; y++) {
 			if(y < 0 && !world.getBlockState(pos.up(y)).isSolid())
@@ -107,8 +116,6 @@ public class SpiralSpireGenerator extends MultiChunkFeatureGenerator {
 			if(rand.nextFloat() < chance)
 				world.setBlockState(next, state, 2);
 		}
-		
-		return false;
 	}
 
 }
