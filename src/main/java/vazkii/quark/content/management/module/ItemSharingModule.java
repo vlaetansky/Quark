@@ -28,7 +28,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.util.InputMappings;
@@ -38,7 +37,6 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.ServerPlayNetHandler;
 import net.minecraft.server.management.PlayerList;
-//import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.IFormattableTextComponent;
@@ -195,42 +193,31 @@ public class ItemSharingModule extends QuarkModule {
 			if (chatGui.getChatOpen()) timeSinceCreation = 0;
 
 			if (timeSinceCreation < 200) {
-				double chatOpacity = mc.gameSettings.chatOpacity * 0.9f + 0.1f;
+				float chatOpacity = (float) mc.gameSettings.chatOpacity * 0.9f + 0.1f;
 				float fadeOut = MathHelper.clamp((1 - timeSinceCreation / 200f) * 10, 0, 1);
-				double alpha = fadeOut * fadeOut * chatOpacity;
+				float alpha = fadeOut * fadeOut * chatOpacity;
 
 				int x = chatX + 3 + mc.fontRenderer.getStringWidth(before);
 				int y = chatY - mc.fontRenderer.FONT_HEIGHT * lineHeight;
 
 				if (alpha > 0) {
-					RenderHelper.enableStandardItemLighting();
-					alphaValue = ((int) (alpha * 255) << 24);
+					alphaValue = alpha;
 
 					renderItemIntoGUI(mc, mc.getItemRenderer(), stack, x, y);
 
-					alphaValue = -1;
+					alphaValue = 1F;
 					RenderHelper.disableStandardItemLighting();
 				}
 			}
 		}
 	}
 
-	public static int transformColor(int src) {
-		if (alphaValue == -1)
-			return src;
-		return (src & RGB_MASK) | alphaValue;
-	}
+	// used in a mixin because rendering overrides are cursed by necessity hahayes
+	public static float alphaValue = 1F;
 
-	public static final int RGB_MASK = 0x00FFFFFF;
-	private static int alphaValue = -1;
-
+	// Not sure if this is a VanillaCopy? Seems to be doing some useful stuff, so I'm leaving it be for now
 	@OnlyIn(Dist.CLIENT)
 	private static void renderItemIntoGUI(Minecraft mc, ItemRenderer render, ItemStack stack, int x, int y) {
-		renderItemModelIntoGUI(mc, render, stack, x, y, render.getItemModelWithOverrides(stack, null, null));
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	private static void renderItemModelIntoGUI(Minecraft mc, ItemRenderer render, ItemStack stack, int x, int y, IBakedModel model) {
 		TextureManager textureManager = mc.getTextureManager();
 
 		RenderSystem.pushMatrix();
