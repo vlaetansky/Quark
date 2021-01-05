@@ -6,10 +6,14 @@ import java.util.function.BooleanSupplier;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MushroomBlock;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
@@ -36,7 +40,12 @@ public class GlowshroomBlock extends MushroomBlock implements IQuarkBlock {
 	private BooleanSupplier enabledSupplier = () -> true;
 
 	public GlowshroomBlock(QuarkModule module) {
-		super(Block.Properties.from(Blocks.RED_MUSHROOM)
+		super(AbstractBlock.Properties.create(Material.PLANTS, MaterialColor.CYAN)
+				.doesNotBlockMovement()
+				.tickRandomly()
+				.zeroHardnessAndResistance()
+				.sound(SoundType.PLANT)
+				.setNeedsPostProcessing((s, r, p) -> true)
 				.setLightLevel(b -> 14)
 				.tickRandomly());
 		
