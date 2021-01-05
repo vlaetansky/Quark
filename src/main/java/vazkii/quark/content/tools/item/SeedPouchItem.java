@@ -183,7 +183,14 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 		super.fillItemGroup(group, items);
 		
 		if(SeedPouchModule.showAllVariantsInCreative && isEnabled() && isInGroup(group)) {
-			List<Item> tagItems = SeedPouchModule.seedPouchHoldableTag.getAllElements();
+			List<Item> tagItems = null;
+			
+			try {
+				tagItems = SeedPouchModule.seedPouchHoldableTag.getAllElements();
+			} catch(IllegalStateException e) { // Tag not bound yet
+				return;
+			}
+			
 			for(Item i : tagItems) {
 				if(!ModuleLoader.INSTANCE.isItemEnabled(i))
 					continue;
