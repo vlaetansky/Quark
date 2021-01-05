@@ -24,6 +24,7 @@ import net.minecraft.client.gui.IngameGui;
 import net.minecraft.client.gui.NewChatGui;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;

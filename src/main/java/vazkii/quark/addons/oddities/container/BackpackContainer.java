@@ -61,42 +61,59 @@ public class BackpackContainer extends PlayerContainer {
 	@Nonnull
 	@Override
 	public ItemStack transferStackInSlot(@Nonnull PlayerEntity playerIn, int index) {
+		final int topSlots = 8;
+		final int invStart = topSlots + 1;
+		final int invEnd = invStart + 27;
+		final int hotbarStart = invEnd;
+		final int hotbarEnd = hotbarStart + 9;
+		final int shieldSlot = hotbarEnd;
+		final int backpackStart = shieldSlot + 1;
+		final int backpackEnd = backpackStart + 27;
+		
 		ItemStack baseStack = ItemStack.EMPTY;
 		Slot slot = this.inventorySlots.get(index);
-
+		
 		if (slot != null && slot.getHasStack()) {
 			ItemStack stack = slot.getStack();
 			baseStack = stack.copy();
 			EquipmentSlotType slotType = stack.getEquipmentSlot();
-			int equipIndex = 8 - (slotType == null ? 0 : slotType.getIndex());
+			int equipIndex = topSlots - (slotType == null ? 0 : slotType.getIndex());
 
-			if (index == 0) {
-				if (!this.mergeItemStack(stack, 9, 45, false) && !this.mergeItemStack(stack, 46, 73, false)) 
-					return ItemStack.EMPTY;
+			if (index < invStart || index == shieldSlot) { // crafting and armor slots
+				ItemStack target = null;
+				if(!this.mergeItemStack(stack, invStart, hotbarEnd, false) && !this.mergeItemStack(stack, backpackStart, backpackEnd, false)) 
+					target = ItemStack.EMPTY;
 
-				slot.onSlotChange(stack, baseStack);
-			} else if (index < 5) {
-				if (!this.mergeItemStack(stack, 9, 45, false)) 
-					return ItemStack.EMPTY;
-			} else if (index < 9) {
-				if (!this.mergeItemStack(stack, 9, 45, false) && !this.mergeItemStack(stack, 46, 73, false)) 
-					return ItemStack.EMPTY;
-			} else if (slotType != null && slotType.getSlotType() == Group.ARMOR && !this.inventorySlots.get(equipIndex).getHasStack()) {
-				if (!this.mergeItemStack(stack, equipIndex, equipIndex + 1, false)) 
-					return ItemStack.EMPTY;
-			} else if (slotType != null && slotType == EquipmentSlotType.OFFHAND && !this.inventorySlots.get(45).getHasStack()) {
-				if (!this.mergeItemStack(stack, 45, 46, false)) 
-					return ItemStack.EMPTY;
-			} else if (index < 36) {
-				if (!this.mergeItemStack(stack, 46, 73, false) && !this.mergeItemStack(stack, 36, 45, false)) 
-					return ItemStack.EMPTY;
-			} else if (index < 73) {
-				if (!this.mergeItemStack(stack, 9, 36, false)) 
-					return ItemStack.EMPTY;
-			} else {
-				if (!this.mergeItemStack(stack, 46, 73, false) && !this.mergeItemStack(stack, 9, 45, false)) 
+				if(target != null) {
+					if(index == 0) // crafting result
+						slot.onSlotChange(stack, baseStack);
+					
+					return target;
+				}
+			}
+			
+			if(slotType != null && slotType.getSlotType() == Group.ARMOR && !this.inventorySlots.get(equipIndex).getHasStack()) { // shift clicking armor
+				if(!this.mergeItemStack(stack, equipIndex, equipIndex + 1, false)) 
 					return ItemStack.EMPTY;
 			}
+			
+			if (slotType != null && slotType == EquipmentSlotType.OFFHAND && !this.inventorySlots.get(shieldSlot).getHasStack()) { // shift clicking shield
+				if(!this.mergeItemStack(stack, shieldSlot, shieldSlot + 1, false)) 
+					return ItemStack.EMPTY;
+			} 
+			
+			if (index < invEnd) {
+				if (!this.mergeItemStack(stack, hotbarStart, hotbarEnd, false) && !this.mergeItemStack(stack, backpackStart, backpackEnd, false)) 
+					return ItemStack.EMPTY;
+			} 
+			
+			if(index < hotbarEnd) {
+				if(!this.mergeItemStack(stack, invStart, invEnd, false) && !this.mergeItemStack(stack, backpackStart, backpackEnd, false)) 
+					return ItemStack.EMPTY;
+			}
+			
+			if(!this.mergeItemStack(stack, hotbarStart, hotbarEnd, false) && !this.mergeItemStack(stack, invStart, invEnd, false)) 
+				return ItemStack.EMPTY;
 
 			if (stack.isEmpty())
 				slot.putStack(ItemStack.EMPTY);
@@ -107,7 +124,7 @@ public class BackpackContainer extends PlayerContainer {
 
 			ItemStack remainder = slot.onTake(playerIn, stack);
 
-			if (index == 0) 
+			if(index == 0) 
 				playerIn.dropItem(remainder, false);
 		}
 
