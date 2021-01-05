@@ -395,6 +395,19 @@ public class PickarangEntity extends ProjectileEntity {
 		boolean returning = dataManager.get(RETURNING);
 		liveTime++;
 
+		LivingEntity owner = getThrower();
+		if(owner == null || !owner.isAlive() || !(owner instanceof PlayerEntity)) {
+			if(!world.isRemote) {
+				while(isEntityInsideOpaqueBlock())
+					setPosition(getPosX(), getPosY() + 1, getPosZ());
+					
+				entityDropItem(stack, 0);
+				remove();
+			}
+
+			return;
+		}
+		
 		if(!returning) {
 			if(liveTime > PickarangModule.timeout)
 				setReturning();
@@ -423,17 +436,6 @@ public class PickarangEntity extends ProjectileEntity {
 				xpOrb.startRiding(this);
 
 				xpOrb.delayBeforeCanPickup = 2;
-			}
-
-
-			LivingEntity owner = getThrower();
-			if(owner == null || !owner.isAlive() || !(owner instanceof PlayerEntity)) {
-				if(!world.isRemote) {
-					entityDropItem(stack, 0);
-					remove();
-				}
-
-				return;
 			}
 
 			Vector3d ownerPos = owner.getPositionVec().add(0, 1, 0);
