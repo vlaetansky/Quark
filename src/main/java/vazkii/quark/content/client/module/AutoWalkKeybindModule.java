@@ -1,6 +1,7 @@
 package vazkii.quark.content.client.module;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -67,7 +68,8 @@ public class AutoWalkKeybindModule extends QuarkModule {
 		Minecraft mc = Minecraft.getInstance();
 		if(mc.player != null && autorunning) {
 			event.getMovementInput().forwardKeyDown = true;
-			event.getMovementInput().moveForward = 1F;
+			// [VanillaCopy] magic numbers copied from net.minecraft.util.MovementInputFromOptions
+			event.getMovementInput().moveForward = ((ClientPlayerEntity) event.getPlayer()).isForcedDown() ? 0.3F : 1F;
 		}
 	}
 

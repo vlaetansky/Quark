@@ -40,7 +40,7 @@ public class GrateBlock extends QuarkBlock implements IWaterLoggable {
 
 	private static final VoxelShape TRUE_SHAPE = makeCuboidShape(0, 15, 0, 16, 16, 16);
 	private static final VoxelShape SPAWN_BLOCK_SHAPE = makeCuboidShape(0, 15, 0, 16, 32, 16);
-	private static final Float2ObjectArrayMap<Float2ObjectArrayMap<VoxelShape>> WALK_BLOCK_CACHE = new Float2ObjectArrayMap<>();
+	private static final Float2ObjectArrayMap<VoxelShape> WALK_BLOCK_CACHE = new Float2ObjectArrayMap<>();
 
 	public static BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
@@ -55,19 +55,8 @@ public class GrateBlock extends QuarkBlock implements IWaterLoggable {
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
 	}
 
-	private static VoxelShape createNewBox(double stepHeight, double height) {
-		VoxelShape shape = TRUE_SHAPE;
-
-		double steps = Math.max(1, (stepHeight + 0.0625) / height);
-		for (int i = 0; i < steps; i++) {
-			double plateHeight = 17 + i * 16 * height;
-			double extraComponent = stepHeight - i * height;
-			if (extraComponent < 1 / height)
-				plateHeight += extraComponent * 16;
-			shape = VoxelShapes.or(shape, makeCuboidShape(0, plateHeight - 1, 0, 16, plateHeight, 16));
-		}
-
-		return shape;
+	private static VoxelShape createNewBox(double stepHeight) {
+		return makeCuboidShape(0, 15, 0, 16, 17 + 16 * stepHeight, 16);
 	}
 
 	@Override
@@ -82,9 +71,8 @@ public class GrateBlock extends QuarkBlock implements IWaterLoggable {
 		return TRUE_SHAPE;
 	}
 	
-	private static VoxelShape getCachedShape(float stepHeight, float height) {
-		Float2ObjectArrayMap<VoxelShape> heightMap = WALK_BLOCK_CACHE.computeIfAbsent(stepHeight, (k) -> new Float2ObjectArrayMap<>());
-		return heightMap.computeIfAbsent(height, (k) -> createNewBox(stepHeight, height));
+	private static VoxelShape getCachedShape(float stepHeight) {
+		return WALK_BLOCK_CACHE.computeIfAbsent(stepHeight, GrateBlock::createNewBox);
 	}
 
 	@Nonnull
@@ -101,9 +89,9 @@ public class GrateBlock extends QuarkBlock implements IWaterLoggable {
 			boolean leashed = animal && ((AnimalEntity) entity).getLeashHolder() != null;
 			
 			if (animal && !leashed)
-				return getCachedShape(entity.stepHeight, entity.getHeight());
+				return getCachedShape(entity.stepHeight);
 
-			if(!(entity instanceof PlayerEntity) && !leashed)
+			if(entity instanceof MobEntity && !leashed)
 				return SPAWN_BLOCK_SHAPE;
 
 			return TRUE_SHAPE;
