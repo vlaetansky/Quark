@@ -1,4 +1,4 @@
-package vazkii.quark.content.tweaks.base;
+package vazkii.quark.base.util;
 
 import net.minecraft.util.math.vector.Vector3d;
 

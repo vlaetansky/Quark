@@ -27,7 +27,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import vazkii.quark.base.handler.OverrideRegistryHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.QuarkModule;
-import vazkii.quark.content.tweaks.base.MutableVectorHolder;
+import vazkii.quark.base.util.MutableVectorHolder;
 import vazkii.quark.content.tweaks.block.SpringySlimeBlock;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.ModuleLoader;

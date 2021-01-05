@@ -19,8 +19,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.vector.Vector3d;
+import vazkii.quark.base.util.MutableVectorHolder;
 import vazkii.quark.content.mobs.entity.StonelingEntity;
-import vazkii.quark.content.tweaks.base.MutableVectorHolder;
 
 public class ActWaryGoal extends WaterAvoidingRandomWalkingGoal {
 
