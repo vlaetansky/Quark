@@ -31,7 +31,7 @@ public class LeafCarpetModule extends QuarkModule {
 	}
 	
 	@Override
-	public void setup() {
+	public void loadComplete() {
 		for(LeafCarpetBlock c : carpets)
 			if(c.asItem() != null)
 				ComposterBlock.CHANCES.put(c.asItem(), 0.2F);

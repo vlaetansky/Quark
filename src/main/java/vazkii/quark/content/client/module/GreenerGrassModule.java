@@ -65,6 +65,7 @@ public class GreenerGrassModule extends QuarkModule {
 	private void registerGreenerColor(Iterable<String> ids, boolean leaves) {
 		BlockColors colors = Minecraft.getInstance().getBlockColors();
 
+
 		Map<IRegistryDelegate<Block>, IBlockColor> map = colors.colors;
 
 		for(String id : ids) {

@@ -1,6 +1,13 @@
 package vazkii.quark.content.automation.module;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import javax.annotation.Nonnull;
+
 import com.google.common.collect.Lists;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.SlabBlock;
@@ -15,19 +22,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-
-import javax.annotation.Nonnull;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 @LoadModule(category = ModuleCategory.AUTOMATION)
 public class DispensersPlaceBlocksModule extends QuarkModule {
@@ -41,14 +43,14 @@ public class DispensersPlaceBlocksModule extends QuarkModule {
 		
 		Map<Item, IDispenseItemBehavior> registry = DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY;
 
-		Registry.BLOCK.forEach(block -> {
-			if(!blacklist.contains(Objects.toString(Registry.BLOCK.getKey(block))))
-			{
-				Item item = block.asItem();
+		for(Block b : ForgeRegistries.BLOCKS) {
+			ResourceLocation res = b.getRegistryName();
+			if(!blacklist.contains(Objects.toString(res))) {
+				Item item = b.asItem();
 				if(item instanceof BlockItem && !registry.containsKey(item))
 					registry.put(item, new BlockBehaviour((BlockItem) item));
 			}
-		});
+		}
 	}
 
 	public static class BlockBehaviour extends OptionalDispenseBehavior {

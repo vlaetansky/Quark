@@ -113,9 +113,10 @@ public class CompressedBlocksModule extends QuarkModule {
 	}
 
 	@Override
-	public void setup() {
+	public void loadComplete() {
 		for (Block block : compostable)
-			ComposterBlock.CHANCES.put(block.asItem(), 1F);
+			if(block.asItem() != null)
+				ComposterBlock.CHANCES.put(block, 1F);
 			
 		FuelHandler.addFuel(stick_block, stickBlockFuelTime);
 		FuelHandler.addFuel(charcoal_block, charcoalBlockFuelTime);

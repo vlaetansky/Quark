@@ -56,6 +56,10 @@ public class CaveRootsModule extends QuarkModule {
 	@Override
 	public void setup() {
 		WorldGenHandler.addGenerator(this, new CaveRootGenerator(dimensions), Decoration.UNDERGROUND_DECORATION, WorldGenWeights.CAVE_ROOTS);
+	}
+	
+	@Override
+	public void loadComplete() {
 		ComposterBlock.CHANCES.put(rootItem, 0.1F);
 	}
 	

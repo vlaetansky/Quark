@@ -76,14 +76,13 @@ public class GlowshroomUndergroundBiomeModule extends UndergroundBiomeModule {
 	}
 
 	@Override
-	public void setup() {
+	public void loadComplete() {
 		ComposterBlock.CHANCES.put(glowshroom_stem.asItem(), 0.65F);
 		ComposterBlock.CHANCES.put(glowshroom.asItem(), 0.65F);
 		ComposterBlock.CHANCES.put(glowshroom_block.asItem(), 0.65F);
-
-		super.setup();
+		
+		super.loadComplete();
 	}
-
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)

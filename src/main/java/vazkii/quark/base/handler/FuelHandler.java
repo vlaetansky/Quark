@@ -11,6 +11,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.Quark;
 import vazkii.quark.content.building.block.VerticalSlabBlock;
 
@@ -20,7 +21,7 @@ public class FuelHandler {
 	private static Map<Item, Integer> fuelValues = new HashMap<>();
 
 	public static void addFuel(Item item, int fuel) {
-		if(fuel > 0)
+		if(fuel > 0 && item != null)
 			fuelValues.put(item, fuel);
 	}
 
@@ -35,11 +36,9 @@ public class FuelHandler {
 	}
 
 	public static void addAllWoods() {
-		Registry.BLOCK.forEach(block -> {
-			if (Registry.BLOCK.getKey(block).getNamespace().equals(Quark.MOD_ID) && block.material == Material.WOOD) {
+		for(Block block : ForgeRegistries.BLOCKS)
+			if(block != null && block.getRegistryName().getNamespace().equals(Quark.MOD_ID) && block.material == Material.WOOD)
 				addWood(block);
-			}
-		});
 	}
 
 	@SubscribeEvent
