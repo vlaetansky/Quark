@@ -31,7 +31,6 @@ public class PickarangRenderer extends EntityRenderer<PickarangEntity> {
 		float time = entity.ticksExisted + (mc.isGamePaused() ? 0 : partialTicks);
 		matrix.rotate(Vector3f.ZP.rotationDegrees(time * 20F));
 
-		RenderSystem.enableBlend();
 		mc.getItemRenderer().renderItem(entity.getStack(), TransformType.FIXED, light, OverlayTexture.NO_OVERLAY, matrix, buffer);
 		
 		matrix.pop();

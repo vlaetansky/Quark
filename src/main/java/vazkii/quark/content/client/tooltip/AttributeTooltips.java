@@ -344,11 +344,11 @@ public class AttributeTooltips {
 		ItemStack stack = event.getStack();	
 		MatrixStack matrix = event.getMatrixStack();
 		if(!Screen.hasShiftDown()) {
-			RenderSystem.pushMatrix();
-			RenderSystem.translatef(0, 0, 500);
+			matrix.push();
+			matrix.translate(0, 0, 500);
 			RenderSystem.color3f(1F, 1F, 1F);
 			Minecraft mc = Minecraft.getInstance();
-			RenderSystem.translatef(0F, 0F, mc.getItemRenderer().zLevel);
+			matrix.translate(0F, 0F, mc.getItemRenderer().zLevel);
 
 			int baseX = event.getX();
 			int y = TooltipUtils.shiftTextByLines(event.getLines(), event.getY() + 10);
@@ -433,7 +433,7 @@ public class AttributeTooltips {
 				}
 			}
 
-			RenderSystem.popMatrix();
+			matrix.pop();
 		}
 	}
 

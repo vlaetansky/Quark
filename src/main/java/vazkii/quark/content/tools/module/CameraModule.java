@@ -301,19 +301,19 @@ public class CameraModule extends QuarkModule {
 
 
 		if(!overlayText.isEmpty()) {
-			RenderSystem.pushMatrix();
-			RenderSystem.translatef(overlayX, overlayY, 0);
-			RenderSystem.scaled(overlayScale, overlayScale, 1.0);
+			matrix.push();
+			matrix.translate(overlayX, overlayY, 0);
+			matrix.scale((float) overlayScale, (float) overlayScale, 1.0F);
 			if(overlayShadow)
 				mc.fontRenderer.drawStringWithShadow(matrix, overlayText, 0, 0, overlayColor);
 			else mc.fontRenderer.drawString(matrix, overlayText, 0, 0, overlayColor);
-			RenderSystem.popMatrix();
+			matrix.pop();
 		}
 
 		if(!screenshotting) {
 			// =============================================== DRAW RULERS ===============================================
-			RenderSystem.pushMatrix();
-			RenderSystem.translatef(paddingHoriz, paddingVert, 0);
+			matrix.push();
+			matrix.translate(paddingHoriz, paddingVert, 0);
 			switch(currRulers) {
 			case 1: // Rule of Thirds
 				vruler(matrix, width / 3, height);
@@ -334,7 +334,7 @@ public class CameraModule extends QuarkModule {
 				hruler(matrix, height / 2, width);
 				break;
 			}
-			RenderSystem.popMatrix();
+			matrix.pop();
 
 			int left = 30;
 			int top = theight - 65;

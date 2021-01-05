@@ -71,7 +71,6 @@ public class FoodTooltips {
 		if(event.getStack().isFood()) {
 			Food food = event.getStack().getItem().getFood();
 			if (food != null) {
-				RenderSystem.pushMatrix();
 				RenderSystem.color3f(1F, 1F, 1F);
 				Minecraft mc = Minecraft.getInstance();
 				MatrixStack matrix = event.getMatrixStack();
@@ -107,8 +106,6 @@ public class FoodTooltips {
 
 					AbstractGui.blit(matrix, x, y, u, v, 9, 9, 256, 256);
 				}
-
-				RenderSystem.popMatrix();
 			}
 		}
 	}

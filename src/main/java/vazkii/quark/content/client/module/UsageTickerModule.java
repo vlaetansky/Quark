@@ -165,13 +165,8 @@ public class UsageTickerModule extends QuarkModule {
 					
 				ItemStack stack = getRenderedStack(player);
 				
-				RenderSystem.pushMatrix();
-				RenderSystem.translatef(x, y, 0);
-				RenderHelper.enableStandardItemLighting();
-				mc.getItemRenderer().renderItemAndEffectIntoGUI(stack, 0, 0);
-				mc.getItemRenderer().renderItemOverlays(Minecraft.getInstance().fontRenderer, stack, 0, 0);
-				RenderHelper.disableStandardItemLighting();
-				RenderSystem.popMatrix();
+				mc.getItemRenderer().renderItemAndEffectIntoGUI(stack, (int) x, (int) y);
+				mc.getItemRenderer().renderItemOverlays(Minecraft.getInstance().fontRenderer, stack, (int) x, (int) y);
 			}
 		}
 		

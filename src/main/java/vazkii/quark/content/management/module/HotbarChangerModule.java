@@ -90,10 +90,10 @@ public class HotbarChangerModule extends QuarkModule {
 		float shift = -getRealHeight(event.getPartialTicks()) + 22;
 		if(shift < 0)
 			if(event.getType() == ElementType.HEALTH) {
-				RenderSystem.translatef(0, shift, 0);
+				event.getMatrixStack().translate(0, shift, 0);
 				shifting = true;
 			} else if(shifting && (event.getType() == ElementType.DEBUG || event.getType() == ElementType.POTION_ICONS)) {
-				RenderSystem.translatef(0, -shift, 0);
+				event.getMatrixStack().translate(0, -shift, 0);
 				shifting = false;
 			}
 	}
@@ -116,36 +116,29 @@ public class HotbarChangerModule extends QuarkModule {
 
 			ItemRenderer render = mc.getItemRenderer();
 
-			RenderSystem.pushMatrix();
 			RenderSystem.enableBlend();
 			RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 			mc.textureManager.bindTexture(WIDGETS);
 			for(int i = 0; i < 3; i++) {
-				RenderSystem.pushMatrix();
+				matrix.push();
 				RenderSystem.color4f(1F, 1F, 1F, 0.75F);
-				RenderSystem.translatef(xStart, yStart + i * 21, 0);
+				matrix.translate(xStart, yStart + i * 21, 0);
 				mc.ingameGUI.blit(matrix, 0, 0, 0, 0, 182, 22);
-				RenderSystem.popMatrix();
+				matrix.pop();
 			}
 
 			for(int i = 0; i < 3; i++)
 				mc.fontRenderer.drawStringWithShadow(matrix, TextFormatting.BOLD + Integer.toString(i + 1), xStart - 9, yStart + i * 21 + 7, 0xFFFFFF);
 
-			RenderHelper.enableStandardItemLighting();
-
-			RenderSystem.translatef(xStart, yStart, 0);
 			for(int i = 0; i < 27; i++) {
 				ItemStack invStack = player.inventory.getStackInSlot(i + 9);
-				int x = (i % 9) * 20 + 3;
-				int y = (i / 9) * 21 + 3;
+				int x = (int) (xStart + (i % 9) * 20 + 3);
+				int y = (int) (yStart + (i / 9) * 21 + 3);
 
 				render.renderItemAndEffectIntoGUI(invStack, x, y);
 				render.renderItemOverlays(mc.fontRenderer, invStack, x, y);
 			}
-			RenderHelper.disableStandardItemLighting();
-
-			RenderSystem.popMatrix();
 		}
 	}
 
