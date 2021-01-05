@@ -29,7 +29,6 @@ public class ToretoiseModule extends QuarkModule {
 
 	public static EntityType<ToretoiseEntity> toretoiseType;
 	
-	@Config public static boolean disableIronFarms = false;
 	@Config public static int maxYLevel = 32;
 	
 	@Config
@@ -64,12 +63,6 @@ public class ToretoiseModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
 		RenderingRegistry.registerEntityRenderingHandler(toretoiseType, ToretoiseRenderer::new);
-	}
-	
-	@SubscribeEvent
-	public void onLoot(LivingDropsEvent event) {
-		if(disableIronFarms && event.getEntity().getType() == EntityType.IRON_GOLEM)
-			event.getDrops().removeIf(e -> e.getItem().getItem() == Items.IRON_INGOT);
 	}
 	
 }

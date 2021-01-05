@@ -141,8 +141,7 @@ public class PathfinderMapsModule extends QuarkModule {
 		if(!(world instanceof ServerWorld))
 			return ItemStack.EMPTY;
 
-		Biome biome = ForgeRegistries.BIOMES.getValue(info.biome);
-		BlockPos biomePos = MiscUtil.locateBiome((ServerWorld) world, biome, pos);
+		BlockPos biomePos = MiscUtil.locateBiome((ServerWorld) world, info.biome, pos);
 		
 		if(biomePos == null)
 			return ItemStack.EMPTY;
@@ -171,7 +170,7 @@ public class PathfinderMapsModule extends QuarkModule {
 			
 			int i = random.nextInt(info.maxPrice - info.minPrice + 1) + info.minPrice;
 
-			ItemStack itemstack = createMap(entity.world, entity.getPosition(), info); // getPosition 
+			ItemStack itemstack = createMap(entity.world, entity.getPosition(), info);
 			if(itemstack.isEmpty())
 				return null;
 			

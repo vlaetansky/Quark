@@ -26,6 +26,7 @@ import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.config.Config;
 
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
@@ -35,6 +36,9 @@ public class HoeHarvestingModule extends QuarkModule {
 	public static boolean hoesCanHaveFortune = true;
 	
 	public static int getRange(ItemStack hoe) {
+		if(!ModuleLoader.INSTANCE.isModuleEnabled(HoeHarvestingModule.class))
+			return 1;
+		
 		if(hoe.isEmpty() || !(hoe.getItem() instanceof HoeItem))
 			return 1;
 		else if (hoe.getItem() == Items.DIAMOND_HOE || hoe.getItem() == Items.NETHERITE_HOE)

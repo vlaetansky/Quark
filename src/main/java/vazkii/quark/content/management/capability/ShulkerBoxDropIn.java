@@ -6,6 +6,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -34,6 +35,9 @@ public class ShulkerBoxDropIn extends AbstractDropIn {
 			return false;
 
 		CompoundNBT cmp = ItemNBTHelper.getCompound(shulkerBox, "BlockEntityTag", false);
+		if(cmp.contains("LootTable"))
+			return false;
+		
 		if (cmp != null) {
 			TileEntity te = null;
 			cmp = cmp.copy();	

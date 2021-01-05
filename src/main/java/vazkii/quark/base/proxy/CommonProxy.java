@@ -1,9 +1,8 @@
-package vazkii.quark.base;
+package vazkii.quark.base.proxy;
 
 import java.time.LocalDateTime;
 import java.time.Month;
 
-import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.config.ModConfig.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -11,6 +10,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.arl.util.ClientTicker;
+import vazkii.quark.base.Quark;
 import vazkii.quark.base.capability.CapabilityHandler;
 import vazkii.quark.base.handler.BrewingHandler;
 import vazkii.quark.base.handler.ContributorRewardHandler;

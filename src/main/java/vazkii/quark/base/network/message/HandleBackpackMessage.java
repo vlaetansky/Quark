@@ -27,8 +27,12 @@ public class HandleBackpackMessage implements IMessage {
 		context.enqueueWork(() -> {
 			if(open) {
 				ItemStack stack = player.getItemStackFromSlot(EquipmentSlotType.CHEST);
-				if(stack.getItem() instanceof INamedContainerProvider)
+				if(stack.getItem() instanceof INamedContainerProvider) {
+					ItemStack holding = player.inventory.getItemStack();
+					player.inventory.setItemStack(ItemStack.EMPTY);
 					NetworkHooks.openGui(player, (INamedContainerProvider) stack.getItem(), player.getPosition());
+					player.inventory.setItemStack(holding);
+				}
 			} else {
 				BackpackContainer.saveCraftingInventory(player);
 				player.openContainer = player.container;

@@ -5,9 +5,11 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -26,7 +28,10 @@ import net.minecraftforge.common.Tags;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.api.ITrowelable;
 import vazkii.quark.api.IUsageTickerOverride;
+import vazkii.quark.base.block.IQuarkBlock;
+import vazkii.quark.base.item.IQuarkItem;
 import vazkii.quark.base.item.QuarkItem;
+import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.tools.module.SeedPouchModule;
 
@@ -139,9 +144,13 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 			else {
 				ActionResultType bestRes = ActionResultType.FAIL;
 				
-				for(int i = 0; i < 9; i++) {
-					int x = -1 + i % 3;
-					int z = -1 + i / 3;
+				int range = SeedPouchModule.shiftRange;
+				int blocks = range * range;
+				int shift = -((int) Math.floor(range / 2));
+						
+				for(int i = 0; i < blocks; i++) {
+					int x = shift + i % range;
+					int z = shift + i / range;
 					
 					ActionResultType res = placeSeed(context, target, context.getPos().add(x, 0, z), total);
 					contents = getContents(stack);
@@ -176,6 +185,9 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 		if(SeedPouchModule.showAllVariantsInCreative && isEnabled() && isInGroup(group)) {
 			List<Item> tagItems = SeedPouchModule.seedPouchHoldableTag.getAllElements();
 			for(Item i : tagItems) {
+				if(!ModuleLoader.INSTANCE.isItemEnabled(i))
+					continue;
+				
 				ItemStack stack = new ItemStack(this);
 				setItemStack(stack, new ItemStack(i));
 				setCount(stack, SeedPouchModule.maxItems);

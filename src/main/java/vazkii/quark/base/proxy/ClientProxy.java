@@ -1,4 +1,4 @@
-package vazkii.quark.base.client;
+package vazkii.quark.base.proxy;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,7 +18,6 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import vazkii.quark.base.CommonProxy;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.config.IngameConfigHandler;
 import vazkii.quark.base.client.config.external.ExternalConfigHandler;

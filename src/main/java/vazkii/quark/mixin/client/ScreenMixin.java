@@ -11,7 +11,7 @@ import vazkii.quark.content.management.module.EasyTransferingModule;
 @Mixin(Screen.class)
 public class ScreenMixin {
 
-	@Inject(method = "hasShiftDown", at = @At("RETURN"), cancellable = true, remap = false)
+	@Inject(method = "hasShiftDown", at = @At("RETURN"), cancellable = true)
 	private static void hasShiftDown(CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
 		callbackInfoReturnable.setReturnValue(EasyTransferingModule.hasShiftDown(callbackInfoReturnable.getReturnValue()));
 	}
