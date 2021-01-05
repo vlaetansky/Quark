@@ -87,15 +87,22 @@ public class DispensersPlaceBlocksModule extends QuarkModule {
 	private static class NotStupidDirectionalPlaceContext extends DirectionalPlaceContext {
 
 		protected boolean replaceClicked = true;
+		protected Direction direction;
 
 		public NotStupidDirectionalPlaceContext(World worldIn, BlockPos p_i50051_2_, Direction p_i50051_3_, ItemStack p_i50051_4_, Direction against) {
 			super(worldIn, p_i50051_2_, p_i50051_3_, p_i50051_4_, against);
 			replaceClicked = worldIn.getBlockState(func_242401_i().getPos()).isReplaceable(this); // func_242401_i = getRayTraceResult
+			direction = p_i50051_3_;
 		}
 		
 		@Override
 		public boolean canPlace() {
 			return replaceClicked;
+		}
+		
+		@Override
+		public Direction getNearestLookingDirection() {
+			return direction.getOpposite();
 		}
 
 	}
