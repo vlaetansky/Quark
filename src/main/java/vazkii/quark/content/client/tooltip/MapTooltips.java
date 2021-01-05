@@ -1,5 +1,6 @@
 package vazkii.quark.content.client.tooltip;
 
+import net.minecraft.util.math.vector.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -44,9 +45,8 @@ public class MapTooltips {
 			if(mapdata == null)
 				return;
 
-			RenderSystem.pushMatrix();
+			MatrixStack ms = event.getMatrixStack();
 			RenderSystem.color3f(1F, 1F, 1F);
-			RenderHelper.disableStandardItemLighting();
 			mc.getTextureManager().bindTexture(RES_MAP_BACKGROUND);
 			Tessellator tessellator = Tessellator.getInstance();
 			BufferBuilder buffer = tessellator.getBuffer();
@@ -55,24 +55,21 @@ public class MapTooltips {
 			float size = 135;
 			float scale = 0.5F;
 
-			RenderSystem.translatef(event.getX(), event.getY() - size * scale - 5, 500);
-			RenderSystem.scalef(scale, scale, 1F);
+			ms.translate(event.getX(), event.getY() - size * scale - 5, 500);
+			ms.scale(scale, scale, 1F);
 			RenderSystem.enableBlend();
 
+			Matrix4f mat = ms.getLast().getMatrix();
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			buffer.pos(-pad, size, 0.0D).tex(0.0F, 1.0f).endVertex();
-			buffer.pos(size, size, 0.0D).tex(1.0F, 1.0f).endVertex();
-			buffer.pos(size, -pad, 0.0D).tex(1.0F, 0.0F).endVertex();
-			buffer.pos(-pad, -pad, 0.0D).tex(0.0F, 0.0F).endVertex();
+			buffer.pos(mat, -pad, size, 0.0F).tex(0.0F, 1.0f).endVertex();
+			buffer.pos(mat, size, size, 0.0F).tex(1.0F, 1.0f).endVertex();
+			buffer.pos(mat, size, -pad, 0.0F).tex(1.0F, 0.0F).endVertex();
+			buffer.pos(mat, -pad, -pad, 0.0F).tex(0.0F, 0.0F).endVertex();
 			tessellator.draw();
 
 			IRenderTypeBuffer.Impl immediateBuffer = IRenderTypeBuffer.getImpl(buffer);
-			MatrixStack matrix = new MatrixStack();
-			mc.gameRenderer.getMapItemRenderer().renderMap(matrix, immediateBuffer, mapdata, true, 240);
+			mc.gameRenderer.getMapItemRenderer().renderMap(ms, immediateBuffer, mapdata, true, 240);
 			immediateBuffer.finish();
-
-			RenderSystem.disableBlend();
-			RenderSystem.popMatrix();
 		}
 	}
 

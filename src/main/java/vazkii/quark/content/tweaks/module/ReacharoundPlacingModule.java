@@ -89,17 +89,17 @@ public class ReacharoundPlacingModule extends QuarkModule {
 			MatrixStack matrix = event.getMatrixStack();
 			String text = (currentTarget.getRight().getAxis() == Axis.Y ? display : displayHorizontal);
 
-			RenderSystem.pushMatrix();
-			RenderSystem.translatef(res.getScaledWidth() / 2F, res.getScaledHeight() / 2f - 4, 0);
+			matrix.push();
+			matrix.translate(res.getScaledWidth() / 2F, res.getScaledHeight() / 2f - 4, 0);
 
 			float scale = (float) Math.min(5, ticksDisplayed + event.getPartialTicks()) / 5F;
 			scale *= scale;
 			int opacity = ((int) (255 * scale)) << 24;
 
-			RenderSystem.scaled(scale, 1F, 1F);
-			RenderSystem.translatef(-mc.fontRenderer.getStringWidth(text) / 2f, 0, 0);
+			matrix.scale(scale, 1F, 1F);
+			matrix.translate(-mc.fontRenderer.getStringWidth(text) / 2f, 0, 0);
 			mc.fontRenderer.drawString(matrix, text, 0, 0, 0xFFFFFF | opacity);
-			RenderSystem.popMatrix();
+			matrix.pop();
 		}
 	}
 

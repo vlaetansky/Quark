@@ -22,14 +22,14 @@ public class AdjustableChatModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void pre(RenderGameOverlayEvent.Pre event) {
 		if(event.getType() == ElementType.CHAT)
-			RenderSystem.translated(horizontalShift, verticalShift, 0);
+			event.getMatrixStack().translate(horizontalShift, verticalShift, 0);
 	}
 	
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public void post(RenderGameOverlayEvent.Post event) {
 		if(event.getType() == ElementType.CHAT)
-			RenderSystem.translated(-horizontalShift, -verticalShift, 0);
+			event.getMatrixStack().translate(-horizontalShift, -verticalShift, 0);
 	}
 	
 }

@@ -139,9 +139,6 @@ public class MatrixEnchantingScreen extends ContainerScreen<MatrixEnchantingCont
 		renderBackground(stack);
 		super.render(stack, mouseX, mouseY, partialTicks);
 
-		if(enchanter.matrix != null)
-			RenderHelper.disableStandardItemLighting();
-
 		if(hoveredPiece != null) {
 			List<ITextComponent> tooltip = new LinkedList<>();
 			tooltip.add(new TranslationTextComponent(hoveredPiece.enchant.getDisplayName(hoveredPiece.level).getString().replaceAll("\\u00A7.", "")).mergeStyle(TextFormatting.GOLD));

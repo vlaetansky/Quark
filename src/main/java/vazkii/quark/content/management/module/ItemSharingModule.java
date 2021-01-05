@@ -13,9 +13,6 @@ package vazkii.quark.content.management.module;
 import java.util.List;
 import java.util.Optional;
 
-import org.lwjgl.opengl.GL11;
-
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.block.Blocks;
@@ -27,11 +24,6 @@ import net.minecraft.client.gui.IngameGui;
 import net.minecraft.client.gui.NewChatGui;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -211,10 +203,13 @@ public class ItemSharingModule extends QuarkModule {
 				if (alpha > 0) {
 					alphaValue = alpha;
 
-					renderItemIntoGUI(mc, mc.getItemRenderer(), stack, x, y);
+					RenderSystem.pushMatrix();
+					RenderSystem.translatef(x - 2, y - 2, -2);
+					RenderSystem.scalef(0.65f, 0.65f, 0.65f);
+					mc.getItemRenderer().renderItemIntoGUI(stack, 0, 0);
+					RenderSystem.popMatrix();
 
 					alphaValue = 1F;
-					RenderHelper.disableStandardItemLighting();
 				}
 			}
 		}
@@ -222,30 +217,4 @@ public class ItemSharingModule extends QuarkModule {
 
 	// used in a mixin because rendering overrides are cursed by necessity hahayes
 	public static float alphaValue = 1F;
-
-	// Not sure if this is a VanillaCopy? Seems to be doing some useful stuff, so I'm leaving it be for now
-	@OnlyIn(Dist.CLIENT)
-	private static void renderItemIntoGUI(Minecraft mc, ItemRenderer render, ItemStack stack, int x, int y) {
-		TextureManager textureManager = mc.getTextureManager();
-
-		RenderSystem.pushMatrix();
-		textureManager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-		textureManager.getTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE).setBlurMipmapDirect(false, false);
-		RenderSystem.enableRescaleNormal();
-		RenderSystem.enableAlphaTest();
-		RenderSystem.alphaFunc(GL11.GL_GREATER, 0.1F);
-		RenderSystem.enableBlend();
-		RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.translatef(x - 2, y - 2, -2);
-		RenderSystem.scalef(0.65f, 0.65f, 0.65f);
-		render.renderItemIntoGUI(stack, 0, 0);
-		RenderSystem.disableAlphaTest();
-		RenderSystem.disableRescaleNormal();
-		RenderSystem.disableLighting();
-		RenderSystem.popMatrix();
-		textureManager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-		textureManager.getTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
-	}
-
 }

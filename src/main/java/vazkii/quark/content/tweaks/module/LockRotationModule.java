@@ -202,7 +202,6 @@ public class LockRotationModule extends QuarkModule {
 			Minecraft mc = Minecraft.getInstance();
 			MatrixStack matrix = event.getMatrixStack();
 			
-			RenderSystem.pushMatrix();
 			RenderSystem.enableBlend();
 			RenderSystem.enableAlphaTest();
 			RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -217,8 +216,6 @@ public class LockRotationModule extends QuarkModule {
 
 			if(clientProfile.half > -1)
 				Screen.blit(matrix, x + 16, y, clientProfile.half * 16, 81, 16, 16, 256, 256);
-
-			RenderSystem.popMatrix();
 		}
 	}
 

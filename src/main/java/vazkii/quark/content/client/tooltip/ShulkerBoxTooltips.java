@@ -118,13 +118,7 @@ public class ShulkerBoxTooltips {
 							currentX -= (right - window.getScaledWidth());
 
 						RenderSystem.pushMatrix();
-						RenderHelper.enableStandardItemLighting();
-						RenderSystem.enableRescaleNormal();
-						RenderSystem.color3f(1F, 1F, 1F);
 						RenderSystem.translatef(0, 0, 700);
-						mc.getTextureManager().bindTexture(WIDGET_RESOURCE);
-
-						RenderHelper.disableStandardItemLighting();
 
 						int color = -1;
 
@@ -142,8 +136,6 @@ public class ShulkerBoxTooltips {
 
 						ItemRenderer render = mc.getItemRenderer();
 
-						RenderHelper.enableStandardItemLighting();
-						RenderSystem.enableDepthTest();
 						for (int i = 0; i < size; i++) {
 							ItemStack itemstack = capability.getStackInSlot(i);
 							int xp = currentX + 6 + (i % 9) * 18;
@@ -160,8 +152,6 @@ public class ShulkerBoxTooltips {
 							}
 						}
 
-						RenderSystem.disableDepthTest();
-						RenderSystem.disableRescaleNormal();
 						RenderSystem.popMatrix();
 					});
 
@@ -190,8 +180,6 @@ public class ShulkerBoxTooltips {
 		RenderSystem.color3f(((color & 0xFF0000) >> 16) / 255f,
 				((color & 0x00FF00) >> 8) / 255f,
 				(color & 0x0000FF) / 255f);
-
-		RenderHelper.disableStandardItemLighting();
 
 		AbstractGui.blit(matrix, x, y,
 				0, 0,
