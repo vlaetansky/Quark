@@ -3,6 +3,8 @@ package vazkii.quark.content.management.module;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.screen.inventory.CreativeScreen;
+import net.minecraft.client.gui.screen.inventory.CreativeScreen.CreativeContainer;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
@@ -32,7 +34,7 @@ public class RightClickArmorModule extends QuarkModule {
 	public void onRightClick(GuiScreenEvent.MouseClickedEvent.Pre event) {
 		Minecraft mc = Minecraft.getInstance();
 		Screen gui = mc.currentScreen;
-		if(gui instanceof ContainerScreen && event.getButton() == 1 && !Screen.hasShiftDown()) {
+		if(gui instanceof ContainerScreen && !(gui instanceof CreativeScreen) && event.getButton() == 1 && !Screen.hasShiftDown()) {
 			ContainerScreen<?> container = (ContainerScreen<?>) gui;
 			Slot under = container.getSlotUnderMouse();
 			if(under != null) {
@@ -84,6 +86,5 @@ public class RightClickArmorModule extends QuarkModule {
 			event.setCanceled(true);
 		}
 	}
-
 	
 }

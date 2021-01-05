@@ -10,6 +10,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.screen.inventory.CreativeScreen;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Slot;
@@ -84,7 +85,7 @@ public class SeedPouchModule extends QuarkModule {
 	public void onRightClick(GuiScreenEvent.MouseClickedEvent.Pre event) {
 		Minecraft mc = Minecraft.getInstance();
 		Screen gui = mc.currentScreen;
-		if(gui instanceof ContainerScreen && event.getButton() == 1) {
+		if(gui instanceof ContainerScreen && !(gui instanceof CreativeScreen) && event.getButton() == 1) {
 			ContainerScreen<?> container = (ContainerScreen<?>) gui;
 			Slot under = container.getSlotUnderMouse();
 			if(under != null) {
