@@ -8,8 +8,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.BoatEntity;
+import net.minecraft.item.ItemStack;
 import vazkii.quark.content.automation.module.ChainLinkageModule;
+import vazkii.quark.content.experimental.module.GameNerfsModule;
 import vazkii.quark.content.management.entity.ChestPassengerEntity;
+import vazkii.quark.content.tools.item.PickarangItem;
 
 @Mixin(BoatEntity.class)
 public class BoatEntityMixin {
@@ -27,6 +30,11 @@ public class BoatEntityMixin {
 	@Inject(method = "updateFallState", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/item/BoatEntity;remove()V"))
 	private void updateFallState$dropChain(CallbackInfo callbackInfo) {
 		ChainLinkageModule.drop((BoatEntity) (Object) this);
+	}
+	
+	@Inject(method = "getBoatGlide", at = @At("RETURN"), cancellable = true)
+	private void getBoatGlide(CallbackInfoReturnable<Float> callbackInfoReturnable) {
+		callbackInfoReturnable.setReturnValue(GameNerfsModule.getBoatGlide(callbackInfoReturnable.getReturnValueF()));
 	}
 	
 	private static Entity ensurePassengerIsNotChest(Entity passenger) {

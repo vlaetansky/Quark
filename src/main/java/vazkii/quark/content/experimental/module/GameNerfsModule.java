@@ -51,6 +51,22 @@ public class GameNerfsModule extends QuarkModule {
 	@Config(description = "Makes Iron Golems not drop Iron Ingots") 
 	public static boolean disableIronFarms = true;
 	
+	@Config(description = "Makes Boats not glide on ice") 
+	public static boolean disableIceRoads = true;
+	
+	private static boolean staticEnabled;
+	
+	@Override
+	public void configChanged() {
+		staticEnabled = enabled;
+	}
+	
+	// Source for this magic number is the ice-boat-nerf mod 
+	// https://gitlab.com/supersaiyansubtlety/ice_boat_nerf/-/blob/master/src/main/java/net/sssubtlety/ice_boat_nerf/mixin/BoatEntityMixin.java
+	public static float getBoatGlide(float glide) {
+		return (staticEnabled && disableIceRoads) ? 0.45F : glide;
+	}
+	
 	// stolen from King Lemming thanks mate
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void killMending(PlayerXpEvent.PickupXp event) {
