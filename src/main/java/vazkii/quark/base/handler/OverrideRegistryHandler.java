@@ -66,7 +66,7 @@ public final class OverrideRegistryHandler {
 		for (Field declared : registryType.getDeclaredFields()) {
 			if (Modifier.isStatic(declared.getModifiers()) && obj.getClass().isAssignableFrom(declared.getType())) {
 				try {
-					IForgeRegistryEntry fieldVal = (IForgeRegistryEntry) declared.get(null);
+					IForgeRegistryEntry<?> fieldVal = (IForgeRegistryEntry) declared.get(null);
 					if (regName.equals(fieldVal.getRegistryName())) {
 						if (obj instanceof Block && fieldVal instanceof Block) {
 							Map<Block, Item> itemMap = GameData.getBlockItemMap();

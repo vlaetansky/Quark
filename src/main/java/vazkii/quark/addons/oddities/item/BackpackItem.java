@@ -198,13 +198,13 @@ public class BackpackItem extends DyeableArmorItem implements IQuarkItem, IItemC
 	}
 
 	@Override
-	@SuppressWarnings( { "rawtypes", "unchecked" } )
 	@OnlyIn(Dist.CLIENT)
-	public BipedModel getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, BipedModel _default) {
+	@SuppressWarnings("unchecked")
+	public <A extends BipedModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, A _default) {
 		if(model == null)
 			model = new BackpackModel();
 
-		return model;
+		return (A) model;
 	}
 
 	@Override

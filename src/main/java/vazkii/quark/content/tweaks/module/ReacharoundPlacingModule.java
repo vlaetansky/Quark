@@ -92,7 +92,7 @@ public class ReacharoundPlacingModule extends QuarkModule {
 			matrix.push();
 			matrix.translate(res.getScaledWidth() / 2F, res.getScaledHeight() / 2f - 4, 0);
 
-			float scale = (float) Math.min(5, ticksDisplayed + event.getPartialTicks()) / 5F;
+			float scale = Math.min(5, ticksDisplayed + event.getPartialTicks()) / 5F;
 			scale *= scale;
 			int opacity = ((int) (255 * scale)) << 24;
 

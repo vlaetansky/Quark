@@ -2,6 +2,7 @@ package vazkii.quark.base.handler;
 
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -21,7 +22,7 @@ public class SimilarBlockTypeHandler {
                 Blocks.YELLOW_SHULKER_BOX, Blocks.LIME_SHULKER_BOX, Blocks.PINK_SHULKER_BOX, Blocks.GRAY_SHULKER_BOX,
                 Blocks.LIGHT_GRAY_SHULKER_BOX, Blocks.CYAN_SHULKER_BOX, Blocks.PURPLE_SHULKER_BOX, Blocks.BLUE_SHULKER_BOX,
                 Blocks.BROWN_SHULKER_BOX, Blocks.GREEN_SHULKER_BOX, Blocks.RED_SHULKER_BOX, Blocks.BLACK_SHULKER_BOX)
-                .stream().map(IForgeRegistryEntry::getRegistryName).map(Objects::toString).collect(Collectors.toList());
+                .stream().map(IForgeRegistryEntry<Block>::getRegistryName).map(Objects::toString).collect(Collectors.toList());
     }
 
     public static boolean isShulkerBox(ItemStack stack) {

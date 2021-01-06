@@ -401,6 +401,7 @@ public final class SortingHandler {
 		private final Comparator<ItemStack> comparator;
 
 		@SafeVarargs
+		@SuppressWarnings("varargs")
 		ItemType(List<Item> list, Comparator<ItemStack>... comparators) {
 			this(itemPredicate(list), jointComparator(listOrderComparator(list), comparators));
 		}

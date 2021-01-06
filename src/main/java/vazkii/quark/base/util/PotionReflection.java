@@ -30,9 +30,9 @@ public class PotionReflection {
     
     static {
         try {
-            Class mixPredicate = Class.forName("net.minecraft.potion.PotionBrewing$MixPredicate");
+            Class<?> mixPredicate = Class.forName("net.minecraft.potion.PotionBrewing$MixPredicate");
             MethodType ctorType = MethodType.methodType(Void.TYPE, ForgeRegistryEntry.class, Ingredient.class, ForgeRegistryEntry.class);
-            Constructor ctor = mixPredicate.getConstructor(ctorType.parameterArray());
+            Constructor<?> ctor = mixPredicate.getConstructor(ctorType.parameterArray());
             ctor.setAccessible(true);
             CREATE_MIX_PREDICATE = MethodHandles.lookup().unreflectConstructor(ctor)
                     .asType(ctorType.changeReturnType(Object.class));
@@ -49,7 +49,7 @@ public class PotionReflection {
     public static void addBrewingRecipe(Potion input, Ingredient reagent, Potion output) {
         try {
             Object mixPredicate = CREATE_MIX_PREDICATE.invokeExact((ForgeRegistryEntry) input, reagent, (ForgeRegistryEntry) output);
-            List typeConversions = (List) GET_POTION_TYPE_CONVERSIONS.invokeExact();
+            List<Object> typeConversions = (List) GET_POTION_TYPE_CONVERSIONS.invokeExact();
             typeConversions.add(mixPredicate);
         } catch (Throwable throwable) {
             throw new RuntimeException(throwable);

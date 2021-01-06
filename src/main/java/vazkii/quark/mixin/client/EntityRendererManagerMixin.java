@@ -21,7 +21,8 @@ public class EntityRendererManagerMixin {
 	public native <T extends Entity> EntityRenderer<? super T> getRenderer(T entityIn);
 
 	@Inject(method = "renderEntityStatic", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/EntityRenderer;render(Lnet/minecraft/entity/Entity;FFLcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer;I)V", shift = At.Shift.AFTER))
+	@SuppressWarnings("unchecked")
 	private <E extends Entity> void renderChain(E entityIn, double xIn, double yIn, double zIn, float rotationYawIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, CallbackInfo ci) {
-		ChainRenderer.renderChain(getRenderer(entityIn), entityIn, matrixStackIn, bufferIn, partialTicks);
+		ChainRenderer.renderChain((EntityRenderer<Entity>) getRenderer(entityIn), entityIn, matrixStackIn, bufferIn, partialTicks);
 	}
 }

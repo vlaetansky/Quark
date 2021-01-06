@@ -205,9 +205,9 @@ public class RedstoneRandomizerBlock extends QuarkBlock {
     @Override
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         if (stateIn.get(POWERED) != RandomizerPowerState.OFF) {
-            double x = (double)((double)pos.getX() + 0.5D) + (double)(rand.nextFloat() - 0.5D) * 0.2D;
-            double y = (double)((double)pos.getY() + 0.4D) + (double)(rand.nextFloat() - 0.5D) * 0.2D;
-            double z = (double)((double)pos.getZ() + 0.5D) + (double)(rand.nextFloat() - 0.5D) * 0.2D;
+            double x = (pos.getX() + 0.5D) + (rand.nextFloat() - 0.5D) * 0.2D;
+            double y = (pos.getY() + 0.4D) + (rand.nextFloat() - 0.5D) * 0.2D;
+            double z = (pos.getZ() + 0.5D) + (rand.nextFloat() - 0.5D) * 0.2D;
 
             worldIn.addParticle(RedstoneParticleData.REDSTONE_DUST, x, y, z, 0.0D, 0.0D, 0.0D);
         }

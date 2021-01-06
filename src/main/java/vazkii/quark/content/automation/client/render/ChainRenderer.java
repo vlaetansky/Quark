@@ -68,9 +68,9 @@ public class ChainRenderer {
 				zLocus -= rotZ;
 			}
 
-			float offsetX = ((float) (xLocus - targetX));
-			float offsetY = ((float) (yLocus - targetY));
-			float offsetZ = ((float) (zLocus - targetZ));
+			float offsetX = xLocus - targetX;
+			float offsetY = yLocus - targetY;
+			float offsetZ = zLocus - targetZ;
 
 			IVertexBuilder vertexBuilder = renderBuffer.getBuffer(RenderType.getLeash());
 
@@ -134,7 +134,7 @@ public class ChainRenderer {
 
 	}
 
-	public static void renderChain(EntityRenderer render, Entity entity, MatrixStack matrixStack, IRenderTypeBuffer renderBuffer, float partTicks) {
+	public static void renderChain(EntityRenderer<Entity> render, Entity entity, MatrixStack matrixStack, IRenderTypeBuffer renderBuffer, float partTicks) {
 		if (ChainHandler.canBeLinked(entity)) {
 			Entity holder = RENDER_MAP.get(entity.getEntityId());
 

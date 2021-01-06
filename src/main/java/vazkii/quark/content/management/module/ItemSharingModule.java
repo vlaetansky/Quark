@@ -180,7 +180,7 @@ public class ItemSharingModule extends QuarkModule {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private static void render(Minecraft mc, NewChatGui chatGui, int updateCounter, String before, ChatLine line, int lineHeight, Style style, String str) {
+	private static void render(Minecraft mc, NewChatGui chatGui, int updateCounter, String before, ChatLine<ITextComponent> line, int lineHeight, Style style, String str) {
 		HoverEvent hoverEvent = style.getHoverEvent();
 		if (hoverEvent != null && hoverEvent.getAction() == HoverEvent.Action.SHOW_ITEM) {
 			HoverEvent.ItemHover contents = hoverEvent.getParameter(HoverEvent.Action.SHOW_ITEM);

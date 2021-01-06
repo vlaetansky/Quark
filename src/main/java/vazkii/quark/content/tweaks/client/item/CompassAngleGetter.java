@@ -126,7 +126,7 @@ public class CompassAngleGetter {
 						angle = d2 + normalAngle.rotation;
 				} else angle = 0.5D - (d1 - 0.25D - d2);
 			} else {
-				if(unknownAngle.needsUpdate(gameTime));
+				if(unknownAngle.needsUpdate(gameTime))
 					unknownAngle.wobble(gameTime, Math.random());
 					
 				angle = unknownAngle.rotation + ((double) worldIn.hashCode() / Math.PI);
