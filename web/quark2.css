@@ -287,13 +287,10 @@ a:not(.no-external)::after, .show-external::after {
 	box-shadow: 0px 6px #51299a;
 }
 
-.friend-dl-container {
-	position: absolute;
-	top: 200px;
-}
-
 .button-download-friend {
+	position: absolute;
 	height: 40px;
+	bottom: 0;
 }
 
 .button-download:hover {
@@ -613,6 +610,11 @@ a:not(.no-external)::after, .show-external::after {
 	height: 50px;
 }
 
+.friend-dl-container {
+	display: block;
+	height: 50px;
+}
+
 #version-dropdown-holder {
 	display: inline-block;
 	float: right;
@@ -879,10 +881,34 @@ a:not(.no-external)::after, .show-external::after {
 		font-size: 30px;
 	}
 
+	.button-download-friend {
+		height: 60px;
+		padding-top: 0px;
+		padding-bottom: 0px;
+	}
+
+	.button-download-friend .button-title {
+		font-size: 30px;
+	}
+
+	.friend-dl-container {
+		height: 100px;
+	}
+
 	#feature-category-strip {
 		width: auto;
 		white-space: nowrap;
 		overflow-x: scroll;
+	}
+
+	#version-dropdown-holder {
+		margin-top: 15px;
+		margin-left: 30px;
+		font-size: 30px;
+	}
+
+	#version-dropdown {
+		font-size: 30px;
 	}
 
 	.content-holder {
