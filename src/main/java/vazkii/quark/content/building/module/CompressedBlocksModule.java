@@ -117,7 +117,7 @@ public class CompressedBlocksModule extends QuarkModule {
 		enqueue(() -> {
 			for(Block block : compostable)
 				if(block.asItem() != null)
-					ComposterBlock.CHANCES.put(block, 1F);
+					ComposterBlock.CHANCES.put(block.asItem(), 1F);
 		});
 			
 		FuelHandler.addFuel(stick_block, stickBlockFuelTime);
