@@ -83,36 +83,34 @@ public class BackpackContainer extends PlayerContainer {
 				ItemStack target = null;
 				if(!this.mergeItemStack(stack, invStart, hotbarEnd, false) && !this.mergeItemStack(stack, backpackStart, backpackEnd, false)) 
 					target = ItemStack.EMPTY;
-
-				if(target != null) {
-					if(index == 0) // crafting result
-						slot.onSlotChange(stack, baseStack);
-					
+				
+				if(target != null)
 					return target;
-				}
+				else if(index == 0) // crafting result
+					slot.onSlotChange(stack, baseStack);
 			}
 			
-			if(slotType != null && slotType.getSlotType() == Group.ARMOR && !this.inventorySlots.get(equipIndex).getHasStack()) { // shift clicking armor
+			else if(slotType != null && slotType.getSlotType() == Group.ARMOR && !this.inventorySlots.get(equipIndex).getHasStack()) { // shift clicking armor
 				if(!this.mergeItemStack(stack, equipIndex, equipIndex + 1, false)) 
 					return ItemStack.EMPTY;
 			}
 			
-			if (slotType != null && slotType == EquipmentSlotType.OFFHAND && !this.inventorySlots.get(shieldSlot).getHasStack()) { // shift clicking shield
+			else if (slotType != null && slotType == EquipmentSlotType.OFFHAND && !this.inventorySlots.get(shieldSlot).getHasStack()) { // shift clicking shield
 				if(!this.mergeItemStack(stack, shieldSlot, shieldSlot + 1, false)) 
 					return ItemStack.EMPTY;
 			} 
 			
-			if (index < invEnd) {
+			else if (index < invEnd) {
 				if (!this.mergeItemStack(stack, hotbarStart, hotbarEnd, false) && !this.mergeItemStack(stack, backpackStart, backpackEnd, false)) 
 					return ItemStack.EMPTY;
 			} 
 			
-			if(index < hotbarEnd) {
+			else if(index < hotbarEnd) {
 				if(!this.mergeItemStack(stack, invStart, invEnd, false) && !this.mergeItemStack(stack, backpackStart, backpackEnd, false)) 
 					return ItemStack.EMPTY;
 			}
 			
-			if(!this.mergeItemStack(stack, hotbarStart, hotbarEnd, false) && !this.mergeItemStack(stack, invStart, invEnd, false)) 
+			else if(!this.mergeItemStack(stack, hotbarStart, hotbarEnd, false) && !this.mergeItemStack(stack, invStart, invEnd, false)) 
 				return ItemStack.EMPTY;
 
 			if (stack.isEmpty())
