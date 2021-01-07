@@ -184,7 +184,7 @@ public class ToretoiseModel extends EntityModel<ToretoiseEntity> {
         float rideMultiplier = 0;
         
         if(entity.rideTime > 0)
-        	rideMultiplier = (float) Math.min(30, entity.rideTime - 1 + ClientTicker.partialTicks) / 30.0F;  
+        	rideMultiplier = Math.min(30, entity.rideTime - 1 + ClientTicker.partialTicks) / 30.0F;  
         
         bodyTrans *= (1F - rideMultiplier); 
         

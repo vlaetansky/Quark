@@ -30,9 +30,9 @@ public class ConfigElementList<T extends IConfigElement & IWidgetProvider> exten
 			isObject = elm instanceof IConfigObject;
 			
 			if(wasObject && !isObject && hadObjects)
-				addEntry(new Entry(parent, null)); // separator
+				addEntry(new Entry<T>(parent, null)); // separator
 			
-			Entry entry = new Entry(parent, elm); 
+			Entry<T> entry = new Entry<T>(parent, (T) elm); 
 			addEntry(entry);
 			
 			hadObjects = hadObjects || isObject;

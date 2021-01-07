@@ -5,11 +5,13 @@ import org.apache.commons.lang3.text.WordUtils;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.client.config.ConfigObject;
 import vazkii.quark.base.client.config.external.ExternalCategory;
 import vazkii.quark.base.client.config.gui.widget.ConfigElementList;
 import vazkii.quark.base.client.config.gui.widget.ScrollableWidgetList;
@@ -64,7 +66,7 @@ public class CategoryScreen extends AbstractScrollingWidgetScreen {
 
 	@Override
 	protected ScrollableWidgetList<?, ?> createWidgetList() {
-		return new ConfigElementList(this);
+		return new ConfigElementList<ConfigObject<?>>(this);
 	}
 
 	@Override

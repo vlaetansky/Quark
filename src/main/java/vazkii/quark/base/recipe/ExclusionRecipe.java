@@ -119,11 +119,11 @@ public class ExclusionRecipe implements ICraftingRecipe {
     }
 
     private static class ShapedExclusionRecipe extends ExclusionRecipe implements IShapedRecipe<CraftingInventory> {
-        private final IShapedRecipe parent;
+        private final IShapedRecipe<CraftingInventory> parent;
 
         public ShapedExclusionRecipe(ICraftingRecipe parent, List<ResourceLocation> excluded) {
             super(parent, excluded);
-            this.parent = (IShapedRecipe) parent;
+            this.parent = (IShapedRecipe<CraftingInventory>) parent;
         }
 
         @Override
@@ -181,9 +181,9 @@ public class ExclusionRecipe implements ICraftingRecipe {
             }
             String trueType = buffer.readString(32767);
 
-            IRecipeSerializer serializer = Registry.RECIPE_SERIALIZER.getOptional(new ResourceLocation(trueType))
+            IRecipeSerializer<?> serializer = Registry.RECIPE_SERIALIZER.getOptional(new ResourceLocation(trueType))
                     .orElseThrow(() -> new IllegalArgumentException("Invalid or unsupported recipe type '" + trueType + "'"));
-            IRecipe parent = serializer.read(recipeId, buffer);
+            IRecipe<?> parent = serializer.read(recipeId, buffer);
             if (!(parent instanceof ICraftingRecipe))
                 throw new IllegalArgumentException("Type '" + trueType + "' is not a crafting recipe");
 

@@ -484,6 +484,7 @@ public class EnchantmentMatrix {
 					break;
 				case VERY_RARE:
 					itemWeight = 5000; 
+					break;
 				default: 
 					break;
 				}

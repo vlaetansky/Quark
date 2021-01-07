@@ -22,6 +22,8 @@ version = "${config.version}-${config.build_number}"
 group = "vazkii.${config.mod_id}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = config.mod_name
 
+compileJava.options.compilerArgs << "-Xlint:all,-classfile,-processing,-deprecation"
+
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 if (System.getenv('BUILD_NUMBER') != null) {

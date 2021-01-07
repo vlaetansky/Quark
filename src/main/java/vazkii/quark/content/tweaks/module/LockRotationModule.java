@@ -279,6 +279,10 @@ public class LockRotationModule extends QuarkModule {
 			return otherProfile.facing == facing && otherProfile.half == half;
 		}
 
+		@Override
+		public int hashCode() {
+			return facing.hashCode() * 31 + half;
+		}
 	}
 
 }
