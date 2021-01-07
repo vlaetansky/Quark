@@ -40,7 +40,9 @@ public class DispensersPlaceBlocksModule extends QuarkModule {
 	public void setup() {
 		if(!enabled)
 			return;
-
+		
+		BlockBehaviour behavior = new BlockBehaviour();
+		
 		enqueue(() -> {
 			Map<Item, IDispenseItemBehavior> registry = DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY;
 			for(Block b : ForgeRegistries.BLOCKS) {
@@ -48,19 +50,13 @@ public class DispensersPlaceBlocksModule extends QuarkModule {
 				if(!blacklist.contains(Objects.toString(res))) {
 					Item item = b.asItem();
 					if(item instanceof BlockItem && !registry.containsKey(item))
-						registry.put(item, new BlockBehaviour((BlockItem) item));
+						registry.put(item, behavior);
 				}
 			}
 		});
 	}
 
 	public static class BlockBehaviour extends OptionalDispenseBehavior {
-
-		private final BlockItem item;
-
-		public BlockBehaviour(BlockItem item) {
-			this.item = item;
-		}
 
 		@Nonnull
 		@Override
@@ -71,6 +67,7 @@ public class DispensersPlaceBlocksModule extends QuarkModule {
 			Direction against = direction;
 			BlockPos pos = source.getBlockPos().offset(direction);
 
+			BlockItem item = (BlockItem) stack.getItem();
 			Block block = item.getBlock();
 			if(block instanceof StairsBlock && direction.getAxis() != Axis.Y)
 				direction = direction.getOpposite();
