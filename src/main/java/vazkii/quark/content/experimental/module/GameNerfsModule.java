@@ -17,6 +17,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.NBTDynamicOps;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -53,6 +54,9 @@ public class GameNerfsModule extends QuarkModule {
 	
 	@Config(description = "Makes Boats not glide on ice") 
 	public static boolean disableIceRoads = true;
+	
+	@Config(description = "Makes Sheep not drop Wool when killed") 
+	public static boolean disableWoolDrops = true;
 	
 	private static boolean staticEnabled;
 	
@@ -169,6 +173,9 @@ public class GameNerfsModule extends QuarkModule {
 	public void onLoot(LivingDropsEvent event) {
 		if(disableIronFarms && event.getEntity().getType() == EntityType.IRON_GOLEM)
 			event.getDrops().removeIf(e -> e.getItem().getItem() == Items.IRON_INGOT);
+		
+		if(disableWoolDrops && event.getEntity().getType() == EntityType.SHEEP)
+			event.getDrops().removeIf(e -> e.getItem().getItem().isIn(ItemTags.WOOL));
 	}
 	
 }
