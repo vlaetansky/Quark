@@ -96,7 +96,7 @@ public class NewStoneTypesModule extends QuarkModule {
 		enabledWithJasper = enableJasper && this.enabled;
 		enabledWithSlate = enableSlate && this.enabled;
 		enabledWithVoidstone = enableVoidstone && this.enabled;
-		enabledWithMyalite = enableVoidstone && this.enabled;
+		enabledWithMyalite = enableMyalite && this.enabled;
 	}
 	
 	@Override
