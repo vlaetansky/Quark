@@ -89,7 +89,9 @@ public class PathfinderMapsModule extends QuarkModule {
 	public void onTradesLoaded(VillagerTradesEvent event) {
 		if(event.getType() == VillagerProfession.CARTOGRAPHER) {
 			Int2ObjectMap<List<ITrade>> trades = event.getTrades();
-			tradeList.forEach((info) -> trades.get(info.level).add(new PathfinderMapTrade(info)));
+			for(TradeInfo info : tradeList)
+				if(info != null)
+					trades.get(info.level).add(new PathfinderMapTrade(info));
 		}
 	}
 	
