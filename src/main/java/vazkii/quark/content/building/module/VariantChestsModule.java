@@ -41,15 +41,17 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.content.building.block.VariantChestBlock;
 import vazkii.quark.content.building.block.VariantTrappedChestBlock;
 import vazkii.quark.content.building.client.render.VariantChestTileEntityRenderer;
+import vazkii.quark.content.building.recipe.MixedChestRecipe;
 import vazkii.quark.content.building.tile.VariantChestTileEntity;
 import vazkii.quark.content.building.tile.VariantTrappedChestTileEntity;
 
@@ -171,6 +173,8 @@ public class VariantChestsModule extends QuarkModule {
 	
 	@Override
 	public void construct() {
+		ForgeRegistries.RECIPE_SERIALIZERS.register(MixedChestRecipe.SERIALIZER);
+		
 		OVERWORLD_WOODS.forEach(s -> addChest(s, Blocks.CHEST));
 		NETHER_WOODS.forEach(s -> addChest(s, Blocks.CHEST));
 		MOD_WOODS.forEach(s -> addModChest(s, Blocks.CHEST));

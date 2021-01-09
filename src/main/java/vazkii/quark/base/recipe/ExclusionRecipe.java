@@ -138,7 +138,8 @@ public class ExclusionRecipe implements ICraftingRecipe {
     }
 
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ExclusionRecipe> {
-        public Serializer() {
+       
+    	public Serializer() {
             setRegistryName("quark:exclusion");
         }
 
