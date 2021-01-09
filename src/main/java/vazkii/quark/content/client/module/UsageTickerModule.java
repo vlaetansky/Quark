@@ -82,7 +82,10 @@ public class UsageTickerModule extends QuarkModule {
 			MainWindow window = event.getWindow();
 			PlayerEntity player = Minecraft.getInstance().player;
 			float partial = event.getPartialTicks();
-			elements.forEach((ticker) -> ticker.render(window, player, invert, partial));
+			
+			for(TickerElement ticker : elements)
+				if(ticker != null)
+					ticker.render(window, player, invert, partial);
 		}
 	}
 	
