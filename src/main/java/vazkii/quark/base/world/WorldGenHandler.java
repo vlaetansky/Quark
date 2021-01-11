@@ -1,6 +1,15 @@
 package vazkii.quark.base.world;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -10,31 +19,33 @@ import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
-import com.google.gson.JsonElement;
-import com.mojang.serialization.JsonOps;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.MutableRegistry;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.feature.*;
-import net.minecraft.world.gen.placement.ConfiguredPlacement;
-import net.minecraft.world.gen.placement.Placement;
-import net.minecraftforge.event.RegistryEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.gson.JsonElement;
+import com.mojang.serialization.JsonOps;
+
+import net.minecraft.util.RegistryKey;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.WorldGenRegion;
+import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.world.gen.feature.DecoratedFeatureConfig;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.IFeatureConfig;
+import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.placement.NoPlacementConfig;
+import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.GeneralConfig;
@@ -75,7 +86,7 @@ public class WorldGenHandler {
 		}
 	}
 
-	public static void loadComplete() {
+	public static void loadComplete(FMLLoadCompleteEvent event) {
 		for(GenerationStage.Decoration stage : GenerationStage.Decoration.values()) {
 			ConfiguredFeature<?, ?> feature = defersBaseFeature.get(stage).withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).withPlacement(CHUNK_CORNER_PLACEMENT.configure(NoPlacementConfig.NO_PLACEMENT_CONFIG));
 
@@ -87,10 +98,10 @@ public class WorldGenHandler {
 			defers.put(stage, () -> feature);
 		}
 
-		setupConditionalizers();
+		event.enqueueWork(WorldGenHandler::setupConditionalizers);
 	}
 
-	public static void setupConditionalizers(){
+	public static void setupConditionalizers() {
 		// Store CFs we make so we can register after the main loop and prevent a CME error.
 		Set<ConfiguredFeature<?, ?>> quarkCfsToRegister = new HashSet<>();
 

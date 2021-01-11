@@ -61,7 +61,7 @@ public class CommonProxy {
 	
 	public void loadComplete(FMLLoadCompleteEvent event) {
 		ModuleLoader.INSTANCE.loadComplete(event);
-		WorldGenHandler.loadComplete();
+		WorldGenHandler.loadComplete(event);
 		FuelHandler.addAllWoods();
 	}
 	

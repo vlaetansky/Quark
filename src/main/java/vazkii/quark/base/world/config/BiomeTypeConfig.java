@@ -12,6 +12,8 @@ import vazkii.quark.base.module.config.ConfigFlagManager;
 
 public class BiomeTypeConfig implements IBiomeConfig {
 
+	private final Object mutex = new Object();
+	
 	@Config(name = "Biome Categories")
 	@Config.Restriction({"none", "taiga", "extreme_hills", "jungle", "mesa", "plains", "savanna", "icy", "the_end", "beach", "forest",
 			"ocean", "desert", "river", "swamp", "mushroom", "nether"})
@@ -39,19 +41,23 @@ public class BiomeTypeConfig implements IBiomeConfig {
 
 	@Override
 	public boolean canSpawn(ResourceLocation res, Category category) {
-		if(categories == null)
-			updateTypes();
-		
-		for(Biome.Category c : categories)
-			if(c.equals(category))
-				return !isBlacklist;
+		synchronized (mutex) {
+			if(categories == null)
+				updateTypes();
+			
+			for(Biome.Category c : categories)
+				if(c.equals(category))
+					return !isBlacklist;
 
-		return isBlacklist;
+			return isBlacklist;
+		}
 	}
 
 	@Override
 	public void onReload(ConfigFlagManager flagManager) {
-		updateTypes();
+		synchronized (mutex) {
+			updateTypes();
+		}
 	}
 	
 	public void updateTypes() {

@@ -37,6 +37,8 @@ import vazkii.quark.base.module.config.IConfigType;
 
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true)
 public class PathfinderMapsModule extends QuarkModule {
+	
+	private static final Object mutex = new Object();
 
 	public static List<TradeInfo> builtinTrades = new LinkedList<>();
 	public static List<TradeInfo> customTrades = new LinkedList<>();
@@ -87,23 +89,26 @@ public class PathfinderMapsModule extends QuarkModule {
 	
 	@SubscribeEvent
 	public void onTradesLoaded(VillagerTradesEvent event) {
-		if(event.getType() == VillagerProfession.CARTOGRAPHER) {
-			Int2ObjectMap<List<ITrade>> trades = event.getTrades();
-			for(TradeInfo info : tradeList)
-				if(info != null)
-					trades.get(info.level).add(new PathfinderMapTrade(info));
-		}
+		if(event.getType() == VillagerProfession.CARTOGRAPHER)
+			synchronized (mutex) {
+				Int2ObjectMap<List<ITrade>> trades = event.getTrades();
+				for(TradeInfo info : tradeList)
+					if(info != null)
+						trades.get(info.level).add(new PathfinderMapTrade(info));
+			}
 	}
 	
 	@Override
 	public void configChanged() {
-		tradeList.clear();
-		customTrades.clear();
+		synchronized (mutex) {
+			tradeList.clear();
+			customTrades.clear();
 
-		loadCustomMaps(customs);
-		
-		tradeList.addAll(builtinTrades);
-		tradeList.addAll(customTrades);
+			loadCustomMaps(customs);
+			
+			tradeList.addAll(builtinTrades);
+			tradeList.addAll(customTrades);
+		}
 	}
 
 	private void loadTradeInfo(RegistryKey<Biome> biome, boolean enabled, int level, int minPrice, int maxPrice, int color) {
