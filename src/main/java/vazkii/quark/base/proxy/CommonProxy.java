@@ -26,7 +26,7 @@ import vazkii.quark.base.world.WorldGenHandler;
 
 public class CommonProxy {
 
-	private int lastConfigChange = Integer.MIN_VALUE;
+	private int lastConfigChange = -10;
 	public static boolean jingleTheBells = false;
 	
 	public void start() {
