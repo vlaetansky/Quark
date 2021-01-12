@@ -70,8 +70,9 @@ public class UsageTickerModule extends QuarkModule {
 	public void clientTick(ClientTickEvent event) {
 		if(event.phase == Phase.START) {
 			Minecraft mc = Minecraft.getInstance();
-			if(mc.player != null)
-				elements.forEach((ticker) -> ticker.tick(mc.player));
+			if(mc.player != null && mc.world != null)
+				for(TickerElement ticker : elements)
+					ticker.tick(mc.player);
 		}
 	}
 	
