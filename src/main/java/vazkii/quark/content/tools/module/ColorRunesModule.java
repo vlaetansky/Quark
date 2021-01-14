@@ -154,7 +154,7 @@ public class ColorRunesModule extends QuarkModule {
             ItemNBTHelper.setBoolean(out, TAG_RUNE_ATTACHED, true);
             ItemNBTHelper.setCompound(out, TAG_RUNE_COLOR, right.serializeNBT());
             event.setOutput(out);
-            event.setCost(applyCost);
+            event.setCost(Math.max(1, applyCost));
             event.setMaterialCost(1);
         }
     }
