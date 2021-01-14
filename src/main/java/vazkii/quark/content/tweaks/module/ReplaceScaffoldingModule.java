@@ -47,7 +47,7 @@ public class ReplaceScaffoldingModule extends QuarkModule {
 				BlockItem bitem = (BlockItem) stack.getItem();
 				Block block = bitem.getBlock();
 				
-				if(block != Blocks.SCAFFOLDING && !bitem.isIn(ItemTags.BEDS)) {
+				if(block != Blocks.SCAFFOLDING && !block.hasTileEntity(block.getDefaultState())) {
 					BlockPos last = getLastInLine(world, pos, dir);
 					
 					ItemUseContext context = new ItemUseContext(player, hand, new BlockRayTraceResult(new Vector3d(0.5F, 1F, 0.5F), dir, last, false));
