@@ -1,15 +1,19 @@
 package vazkii.quark.addons.oddities.module;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import com.google.common.collect.Lists;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
@@ -20,6 +24,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import vazkii.arl.util.ItemNBTHelper;
@@ -30,13 +36,12 @@ import vazkii.quark.addons.oddities.client.screen.MatrixEnchantingScreen;
 import vazkii.quark.addons.oddities.container.MatrixEnchantingContainer;
 import vazkii.quark.addons.oddities.tile.MatrixEnchantingTableTileEntity;
 import vazkii.quark.base.Quark;
-import vazkii.quark.base.handler.OverrideRegistryHandler;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 
-@LoadModule(category = ModuleCategory.ODDITIES, requiredMod = Quark.ODDITIES_ID, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
+@LoadModule(category = ModuleCategory.ODDITIES, requiredMod = Quark.ODDITIES_ID, hasSubscriptions = true)
 public class MatrixEnchantingModule extends QuarkModule {
 
 	public static TileEntityType<MatrixEnchantingTableTileEntity> tileEntityType;
@@ -124,10 +129,11 @@ public class MatrixEnchantingModule extends QuarkModule {
 
 	public static Map<DyeColor, List<Enchantment>> candleInfluences;
 
+	public static Block matrixEnchanter;
+	
 	@Override
 	public void construct() {
-		Block matrixEnchanter = new MatrixEnchantingTableBlock();
-		OverrideRegistryHandler.registerBlock(matrixEnchanter, "enchanting_table", ItemGroup.DECORATIONS);
+		matrixEnchanter = new MatrixEnchantingTableBlock(this);
 
 		containerType = IForgeContainerType.create(MatrixEnchantingContainer::fromNetwork);
 		RegistryHelper.register(containerType, "matrix_enchanting");
@@ -151,7 +157,19 @@ public class MatrixEnchantingModule extends QuarkModule {
 		if(showTooltip && ItemNBTHelper.verifyExistence(stack, MatrixEnchantingTableTileEntity.TAG_STACK_MATRIX))
 			event.getToolTip().add(new TranslationTextComponent("quark.gui.enchanting.pending").mergeStyle(TextFormatting.AQUA));
 	}
-
+	
+	@SubscribeEvent
+	public void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
+		if(event.getPlacedBlock().getBlock().equals(Blocks.ENCHANTING_TABLE))
+			event.getWorld().setBlockState(event.getPos(), matrixEnchanter.getDefaultState(), 3);
+	}
+	
+	@SubscribeEvent
+	public void onRightClick(PlayerInteractEvent.RightClickBlock event) {
+		if(event.getWorld().getBlockState(event.getHitVec().getPos()).getBlock() == Blocks.ENCHANTING_TABLE);
+			event.getWorld().setBlockState(event.getPos(), matrixEnchanter.getDefaultState(), 3);
+	}
+	
 	@Override
 	public void configChanged() {
 		parseInfluences();

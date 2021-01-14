@@ -1,6 +1,9 @@
 package vazkii.quark.addons.oddities.block;
 
 import java.util.Random;
+import java.util.function.BooleanSupplier;
+
+import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -13,6 +16,7 @@ import net.minecraft.inventory.container.EnchantmentContainer;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.item.DyeColor;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.particles.RedstoneParticleData;
@@ -20,23 +24,61 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
+import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.addons.oddities.module.MatrixEnchantingModule;
 import vazkii.quark.addons.oddities.tile.MatrixEnchantingTableTileEntity;
 import vazkii.quark.api.IEnchantmentInfluencer;
+import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.module.ModuleLoader;
-import vazkii.quark.content.building.block.CandleBlock;
+import vazkii.quark.base.module.QuarkModule;
 
-public class MatrixEnchantingTableBlock extends EnchantingTableBlock {
+public class MatrixEnchantingTableBlock extends EnchantingTableBlock implements IQuarkBlock {
 
-	public MatrixEnchantingTableBlock() {
+	private final QuarkModule module;
+	private BooleanSupplier enabledSupplier = () -> true;
+	
+	public MatrixEnchantingTableBlock(QuarkModule module) {
 		super(Block.Properties.from(Blocks.ENCHANTING_TABLE));
+		
+		this.module = module;
+		RegistryHelper.registerBlock(this, "matrix_enchanter");
+	}
+
+	@Override
+	public IFormattableTextComponent getTranslatedName() {
+		return Blocks.ENCHANTING_TABLE.getTranslatedName();
+	}
+	
+	@Override
+	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+		if(isEnabled() || group == ItemGroup.SEARCH)
+			super.fillItemGroup(group, items);
+	}
+
+	@Override
+	public MatrixEnchantingTableBlock setCondition(BooleanSupplier enabledSupplier) {
+		this.enabledSupplier = enabledSupplier;
+		return this;
+	}
+
+	@Override
+	public boolean doesConditionApply() {
+		return enabledSupplier.getAsBoolean();
+	}
+
+	@Nullable
+	@Override
+	public QuarkModule getModule() {
+		return module;
 	}
 
 	@Override
