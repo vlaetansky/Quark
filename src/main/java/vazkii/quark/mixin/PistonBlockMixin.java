@@ -19,7 +19,7 @@ import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 @Mixin(PistonBlock.class)
 public class PistonBlockMixin {
 
-	@Redirect(method = "canPush", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;hasTileEntity()Z"))
+	@Redirect(method = "canPush", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;hasTileEntity()Z", remap = false /* bc hasTileEntity is a forge method */))
 	private static boolean hasTileEntity(BlockState blockStateIn) {
 		return PistonsMoveTileEntitiesModule.shouldMoveTE(blockStateIn.hasTileEntity(), blockStateIn);
 	}
