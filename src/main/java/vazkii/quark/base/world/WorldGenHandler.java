@@ -87,18 +87,20 @@ public class WorldGenHandler {
 	}
 
 	public static void loadComplete(FMLLoadCompleteEvent event) {
-		for(GenerationStage.Decoration stage : GenerationStage.Decoration.values()) {
-			ConfiguredFeature<?, ?> feature = defersBaseFeature.get(stage).withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).withPlacement(CHUNK_CORNER_PLACEMENT.configure(NoPlacementConfig.NO_PLACEMENT_CONFIG));
+		event.enqueueWork(() -> {
+			for(GenerationStage.Decoration stage : GenerationStage.Decoration.values()) {
+				ConfiguredFeature<?, ?> feature = defersBaseFeature.get(stage).withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).withPlacement(CHUNK_CORNER_PLACEMENT.configure(NoPlacementConfig.NO_PLACEMENT_CONFIG));
 
-			// Register the configuredfeatures so that it doesn't cause mod incompat issues later.
-			// Always do .toLowerCase(Locale.ENGLISH) with that locale. If you leave it off, computers in
-			// countries like Turkey will use a special character instead of i and well, crash the ResourceLocation.
-			Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(Quark.MOD_ID, "deferred_feature_" + stage.name().toLowerCase(Locale.ENGLISH)), feature);
+				// Register the configuredfeatures so that it doesn't cause mod incompat issues later.
+				// Always do .toLowerCase(Locale.ENGLISH) with that locale. If you leave it off, computers in
+				// countries like Turkey will use a special character instead of i and well, crash the ResourceLocation.
+				Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(Quark.MOD_ID, "deferred_feature_" + stage.name().toLowerCase(Locale.ENGLISH)), feature);
 
-			defers.put(stage, () -> feature);
-		}
-
-		event.enqueueWork(WorldGenHandler::setupConditionalizers);
+				defers.put(stage, () -> feature);
+			}
+			
+			setupConditionalizers();
+		});
 	}
 
 	public static void setupConditionalizers() {
