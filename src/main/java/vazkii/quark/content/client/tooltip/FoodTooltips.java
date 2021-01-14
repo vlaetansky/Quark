@@ -30,6 +30,9 @@ public class FoodTooltips {
 			Food food = event.getItemStack().getItem().getFood();
 			if (food != null) {
 				int pips = Math.min(20, food.getHealing());
+				if(pips == 0)
+					return;
+				
 				int len = (int) Math.ceil((double) pips / ImprovedTooltipsModule.foodDivisor);
 
 				StringBuilder s = new StringBuilder(" ");
@@ -76,6 +79,8 @@ public class FoodTooltips {
 				MatrixStack matrix = event.getMatrixStack();
 				mc.getTextureManager().bindTexture(ForgeIngameGui.GUI_ICONS_LOCATION);
 				int pips = Math.min(20, food.getHealing());
+				if(pips == 0)
+					return;
 
 				boolean poison = false;
 				for (Pair<EffectInstance, Float> effect : food.getEffects()) {
