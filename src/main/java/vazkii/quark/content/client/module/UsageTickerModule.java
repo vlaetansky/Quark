@@ -72,7 +72,8 @@ public class UsageTickerModule extends QuarkModule {
 			Minecraft mc = Minecraft.getInstance();
 			if(mc.player != null && mc.world != null)
 				for(TickerElement ticker : elements)
-					ticker.tick(mc.player);
+					if(ticker != null)
+						ticker.tick(mc.player);
 		}
 	}
 	
