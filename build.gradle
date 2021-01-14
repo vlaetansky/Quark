@@ -29,7 +29,7 @@ version = "${config.version}-${config.build_number}"
 group = "vazkii.${config.mod_id}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = config.mod_name
 
-compileJava.options.compilerArgs << "-Xlint:all,-classfile,-processing,-deprecation"
+compileJava.options.compilerArgs << "-Xlint:all,-classfile,-processing,-deprecation" << "-Werror"
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -123,7 +123,6 @@ dependencies {
 
 spotless {
     enforceCheck = false // workaround around jenkins having wrong line endings in some files
-                         // we explicitly check in github actions builds
     java {
         target project.fileTree(dir: 'src/main/java/vazkii/quark', include: '**/*.java')
         //indentWithTabs()
@@ -143,6 +142,8 @@ pmd {
 }
 
 task checkSyntax (group: "verification") {
+    // Replace the following line when Spotless is setup
+    //dependsOn spotlessJavaCheck, pmdMain
     dependsOn pmdMain
 }
 

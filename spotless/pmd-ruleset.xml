@@ -6,7 +6,7 @@
          xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
 
     <description>
-        Botania PMD rules
+        Quark PMD rules
     </description>
     <!-- Rule descriptions: https://pmd.github.io/pmd-6.22.0/pmd_rules_java.html -->
 
