@@ -101,7 +101,7 @@ public class ContributorRewardHandler {
 			try {
 				thread.join();
 			} catch (InterruptedException e) {
-				throw new RuntimeException();
+				throw new RuntimeException(e);
 			}
 	}
 	

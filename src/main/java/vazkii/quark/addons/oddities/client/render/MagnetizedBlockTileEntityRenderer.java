@@ -36,6 +36,7 @@ public class MagnetizedBlockTileEntityRenderer extends TileEntityRenderer<Magnet
 	}
 
 	@SuppressWarnings("deprecation")
+	@Override
 	public void render(MagnetizedBlockTileEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
 		World world = tileEntityIn.getWorld();
 		if (world != null) {

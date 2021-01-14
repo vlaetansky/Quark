@@ -50,6 +50,7 @@ public class WantLoveGoal extends Goal {
         this.setMutexFlags(EnumSet.of(Flag.MOVE, Flag.LOOK, Flag.JUMP, Flag.TARGET));
     }
 
+    @Override
     public boolean shouldExecute() {
         if (!needsPets(creature))
             return false;
@@ -66,12 +67,14 @@ public class WantLoveGoal extends Goal {
         }
     }
 
+    @Override
     public boolean shouldContinueExecuting() {
         if (!WantLoveGoal.needsPets(creature))
             return false;
         return !this.creature.onGround;
     }
 
+    @Override
     public void startExecuting() {
     	Vector3d leapPos = leapTarget.getPositionVec();
     	Vector3d creaturePos = creature.getPositionVec();

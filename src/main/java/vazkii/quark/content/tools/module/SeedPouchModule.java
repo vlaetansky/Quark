@@ -70,6 +70,7 @@ public class SeedPouchModule extends QuarkModule {
     }
 
 	@OnlyIn(Dist.CLIENT)
+	@Override
 	public void clientSetup() {
 		ItemModelsProperties.registerProperty(seed_pouch, new ResourceLocation("pouch_items"), SeedPouchItem::itemFraction);
 	}

@@ -54,6 +54,7 @@ public class WeightedSelector<U> {
         return this.entries.stream().map(WeightedSelector.Entry::getValue);
     }
 
+    @Override
     public String toString() {
         return "WeightedList[" + this.entries + "]";
     }
@@ -89,6 +90,7 @@ public class WeightedSelector<U> {
             return this.value;
         }
 
+        @Override
         public String toString() {
             return "" + this.weight + ":" + this.value;
         }

@@ -77,6 +77,7 @@ public abstract class GenericChestTERenderer<T extends TileEntity & IChestLid> e
 		this.field_228870_j_.rotationPointY = 8.0F;
 	}
 
+	@Override
 	public void render(T p_225616_1_, float p_225616_2_, MatrixStack p_225616_3_, IRenderTypeBuffer p_225616_4_, int p_225616_5_, int p_225616_6_) {
 		World world = p_225616_1_.getWorld();
 		boolean flag = world != null;

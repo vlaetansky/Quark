@@ -10,10 +10,17 @@ buildscript {
         classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
     }
 }
+
+plugins {
+    id 'com.diffplug.gradle.spotless' version '4.5.1'
+}
+
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
+
+apply plugin: 'pmd'
 
 ext.configFile = file('build.properties')
 ext.config = parseConfig(configFile)
@@ -112,6 +119,31 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${config.mc_version}:${config.jei_version}:api")
     runtimeOnly fg.deobf("mezz.jei:jei-${config.mc_version}:${config.jei_version}")
 
+}
+
+spotless {
+    enforceCheck = false // workaround around jenkins having wrong line endings in some files
+                         // we explicitly check in github actions builds
+    java {
+        target project.fileTree(dir: 'src/main/java/vazkii/quark', include: '**/*.java')
+        //indentWithTabs()
+        eclipse().configFile 'spotless/eclipseformat.xml'
+        removeUnusedImports()
+        importOrderFile 'spotless/eclipse.importorder'
+        replaceRegex 'Too much space after if', '(if|for|while|switch) +\\(', '$1('
+    }
+}
+
+pmd {
+    toolVersion '6.22.0'
+    // no way around this warning unless we upgrade Gradle, apparently
+    //incrementalAnalysis.set(true)
+    ruleSets.clear()
+    ruleSetFiles = files("spotless/pmd-ruleset.xml")
+}
+
+task checkSyntax (group: "verification") {
+    dependsOn pmdMain
 }
 
 processResources {

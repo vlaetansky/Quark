@@ -242,6 +242,7 @@ public class FoxhoundEntity extends WolfEntity implements IMob {
 //		this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, AbstractSkeletonEntity.class, false));
 	}
 
+	@Override
 	public int getAngerTime() {
 		if (!isTamed() && world.getDifficulty() != Difficulty.PEACEFUL)
 			return 0;
@@ -370,6 +371,7 @@ public class FoxhoundEntity extends WolfEntity implements IMob {
 		return dataManager.get(IS_BLUE);
 	}
 
+	@Override
 	public void setSleeping(boolean sleeping) {
 		dataManager.set(SLEEPING, sleeping);
 	}

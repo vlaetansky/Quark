@@ -8,6 +8,7 @@ public class VariantTrappedChestTileEntity extends VariantChestTileEntity {
 		super(VariantChestsModule.trappedChestTEType);
 	}
 
+	@Override
 	protected void onOpenOrClose() {
 		super.onOpenOrClose();
 		this.world.notifyNeighborsOfStateChange(this.pos.down(), this.getBlockState().getBlock());
