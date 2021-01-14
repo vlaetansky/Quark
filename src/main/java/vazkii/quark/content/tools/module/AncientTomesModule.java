@@ -40,9 +40,26 @@ import java.util.Map;
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true)
 public class AncientTomesModule extends QuarkModule {
 
-	@Config public static int dungeonWeight = 20;
-	@Config public static int libraryWeight = 30;
-	@Config public static int monsterBoxWeight = 5;
+	@Config(description = "Set to 0 to not generate in Dungeons") 
+	public static int dungeonWeight = 20;
+	
+	@Config(description = "Set to 0 to not generate in Stronghold Libraries")
+	public static int libraryWeight = 30;
+	
+	@Config(description = "Set to 0 to not generate in Bastions")
+	public static int bastionWeight = 25;
+	
+	@Config(description = "Set to 0 to not generate in Woodland Mansions")
+	public static int woodlandMansionWeight = 15;
+	
+	@Config(description = "Set to 0 to not generate in Nether Fortresses")
+	public static int netherFortressWeight = 0;
+	
+	@Config(description = "Set to 0 to not generate in Underwater Ruins")
+	public static int underwaterRuinWeight = 0;
+	
+	@Config(description = "Set to 0 to not generate in Monster Boxes")
+	public static int monsterBoxWeight = 5;
 	
 	@Config public static int itemQuality = 2;
 	@Config public static int mergeCost = 35;
@@ -60,11 +77,21 @@ public class AncientTomesModule extends QuarkModule {
 	@SubscribeEvent
 	public void onLootTableLoad(LootTableLoadEvent event) {
 		int weight = 0;
-		if(event.getName().equals(LootTables.CHESTS_STRONGHOLD_LIBRARY))
+		ResourceLocation res = event.getName();
+		if(res.equals(LootTables.CHESTS_STRONGHOLD_LIBRARY))
 			weight = libraryWeight;
-		else if(event.getName().equals(LootTables.CHESTS_SIMPLE_DUNGEON))
+		else if(res.equals(LootTables.CHESTS_SIMPLE_DUNGEON))
 			weight = dungeonWeight;
-		else if(event.getName().equals(MonsterBoxModule.MONSTER_BOX_LOOT_TABLE))
+		else if(res.equals(LootTables.CHESTS_NETHER_BRIDGE))
+			weight = netherFortressWeight;
+		else if(res.equals(LootTables.CHESTS_WOODLAND_MANSION))
+			weight = woodlandMansionWeight;
+		else if(res.equals(LootTables.CHESTS_UNDERWATER_RUIN_BIG) || res.equals(LootTables.CHESTS_UNDERWATER_RUIN_SMALL))
+			weight = underwaterRuinWeight;
+		else if(res.equals(LootTables.BASTION_TREASURE))
+			weight = bastionWeight;
+		
+		else if(res.equals(MonsterBoxModule.MONSTER_BOX_LOOT_TABLE))
 			weight = monsterBoxWeight;
 		
 		if(weight > 0) {
