@@ -31,13 +31,13 @@ public class PickarangModule extends QuarkModule {
 	public static int timeout = 20;
 	@Config(description = "2 is Iron, 3 is Diamond.")
 	public static int harvestLevel = 3;
-	@Config(description = "2 is Iron, 4 is Diamond.")
+	@Config(description = "2 is Iron, 3 is Diamond.")
 	public static int netheriteHarvestLevel = 3;
 	
 	@Config(description = "Set to -1 to have the Pickarang be unbreakable.")
 	public static int durability = 800;
 	
-	@Config(description = "Set to -1 to have the Pickarang be unbreakable.")
+	@Config(description = "Set to -1 to have the Flamerang be unbreakable.")
 	public static int netheriteDurability = 1040;
 	
 	@Config(description = "22.5 is ender chests, 25.0 is monster boxes, 50 is obsidian. Most things are below 5.")
