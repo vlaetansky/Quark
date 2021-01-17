@@ -166,7 +166,7 @@ public class MatrixEnchantingModule extends QuarkModule {
 	
 	@SubscribeEvent
 	public void onRightClick(PlayerInteractEvent.RightClickBlock event) {
-		if(event.getWorld().getBlockState(event.getHitVec().getPos()).getBlock() == Blocks.ENCHANTING_TABLE)
+		if(event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.ENCHANTING_TABLE)
 			event.getWorld().setBlockState(event.getPos(), matrixEnchanter.getDefaultState(), 3);
 	}
 	
