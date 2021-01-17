@@ -39,7 +39,8 @@ import net.minecraft.util.registry.Registry;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.registries.ForgeRegistries;
+import vazkii.quark.addons.oddities.container.BackpackContainer;
+import vazkii.quark.addons.oddities.container.SlotCachingItemHandler;
 import vazkii.quark.api.ICustomSorting;
 import vazkii.quark.api.QuarkCapabilities;
 import vazkii.quark.base.module.ModuleLoader;
@@ -81,11 +82,11 @@ public final class SortingHandler {
 			return;
 
 		Container c = player.openContainer;
-		if (forcePlayer || c == null)
+		boolean backpack = c instanceof BackpackContainer;
+		if ((!backpack && forcePlayer) || c == null)
 			c = player.container;
 
-//		boolean backpack = c instanceof ContainerBackpack;
-		boolean playerContainer = c == player.container; // || backpack;
+		boolean playerContainer = c == player.container || backpack;
 
 		for (Slot s : c.inventorySlots) {
 			IInventory inv = s.inventory;
@@ -102,12 +103,12 @@ public final class SortingHandler {
 			}
 		}
 
-//		if (backpack)
-//			for (Slot s : c.inventorySlots)
-//				if (s instanceof SlotItemHandler) {
-//					sortInventory(((SlotItemHandler) s).getItemHandler());
-//					break;
-//				}
+		if(backpack)
+			for (Slot s : c.inventorySlots)
+				if (s instanceof SlotCachingItemHandler) {
+					sortInventory(((SlotCachingItemHandler) s).getItemHandler());
+					break;
+				}
 	}
 
 	public static void sortInventory(IItemHandler handler) {
