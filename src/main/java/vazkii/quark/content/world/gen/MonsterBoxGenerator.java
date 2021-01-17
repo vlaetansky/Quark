@@ -39,7 +39,7 @@ public class MonsterBoxGenerator extends Generator {
 				} while(moves < MonsterBoxModule.searchRange && testState.getMaterial() != Material.ROCK && testPos.getY() >= MonsterBoxModule.minY);
 				
 				BlockPos placePos = testPos.up();
-				if(testPos.getY() >= MonsterBoxModule.minY && world.isAirBlock(placePos))
+				if(testPos.getY() >= MonsterBoxModule.minY && world.isAirBlock(placePos) && !world.isAirBlock(placePos.down()))
 					world.setBlockState(placePos, MonsterBoxModule.monster_box.getDefaultState(), 0);
 			}
 			

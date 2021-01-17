@@ -44,7 +44,7 @@ public class MonsterBoxModule extends QuarkModule {
 	@Config public static boolean enableExtraLootTable = true;
 	
 	@Config(description = "How many blocks to search vertically from a position before trying to place a block. Higher means you'll get more boxes in open spaces.")
-	public static int searchRange = 4;
+	public static int searchRange = 6;
 	
 	public static Block monster_box = null;
 	
