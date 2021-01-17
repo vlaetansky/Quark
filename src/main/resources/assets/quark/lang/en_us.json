@@ -78,7 +78,7 @@
 	"quark.camera.filter.sobel": "Sobel",
 	"quark.camera.filter.sobel": "Sobel",
 	"quark.camera.filter.sobel": "Sobel",
-	"quark.camera.filter.deutranopia": "Simulated Deutranopia",
+	"quark.camera.filter.deuteranopia": "Simulated Deuteranopia",
 	"quark.camera.filter.protanopia": "Simulated Protanopia",
 	"quark.camera.filter.tritanopia": "Simulated Tritanopia",
 	"quark.camera.filter.achromatopsia": "Simulated Achromatopsia",

@@ -72,7 +72,7 @@ public class CameraModule extends QuarkModule {
 			new ResourceLocation(Quark.MOD_ID, "shaders/post/monochrome.json"),
 			new ResourceLocation("shaders/post/sobel.json"),
 			
-			new ResourceLocation(Quark.MOD_ID, "shaders/post/colorblind/deutranopia.json"),
+			new ResourceLocation(Quark.MOD_ID, "shaders/post/colorblind/deuteranopia.json"),
 			new ResourceLocation(Quark.MOD_ID, "shaders/post/colorblind/protanopia.json"),
 			new ResourceLocation(Quark.MOD_ID, "shaders/post/colorblind/tritanopia.json"),
 			new ResourceLocation(Quark.MOD_ID, "shaders/post/colorblind/achromatopsia.json")
