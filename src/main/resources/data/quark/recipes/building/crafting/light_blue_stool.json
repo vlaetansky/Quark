@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "WWW",
+    "W W"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:light_blue_wool"
+    },
+    "W": {
+      "tag": "minecraft:planks"
+    }    
+  },
+  "result": {
+    "item": "quark:light_blue_stool",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "quark:flag",
+      "flag": "stools"
+    }
+  ]
+} 
