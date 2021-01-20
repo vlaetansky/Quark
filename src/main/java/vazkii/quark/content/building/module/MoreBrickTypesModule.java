@@ -23,7 +23,8 @@ public class MoreBrickTypesModule extends QuarkModule {
 	@Config(flag = "snow_bricks") public boolean enableSnowBricks = true;
 	@Config(flag = "magma_bricks") public boolean enableMagmaBricks = true;
 	@Config(flag = "charred_nether_bricks") public boolean enableCharredNetherBricks = true;
-	
+	@Config(flag = "blackstone_variant_bricks") public boolean enableBlackstoneVariantBricks = true;
+
 	@Config(flag = "blue_nether_bricks",
 			description = "This also comes with a utility recipe for Red Nether Bricks") 
 	public boolean enableBlueNetherBricks = true;
@@ -41,6 +42,8 @@ public class MoreBrickTypesModule extends QuarkModule {
 		add("sandstone", Blocks.SANDSTONE, () -> enableSandstoneBricks);
 		add("red_sandstone", Blocks.RED_SANDSTONE, () -> enableSandstoneBricks);
 		add("soul_sandstone", Blocks.SANDSTONE, () -> enableSandstoneBricks && ModuleLoader.INSTANCE.isModuleEnabled(SoulSandstoneModule.class));
+		add("twisted_blackstone", Blocks.POLISHED_BLACKSTONE_BRICKS, () -> enableBlackstoneVariantBricks);
+		add("weeping_blackstone", Blocks.POLISHED_BLACKSTONE_BRICKS, () -> enableBlackstoneVariantBricks);
 		
 		VariantHandler.addSlabStairsWall(new MagmaBrickBlock(this).setCondition(() -> enableMagmaBricks));
 	}

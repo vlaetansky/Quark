@@ -35,6 +35,8 @@
     "quark:slate_wall",
     "quark:snow_bricks_wall",
     "quark:soul_sandstone_bricks_wall",
-    "quark:soul_sandstone_wall"
+    "quark:soul_sandstone_wall",
+    "quark:twisted_blackstone_bricks_wall",
+    "quark:weeping_blackstone_bricks_wall"
   ]
 }
