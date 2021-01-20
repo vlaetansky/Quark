@@ -75,7 +75,7 @@ public class StoolEntity extends Entity {
 
 	@Override
 	public double getMountedYOffset() {
-		return super.getMountedYOffset();
+		return -0.3;
 	}
 	
 	@Override
