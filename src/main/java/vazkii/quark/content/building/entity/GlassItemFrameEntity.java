@@ -7,10 +7,15 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.item.ItemFrameEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -22,6 +27,10 @@ import vazkii.quark.content.building.module.ItemFramesModule;
 
 public class GlassItemFrameEntity extends ItemFrameEntity implements IEntityAdditionalSpawnData {
 
+	public static final DataParameter<Boolean> IS_SHINY = EntityDataManager.createKey(GlassItemFrameEntity.class, DataSerializers.BOOLEAN);
+	
+	private static final String TAG_SHINY = "isShiny";
+	
 	private boolean didHackery = false;
 
 	public GlassItemFrameEntity(EntityType<? extends GlassItemFrameEntity> type, World worldIn) {
@@ -34,6 +43,13 @@ public class GlassItemFrameEntity extends ItemFrameEntity implements IEntityAddi
 		this.updateFacingWithBoundingBox(face);
 	}
 
+	@Override
+	protected void registerData() {
+		super.registerData();
+		
+		dataManager.register(IS_SHINY, false);
+	}
+	
 	@Override
 	public boolean onValidSurface() {
 		return super.onValidSurface() || isOnSign();
@@ -52,7 +68,7 @@ public class GlassItemFrameEntity extends ItemFrameEntity implements IEntityAddi
 	@Override
 	public ItemEntity entityDropItem(@Nonnull ItemStack stack, float offset) {
 		if (stack.getItem() == Items.ITEM_FRAME && !didHackery) {
-			stack = new ItemStack(ItemFramesModule.glassFrame);
+			stack = new ItemStack(getItem());
 			didHackery = true;
 		}
 
@@ -64,9 +80,27 @@ public class GlassItemFrameEntity extends ItemFrameEntity implements IEntityAddi
 	public ItemStack getPickedResult(RayTraceResult target) {
 		ItemStack held = getDisplayedItem();
 		if (held.isEmpty())
-			return new ItemStack(ItemFramesModule.glassFrame);
+			return new ItemStack(getItem());
 		else
 			return held.copy();
+	}
+	
+	private Item getItem() {
+		return dataManager.get(IS_SHINY) ? ItemFramesModule.glowingGlassFrame : ItemFramesModule.glassFrame;
+	}
+	
+	@Override
+	public void writeAdditional(CompoundNBT cmp) {
+		super.writeAdditional(cmp);
+		
+		cmp.putBoolean(TAG_SHINY, dataManager.get(IS_SHINY));
+	}
+	
+	@Override
+	public void readAdditional(CompoundNBT cmp) {
+		super.readAdditional(cmp);
+		
+		dataManager.set(IS_SHINY, cmp.getBoolean(TAG_SHINY));
 	}
 
 	@Nonnull

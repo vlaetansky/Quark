@@ -34,7 +34,10 @@ import vazkii.quark.base.module.ModuleCategory;
  */
 @LoadModule(category = ModuleCategory.BUILDING)
 public class ItemFramesModule extends QuarkModule {
+	
     public static Item glassFrame;
+    public static Item glowingGlassFrame;
+
     private static Map<DyeColor, Item> coloredFrames = Maps.newEnumMap(DyeColor.class);
 
     public static EntityType<GlassItemFrameEntity> glassFrameEntity;
@@ -64,13 +67,17 @@ public class ItemFramesModule extends QuarkModule {
                 .build("colored_frame");
         RegistryHelper.register(coloredFrameEntity, "colored_frame");
 
-        glassFrame = new QuarkItemFrameItem("glass_item_frame", this, GlassItemFrameEntity::new,
-                new Item.Properties().group(ItemGroup.DECORATIONS));
+        glassFrame = new QuarkItemFrameItem("glass_item_frame", this, GlassItemFrameEntity::new);
+        glowingGlassFrame = new QuarkItemFrameItem("glowing_glass_item_frame", this, 
+        		(w, p, d) -> {
+        			GlassItemFrameEntity e = new GlassItemFrameEntity(w, p, d);
+        			e.getDataManager().set(GlassItemFrameEntity.IS_SHINY, true);
+        			return e;
+        		});
 
         for(DyeColor color : DyeColor.values())
-            coloredFrames.put(color, new QuarkItemFrameItem(color.getTranslationKey() + "_item_frame", this, // name
-                    (world, pos, dir) -> new ColoredItemFrameEntity(world, pos, dir, color.getId()),
-                    new Item.Properties().group(ItemGroup.DECORATIONS)));
+            coloredFrames.put(color, new QuarkItemFrameItem(color.getTranslationKey() + "_item_frame", this,
+                    (world, pos, dir) -> new ColoredItemFrameEntity(world, pos, dir, color.getId())));
     }
 
     @Override

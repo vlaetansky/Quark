@@ -86,6 +86,9 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrameEntity>
 		ModelManager modelmanager = blockrendererdispatcher.getBlockModelShapes().getModelManager();
 
 		ItemStack itemstack = p_225623_1_.getDisplayedItem();
+		
+		if(p_225623_1_.getDataManager().get(GlassItemFrameEntity.IS_SHINY))
+			p_225623_6_ = 0xF000F0;
 
 		if (itemstack.isEmpty()) {
 			p_225623_4_.push();

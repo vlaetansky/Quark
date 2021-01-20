@@ -1,9 +1,12 @@
 package vazkii.quark.content.building.item;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.HangingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
@@ -15,8 +18,6 @@ import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.util.TriFunction;
 
-import javax.annotation.Nonnull;
-
 /**
  * @author WireSegal
  * Created at 11:04 AM on 8/25/19.
@@ -24,8 +25,8 @@ import javax.annotation.Nonnull;
 public class QuarkItemFrameItem extends QuarkItem {
     private final TriFunction<? extends HangingEntity, World, BlockPos, Direction> entityProvider;
 
-    public QuarkItemFrameItem(String name, QuarkModule module, TriFunction<? extends HangingEntity, World, BlockPos, Direction> entityProvider, Item.Properties properties) {
-        super(name, module, properties);
+    public QuarkItemFrameItem(String name, QuarkModule module, TriFunction<? extends HangingEntity, World, BlockPos, Direction> entityProvider) {
+        super(name, module, new Item.Properties().group(ItemGroup.DECORATIONS));
         this.entityProvider = entityProvider;
     }
 
