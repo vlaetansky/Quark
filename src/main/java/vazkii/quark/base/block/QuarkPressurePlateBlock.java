@@ -1,6 +1,6 @@
 package vazkii.quark.base.block;
 
-import net.minecraft.block.AbstractPressurePlateBlock;
+import net.minecraft.block.PressurePlateBlock;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -14,13 +14,13 @@ import java.util.function.BooleanSupplier;
  * @author WireSegal
  * Created at 9:41 PM on 10/8/19.
  */
-public abstract class QuarkPressurePlateBlock extends AbstractPressurePlateBlock implements IQuarkBlock {
+public abstract class QuarkPressurePlateBlock extends PressurePlateBlock implements IQuarkBlock {
 
     private final QuarkModule module;
     private BooleanSupplier enabledSupplier = () -> true;
 
-    public QuarkPressurePlateBlock(String regname, QuarkModule module, ItemGroup creativeTab, Properties properties) {
-        super(properties);
+    public QuarkPressurePlateBlock(Sensitivity sensitivity, String regname, QuarkModule module, ItemGroup creativeTab, Properties properties) {
+        super(sensitivity, properties);
         this.module = module;
 
         RegistryHelper.registerBlock(this, regname);
