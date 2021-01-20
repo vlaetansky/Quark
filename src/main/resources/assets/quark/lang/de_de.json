@@ -7,6 +7,7 @@
 	"quark.gui.button.filter": "Filtern",
 	"quark.gui.button.emotes": "Emotes",
 	"quark.gui.button.back": "Zurück",
+	"quark.gui.button.shift_lock": "Umschaltsperre",
 
 	"quark.gui.enchanting.min": "Min: %d",
 	"quark.gui.enchanting.influence": "Kerzeneinfluss: +%d%%",
@@ -19,6 +20,7 @@
 	"quark.gui.keygroup.misc": "Quark-Kurzbefehle",
 	"quark.gui.keygroup.inv": "Quark-Inventar",
 	"quark.gui.keygroup.emote": "Quark-Emotes",
+	"quark.gui.keygroup.accessibility": "Quark-Barrierefreiheit",
 	
 	"quark.gui.config.save": "Änderungen speichern",
 	"quark.gui.config.social.website": "Quark-Website",
@@ -74,6 +76,10 @@
 	"quark.camera.filter.pencil": "Bleistift",
 	"quark.camera.filter.watercolor": "Aquarell",
 	"quark.camera.filter.sobel": "Sobel",
+	"quark.camera.filter.deuteranopia": "Simulierte Deuteranopie",
+	"quark.camera.filter.protanopia": "Simulierte Protanopie",
+	"quark.camera.filter.tritanopia": "Simulierte Tritanopie",
+	"quark.camera.filter.achromatopsia": "Simulierte Achromatopsie",
 
 	"quark.camera.rulers": "Lineale: ",
 	"quark.camera.rulers0": "Keine",
@@ -118,6 +124,19 @@
 	"quark.keybind.patreon_emote.zombie": "Zombie (Patreon)",
 	"quark.keybind.back": "Zurück",
 	"quark.keybind.camera_mode": "Kameramodus",
+	"quark.keybind.narrator_readout": "Liest etwa",
+	"quark.keybind.narrator_full_readout": "Liest alles",
+	"quark.keybind.shift_lock": "Umschaltsperre",
+	"quark.keybind.autorun": "Automatisches Laufen",
+
+	"quark.readout.not_ingame": "Nicht ingame",
+	"quark.readout.looking": "%s ansehen",
+	"quark.readout.holding": "%dx %s halten",
+	"quark.readout.holding_with_off": "%d %s und %d %s halten",
+	"quark.readout.health": "Gesundheit %d",
+	"quark.readout.food": "Hunger %d",
+	"quark.readout.sign_says": ". Das Schild sagt, ",
+	"quark.readout.no_item": "Kein Gegenstand",
 
 	"quark.subtitles.meep": "Stoneling läuft davon",
 	"quark.subtitles.give_stoneling": "Stoneling nimmt Gegenstand",
@@ -185,8 +204,8 @@
 	"quark.misc.night_has_passed8": "Die Nacht ist vorbei - Der Tag ruft!",
 	"quark.misc.night_has_passed9": "Die Nacht ist vorbei - Carpe diem!",
 	"quark.misc.day_has_passed": "Der Tag ist vorbei.",
-	"quark.misc.shulker_box_shift": "Halte Shift zum Anziegen des Inhalts",
-	"quark.misc.map_shift": "Halte Shift, um die Karte zu sehen",
+	"quark.misc.shulker_box_shift": "Halte Umschalt zum Anziegen des Inhalts",
+	"quark.misc.map_shift": "Halte Umschalt, um die Karte zu sehen",
 	"quark.misc.rotation_lock": "Du hast die Rotationssperre aktiviert. Alle Blöcke, die du platzierst, werden in die Richtung ausgerichtet, in die du geschaut hast. Drücke [%s], um sie zu ändern oder zurückzusetzen. Diese Meldung wird nicht mehr erscheinen.",
 	"quark.misc.saturation0": "Sättigende Mahlzeit",
 	"quark.misc.saturation1": "Herzhafte Mahlzeit",
@@ -194,6 +213,7 @@
 	"quark.misc.saturation3": "Kleine Mahlzeit",
 	"quark.misc.saturation4": "Kleine Zwischenmahlzeit",
 	"quark.misc.mod_disabled": "Ausgeschaltet. Installiere %s anzuschalten.",
+	"quark.misc.repaired": "(Ist repariert worden)",
 	
 	"quark.misc.reloaded0": "Dein Quark-Konfiguration wurde neu geladen.",
 	"quark.misc.reloaded1": "- Wenn du etwas geändert hast, das die Rezepte ändern würde, bitte führ /reload aus.",
@@ -1020,6 +1040,6 @@
 	"block.quark.potted_wheat": "Eingetopfter Weizen",
 	"block.quark.potted_yellow_blossom_sapling": "Eingetopfter sonniger Blütensetzling",
 
-	"generator.quark.realistic": "Quark-Realistisch"
-	
+	"generator.quark.realistic": "Realistisch",
+	"generator.quark.realistic_large_biomes": "Realistic L.Biomes"
 } 
