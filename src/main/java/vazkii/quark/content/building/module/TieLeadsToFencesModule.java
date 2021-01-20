@@ -60,7 +60,7 @@ public class TieLeadsToFencesModule extends QuarkModule {
     @Override
     @OnlyIn(Dist.CLIENT)
     public void clientSetup() {
-        RenderingRegistry.registerEntityRenderingHandler(leashKnot2Entity, (manager) -> new LeashKnot2Renderer(manager));
+        RenderingRegistry.registerEntityRenderingHandler(leashKnot2Entity, LeashKnot2Renderer::new);
     }
     
 	@SubscribeEvent

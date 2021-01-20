@@ -2,15 +2,14 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "###",
-    "WWW",
-    "W W"
+    "WWW"
   ],
   "key": {
     "#": {
       "item": "minecraft:green_wool"
     },
     "W": {
-      "tag": "minecraft:planks"
+      "tag": "minecraft:wooden_slabs"
     }    
   },
   "result": {
