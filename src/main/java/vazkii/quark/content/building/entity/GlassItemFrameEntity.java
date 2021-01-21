@@ -4,9 +4,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ChestBlock;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.item.ItemFrameEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BannerItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -17,12 +20,23 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.SlotItemHandler;
 import vazkii.quark.content.building.module.ItemFramesModule;
 
 public class GlassItemFrameEntity extends ItemFrameEntity implements IEntityAdditionalSpawnData {
@@ -41,6 +55,25 @@ public class GlassItemFrameEntity extends ItemFrameEntity implements IEntityAddi
 		super(ItemFramesModule.glassFrameEntity, worldIn);
 		hangingPosition = blockPos;
 		this.updateFacingWithBoundingBox(face);
+	}
+	
+	@Override
+	public ActionResultType processInitialInteract(PlayerEntity player, Hand hand) {
+		ItemStack item = getDisplayedItem();
+		if(!player.isSneaking() && !item.isEmpty() && !(item.getItem() instanceof BannerItem)) {
+			BlockPos behind = getBehindPos();
+			TileEntity tile = world.getTileEntity(behind);
+			
+			if(tile != null && tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
+				BlockState behindState = world.getBlockState(behind);
+				ActionResultType result = behindState.onBlockActivated(world, player, hand, new BlockRayTraceResult(new Vector3d(getPosX(), getPosY(), getPosZ()), facingDirection, behind, true));
+				
+				if(result.isSuccessOrConsume())
+					return result;
+			}
+		}
+		
+		return super.processInitialInteract(player, hand);
 	}
 
 	@Override
