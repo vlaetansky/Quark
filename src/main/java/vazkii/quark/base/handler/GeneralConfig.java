@@ -52,7 +52,11 @@ public class GeneralConfig {
 			"com.blakebr0.extendedcrafting.client.screen.EliteTableScreen",
 			"com.blakebr0.extendedcrafting.client.screen.EliteAutoTableScreen",
 			"com.blakebr0.extendedcrafting.client.screen.UltimateTableScreen",
-			"com.blakebr0.extendedcrafting.client.screen.UltimateAutoTableScreen"
+			"com.blakebr0.extendedcrafting.client.screen.UltimateAutoTableScreen",
+			"me.desht.modularrouters.client.gui.filter.GuiFilterScreen",
+			"com.resourcefulbees.resourcefulbees.client.gui.screen.CentrifugeScreen",
+			"com.resourcefulbees.resourcefulbees.client.gui.screen.MechanicalCentrifugeScreen",
+			"com.resourcefulbees.resourcefulbees.client.gui.screen.CentrifugeMultiblockScreen"
 			);
 
 	@Config(description = "Set to true to make the quark big worldgen features such as stone clusters or underground biomes generate as spheres rather than unique shapes. It's faster, but won't look as cool")
