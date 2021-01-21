@@ -41,6 +41,8 @@ public class ImprovedTooltipsModule extends QuarkModule {
     
 	@Config 
 	public static boolean showSaturation = true;
+	@Config 
+	public static int foodCompressionThreshold = 4;
 
     @Config(description = "The value of each shank of food. " +
             "Tweak this when using mods like Hardcore Hunger which change that value.")
@@ -68,8 +70,8 @@ public class ImprovedTooltipsModule extends QuarkModule {
     public void makeTooltip(ItemTooltipEvent event) {
         if (attributeTooltips)
             AttributeTooltips.makeTooltip(event);
-        if (foodTooltips)
-            FoodTooltips.makeTooltip(event);
+        if (foodTooltips || showSaturation)
+            FoodTooltips.makeTooltip(event, foodTooltips, showSaturation);
         if (shulkerTooltips)
             ShulkerBoxTooltips.makeTooltip(event);
         if (mapTooltips)

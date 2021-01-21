@@ -25,11 +25,11 @@ import vazkii.quark.content.client.module.ImprovedTooltipsModule;
 public class FoodTooltips {
 
 	@OnlyIn(Dist.CLIENT)
-	public static void makeTooltip(ItemTooltipEvent event) {
+	public static void makeTooltip(ItemTooltipEvent event, boolean showFood, boolean showSaturation) {
 		if(event.getItemStack().isFood()) {
 			Food food = event.getItemStack().getItem().getFood();
 			if (food != null) {
-				int pips = Math.min(20, food.getHealing());
+				int pips = food.getHealing();
 				if(pips == 0)
 					return;
 				
@@ -56,13 +56,15 @@ public class FoodTooltips {
 				List<ITextComponent> tooltip = event.getToolTip();
 
 				if (tooltip.isEmpty()) {
-					tooltip.add(spaces);
-					if(ImprovedTooltipsModule.showSaturation)
+					if(showFood)
+						tooltip.add(spaces);
+					if(showSaturation)
 						tooltip.add(saturationText);
 				}
 				else {
-					tooltip.add(1, spaces);
-					if(ImprovedTooltipsModule.showSaturation)
+					if(showFood)
+						tooltip.add(1, spaces);
+					if(showSaturation)
 						tooltip.add(2, saturationText);
 				}
 			}
@@ -77,8 +79,8 @@ public class FoodTooltips {
 				RenderSystem.color3f(1F, 1F, 1F);
 				Minecraft mc = Minecraft.getInstance();
 				MatrixStack matrix = event.getMatrixStack();
-				mc.getTextureManager().bindTexture(ForgeIngameGui.GUI_ICONS_LOCATION);
-				int pips = Math.min(20, food.getHealing());
+				
+				int pips = food.getHealing();
 				if(pips == 0)
 					return;
 
@@ -91,9 +93,19 @@ public class FoodTooltips {
 				}
 
 				int count = (int) Math.ceil((double) pips / ImprovedTooltipsModule.foodDivisor);
+				boolean fract = pips % 2 != 0;
+				int renderCount = count;
 				int y = TooltipUtils.shiftTextByLines(event.getLines(), event.getY() + 10);
+				
+				boolean compress = count > ImprovedTooltipsModule.foodCompressionThreshold;
+				if(compress)
+					renderCount = 1;
 
-				for (int i = 0; i < count; i++) {
+				matrix.push();
+				matrix.translate(0, 0, 500);
+				mc.getTextureManager().bindTexture(ForgeIngameGui.GUI_ICONS_LOCATION);
+
+				for (int i = 0; i < renderCount; i++) {
 					int x = event.getX() + i * 9 - 1;
 
 					int u = 16;
@@ -104,13 +116,17 @@ public class FoodTooltips {
 					AbstractGui.blit(matrix, x, y, u, v, 9, 9, 256, 256);
 
 					u = 52;
-					if (pips % 2 != 0 && i == 0)
+					if (fract && i == 0)
 						u += 9;
 					if (poison)
 						u += 36;
 
 					AbstractGui.blit(matrix, x, y, u, v, 9, 9, 256, 256);
 				}
+				
+				if(compress)
+					mc.fontRenderer.drawStringWithShadow(matrix, "x" + (count + (fract ? ".5" : "")), event.getX() + 10, y + 1, 0xFF666666);
+				matrix.push();
 			}
 		}
 	}
