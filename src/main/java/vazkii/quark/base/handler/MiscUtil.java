@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -191,7 +192,7 @@ public class MiscUtil {
 	}
 
 	public static <T> List<T> massRegistryGet(Collection<String> coll, Registry<T> registry) {
-		return coll.stream().map(ResourceLocation::new).map(name -> registry.getOptional(name).get()).filter(Predicates.notNull()).collect(Collectors.toList());
+		return coll.stream().map(ResourceLocation::new).map(name -> registry.getOptional(name)).filter(Optional::isPresent).map(Optional::get).filter(Predicates.notNull()).collect(Collectors.toList());
 	}
 
 	public static void syncTE(TileEntity tile) {
