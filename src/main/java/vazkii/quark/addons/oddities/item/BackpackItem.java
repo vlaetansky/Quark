@@ -223,6 +223,7 @@ public class BackpackItem extends DyeableArmorItem implements IQuarkItem, IItemC
 			super.fillItemGroup(group, items);
 	}
 
+	@Override
 	public boolean isEnabled() {
 		return module != null && module.enabled;
 	}

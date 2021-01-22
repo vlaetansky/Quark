@@ -33,6 +33,7 @@ public class StonelingItemLayer extends LayerRenderer<StonelingEntity, Stoneling
 		super(renderer);
 	}
 	
+	@Override
 	public void render(MatrixStack matrix, IRenderTypeBuffer buffer, int light, StonelingEntity stoneling,  float limbAngle, float limbDistance, float tickDelta, float customAngle, float headYaw, float headPitch) {
 		ItemStack stack = stoneling.getCarryingItem();
 		if (!stack.isEmpty()) {

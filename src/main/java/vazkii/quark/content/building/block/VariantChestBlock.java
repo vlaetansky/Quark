@@ -94,10 +94,11 @@ public class VariantChestBlock extends ChestBlock implements IBlockItemProvider,
 		props.setISTER(() -> () -> new ItemStackTileEntityRenderer() {
 			private final TileEntity tile = new VariantChestTileEntity();
 			//render
+			@Override
 			public void func_239207_a_(ItemStack stack, TransformType transformType, MatrixStack matrix, IRenderTypeBuffer buffer, int x, int y) {
 				VariantChestTileEntityRenderer.invBlock = block;
-	            TileEntityRendererDispatcher.instance.renderItem(tile, matrix, buffer, x, y);
-	            VariantChestTileEntityRenderer.invBlock = null;
+				TileEntityRendererDispatcher.instance.renderItem(tile, matrix, buffer, x, y);
+				VariantChestTileEntityRenderer.invBlock = null;
 			}
 			
 		});

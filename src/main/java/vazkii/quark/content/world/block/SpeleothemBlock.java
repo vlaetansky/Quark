@@ -62,6 +62,7 @@ public class SpeleothemBlock extends QuarkBlock implements IWaterLoggable {
 		return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
 	}
 	
+	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
 		int size = state.get(SIZE).strength;
 		if(getBearing(worldIn, pos) < size + 1)

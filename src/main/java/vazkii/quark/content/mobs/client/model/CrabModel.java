@@ -172,6 +172,7 @@ public class CrabModel extends EntityModel<CrabEntity> {
 	}
 	
 	
+	@Override
 	public void render(MatrixStack matrix, IVertexBuilder vb, int p_225598_3_, int p_225598_4_, float p_225598_5_, float p_225598_6_, float p_225598_7_, float p_225598_8_) {
 		matrix.push();
 		matrix.translate(0, 1.5 - crabSize * 1.5, 0);

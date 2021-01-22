@@ -149,6 +149,7 @@ public class ChorusVegetationBlock extends QuarkBlock implements IGrowable, IFor
 		return true;
 	}
 
+	@Override
 	public void grow(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state) {
 		for(int i = 0; i < (3 + rand.nextInt(3)); i++)
 			teleport(pos, rand, worldIn, state, 10, 0);
@@ -174,7 +175,7 @@ public class ChorusVegetationBlock extends QuarkBlock implements IGrowable, IFor
 	@Override
 	@SuppressWarnings("deprecation")
 	public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
-		return type == PathType.AIR && !this.canCollide ? true : super.allowsMovement(state, worldIn, pos, type);
+		return (type == PathType.AIR && !this.canCollide) || super.allowsMovement(state, worldIn, pos, type);
 	}
 
 	@Override
