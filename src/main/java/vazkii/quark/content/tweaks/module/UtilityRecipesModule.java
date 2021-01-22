@@ -3,6 +3,7 @@ package vazkii.quark.content.tweaks.module;
 import net.minecraft.block.ComposterBlock;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraftforge.event.TickEvent.WorldTickEvent;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.module.LoadModule;
@@ -54,20 +55,32 @@ public class UtilityRecipesModule extends QuarkModule {
     @Config(description = "Can bones be smelted down to bone meal?", flag = "bone_meal_utility")
     public static boolean boneMealUtility = true;
 
+    private boolean needsChange = false;
+    
     @Override
     public void configChanged() {
-        if (effectiveDragonBreath)
-            Items.DRAGON_BREATH.containerItem = null;
-        else
-            Items.DRAGON_BREATH.containerItem = Items.GLASS_BOTTLE;
+    	// This has to be defered to a safer thread, making these changes in this thread can result in concurrency errors
+    	needsChange = true;
+    }
+   
+    @SubscribeEvent
+    public void worldTick(WorldTickEvent event) {
+    	if(needsChange) {
+            if (effectiveDragonBreath)
+                Items.DRAGON_BREATH.containerItem = null;
+            else
+                Items.DRAGON_BREATH.containerItem = Items.GLASS_BOTTLE;
 
-        if (compostableToxins) {
-            ComposterBlock.CHANCES.put(Items.POISONOUS_POTATO, 0.85F);
-            ComposterBlock.CHANCES.put(Items.ROTTEN_FLESH, 0.3F);
-        } else {
-            ComposterBlock.CHANCES.removeFloat(Items.POISONOUS_POTATO);
-            ComposterBlock.CHANCES.removeFloat(Items.ROTTEN_FLESH);
-        }
+            if (compostableToxins) {
+                ComposterBlock.CHANCES.put(Items.POISONOUS_POTATO, 0.85F);
+                ComposterBlock.CHANCES.put(Items.ROTTEN_FLESH, 0.3F);
+            } else {
+                ComposterBlock.CHANCES.removeFloat(Items.POISONOUS_POTATO);
+                ComposterBlock.CHANCES.removeFloat(Items.ROTTEN_FLESH);
+            }
+            
+            needsChange = false;
+    	}
     }
 
     @SubscribeEvent
