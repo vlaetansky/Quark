@@ -62,10 +62,13 @@ public class FoodTooltips {
 						tooltip.add(saturationText);
 				}
 				else {
-					if(showFood)
-						tooltip.add(1, spaces);
+					int i = 1;
+					if(showFood) {
+						tooltip.add(i, spaces);
+						i++;
+					}
 					if(showSaturation)
-						tooltip.add(2, saturationText);
+						tooltip.add(i, saturationText);
 				}
 			}
 		}
