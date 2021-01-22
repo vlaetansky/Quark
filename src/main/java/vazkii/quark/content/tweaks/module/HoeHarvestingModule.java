@@ -8,11 +8,15 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.HoeItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.Items;
+import net.minecraft.tags.ITag;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
@@ -22,6 +26,7 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.QuarkModule;
@@ -34,14 +39,16 @@ public class HoeHarvestingModule extends QuarkModule {
 
 	@Config
 	public static boolean hoesCanHaveFortune = true;
-	
+
+	public static ITag<Item> bigHarvestingHoesTag;
+
 	public static int getRange(ItemStack hoe) {
 		if(!ModuleLoader.INSTANCE.isModuleEnabled(HoeHarvestingModule.class))
 			return 1;
-		
+
 		if(hoe.isEmpty() || !(hoe.getItem() instanceof HoeItem))
 			return 1;
-		else if (hoe.getItem() == Items.DIAMOND_HOE || hoe.getItem() == Items.NETHERITE_HOE)
+		else if (hoe.getItem().isIn(bigHarvestingHoesTag))
 			return 3;
 		else
 			return 2;
@@ -51,12 +58,17 @@ public class HoeHarvestingModule extends QuarkModule {
 		return enchantment == Enchantments.FORTUNE && hoesCanHaveFortune && !stack.isEmpty() && stack.getItem() instanceof HoeItem;
 	}
 
+	@Override
+	public void setup() {
+		bigHarvestingHoesTag = ItemTags.createOptional(new ResourceLocation(Quark.MOD_ID, "big_harvesting_hoes"));
+	}
+
 	@SubscribeEvent
 	public void onBlockBroken(BlockEvent.BreakEvent event) {
 		IWorld world = event.getWorld();
 		if(!(world instanceof World))
 			return;
-		
+
 		PlayerEntity player = event.getPlayer();
 		BlockPos basePos = event.getPos();
 		ItemStack stack = player.getHeldItemMainhand();
