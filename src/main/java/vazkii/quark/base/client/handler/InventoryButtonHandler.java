@@ -93,6 +93,7 @@ public final class InventoryButtonHandler {
 						holder.keybind.matchesMouseKey(pressed.getButton()) &&
 						(holder.keybind.getKeyModifier() == KeyModifier.NONE || holder.keybind.getKeyModifier().isActive(KeyConflictContext.GUI))) {
 					holder.pressed.accept(screen);
+					pressed.setCanceled(true);
 				}
 			}
 		}
@@ -111,6 +112,7 @@ public final class InventoryButtonHandler {
 						holder.keybind.matchesKey(pressed.getKeyCode(), pressed.getScanCode()) &&
 						(holder.keybind.getKeyModifier() == KeyModifier.NONE || holder.keybind.getKeyModifier().isActive(KeyConflictContext.GUI))) {
 					holder.pressed.accept(screen);
+					pressed.setCanceled(true);
 				}
 			}
 		}
