@@ -29,6 +29,8 @@ public class InventorySortingModule extends QuarkModule {
 	public static boolean enablePlayerInventoryInChests = true;
 	@Config
 	public static boolean enableChests = true;
+	@Config(description = "Play a click when sorting inventories using keybindings")
+	public static boolean satisfyingClick = true;
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
@@ -39,7 +41,8 @@ public class InventorySortingModule extends QuarkModule {
 				sortPlayer,
 				(screen) -> {
 					if (enablePlayerInventory) {
-						click();
+						if (satisfyingClick)
+							click();
 						QuarkNetwork.sendToServer(new SortInventoryMessage(true));
 					}
 				},
@@ -48,7 +51,8 @@ public class InventorySortingModule extends QuarkModule {
 				sortPlayer,
 				(screen) -> {
 					if (enablePlayerInventoryInChests) {
-						click();
+						if (satisfyingClick)
+							click();
 						QuarkNetwork.sendToServer(new SortInventoryMessage(true));
 					}
 				},
@@ -57,7 +61,8 @@ public class InventorySortingModule extends QuarkModule {
 				"sort_container",
 				(screen) -> {
 					if (enableChests) {
-						click();
+						if (satisfyingClick)
+							click();
 						QuarkNetwork.sendToServer(new SortInventoryMessage(false));
 					}
 				},
