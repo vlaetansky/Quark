@@ -1,6 +1,9 @@
 package vazkii.quark.content.management.module;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.util.SoundEvents;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.base.client.handler.InventoryButtonHandler;
@@ -35,22 +38,28 @@ public class InventorySortingModule extends QuarkModule {
 		InventoryButtonHandler.addButtonProvider(this, ButtonTargetType.PLAYER_INVENTORY, 0,
 				sortPlayer,
 				(screen) -> {
-					if (enablePlayerInventory)
+					if (enablePlayerInventory) {
+						click();
 						QuarkNetwork.sendToServer(new SortInventoryMessage(true));
+					}
 				},
 				provider("sort", true, () -> enablePlayerInventory));
 		InventoryButtonHandler.addButtonProvider(this, ButtonTargetType.CONTAINER_PLAYER_INVENTORY, 0,
 				sortPlayer,
 				(screen) -> {
-					if (enablePlayerInventoryInChests)
+					if (enablePlayerInventoryInChests) {
+						click();
 						QuarkNetwork.sendToServer(new SortInventoryMessage(true));
+					}
 				},
 				provider("sort_inventory", true, () -> enablePlayerInventoryInChests));
 		InventoryButtonHandler.addButtonProvider(this, ButtonTargetType.CONTAINER_INVENTORY, 0,
 				"sort_container",
 				(screen) -> {
-					if (enableChests)
+					if (enableChests) {
+						click();
 						QuarkNetwork.sendToServer(new SortInventoryMessage(false));
+					}
 				},
 				provider("sort_container", false, () -> enableChests));
 	}
@@ -61,4 +70,8 @@ public class InventorySortingModule extends QuarkModule {
 				new MiniInventoryButton(parent, 0, x, y, "quark.gui.button." + tooltip, (b) -> QuarkNetwork.sendToServer(new SortInventoryMessage(forcePlayer)));
 	}
 
+	@OnlyIn(Dist.CLIENT)
+	private void click() {
+		Minecraft.getInstance().getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+	}
 }
