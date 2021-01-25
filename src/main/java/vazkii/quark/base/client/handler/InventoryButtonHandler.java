@@ -152,7 +152,9 @@ public final class InventoryButtonHandler {
 	}
 
 	public static void addButtonProvider(QuarkModule module, ButtonTargetType type, int priority, String keybindName, Consumer<ContainerScreen<?>> onKeybind, ButtonProvider provider) {
-		addButtonProvider(module, type, priority, ModKeybindHandler.init(keybindName, null, ModKeybindHandler.INV_GROUP), onKeybind, provider);
+		KeyBinding keybind = ModKeybindHandler.init(keybindName, null, ModKeybindHandler.INV_GROUP);
+		keybind.setKeyConflictContext(KeyConflictContext.GUI);
+		addButtonProvider(module, type, priority, keybind, onKeybind, provider);
 	}
 
 	public static void addButtonProvider(QuarkModule module, ButtonTargetType type, int priority, ButtonProvider provider) {
