@@ -93,6 +93,7 @@ public final class InventoryButtonHandler {
 						holder.keybind.matchesMouseKey(pressed.getButton()) &&
 						(holder.keybind.getKeyModifier() == KeyModifier.NONE || holder.keybind.getKeyModifier().isActive(KeyConflictContext.GUI))) {
 					holder.pressed.accept(screen);
+					pressed.setCanceled(true);
 				}
 			}
 		}
@@ -111,6 +112,7 @@ public final class InventoryButtonHandler {
 						holder.keybind.matchesKey(pressed.getKeyCode(), pressed.getScanCode()) &&
 						(holder.keybind.getKeyModifier() == KeyModifier.NONE || holder.keybind.getKeyModifier().isActive(KeyConflictContext.GUI))) {
 					holder.pressed.accept(screen);
+					pressed.setCanceled(true);
 				}
 			}
 		}
@@ -150,7 +152,9 @@ public final class InventoryButtonHandler {
 	}
 
 	public static void addButtonProvider(QuarkModule module, ButtonTargetType type, int priority, String keybindName, Consumer<ContainerScreen<?>> onKeybind, ButtonProvider provider) {
-		addButtonProvider(module, type, priority, ModKeybindHandler.init(keybindName, null, ModKeybindHandler.INV_GROUP), onKeybind, provider);
+		KeyBinding keybind = ModKeybindHandler.init(keybindName, null, ModKeybindHandler.INV_GROUP);
+		keybind.setKeyConflictContext(KeyConflictContext.GUI);
+		addButtonProvider(module, type, priority, keybind, onKeybind, provider);
 	}
 
 	public static void addButtonProvider(QuarkModule module, ButtonTargetType type, int priority, ButtonProvider provider) {
