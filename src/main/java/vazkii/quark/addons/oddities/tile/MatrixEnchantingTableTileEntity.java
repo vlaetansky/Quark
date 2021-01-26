@@ -269,11 +269,12 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 				
 				if(ord != null) {
 					List<Enchantment> influencedEnchants = MatrixEnchantingModule.candleInfluences.get(ord);
-					for(Enchantment e : influencedEnchants) {
-						int curr = influences.getOrDefault(e, 0);
-						if(curr < MatrixEnchantingModule.influenceMax)
-							influences.put(e, Math.min(MatrixEnchantingModule.influenceMax, curr + count));
-					}
+					if(influencedEnchants != null)
+						for(Enchantment e : influencedEnchants) {
+							int curr = influences.getOrDefault(e, 0);
+							if(curr < MatrixEnchantingModule.influenceMax)
+								influences.put(e, Math.min(MatrixEnchantingModule.influenceMax, curr + count));
+						}
 				}
 			}
 		}
