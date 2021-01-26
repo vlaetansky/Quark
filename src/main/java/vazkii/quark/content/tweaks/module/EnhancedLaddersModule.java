@@ -139,7 +139,8 @@ public class EnhancedLaddersModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void onInput(InputUpdateEvent event) {
 		PlayerEntity player = event.getPlayer();
-		if(player.isOnLadder() && Minecraft.getInstance().currentScreen != null && !(player.moveForward == 0 && player.rotationPitch > 70)) {
+		if(player.isOnLadder() && player.world.getBlockState(player.getPosition()).getBlock() != Blocks.SCAFFOLDING
+				&& Minecraft.getInstance().currentScreen != null && !(player.moveForward == 0 && player.rotationPitch > 70)) {
 			MovementInput input = event.getMovementInput();
 			if(input != null)
 				input.sneaking = true; // sneaking
