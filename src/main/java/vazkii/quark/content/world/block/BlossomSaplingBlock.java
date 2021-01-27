@@ -30,8 +30,6 @@ import vazkii.quark.base.module.QuarkModule;
 
 public class BlossomSaplingBlock extends SaplingBlock implements IQuarkBlock {
 
-	private static final BlockState SPRUCE_LOG = Blocks.SPRUCE_LOG.getDefaultState();
-
 	private final QuarkModule module;
 	private BooleanSupplier enabledSupplier = () -> true;
 

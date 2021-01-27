@@ -1047,6 +1047,12 @@
 	"block.quark.weeping_blackstone_bricks_vertical_slab": "Weeping Blackstone Brick Vertical Slab",
 	"block.quark.twisted_blackstone_bricks_wall": "Twisted Blackstone Brick Wall",
 	"block.quark.weeping_blackstone_bricks_wall": "Weeping Blackstone Brick Wall",
+	"block.quark.oak_hedge": "Oak Hedge",
+	"block.quark.spruce_hedge": "Spruce Hedge",
+	"block.quark.birch_hedge": "Birch Hedge",
+	"block.quark.jungle_hedge": "Jungle Hedge",
+	"block.quark.acacia_hedge": "Acacia Hedge",
+	"block.quark.dark_oak_hedge": "Dark Oak Hedge",
 
 	"item.quark.stoneling_spawn_egg": "Stoneling Spawn Egg",
 	"item.quark.frog_spawn_egg": "Frog Spawn Egg",
