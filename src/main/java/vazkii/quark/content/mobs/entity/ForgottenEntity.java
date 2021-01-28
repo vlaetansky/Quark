@@ -15,11 +15,13 @@ import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.entity.ai.goal.RangedBowAttackGoal;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.SkeletonEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
@@ -53,7 +55,7 @@ public class ForgottenEntity extends SkeletonEntity {
 
 	public static final ResourceLocation FORGOTTEN_LOOT_TABLE = new ResourceLocation("quark", "entities/forgotten");
 
-	public ForgottenEntity(EntityType<? extends SkeletonEntity> type, World world) {
+	public ForgottenEntity(EntityType<? extends ForgottenEntity> type, World world) {
 		super(type, world);
 	}
 
@@ -63,11 +65,18 @@ public class ForgottenEntity extends SkeletonEntity {
 		dataManager.register(SHEATHED_ITEM, ItemStack.EMPTY);
 	}
 
+	public static AttributeModifierMap.MutableAttribute registerAttributes() {
+		return MonsterEntity.func_234295_eP_()
+				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.3D)
+				.createMutableAttribute(Attributes.MAX_HEALTH, 60)
+				.createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1);
+	}
+
 	@Nullable
 	public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
 		ILivingEntityData ilivingentitydata = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-		getAttribute(Attributes.MAX_HEALTH).setBaseValue(32);
 		setCombatTask();
+		
 		return ilivingentitydata;
 	}
 
@@ -82,7 +91,7 @@ public class ForgottenEntity extends SkeletonEntity {
 			if(shouldUseBow != isUsingBow)
 				swap();
 		}
-		
+
 		double w = getWidth() * 2;
 		double h = getHealth();
 		for(int i = 0; i < 5; i++)
@@ -103,8 +112,8 @@ public class ForgottenEntity extends SkeletonEntity {
 
 		setCombatTask();
 	}
-	
-	
+
+
 	@Nonnull
 	@Override
 	protected ResourceLocation getLootTable() {
@@ -144,25 +153,25 @@ public class ForgottenEntity extends SkeletonEntity {
 
 		ItemStack bow = new ItemStack(Items.BOW);
 		ItemStack sheathed = new ItemStack(Items.IRON_SWORD);
-		
+
 		EnchantmentHelper.addRandomEnchantment(rand, bow, 20, false);
 		EnchantmentHelper.addRandomEnchantment(rand, sheathed, 20, false);
-		
+
 		if(ModuleLoader.INSTANCE.isModuleEnabled(ColorRunesModule.class) && rand.nextBoolean()) {
 			List<Item> items = ColorRunesModule.runesLootableTag.getAllElements();
 			ItemStack item = new ItemStack(items.get(rand.nextInt(items.size())));
 			CompoundNBT runeNbt = item.serializeNBT();
-			
-            ItemNBTHelper.setBoolean(bow, ColorRunesModule.TAG_RUNE_ATTACHED, true);
-            ItemNBTHelper.setBoolean(sheathed, ColorRunesModule.TAG_RUNE_ATTACHED, true);
 
-            ItemNBTHelper.setCompound(bow, ColorRunesModule.TAG_RUNE_COLOR, runeNbt);
-            ItemNBTHelper.setCompound(sheathed, ColorRunesModule.TAG_RUNE_COLOR, runeNbt);
+			ItemNBTHelper.setBoolean(bow, ColorRunesModule.TAG_RUNE_ATTACHED, true);
+			ItemNBTHelper.setBoolean(sheathed, ColorRunesModule.TAG_RUNE_ATTACHED, true);
+
+			ItemNBTHelper.setCompound(bow, ColorRunesModule.TAG_RUNE_COLOR, runeNbt);
+			ItemNBTHelper.setCompound(sheathed, ColorRunesModule.TAG_RUNE_COLOR, runeNbt);
 		}
-		
+
 		setItemStackToSlot(EquipmentSlotType.MAINHAND, bow);
 		dataManager.set(SHEATHED_ITEM, sheathed);
-		
+
 		setItemStackToSlot(EquipmentSlotType.HEAD, new ItemStack(ForgottenModule.forgotten_hat));
 	}
 
@@ -171,7 +180,7 @@ public class ForgottenEntity extends SkeletonEntity {
 		AbstractArrowEntity arrow = super.fireArrow(arrowStack, distanceFactor);
 		if(arrow instanceof ArrowEntity) {
 			ItemStack stack = new ItemStack(Items.TIPPED_ARROW);
-			PotionUtils.appendEffects(stack, ImmutableSet.of(new EffectInstance(Effects.BLINDNESS, 80, 0)));
+			PotionUtils.appendEffects(stack, ImmutableSet.of(new EffectInstance(Effects.BLINDNESS, 100, 0)));
 			((ArrowEntity) arrow).setPotionEffect(stack);
 		}
 
