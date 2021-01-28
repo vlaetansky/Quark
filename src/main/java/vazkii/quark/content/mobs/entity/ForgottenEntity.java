@@ -86,7 +86,12 @@ public class ForgottenEntity extends SkeletonEntity {
 
 		if(!world.isRemote) {
 			LivingEntity target = getAttackTarget();
-			boolean shouldUseBow = target == null || target.getActivePotionEffect(Effects.BLINDNESS) == null;
+			boolean shouldUseBow = target == null;
+			if(!shouldUseBow) {
+				 EffectInstance eff = target.getActivePotionEffect(Effects.BLINDNESS);
+				 shouldUseBow = eff == null || eff.getDuration() < 20;
+			}
+			
 			boolean isUsingBow = getHeldItemMainhand().getItem() instanceof BowItem;
 			if(shouldUseBow != isUsingBow)
 				swap();
