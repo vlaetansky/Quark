@@ -7,12 +7,12 @@
   ],
   "key": {
     "F": {
-      "item": "minecraft:warped_fence"
+      "item": "minecraft:warped_hyphae"
     }
   },
   "result": {
     "item": "quark:warped_post",
-    "count": 3
+    "count": 8
   },
   "conditions": [
     {

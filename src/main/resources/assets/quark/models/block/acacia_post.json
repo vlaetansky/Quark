@@ -1,7 +1,6 @@
 {
   "parent": "quark:block/post",
   "textures": {
-    "top": "quark:block/acacia_post_top",
-	"side": "quark:block/acacia_post"
+    "texture": "minecraft:block/acacia_log"
   }
 }

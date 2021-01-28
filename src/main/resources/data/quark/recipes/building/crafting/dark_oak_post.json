@@ -7,12 +7,12 @@
   ],
   "key": {
     "F": {
-      "item": "minecraft:dark_oak_fence"
+      "item": "minecraft:dark_oak_wood"
     }
   },
   "result": {
     "item": "quark:dark_oak_post",
-    "count": 3
+    "count": 8
   },
   "conditions": [
     {

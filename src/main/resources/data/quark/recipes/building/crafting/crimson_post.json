@@ -7,12 +7,12 @@
   ],
   "key": {
     "F": {
-      "item": "minecraft:crimson_fence"
+      "item": "minecraft:crimson_hyphae"
     }
   },
   "result": {
     "item": "quark:crimson_post",
-    "count": 3
+    "count": 8
   },
   "conditions": [
     {

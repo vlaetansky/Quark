@@ -7,12 +7,12 @@
   ],
   "key": {
     "F": {
-      "item": "minecraft:acacia_fence"
+      "item": "minecraft:acacia_wood"
     }
   },
   "result": {
     "item": "quark:acacia_post",
-    "count": 3
+    "count": 8
   },
   "conditions": [
     {

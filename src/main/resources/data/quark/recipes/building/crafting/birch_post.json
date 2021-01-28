@@ -7,12 +7,12 @@
   ],
   "key": {
     "F": {
-      "item": "minecraft:birch_fence"
+      "item": "minecraft:birch_wood"
     }
   },
   "result": {
     "item": "quark:birch_post",
-    "count": 3
+    "count": 8
   },
   "conditions": [
     {

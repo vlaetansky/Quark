@@ -22,7 +22,8 @@
     "TrapDoorBlockMixin",
     "StructurePieceMixin",
     "StructureStartMixin",
-    "TemplateMixin"
+    "TemplateMixin",
+    "LanternBlockMixin"
   ],
   "client": [
     "client.BipedArmorLayerMixin",

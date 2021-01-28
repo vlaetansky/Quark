@@ -7,12 +7,12 @@
   ],
   "key": {
     "F": {
-      "item": "minecraft:jungle_fence"
+      "item": "minecraft:jungle_wood"
     }
   },
   "result": {
     "item": "quark:jungle_post",
-    "count": 3
+    "count": 8
   },
   "conditions": [
     {

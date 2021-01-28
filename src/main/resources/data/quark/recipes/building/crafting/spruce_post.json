@@ -7,12 +7,12 @@
   ],
   "key": {
     "F": {
-      "item": "minecraft:spruce_fence"
+      "item": "minecraft:spruce_wood"
     }
   },
   "result": {
     "item": "quark:spruce_post",
-    "count": 3
+    "count": 8
   },
   "conditions": [
     {

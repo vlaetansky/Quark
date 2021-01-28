@@ -1,7 +1,6 @@
 {
   "parent": "quark:block/post",
   "textures": {
-    "top": "quark:block/warped_post_top",
-	"side": "quark:block/warped_post"
+    "texture": "minecraft:block/warped_stem"
   }
 }
