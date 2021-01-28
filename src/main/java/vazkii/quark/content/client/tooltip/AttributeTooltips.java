@@ -188,7 +188,16 @@ public class AttributeTooltips {
 			for (int i = 0; i < slots.length; i++) {
 				EquipmentSlotType slot = slots[slots.length - (i + 1)];
 				if (attributeTooltips.containsKey(slot)) {
-					int len = mc.fontRenderer.getStringWidth(attributeTooltips.get(slot).toString()) + 16;
+					String stringForSlot = attributeTooltips.get(slot).toString();
+					
+					int len = 16;
+					if(stringForSlot.contains("/")) {
+						stringForSlot = stringForSlot.substring(0, stringForSlot.length() - 1);
+						String[] toks = stringForSlot.split("/");
+						for(String tok : toks)
+							len += mc.fontRenderer.getStringWidth(tok) + 5;
+					}
+					
 					if (showSlots)
 						len += 20;
 
@@ -253,7 +262,7 @@ public class AttributeTooltips {
 				if (attributeValue != 0) {
 					if (!attributeTooltips.containsKey(slot))
 						attributeTooltips.put(slot, new StringBuilder());
-					attributeTooltips.get(slot).append(format(attr, attributeValue, slot));
+					attributeTooltips.get(slot).append(format(attr, attributeValue, slot)).append("/");
 				}
 			} else if (!anyInvalid) {
 				anyInvalid = true;

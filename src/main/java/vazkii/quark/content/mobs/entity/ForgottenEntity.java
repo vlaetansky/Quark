@@ -3,6 +3,7 @@ package vazkii.quark.content.mobs.entity;
 import java.util.List;
 import java.util.stream.Stream;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableSet;
@@ -37,16 +38,20 @@ import net.minecraft.potion.Effects;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.base.module.ModuleLoader;
+import vazkii.quark.content.mobs.module.ForgottenModule;
 import vazkii.quark.content.tools.module.ColorRunesModule;
 
 public class ForgottenEntity extends SkeletonEntity {
 
 	public static final DataParameter<ItemStack> SHEATHED_ITEM = EntityDataManager.createKey(ForgottenEntity.class, DataSerializers.ITEMSTACK);
+
+	public static final ResourceLocation FORGOTTEN_LOOT_TABLE = new ResourceLocation("quark", "entities/forgotten");
 
 	public ForgottenEntity(EntityType<? extends SkeletonEntity> type, World world) {
 		super(type, world);
@@ -98,6 +103,13 @@ public class ForgottenEntity extends SkeletonEntity {
 
 		setCombatTask();
 	}
+	
+	
+	@Nonnull
+	@Override
+	protected ResourceLocation getLootTable() {
+		return FORGOTTEN_LOOT_TABLE;
+	}
 
 	@Override
 	public void writeAdditional(CompoundNBT compound) {
@@ -136,7 +148,7 @@ public class ForgottenEntity extends SkeletonEntity {
 		EnchantmentHelper.addRandomEnchantment(rand, bow, 20, false);
 		EnchantmentHelper.addRandomEnchantment(rand, sheathed, 20, false);
 		
-		if(ModuleLoader.INSTANCE.isModuleEnabled(ColorRunesModule.class)) {
+		if(ModuleLoader.INSTANCE.isModuleEnabled(ColorRunesModule.class) && rand.nextBoolean()) {
 			List<Item> items = ColorRunesModule.runesLootableTag.getAllElements();
 			ItemStack item = new ItemStack(items.get(rand.nextInt(items.size())));
 			CompoundNBT runeNbt = item.serializeNBT();
@@ -150,6 +162,8 @@ public class ForgottenEntity extends SkeletonEntity {
 		
 		setItemStackToSlot(EquipmentSlotType.MAINHAND, bow);
 		dataManager.set(SHEATHED_ITEM, sheathed);
+		
+		setItemStackToSlot(EquipmentSlotType.HEAD, new ItemStack(ForgottenModule.forgotten_hat));
 	}
 
 	@Override
