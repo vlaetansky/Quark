@@ -40,11 +40,16 @@ public abstract class AbstractConfigElement implements IConfigElement {
 	@Override
 	public List<String> getTooltip() {
 		String[] lines = comment.split("\n");
-		if(lines.length > 0 && !lines[0].isEmpty()) {
+		if(lines.length > 0 && (lines.length > 1 || !lines[0].isEmpty())) {
 			List<String> tooltip = new LinkedList<>();
 			
-			for(String s : lines)
+			for(int i = 0; i < lines.length; i++) {
+				String s = lines[i];
+				if(i == 0 && s.isEmpty())
+					continue;
+				
 				tooltip.add(s);
+			}
 			return tooltip;
 		}
 		
