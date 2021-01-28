@@ -1068,6 +1068,7 @@
 	"item.quark.foxhound_spawn_egg": "Foxhound Spawn Egg",
 	"item.quark.wrapped_spawn_egg": "Wrapped Spawn Egg",
 	"item.quark.toretoise_spawn_egg": "Toretoise Spawn Egg",
+	"item.quark.forgotten_spawn_egg": "Forgotten Spawn Egg",
 
 	"effect.quark.resilience": "Resilience",
 	"effect.quark.danger_sight": "Danger Sight",
@@ -1084,7 +1085,8 @@
 	"entity.quark.foxhound": "Foxhound",
 	"entity.quark.wrapped": "Wrapped",
 	"entity.quark.toretoise": "Toretoise",
-	
+	"entity.quark.forgotten": "Forgotten",
+
 	"block.quark.magnetized_block": "Magnetized Block",
 	"block.quark.potted_beetroot": "Potted Beetroots",
 	"block.quark.potted_berries": "Potted Sweet Berry Bush",
