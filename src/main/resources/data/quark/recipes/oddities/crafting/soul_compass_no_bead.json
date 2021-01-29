@@ -5,7 +5,7 @@
       "item": "minecraft:compass"
     },
     {
-      "item": "minecraft:soul_bead"
+      "item": "minecraft:ender_eye"
     }
   ],
   "result": {
@@ -21,8 +21,11 @@
             "flag": "soul_compass"
           },
           {
-            "type": "quark:flag",
-            "flag": "wraith"
+            "type": "forge:not",
+            "value": {
+              "type": "quark:flag",
+              "flag": "wraith"
+            }
           }
       ]
     }
