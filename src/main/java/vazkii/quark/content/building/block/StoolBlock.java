@@ -1,5 +1,7 @@
 package vazkii.quark.content.building.block;
 
+import java.util.Random;
+
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -29,6 +31,7 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.building.entity.StoolEntity;
@@ -64,6 +67,19 @@ public class StoolBlock extends QuarkBlock implements IWaterLoggable {
 				.notSolid());
 
 		setDefaultState(stateContainer.getBaseState().with(WATERLOGGED, false).with(BIG, false).with(SAT_IN, false));
+	}
+	
+	public void blockClicked(World world, BlockPos pos) {
+		BlockState state = world.getBlockState(pos);
+		if(!state.get(BIG)) {
+			world.setBlockState(pos, state.with(BIG, true));
+	         world.getPendingBlockTicks().scheduleTick(pos, this, 1);
+		}
+	}
+	
+	@Override
+	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
+		fixState(worldIn, pos, state);
 	}
 	
 	@Override
@@ -131,6 +147,10 @@ public class StoolBlock extends QuarkBlock implements IWaterLoggable {
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
 		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
 
+		fixState(worldIn, pos, state);
+	}
+	
+	private void fixState(World worldIn, BlockPos pos, BlockState state) {
 		BlockState target = getStateFor(worldIn, pos);
 		if(!target.equals(state))
 			worldIn.setBlockState(pos, target);

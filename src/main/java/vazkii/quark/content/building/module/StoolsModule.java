@@ -1,10 +1,15 @@
 package vazkii.quark.content.building.module;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.DyeColor;
+import net.minecraft.util.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.module.LoadModule;
@@ -14,7 +19,7 @@ import vazkii.quark.content.building.block.StoolBlock;
 import vazkii.quark.content.building.client.render.StoolEntityRenderer;
 import vazkii.quark.content.building.entity.StoolEntity;
 
-@LoadModule(category = ModuleCategory.BUILDING)
+@LoadModule(category = ModuleCategory.BUILDING, hasSubscriptions = true)
 public class StoolsModule extends QuarkModule {
 
     public static EntityType<StoolEntity> stoolEntity;
@@ -32,6 +37,15 @@ public class StoolsModule extends QuarkModule {
                 .setCustomClientFactory((spawnEntity, world) -> new StoolEntity(stoolEntity, world))
                 .build("stool");
         RegistryHelper.register(stoolEntity, "stool");
+	}
+	
+	@SubscribeEvent
+	public void itemUsed(RightClickBlock event) {
+		if(event.getPlayer().isSneaking() && event.getItemStack().getItem() instanceof BlockItem && event.getFace() == Direction.UP) {
+			BlockState state = event.getWorld().getBlockState(event.getPos());
+			if(state.getBlock() instanceof StoolBlock)
+				((StoolBlock) state.getBlock()).blockClicked(event.getWorld(), event.getPos());
+		}
 	}
 	
     @Override
