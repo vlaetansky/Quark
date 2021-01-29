@@ -28,13 +28,17 @@ import vazkii.quark.base.world.EntitySpawnHandler;
 import vazkii.quark.base.world.config.CostSensitiveEntitySpawnConfig;
 import vazkii.quark.base.world.config.EntitySpawnConfig;
 import vazkii.quark.base.world.config.StrictBiomeConfig;
+import vazkii.quark.content.mobs.client.render.SoulBeadRenderer;
 import vazkii.quark.content.mobs.client.render.WraithRenderer;
+import vazkii.quark.content.mobs.entity.SoulBeadEntity;
 import vazkii.quark.content.mobs.entity.WraithEntity;
+import vazkii.quark.content.mobs.item.SoulBeadItem;
 
 @LoadModule(category = ModuleCategory.MOBS)
 public class WraithModule extends QuarkModule {
 	
 	public static EntityType<WraithEntity> wraithType;
+	public static EntityType<SoulBeadEntity> soulBeadType;
 
 	@Config(description = "List of sound sets to use with wraiths.\nThree sounds must be provided per entry, separated by | (in the format idle|hurt|death). Leave blank for no sound (i.e. if a mob has no ambient noise)")
 	private static List<String> wraithSounds  = Lists.newArrayList(
@@ -69,14 +73,24 @@ public class WraithModule extends QuarkModule {
 
 	@Override
 	public void construct() {
+		new SoulBeadItem(this);
+		
 		wraithType = EntityType.Builder.create(WraithEntity::new, EntityClassification.MONSTER)
-				.size(0.5F, 0.9F)
 				.size(0.6F, 1.95F)
 				.trackingRange(8)
 				.immuneToFire()
 				.setCustomClientFactory((spawnEntity, world) -> new WraithEntity(wraithType, world))
 				.build("wraith");
 		RegistryHelper.register(wraithType, "wraith");
+		
+		soulBeadType = EntityType.Builder.create(SoulBeadEntity::new, EntityClassification.MISC)
+				.size(0F, 0F)
+				.trackingRange(4)
+				.func_233608_b_(10) // update frequency
+				.immuneToFire()
+				.setCustomClientFactory((spawnEntity, world) -> new SoulBeadEntity(soulBeadType, world))
+				.build("soul_bead");
+		RegistryHelper.register(soulBeadType, "soul_bead");
 
 		EntitySpawnHandler.registerSpawn(this, wraithType, EntityClassification.MONSTER, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::canMonsterSpawnInLight, spawnConfig);
 		EntitySpawnHandler.addEgg(wraithType, 0xececec, 0xbdbdbd, spawnConfig);
@@ -93,6 +107,7 @@ public class WraithModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
 		RenderingRegistry.registerEntityRenderingHandler(wraithType, WraithRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(soulBeadType, SoulBeadRenderer::new);
 	}
 	
 	@Override

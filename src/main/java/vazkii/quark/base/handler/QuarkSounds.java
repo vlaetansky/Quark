@@ -47,6 +47,7 @@ public class QuarkSounds {
     public static final SoundEvent BLOCK_PIPE_PICKUP_LENNY = register("block.pipe.pickup.lenny");
 
     public static final SoundEvent ITEM_CAMERA_SHUTTER = register("item.camera.shutter");
+    public static final SoundEvent ITEM_SOUL_POWDER_SPAWN = register("item.soul_powder.spawn");
 
     public static void start() {
         for (SoundEvent event : REGISTRY_DEFERENCE)

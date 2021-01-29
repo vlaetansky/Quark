@@ -31,6 +31,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -44,6 +45,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.mobs.module.ForgottenModule;
@@ -190,6 +192,12 @@ public class ForgottenEntity extends SkeletonEntity {
 		}
 
 		return arrow;
+	}
+	
+	@Nonnull
+	@Override
+	public IPacket<?> createSpawnPacket() {
+		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 }

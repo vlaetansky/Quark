@@ -200,5 +200,12 @@
     "sounds": [
       "quark:item/camera"
     ]
+  },
+  "item.soul_powder.spawn": {
+    "category": "players",
+    "subtitle": "quark.subtitles.soulpowder_scream",
+    "sounds": [
+      "quark:item/soulpowder_scream"
+    ]
   }
 }

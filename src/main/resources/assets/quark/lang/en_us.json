@@ -165,6 +165,7 @@
 	"quark.subtitles.pipe_shoot_lenny": "Pipe nuts",
 	"quark.subtitles.pipe_pickup_lenny": "Pipe succ",
 	"quark.subtitles.camera_shutter": "Camera shoots",
+	"quark.subtitles.soulpowder_scream": "Soul escapes",
 
 	"quark.emote.wave": "Wave",
 	"quark.emote.yes": "Yes",
@@ -300,6 +301,7 @@
 	"item.quark.flamerang": "Flamerang",
 	"item.quark.seed_pouch": "Seed Pouch",
 	"item.quark.forgotten_hat": "Forgotten Hat",
+	"item.quark.soul_bead": "Soul Bead",
 
 	"item.minecraft.potion.effect.quark.resilience": "Potion of Stability",
 	"item.minecraft.splash_potion.effect.quark.resilience": "Splash Potion of Stability",
@@ -1062,6 +1064,7 @@
 	"block.quark.jungle_hedge": "Jungle Hedge",
 	"block.quark.acacia_hedge": "Acacia Hedge",
 	"block.quark.dark_oak_hedge": "Dark Oak Hedge",
+	"block.quark.matrix_enchanter": "Matrix Enchanting Table",
 
 	"item.quark.stoneling_spawn_egg": "Stoneling Spawn Egg",
 	"item.quark.frog_spawn_egg": "Frog Spawn Egg",
@@ -1089,6 +1092,7 @@
 	"entity.quark.toretoise": "Toretoise",
 	"entity.quark.forgotten": "Forgotten",
 	"entity.quark.wraith": "Wraith",
+	"entity.quark.soul_bead": "Soul Bead",
 
 	"block.quark.magnetized_block": "Magnetized Block",
 	"block.quark.potted_beetroot": "Potted Beetroots",
