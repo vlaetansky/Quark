@@ -29,9 +29,8 @@ public class GravisandModule extends QuarkModule {
 
 		gravisandType = EntityType.Builder.<GravisandEntity>create(GravisandEntity::new, EntityClassification.MISC)
 				.size(0.98F, 0.98F)
-				.setTrackingRange(160)
-				.setUpdateInterval(20)
-				.setShouldReceiveVelocityUpdates(true)
+				.trackingRange(10)
+				.func_233608_b_(20) // update interval
 				.setCustomClientFactory((spawnEntity, world) -> new GravisandEntity(gravisandType, world))
 				.build("gravisand");
 		RegistryHelper.register(gravisandType, "gravisand");

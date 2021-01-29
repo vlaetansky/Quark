@@ -50,9 +50,7 @@ public class StonelingsModule extends QuarkModule {
 
 		stonelingType = EntityType.Builder.create(StonelingEntity::new, EntityClassification.CREATURE)
 				.size(0.5F, 0.9F)
-				.setTrackingRange(80)
-				.setUpdateInterval(3)
-				.setShouldReceiveVelocityUpdates(true)
+				.trackingRange(8)
 				.setCustomClientFactory((spawnEntity, world) -> new StonelingEntity(stonelingType, world))
 				.build("stoneling");
 		RegistryHelper.register(stonelingType, "stoneling");

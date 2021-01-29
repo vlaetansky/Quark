@@ -74,8 +74,7 @@ public class TotemOfHoldingModule extends QuarkModule {
 
         totemType = EntityType.Builder.create(TotemOfHoldingEntity::new, EntityClassification.MISC)
                 .size(0.5F, 1F)
-                .setTrackingRange(64)
-                .setUpdateInterval(128)
+                .func_233608_b_(128) // update interval
                 .immuneToFire()
                 .setShouldReceiveVelocityUpdates(false)
                 .setCustomClientFactory((spawnEntity, world) -> new TotemOfHoldingEntity(totemType, world))

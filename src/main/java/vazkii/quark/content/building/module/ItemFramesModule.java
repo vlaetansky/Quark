@@ -51,8 +51,8 @@ public class ItemFramesModule extends QuarkModule {
     public void construct() {
         glassFrameEntity = EntityType.Builder.<GlassItemFrameEntity>create(GlassItemFrameEntity::new, EntityClassification.MISC)
                 .size(0.5F, 0.5F)
-                .setTrackingRange(10)
-                .setUpdateInterval(Integer.MAX_VALUE)
+                .trackingRange(10)
+                .func_233608_b_(Integer.MAX_VALUE) // update interval
                 .setShouldReceiveVelocityUpdates(false)
                 .setCustomClientFactory((spawnEntity, world) -> new GlassItemFrameEntity(glassFrameEntity, world))
                 .build("glass_frame");
@@ -60,8 +60,8 @@ public class ItemFramesModule extends QuarkModule {
 
         coloredFrameEntity = EntityType.Builder.<ColoredItemFrameEntity>create(ColoredItemFrameEntity::new, EntityClassification.MISC)
                 .size(0.5F, 0.5F)
-                .setTrackingRange(10)
-                .setUpdateInterval(Integer.MAX_VALUE)
+                .trackingRange(10)
+                .func_233608_b_(Integer.MAX_VALUE) // update interval
                 .setCustomClientFactory((spawnEntity, world) -> new ColoredItemFrameEntity(coloredFrameEntity, world))
                 .setShouldReceiveVelocityUpdates(false)
                 .build("colored_frame");

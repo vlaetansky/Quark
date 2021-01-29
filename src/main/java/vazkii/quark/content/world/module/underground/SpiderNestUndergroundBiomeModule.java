@@ -56,8 +56,7 @@ public class SpiderNestUndergroundBiomeModule extends UndergroundBiomeModule {
 
 		wrappedType = EntityType.Builder.create(WrappedEntity::new, EntityClassification.MONSTER)
 				.size(0.6F, 1.95F)
-				.setTrackingRange(80)
-				.setUpdateInterval(3)
+				.trackingRange(8)
 				.setCustomClientFactory((spawnEntity, world) -> new WrappedEntity(wrappedType, world))
 				.build("wrapped");
 		RegistryHelper.register(wrappedType, "wrapped");

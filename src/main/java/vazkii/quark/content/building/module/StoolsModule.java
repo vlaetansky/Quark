@@ -26,8 +26,8 @@ public class StoolsModule extends QuarkModule {
 		
 		stoolEntity = EntityType.Builder.<StoolEntity>create(StoolEntity::new, EntityClassification.MISC)
                 .size(6F / 16F, 0.5F)
-                .setTrackingRange(10)
-                .setUpdateInterval(Integer.MAX_VALUE)
+                .trackingRange(3)
+                .func_233608_b_(Integer.MAX_VALUE) // update interval
                 .setShouldReceiveVelocityUpdates(false)
                 .setCustomClientFactory((spawnEntity, world) -> new StoolEntity(stoolEntity, world))
                 .build("stool");

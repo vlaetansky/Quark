@@ -41,9 +41,7 @@ public class ToretoiseModule extends QuarkModule {
 	public void construct() {
 		toretoiseType = EntityType.Builder.<ToretoiseEntity>create(ToretoiseEntity::new, EntityClassification.CREATURE)
 				.size(2F, 1F)
-				.setTrackingRange(80)
-				.setUpdateInterval(3)
-				.setShouldReceiveVelocityUpdates(true)
+				.trackingRange(8)
 				.immuneToFire()
 				.setCustomClientFactory((spawnEntity, world) -> new ToretoiseEntity(toretoiseType, world))
 				.build("toretoise");

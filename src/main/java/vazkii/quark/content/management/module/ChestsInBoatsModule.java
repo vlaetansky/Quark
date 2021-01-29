@@ -46,8 +46,7 @@ public class ChestsInBoatsModule extends QuarkModule {
 	public void construct() {
 		chestPassengerEntityType = EntityType.Builder.<ChestPassengerEntity>create(ChestPassengerEntity::new, EntityClassification.MISC)
 				.size(0.8F, 0.8F)
-				.setTrackingRange(64)
-				.setUpdateInterval(128)
+				.func_233608_b_(128) // update interval
 				.setCustomClientFactory((spawnEntity, world) -> new ChestPassengerEntity(chestPassengerEntityType, world))
 				.build("chest_passenger");
 		RegistryHelper.register(chestPassengerEntityType, "chest_passenger");

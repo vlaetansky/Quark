@@ -73,9 +73,7 @@ public class FrogsModule extends QuarkModule {
 		
 		frogType = EntityType.Builder.<FrogEntity>create(FrogEntity::new, EntityClassification.CREATURE)
 				.size(0.65F, 0.5F)
-				.setTrackingRange(80)
-				.setUpdateInterval(3)
-				.setShouldReceiveVelocityUpdates(true)
+				.trackingRange(8)
 				.setCustomClientFactory((spawnEntity, world) -> new FrogEntity(frogType, world))
 				.build("frog");
 		RegistryHelper.register(frogType, "frog");

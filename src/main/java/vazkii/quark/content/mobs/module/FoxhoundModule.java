@@ -53,9 +53,7 @@ public class FoxhoundModule extends QuarkModule {
 	public void construct() {
 		foxhoundType = EntityType.Builder.create(FoxhoundEntity::new, EntityClassification.CREATURE)
 				.size(0.8F, 0.8F)
-				.setTrackingRange(80)
-				.setUpdateInterval(3)
-				.setShouldReceiveVelocityUpdates(true)
+				.trackingRange(8)
 				.immuneToFire()
 				.setCustomClientFactory((spawnEntity, world) -> new FoxhoundEntity(foxhoundType, world))
 				.build("foxhound");

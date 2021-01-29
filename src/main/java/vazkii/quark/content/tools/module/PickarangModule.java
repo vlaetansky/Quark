@@ -57,9 +57,8 @@ public class PickarangModule extends QuarkModule {
 	public void construct() {
 		pickarangType = EntityType.Builder.<PickarangEntity>create(PickarangEntity::new, EntityClassification.MISC)
 				.size(0.4F, 0.4F)
-				.setTrackingRange(80)
-				.setUpdateInterval(3)
-				.setShouldReceiveVelocityUpdates(true)
+				.trackingRange(4)
+				.func_233608_b_(10) // update interval
 				.setCustomClientFactory((spawnEntity, world) -> new PickarangEntity(pickarangType, world))
 				.build("pickarang");
 		RegistryHelper.register(pickarangType, "pickarang");

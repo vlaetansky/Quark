@@ -42,8 +42,8 @@ public class TieLeadsToFencesModule extends QuarkModule {
 	public void construct() {
 		leashKnot2Entity = EntityType.Builder.<LeashKnot2Entity>create(LeashKnot2Entity::new, EntityClassification.MISC)
                 .size(6F / 16F, 0.5F)
-                .setTrackingRange(10)
-                .setUpdateInterval(Integer.MAX_VALUE)
+                .trackingRange(10)
+                .func_233608_b_(Integer.MAX_VALUE) // update interval
                 .setShouldReceiveVelocityUpdates(false)
                 .setCustomClientFactory((spawnEntity, world) -> new LeashKnot2Entity(leashKnot2Entity, world))
                 .build("leash_knot_fake");

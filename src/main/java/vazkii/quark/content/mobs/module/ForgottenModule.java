@@ -42,8 +42,7 @@ public class ForgottenModule extends QuarkModule {
 
 		forgottenType = EntityType.Builder.create(ForgottenEntity::new, EntityClassification.MONSTER)
 				.size(0.7F, 2.4F)
-				.setTrackingRange(80)
-				.setUpdateInterval(3)
+				.trackingRange(8)
 				.setCustomClientFactory((spawnEntity, world) -> new ForgottenEntity(forgottenType, world))
 				.build("forgotten");
 

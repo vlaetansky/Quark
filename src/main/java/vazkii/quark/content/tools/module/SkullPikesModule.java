@@ -42,8 +42,8 @@ public class SkullPikesModule extends QuarkModule {
 	public void construct() {
 		skullPikeType = EntityType.Builder.<SkullPikeEntity>create(SkullPikeEntity::new, EntityClassification.MISC)
 				.size(0.5F, 0.5F)
-				.setTrackingRange(10)
-				.setUpdateInterval(Integer.MAX_VALUE)
+				.trackingRange(3)
+				.func_233608_b_(Integer.MAX_VALUE) // update interval
 				.setShouldReceiveVelocityUpdates(false)
 				.setCustomClientFactory((spawnEntity, world) -> new SkullPikeEntity(skullPikeType, world))
 				.build("skull_pike");

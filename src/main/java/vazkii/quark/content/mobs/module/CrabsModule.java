@@ -76,9 +76,7 @@ public class CrabsModule extends QuarkModule {
 
 		crabType = EntityType.Builder.<CrabEntity>create(CrabEntity::new, EntityClassification.CREATURE)
 				.size(0.9F, 0.5F)
-				.setTrackingRange(80)
-				.setUpdateInterval(3)
-				.setShouldReceiveVelocityUpdates(true)
+				.trackingRange(8)
 				.setCustomClientFactory((spawnEntity, world) -> new CrabEntity(crabType, world))
 				.build("crab");
 		RegistryHelper.register(crabType, "crab");
