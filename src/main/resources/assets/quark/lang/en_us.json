@@ -1070,6 +1070,7 @@
 	"item.quark.wrapped_spawn_egg": "Wrapped Spawn Egg",
 	"item.quark.toretoise_spawn_egg": "Toretoise Spawn Egg",
 	"item.quark.forgotten_spawn_egg": "Forgotten Spawn Egg",
+	"item.quark.wraith_spawn_egg": "Wraith Spawn Egg",
 
 	"effect.quark.resilience": "Resilience",
 	"effect.quark.danger_sight": "Danger Sight",
@@ -1087,6 +1088,7 @@
 	"entity.quark.wrapped": "Wrapped",
 	"entity.quark.toretoise": "Toretoise",
 	"entity.quark.forgotten": "Forgotten",
+	"entity.quark.wraith": "Wraith",
 
 	"block.quark.magnetized_block": "Magnetized Block",
 	"block.quark.potted_beetroot": "Potted Beetroots",
