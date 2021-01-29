@@ -215,7 +215,7 @@ public class LockRotationModule extends QuarkModule {
 			Screen.blit(matrix, x, y, clientProfile.facing.ordinal() * 16, 65, 16, 16, 256, 256);
 
 			if(clientProfile.half > -1)
-				Screen.blit(matrix, x + 16, y, clientProfile.half * 16, 81, 16, 16, 256, 256);
+				Screen.blit(matrix, x + 16, y, clientProfile.half * 16, 79, 16, 16, 256, 256);
 		}
 	}
 
