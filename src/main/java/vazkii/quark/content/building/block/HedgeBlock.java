@@ -31,6 +31,7 @@ import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
+import vazkii.quark.content.building.module.HedgesModule;
 
 public class HedgeBlock extends FenceBlock implements IQuarkBlock, IBlockColorProvider {
 
@@ -52,6 +53,11 @@ public class HedgeBlock extends FenceBlock implements IQuarkBlock, IBlockColorPr
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
 
 		setDefaultState(getDefaultState().with(EXTEND, false));
+	}
+	
+	@Override
+	public boolean canConnect(BlockState state, boolean isSideSolid, Direction direction) {
+		return state.getBlock().isIn(HedgesModule.hedgesTag);
 	}
 	
 	@Override

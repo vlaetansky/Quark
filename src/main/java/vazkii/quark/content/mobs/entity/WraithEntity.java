@@ -180,7 +180,7 @@ public class WraithEntity extends ZombieEntity {
 	public float getBlockPathWeight(BlockPos pos, IWorldReader worldIn) {
 		BlockState state = worldIn.getBlockState(pos);
 		Block block = state.getBlock();
-		return (block == Blocks.SOUL_SAND || block == Blocks.SOUL_SOIL) ? 1F : 0F;
+		return block.isIn(WraithModule.wraithSpawnableTag) ? 1F : 0F;
 	}
 	
 }

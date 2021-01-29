@@ -50,7 +50,7 @@ public class WraithModel extends EntityModel<WraithEntity> {
 		
 		wraith = entity;
 		offset = Math.sin(time / 16) * 0.1 + 0.15;
-		alphaMult = 0.7F + (float) Math.sin(time / 20)  * 0.3F;
+		alphaMult = 0.5F + (float) Math.sin(time / 20)  * 0.3F;
 	}
 	
 	@Override

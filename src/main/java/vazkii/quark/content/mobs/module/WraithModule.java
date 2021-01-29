@@ -5,21 +5,27 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ITag;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.Heightmap.Type;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
+import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.world.EntitySpawnHandler;
+import vazkii.quark.base.world.config.CostSensitiveEntitySpawnConfig;
 import vazkii.quark.base.world.config.EntitySpawnConfig;
 import vazkii.quark.base.world.config.StrictBiomeConfig;
 import vazkii.quark.content.mobs.client.render.WraithRenderer;
@@ -55,7 +61,9 @@ public class WraithModule extends QuarkModule {
 			);
 	
 	@Config
-	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(80, 1, 3, new StrictBiomeConfig(false, "minecraft:soul_sand_valley"));
+	public static EntitySpawnConfig spawnConfig = new CostSensitiveEntitySpawnConfig(8, 1, 3, 0.7, 0.15, new StrictBiomeConfig(false, "minecraft:soul_sand_valley"));
+	
+	public static ITag<Block> wraithSpawnableTag;
 	
 	public static List<String> validWraithSounds;
 
@@ -77,6 +85,8 @@ public class WraithModule extends QuarkModule {
 	@Override
 	public void setup() {
 		GlobalEntityTypeAttributes.put(wraithType, WraithEntity.registerAttributes().create());
+		
+		wraithSpawnableTag = BlockTags.createOptional(new ResourceLocation(Quark.MOD_ID, "wraith_spawnable"));
 	}
 
 	@Override
