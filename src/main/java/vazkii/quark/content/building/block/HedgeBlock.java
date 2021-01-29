@@ -5,13 +5,11 @@ import java.util.function.BooleanSupplier;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FenceBlock;
-import net.minecraft.block.SixWayBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemGroup;
@@ -25,6 +23,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.common.PlantType;
 import vazkii.arl.interf.IBlockColorProvider;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.block.IQuarkBlock;
@@ -52,6 +52,11 @@ public class HedgeBlock extends FenceBlock implements IQuarkBlock, IBlockColorPr
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
 
 		setDefaultState(getDefaultState().with(EXTEND, false));
+	}
+	
+	@Override
+	public boolean canSustainPlant(BlockState state, IBlockReader world, BlockPos pos, Direction facing, IPlantable plantable) {
+		return facing == Direction.UP && plantable.getPlantType(world, pos) == PlantType.PLAINS;
 	}
 
 	@Override
