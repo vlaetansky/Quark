@@ -56,7 +56,7 @@ public class HedgeBlock extends FenceBlock implements IQuarkBlock, IBlockColorPr
 	
 	@Override
 	public boolean canSustainPlant(BlockState state, IBlockReader world, BlockPos pos, Direction facing, IPlantable plantable) {
-		return facing == Direction.UP && plantable.getPlantType(world, pos) == PlantType.PLAINS;
+		return facing == Direction.UP && !state.get(WATERLOGGED) && plantable.getPlantType(world, pos) == PlantType.PLAINS;
 	}
 
 	@Override
