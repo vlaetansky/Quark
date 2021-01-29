@@ -36,7 +36,6 @@ public class SoulBeadItem extends QuarkItem {
 		if(!worldIn.isRemote) {
 			Structure<?> target = Structure.field_236378_n_; // Nether Fortress
             BlockPos blockpos = ((ServerWorld)worldIn).getChunkProvider().getChunkGenerator().func_235956_a_((ServerWorld)worldIn, target, playerIn.getPosition(), 100, false);
-            System.out.println(blockpos);
 
 			if(blockpos != null) {
 				itemstack.shrink(1);

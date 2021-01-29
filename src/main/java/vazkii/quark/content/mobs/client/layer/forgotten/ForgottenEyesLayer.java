@@ -20,6 +20,7 @@ public class ForgottenEyesLayer<T extends SkeletonEntity, M extends SkeletonMode
 		super(rendererIn);
 	}
 
+	@Override
 	public RenderType getRenderType() {
 		return RENDER_TYPE;
 	}
