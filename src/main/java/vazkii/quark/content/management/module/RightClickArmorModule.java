@@ -67,11 +67,14 @@ public class RightClickArmorModule extends QuarkModule {
 			
 			if(slotUnder.canTakeStack(player) && slotUnder.isItemValid(currArmor)) 
 				if(currArmor.isEmpty() || (EnchantmentHelper.getEnchantmentLevel(Enchantments.BINDING_CURSE, currArmor) == 0 && currArmor != stack)) {
-					player.setItemStackToSlot(equipSlot, stack.copy());
-					
-					slotUnder.inventory.setInventorySlotContents(slotUnder.getSlotIndex(), currArmor.copy());
-					slotUnder.onSlotChange(stack, currArmor);
-					return true;
+					int index = slotUnder.getSlotIndex();
+					if(index < slotUnder.inventory.getSizeInventory()) {
+						player.setItemStackToSlot(equipSlot, stack.copy());
+						
+						slotUnder.inventory.setInventorySlotContents(index, currArmor.copy());
+						slotUnder.onSlotChange(stack, currArmor);
+						return true;
+					}
 				}
 		}
 		
