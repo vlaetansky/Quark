@@ -5,14 +5,24 @@ import java.util.function.BooleanSupplier;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FenceBlock;
+import net.minecraft.block.SixWayBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.StateContainer;
+import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.interf.IBlockColorProvider;
@@ -27,35 +37,67 @@ public class HedgeBlock extends FenceBlock implements IQuarkBlock, IBlockColorPr
 	private final QuarkModule module;
 	final Block leaf;
 	private BooleanSupplier enabledSupplier = () -> true;
-	
+
+	public static final BooleanProperty EXTEND = BooleanProperty.create("extend");
+
 	public HedgeBlock(QuarkModule module, Block fence, Block leaf) {
 		super(Block.Properties.from(fence));
-		
+
 		this.module = module;
 		this.leaf = leaf;
-		
+
 		RegistryHelper.registerBlock(this, fence.getRegistryName().getPath().replaceAll("_fence", "_hedge"));
 		RegistryHelper.setCreativeTab(this, ItemGroup.DECORATIONS);
-		
+
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
+
+		setDefaultState(getDefaultState().with(EXTEND, false));
+	}
+
+	@Override
+	public BlockState getStateForPlacement(BlockItemUseContext context) {
+		IBlockReader iblockreader = context.getWorld();
+		BlockPos blockpos = context.getPos();
+		BlockPos down = blockpos.down();
+		BlockState downState = iblockreader.getBlockState(down);
+
+		return super.getStateForPlacement(context)
+				.with(EXTEND, downState.getBlock() instanceof HedgeBlock);
+	}
+
+	@Override
+	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+		if (stateIn.get(WATERLOGGED)) {
+			worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+		}
+
+		if(facing == Direction.DOWN)
+			return stateIn.with(EXTEND, facingState.getBlock() instanceof HedgeBlock);
+		
+		return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
 	}
 	
+	@Override
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+		super.fillStateContainer(builder);
+		builder.add(EXTEND);
+	}
 
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public IBlockColor getBlockColor() {
-        final BlockColors colors = Minecraft.getInstance().getBlockColors();
-        final BlockState leafState = leaf.getDefaultState();
-        return (state, world, pos, tintIndex) -> colors.getColor(leafState, world, pos, tintIndex);
-    }
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public IBlockColor getBlockColor() {
+		final BlockColors colors = Minecraft.getInstance().getBlockColors();
+		final BlockState leafState = leaf.getDefaultState();
+		return (state, world, pos, tintIndex) -> colors.getColor(leafState, world, pos, tintIndex);
+	}
 
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public IItemColor getItemColor() {
-        final ItemColors colors = Minecraft.getInstance().getItemColors();
-        final ItemStack leafStack = new ItemStack(leaf);
-        return (stack, tintIndex) -> colors.getColor(leafStack, tintIndex);
-    }
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public IItemColor getItemColor() {
+		final ItemColors colors = Minecraft.getInstance().getItemColors();
+		final ItemStack leafStack = new ItemStack(leaf);
+		return (stack, tintIndex) -> colors.getColor(leafStack, tintIndex);
+	}
 
 	@Override
 	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {

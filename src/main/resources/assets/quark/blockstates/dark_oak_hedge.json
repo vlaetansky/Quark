@@ -1,8 +1,19 @@
 {
   "multipart": [
     {
+      "when": {
+        "extend": "false"
+      },
       "apply": {
         "model": "quark:block/dark_oak_hedge_post"
+      }
+    },
+    {
+      "when": {
+        "extend": "true"
+      },
+      "apply": {
+        "model": "quark:block/dark_oak_hedge_extend"
       }
     },
     {
