@@ -103,7 +103,7 @@ public class ForgottenEntity extends SkeletonEntity {
 		double w = getWidth() * 2;
 		double h = getHealth();
 		for(int i = 0; i < 5; i++)
-			world.addParticle(ParticleTypes.AMBIENT_ENTITY_EFFECT, getPosX() + Math.random() * w - w/2, getPosY() + Math.random() * h, getPosZ() + Math.random() * w - w/2, 0, 0, 0);
+			world.addParticle(ParticleTypes.MYCELIUM, getPosX() + Math.random() * w - w/2, getPosY() + Math.random() * h, getPosZ() + Math.random() * w - w/2, 0, 0, 0);
 	}
 
 	private void swap() {
