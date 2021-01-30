@@ -159,6 +159,10 @@ public class ForgottenEntity extends SkeletonEntity {
 	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
 		super.setEquipmentBasedOnDifficulty(difficulty);
 
+		prepareEquipment();
+	}
+	
+	public void prepareEquipment() {
 		ItemStack bow = new ItemStack(Items.BOW);
 		ItemStack sheathed = new ItemStack(Items.IRON_SWORD);
 

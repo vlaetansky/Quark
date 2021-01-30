@@ -72,11 +72,12 @@ public class ForgottenModule extends QuarkModule {
 			MobEntity mob = (MobEntity) entity;
 
 			if(result == Result.ALLOW || (mob.canSpawn(entity.world, event.getSpawnReason()) && mob.isNotColliding(entity.world))) {
-				ForgottenEntity wrapped = new ForgottenEntity(forgottenType, entity.world);
+				ForgottenEntity forgotten = new ForgottenEntity(forgottenType, entity.world);
 				Vector3d epos = entity.getPositionVec();
 
-				wrapped.setPositionAndRotation(epos.x, epos.y, epos.z, entity.rotationYaw, entity.rotationPitch);
-				entity.world.addEntity(wrapped);
+				forgotten.setPositionAndRotation(epos.x, epos.y, epos.z, entity.rotationYaw, entity.rotationPitch);
+				forgotten.prepareEquipment();
+				entity.world.addEntity(forgotten);
 				event.setResult(Result.DENY);
 			}
 		}
