@@ -173,7 +173,8 @@
 			"added": "1.14",
 			"desc": [
 				"Combine Iron Ingots and Glass, and you get yourself some fancy Framed Glass, great for some more rustic or medieval builds.",
-				"You can also craft Panes with these, of course."
+				"You can also craft Panes with these, of course.",
+				"1.16.4+ Only: Stained Framed Glass of all 16 colors can also be created, the same way you'd create normal Stained Glass."
 			]
 		},
 		{
@@ -194,8 +195,15 @@
 				"Item Frames can now be displayed in two new fancy ways:",
 				"*First off, you can dye them any of the 16 colors of the minecraft rainbow.",
 				"*Secondly, you can craft a Glass Item Frame. Glass Item Frames will hide the frame around the item when you put it in, so you can have a display that only shows the item.",
-				"*Furthermore, you can use Item Frames as wallpaper. If you put a banner inside a Glass Item Frame, it'll sit flat with the wall with the pattern that's in it.",
-				"*1.16.3+ Only: Lastly, Glass Item Frames can attach to the front of a Sign that's placed on the floor. This will make the item show flush with the sign."
+				"Glass Item Frames have some additional features unique to them, click on More Info to check them out!"
+			],
+			"expand": [
+				"#Glass Item Frames",
+				"*If you put a banner inside a Glass Item Frame, it'll sit flat with the wall with the pattern that's in it, allowing you to create a wallpaper of sorts.",
+				"*Shields display differently in Glass Item Frames, they sit flush with the wall and look nice.",
+				"*1.16.3+ Only: Glass Item Frames can attach to the front of a Sign that's placed on the floor. This will make the item show flush with the sign.",
+				"*1.16.4+ Only: Combining a Glass Item Frame with Glowstone Dust creates a Glowing Glass Item Frame - it glows in the dark!.",
+				"*1.16.4+ Only: Glass Item Frames can be right clicked through to open chests or other inventories."
 			]
 		},
 		{
@@ -233,11 +241,12 @@
 				"New brick variants are added for a few blocks:",
 				"*Sandy Bricks can be crafted with Bricks and Sand.",
 				"*Snowy Bricks can be crafted with Snow.",
-				"*Magma Bricks can be crafted with Magma Blocks. These glow in the dark just like Magma.",
+				"*Magma Bricks can be crafted with Magma Blocks.",
 				"*Charred Nether Bricks can be crafted with Nether Bricks and a Fire Charge.",
 				"*Sandstone Bricks (for all sandstone types) can be crafted with Cut Sandstone.",
 				"*Blue Nether Bricks (1.16+ only) can be crafted with Nether Bricks and Warped Wart Blocks. Additionally, a similar recipe is added for Red Nether Bricks.",
-				"Additionally, all of these come in Slab, Stairs, and Wall variants."
+				"*Warped and Twisted Blackstone Bricks (1.16.4+ only) can be crafted by combining Blackstone Bricks with the respective vine.",
+				"*Additionally, all of these come in Slab, Stairs, and Wall variants."
 			]
 		},
 		{
@@ -462,7 +471,24 @@
 			"image": "wooden-posts.jpg",
 			"added": "1.16.3",
 			"desc": [
-				"Wooden fences can now be crafted into Posts. Posts, like you can see in the image, are vertical styled blocks that don't connect to other blocks, allowing for new building patterns."
+				"Wooden Posts can be crafted with Logs or Stripped Logs. These are slim log style blocks you can lay down vertically or horizontally. Chains and lanterns can also connect to them."
+			]
+		},
+		{
+			"name": "Hedges",
+			"image": "hedges.jpg",
+			"added": "1.16.4",
+			"desc": [
+				"Hedges can be crafted using an overworld log and the respective leaf type. They connect to eachother like fences, and have the same bounding box. You can even put flowers on them!"
+			]
+		},
+		{
+			"name": "Stools",
+			"image": "stools.jpg",
+			"added": "1.16.4",
+			"desc": [
+				"Stools can be created the same way you'd make a Bed, but using slabs instead of full wood blocks. As you can expect, you can sit on them!",
+				"Additional stool features include being able to place blocks over them, which makes them get bigger to match, and being able to stay on them even when moved by pistons."
 			]
 		}
 	],
@@ -703,7 +729,27 @@
             	"*Toretoises move very slowly, and can't be leashed, using Minecarts is recommended.",
             	"*If Iron Rods (from the Automation module) are enabled, pushing them onto a Toretoise with a piston will break its ore."
             ]
-		}
+		},
+		{
+			"name": "Wraiths",
+			"image": "wraiths.jpg",
+			"added": "1.16.4",
+            "desc": [
+                "Wraiths are new aggressive mobs that spawn in the Soul Sand Valley. They're the lost souls of different mobs, and as such, their sounds are low pitch versions of normal mob sounds.",
+                "They attack like a normal Zombie, inflict slowness, and jump back upon dealing damage. Upon death, they'll drop a Soul Bead.",
+                "Right clicking the Soul Bead will release the soul trapped within, which will fly in the direction of the nearest Nether Fortress."
+            ]
+        },
+		{
+			"name": "Forgotten",
+			"image": "forgotten.jpg",
+			"added": "1.16.4",
+            "desc": [
+                "Forgotten are new rare skeleton variants that spawn deep underground, randomly replacing normal skeleton spawns. These are forgotten hosts of old explorers, making them apt at combat with both a bow and a sword, which always come randomly enchanted.",
+                "Their bows are tipped with Blindness arrows, and when you're blinded, they'll charge at you with their sword, switching back to the bow once the effect ends. On death, they'll drop their hat.",
+                "Wearing an Explorer's Hat, aside from making you look super fashionable, increases your maximum reach distance by 2 blocks, and also improves your luck while fishing."
+            ]
+        }
 	],
 	"tools": [
 		{
@@ -1412,8 +1458,8 @@
 			"added": "1.15",
 			"desc": [
 				"When a player dies, a Totem of Holding will spawn at the dead player's position. This totem will float around in the air, holding the player's items. Any player can retrieve the items the totem is holding by punching it a few times. (The totem won't spawn for PVP kills)",
-				"Do note that if the player who spawned the totem dies again, the totem will break and drop all of the items on the ground, like a normal death.",
-				"A player's totem can be located by crafting a Soul Compass, which is done using a Compass and an Ender Pearl."
+				"Do note that if the player who spawned the totem dies again, the totem will break and drop all of the items on the ground, like a normal death. The totem isn't an item - it just shows up for you.",
+				"A player's totem can be located by crafting a Soul Compass, which is done using a Compass and a Soul Bead (from Wraiths, in the Mobs category; replace with an Ender Pearl if Wraiths are disabled)."
 			]
 		},
 		{
