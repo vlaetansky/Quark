@@ -168,6 +168,9 @@ public class EmotesModule extends QuarkModule {
 			int rows = 0;
 			int row = 0;
 			int tierRow, rowPos;
+			
+			Minecraft mc = Minecraft.getInstance();
+			boolean expandDown = mc.gameSettings.showSubtitles;
 
 			Set<Integer> keys = descriptorSorting.keySet();
 			for(int tier : keys) {
@@ -179,6 +182,8 @@ public class EmotesModule extends QuarkModule {
 				}
 			}
 
+			int buttonY = (expandDown ? 2 : gui.height - 40);
+			
 			List<Button> emoteButtons = new LinkedList<>();
 			for (int tier : keys) {
 				rowPos = 0;
@@ -189,7 +194,7 @@ public class EmotesModule extends QuarkModule {
 						int rowSize = Math.min(descriptors.size() - tierRow * EMOTES_PER_ROW, EMOTES_PER_ROW);
 
 						int x = gui.width - (EMOTE_BUTTON_WIDTH * (EMOTES_PER_ROW + 1)) + (((rowPos + 1) * 2 + EMOTES_PER_ROW - rowSize) * EMOTE_BUTTON_WIDTH / 2 + 1);
-						int y = gui.height - (40 + EMOTE_BUTTON_WIDTH * (rows - row));
+						int y = buttonY + (EMOTE_BUTTON_WIDTH * (rows - row)) * (expandDown ? 1 : -1);
 
 						Button button = new EmoteButton(x, y, desc, (b) -> {
 							String name = desc.getRegistryName();
@@ -212,7 +217,7 @@ public class EmotesModule extends QuarkModule {
 					row++;
 			}
 			
-			event.addWidget(new TranslucentButton(gui.width - 1 - EMOTE_BUTTON_WIDTH * EMOTES_PER_ROW, gui.height - 40, EMOTE_BUTTON_WIDTH * EMOTES_PER_ROW, 20, 
+			event.addWidget(new TranslucentButton(gui.width - 1 - EMOTE_BUTTON_WIDTH * EMOTES_PER_ROW, buttonY, EMOTE_BUTTON_WIDTH * EMOTES_PER_ROW, 20, 
 					new TranslationTextComponent("quark.gui.button.emotes"),
 					(b) -> {
 						for(Button bt : emoteButtons)
