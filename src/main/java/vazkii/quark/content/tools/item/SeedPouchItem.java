@@ -5,11 +5,9 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -24,12 +22,9 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.Tags;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.api.ITrowelable;
 import vazkii.quark.api.IUsageTickerOverride;
-import vazkii.quark.base.block.IQuarkBlock;
-import vazkii.quark.base.item.IQuarkItem;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
@@ -79,7 +74,7 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 		Pair<ItemStack, Integer> contents = getContents(stack);
 		
 		if(contents == null)
-			return incoming.getItem().isIn(Tags.Items.SEEDS);
+			return incoming.getItem().isIn(SeedPouchModule.seedPouchHoldableTag);
 		
 		return contents.getRight() < SeedPouchModule.maxItems && ItemStack.areItemsEqual(incoming, contents.getLeft());
     }
