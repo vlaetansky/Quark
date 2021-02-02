@@ -101,7 +101,7 @@ public class CompassAngleGetter {
 				target = lodestonePos;
 			} else if(dimension.equals(Dimension.THE_END.getLocation()) && CompassesWorkEverywhereModule.enableEnd) 
 				calculate = true;
-			else if(dimension.equals(Dimension.THE_END.getLocation()) && isCalculated(stack) && CompassesWorkEverywhereModule.enableNether) {
+			else if(dimension.equals(Dimension.THE_NETHER.getLocation()) && isCalculated(stack) && CompassesWorkEverywhereModule.enableNether) {
 				boolean set = ItemNBTHelper.getBoolean(stack, TAG_POSITION_SET, false);
 				if(set) {
 					int x = ItemNBTHelper.getInt(stack, TAG_NETHER_TARGET_X, 0);
