@@ -94,14 +94,8 @@ public class MatrixEnchantingTableBlock extends EnchantingTableBlock implements 
 		if(ModuleLoader.INSTANCE.isModuleEnabled(MatrixEnchantingModule.class)) {
 			if(player instanceof ServerPlayerEntity)
 				NetworkHooks.openGui((ServerPlayerEntity) player, (MatrixEnchantingTableTileEntity) worldIn.getTileEntity(pos), pos);
-		} else {
-			if(!worldIn.isRemote) {
-				INamedContainerProvider provider = new SimpleNamedContainerProvider((p_220147_2_, p_220147_3_, p_220147_4_) -> {
-					return new EnchantmentContainer(p_220147_2_, p_220147_3_, IWorldPosCallable.of(worldIn, pos));
-				}, ((MatrixEnchantingTableTileEntity) worldIn.getTileEntity(pos)).getDisplayName());
-				player.openContainer(provider);
-			}
-		}
+		} else
+			worldIn.setBlockState(pos, Blocks.ENCHANTING_TABLE.getDefaultState());
 
 		return ActionResultType.SUCCESS;
 	}
