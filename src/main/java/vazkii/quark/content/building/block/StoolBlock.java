@@ -160,7 +160,7 @@ public class StoolBlock extends QuarkBlock implements IWaterLoggable {
 		return getDefaultState()
 				.with(WATERLOGGED, world.getFluidState(pos).getFluid() == Fluids.WATER)
 				.with(BIG, world.getBlockState(pos.up()).getShape(world, pos.up()).getStart(Axis.Y) == 0)
-				.with(SAT_IN, world.getEntitiesWithinAABB(StoolEntity.class, new AxisAlignedBB(pos, pos.up()).grow(0.4)).size() > 0);
+				.with(SAT_IN, world.getEntitiesWithinAABB(StoolEntity.class, new AxisAlignedBB(pos, pos.up()).grow(0.4), e -> e.getPosition().equals(pos)).size() > 0);
 	}
 	
 	@Override
