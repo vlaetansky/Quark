@@ -2,12 +2,13 @@ package vazkii.quark.content.building.module;
 
 import com.google.common.collect.ImmutableSet;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.LoadModule;
+import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.building.block.VerticalSlabBlock;
-import vazkii.quark.base.module.ModuleCategory;
 
 @LoadModule(category = ModuleCategory.BUILDING)
 public class VerticalSlabsModule extends QuarkModule {
@@ -23,8 +24,17 @@ public class VerticalSlabsModule extends QuarkModule {
 				Blocks.SMOOTH_STONE_SLAB, Blocks.SPRUCE_SLAB, Blocks.STONE_SLAB, Blocks.STONE_BRICK_SLAB, Blocks.BLACKSTONE_SLAB, Blocks.POLISHED_BLACKSTONE_SLAB,
 				Blocks.POLISHED_BLACKSTONE_BRICK_SLAB, Blocks.CRIMSON_SLAB, Blocks.WARPED_SLAB)
 		.forEach(b -> new VerticalSlabBlock(b, this));
-		
-		VariantHandler.SLABS.forEach(b -> new VerticalSlabBlock(b, this));
+
+		VariantHandler.SLABS.forEach(b ->  {
+			if(b instanceof IVerticalSlabProvider) 
+				((IVerticalSlabProvider) b).getVerticalSlab(b, this);
+			else new VerticalSlabBlock(b, this);
+		});
 	}
-	
+
+	public static interface IVerticalSlabProvider {
+		VerticalSlabBlock getVerticalSlab(Block block, QuarkModule module);
+
+	}
+
 }

@@ -18,8 +18,8 @@ import vazkii.quark.base.module.ModuleCategory;
 public class TurfModule extends QuarkModule {
     @Override
     public void construct() {
-        IQuarkBlock turf = new TurfBlock("turf", this, ItemGroup.BUILDING_BLOCKS,
-                Block.Properties.from(Blocks.GRASS_BLOCK));
-        VariantHandler.addSlabAndStairs(turf);
+        IQuarkBlock turf = new TurfBlock("turf", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.GRASS_BLOCK));
+        VariantHandler.SLABS.add(new TurfBlock.TurfSlabBlock(turf));
+        VariantHandler.STAIRS.add(new TurfBlock.TurfStairsBlock(turf));
     }
 }
