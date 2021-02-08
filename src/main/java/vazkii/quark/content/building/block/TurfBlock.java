@@ -13,6 +13,7 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -69,15 +70,17 @@ public class TurfBlock extends QuarkBlock implements IBlockColorProvider {
 			return true;
 
 		if(PlantType.BEACH.equals(type)) {
-			boolean hasWater = false;
-			for(Direction face : Direction.Plane.HORIZONTAL) {
-				BlockState blockState = world.getBlockState(pos.offset(face));
-				FluidState fluidState = world.getFluidState(pos.offset(face));
-				hasWater |= blockState.isIn(Blocks.FROSTED_ICE);
-				hasWater |= fluidState.isTagged(FluidTags.WATER);
-				if(hasWater)
-					break; 
-			}
+			boolean hasWater = world.getFluidState(pos).isTagged(FluidTags.WATER);
+			
+			if(!hasWater)
+				for(Direction face : Direction.Plane.HORIZONTAL) {
+					BlockState blockState = world.getBlockState(pos.offset(face));
+					FluidState fluidState = world.getFluidState(pos.offset(face));
+					hasWater |= blockState.isIn(Blocks.FROSTED_ICE);
+					hasWater |= fluidState.isTagged(FluidTags.WATER);
+					if(hasWater)
+						break; 
+				}
 
 			return hasWater;
 		}
