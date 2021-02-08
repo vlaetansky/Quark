@@ -1,6 +1,8 @@
 package vazkii.quark.content.client.module;
 
 import com.google.common.collect.Lists;
+
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderTooltipEvent;
@@ -60,14 +62,23 @@ public class ImprovedTooltipsModule extends QuarkModule {
             + "minecraft:mending=minecraft:carrot_on_a_stick")
     public static List<String> enchantingAdditionalStacks = Lists.newArrayList();
 
+    private static final String IGNORE_TAG = "quark:no_tooltip";
+    
     @Override
     public void configChanged() {
         EnchantedBookTooltips.reloaded();
     }
 
+    private static boolean ignore(ItemStack stack) {
+    	return stack.hasTag() && stack.getTag().getBoolean(IGNORE_TAG);
+    }
+    
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public void makeTooltip(ItemTooltipEvent event) {
+    	if(ignore(event.getItemStack()))
+    		return;
+    	
         if (attributeTooltips)
             AttributeTooltips.makeTooltip(event);
         if (foodTooltips || showSaturation)
@@ -83,6 +94,9 @@ public class ImprovedTooltipsModule extends QuarkModule {
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public void renderTooltip(RenderTooltipEvent.PostText event) {
+    	if(ignore(event.getStack()))
+    		return;
+    	
         if (attributeTooltips)
             AttributeTooltips.renderTooltip(event);
         if (foodTooltips)
