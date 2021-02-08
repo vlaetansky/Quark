@@ -24,7 +24,12 @@ public class VillagersFollowEmeraldsModule extends QuarkModule {
             boolean alreadySetUp = villager.goalSelector.goals.stream().anyMatch((goal) -> goal.getGoal() instanceof TemptGoal);
 
             if (!alreadySetUp)
-                villager.goalSelector.addGoal(2, new TemptGoal(villager, 0.6, Ingredient.fromItems(Items.EMERALD_BLOCK), false));
+            	try {
+            		villager.goalSelector.addGoal(2, new TemptGoal(villager, 0.6, Ingredient.fromItems(Items.EMERALD_BLOCK), false));
+            	} catch(IllegalArgumentException e) {
+            		// This appears to be a weird bug that happens when a villager is riding something and its chunk unloads
+            	}
+                
         }
     }
 }
