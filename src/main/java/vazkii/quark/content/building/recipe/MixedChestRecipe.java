@@ -100,7 +100,7 @@ public class MixedChestRecipe implements ICraftingRecipe, IShapedRecipe<Crafting
 	public NonNullList<Ingredient> getIngredients() {
 		if(ingredients == null) {
 			NonNullList<Ingredient> list = NonNullList.withSize(9, Ingredient.EMPTY);
-			Ingredient ingr = Ingredient.fromTag(ItemTags.PLANKS);
+			Ingredient ingr = Ingredient.fromItems(Blocks.OAK_PLANKS);
 			for(int i = 0; i < 8; i++)
 				list.set(i < 4 ? i : i + 1, ingr);
 			ingredients = list;
