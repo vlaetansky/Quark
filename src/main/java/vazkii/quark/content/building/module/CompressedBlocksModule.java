@@ -41,6 +41,10 @@ public class CompressedBlocksModule extends QuarkModule {
 	@Config.Min(0)
 	public static int stickBlockFuelTime = 900;
 	
+	@Config(name = "Bamboo Bundle Fuel Time")
+	@Config.Min(0)
+	public static int bambooBundleFuelTime = 500;
+	
 	@Config(flag = "charcoal_block") public static boolean enableCharcoalBlock = true;
 	@Config(flag = "sugar_cane_block") public static boolean enableSugarCaneBlock = true;
 	@Config(flag = "bamboo_block") public static boolean enableBambooBlock = true;
@@ -63,7 +67,7 @@ public class CompressedBlocksModule extends QuarkModule {
 	@Config(flag = "bonded_leather") public static boolean enableBondedLeather = true;
 	@Config(flag = "bonded_rabbit_hide") public static boolean enableBondedRabbitHide = true;
 
-	public static Block charcoal_block, stick_block, blaze_lantern;
+	public static Block charcoal_block, stick_block, blaze_lantern, bamboo_bundle;
 
 	private final List<Block> compostable = Lists.newArrayList();
 
@@ -77,7 +81,7 @@ public class CompressedBlocksModule extends QuarkModule {
 						.sound(SoundType.STONE), true)
 				.setCondition(() -> enableCharcoalBlock);
 		
-		pillar("sugar_cane", MaterialColor.LIME, true, () -> enableSugarCaneBlock, 200);
+		bamboo_bundle = pillar("sugar_cane", MaterialColor.LIME, true, () -> enableSugarCaneBlock, 200);
 		pillar("bamboo", MaterialColor.YELLOW, true, () -> enableBambooBlock, 200);
 		pillar("cactus", MaterialColor.GREEN, true, () -> enableCactusBlock, 50);
 		pillar("chorus_fruit", MaterialColor.PURPLE, false, () -> enableChorusFruitBlock, 10);
@@ -123,6 +127,7 @@ public class CompressedBlocksModule extends QuarkModule {
 		FuelHandler.addFuel(stick_block, stickBlockFuelTime);
 		FuelHandler.addFuel(charcoal_block, charcoalBlockFuelTime);
 		FuelHandler.addFuel(blaze_lantern, blazeLanternFuelTime);
+		FuelHandler.addFuel(bamboo_bundle, bambooBundleFuelTime);
 	}
 
 	private Block pillar(String name, MaterialColor color, boolean compost, BooleanSupplier cond, int flammability) {
