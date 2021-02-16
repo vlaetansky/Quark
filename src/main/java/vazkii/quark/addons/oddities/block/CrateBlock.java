@@ -55,8 +55,10 @@ public class CrateBlock extends QuarkBlock {
 				((CrateTileEntity) tileentity).setCustomName(stack.getDisplayName());
 			}
 		}
-
 	}
+	
+	// TODO sfx
+	// TODO drop items
 
 	@Override
 	public boolean hasTileEntity(BlockState state) {

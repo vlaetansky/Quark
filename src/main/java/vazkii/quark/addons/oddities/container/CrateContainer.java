@@ -67,6 +67,8 @@ public class CrateContainer extends Container {
 		return crateData.get(1);
 	}
 	
+	// TODO support shift click
+	
 	public static CrateContainer fromNetwork(int windowId, PlayerInventory playerInventory, PacketBuffer buf) {
 		BlockPos pos = buf.readBlockPos();
 		CrateTileEntity te = (CrateTileEntity) playerInventory.player.world.getTileEntity(pos);
