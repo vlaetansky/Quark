@@ -65,6 +65,7 @@ public class VerticalSlabBlock extends QuarkBlock implements IWaterLoggable, IBl
 	
 	@Override
 	public BlockState rotate(BlockState state, Rotation rot) {
+		rot = rot.add(Rotation.CLOCKWISE_180);
 		return state.get(TYPE) == VerticalSlabType.DOUBLE ? state : state.with(TYPE, VerticalSlabType.fromDirection(rot.rotate(state.get(TYPE).direction)));
 	}
 	
