@@ -183,8 +183,13 @@ public class ToretoiseEntity extends AnimalEntity {
 
 					LivingEntity aggressor = lastAggressor == null ? this : lastAggressor;
 					DamageSource damageSource = DamageSource.causeMobDamage(aggressor);
-					for(LivingEntity e : hurtMeDaddy)
-						e.attackEntityFrom(damageSource, 4 + world.getDifficulty().ordinal());
+					for(LivingEntity e : hurtMeDaddy) {
+						DamageSource useSource = damageSource;
+						if(e == aggressor)
+							useSource = DamageSource.causeMobDamage(this);
+						
+						e.attackEntityFrom(useSource, 4 + world.getDifficulty().ordinal());
+					}
 				}
 			}
 		}
