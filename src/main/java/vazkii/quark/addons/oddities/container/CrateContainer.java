@@ -13,6 +13,8 @@ import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import vazkii.quark.addons.oddities.module.CrateModule;
 import vazkii.quark.addons.oddities.tile.CrateTileEntity;
@@ -31,9 +33,8 @@ public class CrateContainer extends Container {
 	private final IIntArray crateData;
 
 	public CrateContainer(int id, PlayerInventory inv, CrateTileEntity crate) {
-		this(id, inv, crate, new IntArray(1));
+		this(id, inv, crate, new IntArray(2));
 	}
-
 
 	public CrateContainer(int id, PlayerInventory inv, CrateTileEntity crate, IIntArray data) {
 		super(CrateModule.containerType, id);
@@ -54,8 +55,18 @@ public class CrateContainer extends Container {
 
 		for(int i1 = 0; i1 < 9; ++i1)
 			addSlot(new Slot(inv, i1, 8 + i1 * 18, 161 + i));
+		
+		trackIntArray(crateData);
 	}
-
+	
+	public int getTotal() {
+		return crateData.get(0);
+	}
+	
+	public int getStackCount() {
+		return crateData.get(1);
+	}
+	
 	public static CrateContainer fromNetwork(int windowId, PlayerInventory playerInventory, PacketBuffer buf) {
 		BlockPos pos = buf.readBlockPos();
 		CrateTileEntity te = (CrateTileEntity) playerInventory.player.world.getTileEntity(pos);
@@ -68,15 +79,13 @@ public class CrateContainer extends Container {
 	}
 
 	public void scroll(boolean down, boolean packet) {
-		if(packet) {
+		if(packet)
 			QuarkNetwork.sendToServer(new ScrollCrateMessage(down));
-			return;
-		}
 
 		boolean did = false;
 
 		if(down) {
-			int maxScroll = (crate.getSizeInventory() / numCols) * numCols;
+			int maxScroll = (getStackCount() / numCols) * numCols;
 
 			int target = scroll + numCols;
 			if(target <= maxScroll) {
@@ -93,10 +102,6 @@ public class CrateContainer extends Container {
 
 		if(did)
 			detectAndSendChanges();
-	}
-
-	private CrateContainer container() {
-		return this;
 	}
 
 	private class CrateSlot extends Slot {
@@ -133,10 +138,9 @@ public class CrateContainer extends Container {
 
 			World world = crate.getWorld();
 			if(!world.isRemote) {
-				CrateContainer container = container();
-				List<IContainerListener> listeners = ObfuscationReflectionHelper.getPrivateValue(Container.class, container, "listeners"); // TODO
+				List<IContainerListener> listeners = ObfuscationReflectionHelper.getPrivateValue(Container.class, CrateContainer.this, "listeners"); // TODO
 				for(IContainerListener icontainerlistener : listeners)
-					icontainerlistener.sendAllContents(container, container.getInventory());
+					icontainerlistener.sendAllContents(CrateContainer.this, getInventory());
 			}
 		}
 

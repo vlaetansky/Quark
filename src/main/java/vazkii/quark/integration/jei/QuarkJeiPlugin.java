@@ -11,10 +11,13 @@ import java.util.stream.Stream;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
+import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
+import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.registration.IVanillaCategoryExtensionRegistration;
+import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -26,6 +29,7 @@ import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import vazkii.arl.util.ItemNBTHelper;
+import vazkii.quark.addons.oddities.client.screen.CrateScreen;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.tools.item.AncientTomeItem;
@@ -65,6 +69,11 @@ public class QuarkJeiPlugin implements IModPlugin {
 		
 		if (ModuleLoader.INSTANCE.isModuleEnabled(ColorRunesModule.class))
 			registerRuneAnvilRecipes(registration, factory);
+	}
+	
+	@Override
+	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+		registration.addGuiContainerHandler(CrateScreen.class, new CrateGuiHandler());
 	}
 
 	private void registerAncientTomeAnvilRecipes(IRecipeRegistration registration, IVanillaRecipeFactory factory) {
@@ -131,5 +140,14 @@ public class QuarkJeiPlugin implements IModPlugin {
 				Collections.singletonList(veryDamaged), Collections.singletonList(damaged));
 
 		registration.addRecipes(Arrays.asList(materialRepair, toolRepair), VanillaRecipeCategoryUid.ANVIL);
+	}
+	
+	private static class CrateGuiHandler implements IGuiContainerHandler<CrateScreen> {
+		
+		@Override
+		public List<Rectangle2d> getGuiExtraAreas(CrateScreen containerScreen) {
+			return containerScreen.getExtraAreas();
+		}
+	
 	}
 }

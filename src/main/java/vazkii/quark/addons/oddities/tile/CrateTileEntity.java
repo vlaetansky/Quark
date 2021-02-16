@@ -13,9 +13,11 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.IIntArray;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import vazkii.quark.addons.oddities.container.CrateContainer;
@@ -29,10 +31,24 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 	private int[] visibleSlots = new int[0];
 	boolean needsUpdate = false;
 
+	protected final IIntArray crateData = new IIntArray() {
+		public int get(int index) {
+			return index == 0 ? totalItems : stacks.size();
+		}
+
+		public void set(int index, int value) {
+			// NO-OP
+		}
+
+		public int size() {
+			return 2;
+		}
+	};
+
 	public CrateTileEntity() {
 		super(CrateModule.crateType);
 	}
-	
+
 	public int getTotalItems() {
 		return totalItems;
 	}
@@ -44,11 +60,11 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 			needsUpdate = false;
 		}
 	}
-	
+
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
 		compound.putInt("totalItems", totalItems);
-		
+
 		ListNBT list = new ListNBT();
 		for(ItemStack stack : stacks) {
 			CompoundNBT stackCmp = new CompoundNBT();
@@ -56,22 +72,22 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 			list.add(stackCmp);
 		}
 		compound.put("stacks", list);
-		
+
 		return super.write(compound);
 	}
-	
+
 	@Override
 	public void read(BlockState state, CompoundNBT nbt) {
 		totalItems = nbt.getInt("totalItems");
-		
+
 		ListNBT list = nbt.getList("stacks", 10);
 		stacks = new ArrayList<>(list.size());
 		for(int i = 0; i < list.size(); i++)
 			stacks.add(ItemStack.read(list.getCompound(i)));
-		
+
 		super.read(state, nbt);
 	}
-	
+
 	@Override
 	public ItemStack getStackInSlot(int slot) {
 		return slot < stacks.size() ? stacks.get(slot) : ItemStack.EMPTY;
@@ -83,7 +99,7 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 			ItemStack stack = getStackInSlot(slot);
 			totalItems -= stack.getCount();
 			needsUpdate = true;
-			
+
 			return stack;
 		}
 
@@ -108,10 +124,10 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 		ItemStack stack = getStackInSlot(slot);
 		ItemStack retstack = stack.split(count);
 		totalItems -= count;
-		
+
 		if(stack.isEmpty())
 			needsUpdate = true;
-		
+
 		return retstack;
 	}
 
@@ -168,7 +184,7 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 
 	@Override
 	protected Container createMenu(int id, PlayerInventory player) {
-		return new CrateContainer(id, player, this);
+		return new CrateContainer(id, player, this, crateData);
 	}
 
 	@Override
