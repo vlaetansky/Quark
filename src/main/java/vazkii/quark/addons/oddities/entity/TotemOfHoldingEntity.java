@@ -92,7 +92,7 @@ public class TotemOfHoldingEntity extends Entity {
                     if(curr.isEmpty()) {
                         player.setItemStackToSlot(slot, stack);
                         stack = null;
-                    } else if(EnchantmentHelper.getEnchantmentLevel(Enchantments.BINDING_CURSE, curr) == 0) {
+                    } else if(EnchantmentHelper.getEnchantmentLevel(Enchantments.BINDING_CURSE, curr) == 0 && EnchantmentHelper.getEnchantmentLevel(Enchantments.BINDING_CURSE, stack) == 0) {
                         player.setItemStackToSlot(slot, stack);
                         stack = curr;
                     }
