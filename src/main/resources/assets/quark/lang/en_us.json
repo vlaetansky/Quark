@@ -1065,7 +1065,8 @@
 	"block.quark.acacia_hedge": "Acacia Hedge",
 	"block.quark.dark_oak_hedge": "Dark Oak Hedge",
 	"block.quark.matrix_enchanter": "Matrix Enchanting Table",
-
+	"block.quark.crate": "Crate",
+	
 	"item.quark.stoneling_spawn_egg": "Stoneling Spawn Egg",
 	"item.quark.frog_spawn_egg": "Frog Spawn Egg",
 	"item.quark.crab_spawn_egg": "Crab Spawn Egg",

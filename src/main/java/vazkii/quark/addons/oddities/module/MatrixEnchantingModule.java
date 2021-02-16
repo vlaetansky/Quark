@@ -149,7 +149,6 @@ public class MatrixEnchantingModule extends QuarkModule {
 		ScreenManager.registerFactory(containerType, MatrixEnchantingScreen::new);
 		ClientRegistry.bindTileEntityRenderer(tileEntityType, MatrixEnchantingTableTileEntityRenderer::new);	
 	}
-	
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)

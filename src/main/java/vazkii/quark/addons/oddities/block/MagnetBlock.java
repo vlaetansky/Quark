@@ -44,7 +44,6 @@ public class MagnetBlock extends QuarkBlock {
 	public MagnetBlock(QuarkModule module) {
 		super("magnet", module, ItemGroup.REDSTONE, Properties.from(Blocks.IRON_BLOCK));
 		setDefaultState(getDefaultState().with(FACING, Direction.DOWN).with(POWERED, false));
-		RegistryHelper.setCreativeTab(this, ItemGroup.REDSTONE);
 	}
 
 	@Override
