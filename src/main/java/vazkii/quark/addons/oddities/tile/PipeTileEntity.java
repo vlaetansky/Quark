@@ -187,7 +187,7 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 			if(tile instanceof PipeTileEntity)
 				did = ((PipeTileEntity) tile).passIn(item.stack, item.outgoingFace.getOpposite(), null, item.rngSeed, item.timeInWorld);
 			else {
-				ItemStack result = putIntoInv(item.stack, tile, item.outgoingFace.getOpposite(), false);
+				ItemStack result = MiscUtil.putIntoInv(item.stack, tile, item.outgoingFace.getOpposite(), false, false);
 				if(result.getCount() != item.stack.getCount()) {
 					did = true;
 					if(!result.isEmpty())
@@ -300,31 +300,13 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 
 		if(tile instanceof PipeTileEntity)
 			return ((PipeTileEntity) tile).isPipeEnabled();
-		else {
-			ItemStack result = putIntoInv(stack, tile, face, true);
-			return result.isEmpty();
-		}
+		else
+			return MiscUtil.canPutIntoInv(stack, tile, face, false);
 	}
 
 	protected boolean isPipeEnabled() {
 		BlockState state = world.getBlockState(pos);
 		return state.getBlock() instanceof PipeBlock && !world.isBlockPowered(pos);
-	}
-
-	protected ItemStack putIntoInv(ItemStack stack, TileEntity tile, Direction face, boolean simulate) {
-		IItemHandler handler = null;
-		
-		LazyOptional<IItemHandler> opt = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, face); 
-		if(opt.isPresent())
-			handler = opt.orElse(null);
-		else if(tile instanceof ISidedInventory)
-			handler = new SidedInvWrapper((ISidedInventory) tile, face);
-		else if(tile instanceof IInventory)
-			handler = new InvWrapper((IInventory) tile);
-
-		if(handler != null)
-			return simulate ? ItemStack.EMPTY : ItemHandlerHelper.insertItem(handler, stack, simulate);
-		return stack;
 	}
 
 	@Override

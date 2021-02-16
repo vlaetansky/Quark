@@ -23,6 +23,8 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootEntry;
 import net.minecraft.loot.LootPool;
@@ -47,8 +49,14 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent.KeyboardKeyPressedEvent;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.wrapper.InvWrapper;
+import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.config.gui.AbstractQScreen;
@@ -211,6 +219,27 @@ public class MiscUtil {
 		});
 
 		return world.func_241116_a_(biome, start, 6400, 8); // magic numbers from LocateBiomeCommand
+	}
+	
+	public static ItemStack putIntoInv(ItemStack stack, TileEntity tile, Direction face, boolean simulate, boolean doSimulation) {
+		IItemHandler handler = null;
+		
+		LazyOptional<IItemHandler> opt = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, face); 
+		if(opt.isPresent())
+			handler = opt.orElse(null);
+		else if(tile instanceof ISidedInventory)
+			handler = new SidedInvWrapper((ISidedInventory) tile, face);
+		else if(tile instanceof IInventory)
+			handler = new InvWrapper((IInventory) tile);
+
+		if(handler != null)
+			return (simulate && !doSimulation) ? ItemStack.EMPTY : ItemHandlerHelper.insertItem(handler, stack, simulate);
+		
+		return stack;
+	}
+	
+	public static boolean canPutIntoInv(ItemStack stack, TileEntity tile, Direction face, boolean doSimulation) {
+		return putIntoInv(stack, tile, face, true, doSimulation).isEmpty();
 	}
 
 	private static int progress;

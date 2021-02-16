@@ -67,7 +67,7 @@ public class ChestSearchingModule extends QuarkModule {
 	private static TextFieldWidget searchBar;
 	
 	private static String text = "";
-	private static boolean searchEnabled = false;
+	public static boolean searchEnabled = false;
 	private static long lastClick;
 	private static int matched;
 

@@ -144,7 +144,7 @@ public class ItemSharingModule extends QuarkModule {
 	}
 
 	@SubscribeEvent
-	@OnlyIn(Dist.CLIENT) // TODO wire fix this thanks
+	@OnlyIn(Dist.CLIENT)
 	public void renderSymbols(RenderGameOverlayEvent.Post event) {
 		if (!renderItemsInChat)
 			return;

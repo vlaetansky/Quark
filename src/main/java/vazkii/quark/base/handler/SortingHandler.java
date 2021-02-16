@@ -159,7 +159,7 @@ public final class SortingHandler {
 		return ActionResultType.SUCCESS;
 	}
 
-	private static void mergeStacks(List<ItemStack> list) {
+	public static void mergeStacks(List<ItemStack> list) {
 		for (int i = 0; i < list.size(); i++) {
 			ItemStack set = mergeStackWithOthers(list, i);
 			list.set(i, set);

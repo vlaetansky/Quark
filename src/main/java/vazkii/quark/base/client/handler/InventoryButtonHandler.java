@@ -3,6 +3,7 @@ package vazkii.quark.base.client.handler;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Consumer;
@@ -40,11 +41,13 @@ import vazkii.quark.base.module.QuarkModule;
 public final class InventoryButtonHandler {
 
 	private static final Multimap<ButtonTargetType, ButtonProviderHolder> providers = Multimaps.newSetMultimap(new HashMap<>(), TreeSet::new);
-
+	private static final Multimap<ButtonTargetType, Button> currentButtons = Multimaps.newSetMultimap(new HashMap<>(), LinkedHashSet::new);
+	
 	@SubscribeEvent
 	public static void initGui(GuiScreenEvent.InitGuiEvent.Post event) {
 		if(GeneralConfig.printScreenClassnames)
 			Quark.LOG.info("Opened screen {}", event.getGui().getClass().getName());
+		currentButtons.clear();
 		
 		if(event.getGui() instanceof ContainerScreen && !(event.getGui() instanceof IQuarkButtonIgnored) && !GeneralConfig.ignoredScreens.contains(event.getGui().getClass().getName())) {
 			Minecraft mc = Minecraft.getInstance();
@@ -137,6 +140,7 @@ public final class InventoryButtonHandler {
 						Button button = holder.getButton(screen, x, y);
 						if(button != null) {
 							event.addWidget(button);
+							currentButtons.put(type, button);
 							x -= 12;
 						}
 					}
@@ -144,6 +148,10 @@ public final class InventoryButtonHandler {
 					return;
 				}
 		}
+	}
+	
+	public static Collection<Button> getActiveButtons(ButtonTargetType type) {
+		return currentButtons.get(type);
 	}
 
 	public static void addButtonProvider(QuarkModule module, ButtonTargetType type, int priority, KeyBinding binding, Consumer<ContainerScreen<?>> onKeybind, ButtonProvider provider) {

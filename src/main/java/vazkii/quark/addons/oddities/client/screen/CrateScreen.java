@@ -14,6 +14,9 @@ import net.minecraft.util.text.ITextComponent;
 import vazkii.quark.addons.oddities.container.CrateContainer;
 import vazkii.quark.addons.oddities.module.CrateModule;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.client.handler.InventoryButtonHandler;
+import vazkii.quark.base.client.handler.InventoryButtonHandler.ButtonTargetType;
+import vazkii.quark.content.client.module.ChestSearchingModule;
 
 public class CrateScreen extends ContainerScreen<CrateContainer> {
 
@@ -25,7 +28,7 @@ public class CrateScreen extends ContainerScreen<CrateContainer> {
 	public CrateScreen(CrateContainer container, PlayerInventory inv, ITextComponent component) {
 		super(container, inv, component);
 		
-		inventoryRows = container.numRows;
+		inventoryRows = CrateContainer.numRows;
 		ySize = 114 + this.inventoryRows * 18;
 		playerInventoryTitleY = ySize - 94;
 	}
@@ -37,7 +40,8 @@ public class CrateScreen extends ContainerScreen<CrateContainer> {
 		int i = (width - xSize) / 2;
 		int j = (height - ySize) / 2;
 		extraAreas = Lists.newArrayList(new Rectangle2d(i + xSize, j, 23, 136));
-	}
+	} 
+	// TODO scroll with mouse 
 	
 	public List<Rectangle2d> getExtraAreas() {
 		return extraAreas;
@@ -66,17 +70,17 @@ public class CrateScreen extends ContainerScreen<CrateContainer> {
 		int j = (height - ySize) / 2;
 		blit(matrixStack, i, j, 0, 0, xSize + 20, ySize);
 		
-		int maxScroll = (container.getStackCount() / container.numCols) * container.numCols;
+		int maxScroll = (container.getStackCount() / CrateContainer.numCols) * CrateContainer.numCols;
 		int currScroll = (container.scroll * 95) / Math.max(1, maxScroll);
 		
 		int u = 232 + (maxScroll == 0 ? 12 : 0);
 		int by = j + 18 + currScroll;
 		blit(matrixStack, i + xSize, by, u, 0, 12, 15);
 
-		// TODO hide when searching
-		// TODO offset properly based on button count
-		String s = container.getTotal() + "/" + CrateModule.maxItems;
-		font.drawString(matrixStack, s, i + this.xSize - font.getStringWidth(s) - 33, j + 6, 4210752);
+		if(!ChestSearchingModule.searchEnabled) {
+			String s = container.getTotal() + "/" + CrateModule.maxItems;
+			font.drawString(matrixStack, s, i + this.xSize - font.getStringWidth(s) - 8 - InventoryButtonHandler.getActiveButtons(ButtonTargetType.CONTAINER_INVENTORY).size() * 12, j + 6, 4210752);
+		}
 	}
 
 }

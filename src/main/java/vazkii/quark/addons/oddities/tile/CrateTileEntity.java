@@ -3,10 +3,13 @@ package vazkii.quark.addons.oddities.tile;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -16,13 +19,20 @@ import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import vazkii.quark.addons.oddities.container.CrateContainer;
 import vazkii.quark.addons.oddities.module.CrateModule;
+import vazkii.quark.base.handler.SortingHandler;
 
 public class CrateTileEntity extends LockableTileEntity implements ISidedInventory, ITickableTileEntity {
 
 	private int totalItems = 0;
 	private List<ItemStack> stacks = new ArrayList<>();
+	
+	private LazyOptional<SidedInvWrapper> wrapper = LazyOptional.of(() -> new SidedInvWrapper(this, Direction.UP));
 
 	private int[] visibleSlots = new int[0];
 	boolean needsUpdate = false;
@@ -48,7 +58,15 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 	public int getTotalItems() {
 		return totalItems;
 	}
-	
+
+	public void spillTheTea() {
+		SortingHandler.mergeStacks(stacks);
+
+		for(ItemStack stack : stacks)
+			if(!stack.isEmpty())
+				InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+	}
+
 	@Override
 	public void tick() {
 		if(needsUpdate) {
@@ -104,11 +122,12 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
+		ItemStack stackAt = getStackInSlot(slot);
+
 		if(slot >= stacks.size()) {
 			stacks.add(stack);
 			totalItems += stack.getCount();
 		} else {
-			ItemStack stackAt = getStackInSlot(slot);
 			int sizeDiff = stack.getCount() - stackAt.getCount();
 			totalItems += sizeDiff;
 			stacks.set(slot, stack);
@@ -181,6 +200,14 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 	@Override
 	protected Container createMenu(int id, PlayerInventory player) {
 		return new CrateContainer(id, player, this, crateData);
+	}
+
+	@Override
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
+		if(!removed && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			return wrapper.cast();
+			
+		return super.getCapability(capability, facing);
 	}
 
 	@Override
