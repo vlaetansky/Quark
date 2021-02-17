@@ -108,8 +108,8 @@ public class ChorusVegetationBlock extends QuarkBlock implements IGrowable, IFor
 		int xOff = 0;
 		int zOff = 0;
 		do {
-			xOff = random.nextInt(range) - (range / 2);
-			zOff = random.nextInt(range) - (range / 2);
+			xOff = random.nextInt(range + 1) - (range / 2);
+			zOff = random.nextInt(range + 1) - (range / 2);
 		} while(xOff == 0 && zOff == 0);
 		BlockPos newPos = pos.add(xOff, 10, zOff);
 		
