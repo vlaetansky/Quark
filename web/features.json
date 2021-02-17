@@ -1447,7 +1447,7 @@
 			"image": "backpack.jpg",
 			"added": "1.15",
 			"desc": [
-				"Should you find yourself slaying a Ravager in a raid, you'll get a rare drop of Ravager Hide. The Ravager will always drop one, but may drop more depending on your level of Fortune.",
+				"Should you find yourself slaying a Ravager in a raid, you'll get a rare drop of Ravager Hide. The Ravager will always drop one, but may drop more depending on your level of Looting.",
 				"This Backpack can be worn in the Chest slot, and it'll give you a bunch of extra slots in your inventory to store all your stuff. Note that the backpack does not provide any protection, nor is it enchantable. Ravager Hide is extremely resistent, though, so it'll never break!",
 				"Beware however, if your backpack has items in it, you can't unequip it, and if you die with it, all the items will scatter. You may also dye the backpack just like any other leather armor."
 			]
