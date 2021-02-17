@@ -36,6 +36,7 @@ public class CrateContainer extends Container {
 
 	public CrateContainer(int id, PlayerInventory inv, CrateTileEntity crate, IIntArray data) {
 		super(CrateModule.containerType, id);
+		crate.openInventory(inv.player);
 
 		this.crate = crate;
 		this.playerInv = inv;
@@ -69,12 +70,12 @@ public class CrateContainer extends Container {
 	public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
 		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.inventorySlots.get(index);
-		
+
 		if(slot != null && slot.getHasStack()) {
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
 			boolean empty = false;
-			
+
 			if (index < displayedSlots) {
 				if(!this.mergeItemStack(itemstack1, displayedSlots, inventorySlots.size(), true))
 					empty = true;
@@ -98,7 +99,7 @@ public class CrateContainer extends Container {
 				slot.onSlotChanged();
 				forceSync();
 			}
-			
+
 			if(empty)
 				return ItemStack.EMPTY;
 		}
@@ -115,6 +116,12 @@ public class CrateContainer extends Container {
 	@Override
 	public boolean canInteractWith(PlayerEntity playerIn) {
 		return crate.isUsableByPlayer(playerIn);
+	}
+
+	@Override
+	public void onContainerClosed(PlayerEntity playerIn) {
+		super.onContainerClosed(playerIn);
+		crate.closeInventory(playerIn);
 	}
 
 	private void forceSync() {

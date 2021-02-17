@@ -18,7 +18,7 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 
-@LoadModule(category = ModuleCategory.ODDITIES, requiredMod = Quark.ODDITIES_ID)
+@LoadModule(category = ModuleCategory.ODDITIES, requiredMod = Quark.ODDITIES_ID, enabledByDefault = false, description = "Experimental, probably fine but it MAY delete or dupe items.")
 public class CrateModule extends QuarkModule {
 
     public static TileEntityType<CrateTileEntity> crateType;

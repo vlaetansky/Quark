@@ -8,21 +8,29 @@ import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IIntArray;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
+import vazkii.quark.addons.oddities.block.CrateBlock;
 import vazkii.quark.addons.oddities.container.CrateContainer;
 import vazkii.quark.addons.oddities.module.CrateModule;
 import vazkii.quark.base.handler.SortingHandler;
@@ -30,8 +38,9 @@ import vazkii.quark.base.handler.SortingHandler;
 public class CrateTileEntity extends LockableTileEntity implements ISidedInventory, ITickableTileEntity {
 
 	private int totalItems = 0;
+	private int numPlayersUsing;
 	private List<ItemStack> stacks = new ArrayList<>();
-	
+
 	private LazyOptional<SidedInvWrapper> wrapper = LazyOptional.of(() -> new SidedInvWrapper(this, Direction.UP));
 
 	private int[] visibleSlots = new int[0];
@@ -206,9 +215,11 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
 		if(!removed && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 			return wrapper.cast();
-			
+
 		return super.getCapability(capability, facing);
 	}
+
+	// Vaniller copy =========================
 
 	@Override
 	public boolean isUsableByPlayer(PlayerEntity player) {
@@ -217,6 +228,86 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 		} else {
 			return !(player.getDistanceSq((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) > 64.0D);
 		}
+	}
+
+	@Override
+	public void openInventory(PlayerEntity player) {
+		if (!player.isSpectator()) {
+			if (this.numPlayersUsing < 0) {
+				this.numPlayersUsing = 0;
+			}
+
+			++this.numPlayersUsing;
+			BlockState blockstate = this.getBlockState();
+			boolean flag = blockstate.get(CrateBlock.PROPERTY_OPEN);
+			if (!flag) {
+				this.playSound(blockstate, SoundEvents.BLOCK_BARREL_OPEN);
+				this.setOpenProperty(blockstate, true);
+			}
+
+			this.scheduleTick();
+		}
+
+	}
+
+	private void scheduleTick() {
+		this.world.getPendingBlockTicks().scheduleTick(this.getPos(), this.getBlockState().getBlock(), 5);
+	}
+
+	public void crateTick() {
+		int i = this.pos.getX();
+		int j = this.pos.getY();
+		int k = this.pos.getZ();
+		this.numPlayersUsing = calculatePlayersUsing(this.world, this, i, j, k);
+		if (this.numPlayersUsing > 0) {
+			this.scheduleTick();
+		} else {
+			BlockState blockstate = this.getBlockState();
+			if (!blockstate.isIn(CrateModule.crate)) {
+				this.remove();
+				return;
+			}
+
+			boolean flag = blockstate.get(CrateBlock.PROPERTY_OPEN);
+			if (flag) {
+				this.playSound(blockstate, SoundEvents.BLOCK_BARREL_CLOSE);
+				this.setOpenProperty(blockstate, false);
+			}
+		}
+	}
+
+	public static int calculatePlayersUsing(World p_213976_0_, LockableTileEntity p_213976_1_, int p_213976_2_, int p_213976_3_, int p_213976_4_) {
+		int i = 0;
+
+		for(PlayerEntity playerentity : p_213976_0_.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB((double)((float)p_213976_2_ - 5.0F), (double)((float)p_213976_3_ - 5.0F), (double)((float)p_213976_4_ - 5.0F), (double)((float)(p_213976_2_ + 1) + 5.0F), (double)((float)(p_213976_3_ + 1) + 5.0F), (double)((float)(p_213976_4_ + 1) + 5.0F)))) {
+			if (playerentity.openContainer instanceof CrateContainer) {
+				IInventory iinventory = ((CrateContainer)playerentity.openContainer).crate;
+				if (iinventory == p_213976_1_) {
+					++i;
+				}
+			}
+		}
+
+		return i;
+	}
+
+	@Override
+	public void closeInventory(PlayerEntity player) {
+		if (!player.isSpectator()) {
+			--this.numPlayersUsing;
+		}
+
+	}
+
+	private void setOpenProperty(BlockState state, boolean open) {
+		this.world.setBlockState(this.getPos(), state.with(CrateBlock.PROPERTY_OPEN, Boolean.valueOf(open)), 3);
+	}
+
+	private void playSound(BlockState state, SoundEvent sound) {
+		double d0 = (double)this.pos.getX() + 0.5D;
+		double d1 = (double)this.pos.getY() + 0.5D;
+		double d2 = (double)this.pos.getZ() + 0.5D;
+		this.world.playSound((PlayerEntity)null, d0, d1, d2, sound, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
 	}
 
 }
