@@ -2,20 +2,20 @@ package vazkii.quark.content.building.recipe;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.block.Blocks;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.crafting.IShapedRecipe;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public class MixedChestRecipe implements ICraftingRecipe, IShapedRecipe<CraftingInventory> {
@@ -25,8 +25,18 @@ public class MixedChestRecipe implements ICraftingRecipe, IShapedRecipe<Crafting
 	final ResourceLocation res;
 	NonNullList<Ingredient> ingredients;
 	
-	public MixedChestRecipe(ResourceLocation res) {
+	final boolean log;
+	final ItemStack output;
+	final ITag.INamedTag<Item> tag;
+	final ItemStack placeholder;
+	
+	public MixedChestRecipe(ResourceLocation res, boolean log) {
 		this.res = res;
+		
+		this.log = log;
+		this.output = new ItemStack(Items.CHEST, (log ? 4 : 1));
+		this.tag = (log ? ItemTags.LOGS : ItemTags.PLANKS);
+		this.placeholder = new ItemStack(log ? Items.OAK_LOG : Items.OAK_PLANKS);
 	}
 	
 	@Override
@@ -36,7 +46,7 @@ public class MixedChestRecipe implements ICraftingRecipe, IShapedRecipe<Crafting
 
 	@Override
 	public ItemStack getCraftingResult(CraftingInventory arg0) {
-		return new ItemStack(Blocks.CHEST);
+		return output.copy();
 	}
 
 	@Override
@@ -46,7 +56,7 @@ public class MixedChestRecipe implements ICraftingRecipe, IShapedRecipe<Crafting
 
 	@Override
 	public ItemStack getRecipeOutput() {
-		return new ItemStack(Blocks.CHEST);	
+		return output.copy();	
 	}
 
 	@Override
@@ -63,10 +73,10 @@ public class MixedChestRecipe implements ICraftingRecipe, IShapedRecipe<Crafting
 			for(int i = 0; i < 9; i++)
 				if(i != 4) { // ignore center
 					ItemStack stack = inv.getStackInSlot(i);
-					if(!stack.isEmpty() && stack.getItem().isIn(ItemTags.PLANKS)) {
+					if(!stack.isEmpty() && stack.getItem().isIn(tag)) {
 						if(first == null)
 							first = stack;
-						else if(!ItemStack.areItemsEqual(first, stack) || !isChestMaterial(stack.getItem()))
+						else if(!ItemStack.areItemsEqual(first, stack))
 							foundDifference = true;
 					} else return false;
 				}
@@ -75,15 +85,6 @@ public class MixedChestRecipe implements ICraftingRecipe, IShapedRecipe<Crafting
 		}
 		
 		return false;
-	}
-	
-	private boolean isChestMaterial(Item item) {
-		ResourceLocation res = item.getRegistryName();
-		if(res.getNamespace().equals("minecraft"))
-			return true;
-		
-		ResourceLocation check = new ResourceLocation(res.getNamespace(), res.getPath().replace("_planks", "_chest"));
-		return ForgeRegistries.ITEMS.containsKey(check);
 	}
 
 	@Override
@@ -100,7 +101,7 @@ public class MixedChestRecipe implements ICraftingRecipe, IShapedRecipe<Crafting
 	public NonNullList<Ingredient> getIngredients() {
 		if(ingredients == null) {
 			NonNullList<Ingredient> list = NonNullList.withSize(9, Ingredient.EMPTY);
-			Ingredient ingr = Ingredient.fromItems(Blocks.OAK_PLANKS);
+			Ingredient ingr = Ingredient.fromStacks(placeholder);
 			for(int i = 0; i < 8; i++)
 				list.set(i < 4 ? i : i + 1, ingr);
 			ingredients = list;
@@ -122,17 +123,17 @@ public class MixedChestRecipe implements ICraftingRecipe, IShapedRecipe<Crafting
 
 		@Override
 		public MixedChestRecipe read(ResourceLocation arg0, JsonObject arg1) {
-			return new MixedChestRecipe(arg0);
+			return new MixedChestRecipe(arg0, arg1.get("log").getAsBoolean());
 		}
 
 		@Override
 		public MixedChestRecipe read(ResourceLocation arg0, PacketBuffer arg1) {
-			return new MixedChestRecipe(arg0);
+			return new MixedChestRecipe(arg0, arg1.readBoolean());
 		}
 
 		@Override
 		public void write(PacketBuffer arg0, MixedChestRecipe arg1) {
-			// NO-OP
+			arg0.writeBoolean(arg1.log);
 		}
 		
 	}
