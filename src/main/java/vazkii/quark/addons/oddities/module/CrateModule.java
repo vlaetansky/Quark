@@ -7,12 +7,15 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.extensions.IForgeContainerType;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.addons.oddities.block.CrateBlock;
+import vazkii.quark.addons.oddities.client.render.PipeTileEntityRenderer;
 import vazkii.quark.addons.oddities.client.screen.CrateScreen;
 import vazkii.quark.addons.oddities.container.CrateContainer;
 import vazkii.quark.addons.oddities.tile.CrateTileEntity;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.client.handler.RequiredModTooltipHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
@@ -43,6 +46,8 @@ public class CrateModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
 		ScreenManager.registerFactory(containerType, CrateScreen::new);
+		
+		RequiredModTooltipHandler.map(crate, Quark.ODDITIES_ID);
 	}
 	
 }
