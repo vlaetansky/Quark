@@ -46,14 +46,17 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 	boolean needsUpdate = false;
 
 	protected final IIntArray crateData = new IIntArray() {
+		@Override
 		public int get(int index) {
 			return index == 0 ? totalItems : stacks.size();
 		}
 
+		@Override
 		public void set(int index, int value) {
 			// NO-OP
 		}
-
+		
+		@Override
 		public int size() {
 			return 2;
 		}

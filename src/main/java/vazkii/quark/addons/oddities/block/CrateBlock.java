@@ -55,6 +55,7 @@ public class CrateBlock extends QuarkBlock {
 		}
 	}
 
+	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
 		if(stack.hasDisplayName()) {
 			TileEntity tileentity = worldIn.getTileEntity(pos);
