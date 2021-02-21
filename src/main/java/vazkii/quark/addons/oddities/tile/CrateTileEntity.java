@@ -24,6 +24,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -205,7 +206,7 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 
 	@Override
 	protected ITextComponent getDefaultName() {
-		return CrateModule.crate.getTranslatedName();
+		return new TranslationTextComponent(CrateModule.crate.getTranslationKey());
 	}
 
 	@Override
