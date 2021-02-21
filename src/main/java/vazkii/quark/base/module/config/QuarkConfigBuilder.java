@@ -42,9 +42,6 @@ public class QuarkConfigBuilder implements IConfigBuilder {
 
 	@Override
 	public void comment(String s) {
-		if(currComment.isEmpty())
-			currComment += "\n";
-		
 		currComment += s;
 	}
 
