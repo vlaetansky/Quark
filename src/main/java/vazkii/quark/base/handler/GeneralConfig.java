@@ -56,7 +56,8 @@ public class GeneralConfig {
 			"me.desht.modularrouters.client.gui.filter.GuiFilterScreen",
 			"com.resourcefulbees.resourcefulbees.client.gui.screen.CentrifugeScreen",
 			"com.resourcefulbees.resourcefulbees.client.gui.screen.MechanicalCentrifugeScreen",
-			"com.resourcefulbees.resourcefulbees.client.gui.screen.CentrifugeMultiblockScreen"
+			"com.resourcefulbees.resourcefulbees.client.gui.screen.CentrifugeMultiblockScreen",
+			"com.refinedmods.refinedstorage.screen.FilterScreen"
 			);
 
 	@Config(description = "Set to true to make the quark big worldgen features such as stone clusters or underground biomes generate as spheres rather than unique shapes. It's faster, but won't look as cool")
