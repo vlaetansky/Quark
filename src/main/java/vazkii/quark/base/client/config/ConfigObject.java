@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import vazkii.quark.api.config.IConfigElement;
 import vazkii.quark.api.config.IConfigObject;
 import vazkii.quark.base.client.config.gui.widget.IWidgetProvider;
@@ -23,34 +24,37 @@ public abstract class ConfigObject<T> extends AbstractConfigElement implements I
 	
 	protected T loadedObj;
 	protected T currentObj;
+
+	protected final ConfigValue<T> configValue;
 	
-	public ConfigObject(String name, String comment, T defaultObj, Supplier<T> objGetter, Predicate<Object> restriction, ConfigCategory parent) {
-		super(name, comment, parent);
+	public ConfigObject(ConfigValue<T> value, String comment, T defaultObj, Supplier<T> objGetter, Predicate<Object> restriction, ConfigCategory parent) {
+		super(getDefaultName(value), comment, parent);
 		this.defaultObj = defaultObj;
 		this.objectGetter = objGetter;
 		this.restriction = restriction;
+		this.configValue = value;
 		
 		if(name.contains(" "))
 			displayName = String.format("\"%s\"", name);
 		else displayName = name;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public static <T> IConfigObject<T> create(String name, String comment, T defaultObj, Supplier<T> objGetter, Predicate<Object> restriction, ConfigCategory parent) {
+	public static <T> IConfigObject<T> create(ConfigValue<T> value, String comment, T defaultObj, Supplier<T> objGetter, Predicate<Object> restriction, ConfigCategory parent) {
 		if(defaultObj instanceof Boolean)
-			return (IConfigObject<T>) new BooleanObject(name, comment, (Boolean) defaultObj, (Supplier<Boolean>) objGetter, restriction, parent);
+			return (IConfigObject<T>) new BooleanObject((ConfigValue<Boolean>) value, comment, (Boolean) defaultObj, (Supplier<Boolean>) objGetter, restriction, parent);
 		
 		else if(defaultObj instanceof String)
-			return (IConfigObject<T>) new StringObject(name, comment, (String) defaultObj, (Supplier<String>) objGetter, restriction, parent);
+			return (IConfigObject<T>) new StringObject((ConfigValue<String>) value, comment, (String) defaultObj, (Supplier<String>) objGetter, restriction, parent);
 
 		else if(defaultObj instanceof Integer)
-			return (IConfigObject<T>) new IntegerObject(name, comment, (Integer) defaultObj, (Supplier<Integer>) objGetter, restriction, parent);
+			return (IConfigObject<T>) new IntegerObject((ConfigValue<Integer>) value, comment, (Integer) defaultObj, (Supplier<Integer>) objGetter, restriction, parent);
 		
 		else if(defaultObj instanceof Double)
-			return (IConfigObject<T>) new DoubleObject(name, comment, (Double) defaultObj, (Supplier<Double>) objGetter, restriction, parent);
+			return (IConfigObject<T>) new DoubleObject((ConfigValue<Double>) value, comment, (Double) defaultObj, (Supplier<Double>) objGetter, restriction, parent);
 		
 		else if(defaultObj instanceof List)
-			return (IConfigObject<T>) new ListObject(name, comment, (List<String>) defaultObj, (Supplier<List<String>>) objGetter, restriction, parent);
+			return (IConfigObject<T>) new ListObject((ConfigValue<List<String>>) value, comment, (List<String>) defaultObj, (Supplier<List<String>>) objGetter, restriction, parent);
 		
 		else throw new IllegalArgumentException(defaultObj + " isn't a valid config object.");
 	}
@@ -70,7 +74,12 @@ public abstract class ConfigObject<T> extends AbstractConfigElement implements I
 	public void clean() {
 		loadedObj = currentObj;
 	}
-	
+
+	@Override
+	public void save() {
+		configValue.set(currentObj);
+	}
+
 	@Override
 	public void reset(boolean hard) {
 		setCurrentObj(hard ? defaultObj : loadedObj);
@@ -124,6 +133,11 @@ public abstract class ConfigObject<T> extends AbstractConfigElement implements I
 			return -1;
 		
 		return getName().compareTo(o.getName());
+	}
+
+	private static String getDefaultName(ConfigValue<?> value) {
+		List<String> path = value.getPath();
+		return path.get(path.size() - 1);
 	}
 	
 }

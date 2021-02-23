@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.lwjgl.opengl.ARBInvalidateSubdata;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -18,7 +17,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import vazkii.arl.util.ClientTicker;
-import vazkii.quark.base.client.config.IngameConfigHandler;
 import vazkii.quark.base.client.config.gui.QuarkConfigHomeScreen;
 import vazkii.quark.base.client.handler.TopLayerTooltipHandler;
 import vazkii.quark.base.handler.ContributorRewardHandler;
@@ -103,7 +101,6 @@ public class QButton extends Button {
 	
 	public static void click(Button b) {
 		Minecraft.getInstance().displayGuiScreen(new QuarkConfigHomeScreen(Minecraft.getInstance().currentScreen));
-		IngameConfigHandler.INSTANCE.debug();
 	}
 	
 }

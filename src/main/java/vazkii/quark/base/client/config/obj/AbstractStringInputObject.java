@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
+import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.client.config.ConfigObject;
 import vazkii.quark.base.client.config.gui.CategoryScreen;
@@ -14,8 +15,8 @@ import vazkii.quark.base.client.config.gui.widget.PencilButton;
 
 public abstract class AbstractStringInputObject<T> extends ConfigObject<T> {
 
-	public AbstractStringInputObject(String name, String comment, T defaultObj, Supplier<T> objGetter, Predicate<Object> restriction, ConfigCategory parent) {
-		super(name, comment, defaultObj, objGetter, restriction, parent);
+	public AbstractStringInputObject(ConfigValue<T> value, String comment, T defaultObj, Supplier<T> objGetter, Predicate<Object> restriction, ConfigCategory parent) {
+		super(value, comment, defaultObj, objGetter, restriction, parent);
 	}
 
 	@Override
@@ -24,7 +25,7 @@ public abstract class AbstractStringInputObject<T> extends ConfigObject<T> {
 	}
 	
 	public abstract @Nullable T fromString(String s);
-	public abstract @Nullable boolean isStringValid(String s);
+	public abstract boolean isStringValid(String s);
 	public abstract int getMaxStringLength();
 
 }

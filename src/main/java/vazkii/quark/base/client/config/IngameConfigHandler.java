@@ -1,23 +1,16 @@
 package vazkii.quark.base.client.config;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import com.electronwill.nightconfig.core.file.FileWatcher;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.api.config.IConfigElement;
 import vazkii.quark.api.config.IConfigObject;
-import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.config.external.ExternalConfigHandler;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.IConfigCallback;
@@ -53,9 +46,9 @@ public final class IngameConfigHandler implements IConfigCallback {
 	}
 
 	@Override
-	public <T> void addEntry(String name, T default_, Supplier<T> getter, String comment, Predicate<Object> restriction) {
+	public <T> void addEntry(ConfigValue<T> value, T default_, Supplier<T> getter, String comment, Predicate<Object> restriction) {
 		if(currCategory != null)
-			currCategory.addEntry(name, default_, getter, comment, restriction);
+			currCategory.addEntry(value, default_, getter, comment, restriction);
 	}
 
 	public IConfigObject<Boolean> getCategoryEnabledObject(ModuleCategory category) {
@@ -70,56 +63,17 @@ public final class IngameConfigHandler implements IConfigCallback {
 		topLevelCategories.values().forEach(IConfigElement::refresh);
 	}
 
-	public void debug() {
-		if(!Quark.DEBUG_MODE)
-			return;
-
-		writeToFile(new File("config", "quark-common.toml-generated"), topLevelCategories);
-	}
-
 	public void commit() {
-		commit(new File("config", "quark-common.toml"), topLevelCategories);
+		commit(topLevelCategories);
 		ExternalConfigHandler.instance.commit();
 	}
 
-	public static <T extends IConfigCategory> void commit(File file, Map<String, T> map) {
+	public static <T extends IConfigCategory> void commit(Map<String, T> map) {
 		for(IConfigCategory c : map.values()) {
 			if(c.isDirty()) {
-				save(file, map);
-				return;
+				c.save();
+				c.clean();
 			}
-		}
-	}
-
-	public static <T extends IConfigCategory> void save(File file, Map<String, T> map) {
-		writeToFile(file, map);
-		for(IConfigCategory c1 : map.values())
-			c1.clean();
-	}
-
-	public static <T extends IConfigCategory> void writeToFile(File file, Map<String, T> map) {
-		try {
-			Map<Path, Object> watchedFiles = ObfuscationReflectionHelper.getPrivateValue(FileWatcher.class, FileWatcher.defaultInstance(), "watchedFiles");
-			Path path = file.getAbsoluteFile().toPath();
-			Object watched = watchedFiles.get(path);
-
-			// Removed quark's config from the list of watched files to prevent the watcher from reading it while we're writing
-			if(watched != null)
-				watchedFiles.remove(path);
-
-			file.createNewFile();
-			PrintStream stream = new PrintStream(file);
-
-			for(String name : map.keySet())
-				map.get(name).print("", stream);
-
-			stream.close();
-
-			// Add back 
-			if(watched != null)
-				watchedFiles.put(path, watched);
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 

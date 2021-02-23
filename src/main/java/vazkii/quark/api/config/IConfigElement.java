@@ -18,6 +18,7 @@ public interface IConfigElement extends Comparable<IConfigElement> {
 	public @Nullable IConfigCategory getParent();
 	public boolean isDirty();
 	public void clean();
+	public void save();
 	
 	public void refresh();
 	public void reset(boolean hard);
