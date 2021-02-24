@@ -27,9 +27,6 @@ public class GeneralConfig {
 	@Config.Min(value = 0, exclusive = true)
 	public static int pistonPushLimit = 12;
 
-	@Config(description = "Quark messes with the Stonecutter to allow any item that can be used in it to be shift clicked in. Set this to false to turn it off.")
-	public static boolean hackStonecutterShiftClick = true;
-
 	@Config(description = "Blocks that Quark should treat as Shulker Boxes.")
 	public static List<String> shulkerBoxes = SimilarBlockTypeHandler.getBasicShulkerBoxes();
 
