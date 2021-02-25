@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import org.apache.commons.lang3.text.WordUtils;
 
 import net.minecraft.client.resources.I18n;
@@ -78,7 +79,16 @@ public class ConfigCategory extends AbstractConfigElement implements IConfigCate
 		subElements.forEach(IConfigElement::clean);
 		dirty = false;
 	}
-	
+
+	@Override
+	public void save() {
+		for (IConfigElement element : subElements) {
+			if (element.isDirty()) {
+				element.save();
+			}
+		}
+	}
+
 	@Override
 	public boolean isDirty() {
 		return dirty;
@@ -105,8 +115,8 @@ public class ConfigCategory extends AbstractConfigElement implements IConfigCate
 	}
 	
 	@Override
-	public <T> IConfigObject<T> addEntry(String name, T default_, Supplier<T> getter, String comment, Predicate<Object> restriction) {
-		IConfigObject<T> obj = ConfigObject.create(name, comment, default_, getter, restriction, this); 
+	public <T> IConfigObject<T> addEntry(ConfigValue<T> value, T default_, Supplier<T> getter, String comment, Predicate<Object> restriction) {
+		IConfigObject<T> obj = ConfigObject.create(value, comment, default_, getter, restriction, this);
 		addEntry(obj, default_);
 		return obj;
 	}

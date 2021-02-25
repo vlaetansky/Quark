@@ -14,7 +14,7 @@ public interface IConfigBuilder {
 	public void pop();
 	public void comment(String s);
 	
-	ForgeConfigSpec.ConfigValue<?> defineList(String name, List<?> default_, Supplier<Object> getter, Predicate<Object> predicate);
+	ForgeConfigSpec.ConfigValue<List<?>> defineList(String name, List<?> default_, Supplier<List<?>> getter, Predicate<Object> predicate);
 	ForgeConfigSpec.ConfigValue<?> defineObj(String name, Object default_, Supplier<Object> getter, Predicate<Object> predicate);
 	
 	ForgeConfigSpec.ConfigValue<Boolean> defineBool(String name, Supplier<Boolean> getter, boolean default_);

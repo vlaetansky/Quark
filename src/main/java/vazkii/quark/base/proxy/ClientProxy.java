@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.Util;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -88,7 +89,7 @@ public class ClientProxy extends CommonProxy {
 		mc.runAsync(() -> {
 			if(mc.isSingleplayer() && mc.player != null && mc.getIntegratedServer() != null)
 				for(int i = 0; i < 3; i++)
-					mc.player.sendMessage(new TranslationTextComponent("quark.misc.reloaded" + i).mergeStyle(i == 0 ? TextFormatting.AQUA : TextFormatting.WHITE), null);
+					mc.player.sendMessage(new TranslationTextComponent("quark.misc.reloaded" + i).mergeStyle(i == 0 ? TextFormatting.AQUA : TextFormatting.WHITE), Util.DUMMY_UUID);
 		});
 	}
 

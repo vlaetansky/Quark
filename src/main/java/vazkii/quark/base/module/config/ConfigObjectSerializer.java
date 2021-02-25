@@ -119,10 +119,13 @@ public final class ConfigObjectSerializer {
 		String flag = config.flag();
 		boolean useFlag = object instanceof QuarkModule && !flag.isEmpty();
 			
-		ForgeConfigSpec.ConfigValue<?> value = (defaultValue instanceof List) ?
-				builder.defineList(name, (List<?>) defaultValue, supplier, restrict(restriction, min, max)) :
-				builder.defineObj(name, defaultValue, supplier, restrict(restriction, min, max));
-				
+		ForgeConfigSpec.ConfigValue<?> value;
+		if (defaultValue instanceof List) {
+			Supplier<List<?>> listSupplier = () -> (List<?>) supplier.get();
+			value = builder.defineList(name, (List<?>) defaultValue, listSupplier, restrict(restriction, min, max));
+		} else
+			value = builder.defineObj(name, defaultValue, supplier, restrict(restriction, min, max));
+
 		callbacks.add(() -> {
 			try {
 				Object setObj = value.get();

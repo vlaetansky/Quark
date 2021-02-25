@@ -3,12 +3,13 @@ package vazkii.quark.base.client.config.obj;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import vazkii.quark.base.client.config.ConfigCategory;
 
 public class StringObject extends AbstractStringInputObject<String> {
 
-	public StringObject(String name, String comment, String defaultObj, Supplier<String> objGetter, Predicate<Object> restriction, ConfigCategory parent) {
-		super(name, comment, defaultObj, objGetter, restriction, parent);
+	public StringObject(ConfigValue<String> value, String comment, String defaultObj, Supplier<String> objGetter, Predicate<Object> restriction, ConfigCategory parent) {
+		super(value, comment, defaultObj, objGetter, restriction, parent);
 	}
 
 	@Override

@@ -5,8 +5,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import com.google.common.base.Predicates;
-
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 
@@ -46,40 +44,52 @@ public class QuarkConfigBuilder implements IConfigBuilder {
 	}
 
 	@Override
-	public ConfigValue<?> defineList(String name, List<?> default_, Supplier<Object> getter, Predicate<Object> predicate) {
-		onDefine(name, default_, getter, predicate);
-		return parent.defineList(name, default_, predicate);
+	public ConfigValue<List<?>> defineList(String name, List<?> default_, Supplier<List<?>> getter, Predicate<Object> predicate) {
+		beforeDefine();
+		ConfigValue<List<?>> value = parent.defineList(name, default_, predicate);
+		onDefine(value, default_, getter, predicate);
+		return value;
 	}
 
 	@Override
 	public ConfigValue<?> defineObj(String name, Object default_, Supplier<Object> getter, Predicate<Object> predicate) {
-		onDefine(name, default_, getter, predicate);
-		return parent.define(name, default_, predicate);
+		beforeDefine();
+		ConfigValue<Object> value = parent.define(name, default_, predicate);
+		onDefine(value, default_, getter, predicate);
+		return value;
 	}
 
 	@Override
 	public ConfigValue<Boolean> defineBool(String name, Supplier<Boolean> getter, boolean default_) {
-		onDefine(name, default_, getter, Predicates.alwaysTrue());
-		return parent.define(name, default_);
+		beforeDefine();
+		ForgeConfigSpec.BooleanValue value = parent.define(name, default_);
+		onDefine(value, default_, getter, o -> true);
+		return value;
 	}
 
 	@Override
 	public ConfigValue<Integer> defineInt(String name, Supplier<Integer> getter, int default_) {
-		onDefine(name, default_, getter, Predicates.alwaysTrue());
-		return parent.define(name, default_);
+		beforeDefine();
+		ConfigValue<Integer> value = parent.define(name, default_);
+		onDefine(value, default_, getter, o -> true);
+		return value;
 	}
 	
 	@Override
 	public ConfigValue<Double> defineDouble(String name, Supplier<Double> getter, double default_) {
-		onDefine(name, default_, getter, Predicates.alwaysTrue());
-		return parent.define(name, default_);
+		beforeDefine();
+		ConfigValue<Double> value = parent.define(name, default_);
+		onDefine(value, default_, getter, o -> true);
+		return value;
 	}
-	
-	private <T> void onDefine(String name, T default_, Supplier<T> getter, Predicate<Object> predicate) {
+
+	private void beforeDefine() {
 		if(currComment.length() > 0)
 			parent.comment(currComment);
-		
-		callback.addEntry(name, default_, getter, currComment, predicate);
+	}
+
+	private <T> void onDefine(ConfigValue<T> value, T default_, Supplier<T> getter, Predicate<Object> predicate) {
+		callback.addEntry(value, default_, getter, currComment, predicate);
 		currComment = "";
 	}
 
