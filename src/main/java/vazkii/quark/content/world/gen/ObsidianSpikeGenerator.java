@@ -7,6 +7,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityType;
 import net.minecraft.tileentity.ChestTileEntity;
+import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.tileentity.MobSpawnerTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -101,7 +102,7 @@ public class ObsidianSpikeGenerator extends Generator {
 				
 				placePos = placePos.down();
 				world.setBlockState(placePos, Blocks.CHEST.getDefaultState(), 0);
-				((ChestTileEntity) world.getTileEntity(placePos)).setLootTable(new ResourceLocation("minecraft", "chests/nether_bridge"), rand.nextLong());
+				LockableLootTileEntity.setLootTable(world, rand, placePos, new ResourceLocation("minecraft", "chests/nether_bridge"));
 			}
 		}
 	}
