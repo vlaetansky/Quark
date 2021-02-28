@@ -48,9 +48,9 @@ public class BackpackInventoryScreen extends InventoryScreen {
 	}
 
 	@Override
-	public void init(Minecraft mc, int width, int height) {
+	public void init() {
 		ySize = 224;
-		super.init(mc, width, height);
+		super.init();
 		
 		for(Widget widget : buttons)
 			if(widget instanceof ImageButton) {
