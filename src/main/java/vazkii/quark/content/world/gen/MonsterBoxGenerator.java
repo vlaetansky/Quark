@@ -4,6 +4,7 @@ import java.util.Random;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.FlatChunkGenerator;
@@ -39,7 +40,7 @@ public class MonsterBoxGenerator extends Generator {
 				} while(moves < MonsterBoxModule.searchRange && testState.getMaterial() != Material.ROCK && testPos.getY() >= MonsterBoxModule.minY);
 				
 				BlockPos placePos = testPos.up();
-				if(testPos.getY() >= MonsterBoxModule.minY && world.isAirBlock(placePos) && !world.isAirBlock(placePos.down()))
+				if(testPos.getY() >= MonsterBoxModule.minY && world.isAirBlock(placePos) && world.getBlockState(placePos.down()).isSolidSide(world, placePos.down(), Direction.UP))
 					world.setBlockState(placePos, MonsterBoxModule.monster_box.getDefaultState(), 0);
 			}
 			
