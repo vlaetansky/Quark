@@ -1061,7 +1061,8 @@
 	"block.quark.acacia_hedge": "Seto de acacia",
 	"block.quark.dark_oak_hedge": "Seto de roble oscuro",
 	"block.quark.matrix_enchanter": "Mesa de encantamientos matricial",
-	
+ 	"block.quark.crate": "Caja",
+
 	"item.quark.stoneling_spawn_egg": "Generar petrícola",
 	"item.quark.frog_spawn_egg": "Generar rana",
 	"item.quark.crab_spawn_egg": "Generar cangrejo",
