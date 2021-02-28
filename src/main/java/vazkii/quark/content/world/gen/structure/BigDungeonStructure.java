@@ -8,7 +8,6 @@ import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 
 import net.minecraft.entity.EntityType;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
@@ -31,6 +30,7 @@ import vazkii.quark.base.Quark;
 import vazkii.quark.base.world.JigsawRegistryHelper;
 import vazkii.quark.content.world.gen.structure.processor.BigDungeonChestProcessor;
 import vazkii.quark.content.world.gen.structure.processor.BigDungeonSpawnerProcessor;
+import vazkii.quark.content.world.gen.structure.processor.BigDungeonWaterProcessor;
 import vazkii.quark.content.world.module.BigDungeonModule;
 
 public class BigDungeonStructure extends JigsawStructure {
@@ -74,25 +74,29 @@ public class BigDungeonStructure extends JigsawStructure {
 	
 	private static final BigDungeonChestProcessor CHEST_PROCESSOR = new BigDungeonChestProcessor();
 	private static final BigDungeonSpawnerProcessor SPAWN_PROCESSOR = new BigDungeonSpawnerProcessor();
+	private static final BigDungeonWaterProcessor WATER_PROCESSOR = new BigDungeonWaterProcessor();
 
 	private static Codec<BigDungeonChestProcessor> CHEST_CODEC = Codec.unit(CHEST_PROCESSOR);
 	private static Codec<BigDungeonSpawnerProcessor> SPAWN_CODEC = Codec.unit(SPAWN_PROCESSOR);
+	private static Codec<BigDungeonWaterProcessor> WATER_CODEC = Codec.unit(WATER_PROCESSOR);
 
 	public static IStructureProcessorType<BigDungeonChestProcessor> CHEST_PROCESSOR_TYPE = () -> CHEST_CODEC;
 	public static IStructureProcessorType<BigDungeonSpawnerProcessor> SPAWN_PROCESSOR_TYPE = () -> SPAWN_CODEC;
+	public static IStructureProcessorType<BigDungeonWaterProcessor> WATER_PROCESSOR_TYPE = () -> WATER_CODEC;
 
 	static {
 		startPattern = JigsawRegistryHelper.pool(NAMESPACE, STARTS_DIR)
-		.processor(CHEST_PROCESSOR)
+		.processor(CHEST_PROCESSOR, WATER_PROCESSOR)
 		.addMult(STARTS_DIR, STARTS, 1)
 		.register(PlacementBehaviour.RIGID);
 
 		JigsawRegistryHelper.pool(NAMESPACE, ROOMS_DIR)
-		.processor(CHEST_PROCESSOR, SPAWN_PROCESSOR)
+		.processor(CHEST_PROCESSOR, SPAWN_PROCESSOR, WATER_PROCESSOR)
 		.addMult(ROOMS_DIR, ROOMS, 1)
 		.register(PlacementBehaviour.RIGID);
 
 		JigsawRegistryHelper.pool(NAMESPACE, CORRIDORS_DIR)
+		.processor(WATER_PROCESSOR)
 		.addMult(CORRIDORS_DIR, CORRIDORS, 1)
 		.register(PlacementBehaviour.RIGID);
 
@@ -101,7 +105,7 @@ public class BigDungeonStructure extends JigsawStructure {
 		final double endpointWeightMult = 1.2;
 
 		JigsawRegistryHelper.pool(NAMESPACE, "rooms_or_endpoint")
-		.processor(CHEST_PROCESSOR, SPAWN_PROCESSOR)
+		.processor(CHEST_PROCESSOR, SPAWN_PROCESSOR, WATER_PROCESSOR)
 		.addMult(ROOMS_DIR, ROOMS, roomWeight)
 		.addMult(CORRIDORS_DIR, CORRIDORS, corridorWeight)
 		.add(ENDPOINT, (int) ((ROOMS.size() * roomWeight + CORRIDORS.size() * corridorWeight) * endpointWeightMult))
@@ -116,6 +120,7 @@ public class BigDungeonStructure extends JigsawStructure {
 	public void setup() {
 		Registry.register(Registry.STRUCTURE_PROCESSOR, Quark.MOD_ID + ":big_dungeon_chest", CHEST_PROCESSOR_TYPE);
 		Registry.register(Registry.STRUCTURE_PROCESSOR, Quark.MOD_ID + ":big_dungeon_spawner", SPAWN_PROCESSOR_TYPE);
+		Registry.register(Registry.STRUCTURE_PROCESSOR, Quark.MOD_ID + ":big_dungeon_water", WATER_PROCESSOR_TYPE);
 	}
 
 	@Override
