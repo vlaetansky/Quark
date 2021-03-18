@@ -456,9 +456,8 @@ public class PickarangEntity extends ProjectileEntity {
 
 					if (player.isAlive()) {
 						for (ItemEntity item : items)
-							if(item.isAlive()) {
+							if(item.isAlive())
 								giveItemToPlayer(player, item);
-							}
 
 						for (ExperienceOrbEntity xpOrb : xp) 
 							if(xpOrb.isAlive())
@@ -468,9 +467,9 @@ public class PickarangEntity extends ProjectileEntity {
 							if (!riding.isAlive())
 								continue;
 
-							if (riding instanceof ItemEntity) {
+							if (riding instanceof ItemEntity)
 								giveItemToPlayer(player, (ItemEntity) riding);
-							} else if (riding instanceof ExperienceOrbEntity)
+							else if (riding instanceof ExperienceOrbEntity)
 								riding.onCollideWithPlayer(player);
 						}
 					}
