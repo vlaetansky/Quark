@@ -457,10 +457,7 @@ public class PickarangEntity extends ProjectileEntity {
 					if (player.isAlive()) {
 						for (ItemEntity item : items)
 							if(item.isAlive()) {
-								ItemStack drop = item.getItem();
-								if (!player.addItemStackToInventory(drop))
-									player.dropItem(drop, false);
-								item.remove();
+								giveItemToPlayer(player, item);
 							}
 
 						for (ExperienceOrbEntity xpOrb : xp) 
@@ -472,10 +469,7 @@ public class PickarangEntity extends ProjectileEntity {
 								continue;
 
 							if (riding instanceof ItemEntity) {
-								ItemStack drop = ((ItemEntity) riding).getItem();
-								if (!player.addItemStackToInventory(drop))
-									player.dropItem(drop, false);
-								riding.remove();
+								giveItemToPlayer(player, (ItemEntity) riding);
 							} else if (riding instanceof ExperienceOrbEntity)
 								riding.onCollideWithPlayer(player);
 						}
@@ -485,6 +479,18 @@ public class PickarangEntity extends ProjectileEntity {
 				}
 			} else
 				setMotion(motion.normalize().scale(0.7 + eff * 0.325F));
+		}
+	}
+
+	private void giveItemToPlayer(PlayerEntity player, ItemEntity itemEntity) {
+		itemEntity.setPickupDelay(0);
+		itemEntity.onCollideWithPlayer(player);
+
+		if (itemEntity.isAlive()) {
+			// Player could not pick up everything
+			ItemStack drop = itemEntity.getItem();
+			player.dropItem(drop, false);
+			itemEntity.remove();
 		}
 	}
 
