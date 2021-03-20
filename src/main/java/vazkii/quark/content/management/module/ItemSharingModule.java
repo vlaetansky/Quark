@@ -32,6 +32,7 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.ServerPlayNetHandler;
 import net.minecraft.server.management.PlayerList;
+import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.IFormattableTextComponent;
@@ -154,25 +155,29 @@ public class ItemSharingModule extends QuarkModule {
 		NewChatGui chatGui = gameGui.getChatGUI();
 		if (event.getType() == RenderGameOverlayEvent.ElementType.CHAT) {
 			int updateCounter = gameGui.getTicks();
-			List<ChatLine<ITextComponent>> lines = chatGui.chatLines;
+			List<ChatLine<IReorderingProcessor>> lines = chatGui.drawnChatLines;
 			int shift = chatGui.scrollPos;
 
 			int idx = shift;
 
 			while (idx < lines.size() && (idx - shift) < chatGui.getLineCount()) {
-				ChatLine<ITextComponent> line = lines.get(idx);
+				ChatLine<IReorderingProcessor> line = lines.get(idx);
 				StringBuilder before = new StringBuilder();
 
-				ITextComponent lineProperties = line.getLineString();
+				IReorderingProcessor lineProperties = line.getLineString();
 
 				int captureIndex = idx;
-				lineProperties.getComponentWithStyle((style, str) -> {
-					if (str != null && str.startsWith("   ")) {
-						render(mc, chatGui, updateCounter, before.toString(), line, captureIndex - shift, style, str);
+				// TODO: This patch gets stuff working,
+				// but we probably want to find a better way to detect the position.
+				lineProperties.accept((counter_, style, character) -> {
+					String sofar = before.toString();
+					if (sofar.endsWith("    ")) {
+						render(mc, chatGui, updateCounter, sofar.substring(0, sofar.length() - 3), line, captureIndex - shift, style);
+						return false;
 					}
-					before.append(str);
-					return Optional.empty();
-				}, lineProperties.getStyle());
+					before.append((char) character);
+					return true;
+				});
 
 				idx++;
 			}
@@ -180,7 +185,7 @@ public class ItemSharingModule extends QuarkModule {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private static void render(Minecraft mc, NewChatGui chatGui, int updateCounter, String before, ChatLine<ITextComponent> line, int lineHeight, Style style, String str) {
+	private static void render(Minecraft mc, NewChatGui chatGui, int updateCounter, String before, ChatLine<IReorderingProcessor> line, int lineHeight, Style style) {
 		HoverEvent hoverEvent = style.getHoverEvent();
 		if (hoverEvent != null && hoverEvent.getAction() == HoverEvent.Action.SHOW_ITEM) {
 			HoverEvent.ItemHover contents = hoverEvent.getParameter(HoverEvent.Action.SHOW_ITEM);
