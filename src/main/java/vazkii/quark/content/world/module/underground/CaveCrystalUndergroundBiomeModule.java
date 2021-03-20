@@ -17,6 +17,7 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.content.world.block.CaveCrystalBlock;
+import vazkii.quark.content.world.block.CaveCrystalClusterBlock;
 import vazkii.quark.content.world.config.UndergroundBiomeConfig;
 import vazkii.quark.content.world.gen.underground.CaveCrystalUndergroundBiome;
 
@@ -26,11 +27,23 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 	@Config
 	@Config.Min(value = 0)
 	@Config.Max(value = 1)
-	public static double crystalSpawnChance = 0.025;
-
-	@Config
-	public static boolean crystalsGrowInLava = false;
+	public static double crystalChance = 0.16;
 	
+	@Config
+	@Config.Min(value = 0)
+	@Config.Max(value = 1)
+	public static double crystalClusterChance = 0.2;
+	
+	@Config
+	@Config.Min(value = 0)
+	@Config.Max(value = 1)
+	public static double crystalClusterOnSidesChance = 0.6;
+	
+	@Config
+	@Config.Min(value = 0)
+	@Config.Max(value = 1)
+	public static double doubleCrystalChance = 0.2;
+
 	@Config(description = "The chance that a crystal can grow, this is on average 1 in X world ticks, set to a higher value to make them grow slower. Minimum is 1, for every tick. Set to 0 to disable growth.")
 	public static int caveCrystalGrowthChance = 5;
 
@@ -39,7 +52,7 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 
 	public static List<CaveCrystalBlock> crystals = Lists.newArrayList();
 	public static ITag<Block> crystalTag;
-
+	
 	public static Block crystal(int floorIdx) {
 		return crystals.get(MathHelper.clamp(floorIdx, 0, crystals.size() - 1));
 	}
@@ -58,6 +71,9 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 
 		for(CaveCrystalBlock block : crystals)
 			new QuarkInheritedPaneBlock(block);
+		
+		for(CaveCrystalBlock block : crystals)
+			new CaveCrystalClusterBlock(block);
 
 		super.construct();
 	}

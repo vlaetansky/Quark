@@ -1,15 +1,19 @@
 package vazkii.quark.content.world.gen.underground;
 
+import java.util.Random;
+
 import it.unimi.dsi.fastutil.ints.Int2ByteArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ByteMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.gen.WorldGenRegion;
+import vazkii.quark.base.handler.MiscUtil;
+import vazkii.quark.content.world.block.CaveCrystalBlock;
+import vazkii.quark.content.world.block.CaveCrystalClusterBlock;
 import vazkii.quark.content.world.gen.UndergroundBiomeGenerator.Context;
 import vazkii.quark.content.world.module.underground.CaveCrystalUndergroundBiomeModule;
-
-import java.util.Random;
 
 public class CaveCrystalUndergroundBiome extends BasicUndergroundBiome {
 
@@ -19,9 +23,6 @@ public class CaveCrystalUndergroundBiome extends BasicUndergroundBiome {
 
 	private static final Int2ByteMap CRYSTAL_DATA = new Int2ByteArrayMap();
 
-	private final BlockState LAVA = Blocks.LAVA.getDefaultState();
-	private final BlockState STONE = Blocks.STONE.getDefaultState();
-
 	@Override
 	public void fillCeiling(Context context, BlockPos pos, BlockState state) {
 		byte raw = calculateRawColorData(context.source);
@@ -30,24 +31,8 @@ public class CaveCrystalUndergroundBiome extends BasicUndergroundBiome {
 		if (ceilIdx >= floorIdx)
 			ceilIdx++;
 
-		if(context.random.nextDouble() < CaveCrystalUndergroundBiomeModule.crystalSpawnChance) {
-			BlockPos floorPos = pos.down();
-			while (context.world.isAirBlock(floorPos))
-				floorPos = floorPos.down();
-
-			if (!context.world.getBlockState(pos).isIn(CaveCrystalUndergroundBiomeModule.crystalTag)) {
-				int dist = pos.getY() - floorPos.getY();
-
-				int start = 0;
-				if (!STONE_TYPES_MATCHER.test(context.world.getBlockState(pos.up())))
-					start++;
-
-				BlockState crystalState = CaveCrystalUndergroundBiomeModule.crystal(ceilIdx).getDefaultState();
-
-				for (int i = start; i <= dist * 3 / 4; i++)
-					context.world.setBlockState(pos.offset(Direction.DOWN, i), crystalState, 2);
-			}
-		}
+		if(context.random.nextDouble() < CaveCrystalUndergroundBiomeModule.crystalChance)
+			makeCrystalIfApt(context, pos, Direction.DOWN, ceilIdx);
 	}
 
 	@Override
@@ -55,37 +40,50 @@ public class CaveCrystalUndergroundBiome extends BasicUndergroundBiome {
 		byte raw = calculateRawColorData(context.source);
 		int floorIdx = raw & 0xF;
 
-		if(context.random.nextDouble() < CaveCrystalUndergroundBiomeModule.crystalSpawnChance) {
-			BlockPos ceilPos = pos.up();
-			while (context.world.isAirBlock(ceilPos))
-				ceilPos = ceilPos.up();
-
-			if (!context.world.getBlockState(pos).isIn(CaveCrystalUndergroundBiomeModule.crystalTag)) { 
-				int dist = ceilPos.getY() - pos.getY();
-
-				int start = 0;
-				if (!STONE_TYPES_MATCHER.test(context.world.getBlockState(pos.down())))
-					start++;
-
-				BlockState crystalState = CaveCrystalUndergroundBiomeModule.crystal(floorIdx).getDefaultState();
-
-				for (int i = start; i <= dist * 3 / 4; i++)
-					context.world.setBlockState(pos.offset(Direction.UP, i), crystalState, 2);
-				return;
+		if(context.random.nextDouble() < CaveCrystalUndergroundBiomeModule.crystalChance)
+			makeCrystalIfApt(context, pos, Direction.UP, floorIdx);
+	}
+	
+	private static void makeCrystalIfApt(Context context, BlockPos pos, Direction offset, int color) {
+		BlockPos crystalPos = pos.offset(offset);
+		boolean hasHorizontal = false;
+		
+		WorldGenRegion world = context.world;
+		for(Direction dir : MiscUtil.HORIZONTALS) {
+			BlockPos testPos = crystalPos.offset(dir);
+			if(world.getBlockState(testPos).isSolid()) {
+				hasHorizontal = true;
+				break;
 			}
 		}
+		
+		if(!hasHorizontal)
+			return;
+		
+		makeCrystalAt(context, crystalPos, offset, color, CaveCrystalUndergroundBiomeModule.crystalClusterChance);
+		
+		if(context.random.nextDouble() < CaveCrystalUndergroundBiomeModule.doubleCrystalChance) {
+			crystalPos = crystalPos.offset(offset);
+			
+			if(world.isAirBlock(crystalPos))
+				makeCrystalAt(context, crystalPos, offset, color, 0);
+		}	
+	}
+	
+	private static void makeCrystalAt(Context context, BlockPos crystalPos, Direction offset, int color, double clusterChance) {
+		CaveCrystalBlock crystal = CaveCrystalUndergroundBiomeModule.crystals.get(color);
+		CaveCrystalClusterBlock cluster = crystal.cluster;
 
-		if (CaveCrystalUndergroundBiomeModule.crystalsGrowInLava) {
-			context.world.setBlockState(pos, LAVA, 2);
-
-			for (Direction dir : Direction.values()) {
-				if (dir == Direction.UP)
-					continue;
-
-				BlockPos shiftPos = pos.offset(dir);
-
-				if (!context.world.getBlockState(shiftPos).isSolidSide(context.world, shiftPos, dir.getOpposite()))
-					context.world.setBlockState(shiftPos, STONE, 2);
+		WorldGenRegion world = context.world;
+		if(context.random.nextDouble() < clusterChance)
+			world.setBlockState(crystalPos, cluster.getDefaultState().with(CaveCrystalClusterBlock.FACING, offset), 0);
+		else {
+			world.setBlockState(crystalPos, crystal.getDefaultState(), 0);
+			
+			for(Direction dir : Direction.values()) {
+				BlockPos clusterPos = crystalPos.offset(dir);
+				if(world.isAirBlock(clusterPos) && context.random.nextDouble() < CaveCrystalUndergroundBiomeModule.crystalClusterOnSidesChance)
+					world.setBlockState(clusterPos, cluster.getDefaultState().with(CaveCrystalClusterBlock.FACING, dir), 0);
 			}
 		}
 	}

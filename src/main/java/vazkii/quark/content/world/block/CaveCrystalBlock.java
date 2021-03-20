@@ -12,6 +12,7 @@ import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorldReader;
@@ -19,7 +20,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ToolType;import vazkii.quark.api.event.ModuleLoadedEvent;
+import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkGlassBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
@@ -34,8 +35,10 @@ import vazkii.quark.content.world.module.underground.CaveCrystalUndergroundBiome
  */
 public class CaveCrystalBlock extends QuarkGlassBlock {
 
-	private final float[] colorComponents;
-	private final Vector3d colorVector;
+	public final float[] colorComponents;
+	public final Vector3d colorVector;
+	
+	public CaveCrystalClusterBlock cluster;
 
 	public CaveCrystalBlock(String regname, int color, QuarkModule module, MaterialColor materialColor) {
 		super(regname, module, ItemGroup.DECORATIONS,
@@ -82,10 +85,34 @@ public class CaveCrystalBlock extends QuarkGlassBlock {
 	@Override
 	public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
 		if(canGrow(worldIn, pos)) {
-			double d0 = (double)pos.getX() + rand.nextDouble();
-			double d1 = (double)pos.getY() + rand.nextDouble();
-			double d2 = (double)pos.getZ() + rand.nextDouble();
-			worldIn.addParticle(ParticleTypes.AMBIENT_ENTITY_EFFECT, d0, d1, d2, colorComponents[0], colorComponents[1], colorComponents[2]);
+			double x = (double)pos.getX() + rand.nextDouble();
+			double y = (double)pos.getY() + rand.nextDouble();
+			double z = (double)pos.getZ() + rand.nextDouble();
+			
+			worldIn.addParticle(ParticleTypes.AMBIENT_ENTITY_EFFECT, x, y, z, colorComponents[0], colorComponents[1], colorComponents[2]);
+		}
+		
+		for(int i = 0; i < 4; i++) {
+			double range = 5;
+			
+			double ox = rand.nextDouble() * range - (range / 2);
+			double oy = rand.nextDouble() * range - (range / 2);
+			double oz = rand.nextDouble() * range - (range / 2);
+			
+			double x = (double)pos.getX() + 0.5 + ox;
+			double y = (double)pos.getY() + 0.5 + oy;
+			double z = (double)pos.getZ() + 0.5 + oz;
+			
+			float size = 0.4F + rand.nextFloat() * 0.5F;
+			
+			if(rand.nextDouble() < 0.1) {
+				double ol = ((ox * ox) + (oy * oy) + (oz * oz)) * -2;
+				if(ol == 0)
+					ol = 0.0001;
+				worldIn.addParticle(ParticleTypes.END_ROD, x, y, z, ox / ol, oy / ol, oz / ol);
+			}
+
+			worldIn.addParticle(new RedstoneParticleData(colorComponents[0], colorComponents[1], colorComponents[2], size), x, y, z, 0, 0, 0);
 		}
 	}
 
