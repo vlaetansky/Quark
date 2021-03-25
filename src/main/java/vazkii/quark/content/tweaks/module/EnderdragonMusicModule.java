@@ -40,15 +40,14 @@ public class EnderdragonMusicModule extends QuarkModule {
 					&& mc.world.getDimensionKey().getLocation().equals(Dimension.THE_END.getLocation())
 					&& mc.ingameGUI.getBossOverlay().shouldPlayEndBossMusic();
 			
-			final int targetDelay = 30;
+			final int targetDelay = 50;
 			
 			if(isFightingDragon) {
-				if(delay == targetDelay && mc.gameSettings.getSoundLevel(SoundCategory.MUSIC) > 0) {
+				if(delay == targetDelay) {
 					sound = SimpleSound.music(QuarkSounds.MUSIC_TEDIUM);
 					mc.getSoundHandler().playDelayed(sound, 0);
 					mc.ingameGUI.func_238451_a_(tedium.getDescription());
 				}
-				
 
 				double x = mc.player.getPosX();
 				double z = mc.player.getPosZ();
