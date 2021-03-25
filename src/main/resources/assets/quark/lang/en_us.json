@@ -1069,7 +1069,12 @@
 	"block.quark.dark_oak_hedge": "Dark Oak Hedge",
 	"block.quark.matrix_enchanter": "Matrix Enchanting Table",
 	"block.quark.crate": "Crate",
-	
+	"block.quark.blackstone_bricks": "Blackstone Bricks",
+	"block.quark.blackstone_bricks_stairs": "Blackstone Brick Stairs",
+	"block.quark.blackstone_bricks_slab": "Blackstone Brick Slab",
+	"block.quark.blackstone_bricks_vertical_slab": "Blackstone Brick Vertical Slab",
+	"block.quark.blackstone_bricks_wall": "Blackstone Brick Wall",
+
 	"item.quark.stoneling_spawn_egg": "Stoneling Spawn Egg",
 	"item.quark.frog_spawn_egg": "Frog Spawn Egg",
 	"item.quark.crab_spawn_egg": "Crab Spawn Egg",
