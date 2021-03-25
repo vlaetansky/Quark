@@ -49,6 +49,9 @@ public class QuarkSounds {
     public static final SoundEvent ITEM_CAMERA_SHUTTER = register("item.camera.shutter");
     public static final SoundEvent ITEM_SOUL_POWDER_SPAWN = register("item.soul_powder.spawn");
 
+    public static final SoundEvent MUSIC_TEDIUM = register("music.tedium");
+
+    
     public static void start() {
         for (SoundEvent event : REGISTRY_DEFERENCE)
             RegistryHelper.register(event);
