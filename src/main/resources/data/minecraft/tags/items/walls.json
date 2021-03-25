@@ -12,6 +12,7 @@
     "quark:cobbedstone_wall",
     "quark:cobblestone_bricks_wall",
     "quark:diorite_bricks_wall",
+    "quark:dirt_bricks_wall",
     "quark:elder_prismarine_wall",
     "quark:granite_bricks_wall",
     "quark:jasper_bricks_wall",
@@ -24,6 +25,7 @@
     "quark:mossy_cobblestone_bricks_wall",
     "quark:myalite_bricks_wall",
     "quark:myalite_wall",
+    "quark:netherrack_bricks_wall",
     "quark:paper_wall",
     "quark:paper_wall_big",
     "quark:paper_wall_sakura",
@@ -38,6 +40,7 @@
     "quark:soul_sandstone_bricks_wall",
     "quark:soul_sandstone_wall",
     "quark:twisted_blackstone_bricks_wall",
+    "quark:vanilla_basalt_bricks_wall",
     "quark:weeping_blackstone_bricks_wall"
   ]
 }

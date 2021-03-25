@@ -14,14 +14,26 @@ import vazkii.quark.base.module.config.Config;
 public class CobblestoneBricksModule extends QuarkModule {
 
 	@Config(flag = "blackstone_bricks")
-	private static boolean blackstoneBricks;
+	private static boolean enableBlackstoneBricks;
+	
+	@Config(flag = "dirt_bricks")
+	private static boolean enableDirtBricks;
+	
+	@Config(flag = "netherrack_bricks")
+	private static boolean enableNetherrackBricks;
+	
+	@Config(flag = "basalt_bricks")
+	private static boolean enableBasaltBricks;
 	
 	@Override
 	public void construct() {
 		VariantHandler.addSlabStairsWall(new QuarkBlock("cobblestone_bricks", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.COBBLESTONE)));
 		VariantHandler.addSlabStairsWall(new QuarkBlock("mossy_cobblestone_bricks", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.MOSSY_COBBLESTONE)));
 		
-		VariantHandler.addSlabStairsWall(new QuarkBlock("blackstone_bricks", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.BLACKSTONE)).setCondition(() -> blackstoneBricks));
+		VariantHandler.addSlabStairsWall(new QuarkBlock("blackstone_bricks", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.BLACKSTONE)).setCondition(() -> enableBlackstoneBricks));
+		VariantHandler.addSlabStairsWall(new QuarkBlock("dirt_bricks", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.DIRT)).setCondition(() -> enableDirtBricks));
+		VariantHandler.addSlabStairsWall(new QuarkBlock("netherrack_bricks", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.NETHERRACK)).setCondition(() -> enableNetherrackBricks));
+		VariantHandler.addSlabStairsWall(new QuarkBlock("vanilla_basalt_bricks", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.BASALT)).setCondition(() -> enableBasaltBricks));
 	}
 	
 }
