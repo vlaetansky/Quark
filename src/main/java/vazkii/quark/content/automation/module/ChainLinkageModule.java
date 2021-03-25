@@ -10,18 +10,20 @@
  */
 package vazkii.quark.content.automation.module;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 import io.netty.util.collection.IntObjectHashMap;
 import io.netty.util.collection.IntObjectMap;
+import net.minecraft.block.DispenserBlock;
+import net.minecraft.dispenser.IBlockSource;
+import net.minecraft.dispenser.OptionalDispenseBehavior;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.TickEvent;
@@ -31,13 +33,19 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.SyncChainMessage;
 import vazkii.quark.content.automation.base.ChainHandler;
 import vazkii.quark.content.automation.client.render.ChainRenderer;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @LoadModule(category = ModuleCategory.AUTOMATION, hasSubscriptions = true)
 public class ChainLinkageModule extends QuarkModule {
@@ -46,6 +54,14 @@ public class ChainLinkageModule extends QuarkModule {
     public static boolean craftsArmor = true;
 
     private static final IntObjectMap<UUID> AWAIT_MAP = new IntObjectHashMap<>();
+
+    @Override
+    public void setup() {
+        if (!enabled)
+            return;
+
+        DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY.put(Items.CHAIN, new LinkCartsBehaviour());
+    }
 
     public static void queueChainUpdate(int vehicle, UUID other) {
         if (other != null && !other.equals(SyncChainMessage.NULL_UUID))
@@ -140,6 +156,40 @@ public class ChainLinkageModule extends QuarkModule {
             if (AWAIT_MAP.containsKey(id))
                 target.getPersistentData().putUniqueId(ChainHandler.LINKED_TO, AWAIT_MAP.get(id));
             AWAIT_MAP.remove(id);
+        }
+    }
+
+    public static class LinkCartsBehaviour extends OptionalDispenseBehavior {
+
+        @Nonnull
+        @Override
+        public ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
+            // Resolve direction the dispenser block is facing
+            Direction direction = source.getBlockState().get(DispenserBlock.FACING);
+            // Create the area for the block in front of the dispenser
+            AxisAlignedBB targetArea = new AxisAlignedBB(source.getBlockPos().offset(direction));
+
+            // Get a list of minecarts in front of the dispenser that are not linked to anything
+            List<AbstractMinecartEntity> linkableCarts = source
+                .getWorld()
+                .getEntitiesWithinAABB(AbstractMinecartEntity.class, targetArea)
+                .stream()
+                .filter(e -> ChainHandler.getLinked(e) == null)
+                .collect(Collectors.toList());
+
+            // Make sure that there are exactly two carts in the target area
+            // Do nothing if there are no link-able carts, or if linking targets are ambiguous
+            if (linkableCarts.size() != 2)
+                return stack;
+
+            // Link the two minecarts together
+            ChainHandler.setLink(linkableCarts.get(0), linkableCarts.get(1).getUniqueID(), true);
+            // Use up one of the chains during linking
+            stack.shrink(1);
+            // Mark the dispense result as a success
+            successful = true;
+
+            return stack;
         }
     }
 }
