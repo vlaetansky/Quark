@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3f;
 import vazkii.quark.content.experimental.shiba.entity.ShibaEntity;
 
 public class ShibaModel extends EntityModel<ShibaEntity> {
@@ -19,6 +18,7 @@ public class ShibaModel extends EntityModel<ShibaEntity> {
 	private final ModelRenderer rEar;
 	private final ModelRenderer lEar;
 	
+	private final ModelRenderer tongue;
 	private final ModelRenderer torso;
 	private final ModelRenderer tail;
 	
@@ -28,7 +28,8 @@ public class ShibaModel extends EntityModel<ShibaEntity> {
 	private final ModelRenderer lBackLeg;
 	
 	private ShibaEntity entity;
-
+	private double tongueStick;
+	
 	public ShibaModel() {
 		textureWidth = 80;
 		textureHeight = 48;
@@ -50,6 +51,11 @@ public class ShibaModel extends EntityModel<ShibaEntity> {
 		head.addChild(lEar);
 		lEar.setTextureOffset(0, 0).addBox(-1.0F, 0.0F, -3.0F, 2.0F, 2.0F, 3.0F, 0.0F, true);
 
+		tongue = new ModelRenderer(this);
+		tongue.setRotationPoint(0.0F, -4.0F, -8.0F);
+		head.addChild(tongue);
+		tongue.setTextureOffset(36, 34).addBox(-1.0F, 0.0F, -3.0F, 2.0F, 0.0F, 3.0F, 0.0F, false);
+		
 		torso = new ModelRenderer(this);
 		torso.setRotationPoint(0.0F, 13.0F, -7.0F);
 		torso.setTextureOffset(36, 10).addBox(-3.0F, 0.0F, -4.0F, 6.0F, 14.0F, 8.0F, 0.0F, false);
@@ -86,7 +92,7 @@ public class ShibaModel extends EntityModel<ShibaEntity> {
 	@Override
 	public void setLivingAnimations(ShibaEntity shiba, float limbSwing, float limbSwingAmount, float partialTickTime) {
 		this.entity = shiba;
-		
+
 		setRotationAngle(rFrontLeg, MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount, 0, 0);
 		setRotationAngle(lFrontLeg, MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount, 0, 0);
 		setRotationAngle(rBackLeg, MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount, 0, 0);
@@ -103,6 +109,8 @@ public class ShibaModel extends EntityModel<ShibaEntity> {
 		setRotationAngle(tail, MathHelper.cos(ageInTicks * 0.1F) * 0.1F, MathHelper.sin(ageInTicks * 0.15F) * 0.12F, MathHelper.cos(ageInTicks * 0.3F) * 0.2F);
 		setRotationAngle(lEar, 0F, MathHelper.cos(ageInTicks * 0.08F) * 0.05F - 0.05F, 0F);
 		setRotationAngle(rEar, 0F, MathHelper.sin(ageInTicks * 0.07F) * 0.05F + 0.05F, 0F);
+		
+		boolean tongueOut = false;
 		
 		BlockState state = shiba.getBlockState();
 		boolean sleep = state.isIn(BlockTags.BEDS);
@@ -123,9 +131,18 @@ public class ShibaModel extends EntityModel<ShibaEntity> {
 				setRotationAngle(rBackLeg, -0.5F, 0F, 0F);
 				setRotationAngle(lFrontLeg, -0.5F, 0F, 0F);
 				setRotationAngle(rFrontLeg, -0.5F, 0F, 0F);
+				tongueOut = true;
 			}
 		} else {
 			setRotationAngle(torso, 1.5708F, 0F, 0F);
+		}
+		
+		if(tongueOut) {
+			tongue.setRotationPoint(0F, -4F, -6.75F + MathHelper.cos(ageInTicks * 0.19F) * 0.25F);
+			setRotationAngle(tongue, MathHelper.cos(ageInTicks * 0.19F) * 0.1F + 0.2F, 0, 0);
+		} else {
+			tongue.setRotationPoint(0F, -4F, -5F);
+			setRotationAngle(tongue, 0, 0, 0);
 		}
 	}
 
