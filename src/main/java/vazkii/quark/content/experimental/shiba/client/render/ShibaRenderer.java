@@ -4,9 +4,8 @@ import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
 import vazkii.quark.base.Quark;
-import vazkii.quark.base.module.ModuleLoader;
-import vazkii.quark.content.client.module.VariantAnimalTexturesModule;
 import vazkii.quark.content.experimental.shiba.client.layer.ShibaCollarLayer;
+import vazkii.quark.content.experimental.shiba.client.layer.ShibaMouthItemLayer;
 import vazkii.quark.content.experimental.shiba.client.model.ShibaModel;
 import vazkii.quark.content.experimental.shiba.entity.ShibaEntity;
 
@@ -23,6 +22,7 @@ public class ShibaRenderer extends MobRenderer<ShibaEntity, ShibaModel> {
 	public ShibaRenderer(EntityRendererManager render) {
 		super(render, new ShibaModel(), 0.5F);
 		addLayer(new ShibaCollarLayer(this));
+		addLayer(new ShibaMouthItemLayer(this));
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class ShibaRenderer extends MobRenderer<ShibaEntity, ShibaModel> {
 		if((least % 200) == 0)
 			return SHIBA_RARE;
 		
-		int type = (int) (least % 3);
+		int type = (int) (least % SHIBA_BASES.length);
 		return SHIBA_BASES[type];
 	}
 	

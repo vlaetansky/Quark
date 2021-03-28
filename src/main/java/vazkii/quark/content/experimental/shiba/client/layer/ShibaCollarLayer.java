@@ -19,6 +19,8 @@ import net.minecraft.util.ResourceLocation;
 import vazkii.quark.base.Quark;
 import vazkii.quark.content.experimental.shiba.client.model.ShibaModel;
 import vazkii.quark.content.experimental.shiba.entity.ShibaEntity;
+import vazkii.quark.content.mobs.client.model.FoxhoundModel;
+import vazkii.quark.content.mobs.entity.FoxhoundEntity;
 
 public class ShibaCollarLayer extends LayerRenderer<ShibaEntity, ShibaModel> {
 
@@ -29,10 +31,10 @@ public class ShibaCollarLayer extends LayerRenderer<ShibaEntity, ShibaModel> {
 	}
 
 	@Override
-	public void render(MatrixStack matrix, IRenderTypeBuffer buffer, int light, ShibaEntity shiba,  float limbAngle, float limbDistance, float tickDelta, float customAngle, float headYaw, float headPitch) {
-		if (shiba.isTamed() && !shiba.isInvisible()) {
-			float[] afloat = shiba.getCollarColor().getColorComponentValues();
-			renderCutoutModel(getEntityModel(), WOLF_COLLAR, matrix, buffer, light, shiba, afloat[0], afloat[1], afloat[2]);
+	public void render(MatrixStack matrix, IRenderTypeBuffer buffer, int light, ShibaEntity foxhound,  float limbAngle, float limbDistance, float tickDelta, float customAngle, float headYaw, float headPitch) {
+		if (foxhound.isTamed() && !foxhound.isInvisible()) {
+			float[] afloat = foxhound.getCollarColor().getColorComponentValues();
+			renderCutoutModel(getEntityModel(), WOLF_COLLAR, matrix, buffer, light, foxhound, afloat[0], afloat[1], afloat[2]);
 		}
 	}
 

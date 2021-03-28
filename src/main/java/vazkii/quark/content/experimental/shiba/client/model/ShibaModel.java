@@ -87,6 +87,10 @@ public class ShibaModel extends EntityModel<ShibaEntity> {
 		main.addChild(lFrontLeg);
 		main.addChild(lBackLeg);
 	}
+	
+	public void transformToHead(MatrixStack matrix) {
+		head.translateRotate(matrix);
+	}
 
 	@Override
 	public void setLivingAnimations(ShibaEntity shiba, float limbSwing, float limbSwingAmount, float partialTickTime) {
@@ -101,8 +105,12 @@ public class ShibaModel extends EntityModel<ShibaEntity> {
 	@Override
 	public void setRotationAngles(ShibaEntity shiba, float limbSwing, float limbSwingAmount, float ageInTicks, float yaw, float pitch) {
 		main.setRotationPoint(0F, 0F, 0F);
-		setRotationAngle(main, 0, 0F, 0F);
+		lBackLeg.setRotationPoint(-3.0F, 15.0F, 4.0F);
+		rBackLeg.setRotationPoint(3.0F, 15.0F, 4.0F);
 		
+		setRotationAngle(main, 0, 0F, 0F);
+		setRotationAngle(torso, 1.5708F, 0F, 0F);
+
 		setRotationAngle(head, MathHelper.cos(ageInTicks * 0.6F) * 0.01F, yaw * 0.017453292F, MathHelper.sin(ageInTicks * 0.06F) * 0.06F);
 		
 		setRotationAngle(tail, MathHelper.cos(ageInTicks * 0.1F) * 0.1F, MathHelper.sin(ageInTicks * 0.15F) * 0.12F, MathHelper.cos(ageInTicks * 0.3F) * 0.2F);
@@ -113,8 +121,10 @@ public class ShibaModel extends EntityModel<ShibaEntity> {
 		
 		BlockState state = shiba.getBlockState();
 		boolean sleep = state.isIn(BlockTags.BEDS);
-		
+
 		if(shiba.isSleeping()) {
+			tongueOut = true;
+
 			if(sleep) {
 				main.setRotationPoint(16F, 18.0F, 0F);
 				setRotationAngle(main, 0F, 0F, 1.5708F);
@@ -125,18 +135,20 @@ public class ShibaModel extends EntityModel<ShibaEntity> {
 				setRotationAngle(rFrontLeg, MathHelper.cos(ageInTicks * 0.19F) * 0.1F, 0F, MathHelper.sin(ageInTicks * 0.21F) * 0.12F);
 				setRotationAngle(lFrontLeg, MathHelper.sin(ageInTicks * 0.18F) * 0.08F, 0F, MathHelper.cos(ageInTicks * 0.2F) * 0.11F);
 			} else {
-				setRotationAngle(torso, 1.1F, 0F, 0F);
-				setRotationAngle(lBackLeg, -0.5F, 0F, 0F);
-				setRotationAngle(rBackLeg, -0.5F, 0F, 0F);
-				setRotationAngle(lFrontLeg, -0.5F, 0F, 0F);
-				setRotationAngle(rFrontLeg, -0.5F, 0F, 0F);
-				tongueOut = true;
+				setRotationAngle(torso, 1F, 0F, 0F);
+				
+				lBackLeg.setRotationPoint(-3.0F, 19.0F, 2.0F);
+				rBackLeg.setRotationPoint(3.0F, 19.0F, 2.0F);
+
+				setRotationAngle(lBackLeg, -1F, -0.5F, 0F);
+				setRotationAngle(rBackLeg, -1F, -0.5F, 0F);
+				
+				setRotationAngle(lFrontLeg, -0.5F, 0.5F, 0F);
+				setRotationAngle(rFrontLeg, -0.5F, 0.5F, 0F);
 			}
-		} else {
-			setRotationAngle(torso, 1.5708F, 0F, 0F);
 		}
 		
-		if(tongueOut) {
+		if(tongueOut && shiba.getMouthItem().isEmpty()) {
 			tongue.setRotationPoint(0F, -4F, -6.75F + MathHelper.cos(ageInTicks * 0.19F) * 0.25F);
 			setRotationAngle(tongue, MathHelper.cos(ageInTicks * 0.19F) * 0.1F + 0.2F, 0, 0);
 		} else {
@@ -146,12 +158,32 @@ public class ShibaModel extends EntityModel<ShibaEntity> {
 	}
 
 	@Override
-	public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
+	public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 		matrixStack.push();
-		if(entity.isSitting())
-			matrixStack.translate(0, 0.15, 0);
+		if(entity.isSleeping())
+			matrixStack.translate(0, 0.12, 0);
 		
-		main.render(matrixStack, buffer, packedLight, packedOverlay);
+		main.translateRotate(matrixStack);
+		
+		matrixStack.push();
+		if(isChild)
+			matrixStack.translate(0.0F, 5.0F / 16F, 0F);
+		
+		head.render(matrixStack, buffer, packedLight, packedOverlay);
+		matrixStack.pop();
+
+		matrixStack.push();
+		if (isChild) {
+			matrixStack.translate(0.0F, 12.0F / 16F, 0F);
+			matrixStack.scale(0.5F, 0.5F, 0.5F);
+		}
+		
+		torso.render(matrixStack, buffer, packedLight, packedOverlay);
+		rFrontLeg.render(matrixStack, buffer, packedLight, packedOverlay);
+		rBackLeg.render(matrixStack, buffer, packedLight, packedOverlay);
+		lFrontLeg.render(matrixStack, buffer, packedLight, packedOverlay);
+		lBackLeg.render(matrixStack, buffer, packedLight, packedOverlay);
+		matrixStack.pop();
 		matrixStack.pop();
 	}
 

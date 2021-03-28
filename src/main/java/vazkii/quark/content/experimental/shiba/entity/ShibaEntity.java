@@ -30,20 +30,25 @@ import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
 import vazkii.quark.content.experimental.module.ShibaModule;
+import vazkii.quark.content.tweaks.ai.NuzzleGoal;
+import vazkii.quark.content.tweaks.ai.WantLoveGoal;
 
 public class ShibaEntity extends TameableEntity {
 
 	private static final DataParameter<Integer> COLLAR_COLOR = EntityDataManager.createKey(ShibaEntity.class, DataSerializers.VARINT);
+	private static final DataParameter<ItemStack> MOUTH_ITEM = EntityDataManager.createKey(ShibaEntity.class, DataSerializers.ITEMSTACK);
 
 	public ShibaEntity(EntityType<? extends ShibaEntity> type, World worldIn) {
 		super(type, worldIn);
@@ -57,9 +62,11 @@ public class ShibaEntity extends TameableEntity {
 		goalSelector.addGoal(3, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
 		goalSelector.addGoal(4, new TemptGoal(this, 1, Ingredient.fromItems(Items.BONE), false));
 		goalSelector.addGoal(5, new BreedGoal(this, 1.0D));
-		goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-		goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-		goalSelector.addGoal(8, new LookRandomlyGoal(this));
+		goalSelector.addGoal(6, new NuzzleGoal(this, 0.5F, 16, 2, SoundEvents.ENTITY_WOLF_WHINE));
+		goalSelector.addGoal(7, new WantLoveGoal(this, 0.2F));
+		goalSelector.addGoal(8, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
+		goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 8.0F));
+		goalSelector.addGoal(10, new LookRandomlyGoal(this));
 	}
 
 	@Override
@@ -73,11 +80,12 @@ public class ShibaEntity extends TameableEntity {
 	public IPacket<?> createSpawnPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
-	
+
 	@Override
 	protected void registerData() {
 		super.registerData();
 		dataManager.register(COLLAR_COLOR, DyeColor.RED.getId());
+		dataManager.register(MOUTH_ITEM, ItemStack.EMPTY);
 	}
 
 	public DyeColor getCollarColor() {
@@ -86,6 +94,14 @@ public class ShibaEntity extends TameableEntity {
 
 	public void setCollarColor(DyeColor collarcolor) {
 		this.dataManager.set(COLLAR_COLOR, collarcolor.getId());
+	}
+
+	public ItemStack getMouthItem() {
+		return dataManager.get(MOUTH_ITEM);
+	}
+
+	public void setMouthItem(ItemStack stack) {
+		this.dataManager.set(MOUTH_ITEM, stack);
 	}
 
 	@Override
@@ -128,65 +144,100 @@ public class ShibaEntity extends TameableEntity {
 	}
 
 	@Override
-	public ActionResultType func_230254_b_(PlayerEntity p_230254_1_, Hand p_230254_2_) {
-		ItemStack itemstack = p_230254_1_.getHeldItem(p_230254_2_);
+	public ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
+		ItemStack itemstack = player.getHeldItem(hand);
 		Item item = itemstack.getItem();
-		if (this.world.isRemote) {
-			boolean flag = this.isOwner(p_230254_1_) || this.isTamed() || item == Items.BONE && !this.isTamed();
-			return flag ? ActionResultType.CONSUME : ActionResultType.PASS;
-		} else {
-			if (this.isTamed()) {
-				if (this.isBreedingItem(itemstack) && this.getHealth() < this.getMaxHealth()) {
-					if (!p_230254_1_.abilities.isCreativeMode) {
-						itemstack.shrink(1);
-					}
+		if(player.isDiscrete() && player.getHeldItemMainhand().isEmpty()) {
+			if(hand == Hand.MAIN_HAND && WantLoveGoal.canPet(this)) {
+				if(player.world instanceof ServerWorld) {
+					Vector3d pos = getPositionVec();
+					((ServerWorld) player.world).spawnParticle(ParticleTypes.HEART, pos.x, pos.y + 0.5, pos.z, 1, 0, 0, 0, 0.1);
+					playSound(SoundEvents.ENTITY_WOLF_WHINE, 0.6F, 0.5F + (float) Math.random() * 0.5F);
+				} else player.swingArm(Hand.MAIN_HAND);
 
-					this.heal((float)item.getFood().getHealing());
-					return ActionResultType.SUCCESS;
-				}
+				WantLoveGoal.setPetTime(this);
+			}
 
-				if (!(item instanceof DyeItem)) {
-					ActionResultType actionresulttype = super.func_230254_b_(p_230254_1_, p_230254_2_);
-					if ((!actionresulttype.isSuccessOrConsume() || this.isChild()) && this.isOwner(p_230254_1_)) {
-						this.func_233687_w_(!this.isSitting());
-						this.isJumping = false;
-						this.navigator.clearPath();
-						this.setAttackTarget((LivingEntity)null);
+			return ActionResultType.SUCCESS;
+		} else
+			if (this.world.isRemote) {
+				boolean flag = this.isOwner(player) || this.isTamed() || item == Items.BONE && !this.isTamed();
+				return flag ? ActionResultType.CONSUME : ActionResultType.PASS;
+			} else {
+				if (this.isTamed()) {
+					ItemStack mouthItem = getMouthItem();
+					if(!mouthItem.isEmpty()) {
+						ItemStack copy = mouthItem.copy();
+						if(!player.addItemStackToInventory(copy))
+							entityDropItem(copy);
+
+						if(player.world instanceof ServerWorld) {
+							Vector3d pos = getPositionVec();
+							((ServerWorld) player.world).spawnParticle(ParticleTypes.HEART, pos.x, pos.y + 0.5, pos.z, 1, 0, 0, 0, 0.1);
+							playSound(SoundEvents.ENTITY_WOLF_WHINE, 0.6F, 0.5F + (float) Math.random() * 0.5F);
+						}
+						setMouthItem(ItemStack.EMPTY);
 						return ActionResultType.SUCCESS;
 					}
 
-					return actionresulttype;
-				}
+					if (this.isBreedingItem(itemstack) && this.getHealth() < this.getMaxHealth()) {
+						if (!player.abilities.isCreativeMode) {
+							itemstack.shrink(1);
+						}
 
-				DyeColor dyecolor = ((DyeItem)item).getDyeColor();
-				if (dyecolor != this.getCollarColor()) {
-					this.setCollarColor(dyecolor);
-					if (!p_230254_1_.abilities.isCreativeMode) {
+						this.heal((float)item.getFood().getHealing());
+						return ActionResultType.SUCCESS;
+					}
+
+					if (!(item instanceof DyeItem)) {
+						if(!itemstack.isEmpty() && mouthItem.isEmpty()) {
+							setMouthItem(itemstack.copy());
+							return ActionResultType.SUCCESS;
+						}
+
+						ActionResultType actionresulttype = super.func_230254_b_(player, hand);
+						if ((!actionresulttype.isSuccessOrConsume() || this.isChild()) && this.isOwner(player)) {
+							this.func_233687_w_(!this.isSitting());
+							this.isJumping = false;
+							this.navigator.clearPath();
+							this.setAttackTarget((LivingEntity)null);
+							return ActionResultType.SUCCESS;
+						}
+
+						return actionresulttype;
+					}
+
+					DyeColor dyecolor = ((DyeItem)item).getDyeColor();
+					if (dyecolor != this.getCollarColor()) {
+						this.setCollarColor(dyecolor);
+						if (!player.abilities.isCreativeMode) {
+							itemstack.shrink(1);
+						}
+
+						return ActionResultType.SUCCESS;
+					}
+				} else if (item == Items.BONE) {
+					if (!player.abilities.isCreativeMode) {
 						itemstack.shrink(1);
+					}
+
+					if (this.rand.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player)) {
+						WantLoveGoal.setPetTime(this);
+
+						this.setTamedBy(player);
+						this.navigator.clearPath();
+						this.setAttackTarget((LivingEntity)null);
+						this.func_233687_w_(true);
+						this.world.setEntityState(this, (byte)7);
+					} else {
+						this.world.setEntityState(this, (byte)6);
 					}
 
 					return ActionResultType.SUCCESS;
 				}
-			} else if (item == Items.BONE) {
-				if (!p_230254_1_.abilities.isCreativeMode) {
-					itemstack.shrink(1);
-				}
 
-				if (this.rand.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, p_230254_1_)) {
-					this.setTamedBy(p_230254_1_);
-					this.navigator.clearPath();
-					this.setAttackTarget((LivingEntity)null);
-					this.func_233687_w_(true);
-					this.world.setEntityState(this, (byte)7);
-				} else {
-					this.world.setEntityState(this, (byte)6);
-				}
-
-				return ActionResultType.SUCCESS;
+				return super.func_230254_b_(player, hand);
 			}
-
-			return super.func_230254_b_(p_230254_1_, p_230254_2_);
-		}
 	}
 
 	@Override
