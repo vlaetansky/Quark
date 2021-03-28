@@ -42,6 +42,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
 import vazkii.quark.content.experimental.module.ShibaModule;
+import vazkii.quark.content.experimental.shiba.ai.DeliverFetchedItemGoal;
 import vazkii.quark.content.tweaks.ai.NuzzleGoal;
 import vazkii.quark.content.tweaks.ai.WantLoveGoal;
 
@@ -59,14 +60,15 @@ public class ShibaEntity extends TameableEntity {
 	protected void registerGoals() {
 		goalSelector.addGoal(1, new SwimGoal(this));
 		goalSelector.addGoal(2, new SitGoal(this));
-		goalSelector.addGoal(3, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
-		goalSelector.addGoal(4, new TemptGoal(this, 1, Ingredient.fromItems(Items.BONE), false));
-		goalSelector.addGoal(5, new BreedGoal(this, 1.0D));
-		goalSelector.addGoal(6, new NuzzleGoal(this, 0.5F, 16, 2, SoundEvents.ENTITY_WOLF_WHINE));
-		goalSelector.addGoal(7, new WantLoveGoal(this, 0.2F));
-		goalSelector.addGoal(8, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-		goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-		goalSelector.addGoal(10, new LookRandomlyGoal(this));
+		goalSelector.addGoal(3, new DeliverFetchedItemGoal(this, 1.1D, -1F, 32.0F, false));
+		goalSelector.addGoal(4, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
+		goalSelector.addGoal(5, new TemptGoal(this, 1, Ingredient.fromItems(Items.BONE), false));
+		goalSelector.addGoal(6, new BreedGoal(this, 1.0D));
+		goalSelector.addGoal(7, new NuzzleGoal(this, 0.5F, 16, 2, SoundEvents.ENTITY_WOLF_WHINE));
+		goalSelector.addGoal(8, new WantLoveGoal(this, 0.2F));
+		goalSelector.addGoal(9, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
+		goalSelector.addGoal(10, new LookAtGoal(this, PlayerEntity.class, 8.0F));
+		goalSelector.addGoal(11, new LookRandomlyGoal(this));
 	}
 
 	@Override
@@ -191,7 +193,11 @@ public class ShibaEntity extends TameableEntity {
 
 					if (!(item instanceof DyeItem)) {
 						if(!itemstack.isEmpty() && mouthItem.isEmpty()) {
-							setMouthItem(itemstack.copy());
+							ItemStack copy = itemstack.copy();
+							copy.setCount(1);
+							itemstack.setCount(itemstack.getCount() - 1);
+							
+							setMouthItem(copy);
 							return ActionResultType.SUCCESS;
 						}
 
