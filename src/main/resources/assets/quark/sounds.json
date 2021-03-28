@@ -207,15 +207,5 @@
     "sounds": [
       "quark:item/soulpowder_scream"
     ]
-  },
-
-  "music.tedium": {
-  	"category": "music",
-	"sounds": [
-		{
-			"name": "quark:music/tedium", 
-			"stream": true
-		}
-	] 
   }
 }

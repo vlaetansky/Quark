@@ -28,7 +28,6 @@ public class ShibaModel extends EntityModel<ShibaEntity> {
 	private final ModelRenderer lBackLeg;
 	
 	private ShibaEntity entity;
-	private double tongueStick;
 	
 	public ShibaModel() {
 		textureWidth = 80;
