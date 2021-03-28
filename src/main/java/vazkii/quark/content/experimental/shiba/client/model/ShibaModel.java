@@ -114,7 +114,7 @@ public class ShibaModel extends EntityModel<ShibaEntity> {
 		BlockState state = shiba.getBlockState();
 		boolean sleep = state.isIn(BlockTags.BEDS);
 		
-		if(shiba.isSitting()) {
+		if(shiba.isSleeping()) {
 			if(sleep) {
 				main.setRotationPoint(16F, 18.0F, 0F);
 				setRotationAngle(main, 0F, 0F, 1.5708F);
