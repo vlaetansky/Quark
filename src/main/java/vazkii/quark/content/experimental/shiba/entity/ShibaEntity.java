@@ -1,11 +1,13 @@
 package vazkii.quark.content.experimental.shiba.entity;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.AgeableEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.BreedGoal;
@@ -19,6 +21,8 @@ import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity.PickupStatus;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.Item;
@@ -36,6 +40,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -43,6 +48,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
 import vazkii.quark.content.experimental.module.ShibaModule;
 import vazkii.quark.content.experimental.shiba.ai.DeliverFetchedItemGoal;
+import vazkii.quark.content.experimental.shiba.ai.FetchArrowGoal;
 import vazkii.quark.content.tweaks.ai.NuzzleGoal;
 import vazkii.quark.content.tweaks.ai.WantLoveGoal;
 
@@ -50,7 +56,8 @@ public class ShibaEntity extends TameableEntity {
 
 	private static final DataParameter<Integer> COLLAR_COLOR = EntityDataManager.createKey(ShibaEntity.class, DataSerializers.VARINT);
 	private static final DataParameter<ItemStack> MOUTH_ITEM = EntityDataManager.createKey(ShibaEntity.class, DataSerializers.ITEMSTACK);
-
+	private static final DataParameter<Integer> FETCHING = EntityDataManager.createKey(ShibaEntity.class, DataSerializers.VARINT);
+	
 	public ShibaEntity(EntityType<? extends ShibaEntity> type, World worldIn) {
 		super(type, worldIn);
 		setTamed(false);
@@ -60,17 +67,57 @@ public class ShibaEntity extends TameableEntity {
 	protected void registerGoals() {
 		goalSelector.addGoal(1, new SwimGoal(this));
 		goalSelector.addGoal(2, new SitGoal(this));
-		goalSelector.addGoal(3, new DeliverFetchedItemGoal(this, 1.1D, -1F, 32.0F, false));
-		goalSelector.addGoal(4, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
-		goalSelector.addGoal(5, new TemptGoal(this, 1, Ingredient.fromItems(Items.BONE), false));
-		goalSelector.addGoal(6, new BreedGoal(this, 1.0D));
-		goalSelector.addGoal(7, new NuzzleGoal(this, 0.5F, 16, 2, SoundEvents.ENTITY_WOLF_WHINE));
-		goalSelector.addGoal(8, new WantLoveGoal(this, 0.2F));
-		goalSelector.addGoal(9, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-		goalSelector.addGoal(10, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-		goalSelector.addGoal(11, new LookRandomlyGoal(this));
+		goalSelector.addGoal(3, new FetchArrowGoal(this));
+		goalSelector.addGoal(4, new DeliverFetchedItemGoal(this, 1.1D, -1F, 32.0F, false));
+		goalSelector.addGoal(5, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
+		goalSelector.addGoal(6, new TemptGoal(this, 1, Ingredient.fromItems(Items.BONE), false));
+		goalSelector.addGoal(7, new BreedGoal(this, 1.0D));
+		goalSelector.addGoal(8, new NuzzleGoal(this, 0.5F, 16, 2, SoundEvents.ENTITY_WOLF_WHINE));
+		goalSelector.addGoal(9, new WantLoveGoal(this, 0.2F));
+		goalSelector.addGoal(10, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
+		goalSelector.addGoal(11, new LookAtGoal(this, PlayerEntity.class, 8.0F));
+		goalSelector.addGoal(12, new LookRandomlyGoal(this));
 	}
-
+	
+	@Override
+	public void tick() {
+		super.tick();
+		
+		AbstractArrowEntity fetching = getFetching();
+		if(fetching != null && (isSleeping() || fetching.world != world || !fetching.isAlive() || fetching.pickupStatus != PickupStatus.ALLOWED))
+			setFetching(null);
+		
+		if(!isSleeping() && !world.isRemote && fetching == null && getMouthItem().isEmpty()) {
+			LivingEntity owner = getOwner();
+			if(owner != null) {
+				AxisAlignedBB check = owner.getBoundingBox().grow(2);
+				List<AbstractArrowEntity> arrows = world.getEntitiesWithinAABB(AbstractArrowEntity.class, check, 
+						a -> a.func_234616_v_() == owner && a.pickupStatus == PickupStatus.ALLOWED);
+				
+				if(arrows.size() > 0) {
+					AbstractArrowEntity arrow = arrows.get(world.rand.nextInt(arrows.size()));
+					setFetching(arrow);
+				}
+			}
+		}
+	}
+	
+	public AbstractArrowEntity getFetching() {
+		int id = dataManager.get(FETCHING);
+		if(id == -1)
+			return null;
+		
+		Entity e = world.getEntityByID(id);
+		if(e == null || !(e instanceof AbstractArrowEntity))
+			return null;
+		
+		return (AbstractArrowEntity) e;
+	}
+	
+	public void setFetching(AbstractArrowEntity e) {
+		dataManager.set(FETCHING, e == null ? -1 : e.getEntityId());
+	}
+	
 	@Override
 	public boolean isBreedingItem(ItemStack stack) {
 		Item item = stack.getItem();
@@ -88,6 +135,7 @@ public class ShibaEntity extends TameableEntity {
 		super.registerData();
 		dataManager.register(COLLAR_COLOR, DyeColor.RED.getId());
 		dataManager.register(MOUTH_ITEM, ItemStack.EMPTY);
+		dataManager.register(FETCHING, -1);
 	}
 
 	public DyeColor getCollarColor() {
