@@ -84,7 +84,7 @@ public class ShibaEntity extends TameableEntity {
 		super.tick();
 		
 		AbstractArrowEntity fetching = getFetching();
-		if(fetching != null && (isSleeping() || fetching.world != world || !fetching.isAlive() || fetching.pickupStatus != PickupStatus.ALLOWED))
+		if(fetching != null && (isSleeping() || fetching.world != world || !fetching.isAlive() || fetching.pickupStatus == PickupStatus.DISALLOWED))
 			setFetching(null);
 		
 		if(!isSleeping() && !world.isRemote && fetching == null && getMouthItem().isEmpty()) {
@@ -92,7 +92,7 @@ public class ShibaEntity extends TameableEntity {
 			if(owner != null) {
 				AxisAlignedBB check = owner.getBoundingBox().grow(2);
 				List<AbstractArrowEntity> arrows = world.getEntitiesWithinAABB(AbstractArrowEntity.class, check, 
-						a -> a.func_234616_v_() == owner && a.pickupStatus == PickupStatus.ALLOWED);
+						a -> a.func_234616_v_() == owner && a.pickupStatus != PickupStatus.DISALLOWED);
 				
 				if(arrows.size() > 0) {
 					AbstractArrowEntity arrow = arrows.get(world.rand.nextInt(arrows.size()));
