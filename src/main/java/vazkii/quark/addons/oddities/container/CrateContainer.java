@@ -196,6 +196,11 @@ public class CrateContainer extends Container {
 		public ItemStack decrStackSize(int amount) {
 			return inventory.decrStackSize(getTarget(), amount);
 		}
+		
+		@Override
+		public boolean isItemValid(ItemStack stack) {
+			return stack.getCount() + getTotal() <= CrateModule.maxItems;
+		}
 
 	}
 }

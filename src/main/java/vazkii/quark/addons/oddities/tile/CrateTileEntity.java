@@ -67,10 +67,6 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 		super(CrateModule.crateType);
 	}
 
-	public int getTotalItems() {
-		return totalItems;
-	}
-
 	public void spillTheTea() {
 		SortingHandler.mergeStacks(stacks);
 
