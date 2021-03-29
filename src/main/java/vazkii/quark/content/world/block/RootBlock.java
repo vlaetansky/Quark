@@ -39,7 +39,7 @@ public class RootBlock extends QuarkVineBlock implements IGrowable {
 	
 	@Override
 	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
-		if(!worldIn.isRemote && worldIn.rand.nextInt(2) == 0)
+		if(!worldIn.isRemote && worldIn.rand.nextInt(2) == 0 && canGrow(worldIn, pos, state, false))
 			grow(worldIn, random, pos, state);
 	}
 	
