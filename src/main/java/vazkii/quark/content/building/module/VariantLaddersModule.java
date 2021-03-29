@@ -60,7 +60,7 @@ public class VariantLaddersModule extends QuarkModule {
 			return defaultValue;
 
 		BlockState curr = world.getBlockState(pos);
-		if(curr.get(TrapDoorBlock.OPEN)) {
+		if(curr.getProperties().contains(TrapDoorBlock.OPEN) && curr.get(TrapDoorBlock.OPEN)) {
 			BlockState down = world.getBlockState(pos.down());
 			if(down.getBlock() instanceof LadderBlock)
 				return down.get(LadderBlock.FACING) == curr.get(TrapDoorBlock.HORIZONTAL_FACING);
