@@ -68,7 +68,8 @@ public class TrowelItem extends QuarkItem implements IUsageTickerOverride {
 			CompoundNBT cmp = target.serializeNBT();
 			ItemNBTHelper.setCompound(ourStack, TAG_LAST_STACK, cmp);
 			
-			MiscUtil.damageStack(player, hand, context.getItem(), 1);
+			if(TrowelModule.maxDamage > 0)
+				MiscUtil.damageStack(player, hand, context.getItem(), 1);
 		}
 		
 		return result;
@@ -97,6 +98,11 @@ public class TrowelItem extends QuarkItem implements IUsageTickerOverride {
 	@Override
 	public int getMaxDamage(ItemStack stack) {
 		return TrowelModule.maxDamage;
+	}
+	
+	@Override
+	public boolean isDamageable() {
+		return TrowelModule.maxDamage > 0;
 	}
 	
 	@Override
