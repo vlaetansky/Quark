@@ -50,6 +50,9 @@ public interface IMyaliteColorProvider extends IBlockColorProvider {
     	final double range = 0.3;
     	final double shift = 0.05;
 	
+    	if(pos == null)
+    		pos = BlockPos.ZERO;
+    	
 		double x = pos.getX() * sp;
 		double y = pos.getY() * sp;
 		double z = pos.getZ() * sp;
