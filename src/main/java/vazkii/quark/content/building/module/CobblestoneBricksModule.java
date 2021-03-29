@@ -14,16 +14,16 @@ import vazkii.quark.base.module.config.Config;
 public class CobblestoneBricksModule extends QuarkModule {
 
 	@Config(flag = "blackstone_bricks")
-	private static boolean enableBlackstoneBricks;
+	private static boolean enableBlackstoneBricks = true;
 	
 	@Config(flag = "dirt_bricks")
-	private static boolean enableDirtBricks;
+	private static boolean enableDirtBricks = true;
 	
 	@Config(flag = "netherrack_bricks")
-	private static boolean enableNetherrackBricks;
+	private static boolean enableNetherrackBricks = true;
 	
 	@Config(flag = "basalt_bricks")
-	private static boolean enableBasaltBricks;
+	private static boolean enableBasaltBricks = true;
 	
 	@Override
 	public void construct() {

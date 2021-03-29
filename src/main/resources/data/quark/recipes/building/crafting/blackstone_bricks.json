@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:blackstone"
+    }
+  },
+  "result": {
+    "item": "quark:blackstone_bricks",
+    "count": 4
+  },
+  "conditions": [
+    {
+      "type": "quark:flag",
+      "flag": "blackstone_bricks"
+    }
+  ]
+} 
