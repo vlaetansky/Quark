@@ -67,7 +67,7 @@ public class ImprovedSleepingModule extends QuarkModule {
 		if(!ModuleLoader.INSTANCE.isModuleEnabled(ImprovedSleepingModule.class) || !enableAfk)
 			return;
 
-		boolean alone = player.world.getPlayers().size() != 1; 
+		boolean alone = player.world.getPlayers().size() == 1;
 		if(afk) {
 			player.getPersistentData().putBoolean(TAG_AFK, true);
 			if(!alone) {
