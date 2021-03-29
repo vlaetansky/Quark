@@ -28,6 +28,7 @@ import net.minecraft.item.DyeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.SwordItem;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
@@ -183,13 +184,23 @@ public class ShibaEntity extends TameableEntity {
 	public void writeAdditional(CompoundNBT compound) {
 		super.writeAdditional(compound);
 		compound.putByte("CollarColor", (byte)this.getCollarColor().getId());
+		
+		CompoundNBT itemcmp = new CompoundNBT();
+		ItemStack holding = getMouthItem();
+		if(!holding.isEmpty())
+			holding.write(itemcmp);
+		compound.put("MouthItem", itemcmp);
 	}
 
 	@Override
 	public void readAdditional(CompoundNBT compound) {
 		super.readAdditional(compound);
-		if (compound.contains("CollarColor", 99)) {
+		if (compound.contains("CollarColor", 99))
 			this.setCollarColor(DyeColor.byId(compound.getInt("CollarColor")));
+		
+		if(compound.contains("MouthItem")) {
+			CompoundNBT itemcmp = compound.getCompound("MouthItem");
+			setMouthItem(ItemStack.read(itemcmp));
 		}
 	}
 
@@ -240,7 +251,7 @@ public class ShibaEntity extends TameableEntity {
 					}
 
 					if (!(item instanceof DyeItem)) {
-						if(!itemstack.isEmpty() && mouthItem.isEmpty()) {
+						if(!itemstack.isEmpty() && mouthItem.isEmpty() && itemstack.getItem() instanceof SwordItem) {
 							ItemStack copy = itemstack.copy();
 							copy.setCount(1);
 							itemstack.setCount(itemstack.getCount() - 1);
