@@ -1,5 +1,6 @@
 package vazkii.quark.content.mobs.module;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType;
 import net.minecraft.entity.EntityType;
@@ -12,12 +13,16 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectType;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ITag;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.Heightmap.Type;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
+import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.BrewingHandler;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.LoadModule;
@@ -44,6 +49,8 @@ public class CrabsModule extends QuarkModule {
 	@Config
 	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(5, 1, 3, new BiomeTypeConfig(false, Biome.Category.BEACH));
 
+	public static ITag<Block> crabSpawnableTag;
+	
 	@Config(flag = "crab_brewing")
 	public static boolean enableBrewing = true;
 
@@ -88,6 +95,8 @@ public class CrabsModule extends QuarkModule {
 	@Override
 	public void setup() {
 		GlobalEntityTypeAttributes.put(crabType, CrabEntity.prepareAttributes().create());
+		
+		crabSpawnableTag = BlockTags.createOptional(new ResourceLocation(Quark.MOD_ID, "crab_spawnable"));
 	}
 
 	@Override

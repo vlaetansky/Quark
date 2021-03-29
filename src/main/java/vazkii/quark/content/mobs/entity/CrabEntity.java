@@ -70,7 +70,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
-import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.content.mobs.ai.RaveGoal;
 import vazkii.quark.content.mobs.module.CrabsModule;
@@ -100,7 +99,7 @@ public class CrabEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 	}
 
 	public static boolean spawnPredicate(EntityType<? extends AnimalEntity> type, IWorld world, SpawnReason reason, BlockPos pos, Random random) {
-		return world.getBlockState(pos.down()).getMaterial() == Material.SAND && world.getLight(pos) > 8;
+		return world.getBlockState(pos.down()).getBlock().isIn(CrabsModule.crabSpawnableTag) && world.getLight(pos) > 8;
 	}
 
 	public static void rave(IWorld world, BlockPos pos, boolean raving) {
@@ -110,7 +109,7 @@ public class CrabEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 
 	@Override
 	public float getBlockPathWeight(BlockPos pos, IWorldReader world) {
-		return world.getBlockState(pos.down()).getBlock() == Blocks.SAND ? 10.0F : world.getBrightness(pos) - 0.5F;
+		return world.getBlockState(pos.down()).getBlock().isIn(CrabsModule.crabSpawnableTag) ? 10.0F : world.getBrightness(pos) - 0.5F;
 	}
 
 	@Override
