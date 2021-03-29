@@ -67,14 +67,17 @@ public class ImprovedSleepingModule extends QuarkModule {
 		if(!ModuleLoader.INSTANCE.isModuleEnabled(ImprovedSleepingModule.class) || !enableAfk)
 			return;
 
-		if(player.world.getPlayers().size() != 1) {
-			if(afk) {
-				player.getPersistentData().putBoolean(TAG_AFK, true);
+		boolean alone = player.world.getPlayers().size() != 1; 
+		if(afk) {
+			player.getPersistentData().putBoolean(TAG_AFK, true);
+			if(!alone) {
 				TranslationTextComponent text = new TranslationTextComponent("quark.misc.now_afk");
 				text.mergeStyle(TextFormatting.AQUA);
 				SpamlessChatMessage.sendToPlayer(player, AFK_MSG, text);
-			} else {
-				player.getPersistentData().putBoolean(TAG_AFK, false);
+			}
+		} else {
+			player.getPersistentData().putBoolean(TAG_AFK, false);
+			if(!alone) {
 				TranslationTextComponent text = new TranslationTextComponent("quark.misc.left_afk");
 				text.mergeStyle(TextFormatting.AQUA);
 				SpamlessChatMessage.sendToPlayer(player, AFK_MSG, text);
