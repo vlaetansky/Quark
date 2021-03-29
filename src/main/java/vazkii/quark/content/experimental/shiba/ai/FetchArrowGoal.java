@@ -24,6 +24,7 @@ public class FetchArrowGoal extends Goal {
 		this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
 	}
 
+	@Override
 	public void tick() {
 		AbstractArrowEntity fetching = shiba.getFetching();
 		if(fetching == null)

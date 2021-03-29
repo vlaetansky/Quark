@@ -48,6 +48,7 @@ public class SpeleothemBlock extends QuarkBlock implements IWaterLoggable {
 		return getBearing(worldIn, pos) > 0;
 	}
 
+	@Override
 	@Deprecated
 	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
 		if(stateIn.getBlock() instanceof SpeleothemBlock){
