@@ -21,6 +21,8 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
+import net.minecraft.world.World;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
@@ -41,6 +43,21 @@ public class CaveCrystalClusterBlock extends QuarkBlock implements IWaterLoggabl
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
 		setDefaultState(getDefaultState().with(FACING, Direction.DOWN).with(WATERLOGGED, false));
 	}
+	
+	@Override
+	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+		if(!isValidPosition(state, worldIn, pos))
+			worldIn.destroyBlock(pos, false);
+	}
+	
+	@Override
+	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
+		Direction dir = state.get(FACING);
+		BlockPos off = pos.offset(dir.getOpposite());
+		BlockState offState = worldIn.getBlockState(off);
+		return offState.isSolidSide(worldIn, off, dir);
+	}
+
 	
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader reader, BlockPos pos) {

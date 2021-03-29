@@ -13,6 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.particles.RedstoneParticleData;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorldReader;
@@ -37,7 +38,7 @@ public class CaveCrystalBlock extends QuarkGlassBlock {
 
 	public final float[] colorComponents;
 	public final Vector3d colorVector;
-	
+
 	public CaveCrystalClusterBlock cluster;
 
 	public CaveCrystalBlock(String regname, int color, QuarkModule module, MaterialColor materialColor) {
@@ -57,7 +58,7 @@ public class CaveCrystalBlock extends QuarkGlassBlock {
 		float b = (color & 0xff) / 255f;
 		colorComponents = new float[]{r, g, b};
 		colorVector = new Vector3d(r, g, b);
-		
+
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.TRANSLUCENT);
 	}
 
@@ -75,10 +76,16 @@ public class CaveCrystalBlock extends QuarkGlassBlock {
 	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
 		if(canGrow(worldIn, pos) && random.nextInt(CaveCrystalUndergroundBiomeModule.caveCrystalGrowthChance) == 0) {
 			BlockState down = worldIn.getBlockState(pos.down());
-			worldIn.setBlockState(pos.up(), state);
-			
+			BlockPos up = pos.up();
+			worldIn.setBlockState(up, state);
+
 			if(down.getBlock() == SpiralSpiresModule.myalite_crystal && ModuleLoader.INSTANCE.isModuleEnabled(SpiralSpiresModule.class) && SpiralSpiresModule.renewableMyalite)
 				worldIn.setBlockState(pos, SpiralSpiresModule.myalite_crystal.getDefaultState());
+			else for(Direction d : Direction.values()) {
+				BlockPos offPos = up.offset(d);
+				if(worldIn.isAirBlock(offPos) && random.nextInt(3) == 0)
+					worldIn.setBlockState(offPos, cluster.getDefaultState().with(CaveCrystalClusterBlock.FACING, d));
+			}
 		}
 	}
 
@@ -88,23 +95,23 @@ public class CaveCrystalBlock extends QuarkGlassBlock {
 			double x = (double)pos.getX() + rand.nextDouble();
 			double y = (double)pos.getY() + rand.nextDouble();
 			double z = (double)pos.getZ() + rand.nextDouble();
-			
+
 			worldIn.addParticle(ParticleTypes.AMBIENT_ENTITY_EFFECT, x, y, z, colorComponents[0], colorComponents[1], colorComponents[2]);
 		}
-		
+
 		for(int i = 0; i < 4; i++) {
 			double range = 5;
-			
+
 			double ox = rand.nextDouble() * range - (range / 2);
 			double oy = rand.nextDouble() * range - (range / 2);
 			double oz = rand.nextDouble() * range - (range / 2);
-			
+
 			double x = (double)pos.getX() + 0.5 + ox;
 			double y = (double)pos.getY() + 0.5 + oy;
 			double z = (double)pos.getZ() + 0.5 + oz;
-			
+
 			float size = 0.4F + rand.nextFloat() * 0.5F;
-			
+
 			if(rand.nextDouble() < 0.1) {
 				double ol = ((ox * ox) + (oy * oy) + (oz * oz)) * -2;
 				if(ol == 0)
