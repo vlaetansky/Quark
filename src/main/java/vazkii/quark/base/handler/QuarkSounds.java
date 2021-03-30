@@ -1,12 +1,15 @@
 package vazkii.quark.base.handler;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.google.common.collect.Lists;
+
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.registries.GameData;
 import vazkii.arl.util.RegistryHelper;
-
-import java.util.List;
 
 /**
  * @author WireSegal
@@ -50,6 +53,16 @@ public class QuarkSounds {
     public static final SoundEvent ITEM_SOUL_POWDER_SPAWN = register("item.soul_powder.spawn");
 
 //    public static final SoundEvent MUSIC_TEDIUM = register("music.tedium");
+    
+    private static final String[] VOCALS = new String[] {"a", "ba", "be", "bi", "bo", "bu", "bya", "bye", "byo", "byu", "cha", "che", "chi", "cho", "chu", "da", "de", "di", "do", "dou", "dyu", "e", "fa", "fe", "fi", "fo", "fu", "ga", "ge", "gi", "gie", "go", "gu", "gya", "gyo", "gyu", "ha", "he", "hi", "ho", "hya", "hye", "hyo", "hyu", "i", "ie", "ja", "ji", "jie", "jo", "ju", "ka", "ke", "ki", "ko", "ku", "kya", "kye", "kyo", "kyu", "ma", "me", "mi", "mo", "mu", "mya", "mye", "myo", "myu", "n", "na", "ne", "ni", "no", "nu", "nya", "nye", "nyo", "nyu", "o", "pa", "pe", "pi", "po", "pu", "pya", "pye", "pyo", "pyu", "ra", "re", "ri", "ro", "ru", "rya", "rye", "ryo", "ryu", "sa", "se", "sha", "she", "shi", "sho", "shu", "si", "so", "su", "ta", "te", "thi", "to", "tsa", "tse", "tsi", "tso", "tsu", "tyu", "u", "va", "ve", "vi", "vo", "wa", "we", "who", "wi", "ya", "yo", "yu", "za", "ze", "zi", "zo", "zu" };
+    public static Map<String, SoundEvent> VOCAL_EVENTS = new HashMap<>();
+    
+    static {
+    	for(String s : VOCALS) {
+    		SoundEvent ev = register("voice." + s);
+    		VOCAL_EVENTS.put(s, ev);
+    	}
+    };
     
     public static void start() {
         for (SoundEvent event : REGISTRY_DEFERENCE)

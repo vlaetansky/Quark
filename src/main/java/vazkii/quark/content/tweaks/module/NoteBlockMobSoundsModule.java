@@ -3,6 +3,9 @@ package vazkii.quark.content.tweaks.module;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.WallSignBlock;
+import net.minecraft.tileentity.SignTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.block.WallSkullBlock;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
@@ -13,9 +16,11 @@ import net.minecraft.world.IWorld;
 import net.minecraftforge.event.world.NoteBlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.handler.MiscUtil;
+import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
+import vazkii.quark.base.module.config.Config;
 
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
 public class NoteBlockMobSoundsModule extends QuarkModule {
@@ -26,6 +31,9 @@ public class NoteBlockMobSoundsModule extends QuarkModule {
 			Direction.EAST,
 			Direction.WEST
 	};
+	
+	@Config
+	public static boolean enableVocaloid = true;
 
 	@SubscribeEvent
 	public void noteBlockPlayed(NoteBlockEvent.Play event) {
@@ -44,13 +52,18 @@ public class NoteBlockMobSoundsModule extends QuarkModule {
 		if(sound != null) {
 			event.setCanceled(true);
 			
-			float pitch = (float) Math.pow(2.0, (event.getVanillaNoteId() - 12) / 12.0);
+			int note = event.getVanillaNoteId() - 12;
+			if(sound.getRegistryName().toString().startsWith("quark:voice"))
+				note += 6;
+			
+			float pitch = (float) Math.pow(2.0, (float) note / 12.0);
 			world.playSound(null, pos.up(), sound, SoundCategory.BLOCKS, 1F, pitch);
 		}
 	}
 
 	public SoundEvent getSoundEvent(IWorld world, BlockPos pos, Direction direction) {
-		BlockState state = world.getBlockState(pos.offset(direction)); 
+		BlockPos offPos = pos.offset(direction);
+		BlockState state = world.getBlockState(offPos); 
 		Block block = state.getBlock();
 		
 		if(block instanceof WallSkullBlock && state.get(WallSkullBlock.FACING) == direction) {
@@ -64,6 +77,18 @@ public class NoteBlockMobSoundsModule extends QuarkModule {
 				return SoundEvents.ENTITY_CREEPER_PRIMED;
 			else if(block == Blocks.DRAGON_WALL_HEAD)
 				return SoundEvents.ENTITY_ENDER_DRAGON_AMBIENT;
+		}
+		
+		if(enableVocaloid && block instanceof WallSignBlock && state.get(WallSignBlock.FACING) == direction) {
+			TileEntity tile = world.getTileEntity(offPos);
+			if(tile instanceof SignTileEntity) {
+				SignTileEntity sign = (SignTileEntity) tile;
+				String s = sign.signText[0].getString().trim();
+				
+				SoundEvent event = QuarkSounds.VOCAL_EVENTS.get(s);
+				if(event != null)
+					return event;
+			}
 		}
 		
 		return null;
