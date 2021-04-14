@@ -1,5 +1,6 @@
 package vazkii.quark.addons.oddities.tile;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -268,7 +269,7 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 				int count = influencer.getInfluenceStack(world, pos, state);
 				
 				if(ord != null) {
-					List<Enchantment> influencedEnchants = MatrixEnchantingModule.candleInfluences.get(ord);
+					List<Enchantment> influencedEnchants = new ArrayList<>(MatrixEnchantingModule.candleInfluences.get(ord));
 					if(influencedEnchants != null) {
 					    influencer.modifyInfluencedEnchantments(world, pos, state, getStackInSlot(0), influencedEnchants);
                         for(Enchantment e : influencedEnchants) {
