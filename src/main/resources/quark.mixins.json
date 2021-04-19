@@ -23,7 +23,8 @@
     "StructurePieceMixin",
     "StructureStartMixin",
     "TemplateMixin",
-    "LanternBlockMixin"
+    "LanternBlockMixin",
+    "PlayerAdvancementsMixin"
   ],
   "client": [
     "client.BipedArmorLayerMixin",

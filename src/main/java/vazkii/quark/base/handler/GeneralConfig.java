@@ -26,6 +26,10 @@ public class GeneralConfig {
 	@Config
 	@Config.Min(value = 0, exclusive = true)
 	public static int pistonPushLimit = 12;
+	
+	@Config
+	@Config.Min(value = 0, exclusive = true)
+	public static int advancementVisibilityDepth = 2;
 
 	@Config(description = "Blocks that Quark should treat as Shulker Boxes.")
 	public static List<String> shulkerBoxes = SimilarBlockTypeHandler.getBasicShulkerBoxes();
