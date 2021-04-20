@@ -33,6 +33,7 @@ import vazkii.quark.addons.oddities.container.MatrixEnchantingContainer;
 import vazkii.quark.addons.oddities.container.EnchantmentMatrix.Piece;
 import vazkii.quark.addons.oddities.module.MatrixEnchantingModule;
 import vazkii.quark.api.IEnchantmentInfluencer;
+import vazkii.quark.api.IModifiableEnchantmentInfluencer;
 
 public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile implements INamedContainerProvider {
 
@@ -269,9 +270,12 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 				int count = influencer.getInfluenceStack(world, pos, state);
 				
 				if(ord != null) {
-					List<Enchantment> influencedEnchants = new ArrayList<>(MatrixEnchantingModule.candleInfluences.get(ord));
+					List<Enchantment> influencedEnchants = MatrixEnchantingModule.candleInfluences.get(ord);
 					if(influencedEnchants != null) {
-					    influencer.modifyInfluencedEnchantments(world, pos, state, getStackInSlot(0), influencedEnchants);
+					    if(influencer instanceof IModifiableEnchantmentInfluencer) {
+					        IModifiableEnchantmentInfluencer modifiableInfluencer = (IModifiableEnchantmentInfluencer) influencer;
+                            influencedEnchants = modifiableInfluencer.getModifiedEnchantments(world, pos, state, getStackInSlot(0), new ArrayList<>(influencedEnchants));
+                        }
                         for(Enchantment e : influencedEnchants) {
                             int curr = influences.getOrDefault(e, 0);
                             if(curr < MatrixEnchantingModule.influenceMax)

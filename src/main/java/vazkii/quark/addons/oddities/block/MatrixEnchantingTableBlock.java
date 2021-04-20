@@ -12,9 +12,6 @@ import net.minecraft.block.EnchantingTableBlock;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.EnchantmentContainer;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -23,7 +20,6 @@ import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
-import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -37,6 +33,7 @@ import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.addons.oddities.module.MatrixEnchantingModule;
 import vazkii.quark.addons.oddities.tile.MatrixEnchantingTableTileEntity;
 import vazkii.quark.api.IEnchantmentInfluencer;
+import vazkii.quark.api.IModifiableEnchantmentInfluencer;
 import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
@@ -116,18 +113,24 @@ public class MatrixEnchantingTableBlock extends EnchantingTableBlock implements 
 					for(int k = 0; k <= 1; ++k) {
 						BlockPos blockpos = pos.add(i, k, j);
 						BlockState state = worldIn.getBlockState(blockpos); 
-						if(state.getEnchantPowerBonus(worldIn, pos) > 0) {
+						if(state.getEnchantPowerBonus(worldIn, blockpos) > 0) {
 							BlockPos test = pos.add(i / 2, 0, j / 2);
 							if(!(worldIn.isAirBlock(test) || (allowUnderwater && worldIn.getBlockState(test).getBlock() == Blocks.WATER)))
 								break;
 							
 							if(showInfluences && state.getBlock() instanceof IEnchantmentInfluencer) {
-								DyeColor color = ((IEnchantmentInfluencer) state.getBlock()).getEnchantmentInfluenceColor(worldIn, blockpos, state);
+							    IEnchantmentInfluencer influencer = (IEnchantmentInfluencer) state.getBlock();
+								DyeColor color = influencer.getEnchantmentInfluenceColor(worldIn, blockpos, state);
 								
 								if(color != null) {
 									float[] comp = color.getColorComponentValues();
-									
-									int steps = 20;
+
+                                    if(influencer instanceof IModifiableEnchantmentInfluencer) {
+                                        IModifiableEnchantmentInfluencer modifiableInfluencer = (IModifiableEnchantmentInfluencer) influencer;
+                                        comp = modifiableInfluencer.getModifiedColorComponents(worldIn, blockpos, state, comp);
+                                    }
+
+                                    int steps = 20;
 									double dx = (double) (pos.getX() - blockpos.getX()) / steps;
 									double dy = (double) (pos.getY() - blockpos.getY()) / steps;
 									double dz = (double) (pos.getZ() - blockpos.getZ()) / steps;
