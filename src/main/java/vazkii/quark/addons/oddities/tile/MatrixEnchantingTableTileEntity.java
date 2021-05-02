@@ -1,5 +1,6 @@
 package vazkii.quark.addons.oddities.tile;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,7 @@ import vazkii.quark.addons.oddities.container.MatrixEnchantingContainer;
 import vazkii.quark.addons.oddities.container.EnchantmentMatrix.Piece;
 import vazkii.quark.addons.oddities.module.MatrixEnchantingModule;
 import vazkii.quark.api.IEnchantmentInfluencer;
+import vazkii.quark.api.IModifiableEnchantmentInfluencer;
 
 public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile implements INamedContainerProvider {
 
@@ -269,12 +271,17 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 				
 				if(ord != null) {
 					List<Enchantment> influencedEnchants = MatrixEnchantingModule.candleInfluences.get(ord);
-					if(influencedEnchants != null)
-						for(Enchantment e : influencedEnchants) {
-							int curr = influences.getOrDefault(e, 0);
-							if(curr < MatrixEnchantingModule.influenceMax)
-								influences.put(e, Math.min(MatrixEnchantingModule.influenceMax, curr + count));
-						}
+					if(influencedEnchants != null) {
+					    if(influencer instanceof IModifiableEnchantmentInfluencer) {
+					        IModifiableEnchantmentInfluencer modifiableInfluencer = (IModifiableEnchantmentInfluencer) influencer;
+                            influencedEnchants = modifiableInfluencer.getModifiedEnchantments(world, pos, state, getStackInSlot(0), new ArrayList<>(influencedEnchants));
+                        }
+                        for(Enchantment e : influencedEnchants) {
+                            int curr = influences.getOrDefault(e, 0);
+                            if(curr < MatrixEnchantingModule.influenceMax)
+                                influences.put(e, Math.min(MatrixEnchantingModule.influenceMax, curr + count));
+                        }
+                    }
 				}
 			}
 		}

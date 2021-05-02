@@ -11,11 +11,9 @@ import net.minecraft.world.IBlockReader;
  * Implement on a Block to make it influence matrix enchanting
  */
 public interface IEnchantmentInfluencer {
-
 	@Nullable DyeColor getEnchantmentInfluenceColor(IBlockReader world, BlockPos pos, BlockState state);
 	
 	default int getInfluenceStack(IBlockReader world, BlockPos pos, BlockState state) {
 		return 1;
 	}
-	
 }
