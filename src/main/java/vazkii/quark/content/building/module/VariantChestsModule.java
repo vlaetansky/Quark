@@ -120,7 +120,7 @@ public class VariantChestsModule extends QuarkModule {
 			 "endreborn:end_shipwreck=quark:purpur_chest",
 			 "outer_end:catacombs=quark:purpur_chest",
 			 "outer_end:end_tower=quark:purpur_chest",
-			 "stoneholm:underground_village==quark:spruce_chest",
+			 "stoneholm:underground_village=quark:spruce_chest",
 			 "repurposed_structures:city_nether=quark:nether_brick_chest",
 			 "repurposed_structures:fortress_jungle=quark:jungle_chest",
 			 "repurposed_structures:igloo_grassy=quark:oak_chest",
