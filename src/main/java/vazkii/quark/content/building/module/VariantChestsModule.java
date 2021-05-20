@@ -149,6 +149,7 @@ public class VariantChestsModule extends QuarkModule {
 			 "repurposed_structures:outpost_birch=quark:birch_chest",
 			 "repurposed_structures:outpost_crimson=quark:crimson_chest",
 			 "repurposed_structures:outpost_desert=quark:jungle_chest",
+			 "repurposed_structures:mineshaft_end=quark:purpur_chest",
 			 "repurposed_structures:outpost_giant_tree_taiga=quark:spruce_chest",
 			 "repurposed_structures:outpost_icy=quark:spruce_chest",
 			 "repurposed_structures:outpost_jungle=quark:jungle_chest",
@@ -158,6 +159,8 @@ public class VariantChestsModule extends QuarkModule {
 			 "repurposed_structures:outpost_taiga=quark:spruce_chest",
  			 "repurposed_structures:outpost_warped=quark:warped_chest",
 			 "repurposed_structures:pyramid_badlands=quark:dark_oak_chest",
+			 "repurposed_structures:pyramid_end=quark:purpur_chest",
+			 "repurposed_structures:pyramid_icy=quark:spruce_chest",
 			 "repurposed_structures:pyramid_nether=quark:nether_brick_chest",
 			 "repurposed_structures:pyramid_snowy=quark:spruce_chest",
 			 "repurposed_structures:ruined_portal_end=quark:purpur_chest",
@@ -183,6 +186,12 @@ public class VariantChestsModule extends QuarkModule {
 			 "repurposed_structures:village_oak=quark:oak_chest",
  			 "repurposed_structures:village_swamp=quark:oak_chest",
 			 "repurposed_structures:village_warped=quark:warped_chest",
+			 "repurposed_structures:witch_hut_birch=quark:birch_chest",
+			 "repurposed_structures:witch_hut_dark_forest=quark:dark_oak_chest",
+			 "repurposed_structures:witch_hut_giant_tree_taiga=quark:spruce_chest",
+			 "repurposed_structures:witch_hut_oak=quark:oak_chest",
+			 "repurposed_structures:witch_hut_taiga=quark:spruce_chest",   
+			 "valhelsia_structures:big_tree=quark:oak_chest",
 			 "valhelsia_structures:castle=quark:spruce_chest",
 			 "valhelsia_structures:castle_ruin=quark:oak_chest",
 			 "valhelsia_structures:desert_house=quark:spruce_chest",
@@ -190,7 +199,9 @@ public class VariantChestsModule extends QuarkModule {
 			 "valhelsia_structures:player_house=quark:oak_chest",
 			 "valhelsia_structures:small_castle=quark:oak_chest",
 			 "valhelsia_structures:small_dungeon=quark:oak_chest",
-			 "valhelsia_structures:tower_ruin=quark:spruce_chest");
+			 "valhelsia_structures:spawner_dungeon=quark:oak_chest",
+			 "valhelsia_structures:tower_ruin=quark:spruce_chest",
+			 "valhelsia_structures:witch_hut=quark:spruce_chest);
 	
 	@Override
 	public void construct() {
