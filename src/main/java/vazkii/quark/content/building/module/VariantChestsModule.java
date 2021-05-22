@@ -111,7 +111,7 @@ public class VariantChestsModule extends QuarkModule {
 			 "dungeons_plus:snowy_temple=quark:spruce_chest",
 			 "dungeons_plus:soul_prison=quark:warped_chest",
 			 "dungeons_plus:tower=quark:oak_chest",
-			 "dungeons_plus:warped_garden=quark:warped__chest",
+			 "dungeons_plus:warped_garden=quark:warped_chest",
 			 "hunterillager:hunterhouse=quark:spruce_chest",
 			 "iceandfire:gorgon_temple=quark:jungle_chest",
 			 "pandoras_creatures:end_prison=quark:purpur_chest",
