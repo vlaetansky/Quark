@@ -29,15 +29,13 @@ public class CheckboxButton extends Button {
 	public void renderButton(MatrixStack mstack, int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
 		super.renderButton(mstack, p_renderButton_1_, p_renderButton_2_, p_renderButton_3_);
 		
-		if(ContributorRewardHandler.localPatronTier > 0) {
-			RenderSystem.color3f(1F, 1F, 1F);
-			boolean enabled = checkedSupplier.get() && active;
-			int u = enabled ? 0 : 16;
-			int v = 93;
-			
-			Minecraft.getInstance().textureManager.bindTexture(MiscUtil.GENERAL_ICONS);
-			blit(mstack, x + 2, y + 1, u, v, 16, 16);
-		}
+		RenderSystem.color3f(1F, 1F, 1F);
+		boolean enabled = checkedSupplier.get() && active;
+		int u = enabled ? 0 : 16;
+		int v = 93;
+
+		Minecraft.getInstance().textureManager.bindTexture(MiscUtil.GENERAL_ICONS);
+		blit(mstack, x + 2, y + 1, u, v, 16, 16);
 	}
 
 }
