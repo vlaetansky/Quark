@@ -60,7 +60,7 @@ public class StoolBlock extends QuarkBlock implements IWaterLoggable {
 	public static final BooleanProperty SAT_IN = BooleanProperty.create("sat_in");
 
 	public StoolBlock(QuarkModule module, DyeColor color) {
-		super(color.getTranslationKey() + "_stool", module, ItemGroup.BUILDING_BLOCKS, 
+		super(color.getTranslationKey() + "_stool", module, ItemGroup.DECORATIONS, 
 				AbstractBlock.Properties.create(Material.WOOL, color.getMapColor())
 				.sound(SoundType.WOOD)
 				.hardnessAndResistance(0.2F)
