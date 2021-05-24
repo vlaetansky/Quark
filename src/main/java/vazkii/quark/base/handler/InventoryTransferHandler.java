@@ -232,9 +232,7 @@ public class InventoryTransferHandler {
 					ItemStack ret = insertInHandler(playerInv, copy, predicate);
 
 					if(!ItemStack.areItemStacksEqual(stackAt, ret)) {
-						inv.extractItem(i, stackAt.getMaxStackSize(), false);
-						if(!ret.isEmpty())
-							inv.insertItem(i, ret, false);
+						inv.extractItem(i, stackAt.getCount() - ret.getCount(), false);
 					}
 				}
 			}
