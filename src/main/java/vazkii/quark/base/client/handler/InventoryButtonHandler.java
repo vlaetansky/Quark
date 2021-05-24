@@ -27,7 +27,6 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import vazkii.quark.addons.oddities.client.screen.BackpackInventoryScreen;
 import vazkii.quark.api.IQuarkButtonIgnored;
@@ -132,9 +131,6 @@ public final class InventoryButtonHandler {
 					
 					if(screen instanceof BackpackInventoryScreen)
 						y -= 60;
-
-					if(ModList.get().isLoaded("consoleexperience"))
-						x -= 15;
 					
 					for(ButtonProviderHolder holder : holders) {
 						Button button = holder.getButton(screen, x, y);
