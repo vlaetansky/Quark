@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "L",
+    "W"
+  ],
+  "key": {
+    "L": {
+      "item": "minecraft:pink_blossom_leaves"
+    },
+    "W": {
+      "tag": "minecraft:spruce_logs"
+    }
+  },
+  "result": {
+    "item": "quark:pink_blossom_hedge",
+    "count": 2
+  },
+  "conditions": [
+    {
+      "type": "quark:flag",
+      "flag": "hedges"
+    }
+  ]
+}

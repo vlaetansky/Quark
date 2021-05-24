@@ -10,6 +10,8 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.building.block.HedgeBlock;
+import vazkii.quark.content.world.block.BlossomSaplingBlock.BlossomTree;
+import vazkii.quark.content.world.module.BlossomTreesModule;
 
 @LoadModule(category = ModuleCategory.BUILDING)
 public class HedgesModule extends QuarkModule {
@@ -24,6 +26,12 @@ public class HedgesModule extends QuarkModule {
 		new HedgeBlock(this, Blocks.JUNGLE_FENCE, Blocks.JUNGLE_LEAVES);
 		new HedgeBlock(this, Blocks.ACACIA_FENCE, Blocks.ACACIA_LEAVES);
 		new HedgeBlock(this, Blocks.DARK_OAK_FENCE, Blocks.DARK_OAK_LEAVES);
+	}
+
+	@Override
+	public void modulesStarted() {
+		for (BlossomTree tree : BlossomTreesModule.trees.keySet())
+			new HedgeBlock(this, Blocks.SPRUCE_FENCE, tree.leaf.getBlock());
 	}
 	
 	@Override
