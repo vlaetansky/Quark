@@ -201,7 +201,7 @@ public class VariantChestsModule extends QuarkModule {
 			 "valhelsia_structures:small_dungeon=quark:oak_chest",
 			 "valhelsia_structures:spawner_dungeon=quark:oak_chest",
 			 "valhelsia_structures:tower_ruin=quark:spruce_chest",
-			 "valhelsia_structures:witch_hut=quark:spruce_chest);
+			 "valhelsia_structures:witch_hut=quark:spruce_chest");
 	
 	@Override
 	public void construct() {
