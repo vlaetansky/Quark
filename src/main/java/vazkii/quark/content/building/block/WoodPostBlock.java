@@ -5,6 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ChainBlock;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.LanternBlock;
+import net.minecraft.block.SoundType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -49,8 +50,9 @@ public class WoodPostBlock extends QuarkBlock implements IWaterLoggable {
 	
 	public Block strippedBlock = null;
 
-	public WoodPostBlock(QuarkModule module, Block parent, String prefix) {
-		super(prefix + parent.getRegistryName().getPath().replace("_fence", "_post"), module, ItemGroup.BUILDING_BLOCKS, Properties.from(parent));
+	public WoodPostBlock(QuarkModule module, Block parent, String prefix, boolean nether) {
+		super(prefix + parent.getRegistryName().getPath().replace("_fence", "_post"), module, ItemGroup.BUILDING_BLOCKS, 
+				Properties.from(parent).sound(nether ? SoundType.HYPHAE : SoundType.WOOD));
 		
 		BlockState state = stateContainer.getBaseState().with(WATERLOGGED, false).with(AXIS, Axis.Y);
 		for(BooleanProperty prop : CHAINED)

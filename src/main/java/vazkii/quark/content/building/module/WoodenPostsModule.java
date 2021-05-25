@@ -5,6 +5,8 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LanternBlock;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialColor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldReader;
 import vazkii.quark.base.module.LoadModule;
@@ -22,8 +24,9 @@ public class WoodenPostsModule extends QuarkModule {
 				Blocks.JUNGLE_FENCE, Blocks.ACACIA_FENCE, Blocks.DARK_OAK_FENCE, 
 				Blocks.CRIMSON_FENCE, Blocks.WARPED_FENCE)
 		.forEach(b -> {
-			WoodPostBlock post = new WoodPostBlock(this, b, "");
-			post.strippedBlock = new WoodPostBlock(this, b, "stripped_");
+			boolean nether = b.material == Material.NETHER_WOOD;
+			WoodPostBlock post = new WoodPostBlock(this, b, "",  nether);
+			post.strippedBlock = new WoodPostBlock(this, b, "stripped_", nether);
 		});
 	}
 	
