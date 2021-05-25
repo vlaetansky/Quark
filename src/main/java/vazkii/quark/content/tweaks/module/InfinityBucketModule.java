@@ -25,17 +25,17 @@ import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
 public class InfinityBucketModule extends QuarkModule {
 
-	private static Map<Pair<PlayerEntity, Hand>, Pair<Integer, ItemStack>> bukkitPlayers = new HashMap<>();
+	private static Map<Pair<PlayerEntity, Hand>, TrackedPlayer> bukkitPlayers = new HashMap<>();
 
 	@Config public static int cost = 10;
-	
+
 	@Config(description = "Set this to false to prevent dispensers from using infinite water buckets") 
 	public static boolean allowDispensersToUse = true;
 
@@ -51,13 +51,13 @@ public class InfinityBucketModule extends QuarkModule {
 					if(enabled && EnchantmentHelper.getEnchantmentLevel(Enchantments.INFINITY, stack) > 0) {
 						if(!allowDispensersToUse)
 							return field_239793_b_.dispense(source, stack);;
-						
-						returnItself = true;
+
+							returnItself = true;
 					}
-					
+
 					ItemStack copy = stack.copy();
 					BucketItem bucketitem = (BucketItem) stack.getItem();
-					
+
 					BlockPos blockpos = source.getBlockPos().offset(source.getBlockState().get(DispenserBlock.FACING));
 					World world = source.getWorld();
 					if(bucketitem.tryPlaceContainedLiquid(null, world, blockpos, null)) {
@@ -67,7 +67,7 @@ public class InfinityBucketModule extends QuarkModule {
 						return field_239793_b_.dispense(source, stack);
 				}
 			};
-			
+
 			Map<Item, IDispenseItemBehavior> registry = DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY;
 			registry.put(Items.WATER_BUCKET, behaviour);
 		}
@@ -100,25 +100,66 @@ public class InfinityBucketModule extends QuarkModule {
 
 		PlayerEntity player = event.player;
 		int slot = player.inventory.currentItem;
-		
+
 		for(Hand hand : Hand.values()) {
 			Pair<PlayerEntity, Hand> pair = Pair.of(player, hand);
 
 			if(bukkitPlayers.containsKey(pair)) {
-				ItemStack curr = player.getHeldItem(hand);
-				if(curr.getItem() == Items.BUCKET) {
-					Pair<Integer, ItemStack> resultPair = bukkitPlayers.get(pair);
-					if(resultPair.getLeft() == slot)
-						player.setHeldItem(hand, resultPair.getRight());
+				TrackedPlayer tracked = bukkitPlayers.get(pair);
+				ItemStack curr = player.inventory.getStackInSlot(slot);
+				if(curr.getItem() == Items.BUCKET && tracked.canReplace(player)) {
+					if(slot == tracked.slot || hand == Hand.OFF_HAND)
+						player.setHeldItem(hand, tracked.stack);
+					else 
+						player.inventory.setInventorySlotContents(slot, tracked.stack);
 				}
 
 				bukkitPlayers.remove(pair);
 			}
 		}		
+		
 		for(Hand hand : Hand.values()) {
 			ItemStack stack = player.getHeldItem(hand);
-			if(stack.getItem() == Items.WATER_BUCKET && EnchantmentHelper.getEnchantmentLevel(Enchantments.INFINITY, stack) > 0)
-				bukkitPlayers.put(Pair.of(player, hand), Pair.of(slot, stack.copy()));
+			if(isInfiniteBucket(stack))
+				bukkitPlayers.put(Pair.of(player, hand), new TrackedPlayer(slot, player, stack.copy()));
 		}
 	}
+
+	private static boolean isInfiniteBucket(ItemStack stack) {
+		return stack.getItem() == Items.WATER_BUCKET && EnchantmentHelper.getEnchantmentLevel(Enchantments.INFINITY, stack) > 0;
+	}
+
+
+	private static class TrackedPlayer {
+
+		private int slot, count;
+		private ItemStack stack;
+
+		public TrackedPlayer(int slot, PlayerEntity player, ItemStack stack) {
+			this.slot = slot;
+			this.count = getCount(player);
+			this.stack = stack;
+		}
+
+		private static int getCount(PlayerEntity player) {
+			int total = 0;
+
+			if(isInfiniteBucket(player.inventory.getItemStack()))
+				total++;
+
+			for(int i = 0; i < player.inventory.getSizeInventory(); i++) {
+				ItemStack stack = player.inventory.getStackInSlot(i);
+				if(isInfiniteBucket(stack))
+					total++;
+			}
+
+			return total;
+		}
+
+		public boolean canReplace(PlayerEntity player) {
+			return this.count == (getCount(player) + 1);
+		}
+
+	}
+
 }
