@@ -1,6 +1,7 @@
 package vazkii.quark.content.tweaks.capability;
 
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -10,12 +11,12 @@ import vazkii.quark.base.handler.SimilarBlockTypeHandler;
 public class LavaBucketDropIn extends AbstractDropIn {
 
 	@Override
-	public boolean canDropItemIn(PlayerEntity player, ItemStack stack, ItemStack incoming) {
-		return !player.isCreative() && !incoming.getItem().isImmuneToFire() && !SimilarBlockTypeHandler.isShulkerBox(incoming);
+	public boolean canDropItemIn(PlayerEntity player, ItemStack stack, ItemStack incoming, Slot slot) {
+		return !player.isCreative() && slot.canTakeStack(player) && slot.isItemValid(stack) && !incoming.getItem().isImmuneToFire() && !SimilarBlockTypeHandler.isShulkerBox(incoming);
 	}
 
 	@Override
-	public ItemStack dropItemIn(PlayerEntity player, ItemStack stack, ItemStack incoming) {
+	public ItemStack dropItemIn(PlayerEntity player, ItemStack stack, ItemStack incoming, Slot slot) {
 		incoming.setCount(0);
 		
 		if(!player.world.isRemote)

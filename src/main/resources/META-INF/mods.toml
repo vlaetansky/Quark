@@ -15,7 +15,7 @@ Small things.
 [[dependencies.quark]]
     modId="autoreglib"
     mandatory=true
-    versionRange="[1.6-47,)"
+    versionRange="[1.6-48,)"
     ordering="AFTER"
     side="BOTH"
 

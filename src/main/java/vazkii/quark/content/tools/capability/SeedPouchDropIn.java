@@ -3,8 +3,8 @@ package vazkii.quark.content.tools.capability;
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.Tags;
 import vazkii.arl.util.AbstractDropIn;
 import vazkii.quark.content.tools.item.SeedPouchItem;
 import vazkii.quark.content.tools.module.SeedPouchModule;
@@ -12,12 +12,12 @@ import vazkii.quark.content.tools.module.SeedPouchModule;
 public class SeedPouchDropIn extends AbstractDropIn {
 
 	@Override
-	public boolean canDropItemIn(PlayerEntity player, ItemStack stack, ItemStack incoming) {
-		return SeedPouchItem.canTakeItem(stack, incoming);
+	public boolean canDropItemIn(PlayerEntity player, ItemStack stack, ItemStack incoming, Slot slot) {
+		return slot.canTakeStack(player) && slot.isItemValid(stack) && SeedPouchItem.canTakeItem(stack, incoming);
 	}
 
 	@Override
-	public ItemStack dropItemIn(PlayerEntity player, ItemStack stack, ItemStack incoming) {
+	public ItemStack dropItemIn(PlayerEntity player, ItemStack stack, ItemStack incoming, Slot slot) {
 		Pair<ItemStack, Integer> contents = SeedPouchItem.getContents(stack);
 
 		if(contents == null) {
