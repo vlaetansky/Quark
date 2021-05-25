@@ -2,6 +2,7 @@ package vazkii.quark.addons.oddities.container;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftingInventory;
@@ -76,7 +77,7 @@ public class BackpackContainer extends PlayerContainer {
 		if (slot != null && slot.getHasStack()) {
 			ItemStack stack = slot.getStack();
 			baseStack = stack.copy();
-			EquipmentSlotType slotType = stack.getEquipmentSlot();
+			EquipmentSlotType slotType = MobEntity.getSlotForItemStack(stack);
 			int equipIndex = topSlots - (slotType == null ? 0 : slotType.getIndex());
 
 			if (index < invStart || index == shieldSlot) { // crafting and armor slots
