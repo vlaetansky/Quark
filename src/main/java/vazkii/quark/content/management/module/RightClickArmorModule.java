@@ -20,6 +20,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.SwapArmorMessage;
@@ -51,6 +52,9 @@ public class RightClickArmorModule extends QuarkModule {
 	}
 	
 	public static boolean swap(PlayerEntity player, int slot) {
+		if(!ModuleLoader.INSTANCE.isModuleEnabled(RightClickArmorModule.class))
+			return false;
+		
 		Slot slotUnder = player.openContainer.getSlot(slot);
 		ItemStack stack = slotUnder.getStack();
 		
