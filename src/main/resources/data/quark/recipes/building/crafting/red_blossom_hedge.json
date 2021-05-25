@@ -20,6 +20,10 @@
     {
       "type": "quark:flag",
       "flag": "hedges"
+    },
+    {
+      "type": "quark:flag",
+      "flag": "blossom_trees"
     }
   ]
 }
