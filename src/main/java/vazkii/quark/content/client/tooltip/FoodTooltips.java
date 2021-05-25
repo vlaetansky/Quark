@@ -129,7 +129,7 @@ public class FoodTooltips {
 				
 				if(compress)
 					mc.fontRenderer.drawStringWithShadow(matrix, "x" + (count + (fract ? ".5" : "")), event.getX() + 10, y + 1, 0xFF666666);
-				matrix.push();
+				matrix.pop();
 			}
 		}
 	}
