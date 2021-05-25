@@ -6,7 +6,7 @@
   ],
   "key": {
     "L": {
-      "item": "minecraft:red_blossom_leaves"
+      "item": "quark:red_blossom_leaves"
     },
     "W": {
       "tag": "minecraft:spruce_logs"
@@ -18,12 +18,17 @@
   },
   "conditions": [
     {
-      "type": "quark:flag",
-      "flag": "hedges"
-    },
-    {
-      "type": "quark:flag",
-      "flag": "blossom_trees"
+      "type": "forge:and",
+      "values": [
+        {
+          "type": "quark:flag",
+          "flag": "hedges"
+        },
+        {
+          "type": "quark:flag",
+          "flag": "blossom_trees"
+        }
+      ]
     }
   ]
 }
