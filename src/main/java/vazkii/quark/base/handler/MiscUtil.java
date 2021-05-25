@@ -213,12 +213,12 @@ public class MiscUtil {
 		}
 	}
 
-	public static BlockPos locateBiome(ServerWorld world, ResourceLocation biomeToFind, BlockPos start) {
+	public static BlockPos locateBiome(ServerWorld world, ResourceLocation biomeToFind, BlockPos start, int searchRadius, int searchIncrement) {
 		Biome biome = world.getServer().func_244267_aX().getRegistry(Registry.BIOME_KEY).getOptional(biomeToFind).orElseThrow(() -> {
 			return new RuntimeException("Couldn't find biome " + biomeToFind);
 		});
 
-		return world.func_241116_a_(biome, start, 6400, 8); // magic numbers from LocateBiomeCommand
+		return world.func_241116_a_(biome, start, searchRadius, searchIncrement);
 	}
 	
 	public static ItemStack putIntoInv(ItemStack stack, TileEntity tile, Direction face, boolean simulate, boolean doSimulation) {

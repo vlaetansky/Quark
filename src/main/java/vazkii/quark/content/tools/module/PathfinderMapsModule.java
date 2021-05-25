@@ -58,9 +58,10 @@ public class PathfinderMapsModule extends QuarkModule {
 				+ "Here's an example of a map to locate Ice Mountains:\n"
 				+ "minecraft:ice_mountains,2,8,14,7FE4FF,Ice Mountains Pathfinder Map")
 	private List<String> customs = new LinkedList<>();
-
-	@Config
-	public static int xpFromTrade = 5;
+	
+	@Config public static int searchRadius = 6400;
+	@Config public static int searchDistanceIncrement = 8;
+	@Config public static int xpFromTrade = 5;
 
 	private static String getBiomeDescriptor(ResourceLocation rl) {
 		if(rl == null)
@@ -148,7 +149,7 @@ public class PathfinderMapsModule extends QuarkModule {
 		if(!(world instanceof ServerWorld))
 			return ItemStack.EMPTY;
 
-		BlockPos biomePos = MiscUtil.locateBiome((ServerWorld) world, info.biome, pos);
+		BlockPos biomePos = MiscUtil.locateBiome((ServerWorld) world, info.biome, pos, searchRadius, searchDistanceIncrement);
 		
 		if(biomePos == null)
 			return ItemStack.EMPTY;
