@@ -40,7 +40,7 @@ public class NetworkProfilingHandler {
 					double cd = ((double) c) / 5.0;
 					TextFormatting tf = (System.currentTimeMillis() - i.getLast() < 100) ? TextFormatting.RED : TextFormatting.RESET;
 					
-					event.getLeft().add(tf + "PACKET " + s + ": " + cd + "/s");
+					event.getLeft().add(tf + "PACKET " + s + ": " + cd + "/s (" + i.getCount() + ")");
 				}
 			}
 		}
@@ -49,10 +49,12 @@ public class NetworkProfilingHandler {
 	private static class Info {
 		
 		private static List<Long> times = new ArrayList<>(100);
+		int count;
 		long last;
 		
 		public void add() {
 			last = System.currentTimeMillis();
+			count++;
 			times.add(last);
 		}
 		
@@ -66,6 +68,10 @@ public class NetworkProfilingHandler {
 		
 		public long getLast() {
 			return last;
+		}
+		
+		public int getCount() {
+			return count;
 		}
 		
 	}

@@ -146,6 +146,9 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 			iterating = false;
 
 			pipeItems.addAll(queuedItems);
+			if(!queuedItems.isEmpty())
+				sync();
+			
 			queuedItems.clear();
 		}
 
@@ -201,10 +204,8 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 	}
 
 	private void bounceBack(PipeItem item, ItemStack stack) {
-		if(!world.isRemote) {
+		if(!world.isRemote)
 			passIn(stack == null ? item.stack : stack, item.outgoingFace, item.incomingFace, item.rngSeed, item.timeInWorld);
-			sync();
-		}
 	}
 
 	public void dropItem(ItemStack stack) {
@@ -339,7 +340,6 @@ public class PipeTileEntity extends TileSimpleInventory implements ITickableTile
 	public void sync() {
 		MiscUtil.syncTE(this);
 	}
-
 
 	public static ConnectionType getConnectionTo(IBlockReader world, BlockPos pos, Direction face) {
 		return getConnectionTo(world, pos, face, false);
