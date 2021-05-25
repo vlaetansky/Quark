@@ -9,6 +9,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -17,6 +19,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -184,13 +187,18 @@ public class RopeBlock extends QuarkBlock implements IBlockItemProvider {
 		return pos;
 
 	}
+	
+	// mojang tag pls
+	private boolean isIllegalBlock(Block block) {
+		return block == Blocks.OBSIDIAN || block == Blocks.CRYING_OBSIDIAN || block == Blocks.RESPAWN_ANCHOR;
+	}
 
 	private void moveBlock(World world, BlockPos srcPos, BlockPos dstPos) {
 		BlockState state = world.getBlockState(srcPos);
 		Block block = state.getBlock();
 		
 		if(state.getBlockHardness(world, srcPos) == -1 || !state.isValidPosition(world, dstPos) || block.isAir(state, world, srcPos) ||
-				state.getPushReaction() != PushReaction.NORMAL || block == Blocks.OBSIDIAN)
+				state.getPushReaction() != PushReaction.NORMAL || isIllegalBlock(block))
 			return;
 		
 		TileEntity tile = world.getTileEntity(srcPos);
@@ -201,8 +209,13 @@ public class RopeBlock extends QuarkBlock implements IBlockItemProvider {
 			tile.remove();
 		}
 		
-		world.setBlockState(srcPos, Blocks.AIR.getDefaultState());
-		world.setBlockState(dstPos, state);
+		FluidState fluidState = world.getFluidState(srcPos);
+		world.setBlockState(srcPos, fluidState.getBlockState());
+		
+		BlockState nextState = Block.getValidBlockForPosition(state, world, dstPos);
+		if(nextState.getProperties().contains(BlockStateProperties.WATERLOGGED))
+			nextState = nextState.with(BlockStateProperties.WATERLOGGED, world.getFluidState(dstPos).getFluid() == Fluids.WATER);
+		world.setBlockState(dstPos, nextState);
 		
 		if(tile != null) {
 			tile.setPos(dstPos);
