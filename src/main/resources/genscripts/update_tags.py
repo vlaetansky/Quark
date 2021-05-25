@@ -12,7 +12,7 @@ def main():
 	for file in os.listdir('../assets/quark/blockstates'):
 		if '.json' in file:
 			name = file.replace('.json', '')
-			if '_wall' in name:
+			if '_wall' in name and not('paper_' in name):
 				walls.append(name)
 			elif ('_slab' in name) and not ('_vertical' in name):
 				slabs.append(name)
