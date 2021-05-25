@@ -1,7 +1,10 @@
 package vazkii.quark.content.world.module;
 
+import com.google.common.base.Functions;
+
 import net.minecraft.block.Block;
 import net.minecraft.world.gen.GenerationStage.Decoration;
+import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
@@ -31,6 +34,9 @@ public class ChorusVegetationModule extends QuarkModule {
 	public void construct() {
 		chorus_weeds = new ChorusVegetationBlock("chorus_weeds", this, true);
 		chorus_twist = new ChorusVegetationBlock("chorus_twist", this, false);
+		
+		VariantHandler.addFlowerPot(chorus_weeds, "chorus_weeds", Functions.identity());
+		VariantHandler.addFlowerPot(chorus_twist, "chorus_twist", Functions.identity());
 	}
 	
 	@Override
