@@ -17,6 +17,7 @@ import net.minecraft.world.gen.GenerationStage.Decoration;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.OreFeatureConfig;
+import net.minecraftforge.common.BiomeDictionary;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
@@ -32,13 +33,13 @@ import vazkii.quark.content.world.gen.BigStoneClusterGenerator;
 @LoadModule(category = ModuleCategory.WORLD)
 public class BigStoneClustersModule extends QuarkModule {
 
-	@Config public static BigStoneClusterConfig granite = new BigStoneClusterConfig(Biome.Category.EXTREME_HILLS);
-	@Config public static BigStoneClusterConfig diorite = new BigStoneClusterConfig(Biome.Category.SAVANNA, Biome.Category.JUNGLE, Biome.Category.MUSHROOM);
-	@Config public static BigStoneClusterConfig andesite = new BigStoneClusterConfig(Biome.Category.FOREST);
-	@Config public static BigStoneClusterConfig marble = new BigStoneClusterConfig(Biome.Category.PLAINS);
-	@Config public static BigStoneClusterConfig limestone = new BigStoneClusterConfig(Biome.Category.SWAMP, Biome.Category.OCEAN);
-	@Config public static BigStoneClusterConfig jasper = new BigStoneClusterConfig(Biome.Category.MESA, Biome.Category.DESERT);
-	@Config public static BigStoneClusterConfig slate = new BigStoneClusterConfig(Biome.Category.ICY);
+	@Config public static BigStoneClusterConfig granite = new BigStoneClusterConfig(BiomeDictionary.Type.MOUNTAIN);
+	@Config public static BigStoneClusterConfig diorite = new BigStoneClusterConfig(BiomeDictionary.Type.SAVANNA, BiomeDictionary.Type.JUNGLE, BiomeDictionary.Type.MUSHROOM);
+	@Config public static BigStoneClusterConfig andesite = new BigStoneClusterConfig(BiomeDictionary.Type.FOREST);
+	@Config public static BigStoneClusterConfig marble = new BigStoneClusterConfig(BiomeDictionary.Type.PLAINS);
+	@Config public static BigStoneClusterConfig limestone = new BigStoneClusterConfig(BiomeDictionary.Type.SWAMP, BiomeDictionary.Type.OCEAN);
+	@Config public static BigStoneClusterConfig jasper = new BigStoneClusterConfig(BiomeDictionary.Type.MESA, BiomeDictionary.Type.SANDY);
+	@Config public static BigStoneClusterConfig slate = new BigStoneClusterConfig(BiomeDictionary.Type.SNOWY);
 	
 	@Config public static BigStoneClusterConfig voidstone = new BigStoneClusterConfig(DimensionConfig.end(false), 19, 6, 20, 0, 40, 
 			new StrictBiomeConfig(false, "minecraft:end_highlands", "minecraft:end_midlands", "minecraft:end_barrens"));

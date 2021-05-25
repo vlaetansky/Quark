@@ -11,6 +11,7 @@ import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.BiomeDictionary;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.block.QuarkInheritedPaneBlock;
 import vazkii.quark.base.module.LoadModule;
@@ -91,7 +92,7 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 
 	@Override
 	protected UndergroundBiomeConfig getBiomeConfig() {
-		return new UndergroundBiomeConfig(new CaveCrystalUndergroundBiome(), 400, true, Biome.Category.OCEAN)
+		return new UndergroundBiomeConfig(new CaveCrystalUndergroundBiome(), 400, true, BiomeDictionary.Type.OCEAN)
 				.setDefaultSize(42, 18, 22, 8);
 	}
 

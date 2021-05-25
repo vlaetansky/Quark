@@ -3,11 +3,13 @@ package vazkii.quark.base.world.generator;
 import java.util.Random;
 import java.util.function.BooleanSupplier;
 
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeManager;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.WorldGenRegion;

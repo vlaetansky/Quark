@@ -61,7 +61,7 @@ public class EntitySpawnHandler {
 			if(!c.secondary)
 				l.removeIf(e -> e.type.equals(c.entityType));
 			
-			if(c.config.isEnabled() && c.config.biomes.canSpawn(ev.getName(), ev.getCategory()))
+			if(c.config.isEnabled() && c.config.biomes.canSpawn(ev))
 				l.add(c.entry);
 				
 			if(c.config instanceof CostSensitiveEntitySpawnConfig) {

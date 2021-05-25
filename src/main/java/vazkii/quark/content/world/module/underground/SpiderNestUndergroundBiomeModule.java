@@ -17,6 +17,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.eventbus.api.Event.Result;
@@ -126,7 +127,7 @@ public class SpiderNestUndergroundBiomeModule extends UndergroundBiomeModule {
 
 	@Override
 	protected UndergroundBiomeConfig getBiomeConfig() {
-		return new UndergroundBiomeConfig(new SpiderNestUndergroundBiome(), 80, Biome.Category.PLAINS);
+		return new UndergroundBiomeConfig(new SpiderNestUndergroundBiome(), 80, BiomeDictionary.Type.PLAINS);
 	}
 
 	@Override

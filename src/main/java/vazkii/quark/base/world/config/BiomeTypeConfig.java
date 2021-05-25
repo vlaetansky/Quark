@@ -3,10 +3,16 @@ package vazkii.quark.base.world.config;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
+import com.mojang.datafixers.util.Either;
+
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biome.Category;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.ConfigFlagManager;
 
@@ -14,40 +20,52 @@ public class BiomeTypeConfig implements IBiomeConfig {
 
 	private final Object mutex = new Object();
 	
-	@Config(name = "Biome Categories")
-	@Config.Restriction({"none", "taiga", "extreme_hills", "jungle", "mesa", "plains", "savanna", "icy", "the_end", "beach", "forest",
-			"ocean", "desert", "river", "swamp", "mushroom", "nether"})
-	private List<String> categoryStrings;
+	@Config(name = "Biome Types")
+	@Config.Restriction({"hot", "cold", "sparse", "dense", "wet", "dry", "savanna", 
+		"coniferous", "jungle", "spooky", "dead", "lush", "mushroom", "magical", "rare", 
+		"plateau", "modified", "ocean", "river", "water", "mesa", "forest", "plains", 
+		"mountain", "hills", "swamp", "sandy", "snowy", "wasteland", "beach", "void", 
+		"overworld", "nether", "end"})
+	private List<String> biomeTypeStrings;
 
 	@Config
 	private boolean isBlacklist;
 
-	private List<Biome.Category> categories;
+	private List<BiomeDictionary.Type> types;
 
-	public BiomeTypeConfig(boolean isBlacklist, Biome.Category... categories) {
+	public BiomeTypeConfig(boolean isBlacklist, BiomeDictionary.Type... typesIn) {
 		this.isBlacklist = isBlacklist;
 
-		categoryStrings = new LinkedList<>();
-		for (Biome.Category c : categories)
-			categoryStrings.add(c.getName());
+		biomeTypeStrings = new LinkedList<>();
+		for(BiomeDictionary.Type t : typesIn)
+			biomeTypeStrings.add(t.getName().toLowerCase());
 	}
 
-	public BiomeTypeConfig(boolean isBlacklist, String... categories) {
+	public BiomeTypeConfig(boolean isBlacklist, String... types) {
 		this.isBlacklist = isBlacklist;
 
-		categoryStrings = new LinkedList<>();
-		categoryStrings.addAll(Arrays.asList(categories));
+		biomeTypeStrings = new LinkedList<>();
+		biomeTypeStrings.addAll(Arrays.asList(types));
 	}
-
+	
 	@Override
-	public boolean canSpawn(ResourceLocation res, Category category) {
+	public boolean canSpawn(ResourceLocation resource) {
+		if(resource == null)
+			return false;
+		
+		RegistryKey<Biome> key = RegistryKey.getOrCreateKey(Registry.BIOME_KEY, resource);
+		Set<BiomeDictionary.Type> biomeTypes = BiomeDictionary.getTypes(key);
+
 		synchronized (mutex) {
-			if(categories == null)
+			if(types == null)
 				updateTypes();
 			
-			for(Biome.Category c : categories)
-				if(c.equals(category))
-					return !isBlacklist;
+			for(BiomeDictionary.Type type : biomeTypes) {
+				for(BiomeDictionary.Type type2 : types)
+					if(type2.equals(type)) {
+						return !isBlacklist;
+					}
+			}
 
 			return isBlacklist;
 		}
@@ -61,12 +79,12 @@ public class BiomeTypeConfig implements IBiomeConfig {
 	}
 	
 	public void updateTypes() {
-		categories = new LinkedList<>();
-		for (String s : categoryStrings) {
-			Biome.Category category = Biome.Category.byName(s);
+		types = new LinkedList<>();
+		for (String s : biomeTypeStrings) {
+			BiomeDictionary.Type type = BiomeDictionary.Type.getType(s);
 			
-			if (category != null)
-				categories.add(category);
+			if (type != null)
+				types.add(type);
 		}
 	}
 

@@ -10,6 +10,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.Heightmap.Type;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.module.LoadModule;
@@ -28,7 +29,7 @@ public class ShibaModule extends QuarkModule {
 	public static EntityType<ShibaEntity> shibaType;
 	
 	@Config
-	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(40, 1, 3, new BiomeTypeConfig(false, Biome.Category.EXTREME_HILLS));
+	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(40, 1, 3, new BiomeTypeConfig(false, BiomeDictionary.Type.MOUNTAIN));
 	
 	@Override
 	public void construct() {

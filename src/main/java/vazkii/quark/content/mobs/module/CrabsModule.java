@@ -16,18 +16,18 @@ import net.minecraft.potion.EffectType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.Heightmap.Type;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.BrewingHandler;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.recipe.FlagIngredient;
 import vazkii.quark.base.util.QuarkEffect;
@@ -47,7 +47,7 @@ public class CrabsModule extends QuarkModule {
 	public static EntityType<CrabEntity> crabType;
 
 	@Config
-	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(5, 1, 3, new BiomeTypeConfig(false, Biome.Category.BEACH));
+	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(5, 1, 3, new BiomeTypeConfig(false, BiomeDictionary.Type.BEACH));
 
 	public static ITag<Block> crabSpawnableTag;
 	

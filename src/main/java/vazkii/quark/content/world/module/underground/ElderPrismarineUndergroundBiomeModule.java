@@ -6,6 +6,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.VariantHandler;
@@ -61,7 +62,7 @@ public class ElderPrismarineUndergroundBiomeModule extends UndergroundBiomeModul
 	
 	@Override
 	protected UndergroundBiomeConfig getBiomeConfig() {
-		return new UndergroundBiomeConfig(new ElderPrismarineUndergroundBiome(), 200, Biome.Category.OCEAN);
+		return new UndergroundBiomeConfig(new ElderPrismarineUndergroundBiome(), 200, BiomeDictionary.Type.OCEAN);
 	}
 
 }

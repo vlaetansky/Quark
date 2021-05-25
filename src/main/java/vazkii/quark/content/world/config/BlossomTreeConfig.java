@@ -1,6 +1,7 @@
 package vazkii.quark.content.world.config;
 
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.BiomeDictionary;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.IConfigType;
 import vazkii.quark.base.world.config.BiomeTypeConfig;
@@ -17,9 +18,9 @@ public class BlossomTreeConfig implements IConfigType {
 	@Config
 	public int rarity;
 	
-	public BlossomTreeConfig(int rarity, Biome.Category category) {
+	public BlossomTreeConfig(int rarity, BiomeDictionary.Type type) {
 		this.rarity = rarity;
-		biomeTypes = new BiomeTypeConfig(false, category);
+		biomeTypes = new BiomeTypeConfig(false, type);
 	}
 	
 }

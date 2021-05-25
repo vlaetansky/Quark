@@ -19,6 +19,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.spawner.WorldEntitySpawner;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.handler.BrewingHandler;
@@ -124,7 +125,7 @@ public class GlowshroomUndergroundBiomeModule extends UndergroundBiomeModule {
 
 	@Override
 	protected UndergroundBiomeConfig getBiomeConfig() {
-		return new UndergroundBiomeConfig(new GlowshroomUndergroundBiome(), 80, Biome.Category.EXTREME_HILLS, Biome.Category.MUSHROOM);
+		return new UndergroundBiomeConfig(new GlowshroomUndergroundBiome(), 80, BiomeDictionary.Type.MOUNTAIN, BiomeDictionary.Type.MUSHROOM);
 	}
 
 }

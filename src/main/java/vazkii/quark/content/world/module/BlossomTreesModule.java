@@ -9,6 +9,7 @@ import net.minecraft.block.ComposterBlock;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage.Decoration;
+import net.minecraftforge.common.BiomeDictionary;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.QuarkModule;
@@ -25,12 +26,12 @@ import vazkii.quark.content.world.gen.BlossomTreeGenerator;
 @LoadModule(category = ModuleCategory.WORLD)
 public class BlossomTreesModule extends QuarkModule {
 
-	@Config BlossomTreeConfig blue = new BlossomTreeConfig(200, Biome.Category.ICY);
-	@Config BlossomTreeConfig lavender = new BlossomTreeConfig(100, Biome.Category.SWAMP); 
-	@Config BlossomTreeConfig orange = new BlossomTreeConfig(100, Biome.Category.SAVANNA); 
-	@Config BlossomTreeConfig pink = new BlossomTreeConfig(100, Biome.Category.EXTREME_HILLS); 
-	@Config BlossomTreeConfig yellow = new BlossomTreeConfig(200, Biome.Category.PLAINS); 
-	@Config BlossomTreeConfig red = new BlossomTreeConfig(30, Biome.Category.MESA); 
+	@Config BlossomTreeConfig blue = new BlossomTreeConfig(200, BiomeDictionary.Type.SNOWY);
+	@Config BlossomTreeConfig lavender = new BlossomTreeConfig(100, BiomeDictionary.Type.SWAMP); 
+	@Config BlossomTreeConfig orange = new BlossomTreeConfig(100, BiomeDictionary.Type.SAVANNA); 
+	@Config BlossomTreeConfig pink = new BlossomTreeConfig(100, BiomeDictionary.Type.MOUNTAIN); 
+	@Config BlossomTreeConfig yellow = new BlossomTreeConfig(200, BiomeDictionary.Type.PLAINS); 
+	@Config BlossomTreeConfig red = new BlossomTreeConfig(30, BiomeDictionary.Type.MESA); 
 
 	public static Map<BlossomTree, BlossomTreeConfig> trees = new HashMap<>();
 	

@@ -3,20 +3,20 @@ package vazkii.quark.content.world.module;
 import com.google.common.collect.ImmutableSet;
 
 import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.DimensionSettings;
 import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.world.config.BiomeTypeConfig;
 import vazkii.quark.content.world.gen.structure.BigDungeonStructure;
@@ -37,7 +37,7 @@ public class BigDungeonModule extends QuarkModule {
 	public static double chestChance = 0.5;
 
 	@Config
-	public static BiomeTypeConfig biomeTypes = new BiomeTypeConfig(true, Biome.Category.OCEAN, Biome.Category.BEACH, Biome.Category.NETHER, Biome.Category.THEEND);
+	public static BiomeTypeConfig biomeTypes = new BiomeTypeConfig(true, BiomeDictionary.Type.OCEAN, BiomeDictionary.Type.BEACH, BiomeDictionary.Type.NETHER, BiomeDictionary.Type.END);
 
 	public static final BigDungeonStructure STRUCTURE = new BigDungeonStructure(VillageConfig.field_236533_a_);
 	private static StructureFeature<?, ?> feature;
@@ -69,7 +69,7 @@ public class BigDungeonModule extends QuarkModule {
 
 	@SubscribeEvent
 	public void onBiomeLoad(BiomeLoadingEvent event) {
-		if(biomeTypes.canSpawn(event.getName(), event.getCategory()))
+		if(biomeTypes.canSpawn(event))
 			event.getGeneration().getStructures().add(() -> feature);
 	}
 

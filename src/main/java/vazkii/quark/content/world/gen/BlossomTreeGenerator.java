@@ -5,6 +5,7 @@ import java.util.Random;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SaplingBlock;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.DefaultBiomeFeatures;
@@ -35,8 +36,14 @@ public class BlossomTreeGenerator extends Generator {
 			placePos = worldIn.getHeight(Type.MOTION_BLOCKING, placePos).down();
 
 			BlockState state = worldIn.getBlockState(placePos);
-			if(state.getBlock().canSustainPlant(state, worldIn, pos, Direction.UP, (SaplingBlock) Blocks.OAK_SAPLING))
+			if(state.getBlock().canSustainPlant(state, worldIn, pos, Direction.UP, (SaplingBlock) Blocks.OAK_SAPLING)) {
+				BlockPos up = placePos.up();
+				BlockState upState = worldIn.getBlockState(up);
+				if(upState.isReplaceable(Fluids.WATER))
+					worldIn.setBlockState(up, Blocks.AIR.getDefaultState(), 0);
+				
 				Feature.TREE.func_241855_a(worldIn, generator, rand, placePos, tree.config);
+			}
 		}
 	}
 

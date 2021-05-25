@@ -6,6 +6,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.VariantHandler;
@@ -41,7 +42,7 @@ public class BrimstoneUndergroundBiomeModule extends UndergroundBiomeModule {
 	
 	@Override
 	protected UndergroundBiomeConfig getBiomeConfig() {
-		return new UndergroundBiomeConfig(new BrimstoneUndergroundBiome(), 80, Biome.Category.MESA);
+		return new UndergroundBiomeConfig(new BrimstoneUndergroundBiome(), 80, BiomeDictionary.Type.MESA);
 	}
 
 }
