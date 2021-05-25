@@ -185,12 +185,7 @@ public class VariantChestsModule extends QuarkModule {
 			 "repurposed_structures:village_mountains=quark:spruce_chest",
 			 "repurposed_structures:village_oak=quark:oak_chest",
  			 "repurposed_structures:village_swamp=quark:oak_chest",
-			 "repurposed_structures:village_warped=quark:warped_chest",
-			 "repurposed_structures:witch_hut_birch=quark:birch_chest",
-			 "repurposed_structures:witch_hut_dark_forest=quark:dark_oak_chest",
-			 "repurposed_structures:witch_hut_giant_tree_taiga=quark:spruce_chest",
-			 "repurposed_structures:witch_hut_oak=quark:oak_chest",
-			 "repurposed_structures:witch_hut_taiga=quark:spruce_chest",   
+			 "repurposed_structures:village_warped=quark:warped_chest", 
 			 "valhelsia_structures:big_tree=quark:oak_chest",
 			 "valhelsia_structures:castle=quark:spruce_chest",
 			 "valhelsia_structures:castle_ruin=quark:oak_chest",
@@ -201,7 +196,7 @@ public class VariantChestsModule extends QuarkModule {
 			 "valhelsia_structures:small_dungeon=quark:oak_chest",
 			 "valhelsia_structures:spawner_dungeon=quark:oak_chest",
 			 "valhelsia_structures:tower_ruin=quark:spruce_chest",
-			 "valhelsia_structures:witch_hut=quark:spruce_chest);
+			 "valhelsia_structures:witch_hut=quark:spruce_chest");
 	
 	@Override
 	public void construct() {
