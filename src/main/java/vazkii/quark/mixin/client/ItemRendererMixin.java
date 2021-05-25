@@ -60,6 +60,16 @@ public abstract class ItemRendererMixin {
 	private static RenderType getEntityGlintDirect() {
 		return ColorRunesModule.getEntityGlintDirect();
 	}
+	
+	@Redirect(method = "getGlintVertexBuilder", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;getGlint()Lnet/minecraft/client/renderer/RenderType;"))
+	private static RenderType getGlintVertexBuilder() {
+		return ColorRunesModule.getGlint();
+	}	
+	
+	@Redirect(method = "getDirectGlintVertexBuilder", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;getGlintDirect()Lnet/minecraft/client/renderer/RenderType;"))
+	private static RenderType getDirectGlintVertexBuilder() {
+		return ColorRunesModule.getGlintDirect();
+	}
 
 	@Accessor
 	public abstract ItemColors getItemColors();

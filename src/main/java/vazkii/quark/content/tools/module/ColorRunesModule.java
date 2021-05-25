@@ -1,9 +1,11 @@
 package vazkii.quark.content.tools.module;
 
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.item.CompassItem;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.loot.LootEntry;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.TagLootEntry;
@@ -61,7 +63,8 @@ public class ColorRunesModule extends QuarkModule {
             return -1;
 
         LazyOptional<IRuneColorProvider> cap = get(target);
-
+        
+        
         if (cap.isPresent())
             return cap.orElse((s) -> -1).getRuneColor(target);
         if (!ItemNBTHelper.getBoolean(target, TAG_RUNE_ATTACHED, false))
@@ -69,7 +72,8 @@ public class ColorRunesModule extends QuarkModule {
 
         ItemStack proxied = ItemStack.read(ItemNBTHelper.getCompound(target, TAG_RUNE_COLOR, false));
         LazyOptional<IRuneColorProvider> proxyCap = get(proxied);
-        return proxyCap.orElse((s) -> -1).getRuneColor(target);
+        int color = proxyCap.orElse((s) -> -1).getRuneColor(target);
+        return color;
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -149,7 +153,7 @@ public class ColorRunesModule extends QuarkModule {
         ItemStack right = event.getRight();
         ItemStack output = event.getOutput();
 
-        if(!left.isEmpty() && !right.isEmpty() && left.isEnchanted() && right.getItem().isIn(runesTag)) {
+        if(!left.isEmpty() && !right.isEmpty() && canHaveRune(left) && right.getItem().isIn(runesTag)) {
             ItemStack out = (output.isEmpty() ? left : output).copy();
             ItemNBTHelper.setBoolean(out, TAG_RUNE_ATTACHED, true);
             ItemNBTHelper.setCompound(out, TAG_RUNE_COLOR, right.serializeNBT());
@@ -157,6 +161,10 @@ public class ColorRunesModule extends QuarkModule {
             event.setCost(Math.max(1, applyCost));
             event.setMaterialCost(1);
         }
+    }
+    
+    private static boolean canHaveRune(ItemStack stack) {
+    	return stack.isEnchanted() || (stack.getItem() == Items.COMPASS && CompassItem.func_234670_d_(stack)); // func_234670_d_ = is lodestone compass
     }
 
     @SuppressWarnings("ConstantConditions")
