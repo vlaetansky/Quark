@@ -76,11 +76,10 @@ public class VariantChestsModule extends QuarkModule {
 	private static List<Block> allChests = new LinkedList<>();
 	private static Map<String, Block> chestMappings = new HashMap<>();
 
-	private static Structure<?> currentStructure;
-	private static List<StructurePiece> currentComponents;
-	
 	@Config
 	private static boolean replaceWorldgenChests = true;
+	
+	private static ThreadLocal<StructureHolder> structureHolder = new ThreadLocal<>();
 	
 	private static boolean staticEnabled = false;
 	
@@ -247,21 +246,33 @@ public class VariantChestsModule extends QuarkModule {
 		}
 	}
 	
+	private static StructureHolder getCurrentSturctureHolder() {
+		return structureHolder.get();
+	}
+	
 	public static void setActiveStructure(Structure<?> structure, List<StructurePiece> components) {
-		currentStructure = structure;
-		currentComponents = components;
+		StructureHolder curr = getCurrentSturctureHolder();
+		if(curr == null) {
+			curr = new StructureHolder();
+			structureHolder.set(curr);
+		}
+		
+		curr.currentStructure = structure;
+		curr.currentComponents = components;
 	}
 	
 	public static BlockState getGenerationChestBlockState(BlockState current) {
-		if(replaceWorldgenChests && current.getBlock() == Blocks.CHEST && currentStructure != null && staticEnabled) {
-			ResourceLocation res = currentStructure.getRegistryName();
+		StructureHolder curr = getCurrentSturctureHolder();
+
+		if(replaceWorldgenChests && current.getBlock() == Blocks.CHEST && curr != null && curr.currentStructure != null && staticEnabled) {
+			ResourceLocation res = curr.currentStructure.getRegistryName();
 			if(res == null)
 				return current;
 			String name = res.toString();
 			
 			if("minecraft:village".equals(name)) {
-				if(currentComponents != null && currentComponents.size() > 0) {
-					StructurePiece first = currentComponents.get(0);
+				if(curr.currentComponents != null && curr.currentComponents.size() > 0) {
+					StructurePiece first = curr.currentComponents.get(0);
 					if(first instanceof AbstractVillagePiece) {
 						AbstractVillagePiece avp = (AbstractVillagePiece) first;
 						JigsawPiece jigsaw = avp.getJigsawPiece();
@@ -388,6 +399,11 @@ public class VariantChestsModule extends QuarkModule {
 	public static interface IChestTextureProvider {
 		String getChestTexturePath();
 		boolean isTrap();
+	}
+	
+	private static class StructureHolder {
+		public Structure<?> currentStructure;
+		public List<StructurePiece> currentComponents;
 	}
 
 }
