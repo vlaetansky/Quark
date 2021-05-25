@@ -17,6 +17,7 @@ import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
@@ -48,28 +49,24 @@ public class GlowshroomBlock extends MushroomBlock implements IQuarkBlock {
 				.setNeedsPostProcessing((s, r, p) -> true)
 				.setLightLevel(b -> 14)
 				.tickRandomly());
-		
+
 		this.module = module;
 		RegistryHelper.registerBlock(this, "glowshroom");
 		RegistryHelper.setCreativeTab(this, ItemGroup.DECORATIONS);
-		
+
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
 	}
-	
+
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
 		BlockPos blockpos = pos.down();
-		return worldIn.getBlockState(blockpos).getBlock() == GlowshroomUndergroundBiomeModule.glowcelium;
+		BlockState blockstate = worldIn.getBlockState(blockpos);
+		return blockstate.isIn(BlockTags.MUSHROOM_GROW_BLOCK) || blockstate.canSustainPlant(worldIn, blockpos, Direction.UP, this);
 	}
-	
-	@Override
-	public boolean canSustainPlant(@Nonnull BlockState state, @Nonnull IBlockReader world, BlockPos pos, @Nonnull Direction facing, IPlantable plantable) {
-		return state.getBlock() == GlowshroomUndergroundBiomeModule.glowcelium;
-	}
-	
+
 	@Override
 	public void tick(@Nonnull BlockState state, @Nonnull ServerWorld worldIn, @Nonnull BlockPos pos, Random rand) {
-		if(rand.nextInt(GlowshroomUndergroundBiomeModule.glowshroomGrowthRate) == 0) {
+		if(rand.nextInt(GlowshroomUndergroundBiomeModule.glowshroomGrowthRate) == 0 && worldIn.getBlockState(pos.down()).getBlock() == GlowshroomUndergroundBiomeModule.glowcelium) {
 			int i = 5;
 
 			for(BlockPos targetPos : BlockPos.getAllInBoxMutable(pos.add(-4, -1, -4), pos.add(4, 1, 4))) {
