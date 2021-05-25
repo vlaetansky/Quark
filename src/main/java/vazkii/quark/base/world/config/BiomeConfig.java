@@ -51,7 +51,7 @@ public class BiomeConfig implements IBiomeConfig {
 	
 	@Override
 	public boolean canSpawn(ResourceLocation b) {
-		return types.canSpawn(b) && biomes.canSpawn(b);
+		return b != null && types.canSpawn(b) && biomes.canSpawn(b);
 	}
 
 }
