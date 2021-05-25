@@ -11,7 +11,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.GenerationStage.Decoration;
 import net.minecraft.world.gen.feature.Feature;
@@ -24,6 +23,7 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.world.WorldGenHandler;
 import vazkii.quark.base.world.WorldGenWeights;
+import vazkii.quark.base.world.config.BiomeConfig;
 import vazkii.quark.base.world.config.DimensionConfig;
 import vazkii.quark.base.world.config.StrictBiomeConfig;
 import vazkii.quark.content.world.config.AirStoneClusterConfig;
@@ -42,10 +42,10 @@ public class BigStoneClustersModule extends QuarkModule {
 	@Config public static BigStoneClusterConfig slate = new BigStoneClusterConfig(BiomeDictionary.Type.SNOWY);
 	
 	@Config public static BigStoneClusterConfig voidstone = new BigStoneClusterConfig(DimensionConfig.end(false), 19, 6, 20, 0, 40, 
-			new StrictBiomeConfig(false, "minecraft:end_highlands", "minecraft:end_midlands", "minecraft:end_barrens"));
+			BiomeConfig.fromBiomeReslocs(false, "minecraft:end_highlands", "minecraft:end_midlands", "minecraft:end_barrens"));
 	
 	@Config public static BigStoneClusterConfig myalite = new AirStoneClusterConfig(DimensionConfig.end(false), 20, 6, 100, 58, 62, 
-			new StrictBiomeConfig(false, "minecraft:end_highlands"))
+			BiomeConfig.fromBiomeReslocs(false, "minecraft:end_highlands"))
 			.setVertical(40, 10);
 
 	@Config(description = "Blocks that stone clusters can replace. If you want to make it so it only replaces in one dimension,\n"

@@ -10,7 +10,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.Potions;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.Heightmap.Type;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -18,12 +17,12 @@ import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.BrewingHandler;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.recipe.FlagIngredient;
 import vazkii.quark.base.world.EntitySpawnHandler;
-import vazkii.quark.base.world.config.BiomeTypeConfig;
+import vazkii.quark.base.world.config.BiomeConfig;
 import vazkii.quark.base.world.config.EntitySpawnConfig;
 import vazkii.quark.content.mobs.client.render.FrogRenderer;
 import vazkii.quark.content.mobs.entity.FrogEntity;
@@ -34,7 +33,7 @@ public class FrogsModule extends QuarkModule {
 	public static EntityType<FrogEntity> frogType;
 
 	@Config
-	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(40, 1, 3, new BiomeTypeConfig(false, BiomeDictionary.Type.SWAMP));
+	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(40, 1, 3, BiomeConfig.fromBiomeTypes(false, BiomeDictionary.Type.SWAMP));
 
 	@Config(flag = "frog_brewing") 
 	public static boolean enableBrewing = true;

@@ -135,7 +135,7 @@ public class BigDungeonStructure extends JigsawStructure {
 
 	@Override // hasStartAt
 	protected boolean func_230363_a_(ChunkGenerator chunkGen, BiomeProvider biomeProvider, long seed, SharedSeedRandom rand, int chunkPosX, int chunkPosZ, Biome biome, ChunkPos chunkpos, VillageConfig config) { 
-		if(chunkPosX == chunkpos.x && chunkPosZ == chunkpos.z && chunkGen.func_235957_b_().func_236195_a_().containsKey(this) && BigDungeonModule.biomeTypes.canSpawn(biome)) {
+		if(chunkPosX == chunkpos.x && chunkPosZ == chunkpos.z && chunkGen.func_235957_b_().func_236195_a_().containsKey(this) && BigDungeonModule.biomeConfig.canSpawn(biome)) {
 			int i = chunkPosX >> 4;
 			int j = chunkPosZ >> 4;
 			rand.setSeed((long)(i ^ j << 4) ^ seed);

@@ -25,6 +25,7 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.world.EntitySpawnHandler;
+import vazkii.quark.base.world.config.BiomeConfig;
 import vazkii.quark.base.world.config.CostSensitiveEntitySpawnConfig;
 import vazkii.quark.base.world.config.EntitySpawnConfig;
 import vazkii.quark.base.world.config.StrictBiomeConfig;
@@ -65,7 +66,7 @@ public class WraithModule extends QuarkModule {
 			);
 	
 	@Config
-	public static EntitySpawnConfig spawnConfig = new CostSensitiveEntitySpawnConfig(8, 1, 3, 0.7, 0.15, new StrictBiomeConfig(false, "minecraft:soul_sand_valley"));
+	public static EntitySpawnConfig spawnConfig = new CostSensitiveEntitySpawnConfig(8, 1, 3, 0.7, 0.15, BiomeConfig.fromBiomeReslocs(false, "minecraft:soul_sand_valley"));
 	
 	public static ITag<Block> wraithSpawnableTag;
 	

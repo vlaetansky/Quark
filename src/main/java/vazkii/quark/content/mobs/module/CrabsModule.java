@@ -32,7 +32,7 @@ import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.recipe.FlagIngredient;
 import vazkii.quark.base.util.QuarkEffect;
 import vazkii.quark.base.world.EntitySpawnHandler;
-import vazkii.quark.base.world.config.BiomeTypeConfig;
+import vazkii.quark.base.world.config.BiomeConfig;
 import vazkii.quark.base.world.config.EntitySpawnConfig;
 import vazkii.quark.content.mobs.client.render.CrabRenderer;
 import vazkii.quark.content.mobs.entity.CrabEntity;
@@ -47,7 +47,7 @@ public class CrabsModule extends QuarkModule {
 	public static EntityType<CrabEntity> crabType;
 
 	@Config
-	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(5, 1, 3, new BiomeTypeConfig(false, BiomeDictionary.Type.BEACH));
+	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(5, 1, 3, BiomeConfig.fromBiomeTypes(false, BiomeDictionary.Type.BEACH));
 
 	public static ITag<Block> crabSpawnableTag;
 	

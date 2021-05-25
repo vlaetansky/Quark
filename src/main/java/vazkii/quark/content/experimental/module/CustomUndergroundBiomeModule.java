@@ -11,13 +11,13 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.gen.GenerationStage;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.util.WeightedSelector;
 import vazkii.quark.base.world.WorldGenHandler;
 import vazkii.quark.base.world.WorldGenWeights;
-import vazkii.quark.base.world.config.BiomeTypeConfig;
+import vazkii.quark.base.world.config.BiomeConfig;
 import vazkii.quark.base.world.config.DimensionConfig;
 import vazkii.quark.base.world.generator.CombinedGenerator;
 import vazkii.quark.content.world.config.UndergroundBiomeConfig;
@@ -63,10 +63,8 @@ public class CustomUndergroundBiomeModule extends QuarkModule {
             String strippedDef = definition.replaceAll("\\s", "");
             Matcher match = PATTERN.matcher(strippedDef);
             if (match.matches()) {
-                DimensionConfig dimensions = extractDimensions(match.group("dimensions"),
-                        match.group("isDimensionBlacklist"));
-                BiomeTypeConfig biomes = extractBiomes(match.group("biomeTypes"),
-                        match.group("isBiomeBlacklist"));
+                DimensionConfig dimensions = extractDimensions(match.group("dimensions"), match.group("isDimensionBlacklist"));
+                BiomeConfig biomes = extractBiomes(match.group("biomeTypes"), match.group("isBiomeBlacklist"));
                 int rarity = Integer.parseInt(match.group("rarity"));
                 int minY = Integer.parseInt(match.group("minY"));
                 int maxY = Integer.parseInt(match.group("maxY"));
@@ -123,8 +121,8 @@ public class CustomUndergroundBiomeModule extends QuarkModule {
         }
     }
 
-    private BiomeTypeConfig extractBiomes(String biomeTypes, String isBiomeBlacklist) {
-        return new BiomeTypeConfig(Boolean.parseBoolean(isBiomeBlacklist), biomeTypes.split(","));
+    private BiomeConfig extractBiomes(String biomeTypes, String isBiomeBlacklist) {
+        return BiomeConfig.fromBiomeTypeStrings(Boolean.parseBoolean(isBiomeBlacklist), biomeTypes.split(","));
     }
 
     private DimensionConfig extractDimensions(String dimensions, String isDimensionBlacklist) {

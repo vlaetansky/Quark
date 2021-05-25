@@ -18,6 +18,7 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
+import vazkii.quark.base.world.config.BiomeConfig;
 import vazkii.quark.base.world.config.BiomeTypeConfig;
 import vazkii.quark.content.world.gen.structure.BigDungeonStructure;
 
@@ -37,7 +38,7 @@ public class BigDungeonModule extends QuarkModule {
 	public static double chestChance = 0.5;
 
 	@Config
-	public static BiomeTypeConfig biomeTypes = new BiomeTypeConfig(true, BiomeDictionary.Type.OCEAN, BiomeDictionary.Type.BEACH, BiomeDictionary.Type.NETHER, BiomeDictionary.Type.END);
+	public static BiomeConfig biomeConfig = BiomeConfig.fromBiomeTypes(true, BiomeDictionary.Type.OCEAN, BiomeDictionary.Type.BEACH, BiomeDictionary.Type.NETHER, BiomeDictionary.Type.END);
 
 	public static final BigDungeonStructure STRUCTURE = new BigDungeonStructure(VillageConfig.field_236533_a_);
 	private static StructureFeature<?, ?> feature;
@@ -69,7 +70,7 @@ public class BigDungeonModule extends QuarkModule {
 
 	@SubscribeEvent
 	public void onBiomeLoad(BiomeLoadingEvent event) {
-		if(biomeTypes.canSpawn(event))
+		if(biomeConfig.canSpawn(event))
 			event.getGeneration().getStructures().add(() -> feature);
 	}
 

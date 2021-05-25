@@ -15,7 +15,7 @@ public class StrictBiomeConfig implements IBiomeConfig {
 	@Config
 	private boolean isBlacklist;
 
-	public StrictBiomeConfig(boolean isBlacklist, String... biomes) {
+	protected StrictBiomeConfig(boolean isBlacklist, String... biomes) {
 		this.isBlacklist = isBlacklist;
 
 		biomeStrings = new LinkedList<>();

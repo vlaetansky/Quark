@@ -33,7 +33,7 @@ public class BiomeTypeConfig implements IBiomeConfig {
 
 	private List<BiomeDictionary.Type> types;
 
-	public BiomeTypeConfig(boolean isBlacklist, BiomeDictionary.Type... typesIn) {
+	protected BiomeTypeConfig(boolean isBlacklist, BiomeDictionary.Type... typesIn) {
 		this.isBlacklist = isBlacklist;
 
 		biomeTypeStrings = new LinkedList<>();
@@ -41,7 +41,7 @@ public class BiomeTypeConfig implements IBiomeConfig {
 			biomeTypeStrings.add(t.getName().toLowerCase());
 	}
 
-	public BiomeTypeConfig(boolean isBlacklist, String... types) {
+	protected BiomeTypeConfig(boolean isBlacklist, String... types) {
 		this.isBlacklist = isBlacklist;
 
 		biomeTypeStrings = new LinkedList<>();

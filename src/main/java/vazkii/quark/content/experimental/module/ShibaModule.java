@@ -6,7 +6,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.WolfEntity;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.Heightmap.Type;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -18,7 +17,7 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.world.EntitySpawnHandler;
-import vazkii.quark.base.world.config.BiomeTypeConfig;
+import vazkii.quark.base.world.config.BiomeConfig;
 import vazkii.quark.base.world.config.EntitySpawnConfig;
 import vazkii.quark.content.experimental.shiba.client.render.ShibaRenderer;
 import vazkii.quark.content.experimental.shiba.entity.ShibaEntity;
@@ -29,7 +28,7 @@ public class ShibaModule extends QuarkModule {
 	public static EntityType<ShibaEntity> shibaType;
 	
 	@Config
-	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(40, 1, 3, new BiomeTypeConfig(false, BiomeDictionary.Type.MOUNTAIN));
+	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(40, 1, 3, BiomeConfig.fromBiomeTypes(false, BiomeDictionary.Type.MOUNTAIN));
 	
 	@Override
 	public void construct() {

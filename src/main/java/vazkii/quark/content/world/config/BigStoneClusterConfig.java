@@ -2,6 +2,7 @@ package vazkii.quark.content.world.config;
 
 import net.minecraftforge.common.BiomeDictionary;
 import vazkii.quark.base.module.config.Config;
+import vazkii.quark.base.world.config.BiomeConfig;
 import vazkii.quark.base.world.config.BiomeTypeConfig;
 import vazkii.quark.base.world.config.ClusterSizeConfig;
 import vazkii.quark.base.world.config.DimensionConfig;
@@ -13,7 +14,7 @@ public class BigStoneClusterConfig extends ClusterSizeConfig {
 	public boolean enabled = true;
 
 	public BigStoneClusterConfig(BiomeDictionary.Type... types) {
-		this(DimensionConfig.overworld(false), 14, 9, 4, 20, 80, new BiomeTypeConfig(false, types));
+		this(DimensionConfig.overworld(false), 14, 9, 4, 20, 80, BiomeConfig.fromBiomeTypes(false, types));
 	}
 
 	public BigStoneClusterConfig(DimensionConfig dimensions, int clusterSize, int sizeVariation, int rarity, int minYLevel, int maxYLevel, IBiomeConfig biomes) {
