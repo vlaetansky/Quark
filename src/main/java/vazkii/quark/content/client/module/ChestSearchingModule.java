@@ -104,9 +104,11 @@ public class ChestSearchingModule extends QuarkModule {
 	}
 
 	private void updateSearchStatus() {
-		searchBar.setEnabled(searchEnabled);
-		searchBar.setVisible(searchEnabled);
-		searchBar.setFocused2(searchEnabled);
+		if(searchBar != null) {
+			searchBar.setEnabled(searchEnabled);
+			searchBar.setVisible(searchEnabled);
+			searchBar.setFocused2(searchEnabled);
+		}
 	}
 
 	@SubscribeEvent
