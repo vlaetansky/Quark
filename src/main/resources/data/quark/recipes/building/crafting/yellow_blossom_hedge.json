@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "L",
+    "W"
+  ],
+  "key": {
+    "L": {
+      "item": "minecraft:yellow_blossom_leaves"
+    },
+    "W": {
+      "tag": "minecraft:spruce_logs"
+    }
+  },
+  "result": {
+    "item": "quark:yellow_blossom_hedge",
+    "count": 2
+  },
+  "conditions": [
+    {
+      "type": "quark:flag",
+      "flag": "hedges"
+    },
+    {
+      "type": "quark:flag",
+      "flag": "blossom_trees"
+    }
+  ]
+}

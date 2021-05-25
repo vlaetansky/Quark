@@ -32,6 +32,7 @@ import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.building.module.HedgesModule;
+import vazkii.quark.content.world.block.BlossomLeavesBlock;
 
 public class HedgeBlock extends FenceBlock implements IQuarkBlock, IBlockColorProvider {
 
@@ -47,7 +48,13 @@ public class HedgeBlock extends FenceBlock implements IQuarkBlock, IBlockColorPr
 		this.module = module;
 		this.leaf = leaf;
 
-		RegistryHelper.registerBlock(this, fence.getRegistryName().getPath().replaceAll("_fence", "_hedge"));
+		if (leaf instanceof BlossomLeavesBlock) {
+			String colorName = leaf.getRegistryName().getPath().replaceAll("_blossom_leaves", "");
+  		RegistryHelper.registerBlock(this, colorName + "_blossom_hedge");
+		} else {
+			RegistryHelper.registerBlock(this, fence.getRegistryName().getPath().replaceAll("_fence", "_hedge"));
+		}
+		
 		RegistryHelper.setCreativeTab(this, ItemGroup.DECORATIONS);
 
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
