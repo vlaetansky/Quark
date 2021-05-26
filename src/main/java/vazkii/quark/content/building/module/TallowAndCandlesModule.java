@@ -55,7 +55,7 @@ public class TallowAndCandlesModule extends QuarkModule {
 		for(DyeColor dye : DyeColor.values())
 			new CandleBlock(dye.getTranslationKey() + "_candle", this, dye);
 		
-		tallow_block = new QuarkBlock("tallow_block", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.YELLOW_TERRACOTTA).sound(SoundType.CLOTH));
+		tallow_block = new QuarkBlock("tallow_block", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.HONEYCOMB_BLOCK));
 	}
 
 	@SubscribeEvent
