@@ -351,7 +351,8 @@
 			"added": "1.14",
 			"desc": [
 				"Turf Blocks can be crafted using a few bits of Tall Grass.",
-				"These blocks have the grass texture and coloring on all sides, are available in stair and slab variants, and do not decay when a block is on top."
+				"These blocks have the grass texture and coloring on all sides, are available in stair and slab variants, and do not decay when a block is on top.",
+				"1.16+: Turf and Turf variants can hold any plants grass can, including Sugar Cane without nearby water if a Turf stair/slab is waterlogged."
 			]
 		},
 		{
@@ -421,7 +422,8 @@
 			"image": "cobblestone-bricks.jpg",
 			"added": "1.15",
 			"desc": [
-				"Cobblestone Bricks, as well as their mossy variants, are made just like you'd make Stone Bricks. They're a fancy new way to improve your rustic stone builds."
+				"Cobblestone Bricks and their mossy variants are made just like you'd make Stone Bricks, except with Cobblestone. They're a fancy new way to improve your rustic stone builds.",
+				"1.16+: Cobblestone Bricks can be combined with other blocks, as you can see in the image, to create new color variants."
 			]
 		},
 		{
@@ -489,6 +491,15 @@
 			"desc": [
 				"Stools can be created the same way you'd make a Bed, but using slabs instead of full wood blocks. As you can expect, you can sit on them!",
 				"Additional stool features include being able to place blocks over them, which makes them get bigger to match, and being able to stay on them even when moved by pistons."
+			]
+		},
+		{
+			"name": "Celebratory Lamps",
+			"image": "celebratory-lamps.jpg",
+			"added": "1.16.4",
+			"desc": [
+				"New Lamp blocks can be crafted with your block of choice, glass, and a torch. They come in Stone and Stone Brick variants, and emit a light level of 15.",
+				"These blocks are a celebration of Vazkii's Mods' 10th Anniversary, from 2011 through 2021, starting with the Lamps mod. Check out the <a href='https://vazkii.net/archive/mcf/'>Archive!</a>"
 			]
 		}
 	],
@@ -807,7 +818,8 @@
 			"added": "1.14",
             "desc": [
                 "Colored Runes are a rare loot item from dungeons, temples and nether fortresses. They can be applied to enchanted items in an anvil, and doing so changes the color of the enchantment glint from purple to the color of the rune. These come in all 16 colors of the spectrum.",
-                "If you're dedicated enough, you can craft a Rainbow Rune by mixing together the runes that make the colors of the rainbow. It'll change color over time and look really cool!"
+                "If you're dedicated enough, you can craft a Rainbow Rune by mixing together the runes that make the colors of the rainbow. It'll change color over time and look really cool!",
+                "1.16+: Runes can also change the color of a Lodestone Compass, to help you better find your way."
             ]
 		},
 		{
@@ -1092,6 +1104,14 @@
             "desc": [
                 "Water Buckets can now be given Infinity through an Anvil. When enchanted like this, if they ever cease to be a water bucket (whether they catch a fish or release the water), they'll immediately revert back to a normal, full, water bucket."
             ]
+		},
+		{
+			"name": "Lava Bucket Trash",
+			"image": "lava-bucket-trash.jpg",
+			"added": "1.16.4",
+            "desc": [
+                "Items can now be right clicked onto a Lava Bucket to destroy them forever. Shulker Boxes and items that are immune to fire (eg. Netherite) can not be destroyed this way."
+            ]
 		}
 	],
 	"world": [
@@ -1169,14 +1189,14 @@
 			]
 		},
 		{
-			"name": "Underground Biome: Crystal Cave",
+			"name": "Underground Biome: Corundum",
 			"image": "underground-biome-crystal-cave.jpg",
 			"added": "1.14",
 			"desc": [
-				"A new underground biome that spawns under any biome that isn't an Ocean - It comes with new Cave Crystals, fancy semi-transparent, light emitting blocks.",
-				"Each Crystal Cave will come with two colors of crystals, chosen from a pool of the seven colors that make up the rainbow, as well as white and black.",
-				"Cave Crystals can also be turned into pane variants, and crafted into Colored Runes (from the Tools category), if enabled.",
-				"Lastly, if placed deep underground, they'll grow up to 4 blocks tall, and will emit some particles to let you know they're growing."
+				"A new underground biome that spawns under any biome that isn't an Ocean - It comes with new Corundum Crystals, fancy semi-transparent, light emitting blocks.",
+				"Each Corundum Cave will come with two colors of crystals, chosen from a pool of the seven colors that make up the rainbow, as well as white and black.",
+				"Corundum can also be turned into pane variants, and crafted into Colored Runes (from the Tools category), if enabled. The Cluster variants are decorative only. Furthermore, if placed deep underground, they'll grow up to 4 blocks tall, and will emit some particles to let you know they're growing.",
+				"Note: Prior to 1.16.4, these were called Cave Crystals, with a different look."
 			]
 		},
 		{
@@ -1503,6 +1523,15 @@
 				"*Green: Thorns, Piercing",
 				"*Red: Fire Aspect, Flame",
 				"*Black: Smite, Projectile Protection"
+			]
+		},
+		{
+			"name": "Crate",
+			"image": "crate.jpg",
+			"added": "1.16.4",
+			"desc": [
+				"The Crate is an alternative storage block that can hold up to 640 items, regardless of stack size. A full stack of an item will take up 64, but 64 different items will also take up the same amount.",
+				"This makes the crate not very good for storing bulk items, but excellent for storing a high variety of items in one spot, or for collecting unstackables."
 			]
 		}
 	],
