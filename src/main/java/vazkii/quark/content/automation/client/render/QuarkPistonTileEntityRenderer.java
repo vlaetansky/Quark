@@ -23,7 +23,7 @@ import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 public class QuarkPistonTileEntityRenderer {
 
 	public static boolean renderPistonBlock(PistonTileEntity piston, float pTicks, MatrixStack matrix, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
-		if (!ModuleLoader.INSTANCE.isModuleEnabled(PistonsMoveTileEntitiesModule.class) || piston.getProgress(pTicks) > 1.0F)
+		if (!PistonsMoveTileEntitiesModule.staticEnabled || piston.getProgress(pTicks) > 1.0F) // TODO move this to a static get
 			return false;
 
 		BlockState state = piston.getPistonState();

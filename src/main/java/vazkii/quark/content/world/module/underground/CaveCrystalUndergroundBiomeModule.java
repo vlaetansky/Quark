@@ -1,16 +1,25 @@
 package vazkii.quark.content.world.module.underground;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.common.collect.Lists;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
+import net.minecraft.tileentity.BeaconTileEntity;
+import net.minecraft.tileentity.BeaconTileEntity.BeamSegment;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.util.math.vector.Vector3i;
+import net.minecraft.world.World;
+import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.common.BiomeDictionary;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.block.QuarkInheritedPaneBlock;
@@ -29,17 +38,17 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 	@Config.Min(value = 0)
 	@Config.Max(value = 1)
 	public static double crystalChance = 0.16;
-	
+
 	@Config
 	@Config.Min(value = 0)
 	@Config.Max(value = 1)
 	public static double crystalClusterChance = 0.2;
-	
+
 	@Config
 	@Config.Min(value = 0)
 	@Config.Max(value = 1)
 	public static double crystalClusterOnSidesChance = 0.6;
-	
+
 	@Config
 	@Config.Min(value = 0)
 	@Config.Max(value = 1)
@@ -51,9 +60,14 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 	@Config(flag = "cave_crystal_runes")
 	public static boolean crystalsCraftRunes = true;
 
+	@Config
+	public static boolean enableBeaconRedirection = true;
+
+	public static boolean staticEnabled;
+
 	public static List<CaveCrystalBlock> crystals = Lists.newArrayList();
 	public static ITag<Block> crystalTag;
-	
+
 	public static Block crystal(int floorIdx) {
 		return crystals.get(MathHelper.clamp(floorIdx, 0, crystals.size() - 1));
 	}
@@ -72,7 +86,7 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 
 		for(CaveCrystalBlock block : crystals)
 			new QuarkInheritedPaneBlock(block);
-		
+
 		for(CaveCrystalBlock block : crystals)
 			new CaveCrystalClusterBlock(block);
 
@@ -84,7 +98,12 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 		super.setup();
 		crystalTag = BlockTags.createOptional(new ResourceLocation(Quark.MOD_ID, "crystal"));
 	}
-	
+
+	@Override
+	public void configChanged() {
+		staticEnabled = enabled;
+	}
+
 	@Override
 	protected String getBiomeName() {
 		return "crystal";
@@ -94,6 +113,112 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 	protected UndergroundBiomeConfig getBiomeConfig() {
 		return new UndergroundBiomeConfig(new CaveCrystalUndergroundBiome(), 400, true, BiomeDictionary.Type.OCEAN)
 				.setDefaultSize(42, 18, 22, 8);
+	}
+
+	// The value that comes out of this is fed onto a constant for the FOR loop that
+	// computes the beacon segments, so we return 0 to run that code, or MAX_VALUE to not
+	public static int tickBeacon(BeaconTileEntity beacon) {
+		if(!staticEnabled || !enableBeaconRedirection)
+			return 0; 
+
+		World world = beacon.getWorld();
+		BlockPos beaconPos = beacon.getPos();
+		BlockPos currPos = beaconPos;
+
+		int horizontalMoves = 64;
+		int targetHeight = world.getHeight(Heightmap.Type.WORLD_SURFACE, beaconPos.getX(), beaconPos.getZ());
+
+		beacon.beamColorSegments.clear();
+		boolean broke = false;
+		
+		float[] currColor = new float[] { 1, 1, 1 };
+		ExtendedBeamSegment currSegment = new ExtendedBeamSegment(Direction.UP, Vector3i.NULL_VECTOR, currColor);
+
+		while(currPos.getY() < 256 && horizontalMoves > 0) {
+			currPos = currPos.offset(currSegment.dir);
+			if(currSegment.dir.getAxis().isHorizontal())
+				horizontalMoves--;
+
+			BlockState blockstate = world.getBlockState(currPos);
+			Block block = blockstate.getBlock();
+			float[] targetColor = blockstate.getBeaconColorMultiplier(world, currPos, beaconPos);
+
+			if(block instanceof CaveCrystalClusterBlock) {
+				Direction dir = blockstate.get(CaveCrystalClusterBlock.FACING);
+				if(dir == currSegment.dir)
+					currSegment.incrementHeight();
+				else {
+					beacon.beamColorSegments.add(currSegment);
+					
+					targetColor = ((CaveCrystalClusterBlock) block).base.colorComponents;
+					if(targetColor[0] == 1F && targetColor[1] == 1F && targetColor[2] == 1F)
+						targetColor = currColor;
+					
+					float[] mixedColor = new float[]{(currColor[0] + targetColor[0] * 3) / 4.0F, (currColor[1] + targetColor[1] * 3) / 4.0F, (currColor[2] + targetColor[2] * 3) / 4.0F};
+					currColor = mixedColor;
+					currSegment = new ExtendedBeamSegment(dir, currPos.subtract(beaconPos), currColor);
+				}
+			} else if(targetColor != null) {
+				if(Arrays.equals(targetColor, currColor))
+					currSegment.incrementHeight();
+				else {
+					beacon.beamColorSegments.add(currSegment);
+
+					float[] mixedColor = new float[]{(currColor[0] + targetColor[0]) / 2.0F, (currColor[1] + targetColor[1]) / 2.0F, (currColor[2] + targetColor[2]) / 2.0F};
+					currColor = mixedColor;
+					currSegment = new ExtendedBeamSegment(currSegment.dir, currPos.subtract(beaconPos), mixedColor);
+				}
+			} else {
+				if (blockstate.getOpacity(world, currPos) >= 15 || block == Blocks.BEDROCK) {
+					broke = true;
+					break;
+				}
+
+				currSegment.incrementHeight();
+			}
+		}
+		
+		if(horizontalMoves == 0)
+			broke = true;
+
+		if(!broke) {
+			beacon.beamColorSegments.add(currSegment);
+			beacon.beaconSize = targetHeight + 1;
+		} else {
+			beacon.beamColorSegments.clear();
+			beacon.beaconSize = targetHeight;
+		}
+		
+
+		return Integer.MAX_VALUE;
+	}
+
+	public static class ExtendedBeamSegment extends BeamSegment {
+
+		public final Direction dir;
+		public final Vector3i offset;
+		
+		private boolean isTurn = false;
+
+		public ExtendedBeamSegment(Direction dir, Vector3i offset, float[] colorsIn) {
+			super(colorsIn);
+			this.offset = offset;
+			this.dir = dir;
+		}
+
+		public void makeTurn() {
+			isTurn = true;
+		}
+		
+		public boolean isTurn() {
+			return isTurn;
+		}
+		
+		@Override
+		public void incrementHeight() { // increase visibility
+			super.incrementHeight();
+		}
+
 	}
 
 }

@@ -45,6 +45,8 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 	@Config
 	public static boolean enableChestsMovingTogether = true;
 	
+	public static boolean staticEnabled;
+	
 	@Config
 	public static List<String> renderBlacklist = Lists.newArrayList("psi:programmer", "botania:starfield");
 	@Config
@@ -55,6 +57,11 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 	@Override
 	public void construct() {
 		IIndirectConnector.INDIRECT_STICKY_BLOCKS.add(Pair.of(ChestConnection.PREDICATE, ChestConnection.INSTANCE));
+	}
+	
+	@Override
+	public void configChanged() {
+		staticEnabled = enabled;
 	}
 	
 	@SubscribeEvent

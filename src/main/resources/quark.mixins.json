@@ -24,7 +24,8 @@
     "StructureStartMixin",
     "TemplateMixin",
     "LanternBlockMixin",
-    "PlayerAdvancementsMixin"
+    "PlayerAdvancementsMixin",
+    "BeaconTileEntityMixin"
   ],
   "client": [
     "client.BipedArmorLayerMixin",
@@ -36,7 +37,8 @@
     "client.RenderTypeBuffersMixin",
     "client.ScreenMixin",
     "client.ContainerScreenMixin",
-    "client.TridentRendererMixin"
+    "client.TridentRendererMixin",
+    "client.BeaconTileEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
