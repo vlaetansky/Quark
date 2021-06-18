@@ -262,19 +262,10 @@ public class StonelingEntity extends CreatureEntity {
 		dataManager.set(HOLD_ANGLE, world.getRandom().nextFloat() * 90 - 45);
 
 		if(!isTame && !world.isRemote() && world instanceof IForgeWorldServer) {
-			if (ModuleLoader.INSTANCE.isModuleEnabled(FrogsModule.class) && rand.nextDouble() < 0.01) {
-				FrogEntity frog = new FrogEntity(FrogsModule.frogType, world.getWorld(), 0.25f);
-				Vector3d pos = getPositionVec();
-
-				frog.setPosition(pos.x, pos.y, pos.z);
-				world.addEntity(frog);
-				frog.startRiding(this);
-			} else {
-				List<ItemStack> items = ((IForgeWorldServer) world).getWorldServer().getServer().getLootTableManager()
-						.getLootTableFromLocation(CARRY_LOOT_TABLE).generate(new LootContext.Builder((ServerWorld) world).build(LootParameterSets.EMPTY));
-				if (!items.isEmpty())
-					dataManager.set(CARRYING_ITEM, items.get(0));
-			}
+			List<ItemStack> items = ((IForgeWorldServer) world).getWorldServer().getServer().getLootTableManager()
+					.getLootTableFromLocation(CARRY_LOOT_TABLE).generate(new LootContext.Builder((ServerWorld) world).build(LootParameterSets.EMPTY));
+			if (!items.isEmpty())
+				dataManager.set(CARRYING_ITEM, items.get(0));
 		}
 
 		return super.onInitialSpawn(world, difficulty, spawnReason, data, compound);
