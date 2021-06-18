@@ -8,6 +8,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import vazkii.arl.item.BasicItem;
+import vazkii.quark.base.client.handler.RequiredModTooltipHandler;
 import vazkii.quark.base.module.QuarkModule;
 
 public class QuarkItem extends BasicItem implements IQuarkItem {
@@ -18,6 +19,9 @@ public class QuarkItem extends BasicItem implements IQuarkItem {
 	public QuarkItem(String regname, QuarkModule module, Properties properties) {
 		super(regname, properties);
 		this.module = module;
+		
+		if(module.category.isAddon())
+			RequiredModTooltipHandler.map(this, module.category.requiredMod);
 	}
 
 	@Override

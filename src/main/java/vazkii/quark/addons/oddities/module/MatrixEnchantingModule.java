@@ -42,7 +42,7 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 
-@LoadModule(category = ModuleCategory.ODDITIES, requiredMod = Quark.ODDITIES_ID, hasSubscriptions = true)
+@LoadModule(category = ModuleCategory.ODDITIES, hasSubscriptions = true)
 public class MatrixEnchantingModule extends QuarkModule {
 
 	public static TileEntityType<MatrixEnchantingTableTileEntity> tileEntityType;

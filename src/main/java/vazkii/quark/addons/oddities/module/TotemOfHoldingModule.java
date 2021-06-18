@@ -38,7 +38,7 @@ import vazkii.quark.base.module.config.Config;
  * @author WireSegal
  * Created at 1:21 PM on 3/30/20.
  */
-@LoadModule(category = ModuleCategory.ODDITIES, requiredMod = Quark.ODDITIES_ID, hasSubscriptions = true)
+@LoadModule(category = ModuleCategory.ODDITIES, hasSubscriptions = true)
 public class TotemOfHoldingModule extends QuarkModule {
     private static final String TAG_LAST_TOTEM = "quark:lastTotemOfHolding";
 
@@ -88,8 +88,6 @@ public class TotemOfHoldingModule extends QuarkModule {
         RenderingRegistry.registerEntityRenderingHandler(totemType, TotemOfHoldingRenderer::new);
         
 		ItemModelsProperties.registerProperty(soulCompass, new ResourceLocation("angle"), SoulCompassItem::angle);
-		
-		RequiredModTooltipHandler.map(soulCompass, Quark.ODDITIES_ID);
     }
 
     @Override

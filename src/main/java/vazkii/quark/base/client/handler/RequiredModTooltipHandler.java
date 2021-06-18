@@ -19,18 +19,25 @@ import vazkii.quark.base.Quark;
 public class RequiredModTooltipHandler {
 
 	private static Map<Item, String> ITEMS = new HashMap<>();
-	
+	private static Map<Block, String> BLOCKS = new HashMap<>();
+
 	public static void map(Item item, String mod) {
 		ITEMS.put(item, mod);
 	}
 	
 	public static void map(Block block, String mod) {
-		ITEMS.put(block.asItem(), mod);
+		BLOCKS.put(block, mod);
 	}
 	
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void onTooltip(ItemTooltipEvent event) {
+		if(!BLOCKS.isEmpty() && event.getPlayer().world != null) {
+			for(Block b : BLOCKS.keySet())
+				ITEMS.put(b.asItem(), BLOCKS.get(b));
+			BLOCKS.clear();
+		}
+		
 		Item item = event.getItemStack().getItem();
 		if(ITEMS.containsKey(item)) {
 			String mod = ITEMS.get(item);

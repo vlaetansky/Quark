@@ -19,6 +19,7 @@ public enum ModuleCategory {
 	MOBS("mobs", Items.PIG_SPAWN_EGG),
 	CLIENT("client", Items.ENDER_EYE),
 	ODDITIES("oddities", Items.CHORUS_FRUIT, Quark.ODDITIES_ID),
+	TITOR("titor", Items.CLOCK, Quark.TITOR_ID),
 	EXPERIMENTAL("experimental", Items.TNT);
 	
 	public final String name;
@@ -46,6 +47,10 @@ public enum ModuleCategory {
 	
 	public List<QuarkModule> getOwnedModules() {
 		return ownedModules;
+	}
+	
+	public boolean isAddon() {
+		return requiredMod != null;
 	}
 	
 }

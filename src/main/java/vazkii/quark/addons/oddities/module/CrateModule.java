@@ -21,7 +21,7 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 
-@LoadModule(category = ModuleCategory.ODDITIES, requiredMod = Quark.ODDITIES_ID)
+@LoadModule(category = ModuleCategory.ODDITIES)
 public class CrateModule extends QuarkModule {
 
     public static TileEntityType<CrateTileEntity> crateType;
@@ -46,8 +46,6 @@ public class CrateModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
 		ScreenManager.registerFactory(containerType, CrateScreen::new);
-		
-		RequiredModTooltipHandler.map(crate, Quark.ODDITIES_ID);
 	}
 	
 }

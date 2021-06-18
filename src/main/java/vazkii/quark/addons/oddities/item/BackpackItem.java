@@ -50,6 +50,7 @@ import vazkii.quark.addons.oddities.client.model.BackpackModel;
 import vazkii.quark.addons.oddities.container.BackpackContainer;
 import vazkii.quark.addons.oddities.module.BackpackModule;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.client.handler.RequiredModTooltipHandler;
 import vazkii.quark.base.handler.ProxiedItemStackHandler;
 import vazkii.quark.base.item.IQuarkItem;
 import vazkii.quark.base.module.QuarkModule;
@@ -75,6 +76,9 @@ public class BackpackItem extends DyeableArmorItem implements IQuarkItem, IItemC
 
 		RegistryHelper.registerItem(this, "backpack");
 		this.module = module;
+		
+		if(module.category.isAddon())
+			RequiredModTooltipHandler.map(this, module.category.requiredMod);
 	}
 
 	@Override

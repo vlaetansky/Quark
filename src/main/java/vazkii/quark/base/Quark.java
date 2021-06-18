@@ -15,7 +15,8 @@ public class Quark {
 
 	public static final String MOD_ID = "quark";
 	public static final String ODDITIES_ID = "quarkoddities";
-	
+	public static final String TITOR_ID = "quarktitor";
+
 	public static final boolean DEBUG_MODE = ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
 	
 	public static Quark instance;

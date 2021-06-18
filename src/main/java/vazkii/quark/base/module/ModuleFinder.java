@@ -41,8 +41,10 @@ public final class ModuleFinder {
 			QuarkModule moduleObj = (QuarkModule) clazz.newInstance();
 			
 			Map<String, Object> vals = target.getAnnotationData();
-			if(vals.containsKey("requiredMod")) {
-				String mod = (String) vals.get("requiredMod");	
+			ModuleCategory category = getOrMakeCategory((ModAnnotation.EnumHolder) vals.get("category"));
+			
+			if(category.isAddon()) {
+				String mod = category.requiredMod;
 				if(mod != null && !mod.isEmpty() && !ModList.get().isLoaded(mod))
 					moduleObj.missingDep = true;
 			}
@@ -75,8 +77,8 @@ public final class ModuleFinder {
 			if(vals.containsKey("enabledByDefault"))
 				moduleObj.enabledByDefault = (Boolean) vals.get("enabledByDefault");
 			
-			ModuleCategory category = getOrMakeCategory((ModAnnotation.EnumHolder) vals.get("category"));
 			category.addModule(moduleObj);
+			moduleObj.category = category;
 			
 			foundModules.put((Class<? extends QuarkModule>) clazz, moduleObj);
 		} catch(ReflectiveOperationException e) {

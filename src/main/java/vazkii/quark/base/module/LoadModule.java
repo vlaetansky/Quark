@@ -14,7 +14,6 @@ public @interface LoadModule {
 	ModuleCategory category();
 	
 	String name() default "";
-	String requiredMod() default "";
 	String description() default "";
 	String[] antiOverlap() default { };
 

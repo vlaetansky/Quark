@@ -22,7 +22,7 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 
-@LoadModule(category = ModuleCategory.ODDITIES, requiredMod = Quark.ODDITIES_ID)
+@LoadModule(category = ModuleCategory.ODDITIES)
 public class MagnetsModule extends QuarkModule {
 	
     public static TileEntityType<MagnetTileEntity> magnetType;
@@ -53,9 +53,6 @@ public class MagnetsModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
 		ClientRegistry.bindTileEntityRenderer(magnetizedBlockType, MagnetizedBlockTileEntityRenderer::new);
-		
-		RequiredModTooltipHandler.map(magnet, Quark.ODDITIES_ID);
-		RequiredModTooltipHandler.map(magnetized_block, Quark.ODDITIES_ID);
 	}
 	
 }

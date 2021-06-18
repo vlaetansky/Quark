@@ -19,7 +19,7 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 
-@LoadModule(category = ModuleCategory.ODDITIES, requiredMod = Quark.ODDITIES_ID)
+@LoadModule(category = ModuleCategory.ODDITIES)
 public class PipesModule extends QuarkModule {
 
     public static TileEntityType<PipeTileEntity> tileEntityType;
@@ -54,8 +54,6 @@ public class PipesModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
 		ClientRegistry.bindTileEntityRenderer(tileEntityType, PipeTileEntityRenderer::new);
-		
-		RequiredModTooltipHandler.map(pipe, Quark.ODDITIES_ID);
 	}
 
     @Override

@@ -51,6 +51,7 @@
 	"quark.category.mobs": "Mobs",
 	"quark.category.client": "Client",
 	"quark.category.oddities": "Oddities",
+	"quark.category.titor": "Titor",
 	"quark.category.experimental": "Experimental",
 
 	"quark.camera.filter": "Filter: ",
@@ -303,6 +304,10 @@
 	"item.quark.seed_pouch": "Seed Pouch",
 	"item.quark.forgotten_hat": "Forgotten Hat",
 	"item.quark.soul_bead": "Soul Bead",
+
+	"__titor_items": "",
+	"item.quark.raw_gold": "Raw Gold",
+	"item.quark.raw_iron": "Raw Iron",
 
 	"item.quark.music_disc_tedium": "Music Disc",
 	"item.quark.music_disc_tedium.desc": "Kain Vinosec - Tedium",
@@ -1107,6 +1112,10 @@
 	"block.quark.vanilla_basalt_bricks": "Basalt Bricks",
 	"block.quark.stone_lamp": "Stone Lamp",
 	"block.quark.stone_brick_lamp": "Stone Brick Lamp",
+
+	"__titor_blocks": "",
+	"block.quark.raw_gold_block": "Raw Gold Block",
+	"block.quark.raw_iron_block": "Raw Iron Block",
 
 	"item.quark.stoneling_spawn_egg": "Stoneling Spawn Egg",
 	"item.quark.frog_spawn_egg": "Frog Spawn Egg",

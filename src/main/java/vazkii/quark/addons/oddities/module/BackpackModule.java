@@ -46,7 +46,7 @@ import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.HandleBackpackMessage;
 
-@LoadModule(category = ModuleCategory.ODDITIES, hasSubscriptions = true, requiredMod = Quark.ODDITIES_ID)
+@LoadModule(category = ModuleCategory.ODDITIES, hasSubscriptions = true)
 public class BackpackModule extends QuarkModule {
 
 	@Config(description =  "Set this to true to allow the backpacks to be unequipped even with items in them") 
@@ -90,10 +90,6 @@ public class BackpackModule extends QuarkModule {
 		
 		ItemModelsProperties.registerProperty(backpack, new ResourceLocation("has_items"), 
 				(stack, world, entity) -> (!BackpackModule.superOpMode && BackpackItem.doesBackpackHaveItems(stack)) ? 1 : 0);
-		
-		RequiredModTooltipHandler.map(backpack, Quark.ODDITIES_ID);
-		RequiredModTooltipHandler.map(ravager_hide, Quark.ODDITIES_ID);
-		RequiredModTooltipHandler.map(bonded_ravager_hide, Quark.ODDITIES_ID);
 	}
 	
 	@SubscribeEvent

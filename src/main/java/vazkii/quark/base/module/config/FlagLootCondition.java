@@ -1,14 +1,15 @@
 package vazkii.quark.base.module.config;
 
+import javax.annotation.Nonnull;
+
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
+
 import net.minecraft.loot.ILootSerializer;
 import net.minecraft.loot.LootConditionType;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.conditions.ILootCondition;
-
-import javax.annotation.Nonnull;
 
 /**
  * @author WireSegal
@@ -17,16 +18,18 @@ import javax.annotation.Nonnull;
 public class FlagLootCondition implements ILootCondition {
 
     private final ConfigFlagManager manager;
+    private final boolean inverted;
     private final String flag;
 
-    public FlagLootCondition(ConfigFlagManager manager, String flag) {
+    public FlagLootCondition(ConfigFlagManager manager, boolean inverted, String flag) {
         this.manager = manager;
+        this.inverted = inverted;
         this.flag = flag;
     }
 
     @Override
     public boolean test(LootContext lootContext) {
-        return manager.getFlag(flag);
+        return manager.getFlag(flag) != inverted;
     }
     
 
@@ -52,7 +55,9 @@ public class FlagLootCondition implements ILootCondition {
         @Nonnull
         @Override
         public FlagLootCondition deserialize(@Nonnull JsonObject json, @Nonnull JsonDeserializationContext context) {
-            return new FlagLootCondition(manager, json.getAsJsonPrimitive("flag").getAsString());
+        	boolean inverted = json.has("inverted") ? json.get("inverted").getAsBoolean() : false;
+        	String flag = json.getAsJsonPrimitive("flag").getAsString();
+            return new FlagLootCondition(manager, inverted, flag);
         }
     }
 
