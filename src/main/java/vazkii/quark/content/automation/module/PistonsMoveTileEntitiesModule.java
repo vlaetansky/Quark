@@ -263,7 +263,6 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 		
 		@Override
 		public boolean canConnectIndirectly(World world, BlockPos ourPos, BlockPos sourcePos, BlockState ourState, BlockState sourceState) {
-			System.out.println("test");
 			ChestType ourType = ourState.get(ChestBlock.TYPE);
 			
 			Direction baseDirection = ourState.get(ChestBlock.FACING);

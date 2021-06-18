@@ -3,6 +3,8 @@ package vazkii.quark.content.world.module.underground;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.google.common.collect.Lists;
 
 import net.minecraft.block.Block;
@@ -21,11 +23,13 @@ import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.common.BiomeDictionary;
+import vazkii.quark.api.IIndirectConnector;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.block.QuarkInheritedPaneBlock;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
+import vazkii.quark.content.automation.module.ChainsConnectBlocksModule.ChainConnection;
 import vazkii.quark.content.world.block.CaveCrystalBlock;
 import vazkii.quark.content.world.block.CaveCrystalClusterBlock;
 import vazkii.quark.content.world.config.UndergroundBiomeConfig;
@@ -60,8 +64,8 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 	@Config(flag = "cave_crystal_runes")
 	public static boolean crystalsCraftRunes = true;
 
-	@Config
-	public static boolean enableBeaconRedirection = true;
+	@Config public static boolean enableBeaconRedirection = true;
+	@Config public static boolean enableCollateralMovement = true;
 
 	public static boolean staticEnabled;
 
@@ -87,8 +91,12 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 		for(CaveCrystalBlock block : crystals)
 			new QuarkInheritedPaneBlock(block);
 
-		for(CaveCrystalBlock block : crystals)
-			new CaveCrystalClusterBlock(block);
+		for(CaveCrystalBlock block : crystals) {
+			CaveCrystalClusterBlock cluster = new CaveCrystalClusterBlock(block);
+			
+			ClusterConnection connection = new ClusterConnection(cluster);
+			IIndirectConnector.INDIRECT_STICKY_BLOCKS.add(Pair.of(connection::isValidState, connection));
+		}
 
 		super.construct();
 	}
@@ -134,7 +142,7 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 		float[] currColor = new float[] { 1, 1, 1 };
 		ExtendedBeamSegment currSegment = new ExtendedBeamSegment(Direction.UP, Vector3i.NULL_VECTOR, currColor);
 
-		while(currPos.getY() < 256 && horizontalMoves > 0) {
+		while(currPos.getY() < 256 && currPos.getY() > 0 && horizontalMoves > 0) {
 			currPos = currPos.offset(currSegment.dir);
 			if(currSegment.dir.getAxis().isHorizontal())
 				horizontalMoves--;
@@ -178,7 +186,7 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 			}
 		}
 		
-		if(horizontalMoves == 0)
+		if(horizontalMoves == 0 || currPos.getY() <= 0)
 			broke = true;
 
 		if(!broke) {
@@ -221,4 +229,32 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 
 	}
 
+	public static class ClusterConnection implements IIndirectConnector {
+
+		final CaveCrystalClusterBlock cluster;
+		
+		public ClusterConnection(CaveCrystalClusterBlock cluster) {
+			this.cluster = cluster;
+		}
+		
+		@Override
+		public boolean isEnabled() {
+			return enableCollateralMovement;
+		}
+		
+		private boolean isValidState(BlockState state) {
+			return state.getBlock() == cluster; 
+		}
+		
+		@Override
+		public boolean canConnectIndirectly(World world, BlockPos ourPos, BlockPos sourcePos, BlockState ourState, BlockState sourceState) {
+			BlockPos offsetPos = ourPos.offset(ourState.get(CaveCrystalClusterBlock.FACING).getOpposite());
+			if(!offsetPos.equals(sourcePos))
+				return false;
+			
+			return sourceState.getBlock() == cluster.base;
+		}
+		
+	}
+	
 }
