@@ -15,7 +15,9 @@ import javax.annotation.Nonnull;
 import com.google.common.base.Predicates;
 import com.google.common.base.Throwables;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
@@ -52,12 +54,12 @@ import net.minecraftforge.client.event.GuiScreenEvent.KeyboardKeyPressedEvent;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.config.gui.AbstractQScreen;
 
@@ -107,6 +109,20 @@ public class MiscUtil {
 	public static final String[] NETHER_WOOD_TYPES = new String[] {
 			"crimson",
 			"warped"
+	};
+	
+	public static final Block[] OVERWORLD_WOOD_OBJECTS = new Block[] {
+			Blocks.OAK_PLANKS,
+			Blocks.SPRUCE_PLANKS,
+			Blocks.BIRCH_PLANKS,
+			Blocks.JUNGLE_PLANKS,
+			Blocks.ACACIA_PLANKS, 
+			Blocks.DARK_OAK_PLANKS
+	};
+
+	public static final Block[] NETHER_WOOD_OBJECTS = new Block[] {
+			Blocks.CRIMSON_PLANKS,
+			Blocks.WARPED_PLANKS
 	};
 
 	public static void addToLootTable(LootTable table, LootEntry entry) {
