@@ -18,18 +18,16 @@ import net.minecraft.loot.conditions.ILootCondition;
 public class FlagLootCondition implements ILootCondition {
 
     private final ConfigFlagManager manager;
-    private final boolean inverted;
     private final String flag;
 
-    public FlagLootCondition(ConfigFlagManager manager, boolean inverted, String flag) {
+    public FlagLootCondition(ConfigFlagManager manager, String flag) {
         this.manager = manager;
-        this.inverted = inverted;
         this.flag = flag;
     }
 
     @Override
     public boolean test(LootContext lootContext) {
-        return manager.getFlag(flag) != inverted;
+        return manager.getFlag(flag);
     }
     
 
@@ -55,9 +53,8 @@ public class FlagLootCondition implements ILootCondition {
         @Nonnull
         @Override
         public FlagLootCondition deserialize(@Nonnull JsonObject json, @Nonnull JsonDeserializationContext context) {
-        	boolean inverted = json.has("inverted") ? json.get("inverted").getAsBoolean() : false;
         	String flag = json.getAsJsonPrimitive("flag").getAsString();
-            return new FlagLootCondition(manager, inverted, flag);
+            return new FlagLootCondition(manager, flag);
         }
     }
 
