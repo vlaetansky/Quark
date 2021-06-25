@@ -10,7 +10,6 @@ import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -20,13 +19,14 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
+import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
+import vazkii.quark.base.module.config.Config;
 import vazkii.quark.content.building.client.render.ColoredItemFrameRenderer;
 import vazkii.quark.content.building.client.render.GlassItemFrameRenderer;
 import vazkii.quark.content.building.entity.ColoredItemFrameEntity;
 import vazkii.quark.content.building.entity.GlassItemFrameEntity;
 import vazkii.quark.content.building.item.QuarkItemFrameItem;
-import vazkii.quark.base.module.ModuleCategory;
 
 /**
  * @author WireSegal
@@ -34,6 +34,8 @@ import vazkii.quark.base.module.ModuleCategory;
  */
 @LoadModule(category = ModuleCategory.BUILDING)
 public class ItemFramesModule extends QuarkModule {
+
+	@Config public static boolean glassItemFramesUpdateMaps = true;
 	
     public static Item glassFrame;
     public static Item glowingGlassFrame;

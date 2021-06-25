@@ -1,15 +1,19 @@
 package vazkii.quark.content.building.entity;
 
+import java.util.UUID;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.mojang.authlib.GameProfile;
+
 import net.minecraft.block.BlockState;
-import net.minecraft.block.ChestBlock;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.item.ItemFrameEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BannerItem;
+import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -29,14 +33,13 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.storage.MapData;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.SlotItemHandler;
+import vazkii.quark.base.util.MovableFakePlayer;
 import vazkii.quark.content.building.module.ItemFramesModule;
 
 public class GlassItemFrameEntity extends ItemFrameEntity implements IEntityAdditionalSpawnData {
@@ -46,6 +49,7 @@ public class GlassItemFrameEntity extends ItemFrameEntity implements IEntityAddi
 	private static final String TAG_SHINY = "isShiny";
 	
 	private boolean didHackery = false;
+	private FakePlayer fakePlayer = null;
 
 	public GlassItemFrameEntity(EntityType<? extends GlassItemFrameEntity> type, World worldIn) {
 		super(type, worldIn);
@@ -74,6 +78,33 @@ public class GlassItemFrameEntity extends ItemFrameEntity implements IEntityAddi
 		}
 		
 		return super.processInitialInteract(player, hand);
+	}
+	
+	@Override
+	public void tick() {
+		super.tick();
+		
+		if(ItemFramesModule.glassItemFramesUpdateMaps) {
+			ItemStack stack = getDisplayedItem();
+			if(stack.getItem() instanceof FilledMapItem && world instanceof ServerWorld) {
+				ServerWorld sworld = (ServerWorld) world;
+				ItemStack clone = stack.copy();
+
+				MapData data = FilledMapItem.getMapData(clone, world);
+				if(data != null && !data.locked) {
+					if(fakePlayer == null)
+						fakePlayer = new MovableFakePlayer(sworld, new GameProfile(UUID.randomUUID(), "ItemFrame"));
+					
+					FilledMapItem item = (FilledMapItem) stack.getItem();
+					
+					clone.setAttachedEntity(null);
+					fakePlayer.setPosition(getPosX(), getPosY(), getPosZ());
+					fakePlayer.inventory.setInventorySlotContents(0, clone);
+					
+					item.updateMapData(world, fakePlayer, data);
+				}
+			}
+		}
 	}
 
 	@Override
