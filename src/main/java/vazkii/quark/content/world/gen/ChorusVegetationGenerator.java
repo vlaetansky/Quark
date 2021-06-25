@@ -30,7 +30,7 @@ public class ChorusVegetationGenerator extends MultiChunkFeatureGenerator {
 	@Override
 	public BlockPos[] getSourcesInChunk(WorldGenRegion world, Random random, ChunkGenerator generator, BlockPos chunkCorner) {
 		if(!chunkCorner.withinDistance(Vector3i.NULL_VECTOR, 1050) && ChorusVegetationModule.rarity > 0 && random.nextInt(ChorusVegetationModule.rarity) == 0) {
-			Biome b = getBiome(world, chunkCorner);
+			Biome b = getBiome(world, chunkCorner, true);
 			if(b.getRegistryName().equals(Biomes.END_HIGHLANDS.getLocation()))
 				return new BlockPos[] { chunkCorner };
 		}
@@ -43,7 +43,7 @@ public class ChorusVegetationGenerator extends MultiChunkFeatureGenerator {
 		for(int i = 0; i < ChorusVegetationModule.chunkAttempts; i++) {
 			BlockPos placePos = pos.add(rand.nextInt(16), 100, rand.nextInt(16));
 			
-			Biome b = getBiome(worldIn, placePos);
+			Biome b = getBiome(worldIn, placePos, true);
 			double chance = getChance(b);
 			
 			double dist = ((placePos.getX() - src.getX()) * (placePos.getX() - src.getX())) + ((placePos.getZ() - src.getZ()) * (placePos.getZ() - src.getZ()));

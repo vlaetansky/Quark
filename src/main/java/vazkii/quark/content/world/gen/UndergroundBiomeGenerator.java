@@ -46,7 +46,7 @@ public class UndergroundBiomeGenerator extends ClusterBasedGenerator {
 
 	@Override
 	public boolean isSourceValid(WorldGenRegion world, ChunkGenerator generator, BlockPos pos) {
-		Biome biome = getBiome(world, pos);
+		Biome biome = getBiome(world, pos, true);
 		return info.biomes.canSpawn(biome);
 	}
 	

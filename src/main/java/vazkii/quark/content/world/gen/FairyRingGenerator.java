@@ -29,7 +29,7 @@ public class FairyRingGenerator extends Generator {
 		int z = corner.getZ() + rand.nextInt(16);
 		BlockPos center = new BlockPos(x, 128, z);
 		
-		Biome biome = getBiome(worldIn, center);
+		Biome biome = getBiome(worldIn, center, false);
 		
 		Biome.Category category = biome.getCategory();
 		double chance = 0;

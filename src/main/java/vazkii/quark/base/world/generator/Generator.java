@@ -45,8 +45,12 @@ public abstract class Generator implements IGenerator {
 		return condition.getAsBoolean() && dimConfig.canSpawnHere(world.getWorld());
 	}
 	
-	public Biome getBiome(IWorld world, BlockPos pos) {
-		return world.getBiomeManager().getBiome(pos);
+	public Biome getBiome(IWorld world, BlockPos pos, boolean offset) {
+		// Move the position over to the top of the world to ensure it doesn't clip into potential
+		// mod-added underground biomes
+		
+		BlockPos testPos = offset ? new BlockPos(pos.getX(), world.getHeight() - 1, pos.getZ()) : pos;
+		return world.getBiomeManager().getBiome(testPos);
 	}
 	
 	protected boolean isNether(IWorld world) {

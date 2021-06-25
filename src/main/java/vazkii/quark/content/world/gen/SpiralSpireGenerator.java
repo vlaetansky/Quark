@@ -32,7 +32,7 @@ public class SpiralSpireGenerator extends MultiChunkFeatureGenerator {
 			return;
 		
 		BlockPos pos = chunkCorner.add(random.nextInt(16), 256, random.nextInt(16));
-		Biome biome = getBiome(world, pos);
+		Biome biome = getBiome(world, pos, false);
 		if(!SpiralSpiresModule.biomes.canSpawn(biome))
 			return;
 		

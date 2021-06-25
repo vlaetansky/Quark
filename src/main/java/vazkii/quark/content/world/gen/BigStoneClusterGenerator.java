@@ -26,7 +26,7 @@ public class BigStoneClusterGenerator extends ClusterBasedGenerator {
 
 	@Override
 	public boolean isSourceValid(WorldGenRegion world, ChunkGenerator generator, BlockPos pos) {
-		return config.biomes.canSpawn(getBiome(world, pos));
+		return config.biomes.canSpawn(getBiome(world, pos, true));
 	}
 
 	@Override
