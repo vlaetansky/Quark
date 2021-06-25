@@ -69,7 +69,7 @@ public class AbacusModule extends QuarkModule {
 
 						mc.getItemRenderer().renderItemAndEffectIntoGUI(stack, x, y);
 						
-						String distStr = distance < AbacusItem.MAX_COUNT ? Integer.toString(distance) : (distance + "+");
+						String distStr = distance < AbacusItem.MAX_COUNT ? Integer.toString(distance) : (AbacusItem.MAX_COUNT + "+");
 						mc.fontRenderer.drawStringWithShadow(event.getMatrixStack(), distStr, x + 17, y + 5, 0xFFFFFF);
 					}
 				}
