@@ -1,5 +1,6 @@
 package vazkii.quark.content.building.module;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -98,8 +99,10 @@ public class VariantChestsModule extends QuarkModule {
 			 "minecraft:ruined_portal=quark:crimson_chest",
 			 "minecraft:bastion_remnant=quark:crimson_chest",
 			 "minecraft:fortress=quark:nether_brick_chest",
-			 "minecraft:endcity=quark:purpur_chest",
-			 "bettermineshafts:mineshaft=quark:oak_chest",
+			 "minecraft:endcity=quark:purpur_chest");
+	
+	private static final List<String> BUILT_IN_MOD_STRUCTURES = Arrays.asList(
+			"bettermineshafts:mineshaft=quark:oak_chest",
 			 "betterstrongholds:stronghold=quark:oak_chest",
 			 "cobbler:shulker_factory=quark:purpur_chest",
 			 "conjurer_illager:theatre=quark:dark_oak_chest",
@@ -166,7 +169,7 @@ public class VariantChestsModule extends QuarkModule {
 			 "repurposed_structures:outpost_oak=quark:oak_chest",
 			 "repurposed_structures:outpost_snowy=quark:spruce_chest",
 			 "repurposed_structures:outpost_taiga=quark:spruce_chest",
- 			 "repurposed_structures:outpost_warped=quark:warped_chest",
+			 "repurposed_structures:outpost_warped=quark:warped_chest",
 			 "repurposed_structures:pyramid_badlands=quark:dark_oak_trapped_chest",
 			 "repurposed_structures:pyramid_end=quark:purpur_chest",
 			 "repurposed_structures:pyramid_flower_forest=quark:oak_chest",
@@ -183,23 +186,23 @@ public class VariantChestsModule extends QuarkModule {
 			 "repurposed_structures:ruins_nether=quark:nether_brick_chest",
 			 "repurposed_structures:shipwreck_crimson=quark:crimson_chest",
 			 "repurposed_structures:shipwreck_end=quark:purpur_chest",
- 			 "repurposed_structures:shipwreck_nether_bricks=quark:nether_brick_chest",
-  		 	 "repurposed_structures:shipwreck_warped=quark:warped_chest",
-   		 	 "repurposed_structures:stronghold_nether=quark:nether_brick_chest",
+			 "repurposed_structures:shipwreck_nether_bricks=quark:nether_brick_chest",
+ 		 	 "repurposed_structures:shipwreck_warped=quark:warped_chest",
+  		 	 "repurposed_structures:stronghold_nether=quark:nether_brick_chest",
 			 "repurposed_structures:temple_nether_basalt=quark:nether_brick_chest",
- 			 "repurposed_structures:temple_nether_crimson=quark:crimson_chest",
- 			 "repurposed_structures:temple_nether_soul=quark:warped_chest",
-  		 	 "repurposed_structures:temple_nether_warped=quark:warped_trapped_chest",
+			 "repurposed_structures:temple_nether_crimson=quark:crimson_chest",
+			 "repurposed_structures:temple_nether_soul=quark:warped_chest",
+ 		 	 "repurposed_structures:temple_nether_warped=quark:warped_trapped_chest",
 			 "repurposed_structures:temple_nether_wasteland=quark:nether_brick_chest",
 			 "repurposed_structures:village_badlands=quark:dark_oak_chest",
 			 "repurposed_structures:village_birch=quark:birch_chest",
 			 "repurposed_structures:village_crimson=quark:crimson_chest",
 			 "repurposed_structures:village_dark_oak=quark:dark_oak_chest",
- 			 "repurposed_structures:village_giant_taiga=quark:spruce_chest",
+			 "repurposed_structures:village_giant_taiga=quark:spruce_chest",
 			 "repurposed_structures:village_jungle=quark:jungle_chest",
 			 "repurposed_structures:village_mountains=quark:spruce_chest",
 			 "repurposed_structures:village_oak=quark:oak_chest",
- 			 "repurposed_structures:village_swamp=quark:oak_chest",
+			 "repurposed_structures:village_swamp=quark:oak_chest",
 			 "repurposed_structures:village_warped=quark:warped_chest", 
 			 "valhelsia_structures:big_tree=quark:oak_chest",
 			 "valhelsia_structures:castle=quark:spruce_chest",
@@ -247,7 +250,10 @@ public class VariantChestsModule extends QuarkModule {
 		staticEnabled = enabled;
 		
 		chestMappings.clear();
-		for(String s : structureChests) {
+		List<String> chestsClone = new ArrayList<>(BUILT_IN_MOD_STRUCTURES);
+		chestsClone.addAll(structureChests);
+		
+		for(String s : chestsClone) {
 			String[] toks = s.split("=");
 			if(toks.length == 2) {
 				String left = toks[0];
