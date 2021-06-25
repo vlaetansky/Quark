@@ -84,6 +84,7 @@ public class CrabEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 	private static int lightningCooldown;
 	private Ingredient temptationItems;
 
+	private boolean noSpike;
 	private boolean crabRave;
 	private BlockPos jukeboxPosition;
 
@@ -271,7 +272,7 @@ public class CrabEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 	@Override
 	protected void collideWithEntity(Entity entityIn) {
 		super.collideWithEntity(entityIn);
-		if (world.getDifficulty() != Difficulty.PEACEFUL) {
+		if (world.getDifficulty() != Difficulty.PEACEFUL && !noSpike) {
 			if (entityIn instanceof LivingEntity && !(entityIn instanceof CrabEntity))
 				entityIn.attackEntityFrom(DamageSource.CACTUS, 1f);
 		}
@@ -353,6 +354,7 @@ public class CrabEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 		super.readAdditional(compound);
 
 		lightningCooldown = compound.getInt("LightningCooldown");
+		noSpike = compound.getBoolean("NoSpike");
 
 		if (compound.contains("EnemyCrabRating")) {
 			float sizeModifier = compound.getFloat("EnemyCrabRating");
@@ -369,6 +371,7 @@ public class CrabEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 		compound.putFloat("EnemyCrabRating", getSizeModifier());
 		compound.putInt("LightningCooldown", lightningCooldown);
 		compound.putInt("Variant", dataManager.get(VARIANT));
+		compound.putBoolean("NoSpike", noSpike);
 	}
 
 
