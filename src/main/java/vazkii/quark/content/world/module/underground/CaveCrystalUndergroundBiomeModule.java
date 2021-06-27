@@ -1,6 +1,7 @@
 package vazkii.quark.content.world.module.underground;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -29,7 +30,6 @@ import vazkii.quark.base.block.QuarkInheritedPaneBlock;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.content.automation.module.ChainsConnectBlocksModule.ChainConnection;
 import vazkii.quark.content.world.block.CaveCrystalBlock;
 import vazkii.quark.content.world.block.CaveCrystalClusterBlock;
 import vazkii.quark.content.world.config.UndergroundBiomeConfig;
@@ -142,6 +142,9 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 		float[] currColor = new float[] { 1, 1, 1 };
 		ExtendedBeamSegment currSegment = new ExtendedBeamSegment(Direction.UP, Vector3i.NULL_VECTOR, currColor);
 
+		List<BlockPos> seenPositions = new LinkedList<>();
+		boolean check = true;
+
 		while(currPos.getY() < 256 && currPos.getY() > 0 && horizontalMoves > 0) {
 			currPos = currPos.offset(currSegment.dir);
 			if(currSegment.dir.getAxis().isHorizontal())
@@ -150,12 +153,13 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 			BlockState blockstate = world.getBlockState(currPos);
 			Block block = blockstate.getBlock();
 			float[] targetColor = blockstate.getBeaconColorMultiplier(world, currPos, beaconPos);
-
+			
 			if(block instanceof CaveCrystalClusterBlock) {
 				Direction dir = blockstate.get(CaveCrystalClusterBlock.FACING);
 				if(dir == currSegment.dir)
 					currSegment.incrementHeight();
 				else {
+					check = true;
 					beacon.beamColorSegments.add(currSegment);
 					
 					targetColor = ((CaveCrystalClusterBlock) block).base.colorComponents;
@@ -170,6 +174,7 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 				if(Arrays.equals(targetColor, currColor))
 					currSegment.incrementHeight();
 				else {
+					check = true;
 					beacon.beamColorSegments.add(currSegment);
 
 					float[] mixedColor = new float[]{(currColor[0] + targetColor[0]) / 2.0F, (currColor[1] + targetColor[1]) / 2.0F, (currColor[2] + targetColor[2]) / 2.0F};
@@ -183,6 +188,13 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 				}
 
 				currSegment.incrementHeight();
+			}
+			
+			if(check) {
+				if(seenPositions.contains(currPos)) {
+					broke = true;
+					break;
+				} else seenPositions.add(currPos);
 			}
 		}
 		
