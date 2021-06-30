@@ -7,7 +7,7 @@
 	"quark.gui.button.filter": "Filtrar",
 	"quark.gui.button.emotes": "Emojis",
 	"quark.gui.button.back": "Voltar",
-	"quark.gui.button.shift_lock": "Shift travado***",
+	"quark.gui.button.shift_lock": "Shift travado",
 
 	"quark.gui.enchanting.min": "Mínimo: %d",
 	"quark.gui.enchanting.influence": "Influência de vela: +%d%%",
@@ -107,7 +107,7 @@
 
 	"quark.camera.header": "Modo de câmera",
 	"quark.camera.info": "[%s para sair, ENTER para tirar foto]",
-	"quark.camera.reset": "Redefinir configurações (precisa agachar)",
+	"quark.camera.reset": "Resetar configurações (precisa agachar)",
 	"quark.camera.greetings": "Boas-vindas de %s!",
 
 	"quark.jei.makes_copy": "Faz cópia",
@@ -127,9 +127,9 @@
 	"quark.keybind.patreon_emote.zombie": "Zumbi (Patreon)",
 	"quark.keybind.back": "Voltar",
 	"quark.keybind.camera_mode": "Modo de câmera",
-	"quark.keybind.narrator_readout": "Narrator Readout***",
-	"quark.keybind.narrator_full_readout": "Narrator Full Readout***",
-	"quark.keybind.shift_lock": "Shift travado***",
+	"quark.keybind.narrator_readout": "Leitura do narrador",
+	"quark.keybind.narrator_full_readout": "Leitura compelta do narrador",
+	"quark.keybind.shift_lock": "Shift travado",
 	"quark.keybind.autorun": "Andar automaticamente",
 	
 	"quark.readout.not_ingame": "Não está no jogo",
@@ -157,8 +157,8 @@
 	"quark.subtitles.frog_hurt": "Rã ferida",
 	"quark.subtitles.frog_idle": "Rã coachando",
 	"quark.subtitles.frog_jump": "Rã salta",
-	"quark.subtitles.crab_die": "Casco esmagado",
-	"quark.subtitles.crab_hurt": "Casco danificado",
+	"quark.subtitles.crab_die": "Caranquejo morre",
+	"quark.subtitles.crab_hurt": "Caranguejo ferido",
 	"quark.subtitles.crab_scuttle": "Caranguejo corre",
 	"quark.subtitles.growl": "Monstros surgem",
 	"quark.subtitles.pipe_shoot": "Cano ejeta",
@@ -221,7 +221,7 @@
 	"quark.misc.celebration": "Celebrando 10 anos dos mods do Vazkii (2021)",
 
 	"quark.misc.reloaded0": "Suas configurações do quark foram recarregadas.",
-	"quark.misc.reloaded1": "- Se você mudou qualquer coisa que altera receitas, por favor digite /reload.",
+	"quark.misc.reloaded1": "- Se você mudou algo relacionado a receitas, por favor digite /reload.",
 	"quark.misc.reloaded2": "- Se suas alterações não forem aplicadas, tente reiniciar o jogo.",
 
 	"quark.container.feeding_trough": "Comedouro",
@@ -1136,7 +1136,7 @@
 	"entity.quark.colored_frame": "Moldura tingida",
 	"entity.quark.totem": "Totem da contenção",
 	"entity.quark.stoneling": "Pedrita",
-	"entity.quark.gravisand": "Gravidareia flutuando",
+	"entity.quark.gravisand": "Gravidareia flutuante",
 	"entity.quark.frog": "Rã",
 	"entity.quark.crab": "Caranguejo",
 	"entity.quark.foxhound": "Foxhound",
