@@ -1756,6 +1756,15 @@
 				"YUNG's Better Mineshafts completely revamps vanilla abandoned mineshafts, changing them from boring straight lines into dynamic, varied webs of tunnels."
 			],
 			"download": "https://www.curseforge.com/minecraft/mc-mods/yungs-better-mineshafts-forge"
+		},
+		{
+			"name": "Supplementaries",
+			"image": "supplementaries.jpg",
+			"custom_version": "Friend",
+			"desc": [
+				"Adds many funcional and useful blocks, decorations as well as tweaks that expand and complement well the vanilla game"
+			],
+			"download": "https://www.curseforge.com/minecraft/mc-mods/supplementaries"
 		}
 	]
 }
