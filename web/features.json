@@ -1756,6 +1756,24 @@
 				"YUNG's Better Mineshafts completely revamps vanilla abandoned mineshafts, changing them from boring straight lines into dynamic, varied webs of tunnels."
 			],
 			"download": "https://www.curseforge.com/minecraft/mc-mods/yungs-better-mineshafts-forge"
+		},
+		{
+			"name": "YUNG's Better Strongholds",
+			"image": "yungs-better-strongholds.jpg",
+			"custom_version": "Friend",
+			"desc": [
+				"A complete redesign of Minecraft strongholds like never before, making them much more complex and exciting while still staying true to vanilla themes. Features over 15 different rooms, various types of tunnels and hallways, staircases, traps, and even hidden areas!"
+			],
+			"download": "https://www.curseforge.com/minecraft/mc-mods/yungs-better-strongholds"
+		},
+		{
+			"name": "YUNG's Extras",
+			"image": "yungs-extras.jpg",
+			"custom_version": "Friend",
+			"desc": [
+				"A myriad of structures, features, and vanilla+ content. This mod is a collection of upgrades to vanilla Minecraft that are each individually too small for their own mods, but together create a nice finishing touch for your modpack. It's the cherry on top for any modpack."
+			],
+			"download": "https://www.curseforge.com/minecraft/mc-mods/yungs-extras"
 		}
 	]
 }
