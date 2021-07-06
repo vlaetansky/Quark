@@ -217,6 +217,7 @@
 	"quark.misc.saturation4": "Snack liviano",
 	"quark.misc.mod_disabled": "Desactivado. Instalá %s para activarlo.",
 	"quark.misc.repaired": "(fue reparado)",
+	"quark.misc.celebration": "Celebrando 10 años de mods de Vazkii (2021)",
 
 	"quark.misc.reloaded0": "Se recargó tu configuración de Quark.",
 	"quark.misc.reloaded1": "- Si cambiaste algo que afecta las recetas, ejecutá /reload.",
@@ -302,6 +303,7 @@
 	"item.quark.seed_pouch": "Bolsa de semillas",
 	"item.quark.forgotten_hat": "Sombrero olvidado",
 	"item.quark.soul_bead": "Cuenta de alma",
+	"item.quark.abacus": "Ábaco",
 
 	"item.quark.music_disc_tedium": "Disco",
 	"item.quark.music_disc_tedium.desc": "Kain Vinosec - Tedium",
@@ -1076,6 +1078,12 @@
 	"block.quark.jungle_hedge": "Seto de jungla",
 	"block.quark.acacia_hedge": "Seto de acacia",
 	"block.quark.dark_oak_hedge": "Seto de roble oscuro",
+	"block.quark.blue_blossom_hedge": "Seto floral azul",
+	"block.quark.lavender_blossom_hedge": "Seto floral lavanda",
+	"block.quark.orange_blossom_hedge": "Seto floral naranja",
+	"block.quark.pink_blossom_hedge": "Seto floral rosa",
+  	"block.quark.yellow_blossom_hedge": "Seto floral amarillo",
+  	"block.quark.red_blossom_hedge": "Seto floral rojo",
 	"block.quark.matrix_enchanter": "Mesa de encantamientos matricial",
  	"block.quark.crate": "Caja",
 	"block.quark.blackstone_bricks": "Ladrillos de piedra negra",
@@ -1098,6 +1106,8 @@
 	"block.quark.vanilla_basalt_bricks_vertical_slab": "Baldosa vertical de ladrillos de basalto",
 	"block.quark.vanilla_basalt_bricks_wall": "Pared de ladrillos de basalto",
 	"block.quark.vanilla_basalt_bricks": "Ladrillos de basalto",
+	"block.quark.stone_lamp": "Lámpara de piedra",
+	"block.quark.stone_brick_lamp": "Lámpara de ladrillos de piedra",
 
 	"item.quark.stoneling_spawn_egg": "Generar petrícola",
 	"item.quark.frog_spawn_egg": "Generar rana",
