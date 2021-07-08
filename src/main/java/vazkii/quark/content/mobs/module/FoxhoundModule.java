@@ -22,7 +22,7 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.base.module.config.type.BiomeConfig;
+import vazkii.quark.base.module.config.type.CompoundBiomeConfig;
 import vazkii.quark.base.module.config.type.CostSensitiveEntitySpawnConfig;
 import vazkii.quark.base.module.config.type.EntitySpawnConfig;
 import vazkii.quark.base.world.EntitySpawnHandler;
@@ -42,10 +42,10 @@ public class FoxhoundModule extends QuarkModule {
 	public static double tameChance = 0.05;
 
 	@Config
-	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(30, 1, 2, BiomeConfig.fromBiomeReslocs(false, "minecraft:nether_wastes", "minecraft:basalt_deltas"));
+	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(30, 1, 2, CompoundBiomeConfig.fromBiomeReslocs(false, "minecraft:nether_wastes", "minecraft:basalt_deltas"));
 	
 	@Config
-	public static EntitySpawnConfig lesserSpawnConfig = new CostSensitiveEntitySpawnConfig(2, 1, 1, 0.7, 0.15, BiomeConfig.fromBiomeReslocs(false, "minecraft:soul_sand_valley"));
+	public static EntitySpawnConfig lesserSpawnConfig = new CostSensitiveEntitySpawnConfig(2, 1, 1, 0.7, 0.15, CompoundBiomeConfig.fromBiomeReslocs(false, "minecraft:soul_sand_valley"));
 	
 	public static ITag<Block> foxhoundSpawnableTag;
 	

@@ -21,7 +21,7 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.base.module.config.type.BiomeConfig;
+import vazkii.quark.base.module.config.type.CompoundBiomeConfig;
 import vazkii.quark.base.module.config.type.DimensionConfig;
 import vazkii.quark.base.module.config.type.StrictBiomeConfig;
 import vazkii.quark.base.world.WorldGenHandler;
@@ -42,10 +42,10 @@ public class BigStoneClustersModule extends QuarkModule {
 	@Config public static BigStoneClusterConfig slate = new BigStoneClusterConfig(BiomeDictionary.Type.SNOWY);
 	
 	@Config public static BigStoneClusterConfig voidstone = new BigStoneClusterConfig(DimensionConfig.end(false), 19, 6, 20, 0, 40, 
-			BiomeConfig.fromBiomeReslocs(false, "minecraft:end_highlands", "minecraft:end_midlands", "minecraft:end_barrens"));
+			CompoundBiomeConfig.fromBiomeReslocs(false, "minecraft:end_highlands", "minecraft:end_midlands", "minecraft:end_barrens"));
 	
 	@Config public static BigStoneClusterConfig myalite = new AirStoneClusterConfig(DimensionConfig.end(false), 20, 6, 100, 58, 62, 
-			BiomeConfig.fromBiomeReslocs(false, "minecraft:end_highlands"))
+			CompoundBiomeConfig.fromBiomeReslocs(false, "minecraft:end_highlands"))
 			.setVertical(40, 10);
 
 	@Config(description = "Blocks that stone clusters can replace. If you want to make it so it only replaces in one dimension,\n"

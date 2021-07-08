@@ -19,7 +19,7 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.base.module.config.type.BiomeConfig;
+import vazkii.quark.base.module.config.type.CompoundBiomeConfig;
 import vazkii.quark.base.module.config.type.DimensionConfig;
 import vazkii.quark.base.module.config.type.StrictBiomeConfig;
 import vazkii.quark.base.world.WorldGenHandler;
@@ -34,7 +34,7 @@ public class SpiralSpiresModule extends QuarkModule {
 	public static DimensionConfig dimensions = DimensionConfig.end(false);
 	
 	@Config
-	public static BiomeConfig biomes = BiomeConfig.fromBiomeReslocs(false, "minecraft:end_highlands");
+	public static CompoundBiomeConfig biomes = CompoundBiomeConfig.fromBiomeReslocs(false, "minecraft:end_highlands");
 	
 	@Config public static int rarity = 200;
 	@Config public static int radius = 15;

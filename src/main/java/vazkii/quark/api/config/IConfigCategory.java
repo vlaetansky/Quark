@@ -13,7 +13,7 @@ import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 @OnlyIn(Dist.CLIENT)
 public interface IConfigCategory extends IConfigElement {
 
-	public IConfigCategory addCategory(String name, @Nonnull String comment);
+	public IConfigCategory addCategory(String name, @Nonnull String comment, Object holderObject);
 	public <T> IConfigElement addEntry(ConfigValue<T> value, T default_, Supplier<T> getter, @Nonnull String comment, @Nonnull Predicate<Object> restriction);
 
 	public default <T> void addEntry(ConfigValue<T> forgeValue) {
@@ -21,7 +21,7 @@ public interface IConfigCategory extends IConfigElement {
 	}
 	
 	public default IConfigCategory addCategory(String name) {
-		return addCategory(name, "");
+		return addCategory(name, "", null);
 	}
 	
 	// getters you probably don't have any use for

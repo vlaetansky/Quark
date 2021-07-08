@@ -5,7 +5,7 @@ import net.minecraftforge.common.BiomeDictionary;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.ConfigFlagManager;
 
-public class BiomeConfig implements IBiomeConfig {
+public class CompoundBiomeConfig extends AbstractConfigType implements IBiomeConfig {
 
 	@Config(description = "Types of biomes this should spawn in. Must match both this and 'biomes' to spawn.")
 	BiomeTypeConfig types;
@@ -13,25 +13,25 @@ public class BiomeConfig implements IBiomeConfig {
 	@Config(description = "Biome names this should spawn in. Must match both this and 'types' to spawn.")
 	StrictBiomeConfig biomes;
 	
-	private BiomeConfig(BiomeTypeConfig types, StrictBiomeConfig biomes) {
+	private CompoundBiomeConfig(BiomeTypeConfig types, StrictBiomeConfig biomes) {
 		this.types = types;
 		this.biomes = biomes;
 	}
 	
-	public static BiomeConfig fromBiomeTypes(boolean isBlacklist, BiomeDictionary.Type... typesIn) {
-		return new BiomeConfig(new BiomeTypeConfig(isBlacklist, typesIn), noSBC());
+	public static CompoundBiomeConfig fromBiomeTypes(boolean isBlacklist, BiomeDictionary.Type... typesIn) {
+		return new CompoundBiomeConfig(new BiomeTypeConfig(isBlacklist, typesIn), noSBC());
 	}
 	
-	public static BiomeConfig fromBiomeTypeStrings(boolean isBlacklist, String... typesIn) {
-		return new BiomeConfig(new BiomeTypeConfig(isBlacklist, typesIn), noSBC());
+	public static CompoundBiomeConfig fromBiomeTypeStrings(boolean isBlacklist, String... typesIn) {
+		return new CompoundBiomeConfig(new BiomeTypeConfig(isBlacklist, typesIn), noSBC());
 	}
 	
-	public static BiomeConfig fromBiomeReslocs(boolean isBlacklist, String... typesIn) {
-		return new BiomeConfig(noBTC(), new StrictBiomeConfig(isBlacklist, typesIn));
+	public static CompoundBiomeConfig fromBiomeReslocs(boolean isBlacklist, String... typesIn) {
+		return new CompoundBiomeConfig(noBTC(), new StrictBiomeConfig(isBlacklist, typesIn));
 	}
 	
-	public static BiomeConfig all() {
-		return new BiomeConfig(noBTC(), noSBC());
+	public static CompoundBiomeConfig all() {
+		return new CompoundBiomeConfig(noBTC(), noSBC());
 	}
 	
 	private static BiomeTypeConfig noBTC() {

@@ -3,7 +3,7 @@ package vazkii.quark.base.module.config.type;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 
-public class EntitySpawnConfig implements IConfigType {
+public class EntitySpawnConfig extends AbstractConfigType {
 
 	public QuarkModule module;
 

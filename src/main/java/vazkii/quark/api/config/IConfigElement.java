@@ -14,7 +14,6 @@ public interface IConfigElement extends Comparable<IConfigElement> {
 	public String getName();
 	public String getGuiDisplayName();
 	public List<String> getTooltip();
-	public String getSubtitle();
 	public @Nullable IConfigCategory getParent();
 	public boolean isDirty();
 	public void clean();

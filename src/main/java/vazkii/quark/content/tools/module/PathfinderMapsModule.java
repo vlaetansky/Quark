@@ -26,14 +26,13 @@ import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.MapDecoration.Type;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.base.module.config.type.IConfigType;
+import vazkii.quark.base.module.config.type.AbstractConfigType;
 
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true)
 public class PathfinderMapsModule extends QuarkModule {
@@ -186,7 +185,7 @@ public class PathfinderMapsModule extends QuarkModule {
 		}
 	}
 
-	public static class TradeInfo implements IConfigType {
+	public static class TradeInfo extends AbstractConfigType {
 
 		public final ResourceLocation biome;
 		public final int color;

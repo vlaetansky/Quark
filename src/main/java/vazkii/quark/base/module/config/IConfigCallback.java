@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 
 public interface IConfigCallback {
 	
-	public abstract void push(String s, String comment);
+	public abstract void push(String s, String comment, Object holderObject);
 	public abstract void pop();
 	
 	public abstract <T> void addEntry(ConfigValue<T> value, T default_, Supplier<T> getter, String comment, Predicate<Object> restriction);
@@ -15,7 +15,7 @@ public interface IConfigCallback {
 	public static final class Dummy implements IConfigCallback {
 
 		@Override
-		public void push(String s, String comment) {
+		public void push(String s, String comment, Object holderObject) {
 			// NO-OP
 		}
 

@@ -16,7 +16,7 @@ public class ExternalCategory extends ConfigCategory implements IExternalCategor
 	final Consumer<IExternalCategory> onChangedCallback;
 	
 	public ExternalCategory(String name, Consumer<IExternalCategory> onChangedCallback, IConfigCategory parent) {
-		super(name, "", parent);
+		super(name, "", parent, null);
 		this.onChangedCallback = onChangedCallback;
 	}
 	
@@ -33,8 +33,8 @@ public class ExternalCategory extends ConfigCategory implements IExternalCategor
 	}
 
 	@Override
-	public IConfigCategory addCategory(String name, String comment) {
-		IConfigCategory category = super.addCategory(name, comment);
+	public IConfigCategory addCategory(String name, String comment, Object holderObject) {
+		IConfigCategory category = super.addCategory(name, comment, holderObject);
 		topLevelCategories.put(name, category);
 		return category;
 	}

@@ -14,7 +14,7 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.base.module.config.type.BiomeConfig;
+import vazkii.quark.base.module.config.type.CompoundBiomeConfig;
 import vazkii.quark.base.module.config.type.DimensionConfig;
 import vazkii.quark.base.util.WeightedSelector;
 import vazkii.quark.base.world.WorldGenHandler;
@@ -64,7 +64,7 @@ public class CustomUndergroundBiomeModule extends QuarkModule {
             Matcher match = PATTERN.matcher(strippedDef);
             if (match.matches()) {
                 DimensionConfig dimensions = extractDimensions(match.group("dimensions"), match.group("isDimensionBlacklist"));
-                BiomeConfig biomes = extractBiomes(match.group("biomeTypes"), match.group("isBiomeBlacklist"));
+                CompoundBiomeConfig biomes = extractBiomes(match.group("biomeTypes"), match.group("isBiomeBlacklist"));
                 int rarity = Integer.parseInt(match.group("rarity"));
                 int minY = Integer.parseInt(match.group("minY"));
                 int maxY = Integer.parseInt(match.group("maxY"));
@@ -121,8 +121,8 @@ public class CustomUndergroundBiomeModule extends QuarkModule {
         }
     }
 
-    private BiomeConfig extractBiomes(String biomeTypes, String isBiomeBlacklist) {
-        return BiomeConfig.fromBiomeTypeStrings(Boolean.parseBoolean(isBiomeBlacklist), biomeTypes.split(","));
+    private CompoundBiomeConfig extractBiomes(String biomeTypes, String isBiomeBlacklist) {
+        return CompoundBiomeConfig.fromBiomeTypeStrings(Boolean.parseBoolean(isBiomeBlacklist), biomeTypes.split(","));
     }
 
     private DimensionConfig extractDimensions(String dimensions, String isDimensionBlacklist) {

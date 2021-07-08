@@ -5,18 +5,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import com.mojang.datafixers.util.Either;
-
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.ConfigFlagManager;
 
-public class BiomeTypeConfig implements IBiomeConfig {
+public class BiomeTypeConfig extends AbstractConfigType implements IBiomeConfig {
 
 	private final Object mutex = new Object();
 	

@@ -26,9 +26,9 @@ public class QuarkConfigBuilder implements IConfigBuilder {
 	}
 	
 	@Override
-	public void push(String s) {
+	public void push(String s, Object holderObject) {
 		parent.push(s);
-		callback.push(s, currComment);
+		callback.push(s, currComment, holderObject);
 		currComment = "";
 	}
 

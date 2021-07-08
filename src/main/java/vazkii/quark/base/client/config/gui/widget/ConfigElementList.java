@@ -25,6 +25,7 @@ public class ConfigElementList<T extends IConfigElement & IWidgetProvider> exten
 	protected void findEntries() {
 		boolean hadObjects = false;
 		boolean isObject = true;
+		
 		for(IConfigElement elm : parent.category.getSubElements()) {
 			boolean wasObject = isObject;
 			isObject = elm instanceof IConfigObject;
@@ -41,7 +42,7 @@ public class ConfigElementList<T extends IConfigElement & IWidgetProvider> exten
 
 	public static final class Entry<T extends IConfigElement & IWidgetProvider> extends ScrollableWidgetList.Entry<Entry<T>> {
 
-		private final IConfigElement element;
+		private final T element;
 
 		public Entry(CategoryScreen parent, T element) {
 			this.element = element;

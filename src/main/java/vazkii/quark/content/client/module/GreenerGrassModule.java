@@ -16,6 +16,7 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
+import vazkii.quark.base.module.config.type.ColorMatrixConfig;
 
 import java.util.List;
 import java.util.Map;
@@ -50,6 +51,12 @@ public class GreenerGrassModule extends QuarkModule {
 			"environmental:willow_leaves",
 			"environmental:hanging_willow_leaves",
 			"minecraft:vine");
+	
+	@Config public static ColorMatrixConfig colorMatrix = new ColorMatrixConfig(new double[] {
+			0.89, 0.00, 0.00,
+			0.00, 1.11, 0.00,
+			0.00, 0.00, 0.89
+	});
 
 	@Override
 	public void firstClientTick() {
@@ -81,27 +88,9 @@ public class GreenerGrassModule extends QuarkModule {
 			int originalColor = color.getColor(state, world, pos, tintIndex);
 			if(!enabled || (leaves && !affectLeaves))
 				return originalColor;
-
-			int r = originalColor >> 16 & 0xFF;
-			int g = originalColor >> 8 & 0xFF;
-			int b = originalColor & 0xFF;
-
-			double[] colorMatrix = {
-					0.00, 1.00, 0.00,
-					0.50, 0.00, 0.00,
-					0.50, 0.00, 0.00
-			};
-
-			int outR = clamp((int) ((double) r * colorMatrix[0] + (double) g * colorMatrix[1] + (double) b * colorMatrix[2]));
-			int outG = clamp((int) ((double) r * colorMatrix[3] + (double) g * colorMatrix[4] + (double) b * colorMatrix[5]));
-			int outB = clamp((int) ((double) r * colorMatrix[6] + (double) g * colorMatrix[7] + (double) b * colorMatrix[8]));
 			
-			return ((outR & 0xFF) << 16) + ((outG & 0xFF) << 8) + (outB & 0xFF); 
+			return colorMatrix.convolve(originalColor);
 		};
-	}
-	
-	private int clamp(int val) {
-		return Math.min(0xFF, Math.max(0, val));
 	}
 
 }

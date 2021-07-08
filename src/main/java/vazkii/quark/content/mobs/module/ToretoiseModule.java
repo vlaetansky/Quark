@@ -14,7 +14,7 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.base.module.config.type.BiomeConfig;
+import vazkii.quark.base.module.config.type.CompoundBiomeConfig;
 import vazkii.quark.base.module.config.type.DimensionConfig;
 import vazkii.quark.base.module.config.type.EntitySpawnConfig;
 import vazkii.quark.base.world.EntitySpawnHandler;
@@ -32,7 +32,7 @@ public class ToretoiseModule extends QuarkModule {
 	public static DimensionConfig dimensions = DimensionConfig.overworld(false);
 	
 	@Config 
-	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(100, 1, 1, BiomeConfig.fromBiomeTypes(true, BiomeDictionary.Type.VOID, BiomeDictionary.Type.NETHER, BiomeDictionary.Type.END));
+	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(100, 1, 1, CompoundBiomeConfig.fromBiomeTypes(true, BiomeDictionary.Type.VOID, BiomeDictionary.Type.NETHER, BiomeDictionary.Type.END));
 	
 	@Override
 	public void construct() {

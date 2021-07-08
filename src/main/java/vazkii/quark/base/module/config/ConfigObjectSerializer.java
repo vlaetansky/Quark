@@ -109,7 +109,7 @@ public final class ConfigObjectSerializer {
 		if(defaultValue instanceof IConfigType) {
 			name = name.toLowerCase(Locale.ROOT).replaceAll(" ", "_");
 			
-			builder.push(name);
+			builder.push(name, defaultValue);
 			serialize(builder, flagManager, callbacks, defaultValue);
 			callbacks.add(() -> ((IConfigType) defaultValue).onReload(flagManager));
 			builder.pop();

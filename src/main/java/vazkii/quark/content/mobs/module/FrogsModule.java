@@ -20,7 +20,7 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.base.module.config.type.BiomeConfig;
+import vazkii.quark.base.module.config.type.CompoundBiomeConfig;
 import vazkii.quark.base.module.config.type.EntitySpawnConfig;
 import vazkii.quark.base.recipe.FlagIngredient;
 import vazkii.quark.base.world.EntitySpawnHandler;
@@ -33,7 +33,7 @@ public class FrogsModule extends QuarkModule {
 	public static EntityType<FrogEntity> frogType;
 
 	@Config
-	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(40, 1, 3, BiomeConfig.fromBiomeTypes(false, BiomeDictionary.Type.SWAMP));
+	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(40, 1, 3, CompoundBiomeConfig.fromBiomeTypes(false, BiomeDictionary.Type.SWAMP));
 
 	@Config(flag = "frog_brewing") 
 	public static boolean enableBrewing = true;

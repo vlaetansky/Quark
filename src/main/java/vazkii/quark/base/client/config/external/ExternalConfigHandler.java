@@ -51,7 +51,7 @@ public final class ExternalConfigHandler implements IQuarkConfig {
 	@Override
 	public IExternalCategory registerExternalCategory(String modid, String name, Consumer<IExternalCategory> onChangedCallback) {
 		if(mockCategory == null)
-			mockCategory = new ConfigCategory("friends", "", null);
+			mockCategory = new ConfigCategory("friends", "", null, null);
 		
 		ExternalCategory category = new ExternalCategory(name, onChangedCallback, mockCategory);
 		externalCategories.put(modid, category);

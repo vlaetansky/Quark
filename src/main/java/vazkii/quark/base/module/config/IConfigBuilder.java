@@ -10,7 +10,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 public interface IConfigBuilder {
 
 	public <T> ForgeConfigSpec configure(Function<IConfigBuilder, T> consumer);
-	public void push(String s);
+	public void push(String s, Object holderObject);
 	public void pop();
 	public void comment(String s);
 	

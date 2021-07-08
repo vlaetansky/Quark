@@ -1,10 +1,9 @@
 package vazkii.quark.base.module.config.type;
 
-import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import vazkii.quark.base.module.config.Config;
 
-public class ClusterSizeConfig implements IConfigType {
+public class ClusterSizeConfig extends AbstractConfigType {
 
 	@Config
 	public DimensionConfig dimensions = DimensionConfig.overworld(false);

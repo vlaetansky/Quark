@@ -14,7 +14,7 @@ public class TopLevelCategory extends ConfigCategory {
 	private Map<String, IConfigObject<Boolean>> moduleOptions = new HashMap<>();
 
 	public TopLevelCategory(String name, String comment, IConfigCategory parent) {
-		super(name, comment, parent);
+		super(name, comment, parent, null);
 	}
 
 	@Override

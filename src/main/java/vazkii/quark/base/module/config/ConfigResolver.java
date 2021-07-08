@@ -39,7 +39,7 @@ public class ConfigResolver {
 	}
 	
 	private Void build(IConfigBuilder builder) {
-		builder.push("general");
+		builder.push("general", null);
 		try {
 			ConfigObjectSerializer.serialize(builder, flagManager, refreshRunnables, GeneralConfig.INSTANCE);
 		} catch (ReflectiveOperationException e) {
@@ -47,7 +47,7 @@ public class ConfigResolver {
 		}
 		builder.pop();
 		
-		builder.push("categories");
+		builder.push("categories", null);
 		buildCategoryList(builder);
 		builder.pop();
 		
@@ -66,7 +66,7 @@ public class ConfigResolver {
 	}
 	
 	private void buildCategory(IConfigBuilder builder, ModuleCategory category) {
-		builder.push(category.name);
+		builder.push(category.name, category);
 		
 		List<QuarkModule> modules = category.getOwnedModules();
 		Map<QuarkModule, Runnable> setEnabledRunnables = new HashMap<>();
@@ -89,7 +89,7 @@ public class ConfigResolver {
 		if(!module.description.isEmpty())
 			builder.comment(module.description);
 		
-		builder.push(module.lowercaseName);
+		builder.push(module.lowercaseName, module);
 		
 		if(module.antiOverlap != null && module.antiOverlap.size() > 0)
 			addModuleAntiOverlap(builder, module);

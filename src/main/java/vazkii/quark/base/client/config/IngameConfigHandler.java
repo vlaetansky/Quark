@@ -12,6 +12,7 @@ import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.api.config.IConfigElement;
 import vazkii.quark.api.config.IConfigObject;
 import vazkii.quark.base.client.config.external.ExternalConfigHandler;
+import vazkii.quark.base.client.config.gui.widget.IWidgetProvider;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.IConfigCallback;
 
@@ -27,12 +28,12 @@ public final class IngameConfigHandler implements IConfigCallback {
 	private IngameConfigHandler() {}
 
 	@Override
-	public void push(String s, String comment) {
+	public void push(String s, String comment, Object holderObject) {
 		IConfigCategory newCategory = null;
 		if(currCategory == null) {
 			newCategory = new TopLevelCategory(s, comment, null);
 			topLevelCategories.put(s, (TopLevelCategory) newCategory);
-		} else newCategory = currCategory.addCategory(s, comment);
+		} else newCategory = currCategory.addCategory(s, comment, holderObject);
 
 		currCategory = newCategory;
 	}

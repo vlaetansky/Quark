@@ -8,7 +8,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import vazkii.quark.base.module.config.Config;
 
-public class DimensionConfig implements IConfigType {
+public class DimensionConfig extends AbstractConfigType {
 
 	@Config
 	private boolean isBlacklist;

@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import org.apache.commons.lang3.text.WordUtils;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.api.config.IConfigElement;
 import vazkii.quark.api.config.IConfigObject;
@@ -19,6 +19,7 @@ import vazkii.quark.base.client.config.gui.CategoryScreen;
 import vazkii.quark.base.client.config.gui.WidgetWrapper;
 import vazkii.quark.base.client.config.gui.widget.IWidgetProvider;
 import vazkii.quark.base.client.config.gui.widget.PencilButton;
+import vazkii.quark.base.module.config.type.IConfigType;
 
 public class ConfigCategory extends AbstractConfigElement implements IConfigCategory, IWidgetProvider {
 
@@ -26,11 +27,14 @@ public class ConfigCategory extends AbstractConfigElement implements IConfigCate
 	
 	private final String path;
 	private final int depth;
+	private final Object holderObject;
+	
 	private boolean dirty = false;
 	
-	public ConfigCategory(String name, String comment, IConfigCategory parent) {
+	public ConfigCategory(String name, String comment, IConfigCategory parent, Object holderObject) {
 		super(name, comment, parent);
 		
+		this.holderObject = holderObject;
 		if(parent == null || (parent instanceof ExternalCategory)) {
 			path = name;
 			depth = 0;
@@ -105,8 +109,11 @@ public class ConfigCategory extends AbstractConfigElement implements IConfigCate
 	}
 	
 	@Override
-	public IConfigCategory addCategory(String name, String comment) {
-		return addCategory(new ConfigCategory(name, comment, this));
+	public IConfigCategory addCategory(String name, String comment, Object holderObject) {
+		if(holderObject != null && holderObject instanceof IConfigType)
+			((IConfigType) holderObject).setCategory(this);
+		
+		return addCategory(new ConfigCategory(name, comment, this, holderObject));
 	}
 	
 	public IConfigCategory addCategory(IConfigCategory category) {
@@ -133,7 +140,9 @@ public class ConfigCategory extends AbstractConfigElement implements IConfigCate
 
 	@Override
 	public void addWidgets(CategoryScreen parent, List<WidgetWrapper> widgets) {
-		widgets.add(new WidgetWrapper(new PencilButton(230, 3, parent.categoryLink(this))));
+		if(holderObject != null && holderObject instanceof IWidgetProvider)
+			((IWidgetProvider) holderObject).addWidgets(parent, widgets);
+		else widgets.add(new WidgetWrapper(new PencilButton(230, 3, parent.categoryLink(this))));
 	}
 
 	@Override
@@ -148,8 +157,17 @@ public class ConfigCategory extends AbstractConfigElement implements IConfigCate
 	
 	@Override
 	public String getSubtitle() {
-		int size = subElements.size();
-		return size == 1 ? I18n.format("quark.gui.config.onechild") : I18n.format("quark.gui.config.nchildren", subElements.size());
+		String ret = "";
+		if(holderObject != null && holderObject instanceof IWidgetProvider)
+			ret = ((IWidgetProvider) holderObject).getSubtitle();
+		else {
+			int size = subElements.size();
+			ret = (size == 1 ? I18n.format("quark.gui.config.onechild") : I18n.format("quark.gui.config.nchildren", subElements.size()));
+		}
+		
+		if(ret.length() > 30)
+			ret = ret.substring(0, 27) + "...";
+		return ret;
 	}
 
 	@Override

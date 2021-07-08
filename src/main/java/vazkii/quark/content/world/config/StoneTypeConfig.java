@@ -1,11 +1,11 @@
 package vazkii.quark.content.world.config;
 
 import vazkii.quark.base.module.config.Config;
+import vazkii.quark.base.module.config.type.AbstractConfigType;
 import vazkii.quark.base.module.config.type.DimensionConfig;
-import vazkii.quark.base.module.config.type.IConfigType;
 import vazkii.quark.base.module.config.type.OrePocketConfig;
 
-public class StoneTypeConfig implements IConfigType {
+public class StoneTypeConfig extends AbstractConfigType {
 
 	@Config
 	public DimensionConfig dimensions;

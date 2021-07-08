@@ -1,12 +1,12 @@
 package vazkii.quark.base.module.config.type;
 
-import net.minecraft.util.math.BlockPos;
-import vazkii.quark.base.module.config.Config;
-
 import java.util.Random;
 import java.util.function.Consumer;
 
-public class OrePocketConfig implements IConfigType {
+import net.minecraft.util.math.BlockPos;
+import vazkii.quark.base.module.config.Config;
+
+public class OrePocketConfig extends AbstractConfigType {
 
 	@Config
 	@Config.Min(0)

@@ -16,7 +16,7 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.base.module.config.type.BiomeConfig;
+import vazkii.quark.base.module.config.type.CompoundBiomeConfig;
 import vazkii.quark.base.module.config.type.EntitySpawnConfig;
 import vazkii.quark.base.world.EntitySpawnHandler;
 import vazkii.quark.content.experimental.shiba.client.render.ShibaRenderer;
@@ -28,7 +28,7 @@ public class ShibaModule extends QuarkModule {
 	public static EntityType<ShibaEntity> shibaType;
 	
 	@Config
-	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(40, 1, 3, BiomeConfig.fromBiomeTypes(false, BiomeDictionary.Type.MOUNTAIN));
+	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(40, 1, 3, CompoundBiomeConfig.fromBiomeTypes(false, BiomeDictionary.Type.MOUNTAIN));
 	
 	@Override
 	public void construct() {

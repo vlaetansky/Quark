@@ -7,7 +7,7 @@ import java.util.List;
 import net.minecraft.util.ResourceLocation;
 import vazkii.quark.base.module.config.Config;
 
-public class StrictBiomeConfig implements IBiomeConfig {
+public class StrictBiomeConfig extends AbstractConfigType implements IBiomeConfig {
 
 	@Config(name = "Biomes")
 	private List<String> biomeStrings;
