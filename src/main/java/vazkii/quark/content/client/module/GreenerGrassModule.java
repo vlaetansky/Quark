@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -23,12 +24,6 @@ import java.util.Map;
 public class GreenerGrassModule extends QuarkModule {
 
 	@Config public static boolean affectLeaves = true;
-	@Config public static boolean alphaGrass = false;
-	@Config public static boolean absoluteValues = false;
-
-	@Config public static int redShift = -30;
-	@Config public static int greenShift = 30;
-	@Config public static int blueShift = -30;
 
 	@Config public static List<String> blockList = Lists.newArrayList(
 			"minecraft:large_fern", 
@@ -55,13 +50,13 @@ public class GreenerGrassModule extends QuarkModule {
 			"environmental:willow_leaves",
 			"environmental:hanging_willow_leaves",
 			"minecraft:vine");
-	
+
 	@Override
 	public void firstClientTick() {
 		registerGreenerColor(blockList, false);
 		registerGreenerColor(leavesList, true);
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	private void registerGreenerColor(Iterable<String> ids, boolean leaves) {
 		BlockColors colors = Minecraft.getInstance().getBlockColors();
@@ -91,14 +86,22 @@ public class GreenerGrassModule extends QuarkModule {
 			int g = originalColor >> 8 & 0xFF;
 			int b = originalColor & 0xFF;
 
-			int shiftRed = alphaGrass ? 30 : redShift;
-			int shiftGreen = alphaGrass ? 120 : greenShift;
-			int shiftBlue = alphaGrass ? 30 : blueShift;
+			double[] colorMatrix = {
+					0.89, 0.00, 0.00,
+					0.00, 1.11, 0.00,
+					0.00, 0.00, 0.89
+			};
 
-			if(absoluteValues)
-				return (Math.max(0, Math.min(0xFF, redShift)) << 16) + Math.max(0, Math.min(0xFF, greenShift) << 8) + Math.max(0, Math.min(0xFF, blueShift));
-			return (Math.max(0, Math.min(0xFF, r + shiftRed)) << 16) + Math.max(0, Math.min(0xFF, g + shiftGreen) << 8) + Math.max(0, Math.min(0xFF, b + shiftBlue));
+			int outR = clamp((int) ((double) r * colorMatrix[0] + (double) g * colorMatrix[1] + (double) b * colorMatrix[2]));
+			int outG = clamp((int) ((double) r * colorMatrix[3] + (double) g * colorMatrix[4] + (double) b * colorMatrix[5]));
+			int outB = clamp((int) ((double) r * colorMatrix[6] + (double) g * colorMatrix[7] + (double) b * colorMatrix[8]));
+			
+			return ((outR & 0xFF) << 16) + ((outG & 0xFF) << 8) + (outB & 0xFF); 
 		};
+	}
+	
+	private int clamp(int val) {
+		return Math.min(0xFF, Math.max(0, val));
 	}
 
 }
