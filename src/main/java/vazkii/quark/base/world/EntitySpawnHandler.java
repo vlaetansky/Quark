@@ -23,8 +23,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.item.QuarkSpawnEggItem;
 import vazkii.quark.base.module.QuarkModule;
-import vazkii.quark.base.world.config.CostSensitiveEntitySpawnConfig;
-import vazkii.quark.base.world.config.EntitySpawnConfig;
+import vazkii.quark.base.module.config.type.CostSensitiveEntitySpawnConfig;
+import vazkii.quark.base.module.config.type.EntitySpawnConfig;
 
 @EventBusSubscriber(modid = Quark.MOD_ID)
 public class EntitySpawnHandler {

@@ -13,7 +13,7 @@ import net.minecraft.world.biome.Biome.Category;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.WorldGenRegion;
 import net.minecraftforge.common.Tags;
-import vazkii.quark.base.world.config.DimensionConfig;
+import vazkii.quark.base.module.config.type.DimensionConfig;
 import vazkii.quark.base.world.generator.Generator;
 import vazkii.quark.content.world.module.FairyRingsModule;
 

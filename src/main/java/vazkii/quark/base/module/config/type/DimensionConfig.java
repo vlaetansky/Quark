@@ -1,4 +1,4 @@
-package vazkii.quark.base.world.config;
+package vazkii.quark.base.module.config.type;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -7,7 +7,6 @@ import java.util.List;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.base.module.config.IConfigType;
 
 public class DimensionConfig implements IConfigType {
 

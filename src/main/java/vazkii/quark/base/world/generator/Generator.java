@@ -13,7 +13,7 @@ import net.minecraft.world.biome.BiomeManager;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.WorldGenRegion;
-import vazkii.quark.base.world.config.DimensionConfig;
+import vazkii.quark.base.module.config.type.DimensionConfig;
 
 public abstract class Generator implements IGenerator {
 	

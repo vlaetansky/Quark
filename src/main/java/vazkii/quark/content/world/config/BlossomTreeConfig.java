@@ -3,10 +3,10 @@ package vazkii.quark.content.world.config;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.base.module.config.IConfigType;
-import vazkii.quark.base.world.config.BiomeConfig;
-import vazkii.quark.base.world.config.BiomeTypeConfig;
-import vazkii.quark.base.world.config.DimensionConfig;
+import vazkii.quark.base.module.config.type.BiomeConfig;
+import vazkii.quark.base.module.config.type.BiomeTypeConfig;
+import vazkii.quark.base.module.config.type.DimensionConfig;
+import vazkii.quark.base.module.config.type.IConfigType;
 
 public class BlossomTreeConfig implements IConfigType {
 

@@ -1,4 +1,4 @@
-package vazkii.quark.base.world.config;
+package vazkii.quark.base.module.config.type;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.BiomeDictionary;

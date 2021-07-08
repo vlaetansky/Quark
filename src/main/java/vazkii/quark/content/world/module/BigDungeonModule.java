@@ -18,8 +18,8 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.base.world.config.BiomeConfig;
-import vazkii.quark.base.world.config.BiomeTypeConfig;
+import vazkii.quark.base.module.config.type.BiomeConfig;
+import vazkii.quark.base.module.config.type.BiomeTypeConfig;
 import vazkii.quark.content.world.gen.structure.BigDungeonStructure;
 
 @LoadModule(category = ModuleCategory.WORLD, hasSubscriptions = true)

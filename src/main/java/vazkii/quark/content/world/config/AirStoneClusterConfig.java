@@ -1,8 +1,8 @@
 package vazkii.quark.content.world.config;
 
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.base.world.config.DimensionConfig;
-import vazkii.quark.base.world.config.IBiomeConfig;
+import vazkii.quark.base.module.config.type.DimensionConfig;
+import vazkii.quark.base.module.config.type.IBiomeConfig;
 
 public class AirStoneClusterConfig extends BigStoneClusterConfig {
 

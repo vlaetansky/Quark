@@ -1,8 +1,7 @@
-package vazkii.quark.base.world.config;
+package vazkii.quark.base.module.config.type;
 
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.base.module.config.IConfigType;
 
 public class EntitySpawnConfig implements IConfigType {
 

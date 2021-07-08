@@ -2,11 +2,11 @@ package vazkii.quark.content.world.config;
 
 import net.minecraftforge.common.BiomeDictionary;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.base.world.config.BiomeConfig;
-import vazkii.quark.base.world.config.BiomeTypeConfig;
-import vazkii.quark.base.world.config.ClusterSizeConfig;
-import vazkii.quark.base.world.config.DimensionConfig;
-import vazkii.quark.base.world.config.IBiomeConfig;
+import vazkii.quark.base.module.config.type.BiomeConfig;
+import vazkii.quark.base.module.config.type.BiomeTypeConfig;
+import vazkii.quark.base.module.config.type.ClusterSizeConfig;
+import vazkii.quark.base.module.config.type.DimensionConfig;
+import vazkii.quark.base.module.config.type.IBiomeConfig;
 
 public class BigStoneClusterConfig extends ClusterSizeConfig {
 

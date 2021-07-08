@@ -17,7 +17,7 @@ import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.WorldGenRegion;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.ModuleLoader;
-import vazkii.quark.base.world.config.DimensionConfig;
+import vazkii.quark.base.module.config.type.DimensionConfig;
 import vazkii.quark.base.world.generator.Generator;
 import vazkii.quark.content.building.module.CompressedBlocksModule;
 import vazkii.quark.content.world.module.NetherObsidianSpikesModule;

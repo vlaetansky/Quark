@@ -9,8 +9,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.gen.PerlinNoiseGenerator;
 import vazkii.quark.base.handler.GeneralConfig;
-import vazkii.quark.base.world.config.ClusterSizeConfig;
-import vazkii.quark.base.world.config.IBiomeConfig;
+import vazkii.quark.base.module.config.type.ClusterSizeConfig;
+import vazkii.quark.base.module.config.type.IBiomeConfig;
 
 public class ClusterShape {
 	

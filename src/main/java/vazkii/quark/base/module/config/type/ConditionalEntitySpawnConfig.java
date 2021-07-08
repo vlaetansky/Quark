@@ -1,4 +1,4 @@
-package vazkii.quark.base.world.config;
+package vazkii.quark.base.module.config.type;
 
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.ConfigFlagManager;

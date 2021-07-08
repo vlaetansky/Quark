@@ -12,7 +12,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.WorldGenRegion;
-import vazkii.quark.base.world.config.DimensionConfig;
+import vazkii.quark.base.module.config.type.DimensionConfig;
 import vazkii.quark.base.world.generator.multichunk.MultiChunkFeatureGenerator;
 import vazkii.quark.content.world.module.ChorusVegetationModule;
 

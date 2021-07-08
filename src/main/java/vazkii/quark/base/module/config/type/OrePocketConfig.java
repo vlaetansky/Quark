@@ -1,8 +1,7 @@
-package vazkii.quark.base.world.config;
+package vazkii.quark.base.module.config.type;
 
 import net.minecraft.util.math.BlockPos;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.base.module.config.IConfigType;
 
 import java.util.Random;
 import java.util.function.Consumer;

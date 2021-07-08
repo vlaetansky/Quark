@@ -1,9 +1,8 @@
-package vazkii.quark.base.world.config;
+package vazkii.quark.base.module.config.type;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
-import vazkii.quark.base.module.config.IConfigType;
 
 public interface IBiomeConfig extends IConfigType {
 

@@ -2,7 +2,7 @@ package vazkii.quark.content.world.config;
 
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
-import vazkii.quark.base.world.config.ClusterSizeConfig;
+import vazkii.quark.base.module.config.type.ClusterSizeConfig;
 import vazkii.quark.content.world.gen.underground.UndergroundBiome;
 
 public class UndergroundBiomeConfig extends ClusterSizeConfig {

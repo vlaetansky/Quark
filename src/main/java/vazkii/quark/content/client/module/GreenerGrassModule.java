@@ -87,9 +87,9 @@ public class GreenerGrassModule extends QuarkModule {
 			int b = originalColor & 0xFF;
 
 			double[] colorMatrix = {
-					0.89, 0.00, 0.00,
-					0.00, 1.11, 0.00,
-					0.00, 0.00, 0.89
+					0.00, 1.00, 0.00,
+					0.50, 0.00, 0.00,
+					0.50, 0.00, 0.00
 			};
 
 			int outR = clamp((int) ((double) r * colorMatrix[0] + (double) g * colorMatrix[1] + (double) b * colorMatrix[2]));

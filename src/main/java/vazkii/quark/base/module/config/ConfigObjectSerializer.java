@@ -15,6 +15,7 @@ import org.apache.commons.lang3.text.WordUtils;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import vazkii.quark.base.module.QuarkModule;
+import vazkii.quark.base.module.config.type.IConfigType;
 
 @SuppressWarnings("deprecation")
 public final class ConfigObjectSerializer {

@@ -16,9 +16,9 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
+import vazkii.quark.base.module.config.type.BiomeConfig;
+import vazkii.quark.base.module.config.type.EntitySpawnConfig;
 import vazkii.quark.base.world.EntitySpawnHandler;
-import vazkii.quark.base.world.config.BiomeConfig;
-import vazkii.quark.base.world.config.EntitySpawnConfig;
 import vazkii.quark.content.experimental.shiba.client.render.ShibaRenderer;
 import vazkii.quark.content.experimental.shiba.entity.ShibaEntity;
 

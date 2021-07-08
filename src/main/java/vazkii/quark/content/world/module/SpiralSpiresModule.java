@@ -19,11 +19,11 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
+import vazkii.quark.base.module.config.type.BiomeConfig;
+import vazkii.quark.base.module.config.type.DimensionConfig;
+import vazkii.quark.base.module.config.type.StrictBiomeConfig;
 import vazkii.quark.base.world.WorldGenHandler;
 import vazkii.quark.base.world.WorldGenWeights;
-import vazkii.quark.base.world.config.BiomeConfig;
-import vazkii.quark.base.world.config.DimensionConfig;
-import vazkii.quark.base.world.config.StrictBiomeConfig;
 import vazkii.quark.content.world.block.MyaliteCrystalBlock;
 import vazkii.quark.content.world.gen.SpiralSpireGenerator;
 

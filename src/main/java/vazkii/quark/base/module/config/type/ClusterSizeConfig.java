@@ -1,9 +1,8 @@
-package vazkii.quark.base.world.config;
+package vazkii.quark.base.module.config.type;
 
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.base.module.config.IConfigType;
 
 public class ClusterSizeConfig implements IConfigType {
 
