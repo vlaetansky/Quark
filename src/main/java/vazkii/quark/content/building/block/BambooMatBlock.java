@@ -21,9 +21,9 @@ public class BambooMatBlock extends QuarkBlock {
 	
 	public BambooMatBlock(QuarkModule module) {
 		super("bamboo_mat", module, ItemGroup.BUILDING_BLOCKS,
-				Block.Properties.create(Material.WOOD, MaterialColor.YELLOW)
+				Block.Properties.create(Material.BAMBOO, MaterialColor.YELLOW)
 				.hardnessAndResistance(0.5F)
-				.sound(SoundType.WOOD));
+				.sound(SoundType.BAMBOO));
 		
 		setDefaultState(getDefaultState().with(FACING, Direction.NORTH));
 	}
