@@ -1,5 +1,6 @@
 package vazkii.quark.mixin;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,9 +18,12 @@ public class EnchantmentHelperMixin {
 
 	@Inject(method = "getEnchantments", at = @At("HEAD"), cancellable = true)
 	private static void getAncientTomeEnchantments(ItemStack stack, CallbackInfoReturnable<Map<Enchantment, Integer>> callbackInfoReturnable) {
-		Map<Enchantment, Integer> enchantments = AncientTomesModule.getTomeEnchantments(stack);
+		Enchantment enchant = AncientTomesModule.getTomeEnchantment(stack);
 
-		if(enchantments != null)
-			callbackInfoReturnable.setReturnValue(enchantments);
+		if(enchant != null) {
+			Map<Enchantment, Integer> map = new HashMap<>();
+			map.put(enchant, 1);
+			callbackInfoReturnable.setReturnValue(map);
+		}
 	}
 }

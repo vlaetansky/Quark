@@ -1,21 +1,28 @@
 package vazkii.quark.content.tools.item;
 
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
-import net.minecraft.item.*;
+import net.minecraft.item.EnchantedBookItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.tools.module.AncientTomesModule;
-
-import javax.annotation.Nonnull;
-import java.util.List;
 
 public class AncientTomeItem extends QuarkItem {
 
@@ -71,7 +78,10 @@ public class AncientTomeItem extends QuarkItem {
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 		super.addInformation(stack, worldIn, tooltip, flagIn);
-	    ItemStack.addEnchantmentTooltips(tooltip, EnchantedBookItem.getEnchantments(stack));
+		
+		Enchantment ench = AncientTomesModule.getTomeEnchantment(stack);
+		if(ench != null)
+			tooltip.add(new TranslationTextComponent("quark.misc.ancient_tome_tooltip", new TranslationTextComponent(ench.getName()), new TranslationTextComponent("enchantment.level." + (ench.getMaxLevel() + 1))).mergeStyle(TextFormatting.GRAY));
 	}
 
 }
