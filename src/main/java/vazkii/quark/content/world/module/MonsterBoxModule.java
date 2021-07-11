@@ -2,6 +2,7 @@ package vazkii.quark.content.world.module;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameterSets;
 import net.minecraft.loot.LootTable;
@@ -64,7 +65,10 @@ public class MonsterBoxModule extends QuarkModule {
 	@SubscribeEvent
 	public void onDrops(LivingDropsEvent event) {
 		LivingEntity entity = event.getEntityLiving();
-		if(enableExtraLootTable && entity.getEntityWorld() instanceof ServerWorld && entity.getPersistentData().getBoolean(TAG_MONSTER_BOX_SPAWNED) && entity.world.getGameRules().getBoolean(GameRules.DO_MOB_LOOT)) {
+		if(enableExtraLootTable && entity.getEntityWorld() instanceof ServerWorld 
+				&& entity.getPersistentData().getBoolean(TAG_MONSTER_BOX_SPAWNED) 
+				&& entity.world.getGameRules().getBoolean(GameRules.DO_MOB_LOOT)
+				&& event.getSource().getTrueSource() instanceof PlayerEntity) {
 			LootTable loot = ((ServerWorld) entity.getEntityWorld()).getServer().getLootTableManager().getLootTableFromLocation(MONSTER_BOX_LOOT_TABLE);
 			if(loot != null)
 				loot.generate(new LootContext.Builder((ServerWorld) entity.getEntityWorld()).build(LootParameterSets.EMPTY), entity::entityDropItem);
