@@ -53,7 +53,7 @@ public class BackpackInventoryScreen extends InventoryScreen {
 		super.init();
 		
 		for(Widget widget : buttons)
-			if(widget instanceof ImageButton) {
+			if(widget instanceof ImageButton || widget.getClass().getName().contains("svenhjol.charm")) {
 				widget.y -= 29;
 				buttonYs.put((Button) widget, widget.y);
 			}
