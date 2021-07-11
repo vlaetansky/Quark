@@ -82,7 +82,7 @@ public class CompressedBlocksModule extends QuarkModule {
 				.setCondition(() -> enableCharcoalBlock);
 		
 		bamboo_bundle = pillar("sugar_cane", MaterialColor.LIME, true, () -> enableSugarCaneBlock, 200);
-		pillar("bamboo", MaterialColor.YELLOW, true, () -> enableBambooBlock, 200);
+		pillar("bamboo", MaterialColor.YELLOW, false, () -> enableBambooBlock, 200);
 		pillar("cactus", MaterialColor.GREEN, true, () -> enableCactusBlock, 50);
 		pillar("chorus_fruit", MaterialColor.PURPLE, false, () -> enableChorusFruitBlock, 10);
 		stick_block = pillar("stick", MaterialColor.WOOD, false, () -> enableStickBlock, 300);
