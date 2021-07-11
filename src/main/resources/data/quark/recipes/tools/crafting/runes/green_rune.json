@@ -5,11 +5,11 @@
       "item": "quark:blank_rune"
     },
     {
-      "tag": "forge:dyes/lime"
+      "tag": "forge:dyes/green"
     }
   ],
   "result": {
-    "item": "quark:lime_rune",
+    "item": "quark:green_rune",
     "count": 1
   },
   "conditions": [

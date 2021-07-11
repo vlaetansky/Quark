@@ -1,35 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "###",
-    "#S#",
-    "###"
-  ],
-  "key": {
-    "#": {
-      "item": "quark:orange_crystal"
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "quark:blank_rune"
     },
-    "S": {
-      "tag": "forge:stone"
+    {
+      "tag": "forge:dyes/orange"
     }
-  },
+  ],
   "result": {
-    "item": "quark:orange_rune"
+    "item": "quark:orange_rune",
+    "count": 1
   },
-  "group": "quark:crystal_rune",
   "conditions": [
     {
-      "type": "forge:and",
-      "values": [
-        {
-          "type": "quark:flag",
-          "flag": "color_runes"
-        },
-        {
-          "type": "quark:flag",
-          "flag": "cave_crystal_runes"
-        }
-      ]
+      "type": "quark:flag",
+      "flag": "color_runes"
     }
   ]
 } 

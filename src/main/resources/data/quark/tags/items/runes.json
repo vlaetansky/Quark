@@ -17,6 +17,7 @@
     "quark:red_rune",
     "quark:white_rune",
     "quark:yellow_rune",
-    "quark:rainbow_rune"
+    "quark:rainbow_rune",
+    "quark:blank_rune"
   ]
 }

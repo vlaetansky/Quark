@@ -2,14 +2,14 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "quark:blank_rune"
+      "item": "%modid%:blank_rune"
     },
     {
-      "tag": "forge:dyes/lime"
+      "tag": "forge:dyes/%name%"
     }
   ],
   "result": {
-    "item": "quark:lime_rune",
+    "item": "%modid%:%name%_rune",
     "count": 1
   },
   "conditions": [

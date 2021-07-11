@@ -25,15 +25,17 @@ import javax.annotation.Nullable;
 public class RuneItem extends QuarkItem implements IRuneColorProvider {
 
     private final int color;
+    private final boolean glow;
 
-    public RuneItem(String regname, QuarkModule module, int color) {
+    public RuneItem(String regname, QuarkModule module, int color, boolean glow) {
         super(regname, module, new Item.Properties().group(ItemGroup.MATERIALS));
         this.color = color;
+        this.glow = glow;
     }
 
     @Override
     public boolean hasEffect(ItemStack stack) {
-        return true;
+        return glow;
     }
 
     @Override

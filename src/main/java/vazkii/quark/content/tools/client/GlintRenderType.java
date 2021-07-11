@@ -18,6 +18,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.base.Quark;
+import vazkii.quark.content.tools.module.ColorRunesModule;
 
 @OnlyIn(Dist.CLIENT)
 public class GlintRenderType {
@@ -40,12 +41,13 @@ public class GlintRenderType {
     }
     
     private static List<RenderType> newRenderList(Function<String, RenderType> func) {
-    	ArrayList<RenderType> list = new ArrayList<>(17);
+    	ArrayList<RenderType> list = new ArrayList<>(ColorRunesModule.RUNE_TYPES + 1);
     	
         for (DyeColor color : DyeColor.values())
         	list.add(func.apply(color.getTranslationKey()));
         list.add(func.apply("rainbow"));
-        
+        list.add(func.apply("blank"));
+
         return list;
     }
     
