@@ -10,9 +10,9 @@ import vazkii.quark.content.tools.item.TrowelItem;
 public class TrowelModule extends QuarkModule {
 
 	@Config(name = "Trowel Max Durability",
-			description = "Amount of blocks placed is this value + 1. Default is 255 (4 stacks).\nSet to 0 to make the Trowel unbreakable")
+			description = "Amount of blocks placed is this value + 1.\nSet to 0 to make the Trowel unbreakable")
 	@Config.Min(0)
-	public static int maxDamage = 255;
+	public static int maxDamage = 0;
 	
 	@Override
 	public void construct() {
