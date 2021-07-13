@@ -17,6 +17,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.MusicDiscItem;
 import net.minecraft.item.Rarity;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -67,7 +68,11 @@ public class QuarkMusicDiscItem extends MusicDiscItem implements IQuarkItem {
 		if(isAmbient) {
 			SimpleSound simplesound = new SimpleSound(soundIn.getName(), SoundCategory.RECORDS, 4.0F, 1.0F, true, 0, ISound.AttenuationType.LINEAR, pos.getX(), pos.getY(), pos.getZ(), false);
 	        render.mapSoundPositions.put(pos, simplesound);
-	        Minecraft.getInstance().getSoundHandler().play(simplesound);
+	        
+	        Minecraft mc = Minecraft.getInstance();
+	        mc.getSoundHandler().play(simplesound);
+	        
+	        mc.world.addParticle(ParticleTypes.NOTE,pos.getX() + Math.random(), pos.getY() + 1.1, pos.getZ() + Math.random(), Math.random(), 0, 0);
 			
 			info.cancel();
 		}

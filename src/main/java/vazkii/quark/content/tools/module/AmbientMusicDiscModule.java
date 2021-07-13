@@ -1,6 +1,5 @@
 package vazkii.quark.content.tools.module;
 
-import net.minecraft.util.SoundEvent;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.base.item.QuarkMusicDiscItem;
 import vazkii.quark.base.module.LoadModule;
@@ -16,10 +15,10 @@ public class AmbientMusicDiscModule extends QuarkModule {
 		new QuarkMusicDiscItem(15, () -> QuarkSounds.AMBIENT_OCEAN, "ocean", this, true);
 		new QuarkMusicDiscItem(15, () -> QuarkSounds.AMBIENT_RAIN,  "rain",  this, true);
 		new QuarkMusicDiscItem(15, () -> QuarkSounds.AMBIENT_WIND,  "wind",  this, true);
-	}
-	
-	SoundEvent getSound() {
-		return QuarkSounds.AMBIENT_DRIPS;
+		new QuarkMusicDiscItem(15, () -> QuarkSounds.AMBIENT_FIRE,  "fire",  this, true);
+		new QuarkMusicDiscItem(15, () -> QuarkSounds.AMBIENT_CLOCK,  "clock",  this, true);
+		new QuarkMusicDiscItem(15, () -> QuarkSounds.AMBIENT_CRICKETS,  "crickets",  this, true);
+		new QuarkMusicDiscItem(15, () -> QuarkSounds.AMBIENT_CHATTER,  "chatter",  this, true);
 	}
 	
 }

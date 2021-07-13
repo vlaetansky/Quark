@@ -235,5 +235,33 @@
     "sounds": [
       "quark:ambient/wind"
     ]
+  },
+  "ambient.fire": {
+    "category": "records",
+    "subtitle": "quark.subtitles.ambient.fire",
+    "sounds": [
+      "quark:ambient/fire"
+    ]
+  },
+  "ambient.clock": {
+    "category": "records",
+    "subtitle": "quark.subtitles.ambient.clock",
+    "sounds": [
+      "quark:ambient/clock"
+    ]
+  },
+  "ambient.crickets": {
+    "category": "records",
+    "subtitle": "quark.subtitles.ambient.crickets",
+    "sounds": [
+      "quark:ambient/crickets"
+    ]
+  },
+  "ambient.chatter": {
+    "category": "records",
+    "subtitle": "quark.subtitles.ambient.chatter",
+    "sounds": [
+      "quark:ambient/chatter"
+    ]
   }
 }

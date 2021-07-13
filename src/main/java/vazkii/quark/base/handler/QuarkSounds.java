@@ -54,6 +54,10 @@ public class QuarkSounds {
     public static final SoundEvent AMBIENT_OCEAN = register("ambient.ocean");
     public static final SoundEvent AMBIENT_RAIN = register("ambient.rain");
     public static final SoundEvent AMBIENT_WIND = register("ambient.wind");
+    public static final SoundEvent AMBIENT_FIRE = register("ambient.fire");
+    public static final SoundEvent AMBIENT_CLOCK = register("ambient.clock");
+    public static final SoundEvent AMBIENT_CRICKETS = register("ambient.crickets");
+    public static final SoundEvent AMBIENT_CHATTER = register("ambient.chatter");
 
 //    public static final SoundEvent MUSIC_TEDIUM = register("music.tedium");
     
