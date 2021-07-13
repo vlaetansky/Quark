@@ -38,7 +38,8 @@
     "client.ScreenMixin",
     "client.ContainerScreenMixin",
     "client.TridentRendererMixin",
-    "client.BeaconTileEntityRendererMixin"
+    "client.BeaconTileEntityRendererMixin",
+    "client.WorldRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

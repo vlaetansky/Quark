@@ -207,5 +207,33 @@
     "sounds": [
       "quark:item/soulpowder_scream"
     ]
+  },
+  "ambient.drips": {
+    "category": "records",
+    "subtitle": "quark.subtitles.ambient.drips",
+    "sounds": [
+      "quark:ambient/drips"
+    ]
+  },
+  "ambient.ocean": {
+    "category": "records",
+    "subtitle": "quark.subtitles.ambient.ocean",
+    "sounds": [
+      "quark:ambient/ocean"
+    ]
+  },
+  "ambient.rain": {
+    "category": "records",
+    "subtitle": "quark.subtitles.ambient.rain",
+    "sounds": [
+      "quark:ambient/rain"
+    ]
+  },
+  "ambient.wind": {
+    "category": "records",
+    "subtitle": "quark.subtitles.ambient.wind",
+    "sounds": [
+      "quark:ambient/wind"
+    ]
   }
 }

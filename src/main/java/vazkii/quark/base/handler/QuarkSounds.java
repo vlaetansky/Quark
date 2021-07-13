@@ -1,12 +1,13 @@
 package vazkii.quark.base.handler;
 
+import java.util.List;
+
 import com.google.common.collect.Lists;
+
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.registries.GameData;
 import vazkii.arl.util.RegistryHelper;
-
-import java.util.List;
 
 /**
  * @author WireSegal
@@ -48,6 +49,11 @@ public class QuarkSounds {
 
     public static final SoundEvent ITEM_CAMERA_SHUTTER = register("item.camera.shutter");
     public static final SoundEvent ITEM_SOUL_POWDER_SPAWN = register("item.soul_powder.spawn");
+
+    public static final SoundEvent AMBIENT_DRIPS = register("ambient.drips");
+    public static final SoundEvent AMBIENT_OCEAN = register("ambient.ocean");
+    public static final SoundEvent AMBIENT_RAIN = register("ambient.rain");
+    public static final SoundEvent AMBIENT_WIND = register("ambient.wind");
 
 //    public static final SoundEvent MUSIC_TEDIUM = register("music.tedium");
     

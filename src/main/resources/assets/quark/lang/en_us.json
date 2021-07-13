@@ -310,6 +310,15 @@
 	"item.quark.music_disc_tedium": "Music Disc",
 	"item.quark.music_disc_tedium.desc": "Kain Vinosec - Tedium",
 
+	"item.quark.music_disc_drips": "Ambience Disc",
+	"item.quark.music_disc_drips.desc": "Water Droplets",
+	"item.quark.music_disc_ocean": "Ambience Disc",
+	"item.quark.music_disc_ocean.desc": "Ocean Waves",
+	"item.quark.music_disc_rain": "Ambience Disc",
+	"item.quark.music_disc_rain.desc": "Rain Sounds",
+	"item.quark.music_disc_wind": "Ambience Disc",
+	"item.quark.music_disc_wind.desc": "Heavy Wind",
+
 	"item.minecraft.potion.effect.quark.resilience": "Potion of Stability",
 	"item.minecraft.splash_potion.effect.quark.resilience": "Splash Potion of Stability",
 	"item.minecraft.lingering_potion.effect.quark.resilience": "Lingering Potion of Stability",
