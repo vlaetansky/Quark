@@ -78,29 +78,34 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 
 	@Override
 	public void construct() {
-		crystals.add(new CaveCrystalBlock("red_crystal", 0xff0000, this, MaterialColor.RED));
-		crystals.add(new CaveCrystalBlock("orange_crystal", 0xff8000, this, MaterialColor.ADOBE));
-		crystals.add(new CaveCrystalBlock("yellow_crystal", 0xffff00, this, MaterialColor.YELLOW));
-		crystals.add(new CaveCrystalBlock("green_crystal", 0x00ff00, this, MaterialColor.GREEN));
-		crystals.add(new CaveCrystalBlock("blue_crystal", 0x00ffff, this, MaterialColor.LIGHT_BLUE)); // *grumbling about the names of colors in the rainbow*
-		crystals.add(new CaveCrystalBlock("indigo_crystal", 0x0000ff, this, MaterialColor.BLUE));
-		crystals.add(new CaveCrystalBlock("violet_crystal", 0xff00ff, this, MaterialColor.MAGENTA));
-		crystals.add(new CaveCrystalBlock("white_crystal", 0xffffff, this, MaterialColor.SNOW));
-		crystals.add(new CaveCrystalBlock("black_crystal", 0x000000, this, MaterialColor.BLACK));
-
-		for(CaveCrystalBlock block : crystals)
-			new QuarkInheritedPaneBlock(block);
-
-		for(CaveCrystalBlock block : crystals) {
-			CaveCrystalClusterBlock cluster = new CaveCrystalClusterBlock(block);
-			
-			ClusterConnection connection = new ClusterConnection(cluster);
-			IIndirectConnector.INDIRECT_STICKY_BLOCKS.add(Pair.of(connection::isValidState, connection));
-		}
-
+		crystal("red", 0xff0000, MaterialColor.RED);
+		crystal("orange", 0xff8000, MaterialColor.ADOBE);
+		crystal("yellow", 0xffff00, MaterialColor.YELLOW);
+		crystal("green", 0x00ff00, MaterialColor.GREEN);
+		crystal("blue", 0x00ffff, MaterialColor.LIGHT_BLUE);
+		crystal("indigo", 0x0000ff, MaterialColor.BLUE);
+		crystal("violet", 0xff00ff, MaterialColor.MAGENTA);
+		crystal("white", 0xffffff, MaterialColor.SNOW);
+		crystal("black", 0x000000, MaterialColor.BLACK);
+		
 		super.construct();
 	}
 
+	private void crystal(String name, int color, MaterialColor material) {
+		CaveCrystalBlock crystal = new CaveCrystalBlock(name + "_crystal", color, this, material, false);
+		crystals.add(crystal);
+		
+		CaveCrystalBlock waxed = new CaveCrystalBlock("waxed_" + name + "_crystal", color, this, material, true);
+		waxed.alternate = crystal;
+		crystal.alternate = waxed;
+
+		new QuarkInheritedPaneBlock(crystal);
+		CaveCrystalClusterBlock cluster = new CaveCrystalClusterBlock(crystal);
+		
+		ClusterConnection connection = new ClusterConnection(cluster);
+		IIndirectConnector.INDIRECT_STICKY_BLOCKS.add(Pair.of(connection::isValidState, connection));
+	}
+	
 	@Override
 	public void setup() {
 		super.setup();
