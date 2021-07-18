@@ -19,6 +19,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -68,6 +69,8 @@ public class MiscUtil {
 
 	public static final ResourceLocation GENERAL_ICONS = new ResourceLocation(Quark.MOD_ID, "textures/gui/general_icons.png");
 
+	public static final int BASIC_GUI_TEXT_COLOR = 0x404040;
+	
 	private static final MethodHandle LOOT_TABLE_POOLS, LOOT_POOL_ENTRIES;
 
 	static {
@@ -254,6 +257,21 @@ public class MiscUtil {
 	
 	public static boolean canPutIntoInv(ItemStack stack, TileEntity tile, Direction face, boolean doSimulation) {
 		return putIntoInv(stack, tile, face, true, doSimulation).isEmpty();
+	}
+	
+	@OnlyIn(Dist.CLIENT)
+	public static int getGuiTextColor(String name) {
+		return getGuiTextColor(name, BASIC_GUI_TEXT_COLOR);
+	}
+	
+	@OnlyIn(Dist.CLIENT)
+	public static int getGuiTextColor(String name, int base) {
+		int ret = base;
+		
+		String hex = I18n.format("quark.gui.color." + name);
+		if(hex.matches("\\#[A-F0-9]{6}"))
+			ret = Integer.valueOf(hex.substring(1), 16);
+		return ret;
 	}
 
 	private static int progress;

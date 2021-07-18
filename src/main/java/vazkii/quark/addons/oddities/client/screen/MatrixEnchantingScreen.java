@@ -26,6 +26,7 @@ import vazkii.quark.addons.oddities.container.EnchantmentMatrix.Piece;
 import vazkii.quark.addons.oddities.module.MatrixEnchantingModule;
 import vazkii.quark.addons.oddities.tile.MatrixEnchantingTableTileEntity;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.MatrixEnchanterOperationMessage;
 
@@ -123,8 +124,10 @@ public class MatrixEnchantingScreen extends ContainerScreen<MatrixEnchantingCont
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer(MatrixStack matrix, int mouseX, int mouseY) {
-		font.drawString(matrix, enchanter.getDisplayName().getString(), 12, 5, 4210752);
-		font.drawString(matrix, playerInv.getDisplayName().getString(), 8, ySize - 96 + 2, 4210752);
+		int color = MiscUtil.getGuiTextColor("matrix_enchanting");
+		
+		font.drawString(matrix, enchanter.getDisplayName().getString(), 12, 5, color);
+		font.drawString(matrix, playerInv.getDisplayName().getString(), 8, ySize - 96 + 2, color);
 
 		if(enchanter.matrix != null) {
 			boolean needsRefresh = listPieces == null;

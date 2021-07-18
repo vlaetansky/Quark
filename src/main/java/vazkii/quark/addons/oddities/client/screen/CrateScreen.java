@@ -8,7 +8,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.Rectangle2d;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -17,6 +16,7 @@ import vazkii.quark.addons.oddities.module.CrateModule;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.handler.InventoryButtonHandler;
 import vazkii.quark.base.client.handler.InventoryButtonHandler.ButtonTargetType;
+import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.content.client.module.ChestSearchingModule;
 
 public class CrateScreen extends ContainerScreen<CrateContainer> {
@@ -81,11 +81,7 @@ public class CrateScreen extends ContainerScreen<CrateContainer> {
 		if(!ChestSearchingModule.searchEnabled) {
 			String s = container.getTotal() + "/" + CrateModule.maxItems;
 			
-			int color = 0x404040;
-			String hex = I18n.format("quark.gui.color.crate_count");
-			if(hex.matches("\\#[A-F0-9]{6}"))
-				color = Integer.valueOf(hex.substring(1), 16);
-			
+			int color = MiscUtil.getGuiTextColor("crate_count");
 			font.drawString(matrixStack, s, i + this.xSize - font.getStringWidth(s) - 8 - InventoryButtonHandler.getActiveButtons(ButtonTargetType.CONTAINER_INVENTORY).size() * 12, j + 6, color);
 		}
 	}
