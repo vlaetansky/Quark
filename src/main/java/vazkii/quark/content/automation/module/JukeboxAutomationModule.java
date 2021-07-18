@@ -31,10 +31,9 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 
 @LoadModule(category = ModuleCategory.AUTOMATION, hasSubscriptions = true)
-public class DispensersPlayMusicDiscsModule extends QuarkModule {
+public class JukeboxAutomationModule extends QuarkModule {
 
 	private static final ResourceLocation JUKEBOX_ITEM_HANDLER = new ResourceLocation(Quark.MOD_ID, "jukebox_item_handler");
-
 
 	@Override
 	public void setup() {

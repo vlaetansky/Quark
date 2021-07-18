@@ -30,7 +30,7 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true)
-public class AmbientMusicDiscModule extends QuarkModule {
+public class AmbientDiscsModule extends QuarkModule {
 
 	@Config public static boolean dropOnSpiderKill = true;
 	
