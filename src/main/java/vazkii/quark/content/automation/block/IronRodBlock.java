@@ -18,6 +18,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.api.ICollateralMover;
+import vazkii.quark.base.handler.RenderLayerHandler;
+import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
 
 public class IronRodBlock extends EndRodBlock implements ICollateralMover {
@@ -29,10 +31,13 @@ public class IronRodBlock extends EndRodBlock implements ICollateralMover {
 	public IronRodBlock(QuarkModule module) {
 		super(Block.Properties.create(Material.IRON, DyeColor.GRAY)
 				.hardnessAndResistance(5F, 10F)
-				.sound(SoundType.METAL));
+				.sound(SoundType.METAL)
+				.notSolid());
 		
 		RegistryHelper.registerBlock(this, "iron_rod");
 		RegistryHelper.setCreativeTab(this, ItemGroup.DECORATIONS);
+		
+		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
 		
 		this.module = module;
 	}
