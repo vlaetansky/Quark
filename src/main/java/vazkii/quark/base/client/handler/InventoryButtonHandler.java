@@ -87,7 +87,9 @@ public final class InventoryButtonHandler {
 		Screen gui = pressed.getGui();
 		if (gui instanceof ContainerScreen) {
 			ContainerScreen<?> screen = (ContainerScreen<?>) gui;
-
+			if(GeneralConfig.isScreenIgnored(screen))
+				return;
+			
 			Collection<ButtonProviderHolder> holders = forGui(screen);
 
 			for (ButtonProviderHolder holder : holders) {
@@ -106,6 +108,8 @@ public final class InventoryButtonHandler {
 		Screen gui = pressed.getGui();
 		if (gui instanceof ContainerScreen) {
 			ContainerScreen<?> screen = (ContainerScreen<?>) gui;
+			if(GeneralConfig.isScreenIgnored(screen))
+				return;
 
 			Collection<ButtonProviderHolder> holders = forGui(screen);
 
