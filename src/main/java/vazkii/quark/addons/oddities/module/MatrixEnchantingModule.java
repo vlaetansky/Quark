@@ -128,6 +128,9 @@ public class MatrixEnchantingModule extends QuarkModule {
 	@Config(description = "How much each candle influences an enchantment. This works as a multiplier to its weight")
 	public static double influencePower = 0.125;
 
+	@Config(description = "If you set this to false, the vanilla Enchanting Table will no longer automatically convert to the Matrix Enchanting table. You'll have to add a recipe for the Matrix Enchanting Table to make use of this.")
+	public static boolean automaticallyConvert = false;
+	
 	public static Map<DyeColor, List<Enchantment>> candleInfluences;
 
 	public static Block matrixEnchanter;
@@ -160,7 +163,7 @@ public class MatrixEnchantingModule extends QuarkModule {
 	
 	@SubscribeEvent
 	public void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
-		if(event.getPlacedBlock().getBlock().equals(Blocks.ENCHANTING_TABLE))
+		if(event.getPlacedBlock().getBlock().equals(Blocks.ENCHANTING_TABLE) && automaticallyConvert)
 			event.getWorld().setBlockState(event.getPos(), matrixEnchanter.getDefaultState(), 3);
 	}
 	
@@ -169,7 +172,7 @@ public class MatrixEnchantingModule extends QuarkModule {
 		if(event.getPlayer() instanceof FakePlayer)
 			return;
 		
-		if(event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.ENCHANTING_TABLE)
+		if(event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.ENCHANTING_TABLE && automaticallyConvert)
 			event.getWorld().setBlockState(event.getPos(), matrixEnchanter.getDefaultState(), 3);
 	}
 	
