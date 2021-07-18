@@ -131,6 +131,7 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 	// The value that comes out of this is fed onto a constant for the FOR loop that
 	// computes the beacon segments, so we return 0 to run that code, or MAX_VALUE to not
 	public static int tickBeacon(BeaconTileEntity beacon) {
+		enableBeaconRedirection = true;
 		if(!staticEnabled || !enableBeaconRedirection)
 			return 0; 
 
@@ -157,6 +158,7 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 
 			BlockState blockstate = world.getBlockState(currPos);
 			Block block = blockstate.getBlock();
+			boolean setColor = false;
 			float[] targetColor = blockstate.getBeaconColorMultiplier(world, currPos, beaconPos);
 			
 			if(block instanceof CaveCrystalClusterBlock) {
@@ -183,6 +185,12 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 					beacon.beamColorSegments.add(currSegment);
 
 					float[] mixedColor = new float[]{(currColor[0] + targetColor[0]) / 2.0F, (currColor[1] + targetColor[1]) / 2.0F, (currColor[2] + targetColor[2]) / 2.0F};
+					
+					if(!setColor) {
+						mixedColor = targetColor;
+						setColor = true;
+					}
+					
 					currColor = mixedColor;
 					currSegment = new ExtendedBeamSegment(currSegment.dir, currPos.subtract(beaconPos), mixedColor);
 				}
