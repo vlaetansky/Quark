@@ -134,6 +134,9 @@ public class MagnetSystem {
 			Multimap<Item, Item> recipeDigestion = HashMultimap.create();
 
 			for(IRecipe<?> recipe : recipes) {
+				if(recipe == null || recipe.getRecipeOutput() == null)
+					continue;
+				
 				Item out = recipe.getRecipeOutput().getItem();
 
 				NonNullList<Ingredient> ingredients = recipe.getIngredients();
