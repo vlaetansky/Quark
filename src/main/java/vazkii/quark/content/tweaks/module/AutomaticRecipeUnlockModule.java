@@ -51,7 +51,20 @@ public class AutomaticRecipeUnlockModule extends QuarkModule {
 			if (server != null) {
 				List<IRecipe<?>> recipes = new ArrayList<>(server.getRecipeManager().getRecipes());
 				recipes.removeIf((recipe) -> ignoredRecipes.contains(Objects.toString(recipe.getId())) || recipe.getRecipeOutput().isEmpty());
-				player.unlockRecipes(recipes);
+				
+				int idx = 0;
+				int maxShift = 1000;
+				int shift = 0;
+				int size = recipes.size();
+				do {
+					shift = size - idx;
+					int effShift = Math.min(maxShift, shift);
+					
+					List<IRecipe<?>> sectionedRecipes = recipes.subList(idx, idx + effShift);
+					player.unlockRecipes(sectionedRecipes);
+					idx += effShift;
+				} while(shift > maxShift);
+				
 
 				if (forceLimitedCrafting)
 					player.world.getGameRules().get(GameRules.DO_LIMITED_CRAFTING).set(true, server);
