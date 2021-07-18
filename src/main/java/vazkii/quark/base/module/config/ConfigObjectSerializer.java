@@ -32,7 +32,6 @@ public final class ConfigObjectSerializer {
 	private static List<Field> recursivelyGetFields(Class<?> clazz) {
 		List<Field> list = new LinkedList<>();
 		while(clazz != Object.class) {
-			System.out.println(clazz);
 			Field[] fields = clazz.getDeclaredFields();
 			list.addAll(Arrays.asList(fields));
 				

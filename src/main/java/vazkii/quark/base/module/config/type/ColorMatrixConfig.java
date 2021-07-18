@@ -88,6 +88,11 @@ public class ColorMatrixConfig extends AbstractConfigType implements IWidgetProv
 	public boolean equals(Object obj) {
 		return obj == this || (obj instanceof ColorMatrixConfig && Arrays.equals(((ColorMatrixConfig) obj).colorMatrix, colorMatrix));
 	}
+	
+	@Override
+	public int hashCode() {
+		return colorMatrix.hashCode();
+	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)

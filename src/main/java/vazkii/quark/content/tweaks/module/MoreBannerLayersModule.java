@@ -21,7 +21,6 @@ public class MoreBannerLayersModule extends QuarkModule {
 	}
 	
 	public static int getLimit(int curr) {
-		System.out.println(layerLimit);
 		return staticEnabled ? layerLimit : curr;
 	}
 	
