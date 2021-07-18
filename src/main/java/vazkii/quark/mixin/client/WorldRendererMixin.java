@@ -16,6 +16,7 @@ import vazkii.quark.base.item.QuarkMusicDiscItem;
 public class WorldRendererMixin {
 
 	@Inject(method = "playRecord(Lnet/minecraft/util/SoundEvent;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/item/MusicDiscItem;)V",
+			remap = false,
 			at = @At(value = "JUMP", ordinal = 1),
 			locals = LocalCapture.CAPTURE_FAILSOFT,
 			cancellable = true)
