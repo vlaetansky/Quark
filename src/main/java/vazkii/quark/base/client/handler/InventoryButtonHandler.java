@@ -48,7 +48,7 @@ public final class InventoryButtonHandler {
 			Quark.LOG.info("Opened screen {}", event.getGui().getClass().getName());
 		currentButtons.clear();
 		
-		if(event.getGui() instanceof ContainerScreen && !(event.getGui() instanceof IQuarkButtonIgnored) && !GeneralConfig.ignoredScreens.contains(event.getGui().getClass().getName())) {
+		if(event.getGui() instanceof ContainerScreen && !(event.getGui() instanceof IQuarkButtonIgnored) && !GeneralConfig.isScreenIgnored(event.getGui())) {
 			Minecraft mc = Minecraft.getInstance();
 			ContainerScreen<?> screen = (ContainerScreen<?>) event.getGui();
 

@@ -85,7 +85,7 @@ public class ChestSearchingModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void initGui(GuiScreenEvent.InitGuiEvent.Post event) {
 		Screen gui = event.getGui();
-		if(gui instanceof ContainerScreen && !(event.getGui() instanceof IQuarkButtonIgnored) && !GeneralConfig.ignoredScreens.contains(event.getGui().getClass().getName())) {
+		if(gui instanceof ContainerScreen && !(event.getGui() instanceof IQuarkButtonIgnored) && !GeneralConfig.isScreenIgnored(event.getGui())) {
 			Minecraft mc = gui.getMinecraft();
 			ContainerScreen<?> chest = (ContainerScreen<?>) gui;
 			if(InventoryTransferHandler.accepts(chest.getContainer(), mc.player)) {

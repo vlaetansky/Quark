@@ -10,6 +10,23 @@ public class GeneralConfig {
 
 	public static final GeneralConfig INSTANCE = new GeneralConfig();
 
+	private static final List<String> STATIC_IGNORED_SCREENS = Lists.newArrayList(
+		"blusunrize.immersiveengineering.client.gui.CraftingTableScreen",
+		"com.tfar.craftingstation.client.CraftingStationScreen",
+		"com.refinedmods.refinedstorage.screen.grid.GridScreen", 
+		"appeng.client.gui.me.items.CraftingTermScreen", 
+		"appeng.client.gui.me.items.PatternTermScreen",
+		"com.blakebr0.extendedcrafting.client.screen.EliteTableScreen",
+		"com.blakebr0.extendedcrafting.client.screen.EliteAutoTableScreen",
+		"com.blakebr0.extendedcrafting.client.screen.UltimateTableScreen",
+		"com.blakebr0.extendedcrafting.client.screen.UltimateAutoTableScreen",
+		"me.desht.modularrouters.client.gui.filter.GuiFilterScreen",
+		"com.resourcefulbees.resourcefulbees.client.gui.screen.CentrifugeScreen",
+		"com.resourcefulbees.resourcefulbees.client.gui.screen.MechanicalCentrifugeScreen",
+		"com.resourcefulbees.resourcefulbees.client.gui.screen.CentrifugeMultiblockScreen",
+		"com.refinedmods.refinedstorage.screen.FilterScreen"
+	);
+	
 	@Config(name = "Enable 'q' Button")
 	public static boolean enableQButton = true;
 
@@ -44,22 +61,7 @@ public class GeneralConfig {
 	public static boolean printScreenClassnames = false;
 
 	@Config(description = "A list of screens that don't play well with quark's buttons. Use \"Print Screen Classnames\" to find the names of any others you'd want to add.")
-	public static List<String> ignoredScreens = Lists.newArrayList(
-			"blusunrize.immersiveengineering.client.gui.CraftingTableScreen",
-			"com.tfar.craftingstation.client.CraftingStationScreen",
-			"com.refinedmods.refinedstorage.screen.grid.GridScreen", 
-			"appeng.client.gui.me.items.CraftingTermScreen", 
-			"appeng.client.gui.me.items.PatternTermScreen",
-			"com.blakebr0.extendedcrafting.client.screen.EliteTableScreen",
-			"com.blakebr0.extendedcrafting.client.screen.EliteAutoTableScreen",
-			"com.blakebr0.extendedcrafting.client.screen.UltimateTableScreen",
-			"com.blakebr0.extendedcrafting.client.screen.UltimateAutoTableScreen",
-			"me.desht.modularrouters.client.gui.filter.GuiFilterScreen",
-			"com.resourcefulbees.resourcefulbees.client.gui.screen.CentrifugeScreen",
-			"com.resourcefulbees.resourcefulbees.client.gui.screen.MechanicalCentrifugeScreen",
-			"com.resourcefulbees.resourcefulbees.client.gui.screen.CentrifugeMultiblockScreen",
-			"com.refinedmods.refinedstorage.screen.FilterScreen"
-			);
+	private static List<String> ignoredScreens = Lists.newArrayList();
 
 	@Config(description = "Set to true to make the quark big worldgen features such as stone clusters or underground biomes generate as spheres rather than unique shapes. It's faster, but won't look as cool")
 	public static boolean useFastWorldgen = false;
@@ -69,6 +71,11 @@ public class GeneralConfig {
 
 	private GeneralConfig() {
 		// NO-OP
+	}
+	
+	public static boolean isScreenIgnored(Object screen) {
+		String clazz = screen.getClass().getName();
+		return STATIC_IGNORED_SCREENS.contains(clazz) || ignoredScreens.contains(clazz);
 	}
 
 }
