@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.SimpleSound;
+import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -30,7 +31,9 @@ import vazkii.quark.base.module.QuarkModule;
 public class QuarkMusicDiscItem extends MusicDiscItem implements IQuarkItem {
 
 	private final QuarkModule module;
-	private final boolean isAmbient; 
+	private final boolean isAmbient;
+	private final Supplier<SoundEvent> soundSupplier;
+	
 	private BooleanSupplier enabledSupplier = () -> true;
 
 	public QuarkMusicDiscItem(int comparatorValue, Supplier<SoundEvent> sound, String name, QuarkModule module, boolean isAmbient) {
@@ -39,6 +42,7 @@ public class QuarkMusicDiscItem extends MusicDiscItem implements IQuarkItem {
 		RegistryHelper.registerItem(this, "music_disc_" + name);
 		this.module = module;
 		this.isAmbient = isAmbient;
+		this.soundSupplier = sound;
 	}
 
 	@Override
@@ -62,20 +66,26 @@ public class QuarkMusicDiscItem extends MusicDiscItem implements IQuarkItem {
 	public boolean doesConditionApply() {
 		return enabledSupplier.getAsBoolean();
 	}
-
+	
 	@OnlyIn(Dist.CLIENT)
-	public void onPlayed(@Nullable SoundEvent soundIn, BlockPos pos, WorldRenderer render, CallbackInfo info) {
+	public boolean playAmbientSound(BlockPos pos) {
 		if(isAmbient) {
-			SimpleSound simplesound = new SimpleSound(soundIn.getName(), SoundCategory.RECORDS, 4.0F, 1.0F, true, 0, ISound.AttenuationType.LINEAR, pos.getX(), pos.getY(), pos.getZ(), false);
-	        render.mapSoundPositions.put(pos, simplesound);
-	        
 	        Minecraft mc = Minecraft.getInstance();
-	        mc.getSoundHandler().play(simplesound);
-	        
-	        mc.world.addParticle(ParticleTypes.NOTE,pos.getX() + Math.random(), pos.getY() + 1.1, pos.getZ() + Math.random(), Math.random(), 0, 0);
+	        SoundHandler soundEngine = mc.getSoundHandler();
+	        WorldRenderer render = mc.worldRenderer;
 			
-			info.cancel();
+			SimpleSound simplesound = new SimpleSound(soundSupplier.get().getName(), SoundCategory.RECORDS, 4.0F, 1.0F, true, 0, ISound.AttenuationType.LINEAR, pos.getX(), pos.getY(), pos.getZ(), false);
+	       
+			render.mapSoundPositions.put(pos, simplesound);
+	        soundEngine.play(simplesound);
+	        
+	        if(mc.world != null)
+	        	mc.world.addParticle(ParticleTypes.NOTE,pos.getX() + Math.random(), pos.getY() + 1.1, pos.getZ() + Math.random(), Math.random(), 0, 0);
+			
+			return true;
 		}
+		
+		return false;
 	}
 
 }

@@ -20,8 +20,8 @@ public class WorldRendererMixin {
 			locals = LocalCapture.CAPTURE_FAILSOFT,
 			cancellable = true)
 	public void playRecord(SoundEvent soundIn, BlockPos pos, MusicDiscItem musicDiscItem, CallbackInfo info) {
-		if(musicDiscItem instanceof QuarkMusicDiscItem)
-			((QuarkMusicDiscItem) musicDiscItem).onPlayed(soundIn, pos, (WorldRenderer) (Object) this, info);
+		if(musicDiscItem instanceof QuarkMusicDiscItem && ((QuarkMusicDiscItem) musicDiscItem).playAmbientSound(pos))
+			info.cancel();
 	}
 
 

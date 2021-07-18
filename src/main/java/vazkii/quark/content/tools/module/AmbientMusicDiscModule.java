@@ -3,10 +3,22 @@ package vazkii.quark.content.tools.module;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.ISound;
+import net.minecraft.client.audio.SimpleSound;
+import net.minecraft.client.audio.SoundHandler;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.entity.monster.SkeletonEntity;
 import net.minecraft.entity.monster.SpiderEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.JukeboxTileEntity;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -46,6 +58,25 @@ public class AmbientMusicDiscModule extends QuarkModule {
 		if(dropOnSpiderKill && event.getEntity() instanceof SpiderEntity && event.getSource().getTrueSource() instanceof SkeletonEntity) {
 			Item item = discs.get(event.getEntity().world.rand.nextInt(discs.size()));
 			event.getEntity().entityDropItem(item, 0);
+		}
+	}
+	
+	@OnlyIn(Dist.CLIENT)
+	public static void onJukeboxLoad(JukeboxTileEntity tile) {
+		Minecraft mc = Minecraft.getInstance();
+		WorldRenderer render = mc.worldRenderer;
+		BlockPos pos = tile.getPos();
+		
+		ISound sound = render.mapSoundPositions.get(pos);
+		SoundHandler soundEngine = mc.getSoundHandler();
+		if(sound == null || !soundEngine.isPlaying(sound)) {
+			if(sound != null) {
+				soundEngine.play(sound);
+			} else {
+				ItemStack stack = tile.getRecord();
+				if(stack.getItem() instanceof QuarkMusicDiscItem)
+					((QuarkMusicDiscItem) stack.getItem()).playAmbientSound(pos);
+			}
 		}
 	}
 	

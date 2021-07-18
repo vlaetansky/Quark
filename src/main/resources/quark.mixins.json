@@ -42,7 +42,8 @@
     "client.BeaconTileEntityRendererMixin",
     "client.WorldRendererMixin",
     "client.BannerItemMixin",
-    "client.LoomScreenMixin"
+    "client.LoomScreenMixin",
+    "client.JukeboxTileEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
