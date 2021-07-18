@@ -10,6 +10,7 @@ import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.BreedGoal;
 import net.minecraft.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.entity.ai.goal.LookAtGoal;
@@ -58,7 +59,7 @@ public class ShibaEntity extends TameableEntity {
 	private static final DataParameter<Integer> COLLAR_COLOR = EntityDataManager.createKey(ShibaEntity.class, DataSerializers.VARINT);
 	private static final DataParameter<ItemStack> MOUTH_ITEM = EntityDataManager.createKey(ShibaEntity.class, DataSerializers.ITEMSTACK);
 	private static final DataParameter<Integer> FETCHING = EntityDataManager.createKey(ShibaEntity.class, DataSerializers.VARINT);
-	
+
 	public ShibaEntity(EntityType<? extends ShibaEntity> type, World worldIn) {
 		super(type, worldIn);
 		setTamed(false);
@@ -79,22 +80,22 @@ public class ShibaEntity extends TameableEntity {
 		goalSelector.addGoal(11, new LookAtGoal(this, PlayerEntity.class, 8.0F));
 		goalSelector.addGoal(12, new LookRandomlyGoal(this));
 	}
-	
+
 	@Override
 	public void tick() {
 		super.tick();
-		
+
 		AbstractArrowEntity fetching = getFetching();
 		if(fetching != null && (isSleeping() || fetching.world != world || !fetching.isAlive() || fetching.pickupStatus == PickupStatus.DISALLOWED))
 			setFetching(null);
-		
+
 		if(!isSleeping() && !world.isRemote && fetching == null && getMouthItem().isEmpty()) {
 			LivingEntity owner = getOwner();
 			if(owner != null) {
 				AxisAlignedBB check = owner.getBoundingBox().grow(2);
 				List<AbstractArrowEntity> arrows = world.getEntitiesWithinAABB(AbstractArrowEntity.class, check, 
 						a -> a.func_234616_v_() == owner && a.pickupStatus != PickupStatus.DISALLOWED);
-				
+
 				if(arrows.size() > 0) {
 					AbstractArrowEntity arrow = arrows.get(world.rand.nextInt(arrows.size()));
 					setFetching(arrow);
@@ -102,23 +103,23 @@ public class ShibaEntity extends TameableEntity {
 			}
 		}
 	}
-	
+
 	public AbstractArrowEntity getFetching() {
 		int id = dataManager.get(FETCHING);
 		if(id == -1)
 			return null;
-		
+
 		Entity e = world.getEntityByID(id);
 		if(e == null || !(e instanceof AbstractArrowEntity))
 			return null;
-		
+
 		return (AbstractArrowEntity) e;
 	}
-	
+
 	public void setFetching(AbstractArrowEntity e) {
 		dataManager.set(FETCHING, e == null ? -1 : e.getEntityId());
 	}
-	
+
 	@Override
 	public boolean isBreedingItem(ItemStack stack) {
 		Item item = stack.getItem();
@@ -184,7 +185,7 @@ public class ShibaEntity extends TameableEntity {
 	public void writeAdditional(CompoundNBT compound) {
 		super.writeAdditional(compound);
 		compound.putByte("CollarColor", (byte)this.getCollarColor().getId());
-		
+
 		CompoundNBT itemcmp = new CompoundNBT();
 		ItemStack holding = getMouthItem();
 		if(!holding.isEmpty())
@@ -197,7 +198,7 @@ public class ShibaEntity extends TameableEntity {
 		super.readAdditional(compound);
 		if (compound.contains("CollarColor", 99))
 			this.setCollarColor(DyeColor.byId(compound.getInt("CollarColor")));
-		
+
 		if(compound.contains("MouthItem")) {
 			CompoundNBT itemcmp = compound.getCompound("MouthItem");
 			setMouthItem(ItemStack.read(itemcmp));
@@ -255,7 +256,7 @@ public class ShibaEntity extends TameableEntity {
 							ItemStack copy = itemstack.copy();
 							copy.setCount(1);
 							itemstack.setCount(itemstack.getCount() - 1);
-							
+
 							setMouthItem(copy);
 							return ActionResultType.SUCCESS;
 						}
@@ -303,6 +304,17 @@ public class ShibaEntity extends TameableEntity {
 
 				return super.func_230254_b_(player, hand);
 			}
+	}
+
+	@Override
+	public void setTamed(boolean tamed) {
+		super.setTamed(tamed);
+		if(tamed) {
+			getAttribute(Attributes.MAX_HEALTH).setBaseValue(20);
+			setHealth(20);
+		} getAttribute(Attributes.MAX_HEALTH).setBaseValue(8);
+
+		getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(4);
 	}
 
 	@Override
