@@ -29,6 +29,8 @@ public class SpeleothemsModule extends QuarkModule {
 	@Config public static int speleothemsPerChunkInNether = 12;
 	@Config public static int maxYlevel = 55;
 	
+	@Config public static boolean smallSpeleothemsIncreaseFallDamage = true;
+	
 	public static Map<Block, Block> speleothemMapping = new HashMap<>();
 	
 	@Override
