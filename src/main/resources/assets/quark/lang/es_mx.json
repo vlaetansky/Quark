@@ -1,4 +1,8 @@
 {
+	"____comment": "Los colores son de la forma #RRGGBB",
+	"quark.gui.color.crate_count": "#404040",
+	"quark.gui.color.matrix_enchanting": "#404040",
+
 	"quark.gui.button.sort": "Ordenar",
 	"quark.gui.button.sort_inventory": "Ordenar inventario",
 	"quark.gui.button.sort_container": "Ordenar contenedor",
