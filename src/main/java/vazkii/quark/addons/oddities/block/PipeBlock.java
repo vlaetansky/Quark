@@ -215,13 +215,13 @@ public class PipeBlock extends QuarkBlock implements IWaterLoggable {
 	}
 	
 	@Override
-	public void onPlayerDestroy(IWorld worldIn, BlockPos pos, BlockState state) {
+	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		TileEntity tileentity = worldIn.getTileEntity(pos);
 
 		if(tileentity instanceof PipeTileEntity)
 			((PipeTileEntity) tileentity).dropAllItems();
-
-		super.onPlayerDestroy(worldIn, pos, state);
+		
+		super.onReplaced(state, worldIn, pos, newState, isMoving);
 	}
 
 	@Override
