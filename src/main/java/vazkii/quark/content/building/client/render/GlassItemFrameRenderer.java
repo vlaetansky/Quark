@@ -163,7 +163,7 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrameEntity>
 				if (mapdata != null) {
 					matrix.rotate(Vector3f.ZP.rotationDegrees(180.0F));
 					matrix.scale(0.0078125F, 0.0078125F, 0.0078125F);
-					matrix.translate(-64.0F, -64.0F, 63.9F); // <- Use 63.9 instead of 64 to prevent z-fighting
+					matrix.translate(-64.0F, -64.0F, 62.5F); // <- Use 62.5 instead of 64 to prevent z-fighting
 					this.mc.gameRenderer.getMapItemRenderer().renderMap(matrix, buff, mapdata, true, p_225623_6_);
 				} else {
 					float s = 1.5F;
