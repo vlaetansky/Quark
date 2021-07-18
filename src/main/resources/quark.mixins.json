@@ -25,7 +25,8 @@
     "TemplateMixin",
     "LanternBlockMixin",
     "PlayerAdvancementsMixin",
-    "BeaconTileEntityMixin"
+    "BeaconTileEntityMixin",
+    "LoomContainerMixin"
   ],
   "client": [
     "client.BipedArmorLayerMixin",
@@ -39,7 +40,9 @@
     "client.ContainerScreenMixin",
     "client.TridentRendererMixin",
     "client.BeaconTileEntityRendererMixin",
-    "client.WorldRendererMixin"
+    "client.WorldRendererMixin",
+    "client.BannerItemMixin",
+    "client.LoomScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1
