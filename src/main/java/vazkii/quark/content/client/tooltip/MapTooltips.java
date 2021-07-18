@@ -55,6 +55,7 @@ public class MapTooltips {
 			float size = 135;
 			float scale = 0.5F;
 
+			ms.push();
 			ms.translate(event.getX(), event.getY() - size * scale - 5, 500);
 			ms.scale(scale, scale, 1F);
 			RenderSystem.enableBlend();
@@ -70,6 +71,7 @@ public class MapTooltips {
 			IRenderTypeBuffer.Impl immediateBuffer = IRenderTypeBuffer.getImpl(buffer);
 			mc.gameRenderer.getMapItemRenderer().renderMap(ms, immediateBuffer, mapdata, true, 240);
 			immediateBuffer.finish();
+			ms.pop();
 		}
 	}
 
