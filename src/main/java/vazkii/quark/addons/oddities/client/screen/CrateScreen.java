@@ -8,6 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.Rectangle2d;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -79,7 +80,13 @@ public class CrateScreen extends ContainerScreen<CrateContainer> {
 
 		if(!ChestSearchingModule.searchEnabled) {
 			String s = container.getTotal() + "/" + CrateModule.maxItems;
-			font.drawString(matrixStack, s, i + this.xSize - font.getStringWidth(s) - 8 - InventoryButtonHandler.getActiveButtons(ButtonTargetType.CONTAINER_INVENTORY).size() * 12, j + 6, 4210752);
+			
+			int color = 0x404040;
+			String hex = I18n.format("quark.gui.color.crate_count");
+			if(hex.matches("\\#[A-F0-9]{6}"))
+				color = Integer.valueOf(hex.substring(1), 16);
+			
+			font.drawString(matrixStack, s, i + this.xSize - font.getStringWidth(s) - 8 - InventoryButtonHandler.getActiveButtons(ButtonTargetType.CONTAINER_INVENTORY).size() * 12, j + 6, color);
 		}
 	}
 
