@@ -129,7 +129,7 @@ public class MatrixEnchantingModule extends QuarkModule {
 	public static double influencePower = 0.125;
 
 	@Config(description = "If you set this to false, the vanilla Enchanting Table will no longer automatically convert to the Matrix Enchanting table. You'll have to add a recipe for the Matrix Enchanting Table to make use of this.")
-	public static boolean automaticallyConvert = false;
+	public static boolean automaticallyConvert = true;
 	
 	public static Map<DyeColor, List<Enchantment>> candleInfluences;
 
