@@ -48,6 +48,7 @@ public class MatrixEnchantingTableBlock extends EnchantingTableBlock implements 
 		
 		this.module = module;
 		RegistryHelper.registerBlock(this, "matrix_enchanter");
+		RegistryHelper.setCreativeTab(this, ItemGroup.DECORATIONS);
 	}
 
 	@Override
