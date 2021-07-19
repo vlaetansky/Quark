@@ -255,7 +255,7 @@ public class AttributeTooltips {
 
 	public static boolean extractAttributeValues(ItemTooltipEvent event, ItemStack stack, List<ITextComponent> tooltip, Map<EquipmentSlotType, StringBuilder> attributeTooltips, boolean onlyInvalid, EquipmentSlotType slot, Multimap<Attribute, AttributeModifier> slotAttributes) {
 		boolean anyInvalid = false;
-		for(Attribute attr : slotAttributes.keys()) {
+		for(Attribute attr : slotAttributes.keySet()) {
 			if(VALID_ATTRIBUTES.contains(attr)) {
 				onlyInvalid = false;
 				double attributeValue = getAttribute(event.getPlayer(), slot, stack, slotAttributes, attr);
