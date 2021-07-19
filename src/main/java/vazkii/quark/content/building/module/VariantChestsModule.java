@@ -77,8 +77,8 @@ public class VariantChestsModule extends QuarkModule {
 	private static List<Block> allChests = new LinkedList<>();
 	private static Map<String, Block> chestMappings = new HashMap<>();
 
-	@Config
-	private static boolean replaceWorldgenChests = true;
+	@Config private static boolean replaceWorldgenChests = true;
+	@Config(flag = "chest_reversion") private static boolean enableRevertingWoodenChests = true;
 	
 	private static ThreadLocal<StructureHolder> structureHolder = new ThreadLocal<>();
 	
