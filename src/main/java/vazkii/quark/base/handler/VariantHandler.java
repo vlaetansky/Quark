@@ -23,26 +23,31 @@ public class VariantHandler {
 	public static final List<QuarkStairsBlock> STAIRS = new LinkedList<>();
 	public static final List<QuarkWallBlock> WALLS = new LinkedList<>();
 	
-	public static void addSlabStairsWall(IQuarkBlock block) {
+	public static Block addSlabStairsWall(IQuarkBlock block) {
 		addSlabAndStairs(block);
 		addWall(block);
+		return block.getBlock();
 	}
 	
-	public static void addSlabAndStairs(IQuarkBlock block) {
+	public static IQuarkBlock addSlabAndStairs(IQuarkBlock block) {
 		addSlab(block);
 		addStairs(block);
+		return block;
 	}
 	
-	public static void addSlab(IQuarkBlock block) {
+	public static IQuarkBlock addSlab(IQuarkBlock block) {
 		SLABS.add(new QuarkSlabBlock(block));
+		return block;
 	}
 	
-	public static void addStairs(IQuarkBlock block) {
+	public static IQuarkBlock addStairs(IQuarkBlock block) {
 		STAIRS.add(new QuarkStairsBlock(block));
+		return block;
 	}
 	
-	public static void addWall(IQuarkBlock block) {
+	public static IQuarkBlock addWall(IQuarkBlock block) {
 		WALLS.add(new QuarkWallBlock(block));
+		return block;
 	}
 
 	public static FlowerPotBlock addFlowerPot(Block block, String name, Function<Block.Properties, Block.Properties> propertiesFunc) {
