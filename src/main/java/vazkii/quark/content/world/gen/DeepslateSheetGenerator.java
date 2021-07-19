@@ -11,6 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.PerlinNoiseGenerator;
 import net.minecraft.world.gen.WorldGenRegion;
+import net.minecraftforge.common.Tags;
 import vazkii.quark.base.module.config.type.DimensionConfig;
 import vazkii.quark.base.world.generator.Generator;
 import vazkii.quark.content.world.module.DeepslateModule;
@@ -37,12 +38,11 @@ public class DeepslateSheetGenerator extends Generator {
 			for(int j = 0; j < 16; j++) {
 				mutable.setZ(pos.getZ() + j);
 				
-				DeepslateModule.sheetHeight = 18;
 				int start = DeepslateModule.sheetYStart; 
 				int end = start + DeepslateModule.sheetHeight;
 				
 				double noise = noiseGenerator.noiseAt(mutable.getX(), mutable.getZ(), false);
-				end += Math.round(noise * 6);
+				end += Math.round(noise * DeepslateModule.sheetHeightVariance);
 				
 				for(int k = start; k <= end; k++) {
 					mutable.setY(k);
@@ -52,7 +52,7 @@ public class DeepslateSheetGenerator extends Generator {
 					if(stateAt.getBlock() == Blocks.STONE) {
 						for(Direction d : Direction.values()) {
 							stateAt = worldIn.getBlockState(mutable.offset(d));
-							if(stateAt.getBlock().getRegistryName().getPath().contains("_ore")) {
+							if(stateAt.getBlock().isIn(Tags.Blocks.ORES)) {
 								canPlace = false;
 								break;
 							}

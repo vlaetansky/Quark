@@ -23,7 +23,8 @@ import vazkii.quark.content.world.gen.DeepslateSheetGenerator;
 public class DeepslateModule extends QuarkModule {
 
 	@Config public static DimensionConfig dimensions = DimensionConfig.overworld(false);
-	@Config public static int sheetHeight = 12;
+	@Config public static int sheetHeight = 18;
+	@Config public static int sheetHeightVariance = 6;
 	@Config public static int sheetYStart = 0;
 	
 	public static Block deepslate, smooth_basalt;
@@ -41,7 +42,9 @@ public class DeepslateModule extends QuarkModule {
 		VariantHandler.addSlabStairsWall(new QuarkBlock("deepslate_bricks", this, ItemGroup.BUILDING_BLOCKS, deepslateVariantProps));
 		VariantHandler.addSlabStairsWall(new QuarkBlock("deepslate_tiles", this, ItemGroup.BUILDING_BLOCKS, deepslateVariantProps));
 		new QuarkBlock("chiseled_deepslate", this, ItemGroup.BUILDING_BLOCKS, deepslateVariantProps);
-		
+		new QuarkBlock("cracked_deepslate_bricks", this, ItemGroup.BUILDING_BLOCKS, deepslateVariantProps);
+		new QuarkBlock("cracked_deepslate_tiles", this, ItemGroup.BUILDING_BLOCKS, deepslateVariantProps);
+
 		smooth_basalt = VariantHandler.addSlabStairsWall(new QuarkBlock("smooth_basalt", this, ItemGroup.BUILDING_BLOCKS, basaltProps));
 	}
 	
