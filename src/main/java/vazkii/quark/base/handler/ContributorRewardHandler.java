@@ -36,7 +36,8 @@ public class ContributorRewardHandler {
 			"8c826f34-113b-4238-a173-44639c53b6e6",
 			"0d054077-a977-4b19-9df9-8a4d5bf20ec3",
 			"458391f5-6303-4649-b416-e4c0d18f837a",
-			"75c298f9-27c8-415b-9a16-329e3884054b");
+			"75c298f9-27c8-415b-9a16-329e3884054b",
+			"6c175d10-198a-49f9-8e2b-c74f1f0178f3");
 
 	private static final Set<String> done = Collections.newSetFromMap(new WeakHashMap<>());
 
