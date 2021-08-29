@@ -58,8 +58,7 @@ import vazkii.quark.content.world.module.CaveRootsModule;
 
 public class ToretoiseEntity extends AnimalEntity {
 
-	public static final int ORE_TYPES = 4; 
-	private static final int DEFAULT_EAT_COOLDOWN = 20 * 60;
+	public static final int ORE_TYPES = 4;
 	public static final int ANGERY_TIME = 20; 
 
 	private static final String TAG_TAMED = "tamed";
@@ -313,7 +312,7 @@ public class ToretoiseEntity extends AnimalEntity {
 			dataManager.set(ORE_TYPE, ore);
 
 			if(!natural) {
-				eatCooldown = DEFAULT_EAT_COOLDOWN;
+				eatCooldown = ToretoiseModule.cooldownTicks;
 
 				if(world instanceof ServerWorld) {
 					((ServerWorld) world).spawnParticle(ParticleTypes.CLOUD, getPosX(), getPosY() + 0.5, getPosZ(), 100, 0.6, 0.6, 0.6, 0);

@@ -28,6 +28,9 @@ public class ToretoiseModule extends QuarkModule {
 	
 	@Config public static int maxYLevel = 32;
 	
+	@Config(description="The number of ticks from mining a tortoise until feeding it could cause it to regrow.")
+	public static int cooldownTicks = 20 * 60;
+	
 	@Config
 	public static DimensionConfig dimensions = DimensionConfig.overworld(false);
 	
