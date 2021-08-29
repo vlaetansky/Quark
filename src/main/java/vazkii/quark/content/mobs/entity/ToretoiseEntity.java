@@ -316,7 +316,9 @@ public class ToretoiseEntity extends AnimalEntity {
 	}
 
 	private void popOre(boolean natural) {
-		if(getOreType() == 0 && (natural || world.rand.nextInt(3) == 0)) {
+		if (!natural && ToretoiseModule.regrowChance == 0)
+			return;
+		if(getOreType() == 0 && (natural || world.rand.nextInt(ToretoiseModule.regrowChance) == 0)) {
 			int ore = rand.nextInt(ORE_TYPES) + 1;
 			dataManager.set(ORE_TYPE, ore);
 
