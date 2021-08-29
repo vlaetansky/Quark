@@ -310,7 +310,7 @@ public class ToretoiseEntity extends AnimalEntity {
 
 			if(world instanceof ServerWorld)
 				((ServerWorld) world).spawnParticle(ParticleTypes.HEART, getPosX(), getPosY(), getPosZ(), 20, 0.5, 0.5, 0.5, 0);
-		} else {
+		} else if (eatCooldown == 0) {
 			popOre(false);
 		}
 	}
