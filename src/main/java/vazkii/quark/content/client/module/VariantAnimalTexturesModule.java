@@ -24,12 +24,7 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.content.client.render.variant.VariantBeeRenderer;
-import vazkii.quark.content.client.render.variant.VariantChickenRenderer;
-import vazkii.quark.content.client.render.variant.VariantCowRenderer;
-import vazkii.quark.content.client.render.variant.VariantLlamaRenderer;
-import vazkii.quark.content.client.render.variant.VariantPigRenderer;
-import vazkii.quark.content.client.render.variant.VariantRabbitRenderer;
+import vazkii.quark.content.client.render.variant.*;
 
 @LoadModule(category = ModuleCategory.CLIENT, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class VariantAnimalTexturesModule extends QuarkModule {
@@ -46,6 +41,7 @@ public class VariantAnimalTexturesModule extends QuarkModule {
 	@Config public static boolean enableChicken = true;
 	@Config public static boolean enableShinyRabbit = true;
 	@Config public static boolean enableShinyLlama = true;
+	@Config public static boolean enableShinyDolphin = true;
 	@Config public static boolean enableLGBTBees = true;
 	
 	@Config public static boolean everyBeeIsLGBT = false;
@@ -66,6 +62,7 @@ public class VariantAnimalTexturesModule extends QuarkModule {
 		registerTextures(VariantTextureType.CHICKEN, CHICKEN_COUNT, new ResourceLocation("textures/entity/chicken.png"));
 		registerShiny(VariantTextureType.RABBIT);
 		registerShiny(VariantTextureType.LLAMA);
+		registerShiny(VariantTextureType.DOLPHIN);
 
 		if(enableCow)
 			RenderingRegistry.registerEntityRenderingHandler(EntityType.COW, VariantCowRenderer::new);
@@ -79,6 +76,9 @@ public class VariantAnimalTexturesModule extends QuarkModule {
 			RenderingRegistry.registerEntityRenderingHandler(EntityType.LLAMA, VariantLlamaRenderer::new);
 		if(enableLGBTBees)
 			RenderingRegistry.registerEntityRenderingHandler(EntityType.BEE, VariantBeeRenderer::new);
+		if(enableShinyDolphin)
+			RenderingRegistry.registerEntityRenderingHandler(EntityType.DOLPHIN, VariantDolphinRenderer::new);
+
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -124,7 +124,7 @@ public class VariantAnimalTexturesModule extends QuarkModule {
 	}
 
 	public enum VariantTextureType {
-		COW, PIG, CHICKEN, LLAMA, RABBIT
+		COW, PIG, CHICKEN, LLAMA, RABBIT, DOLPHIN
 	}
 
 }
