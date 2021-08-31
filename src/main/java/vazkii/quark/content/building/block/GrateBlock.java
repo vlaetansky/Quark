@@ -150,11 +150,6 @@ public class GrateBlock extends QuarkBlock implements IWaterLoggable {
 //	}
 
 	@Override
-	public boolean collisionExtendsVertically(BlockState state, IBlockReader world, BlockPos pos, Entity collidingEntity) {
-		return true;
-	}
-
-	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
 		builder.add(WATERLOGGED);
 	}
