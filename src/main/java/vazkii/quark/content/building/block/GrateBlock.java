@@ -1,5 +1,8 @@
 package vazkii.quark.content.building.block;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import it.unimi.dsi.fastutil.floats.Float2ObjectArrayMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -31,9 +34,6 @@ import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class GrateBlock extends QuarkBlock implements IWaterLoggable {
 	private static final VoxelShape TRUE_SHAPE = makeCuboidShape(0, 15, 0, 16, 16, 16);

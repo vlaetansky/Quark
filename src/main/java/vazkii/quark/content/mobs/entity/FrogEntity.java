@@ -12,7 +12,6 @@ import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -38,7 +37,6 @@ import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.IForgeShearable;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
-import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.base.proxy.CommonProxy;
 import vazkii.quark.content.mobs.ai.FavorBlockGoal;
@@ -643,5 +641,6 @@ public class FrogEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 			setMovementSpeed(this.speed);
 		}
 	}
+
 }
 
