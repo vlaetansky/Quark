@@ -56,7 +56,6 @@ import java.util.UUID;
 
 @SuppressWarnings("deprecation")
 public class FrogEntity extends AnimalEntity implements IEntityAdditionalSpawnData, IForgeShearable {
-
 	public static final ResourceLocation FROG_LOOT_TABLE = new ResourceLocation("quark", "entities/frog");
 
 	private static final DataParameter<Integer> TALK_TIME = EntityDataManager.createKey(FrogEntity.class, DataSerializers.VARINT);
@@ -573,6 +572,11 @@ public class FrogEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 		dataManager.set(SIZE_MODIFIER, buffer.readFloat());
 	}
 	
+	@Override
+	public EntitySize getSize(Pose poseIn) {
+		return super.getSize(poseIn).scale(this.getSizeModifier());
+	}
+
 	public class FrogJumpController extends JumpController {
 		private boolean canJump;
 
@@ -639,6 +643,5 @@ public class FrogEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 			setMovementSpeed(this.speed);
 		}
 	}
-
 }
 
