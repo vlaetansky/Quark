@@ -46,7 +46,7 @@
 	"quark.gui.config.missingaddon": "Non hai la mod add-on necessaria per questa categoria",
 
 	"quark.category.general": "Impostazioni generali",
-	"quark.category.friends": "Friend Config",	
+	"quark.category.friends": "Config amico",	
 	"quark.category.automation": "Automazione",
 	"quark.category.building": "Costruzione",
 	"quark.category.management": "Gestione",
@@ -294,7 +294,7 @@
 	"item.quark.ancient_tome": "Tomo antico",
 	"item.quark.frog_leg": "Coscia di rana cruda",
 	"item.quark.cooked_frog_leg": "Coscia di rana cotta",
-	"item.quark.golden_frog_leg": "Coscia di rana dorata",
+	"item.quark.golden_frog_leg": "Coscia di rana d'oro",
 	"item.quark.crab_leg": "Zampa di granchio cruda",
 	"item.quark.cooked_crab_leg": "Zampa di granchio cotta",
 	"item.quark.crab_shell": "Guscio di granchio",
