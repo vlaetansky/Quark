@@ -1,5 +1,7 @@
 package vazkii.quark.content.mobs.module;
 
+import com.google.common.collect.Lists;
+
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType;
 import net.minecraft.entity.EntityType;
@@ -21,12 +23,24 @@ import vazkii.quark.base.world.EntitySpawnHandler;
 import vazkii.quark.content.mobs.client.render.ToretoiseRenderer;
 import vazkii.quark.content.mobs.entity.ToretoiseEntity;
 
+import java.util.List;
+
 @LoadModule(category = ModuleCategory.MOBS, hasSubscriptions = true)
 public class ToretoiseModule extends QuarkModule {
 
 	public static EntityType<ToretoiseEntity> toretoiseType;
 	
 	@Config public static int maxYLevel = 32;
+	
+	@Config(description="The number of ticks from mining a tortoise until feeding it could cause it to regrow.")
+	public static int cooldownTicks = 20 * 60;
+	
+	@Config(description="The items that can be fed to toretoises to make them regrow ores.")
+	public static List<String> foods = Lists.newArrayList("quark:root_item", "minecraft:cactus");
+	
+	@Config(description="Feeding a toretoise after cooldown will regrow them with a one-in-this-number chance. "
+			+ "Set to 1 to always regrow, or 0 to disable.")
+	public static int regrowChance = 3;
 	
 	@Config
 	public static DimensionConfig dimensions = DimensionConfig.overworld(false);

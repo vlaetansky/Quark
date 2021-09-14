@@ -1,6 +1,7 @@
 package vazkii.quark.content.mobs.entity;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import javax.annotation.Nonnull;
@@ -39,10 +40,12 @@ import net.minecraft.tileentity.PistonTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
@@ -51,15 +54,12 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.handler.MiscUtil;
-import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.automation.module.IronRodModule;
 import vazkii.quark.content.mobs.module.ToretoiseModule;
-import vazkii.quark.content.world.module.CaveRootsModule;
 
 public class ToretoiseEntity extends AnimalEntity {
 
-	public static final int ORE_TYPES = 4; 
-	private static final int DEFAULT_EAT_COOLDOWN = 20 * 60;
+	public static final int ORE_TYPES = 4;
 	public static final int ANGERY_TIME = 20; 
 
 	private static final String TAG_TAMED = "tamed";
@@ -99,12 +99,20 @@ public class ToretoiseEntity extends AnimalEntity {
 		goalSelector.addGoal(4, new LookAtGoal(this, PlayerEntity.class, 6.0F));
 		goalSelector.addGoal(5, new LookRandomlyGoal(this));
 	}
-
+	
 	private Ingredient getGoodFood() {
 		if(goodFood == null)
-			goodFood = Ingredient.fromItems(ModuleLoader.INSTANCE.isModuleEnabled(CaveRootsModule.class) ? CaveRootsModule.rootItem : Items.CACTUS);
+			computeGoodFood();
 
 		return goodFood;
+	}
+
+	private void computeGoodFood() {
+		goodFood = Ingredient.fromStacks(ToretoiseModule.foods.stream()
+				.map(loc -> Registry.ITEM.getOptional(new ResourceLocation(loc)))
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.map(item -> new ItemStack(item)));
 	}
 
 	@Override
@@ -302,18 +310,20 @@ public class ToretoiseEntity extends AnimalEntity {
 
 			if(world instanceof ServerWorld)
 				((ServerWorld) world).spawnParticle(ParticleTypes.HEART, getPosX(), getPosY(), getPosZ(), 20, 0.5, 0.5, 0.5, 0);
-		} else {
+		} else if (eatCooldown == 0) {
 			popOre(false);
 		}
 	}
 
 	private void popOre(boolean natural) {
-		if(getOreType() == 0 && (natural || world.rand.nextInt(3) == 0)) {
+		if (!natural && ToretoiseModule.regrowChance == 0)
+			return;
+		if(getOreType() == 0 && (natural || world.rand.nextInt(ToretoiseModule.regrowChance) == 0)) {
 			int ore = rand.nextInt(ORE_TYPES) + 1;
 			dataManager.set(ORE_TYPE, ore);
 
 			if(!natural) {
-				eatCooldown = DEFAULT_EAT_COOLDOWN;
+				eatCooldown = ToretoiseModule.cooldownTicks;
 
 				if(world instanceof ServerWorld) {
 					((ServerWorld) world).spawnParticle(ParticleTypes.CLOUD, getPosX(), getPosY() + 0.5, getPosZ(), 100, 0.6, 0.6, 0.6, 0);
