@@ -47,7 +47,7 @@ public class CaveCrystalClusterBlock extends QuarkBlock implements IWaterLoggabl
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
 		if(!isValidPosition(state, worldIn, pos))
-			worldIn.destroyBlock(pos, false);
+			worldIn.destroyBlock(pos, true);
 	}
 	
 	@Override
