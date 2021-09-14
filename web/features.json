@@ -203,7 +203,8 @@
 				"*Shields display differently in Glass Item Frames, they sit flush with the wall and look nice.",
 				"*1.16.3+ Only: Glass Item Frames can attach to the front of a Sign that's placed on the floor. This will make the item show flush with the sign.",
 				"*1.16.4+ Only: Combining a Glass Item Frame with Glowstone Dust creates a Glowing Glass Item Frame - it glows in the dark!.",
-				"*1.16.4+ Only: Glass Item Frames can be right clicked through to open chests or other inventories."
+				"*1.16.4+ Only: Glass Item Frames can be right clicked through to open chests or other inventories.",
+				"*1.16.4+ Only: When a map is placed in a Glass Item Frame, it will update in real time. Perfect for spies!"
 			]
 		},
 		{
@@ -370,7 +371,8 @@
 			"desc": [
 				"Chests can be made of all the different wood types. Each one is styled differently for the type of wood you use.",
 				"To get the vanilla chest, you can craft a chest with more than one type of wood, or woods added by other mods.",
-				"1.16.3+ Only: These variant chests will also replace the chests found in structures in the world."
+				"1.16.3+ Only: These variant chests will also replace the chests found in structures in the world.",
+				"1.16.4+ Only: Variant Chests can be converted into Vanilla Chests by placing them in a crafting table."
 			]
 		},
 		{
@@ -764,6 +766,32 @@
 	],
 	"tools": [
 		{
+			"name": "Abacus",
+			"image": "abacus.jpg",
+			"added": "1.16.4",
+			"desc": [
+				"Right clicking a block will bind the Abacus to it. After that, it will count the distance between the targeted and hovered block, measured along right angles.",
+				"The Abacus will count up to 48 blocks, drawing an outline of the counted blocks. The texture of the item will change according to how many blocks are counted. Right click again to unbind."
+			]
+		},
+		{
+			"name": "Ambience Discs",
+			"image": "ambience-discs.jpg",
+			"added": "1.16.4",
+			"desc": [
+				"A variety of 8 discs that add a wide range of ambient sound to the game. When you insert them into a Jukebox, they loop infinitely, and do not display on the UI when played.",
+				"*Water Droplets, which sounds like a small trickle of water that drips down into a cave.",
+				"*Ocean Waves, which sounds like waves crashing on the shore.",
+				"*Rainy Mood, which is the sound of heavy rainfall, perfectly cozy.",
+				"*Heavy Wind, perfect for the top of a tall tower.",
+				"*Soothing Cinders, the sound of crackling fire, perfect for a fireplace.",
+				"*Tick-Tock, on the clock, but the party don't stop.",
+				"*Cricket Song, the sounds of millions of crickets, humming you to sleep.",
+				"*Packed Venue, the sound of a crowded room, full of constant chatter.",
+				"Obtained when a Skeleton kills a Spider."
+			]
+		},
+		{
 			"name": "Ancient Tomes",
 			"image": "ancient-tomes.jpg",
 			"added": "1.14",
@@ -819,8 +847,15 @@
             "desc": [
                 "Colored Runes are a rare loot item from dungeons, temples and nether fortresses. They can be applied to enchanted items in an anvil, and doing so changes the color of the enchantment glint from purple to the color of the rune. These come in all 16 colors of the spectrum.",
                 "If you're dedicated enough, you can craft a Rainbow Rune by mixing together the runes that make the colors of the rainbow. It'll change color over time and look really cool!",
-                "1.16+: Runes can also change the color of a Lodestone Compass, to help you better find your way."
-            ]
+                "1.16+: Runes can also change the color of a Lodestone Compass, to help you better find your way.",
+				"1.16.4+ Only: Colored Runes will no longer spawn in chests. Instead, you'll find Blank Runes. Click More Info to find out more."
+            ],
+			"expand": [				
+				"Blank Runes can be combined with any dye to create a rune of your choice.",
+				"!img/features/tools/colored-runes/dyeable-runes.jpg",
+				"Blank Runes can also be used to remove enchantment glint.",
+				"Additionally in 1.16.4, the cost to apply a rune to an item was reduced from 15 to 5."
+		   	]
 		},
 		{
 			"name": "Bottled Cloud",
@@ -878,6 +913,15 @@
 			"added": "1.14",
 			"desc": [
 				"Axes will break leaves as fast as Shears, but will not drop the leaf blocks. Normal drops such as saplings or apples will still drop."
+			]
+		},
+				{
+			"name": "Better Elytra Rockets",
+			"image": "better-elytra-rockets.jpg",
+			"added": "1.16.4",
+			"desc": [
+				"Firework Rockets are able to be used to start Elytra lying, even if you're not currently in that state.",
+				"All you have to do is right click a Firework Rocket while wearing an Elytra, and you'll shoot up into the sky."
 			]
 		},
 		{
@@ -944,12 +988,30 @@
 			]
 		},
 		{
+			"name": "Jukebox Automation",
+			"image": "jukebox-automation.jpg",
+			"added": "1.16.4",
+			"desc": [
+				"Dispensers are now able to place discs into Jukeboxes.",
+				"This includes ambience discs."
+			]
+		},
+		{
 			"name": "Lock Rotation",
 			"image": "lock-rotation.jpg",
 			"added": "1.14",
 			"desc": [
 				"Pressing the K key (rebindable) will lock a rotation, and optionally a block half, if you're looking at a block. Any further blocks placed are changed to that direction, regardless of how you were facing when placing them. This can be very useful for building with blocks that have awkward rotation methods, such as stairs or pistons.",
 				"To unlock the rotation press the key again while looking in the same direction you locked in."
+			]
+		},
+		{
+			"name": "More Banner Layers",
+			"image": "more-banner-layers.jpg",
+			"added": "1.16.4",
+			"desc": [
+				"The Loom is now able to handle 16 different patterns at once, increased from 6.",
+				"This is matching the creative limit."
 			]
 		},
 		{
@@ -1158,6 +1220,16 @@
             ]
 		},
 		{
+			"name": "Deepslate Backport",
+			"image": "deepslate-backport.jpg",
+			"added": "1.16.4",
+            "desc": [
+                "Deepslate and Smooth Basalt have been backported to 1.16. Deepslate will now generate in a sheet at the bottom of the world, and the sheet is topped with a layer of Smooth Basalt.",
+                "While this may be a nerf to strip mining, ores will be outlined with stone, generally making them easier to find.",
+                "All block variants from Vanilla are available, such as Polished and Chiseled Deepslate, as well as their respective Vertical Slabs."
+            ]
+		},
+		{
 			"name": "New Stone Types",
 			"image": "new-stone-types.jpg",
 			"added": "1.14",
@@ -1176,7 +1248,8 @@
 			"added": "1.14",
             "desc": [
                 "Speleothems (commonly known as Stalactites and Stalagmites) will generate in caves and the Nether, in all stone type variants. These can be harvested only with Silk Touch (or crafted, if you want), and can grow up to 3 blocks high.",
-                "If you break the supporting blocks, the rest of the structure falls apart, which is super satisfying to do."
+                "If you break the supporting blocks, the rest of the structure falls apart, which is super satisfying to do.",
+				"1.16.4+ Only: Small Speleothems now increase fall damage by 50%. Perfect for mob farms!"
             ]
 		},
 		{
