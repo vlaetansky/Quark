@@ -481,7 +481,7 @@
 			"image": "hedges.jpg",
 			"added": "1.16.4",
 			"desc": [
-				"Hedges can be crafted using an overworld log and the respective leaf type. They connect to eachother like fences, and have the same bounding box. You can even put flowers on them!"
+				"Hedges can be crafted using an overworld log and the respective leaf type. They connect to each other like fences, and have the same bounding box. You can even put flowers on them!"
 			]
 		},
 		{
@@ -703,7 +703,7 @@
 			"desc": [
 				"Crabs are cute new animals that spawn in beaches. They walk sideways and will prick you if you get too close! If you kill one, they might drop Crab Legs or Crab Shells.",
 				"*Crab Legs can be cooked and eaten, they're quite tasty!",
-				"*Crab Shells can be brewed into a Potion of Resillience. While under its effect, you'll gain additional knockback resistance.",
+				"*Crab Shells can be brewed into a Potion of Resilience. While under its effect, you'll gain additional knockback resistance.",
 				"*Crabs can be bred with Wheat, Chicken, or any type of Fish.",
 				"*They are also known to enjoy music, or so we've been told."
 			]
@@ -1204,7 +1204,7 @@
 			"image": "underground-biome-elder-prismarine.jpg",
 			"added": "1.14",
 			"desc": [
-				"A new underground biome that spawns under Oceans - It comes with new Elder Prismarine blocks, which look like Prismarine, but with the Elder Guardian pallete.",
+				"A new underground biome that spawns under Oceans - It comes with new Elder Prismarine blocks, which look like Prismarine, but with the Elder Guardian palette.",
 				"Elder Prismarine only spawns in the rough variant, but has the same variants Prismarine has. Elder Sea Lanterns will also spawn sporadically.",
 				"Once you have acquired some Elder Prismarine, you can combine it with normal Prismarine to make more of it."
 			]
@@ -1230,7 +1230,7 @@
 			"image": "underground-biome-lush.jpg",
 			"added": "1.14",
 			"desc": [
-				"A new underground biome that spawns under Jungles - It comes with some folliage and vines to liven up your caving."
+				"A new underground biome that spawns under Jungles - It comes with some foliage and vines to liven up your caving."
 			]
 		},
 		{
@@ -1374,7 +1374,7 @@
 			"image": "chorus-vegetation.jpg",
 			"added": "1.16.3",
 			"desc": [
-				"Uncommon patches of new Chorus Weeds and Chorus Twist blocks will now spawn on the outer end. These blocks may look unasumming, but have all sorts of ender properties.",
+				"Uncommon patches of new Chorus Weeds and Chorus Twist blocks will now spawn on the outer end. These blocks may look unassuming, but have all sorts of ender properties.",
 				"*They randomly teleport every now and then, and when doing so, have a tiny chance to reproduce.",
 				"*When trampled by a living being that isn't an enderman or endermite, they'll always teleport. This has a tiny chance to spawn an endermite.",
 				"*When water is adjacent to them, they'll try and teleport out of the wet situation.",
@@ -1396,7 +1396,7 @@
 				"Myalite Viaducts redirect ender teleportations (caused by ender pearls or endermen teleporting), if an ender teleportation would result in the target being placed on an edge of a Myalite Viaduct, said entity would instead end up at the other edge.",
 				"!img/features/world/spiral-spires/myalite-viaducts.jpg",
 				"Viaducts have some rules applied to determine where a teleport would end:",
-				"*Viadcuts longer than 24 blocks, or that would cause a loop are illegal, and will just have the teleport go through as normal.",
+				"*Viaducts longer than 24 blocks, or that would cause a loop are illegal, and will just have the teleport go through as normal.",
 				"*On a fork, the destination is chosen randomly.",
 				"*It's possible a fork can lead to an illegal viaduct on one side, and a legal one on the other side. The results are handled independently. (e.g. a fork with an illegal loop on the left and a normal end on the right has a 50% chance to teleport to the right, and a 50% to leave you at the start)",
 				"*Yes, you can move them with pistons."
@@ -1414,7 +1414,7 @@
 			"added": "1.15",
 			"desc": [
 				"Magnets are new technical blocks that can move metallic blocks. A metallic block is defined as block made of Iron Ingots, or made of things made of Iron Ingots. When powered, the front (red) side of the Magnet will push blocks forward like a piston, whereas the back side will pull blocks towards it.",
-				"When multiple Magnets are exerting force upon the same block, the one with the higest force wins. A magnet's force upon a block is the redstone level applied to it, minus the distance.",
+				"When multiple Magnets are exerting force upon the same block, the one with the biggest force wins. A magnet's force upon a block is the redstone level applied to it, minus the distance.",
 				"Check out More Info for blocks that do special things when moved."
 			],
 			"expand": [
@@ -1468,7 +1468,7 @@
 			"added": "1.15",
 			"desc": [
 				"Should you find yourself slaying a Ravager in a raid, you'll get a rare drop of Ravager Hide. The Ravager will always drop one, but may drop more depending on your level of Looting.",
-				"This Backpack can be worn in the Chest slot, and it'll give you a bunch of extra slots in your inventory to store all your stuff. Note that the backpack does not provide any protection, nor is it enchantable. Ravager Hide is extremely resistent, though, so it'll never break!",
+				"This Backpack can be worn in the Chest slot, and it'll give you a bunch of extra slots in your inventory to store all your stuff. Note that the backpack does not provide any protection, nor is it enchantable. Ravager Hide is extremely resistant, though, so it'll never break!",
 				"Beware however, if your backpack has items in it, you can't unequip it, and if you die with it, all the items will scatter. You may also dye the backpack just like any other leather armor."
 			]
 		},
@@ -1514,7 +1514,7 @@
 				"*Yellow: Looting, Fortune, Luck of the Sea",
 				"*Lime: Blast Protection",
 				"*Pink: Silk Touch, Channeling",
-				"*Gray: Bane of Arhtropods",
+				"*Gray: Bane of Arthropods",
 				"*Light Gray: Protection",
 				"*Cyan: Respiration, Loyalty, Infinity",
 				"*Purple: Sweeping Edge, Multishot",
@@ -1538,7 +1538,7 @@
 	"friends": [
 		{
 			"addon": true,
-			"info": "These are separate mods you can get that enchance your experience! They're curated and in the same style as Quark. Note that despite them being promoted here, they're not officially supported by Quark. Are you a modder? <a href='https://github.com/Vazkii/Quark/issues/1939'>Add yours!</a>",
+			"info": "These are separate mods you can get that enhance your experience! They're curated and in the same style as Quark. Note that despite them being promoted here, they're not officially supported by Quark. Are you a modder? <a href='https://github.com/Vazkii/Quark/issues/1939'>Add yours!</a>",
 			"hide_count": true
 		},
 		{
@@ -1600,7 +1600,7 @@
 			"image": "extra-boats.jpg",
 			"custom_version": "Friend",
 			"desc": [
-				"Extra Boats adds more content for ocean travellers. Chest boats, furnace boats, and large boats can be obtained with compatability and variants for other mods' wood types."
+				"Extra Boats adds more content for ocean travellers. Chest boats, furnace boats, and large boats can be obtained with compatibility and variants for other mods' wood types."
 			],
 			"download": "https://www.curseforge.com/minecraft/mc-mods/extra-boats"
 		},
@@ -1674,7 +1674,7 @@
 			"desc": [
 				"Better Badlands improves Minecraft’s badlands biome with better generation and new blocks."
 			],
-			"download": "https://www.curseforge.com/minecraft/mc-mods/bayou-blues"
+			"download": "https://www.curseforge.com/minecraft/mc-mods/better-badlands"
 		},
     		{
 			"name": "Enhanced Mushrooms",
@@ -1780,7 +1780,7 @@
 			"image": "supplementaries.jpg",
 			"custom_version": "Friend",
 			"desc": [
-				"Adds many funcional and useful blocks, decorations as well as tweaks that expand and complement well the vanilla game"
+				"Adds many functional and useful blocks, decorations as well as tweaks that expand and complement well the vanilla game"
 			],
 			"download": "https://www.curseforge.com/minecraft/mc-mods/supplementaries"
     }
