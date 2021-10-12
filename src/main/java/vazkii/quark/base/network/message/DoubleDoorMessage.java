@@ -25,7 +25,7 @@ public class DoubleDoorMessage implements IMessage {
 
 	@Override
 	public boolean receive(Context context) {
-		context.enqueueWork(() -> DoubleDoorOpeningModule.openDoor(extractWorld(context.getSender()), pos));
+		context.enqueueWork(() -> DoubleDoorOpeningModule.openDoor(extractWorld(context.getSender()), context.getSender(), pos));
 		return true;
 	}
 

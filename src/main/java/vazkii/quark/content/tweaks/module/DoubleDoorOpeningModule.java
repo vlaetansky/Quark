@@ -3,10 +3,15 @@ package vazkii.quark.content.tweaks.module;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.properties.DoorHingeSide;
 import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -14,9 +19,9 @@ import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.ModuleLoader;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.DoubleDoorMessage;
 
@@ -32,12 +37,12 @@ public class DoubleDoorOpeningModule extends QuarkModule {
 		BlockPos pos = event.getPos();
 		
 		if(world.getBlockState(pos).getBlock() instanceof DoorBlock) {
-			openDoor(world, pos);
+			openDoor(world, event.getPlayer(), pos);
 			QuarkNetwork.sendToServer(new DoubleDoorMessage(pos));
 		}
 	}
 	
-	public static void openDoor(World world, BlockPos pos) {
+	public static void openDoor(World world, PlayerEntity player, BlockPos pos) {
 		if(!ModuleLoader.INSTANCE.isModuleEnabled(DoubleDoorOpeningModule.class) || world == null)
 			return;
 		
@@ -51,26 +56,10 @@ public class DoubleDoorOpeningModule extends QuarkModule {
 		BlockState other = world.getBlockState(doorPos);
 
 		if(state.getMaterial() != Material.IRON && other.getBlock() == state.getBlock() && other.get(DoorBlock.FACING) == direction && other.get(DoorBlock.OPEN) == isOpen && other.get(DoorBlock.HINGE) != isMirrored) {
-			BlockState newState = other.func_235896_a_(DoorBlock.OPEN); // cycle
-			world.setBlockState(doorPos, newState);
+			RayTraceResult res = new BlockRayTraceResult(new Vector3d(doorPos.getX() + 0.5, doorPos.getY() + 0.5, doorPos.getZ() + 0.5), direction, doorPos, false);
+			if(res instanceof BlockRayTraceResult)
+				other.onBlockActivated(world, player, Hand.MAIN_HAND, (BlockRayTraceResult) res);
 		}
 	}
-	
-//	@SubscribeEvent
-//	public void onEntityTick(LivingUpdateEvent event) {
-//		if(event.getEntity() instanceof VillagerEntity && allowVillagers) {
-//			VillagerEntity villager = (VillagerEntity) event.getEntity();
-//			for(Iterator<EntityAITaskEntry> it = villager.tasks.taskEntries.iterator(); it.hasNext();) {
-//				Goal te = it.next().action;
-//				if(te instanceof EntityAIOpenDoubleDoor)
-//					return;
-//				else if(te instanceof OpenDoorGoal) {
-//					it.remove();
-//					villager.tasks.addTask(4, new EntityAIOpenDoubleDoor(villager, true));
-//					return;
-//				}
-//			}
-//		}
-//	}
 	
 }
