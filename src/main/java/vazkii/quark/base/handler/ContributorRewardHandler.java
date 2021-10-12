@@ -59,7 +59,6 @@ public class ContributorRewardHandler {
 		if (thread != null && thread.isAlive())
 			return;
 		
-		doneLoading = false;
 		thread = new ThreadContributorListLoader();
 	}
 
@@ -113,8 +112,6 @@ public class ContributorRewardHandler {
 		
 		if(!allPatrons.isEmpty())
 			featuredPatron = allPatrons.get((int) (Math.random() * allPatrons.size()));
-
-		doneLoading = true;
 	}
 
 	private static class ThreadContributorListLoader extends Thread {
@@ -140,7 +137,6 @@ public class ContributorRewardHandler {
 				}
 			} catch (IOException e) {
 				Quark.LOG.error("Failed to load patreon information", e);
-				doneLoading = true;
 			}
 		}
 
