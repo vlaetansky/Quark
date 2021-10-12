@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
+import net.minecraft.item.TridentItem;
 import net.minecraft.util.math.vector.Vector3f;
 import vazkii.quark.content.experimental.shiba.client.model.ShibaModel;
 import vazkii.quark.content.experimental.shiba.entity.ShibaEntity;
@@ -26,13 +27,17 @@ public class ShibaMouthItemLayer extends LayerRenderer<ShibaEntity, ShibaModel> 
 			return;
 		
 		boolean sword = item.getItem() instanceof SwordItem;
-		float scale = sword ? 0.75F : 0.5F;
+		boolean trident = item.getItem() instanceof TridentItem;
+		float scale = sword || trident ? 0.75F : 0.5F;
 		matrix.push();
 		getEntityModel().transformToHead(matrix);
 		
 		if(sword)
 			matrix.translate(0.3, -0.15, -0.5);
-		else 
+		else if(trident) {
+			matrix.translate(1, -0.6, -0.7);
+			matrix.rotate(Vector3f.YP.rotationDegrees(40F));
+		} else
 			matrix.translate(0, -0.15, -0.5);
 		matrix.scale(scale, scale, scale);
 
