@@ -52,7 +52,7 @@ public class SoulBeadEntity extends Entity {
 		double posSpread = 0.4;
 		double scale = 0.08;
 		double rotateSpread = 1.5;
-		double rise = 0.05;
+		double rise = 0.025;
 		int maxLiveTime = 6000;
 		int particles = 20;
 		double trigArg = liveTicks * 0.32;
@@ -82,7 +82,7 @@ public class SoulBeadEntity extends Entity {
 			world.playSound(null, bpx, bpy, bpz, QuarkSounds.ENTITY_SOUL_BEAD_IDLE, SoundCategory.PLAYERS, 0.2F, 1F);
 
 		liveTicks++;
-		if(liveTicks > maxLiveTime || world.getBlockState(new BlockPos(bpx, bpy, bpz)).isSolid())
+		if(liveTicks > maxLiveTime)
 			setDead();
 	}
 	
