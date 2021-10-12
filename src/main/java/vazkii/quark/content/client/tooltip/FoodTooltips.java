@@ -101,8 +101,10 @@ public class FoodTooltips {
 				int y = TooltipUtils.shiftTextByLines(event.getLines(), event.getY() + 10);
 				
 				boolean compress = count > ImprovedTooltipsModule.foodCompressionThreshold;
-				if(compress)
+				if(compress) {
 					renderCount = 1;
+					count--;
+				}
 
 				matrix.push();
 				matrix.translate(0, 0, 500);
