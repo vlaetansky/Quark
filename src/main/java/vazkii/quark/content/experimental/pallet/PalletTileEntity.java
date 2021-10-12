@@ -107,7 +107,6 @@ public class PalletTileEntity extends TileSimpleInventory implements ITickableTi
 				this.stack = copy;
 				this.count = stack.getCount();
 			} else {
-				System.out.println(stack);
 				ItemStack curr = getStackInSlot(index);
 				if(curr.isEmpty())
 					count += stack.getCount();
