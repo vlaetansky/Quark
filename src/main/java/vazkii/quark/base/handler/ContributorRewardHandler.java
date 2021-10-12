@@ -70,7 +70,6 @@ public class ContributorRewardHandler {
 	}
 	
 	public static int getTier(String name) {
-		join();
 		return tiers.getOrDefault(name.toLowerCase(Locale.ROOT), 0);
 	}
 	
@@ -96,15 +95,6 @@ public class ContributorRewardHandler {
 	@OnlyIn(Dist.DEDICATED_SERVER)
 	public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
 		ContributorRewardHandler.init();
-	}
-	
-	private static void join() {
-		if(!doneLoading)
-			try {
-				thread.join();
-			} catch (InterruptedException e) {
-				throw new RuntimeException(e);
-			}
 	}
 	
 	private static void load(Properties props) {
