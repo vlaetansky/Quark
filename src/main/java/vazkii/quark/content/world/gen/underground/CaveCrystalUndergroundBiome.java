@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.ints.Int2ByteArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ByteMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.WorldGenRegion;
@@ -76,14 +77,14 @@ public class CaveCrystalUndergroundBiome extends BasicUndergroundBiome {
 
 		WorldGenRegion world = context.world;
 		if(context.random.nextDouble() < clusterChance)
-			world.setBlockState(crystalPos, cluster.getDefaultState().with(CaveCrystalClusterBlock.FACING, offset), 0);
+			world.setBlockState(crystalPos, cluster.getDefaultState().with(CaveCrystalClusterBlock.FACING, offset).with(CaveCrystalClusterBlock.WATERLOGGED, world.getFluidState(crystalPos).getFluid() == Fluids.WATER), 0);
 		else {
 			world.setBlockState(crystalPos, crystal.getDefaultState(), 0);
 			
 			for(Direction dir : Direction.values()) {
 				BlockPos clusterPos = crystalPos.offset(dir);
 				if(world.isAirBlock(clusterPos) && context.random.nextDouble() < CaveCrystalUndergroundBiomeModule.crystalClusterOnSidesChance)
-					world.setBlockState(clusterPos, cluster.getDefaultState().with(CaveCrystalClusterBlock.FACING, dir), 0);
+					world.setBlockState(clusterPos, cluster.getDefaultState().with(CaveCrystalClusterBlock.FACING, dir).with(CaveCrystalClusterBlock.WATERLOGGED, world.getFluidState(clusterPos).getFluid() == Fluids.WATER), 0);
 			}
 		}
 	}
