@@ -87,7 +87,7 @@ public class TotemOfHoldingModule extends QuarkModule {
     public void clientSetup() {
         RenderingRegistry.registerEntityRenderingHandler(totemType, TotemOfHoldingRenderer::new);
         
-		ItemModelsProperties.registerProperty(soulCompass, new ResourceLocation("angle"), SoulCompassItem::angle);
+        enqueue(() -> ItemModelsProperties.registerProperty(soulCompass, new ResourceLocation("angle"), SoulCompassItem::angle));
     }
 
     @Override

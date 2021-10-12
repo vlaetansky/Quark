@@ -35,8 +35,8 @@ public class SlimeInABucketModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		ItemModelsProperties.registerProperty(slime_in_a_bucket, new ResourceLocation("excited"), 
-				(stack, world, e) -> ItemNBTHelper.getBoolean(stack, SlimeInABucketItem.TAG_EXCITED, false) ? 1 : 0);
+		enqueue(() -> ItemModelsProperties.registerProperty(slime_in_a_bucket, new ResourceLocation("excited"), 
+				(stack, world, e) -> ItemNBTHelper.getBoolean(stack, SlimeInABucketItem.TAG_EXCITED, false) ? 1 : 0));
 	}
 
 	@SubscribeEvent

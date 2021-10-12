@@ -88,8 +88,8 @@ public class BackpackModule extends QuarkModule {
 	public void clientSetup() {
 		ScreenManager.registerFactory(container, BackpackInventoryScreen::new);
 		
-		ItemModelsProperties.registerProperty(backpack, new ResourceLocation("has_items"), 
-				(stack, world, entity) -> (!BackpackModule.superOpMode && BackpackItem.doesBackpackHaveItems(stack)) ? 1 : 0);
+		enqueue(() -> ItemModelsProperties.registerProperty(backpack, new ResourceLocation("has_items"), 
+				(stack, world, entity) -> (!BackpackModule.superOpMode && BackpackItem.doesBackpackHaveItems(stack)) ? 1 : 0));
 	}
 	
 	@SubscribeEvent

@@ -46,7 +46,7 @@ public class AbacusModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		ItemModelsProperties.registerProperty(abacus, new ResourceLocation("count"), AbacusItem::count);
+		enqueue(() -> ItemModelsProperties.registerProperty(abacus, new ResourceLocation("count"), AbacusItem::count));
 	}
 
 	@SubscribeEvent
