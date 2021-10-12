@@ -64,13 +64,19 @@ public class EnchantedBookTooltips {
 				for(; tooltipIndex < tooltip.size(); tooltipIndex++)
 					if(tooltip.get(tooltipIndex).equals(match)) {
 						List<ItemStack> items = getItemsForEnchantment(ed.enchantment);
-						if(!items.isEmpty()) {
-							int len = 3 + items.size() * 9;
+						int itemCount = items.size();
+						int lines = (int) Math.ceil((double) itemCount / 10.0);
+						
+						int remLines = lines;
+						int len = 3 + Math.min(10, itemCount) * 9;
+						while(remLines > 0) {
 							String spaces = "";
-							while(mc.fontRenderer.getStringWidth(spaces) < len)
+							while (mc.fontRenderer.getStringWidth(spaces) < len)
 								spaces += " ";
 
 							tooltip.add(tooltipIndex + 1, new StringTextComponent(spaces));
+							tooltipIndex++;
+							remLines--;
 						}
 
 						break;
@@ -98,13 +104,19 @@ public class EnchantedBookTooltips {
 					String line = TextFormatting.getTextWithoutFormattingCodes(list.get(tooltipIndex));
 					if (line != null && line.equals(match)) {
 						List<ItemStack> items = getItemsForEnchantment(enchantment);
-						if (!items.isEmpty()) {
-							int len = 3 + items.size() * 9;
+						int itemCount = items.size();
+						int lines = (int) Math.ceil((double) itemCount / 10.0);
+						
+						int remLines = lines;
+						int len = 3 + Math.min(10, itemCount) * 9;
+						while(remLines > 0) {
 							String spaces = "";
 							while (mc.fontRenderer.getStringWidth(spaces) < len)
 								spaces += " ";
 
 							list.add(tooltipIndex + 1, spaces);
+							tooltipIndex++;
+							remLines--;
 						}
 
 						break;
@@ -161,7 +173,7 @@ public class EnchantedBookTooltips {
 
 						List<ItemStack> items = getItemsForEnchantment(ed.enchantment);
 						for(ItemStack testStack : items) {
-							mc.getItemRenderer().renderItemIntoGUI(testStack, 6 + drawn * 18, tooltipIndex * 20 - 2);
+							mc.getItemRenderer().renderItemIntoGUI(testStack, 6 + (drawn % 10) * 18, tooltipIndex * 20 - 2 + (drawn / 10) * 20);
 							drawn++;
 						}
 
