@@ -149,7 +149,8 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 
 		List<BlockPos> seenPositions = new LinkedList<>();
 		boolean check = true;
-
+		boolean setColor = false;
+		
 		while(currPos.getY() < 256 && currPos.getY() > 0 && horizontalMoves > 0) {
 			currPos = currPos.offset(currSegment.dir);
 			if(currSegment.dir.getAxis().isHorizontal())
@@ -157,9 +158,8 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 
 			BlockState blockstate = world.getBlockState(currPos);
 			Block block = blockstate.getBlock();
-			boolean setColor = false;
 			float[] targetColor = blockstate.getBeaconColorMultiplier(world, currPos, beaconPos);
-			
+
 			if(block instanceof CaveCrystalClusterBlock) {
 				Direction dir = blockstate.get(CaveCrystalClusterBlock.FACING);
 				if(dir == currSegment.dir)
