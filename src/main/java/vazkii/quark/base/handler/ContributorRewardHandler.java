@@ -43,8 +43,6 @@ public class ContributorRewardHandler {
 	private static final Set<String> done = Collections.newSetFromMap(new WeakHashMap<>());
 
 	private static Thread thread;
-	private static boolean doneLoading;
-
 	private static String name;
 
 	private static final Map<String, Integer> tiers = new HashMap<>();
