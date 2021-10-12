@@ -103,7 +103,8 @@ public class FoodTooltips {
 				boolean compress = count > ImprovedTooltipsModule.foodCompressionThreshold;
 				if(compress) {
 					renderCount = 1;
-					count--;
+					if(fract)
+						count--;
 				}
 
 				matrix.push();
