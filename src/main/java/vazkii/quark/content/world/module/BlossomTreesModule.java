@@ -33,6 +33,8 @@ public class BlossomTreesModule extends QuarkModule {
 	@Config BlossomTreeConfig yellow = new BlossomTreeConfig(200, BiomeDictionary.Type.PLAINS); 
 	@Config BlossomTreeConfig red = new BlossomTreeConfig(30, BiomeDictionary.Type.MESA); 
 
+	@Config public static boolean dropLeafParticles = true;
+	
 	public static Map<BlossomTree, BlossomTreeConfig> trees = new HashMap<>();
 	
 	@Override

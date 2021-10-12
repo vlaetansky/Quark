@@ -25,6 +25,7 @@ import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
+import vazkii.quark.content.world.module.BlossomTreesModule;
 
 public class BlossomLeavesBlock extends LeavesBlock implements IQuarkBlock {
 
@@ -52,7 +53,7 @@ public class BlossomLeavesBlock extends LeavesBlock implements IQuarkBlock {
 	
 	@Override
 	public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-		if(worldIn.isAirBlock(pos.down()) && rand.nextInt(5) == 0) {
+		if(worldIn.isAirBlock(pos.down()) && rand.nextInt(5) == 0 && BlossomTreesModule.dropLeafParticles) {
 			double windStrength = 5 + Math.cos((double) worldIn.getGameTime() / 2000) * 2;
 			double windX = Math.cos((double) worldIn.getGameTime() / 1200) * windStrength;
 			double windZ = Math.sin((double) worldIn.getGameTime() / 1000) * windStrength;
