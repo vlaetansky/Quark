@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
+import vazkii.quark.base.handler.QuarkSounds;
 
 public class SoulBeadEntity extends Entity {
 
@@ -78,7 +79,7 @@ public class SoulBeadEntity extends Entity {
 		}
 		
 		if(Math.random() < 0.1)
-			world.playSound(null, bpx, bpy, bpz, SoundEvents.ENTITY_GHAST_AMBIENT, SoundCategory.PLAYERS, 0.2F, 1F);
+			world.playSound(null, bpx, bpy, bpz, QuarkSounds.ENTITY_SOUL_BEAD_IDLE, SoundCategory.PLAYERS, 0.2F, 1F);
 
 		liveTicks++;
 		if(liveTicks > maxLiveTime || world.getBlockState(new BlockPos(bpx, bpy, bpz)).isSolid())

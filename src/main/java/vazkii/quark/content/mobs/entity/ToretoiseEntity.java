@@ -42,7 +42,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
@@ -54,8 +53,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.handler.MiscUtil;
+import vazkii.quark.base.handler.QuarkSounds;
+import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.automation.module.IronRodModule;
 import vazkii.quark.content.mobs.module.ToretoiseModule;
+import vazkii.quark.content.world.module.CaveRootsModule;
 
 public class ToretoiseEntity extends AnimalEntity {
 
@@ -179,7 +181,7 @@ public class ToretoiseEntity extends AnimalEntity {
 
 				if(world instanceof ServerWorld) {
 					if(angeryTicks == 3)
-						playSound(SoundEvents.ENTITY_WITHER_BREAK_BLOCK, 1F, 0.2F);
+						playSound(QuarkSounds.ENTITY_TORETOISE_ANGRY, 1F, 0.2F);
 					else if(angeryTicks == 0) {
 						((ServerWorld) world).spawnParticle(ParticleTypes.CLOUD, x, y, z, 200, dangerRange, 0.5, dangerRange, 0);
 					}
@@ -258,7 +260,7 @@ public class ToretoiseEntity extends AnimalEntity {
 	}
 
 	public void dropOre(int ore) {
-		playSound(SoundEvents.BLOCK_LANTERN_BREAK, 1F, 0.6F);
+		playSound(QuarkSounds.ENTITY_TORETOISE_HARVEST, 1F, 0.6F);
 
 		Item drop = null;
 		int countMult = 1;
@@ -302,7 +304,7 @@ public class ToretoiseEntity extends AnimalEntity {
 		if(world.isRemote)
 			return;
 
-		playSound(SoundEvents.ENTITY_GENERIC_EAT, 0.5F + 0.5F * world.rand.nextInt(2), (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F + 1.0F);
+		playSound(QuarkSounds.ENTITY_TORETOISE_EAT, 0.5F + 0.5F * world.rand.nextInt(2), (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F + 1.0F);
 		heal(8);
 
 		if(!isTamed) {
@@ -327,7 +329,7 @@ public class ToretoiseEntity extends AnimalEntity {
 
 				if(world instanceof ServerWorld) {
 					((ServerWorld) world).spawnParticle(ParticleTypes.CLOUD, getPosX(), getPosY() + 0.5, getPosZ(), 100, 0.6, 0.6, 0.6, 0);
-					playSound(SoundEvents.BLOCK_STONE_PLACE, 10F, 0.7F);
+					playSound(QuarkSounds.ENTITY_TORETOISE_REGROW, 10F, 0.7F);
 				}
 			}
 		}
@@ -383,17 +385,17 @@ public class ToretoiseEntity extends AnimalEntity {
 
 	@Override
 	protected SoundEvent getAmbientSound() {
-		return SoundEvents.ENTITY_TURTLE_AMBIENT_LAND;
+		return QuarkSounds.ENTITY_TORETOISE_IDLE;
 	}
 
 	@Override
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-		return SoundEvents.ENTITY_TURTLE_HURT;
+		return QuarkSounds.ENTITY_TORETOISE_HURT;
 	}
 
 	@Override
 	protected SoundEvent getDeathSound() {
-		return SoundEvents.ENTITY_TURTLE_DEATH;
+		return QuarkSounds.ENTITY_TORETOISE_DIE;
 	}
 
 	public int getOreType() {

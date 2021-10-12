@@ -8,6 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ShieldItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.IPacket;
@@ -95,6 +96,13 @@ public class TotemOfHoldingEntity extends Entity {
                     } else if(EnchantmentHelper.getEnchantmentLevel(Enchantments.BINDING_CURSE, curr) == 0 && EnchantmentHelper.getEnchantmentLevel(Enchantments.BINDING_CURSE, stack) == 0) {
                         player.setItemStackToSlot(slot, stack);
                         stack = curr;
+                    }
+                } else if(stack.getItem() instanceof ShieldItem) {
+                    ItemStack curr = player.getItemStackFromSlot(EquipmentSlotType.OFFHAND);
+
+                    if(curr.isEmpty()) {
+                        player.setItemStackToSlot(EquipmentSlotType.OFFHAND, stack);
+                        stack = null;
                     }
                 }
 

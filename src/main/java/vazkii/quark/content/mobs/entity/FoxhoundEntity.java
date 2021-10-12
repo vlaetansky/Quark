@@ -16,6 +16,7 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
@@ -81,6 +82,7 @@ import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
 import vazkii.quark.base.handler.MiscUtil;
+import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.content.mobs.ai.FindPlaceToSleepGoal;
 import vazkii.quark.content.mobs.ai.SleepGoal;
 import vazkii.quark.content.mobs.module.FoxhoundModule;
@@ -359,7 +361,26 @@ public class FoxhoundEntity extends WolfEntity implements IMob {
 
 	@Override
 	protected SoundEvent getAmbientSound() {
-		return isSleeping() ? null : super.getAmbientSound();
+		if (isSleeping()) {
+			return null;
+		}
+		if (this.func_233678_J__()) {
+			return QuarkSounds.ENTITY_FOXHOUND_GROWL;
+		} else if (this.rand.nextInt(3) == 0) {
+			return this.isTamed() && this.getHealth() < 10.0F ? QuarkSounds.ENTITY_FOXHOUND_WHINE : QuarkSounds.ENTITY_FOXHOUND_PANT;
+		} else {
+			return QuarkSounds.ENTITY_FOXHOUND_IDLE;
+		}
+	}
+
+	@Override
+	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+		return QuarkSounds.ENTITY_FOXHOUND_HURT;
+	}
+
+	@Override
+	protected SoundEvent getDeathSound() {
+		return QuarkSounds.ENTITY_FOXHOUND_DIE;
 	}
 
 	@Override

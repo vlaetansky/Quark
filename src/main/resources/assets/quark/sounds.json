@@ -100,6 +100,54 @@
       { "name": "minecraft:random/pop", "pitch": 0.75, "volume": 0.5 }
     ]
   },
+  "entity.foxhound.ambient": {
+    "sounds": [
+      "mob/wolf/bark1",
+      "mob/wolf/bark2",
+      "mob/wolf/bark3"
+    ],
+    "subtitle": "quark.subtitle.foxhound_ambient"
+  },
+  "entity.foxhound.death": {
+    "sounds": [
+      "mob/wolf/death"
+    ],
+    "subtitle": "quark.subtitle.foxhound_death"
+  },
+  "entity.foxhound.growl": {
+    "sounds": [
+      "mob/wolf/growl1",
+      "mob/wolf/growl2",
+      "mob/wolf/growl3"
+    ],
+    "subtitle": "quark.subtitle.foxhound_growl"
+  },
+  "entity.foxhound.hurt": {
+    "sounds": [
+      "mob/wolf/hurt1",
+      "mob/wolf/hurt2",
+      "mob/wolf/hurt3"
+    ],
+    "subtitle": "quark.subtitle.foxhound_hurt"
+  },
+  "entity.foxhound.pant": {
+    "sounds": [
+      "mob/wolf/panting"
+    ],
+    "subtitle": "quark.subtitle.foxhound_ambient"
+  },
+  "entity.foxhound.shake": {
+    "sounds": [
+      "mob/wolf/shake"
+    ],
+    "subtitle": "quark.subtitle.foxhound_shake"
+  },
+  "entity.foxhound.whine": {
+    "sounds": [
+      "mob/wolf/whine"
+    ],
+    "subtitle": "quark.subtitle.foxhound_ambient"
+  },
   "entity.frog.wednesday": {
     "category": "neutral",
     "subtitle": "quark.subtitles.hump_day",
@@ -144,6 +192,13 @@
       { "name": "minecraft:mob/rabbit/hop4", "volume": 0.1 }
     ]
   },
+  "entity.frog.shear": {
+    "category": "neutral",
+    "subtitle": "subtitles.item.shears.shear",
+    "sounds": [
+      "mob/sheep/shear"
+    ]
+  },
   "entity.crab.idle": {
     "category": "neutral",
     "subtitle": "quark.subtitles.crab_scuttle",
@@ -158,6 +213,95 @@
     "category": "neutral",
     "subtitle": "quark.subtitles.crab_die",
     "sounds": []
+  },
+  "entity.toretoise.die": {
+    "category": "neutral",
+    "subtitle": "quark.subtitles.toretoise_die",
+    "sounds": [
+      "mob/turtle/death1",
+      "mob/turtle/death2",
+      "mob/turtle/death3"
+    ]
+  },
+  "entity.toretoise.hurt": {
+    "category": "neutral",
+    "subtitle": "quark.subtitles.toretoise_hurt",
+    "sounds": [
+      "mob/turtle/hurt1",
+      "mob/turtle/hurt2",
+      "mob/turtle/hurt3",
+      "mob/turtle/hurt4",
+      "mob/turtle/hurt5"
+    ]
+  },
+  "entity.toretoise.idle": {
+    "category": "neutral",
+    "subtitle": "quark.subtitles.toretoise_idle",
+    "sounds": [
+      {
+        "name": "mob/turtle/idle1",
+        "volume": 0.8
+      },
+      {
+        "name": "mob/turtle/idle2",
+        "volume": 0.7
+      },
+      {
+        "name": "mob/turtle/idle3",
+        "volume": 0.8
+      }
+    ]
+  },
+  "entity.toretoise.angry": {
+    "category": "neutral",
+    "subtitle": "quark.subtitles.toretoise_angry",
+    "sounds": [
+      "mob/zombie/woodbreak"
+    ]
+  },
+  "entity.toretoise.harvest": {
+    "category": "neutral",
+    "subtitle": "quark.subtitles.toretoise_harvest",
+    "sounds": [
+      "block/lantern/break1",
+      "block/lantern/break2",
+      "block/lantern/break3",
+      "block/lantern/break4",
+      "block/lantern/break5",
+      "block/lantern/break6"
+    ]
+  },
+  "entity.toretoise.eat": {
+    "category": "neutral",
+    "subtitle": "subtitles.entity.generic.eat",
+    "sounds": [
+      "random/eat1",
+      "random/eat2",
+      "random/eat3"
+    ]
+  },
+  "entity.toretoise.regrow": {
+    "category": "neutral",
+    "subtitle": "quark.subtitles.toretoise_regrow",
+    "sounds": [
+      "dig/stone1",
+      "dig/stone2",
+      "dig/stone3",
+      "dig/stone4"
+    ]
+  },
+  "entity.soul_bead.idle": {
+    "category": "neutral",
+    "subtitle": "quark.subtitles.soul_bead.idle",
+    "sounds": [
+      "mob/ghast/moan1",
+      "mob/ghast/moan2",
+      "mob/ghast/moan3",
+      "mob/ghast/moan4",
+      "mob/ghast/moan5",
+      "mob/ghast/moan6",
+      "mob/ghast/moan7"
+    ]
   },
   "block.monster_box.growl": {
     "category": "blocks",

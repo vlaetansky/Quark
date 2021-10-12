@@ -300,7 +300,7 @@ public class FrogEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 	public List<ItemStack> onSheared(PlayerEntity player, @Nonnull ItemStack item, World iworld, BlockPos pos, int fortune) {
 		setSweater(false);
 		Vector3d epos = getPositionVec();
-		world.playSound(null, epos.x, epos.y, epos.z, SoundEvents.ENTITY_SHEEP_SHEAR, SoundCategory.PLAYERS, 1F, 1F);
+		world.playSound(null, epos.x, epos.y, epos.z, QuarkSounds.ENTITY_FROG_SHEAR, SoundCategory.PLAYERS, 1F, 1F);
 
 		return Lists.newArrayList();
 	}
