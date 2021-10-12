@@ -84,11 +84,12 @@ public class WeatherSensorBlock extends QuarkBlock {
     public static void updatePower(BlockState state, World world, BlockPos pos) {
         if (world.getDimensionType().hasSkyLight()) {
             boolean inverted = state.get(INVERTED);
+            boolean dryBiome = world.getBiome(pos).getPrecipitation() == Biome.RainType.NONE;
 
-            if (world.isThundering())
+            if (world.isThundering() && !dryBiome)
                 world.setBlockState(pos, state.with(POWER, inverted ? 0 : 2));
-            else if (world.isRaining() && world.getBiome(pos).getPrecipitation() != Biome.RainType.NONE)
-                world.setBlockState(pos, state.with(POWER, 1));
+            else if (world.isRaining() || (world.isThundering() && dryBiome))
+                world.setBlockState(pos, state.with(POWER, inverted ? 0 : 1));
             else
                 world.setBlockState(pos, state.with(POWER, inverted ? 2 : 0));
         }

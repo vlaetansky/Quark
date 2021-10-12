@@ -97,7 +97,11 @@ public class RootBlock extends QuarkVineBlock implements IGrowable {
 
 	@Override
 	public boolean canGrow(IBlockReader world, BlockPos pos, BlockState state, boolean client) {
-		return world.getLightValue(pos) < 7;
+		if(world instanceof ServerWorld) {
+			ServerWorld serverWorld = (ServerWorld) world;
+			return serverWorld.getLightSubtracted(pos, 0) < 7;
+		}
+		return false;
 	}
 
 	@Override
