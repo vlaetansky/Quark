@@ -356,56 +356,80 @@
     "category": "records",
     "subtitle": "quark.subtitles.ambient.drips",
     "sounds": [
-      "quark:ambient/drips"
+      {
+        "name": "quark:ambient/drips",
+        "stream": true
+      }
     ]
   },
   "ambient.ocean": {
     "category": "records",
     "subtitle": "quark.subtitles.ambient.ocean",
     "sounds": [
-      "quark:ambient/ocean"
+      {
+        "name": "quark:ambient/ocean",
+        "stream": true
+      }
     ]
   },
   "ambient.rain": {
     "category": "records",
     "subtitle": "quark.subtitles.ambient.rain",
     "sounds": [
-      "quark:ambient/rain"
+      {
+        "name": "quark:ambient/rain",
+        "stream": true
+      }
     ]
   },
   "ambient.wind": {
     "category": "records",
     "subtitle": "quark.subtitles.ambient.wind",
     "sounds": [
-      "quark:ambient/wind"
+      {
+        "name": "quark:ambient/wind",
+        "stream": true
+      }
     ]
   },
   "ambient.fire": {
     "category": "records",
     "subtitle": "quark.subtitles.ambient.fire",
     "sounds": [
-      "quark:ambient/fire"
+      {
+        "name": "quark:ambient/fire",
+        "stream": true
+      }
     ]
   },
   "ambient.clock": {
     "category": "records",
     "subtitle": "quark.subtitles.ambient.clock",
     "sounds": [
-      "quark:ambient/clock"
+      {
+        "name": "quark:ambient/clock",
+        "stream": true
+      }
     ]
   },
   "ambient.crickets": {
     "category": "records",
     "subtitle": "quark.subtitles.ambient.crickets",
     "sounds": [
-      "quark:ambient/crickets"
+      {
+        "name": "quark:ambient/crickets",
+        "stream": true
+      }
     ]
   },
   "ambient.chatter": {
     "category": "records",
     "subtitle": "quark.subtitles.ambient.chatter",
     "sounds": [
-      "quark:ambient/chatter"
+      {
+        "name": "quark:ambient/chatter",
+        "stream": true
+      }
     ]
   }
 }
