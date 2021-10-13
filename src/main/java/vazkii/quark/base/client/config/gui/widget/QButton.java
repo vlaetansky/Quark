@@ -1,12 +1,11 @@
 package vazkii.quark.base.client.config.gui.widget;
 
 import java.awt.Color;
+import java.time.Month;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-
-import org.apache.commons.lang3.tuple.Pair;
+import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -15,7 +14,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
 import vazkii.arl.util.ClientTicker;
 import vazkii.quark.base.client.config.gui.QuarkConfigHomeScreen;
 import vazkii.quark.base.client.handler.TopLayerTooltipHandler;
@@ -24,18 +22,59 @@ import vazkii.quark.base.handler.MiscUtil;
 
 public class QButton extends Button {
 	
-	private static final HashMap<String, Pair<Integer, Integer>> BIRTHDAYS = new LinkedHashMap<>();
+	private static final int ORANGE = 1;
+	private static final int PURPLE = 2;
+	private static final int RAINBOW = 3;
+	private static final int QUARK = 4;
+	
+	private static final List<Celebration> CELEBRATIONS = new ArrayList<>();
 	static {
-		BIRTHDAYS.put("MCVinnyq", Pair.of(9, 4)); // 9 April
-		BIRTHDAYS.put("Vazkii", Pair.of(22, 11)); // 22 November
-		BIRTHDAYS.put("Wire Segal", Pair.of(23, 9)); // 23 September
-		BIRTHDAYS.put("Quark", Pair.of(21, 3)); // 21 March
+		celebrate("quark", 21, Month.MARCH, QUARK);
+		celebrate("vm", 29, Month.APRIL, PURPLE);
+		celebrate("minecraft", 18, Month.NOVEMBER, ORANGE);
+
+		celebrate("vns", 9, Month.APRIL, ORANGE);
+		celebrate("vazkii", 22, Month.NOVEMBER, ORANGE);
+		celebrate("wire", 23, Month.SEPTEMBER, ORANGE);
+		
+		celebrate("iad", 6, Month.APRIL, RAINBOW);
+		celebrate("iad2", 26, Month.OCTOBER, RAINBOW);
+		celebrate("idr", 8, Month.NOVEMBER, RAINBOW);
+		celebrate("ld", 8, Month.OCTOBER, RAINBOW);
+		celebrate("lvd", 26, Month.APRIL, RAINBOW);
+		celebrate("ncod", 11, Month.OCTOBER, RAINBOW);
+		celebrate("nbpd", 14, Month.JULY, RAINBOW);
+		celebrate("ppad", 24, Month.MAY, RAINBOW);
+		celebrate("tdr", 20, Month.NOVEMBER, RAINBOW);
+		celebrate("tdv", 31, Month.MARCH, RAINBOW);
+		celebrate("zdd", 1, Month.MARCH, RAINBOW);
+
+		celebrate("pm", 1, 30, Month.JUNE, RAINBOW);
+		celebrate("baw", 16, 22, Month.SEPTEMBER, RAINBOW);
+		celebrate("taw", 13, 19, Month.NOVEMBER, RAINBOW);
+
+		celebrate("afd", 1, Month.APRIL, QUARK);
+		celebrate("wwd", 3, Month.MARCH, PURPLE);
+		celebrate("hw", 31, Month.OCTOBER, ORANGE);
+		celebrate("xmas", 25, Month.DECEMBER, PURPLE);
+		celebrate("iwd", 8, Month.MARCH, PURPLE);
+		celebrate("wpld", 5, Month.MAY, PURPLE);
+		celebrate("iyd", 12, Month.AUGUST, PURPLE);
+		celebrate("hrd", 9, Month.DECEMBER, PURPLE);
+		celebrate("ny", 1, 3, Month.JANUARY, PURPLE);
+	}
+	
+	private static void celebrate(String name, int day, Month month, int tier) {
+		celebrate(name, day, day, month, tier);
+	}
+	
+	private static void celebrate(String name, int day, int end, Month month, int tier) {
+		CELEBRATIONS.add(new Celebration(day, month.getValue(), (end - day), tier, name));
 	}
 
+
 	private final boolean gay;
-	
-	private int birthdayIndex = -1;
-	private String birthday;
+	private Celebration celebrating;
 	
 	public QButton(int x, int y) {
 		super(x, y, 20, 20, new StringTextComponent("q"), QButton::click);
@@ -43,18 +82,14 @@ public class QButton extends Button {
 		Calendar calendar = Calendar.getInstance();
 		int month = calendar.get(Calendar.MONTH) + 1;
 		int day = calendar.get(Calendar.DATE);
+		
 		gay = month == 6;
 		
-		int i = 0;
-		for(String s : BIRTHDAYS.keySet()) {
-			Pair<Integer, Integer> date = BIRTHDAYS.get(s);
-			if(month == date.getRight() && day == date.getLeft()) {
-				birthdayIndex = i;
-				birthday = s;
+		for(Celebration c : CELEBRATIONS)
+			if(c.running(day, month)) {
+				celebrating = c;
 				break;
 			}
-			i++;
-		}
 	}
 	
 	@Override
@@ -67,8 +102,9 @@ public class QButton extends Button {
 		super.renderButton(mstack, mouseX, mouseY, pticks);
 		
 		int iconIndex = Math.min(4, ContributorRewardHandler.localPatronTier);
-		if(birthdayIndex > -1)
-			iconIndex = birthdayIndex + 1;
+		if(celebrating != null) {
+			iconIndex = celebrating.tier;
+		}
 		
 		if(iconIndex > 0) {
 			RenderSystem.color3f(1F, 1F, 1F);
@@ -80,7 +116,7 @@ public class QButton extends Button {
 			
 			int v = 26;
 			
-			if(birthdayIndex > -1) {
+			if(celebrating != null) {
 				rx -= 3;
 				ry -= 2;
 				w = 10;
@@ -89,7 +125,7 @@ public class QButton extends Button {
 				
 				boolean hovered = mouseX >= x && mouseY >= y && mouseX < (x + width) && mouseY < (y + height);
 				if(hovered)
-					TopLayerTooltipHandler.setTooltip(Arrays.asList(I18n.format("quark.gui.config.bday", TextFormatting.YELLOW + birthday + TextFormatting.RESET)), mouseX, mouseY);
+					TopLayerTooltipHandler.setTooltip(Arrays.asList(I18n.format("quark.gui.celebration." + celebrating.name)), mouseX, mouseY);
 			}
 			
 			int u = 256 - iconIndex * w;
@@ -101,6 +137,25 @@ public class QButton extends Button {
 	
 	public static void click(Button b) {
 		Minecraft.getInstance().displayGuiScreen(new QuarkConfigHomeScreen(Minecraft.getInstance().currentScreen));
+	}
+	
+	private static class Celebration {
+		public final int day, month, len, tier;
+		public final String name;
+		
+		public Celebration(int day, int month, int len, int tier, String name) {
+			this.day = day;
+			this.month = month;
+			this.len = len;
+			this.tier = tier;
+			this.name = name;
+		}
+		
+		// AFAIK none of the ones I'm tracking pass beyond a month so this 
+		// lazy check is fine
+		public boolean running(int day, int month) {
+			return this.month == month && (this.day >= day && this.day <= (day + len));
+		}
 	}
 	
 }
