@@ -2,6 +2,7 @@ package vazkii.quark.content.client.render.variant;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.UUID;
 
 import com.google.common.collect.ImmutableList;
@@ -26,18 +27,23 @@ public class VariantBeeRenderer extends BeeRenderer {
 	
 	@Override
 	public ResourceLocation getEntityTexture(BeeEntity entity) {
-		if(entity.hasCustomName() || VariantAnimalTexturesModule.everyBeeIsLGBT) {
+		UUID id = entity.getUniqueID();
+		long most = id.getMostSignificantBits();
+		
+		// From https://williamsinstitute.law.ucla.edu/publications/how-many-people-lgbt/
+		final double lgbtChance = 0.038;
+		boolean lgbt = VariantAnimalTexturesModule.everyBeeIsLGBT ||  (new Random(most)).nextDouble() < lgbtChance;
+		
+		if(entity.hasCustomName() || lgbt) {
 			String custName = entity.hasCustomName() ? entity.getCustomName().getString().trim() : "";
 			String name = custName.toLowerCase(Locale.ROOT);
 			
-			if(VariantAnimalTexturesModule.everyBeeIsLGBT) {
-				UUID id = entity.getUniqueID();
-				long most = id.getMostSignificantBits();
-				name = VARIANTS.get(Math.abs((int) (most % VARIANTS.size())));
+			if(!VARIANTS.contains(name)) {
+				if(custName.matches("wire(se|bee)gal"))
+					name = "enbee";
+				else if(lgbt)
+					name = VARIANTS.get(Math.abs((int) (most % (VARIANTS.size() - 1)))); // -1 to not spawn helen bee naturally
 			}
-			
-			if(custName.matches("wire(se|bee)gal"))
-				name = "enbee";
 			
 			if(VARIANTS.contains(name)) {
 				String type = "normal";
