@@ -30,8 +30,8 @@ public class VariantBeeRenderer extends BeeRenderer {
 		UUID id = entity.getUniqueID();
 		long most = id.getMostSignificantBits();
 		
-		// From https://williamsinstitute.law.ucla.edu/publications/how-many-people-lgbt/
-		final double lgbtChance = 0.038;
+		// From https://news.gallup.com/poll/329708/lgbt-identification-rises-latest-estimate.aspx
+		final double lgbtChance = 0.056;
 		boolean lgbt = VariantAnimalTexturesModule.everyBeeIsLGBT ||  (new Random(most)).nextDouble() < lgbtChance;
 		
 		if(entity.hasCustomName() || lgbt) {
