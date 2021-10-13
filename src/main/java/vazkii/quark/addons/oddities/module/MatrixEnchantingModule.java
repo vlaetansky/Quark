@@ -64,13 +64,13 @@ public class MatrixEnchantingModule extends QuarkModule {
 	public static int baseMaxPieceCountBook = 1;
 
 	@Config(description = "At which piece count the calculation for the min level should default to increasing one per piece rather than using the scale factor")
-	public static int minLevelCutoff = 10;
+	public static int minLevelCutoff = 8;
 
 	@Config(description = "How many pieces a single Lapis can generate")
 	public static int chargePerLapis = 4;
 
 	@Config(description = "How much the min level requirement for adding a new piece should increase for each piece added (up until the value of Min Level Cutoff)")
-	public static double minLevelScaleFactor = 1.5;
+	public static double minLevelScaleFactor = 1.2;
 
 	@Config(description = "How much the min level requirement for adding a new piece to a book should increase per each bookshelf being used")
 	public static double minLevelScaleFactorBook = 2.0;
