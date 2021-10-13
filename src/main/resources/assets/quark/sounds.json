@@ -106,13 +106,13 @@
       "mob/wolf/bark2",
       "mob/wolf/bark3"
     ],
-    "subtitle": "quark.subtitle.foxhound_ambient"
+    "subtitle": "quark.subtitles.foxhound_ambient"
   },
   "entity.foxhound.death": {
     "sounds": [
       "mob/wolf/death"
     ],
-    "subtitle": "quark.subtitle.foxhound_death"
+    "subtitle": "quark.subtitles.foxhound_death"
   },
   "entity.foxhound.growl": {
     "sounds": [
@@ -120,7 +120,7 @@
       "mob/wolf/growl2",
       "mob/wolf/growl3"
     ],
-    "subtitle": "quark.subtitle.foxhound_growl"
+    "subtitle": "quark.subtitles.foxhound_growl"
   },
   "entity.foxhound.hurt": {
     "sounds": [
@@ -128,25 +128,25 @@
       "mob/wolf/hurt2",
       "mob/wolf/hurt3"
     ],
-    "subtitle": "quark.subtitle.foxhound_hurt"
+    "subtitle": "quark.subtitles.foxhound_hurt"
   },
   "entity.foxhound.pant": {
     "sounds": [
       "mob/wolf/panting"
     ],
-    "subtitle": "quark.subtitle.foxhound_ambient"
+    "subtitle": "quark.subtitles.foxhound_ambient"
   },
   "entity.foxhound.shake": {
     "sounds": [
       "mob/wolf/shake"
     ],
-    "subtitle": "quark.subtitle.foxhound_shake"
+    "subtitle": "quark.subtitles.foxhound_shake"
   },
   "entity.foxhound.whine": {
     "sounds": [
       "mob/wolf/whine"
     ],
-    "subtitle": "quark.subtitle.foxhound_ambient"
+    "subtitle": "quark.subtitles.foxhound_ambient"
   },
   "entity.frog.wednesday": {
     "category": "neutral",
@@ -434,7 +434,6 @@
   },
   "music.tedium": {
     "category": "records",
-    "subtitle": "quark.subtitles.music.tedium",
     "sounds": [
       {
         "name": "quark:music/tedium",
