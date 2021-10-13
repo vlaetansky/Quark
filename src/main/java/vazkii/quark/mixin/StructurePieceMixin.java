@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
-import vazkii.quark.content.building.module.VariantChestsModule;
+import vazkii.quark.base.handler.StructureBlockReplacementHandler;
 
 @Mixin(StructurePiece.class)
 public class StructurePieceMixin {
@@ -16,9 +16,17 @@ public class StructurePieceMixin {
 		    at = @At(value = "INVOKE", target = "Lnet/minecraft/world/IServerWorld;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"),
 		    index = 1
 		)
-	protected BlockState modifyBlockstate(BlockState state) {
-		return VariantChestsModule.getGenerationChestBlockState(state);
+	protected BlockState modifyBlockstateForChest(BlockState state) {
+		return StructureBlockReplacementHandler.getResultingBlockState(state);
 	}
-
+	
+	@ModifyArg(
+		    method = "setBlockState(Lnet/minecraft/world/ISeedReader;Lnet/minecraft/block/BlockState;IIILnet/minecraft/util/math/MutableBoundingBox;)V",
+		    at = @At(value = "INVOKE", target = "Lnet/minecraft/world/ISeedReader;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"),
+		    index = 1
+		)
+	protected BlockState modifyBlockstate(BlockState state) {
+		return StructureBlockReplacementHandler.getResultingBlockState(state);
+	}
 	
 }

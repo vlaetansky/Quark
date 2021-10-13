@@ -12,6 +12,8 @@ import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.WorldGenRegion;
 import vazkii.quark.base.module.config.type.DimensionConfig;
 import vazkii.quark.base.world.generator.multichunk.MultiChunkFeatureGenerator;
+import vazkii.quark.content.building.module.MoreStoneVariantsModule;
+import vazkii.quark.content.world.module.NewStoneTypesModule;
 import vazkii.quark.content.world.module.SpiralSpiresModule;
 
 public class SpiralSpireGenerator extends MultiChunkFeatureGenerator {
@@ -60,8 +62,6 @@ public class SpiralSpireGenerator extends MultiChunkFeatureGenerator {
 		int start = -5;
 		int y = start;
 		
-		Supplier<BlockState> prov = () -> (rand.nextFloat() < 0.05 ? Blocks.CRYING_OBSIDIAN : Blocks.OBSIDIAN).getDefaultState();
-		
 		for(; y < height; y++) {
 			BlockPos test = pos.up(y);
 			BlockState state = world.getBlockState(test);
@@ -79,8 +79,11 @@ public class SpiralSpireGenerator extends MultiChunkFeatureGenerator {
 			
 			for(int i = -ri; i < ri; i++)
 				for(int j = -ri; j < ri; j++) 
-					if(i * i + j * j < ri * ri)
-						world.setBlockState(pos.add(i, y, j), prov.get(), 2);
+					if(i * i + j * j < ri * ri) {
+						boolean edge = i == -ri || i == (ri - 1) || j == -ri || j == (ri - 1);
+						BlockState state = (edge && rand.nextFloat() < 0.3 ? NewStoneTypesModule.myaliteBlock : SpiralSpiresModule.dusky_myalite).getDefaultState();
+						world.setBlockState(pos.add(i, y, j), state, 2);
+					}
 		}
 		
 		int steps = 80 + rand.nextInt(30);

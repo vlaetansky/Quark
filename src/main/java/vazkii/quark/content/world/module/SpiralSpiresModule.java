@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.particles.BlockParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction;
@@ -13,8 +16,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.GenerationStage.Decoration;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
@@ -44,10 +49,17 @@ public class SpiralSpiresModule extends QuarkModule {
 	
 	@Config public static boolean renewableMyalite = true;
 	
+	public static Block dusky_myalite;
 	public static Block myalite_crystal;
 	
 	@Override
 	public void construct() {
+		Block.Properties props = Block.Properties.create(Material.ROCK, MaterialColor.PURPLE_TERRACOTTA)
+				.setRequiresTool()
+        		.harvestTool(ToolType.PICKAXE)
+        		.hardnessAndResistance(1.5F, 6.0F);
+		dusky_myalite = new QuarkBlock("dusky_myalite", this, ItemGroup.BUILDING_BLOCKS, props);
+				
 		myalite_crystal = new MyaliteCrystalBlock(this);
 	}
 	

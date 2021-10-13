@@ -31,7 +31,6 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.gen.feature.jigsaw.JigsawPiece;
 import net.minecraft.world.gen.feature.jigsaw.LegacySingleJigsawPiece;
 import net.minecraft.world.gen.feature.structure.AbstractVillagePiece;
-import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -45,6 +44,8 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.MiscUtil;
+import vazkii.quark.base.handler.StructureBlockReplacementHandler;
+import vazkii.quark.base.handler.StructureBlockReplacementHandler.StructureHolder;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
@@ -79,8 +80,6 @@ public class VariantChestsModule extends QuarkModule {
 
 	@Config private static boolean replaceWorldgenChests = true;
 	@Config(flag = "chest_reversion") private static boolean enableRevertingWoodenChests = true;
-	
-	private static ThreadLocal<StructureHolder> structureHolder = new ThreadLocal<>();
 	
 	private static boolean staticEnabled = false;
 	
@@ -234,6 +233,8 @@ public class VariantChestsModule extends QuarkModule {
 
 		RegistryHelper.register(chestTEType, "variant_chest");
 		RegistryHelper.register(trappedChestTEType, "variant_trapped_chest");
+		
+		StructureBlockReplacementHandler.functions.add(VariantChestsModule::getGenerationChestBlockState);
 	}
 
 	@Override
@@ -268,33 +269,16 @@ public class VariantChestsModule extends QuarkModule {
 		}
 	}
 	
-	private static StructureHolder getCurrentSturctureHolder() {
-		return structureHolder.get();
-	}
-	
-	public static void setActiveStructure(Structure<?> structure, List<StructurePiece> components) {
-		StructureHolder curr = getCurrentSturctureHolder();
-		if(curr == null) {
-			curr = new StructureHolder();
-			structureHolder.set(curr);
-		}
-		
-		curr.currentStructure = structure;
-		curr.currentComponents = components;
-	}
-	
-	public static BlockState getGenerationChestBlockState(BlockState current) {
-		StructureHolder curr = getCurrentSturctureHolder();
-
-		if(replaceWorldgenChests && current.getBlock() == Blocks.CHEST && curr != null && curr.currentStructure != null && staticEnabled) {
-			ResourceLocation res = curr.currentStructure.getRegistryName();
+	private static BlockState getGenerationChestBlockState(BlockState current, StructureHolder structure) {
+		if(staticEnabled && replaceWorldgenChests && current.getBlock() == Blocks.CHEST) {
+			ResourceLocation res = structure.currentStructure.getRegistryName();
 			if(res == null)
-				return current;
+				return null; // no change
 			String name = res.toString();
 			
 			if("minecraft:village".equals(name)) {
-				if(curr.currentComponents != null && curr.currentComponents.size() > 0) {
-					StructurePiece first = curr.currentComponents.get(0);
+				if(structure.currentComponents != null && structure.currentComponents.size() > 0) {
+					StructurePiece first = structure.currentComponents.get(0);
 					if(first instanceof AbstractVillagePiece) {
 						AbstractVillagePiece avp = (AbstractVillagePiece) first;
 						JigsawPiece jigsaw = avp.getJigsawPiece();
@@ -326,7 +310,7 @@ public class VariantChestsModule extends QuarkModule {
 			}
 		}
 		
-		return current;
+		return null; // no change
 	}
 
 	private void addChest(String name, Block from) {
@@ -423,9 +407,4 @@ public class VariantChestsModule extends QuarkModule {
 		boolean isTrap();
 	}
 	
-	private static class StructureHolder {
-		public Structure<?> currentStructure;
-		public List<StructurePiece> currentComponents;
-	}
-
 }
