@@ -1,4 +1,4 @@
-package vazkii.quark.content.tweaks.module;
+package vazkii.quark.content.tools;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
@@ -21,16 +21,16 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 
-@LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
-public class TediumMusicDiscModule extends QuarkModule {
+@LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true)
+public class EndermoshMusicDiscModule extends QuarkModule {
 
-	@Config private boolean playTediumDuringEnderdragonFight = false;
+	@Config private boolean playEndermoshDuringEnderdragonFight = false;
 	
 	@Config private boolean addToEndCityLoot = true;
 	@Config private int lootWeight = 5;
 	@Config private int lootQuality = 1;
 
-	public static QuarkMusicDiscItem tedium;
+	public static QuarkMusicDiscItem endermosh;
 	
 	@OnlyIn(Dist.CLIENT) private boolean isFightingDragon;
 	@OnlyIn(Dist.CLIENT) private int delay;
@@ -38,7 +38,7 @@ public class TediumMusicDiscModule extends QuarkModule {
 
 	@Override
 	public void construct() {
-		tedium = new QuarkMusicDiscItem(14, () -> QuarkSounds.MUSIC_TEDIUM, "tedium", this, false);
+		endermosh = new QuarkMusicDiscItem(14, () -> QuarkSounds.MUSIC_ENDERMOSH, "endermosh", this, false);
 	}
 	
 	@SubscribeEvent
@@ -46,7 +46,7 @@ public class TediumMusicDiscModule extends QuarkModule {
 		if(addToEndCityLoot) {
 			ResourceLocation res = event.getName();
 			if(res.equals(LootTables.CHESTS_END_CITY_TREASURE)) {
-				LootEntry entry = ItemLootEntry.builder(tedium)
+				LootEntry entry = ItemLootEntry.builder(endermosh)
 						.weight(lootWeight)
 						.quality(lootQuality)
 						.build();
@@ -59,7 +59,7 @@ public class TediumMusicDiscModule extends QuarkModule {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public void tick(ClientTickEvent event) {
-		if(event.phase == Phase.END && playTediumDuringEnderdragonFight) {
+		if(event.phase == Phase.END && playEndermoshDuringEnderdragonFight) {
 			boolean wasFightingDragon = isFightingDragon;
 
 			Minecraft mc = Minecraft.getInstance();
@@ -71,9 +71,9 @@ public class TediumMusicDiscModule extends QuarkModule {
 			
 			if(isFightingDragon) {
 				if(delay == targetDelay) {
-					sound = SimpleSound.music(QuarkSounds.MUSIC_TEDIUM);
+					sound = SimpleSound.music(QuarkSounds.MUSIC_ENDERMOSH);
 					mc.getSoundHandler().playDelayed(sound, 0);
-					mc.ingameGUI.func_238451_a_(tedium.getDescription());
+					mc.ingameGUI.func_238451_a_(endermosh.getDescription());
 				}
 
 				double x = mc.player.getPosX();

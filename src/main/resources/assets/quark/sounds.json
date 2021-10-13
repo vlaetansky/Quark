@@ -432,11 +432,11 @@
       }
     ]
   },
-  "music.tedium": {
+  "music.endermosh": {
     "category": "records",
     "sounds": [
       {
-        "name": "quark:music/tedium",
+        "name": "quark:music/endermosh",
         "stream": true
       }
     ]
