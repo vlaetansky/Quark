@@ -432,7 +432,16 @@
       }
     ]
   },
-
+  "music.tedium": {
+    "category": "records",
+    "subtitle": "quark.subtitles.music.tedium",
+    "sounds": [
+      {
+        "name": "quark:music/tedium",
+        "stream": true
+      }
+    ]
+  },
 
 
 

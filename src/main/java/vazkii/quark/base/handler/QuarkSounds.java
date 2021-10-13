@@ -94,6 +94,8 @@ public class QuarkSounds {
     public static final SoundEvent BLOCK_DEEPSLATE_TILES_PLACE = register("block.deepslate_tiles.place");
     public static final SoundEvent BLOCK_DEEPSLATE_TILES_STEP = register("block.deepslate_tiles.step");
     
+    public static final SoundEvent MUSIC_TEDIUM = register("music.tedium");
+    
     public static final SoundType DEEPSLATE_TYPE = new SoundType(1F, 1F, BLOCK_DEEPSLATE_BREAK, BLOCK_DEEPSLATE_STEP, BLOCK_DEEPSLATE_PLACE, BLOCK_DEEPSLATE_HIT, BLOCK_DEEPSLATE_FALL);
     public static final SoundType DEEPSLATE_BRICKS_TYPE = new SoundType(1F, 1F, BLOCK_DEEPSLATE_BRICKS_BREAK, BLOCK_DEEPSLATE_BRICKS_STEP, BLOCK_DEEPSLATE_BRICKS_PLACE, BLOCK_DEEPSLATE_BRICKS_HIT, BLOCK_DEEPSLATE_BRICKS_FALL);
     public static final SoundType DEEPSLATE_TILES_TYPE = new SoundType(1F, 1F, BLOCK_DEEPSLATE_TILES_BREAK, BLOCK_DEEPSLATE_TILES_STEP, BLOCK_DEEPSLATE_TILES_PLACE, BLOCK_DEEPSLATE_TILES_HIT, BLOCK_DEEPSLATE_TILES_FALL);
