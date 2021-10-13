@@ -56,7 +56,7 @@ public class WraithEntity extends ZombieEntity {
 
 	public static AttributeModifierMap.MutableAttribute registerAttributes() {
 		return MonsterEntity.func_234295_eP_()
-				.createMutableAttribute(Attributes.MAX_HEALTH, 40)
+				.createMutableAttribute(Attributes.MAX_HEALTH, 15)
 				.createMutableAttribute(Attributes.FOLLOW_RANGE, 35)
 				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.28)
 				.createMutableAttribute(Attributes.ATTACK_DAMAGE, 3)
