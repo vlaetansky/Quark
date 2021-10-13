@@ -16,6 +16,10 @@
         {
           "type": "quark:flag",
           "flag": "myalite"
+        },
+        {
+          "type": "quark:flag",
+          "flag": "vertical_slabs"
         }
       ]
     }

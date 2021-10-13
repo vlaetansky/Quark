@@ -15,7 +15,7 @@
         },
         {
           "type": "quark:flag",
-          "flag": "sandstone_bricks"
+          "flag": "vertical_slabs"
         }
       ]
     }
