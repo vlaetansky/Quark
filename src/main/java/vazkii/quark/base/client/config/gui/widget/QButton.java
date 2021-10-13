@@ -32,7 +32,7 @@ public class QButton extends Button {
 		celebrate("quark", 21, Month.MARCH, QUARK);
 		celebrate("vm", 29, Month.APRIL, PURPLE);
 		celebrate("minecraft", 18, Month.NOVEMBER, ORANGE);
-
+		
 		celebrate("vns", 9, Month.APRIL, ORANGE);
 		celebrate("vazkii", 22, Month.NOVEMBER, ORANGE);
 		celebrate("wire", 23, Month.SEPTEMBER, ORANGE);
@@ -49,10 +49,6 @@ public class QButton extends Button {
 		celebrate("tdv", 31, Month.MARCH, RAINBOW);
 		celebrate("zdd", 1, Month.MARCH, RAINBOW);
 
-		celebrate("pm", 1, 30, Month.JUNE, RAINBOW);
-		celebrate("baw", 16, 22, Month.SEPTEMBER, RAINBOW);
-		celebrate("taw", 13, 19, Month.NOVEMBER, RAINBOW);
-
 		celebrate("afd", 1, Month.APRIL, QUARK);
 		celebrate("wwd", 3, Month.MARCH, PURPLE);
 		celebrate("hw", 31, Month.OCTOBER, ORANGE);
@@ -62,6 +58,12 @@ public class QButton extends Button {
 		celebrate("iyd", 12, Month.AUGUST, PURPLE);
 		celebrate("hrd", 9, Month.DECEMBER, PURPLE);
 		celebrate("ny", 1, 3, Month.JANUARY, PURPLE);
+		celebrate("doyouremember", 21, Month.SEPTEMBER, ORANGE);
+
+		// Order is important, ensure mutli day ones are at the bottom
+		celebrate("pm", 1, 30, Month.JUNE, RAINBOW);
+		celebrate("baw", 16, 22, Month.SEPTEMBER, RAINBOW);
+		celebrate("taw", 13, 19, Month.NOVEMBER, RAINBOW);
 	}
 	
 	private static void celebrate(String name, int day, Month month, int tier) {
