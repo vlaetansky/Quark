@@ -32,9 +32,9 @@ public class TediumMusicDiscModule extends QuarkModule {
 
 	public static QuarkMusicDiscItem tedium;
 	
-	private boolean isFightingDragon;
-	private int delay;
-	private SimpleSound sound;
+	@OnlyIn(Dist.CLIENT) private boolean isFightingDragon;
+	@OnlyIn(Dist.CLIENT) private int delay;
+	@OnlyIn(Dist.CLIENT) private SimpleSound sound;
 
 	@Override
 	public void construct() {
