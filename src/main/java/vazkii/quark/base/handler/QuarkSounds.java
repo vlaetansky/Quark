@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import net.minecraft.block.SoundType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.registries.GameData;
@@ -75,8 +76,28 @@ public class QuarkSounds {
     public static final SoundEvent AMBIENT_CRICKETS = register("ambient.crickets");
     public static final SoundEvent AMBIENT_CHATTER = register("ambient.chatter");
 
-//    public static final SoundEvent MUSIC_TEDIUM = register("music.tedium");
+    public static final SoundEvent BLOCK_DEEPSLATE_BREAK = register("block.deepslate.break");
+    public static final SoundEvent BLOCK_DEEPSLATE_FALL = register("block.deepslate.fall");
+    public static final SoundEvent BLOCK_DEEPSLATE_HIT = register("block.deepslate.hit");
+    public static final SoundEvent BLOCK_DEEPSLATE_PLACE = register("block.deepslate.place");
+    public static final SoundEvent BLOCK_DEEPSLATE_STEP = register("block.deepslate.step");
+
+    public static final SoundEvent BLOCK_DEEPSLATE_BRICKS_BREAK = register("block.deepslate_bricks.break");
+    public static final SoundEvent BLOCK_DEEPSLATE_BRICKS_FALL = register("block.deepslate_bricks.fall");
+    public static final SoundEvent BLOCK_DEEPSLATE_BRICKS_HIT = register("block.deepslate_bricks.hit");
+    public static final SoundEvent BLOCK_DEEPSLATE_BRICKS_PLACE = register("block.deepslate_bricks.place");
+    public static final SoundEvent BLOCK_DEEPSLATE_BRICKS_STEP = register("block.deepslate_bricks.step");
     
+    public static final SoundEvent BLOCK_DEEPSLATE_TILES_BREAK = register("block.deepslate_tiles.break");
+    public static final SoundEvent BLOCK_DEEPSLATE_TILES_FALL = register("block.deepslate_tiles.fall");
+    public static final SoundEvent BLOCK_DEEPSLATE_TILES_HIT = register("block.deepslate_tiles.hit");
+    public static final SoundEvent BLOCK_DEEPSLATE_TILES_PLACE = register("block.deepslate_tiles.place");
+    public static final SoundEvent BLOCK_DEEPSLATE_TILES_STEP = register("block.deepslate_tiles.step");
+    
+    public static final SoundType DEEPSLATE_TYPE = new SoundType(1F, 1F, BLOCK_DEEPSLATE_BREAK, BLOCK_DEEPSLATE_STEP, BLOCK_DEEPSLATE_PLACE, BLOCK_DEEPSLATE_HIT, BLOCK_DEEPSLATE_FALL);
+    public static final SoundType DEEPSLATE_BRICKS_TYPE = new SoundType(1F, 1F, BLOCK_DEEPSLATE_BRICKS_BREAK, BLOCK_DEEPSLATE_BRICKS_STEP, BLOCK_DEEPSLATE_BRICKS_PLACE, BLOCK_DEEPSLATE_BRICKS_HIT, BLOCK_DEEPSLATE_BRICKS_FALL);
+    public static final SoundType DEEPSLATE_TILES_TYPE = new SoundType(1F, 1F, BLOCK_DEEPSLATE_TILES_BREAK, BLOCK_DEEPSLATE_TILES_STEP, BLOCK_DEEPSLATE_TILES_PLACE, BLOCK_DEEPSLATE_TILES_HIT, BLOCK_DEEPSLATE_TILES_FALL);
+
     public static void start() {
         for (SoundEvent event : REGISTRY_DEFERENCE)
             RegistryHelper.register(event);
