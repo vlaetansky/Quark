@@ -10,12 +10,12 @@
       "item": "minecraft:purpur_block"
     },
     "O": {
-      "item": "quark:dusky_myalite"
+      "item": "minecraft:obsidian"
     }
   },
   "result": {
     "item": "quark:duskbound_block",
-    "count": 8
+    "count": 16
   },
   "conditions": [
     {
@@ -26,8 +26,11 @@
           "flag": "duskbound_blocks"
         },
         {
-          "type": "quark:flag",
-          "flag": "spiral_spires"
+          "type": "forge:not",
+          "value": {
+            "type": "quark:flag",
+            "flag": "spiral_spires"
+          }
         }
       ]
     }
