@@ -55,7 +55,7 @@ public class TotemOfHoldingModule extends QuarkModule {
     @Config(description = "Set this to false to remove the behaviour where totems destroy themselves if the player dies again.")
     public static boolean darkSoulsMode = true;
 
-    @Config(name = "Spawn Totem on PVP Kill")
+    @Config(name = "Spawn Totem on PVP Kill. Totem will always spawn if the player killer is himself.")
     public static boolean enableOnPK = false;
 
     @Config(description = "Set this to true to make it so that if a totem is destroyed, the items it holds are destroyed alongside it rather than dropped")
@@ -104,7 +104,7 @@ public class TotemOfHoldingModule extends QuarkModule {
 
         Collection<ItemEntity> drops = event.getDrops();
 
-        if(!event.isCanceled() && (enableOnPK || !(event.getSource().getTrueSource() instanceof PlayerEntity))) {
+        if(!event.isCanceled() && (enableOnPK || !(event.getSource().getTrueSource() instanceof PlayerEntity) || entity == event.getSource().getTrueSource())) {
             PlayerEntity player = (PlayerEntity) entity;
             CompoundNBT data = player.getPersistentData();
             CompoundNBT persistent = data.getCompound(PlayerEntity.PERSISTED_NBT_TAG);
