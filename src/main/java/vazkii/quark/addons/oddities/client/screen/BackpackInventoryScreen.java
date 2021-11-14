@@ -52,11 +52,11 @@ public class BackpackInventoryScreen extends InventoryScreen {
 		ySize = 224;
 		super.init();
 		
-		for(Widget widget : buttons)
+		/*for(Widget widget : buttons)
 			if(widget instanceof ImageButton || widget.getClass().getName().contains("svenhjol.charm")) {
 				widget.y -= 29;
 				buttonYs.put((Button) widget, widget.y);
-			}
+			}*/
 	}
 
 	@Override
@@ -93,6 +93,16 @@ public class BackpackInventoryScreen extends InventoryScreen {
 		int j = guiTop;
 		blit(stack, i, j, 0, 0, xSize, ySize);
 		drawEntityOnScreen(i + 51, j + 75, 30, i + 51 - mouseX, j + 75 - 50 - mouseY, minecraft.player);
+		moveCharmsButtons();
+	}
+
+	private void moveCharmsButtons() {
+		for(Widget widget : buttons) {
+			//Charms buttons have a static Y pos, so use that to only focus on them.
+			if(widget instanceof ImageButton && widget.y == height / 2 - 22) {
+				((ImageButton) widget).setPosition(widget.x, widget.y - 29);
+			}
+		}
 	}
 	
 }
