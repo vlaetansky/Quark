@@ -364,8 +364,8 @@
 	"item.quark.soul_bead": "Cuenta de alma",
 	"item.quark.abacus": "Ábaco",
 
-	"item.quark.music_disc_tedium": "Disco de música",
-	"item.quark.music_disc_tedium.desc": "Kain Vinosec - Tedium",
+	"item.quark.music_disc_endermosh": "Disco de música",
+	"item.quark.music_disc_endermosh.desc": "Kain Vinosec - Endermosh",
 	"item.quark.music_disc_drips": "Disco ambiental",
 	"item.quark.music_disc_drips.desc": "Gotas de agua",
 	"item.quark.music_disc_ocean": "Disco ambiental",
@@ -1193,7 +1193,7 @@
 	"block.quark.stone_lamp": "Lámpara de piedra",
 	"block.quark.stone_brick_lamp": "Lámpara de ladrillos de piedra",
 	"block.quark.pallet": "Paleta",
-	"block.quark.dusky_myalite": "Mialita oscura",
+	"block.quark.dusky_myalite": "Mialita crepuscular",
 
 	"block.quark.chiseled_deepslate": "Pizarra profunda cincelada",
 	"block.quark.cobbled_deepslate": "Pizarra profunda rocosa",
