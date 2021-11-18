@@ -48,6 +48,9 @@ public class GoldBarsModule extends QuarkModule {
 			if("minecraft:fortress".equals(name)) {
 				BlockState newState = gold_bars.getDefaultState();
 				for(Property prop : current.getProperties())
+					// both blocks have same properties in vanilla, so this check isn't needed,
+					// but some mods add additional block states to fences, then this would fail
+					if (newState.hasProperty(prop))
 					newState = newState.with(prop, current.get(prop));
 				return newState;
 			}
