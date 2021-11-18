@@ -8,14 +8,18 @@ import java.util.UUID;
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.client.renderer.entity.BeeRenderer;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
 import vazkii.quark.base.Quark;
 import vazkii.quark.content.client.module.VariantAnimalTexturesModule;
 
 public class VariantBeeRenderer extends BeeRenderer {
 
+	public static IRenderFactory<BeeEntity> OLD_BEE_RENDER_FACTORY = null;
+	private EntityRenderer<? super BeeEntity> OLD_BEE_RENDER = null;
 	private static final List<String> VARIANTS = ImmutableList.of(
 			"acebee", "agenbee", "arobee", "beefluid", "beesexual", 
 			"beequeer", "enbee", "gaybee", "interbee", "lesbeean", 
@@ -23,6 +27,9 @@ public class VariantBeeRenderer extends BeeRenderer {
 	
 	public VariantBeeRenderer(EntityRendererManager renderManagerIn) {
 		super(renderManagerIn);
+		if(OLD_BEE_RENDER_FACTORY != null) {
+			OLD_BEE_RENDER = OLD_BEE_RENDER_FACTORY.createRenderFor(renderManagerIn);
+		}
 	}
 	
 	@Override
@@ -58,6 +65,10 @@ public class VariantBeeRenderer extends BeeRenderer {
 				String path = String.format("textures/model/entity/variants/bees/%s/%s.png", name, type);
 				return new ResourceLocation(Quark.MOD_ID, path);
 			}
+		}
+
+		if(OLD_BEE_RENDER != null) {
+			return OLD_BEE_RENDER.getEntityTexture(entity);
 		}
 		
 		return super.getEntityTexture(entity);

@@ -14,6 +14,7 @@ import com.google.common.collect.Multimaps;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -25,6 +26,7 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.content.client.render.variant.*;
+import vazkii.quark.mixin.RenderingRegistryAccessor;
 
 @LoadModule(category = ModuleCategory.CLIENT, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class VariantAnimalTexturesModule extends QuarkModule {
@@ -75,10 +77,16 @@ public class VariantAnimalTexturesModule extends QuarkModule {
 		if(enableShinyLlama)
 			RenderingRegistry.registerEntityRenderingHandler(EntityType.LLAMA, VariantLlamaRenderer::new);
 		if(enableLGBTBees)
-			RenderingRegistry.registerEntityRenderingHandler(EntityType.BEE, VariantBeeRenderer::new);
+			registerAndStackBeeRenderers();
 		if(enableShinyDolphin)
 			RenderingRegistry.registerEntityRenderingHandler(EntityType.DOLPHIN, VariantDolphinRenderer::new);
 
+	}
+
+	@SuppressWarnings("unchecked")
+	private void registerAndStackBeeRenderers() {
+		VariantBeeRenderer.OLD_BEE_RENDER_FACTORY = (IRenderFactory<BeeEntity>) ((RenderingRegistryAccessor) RenderingRegistryAccessor.getINSTANCE()).getEntityRenderers().get(EntityType.BEE);
+		RenderingRegistry.registerEntityRenderingHandler(EntityType.BEE, VariantBeeRenderer::new);
 	}
 
 	@OnlyIn(Dist.CLIENT)
