@@ -81,10 +81,10 @@ public class MicrocraftingHelperModule extends QuarkModule {
 					}
 
 					if(ourCount > 0) {
-						StackedRecipe stackedRecipe = new StackedRecipe(ghost.getRecipe(), compoundCount, getClearCondition(ingr));
-						recipes.add(stackedRecipe);
+						compoundCount *= (int) (Math.ceil((double) ourCount / (double) testStack.getCount()));
 
-						compoundCount *= ourCount;
+						StackedRecipe stackedRecipe = new StackedRecipe(ghost.getRecipe(), testStack, compoundCount, getClearCondition(ingr));
+						recipes.add(stackedRecipe);
 					}
 
 					ghost.clear();
@@ -119,10 +119,9 @@ public class MicrocraftingHelperModule extends QuarkModule {
 					int x = left +index * 24 + 2;
 					int y = top + 2;
 
-					ItemStack copy = recipe.recipe.getRecipeOutput().copy();
-					copy.setCount(recipe.count);
-					render.renderItemIntoGUI(copy, x, y);
-					render.renderItemOverlays(mc.fontRenderer, copy, x, y);
+					ItemStack drawStack = recipe.displayItem;
+					render.renderItemIntoGUI(drawStack, x, y);
+					render.renderItemOverlays(mc.fontRenderer, drawStack, x, y);
 
 					if(index > 0)
 						mc.fontRenderer.drawString(mstack, "<", x - 6, y + 4, 0x3f3f3f);
@@ -266,13 +265,17 @@ public class MicrocraftingHelperModule extends QuarkModule {
 	private static class StackedRecipe {
 
 		public final IRecipe<?> recipe;
+		public final ItemStack displayItem;
 		public final int count;
 		public final BooleanSupplier clearCondition;
 
-		StackedRecipe(IRecipe<?> recipe, int count, BooleanSupplier clearCondition) {
+		StackedRecipe(IRecipe<?> recipe, ItemStack displayItem, int count, BooleanSupplier clearCondition) {
 			this.recipe = recipe;
 			this.count = count;
 			this.clearCondition = clearCondition;
+			
+			this.displayItem = displayItem.copy();
+			this.displayItem.setCount(count);
 		}
 
 	}
