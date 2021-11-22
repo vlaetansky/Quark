@@ -131,7 +131,7 @@ public class MicrocraftingHelperModule extends QuarkModule {
 				if(pair != null) {
 					GhostIngredient ingr = pair.getRight();
 					if(ingr != null) {
-						List<ITextProperties> tooltip = Arrays.asList(new TranslationTextComponent("Right Click to Craft"));
+						List<ITextProperties> tooltip = Arrays.asList(new TranslationTextComponent("Right Click to Craft")); // TODO localize
 						cscreen.renderWrappedToolTip(mstack, tooltip, event.getMouseX(), event.getMouseY() - 15, mc.fontRenderer);
 					}
 				}
