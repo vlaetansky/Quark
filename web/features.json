@@ -520,8 +520,9 @@
 			"image": "greener-grass.jpg",
 			"added": "1.14",
 			"desc": [
-				"Grass is greener on the Quark side. Biome colors are still respected, but are greener non the less.",
+				"Grass is greener on the Quark side. Biome colors are still respected, but are greener non the less.", 
 				"There's also config options to enable Alpha style grass, which gives you the Minecraft Alpha vibe, or to manually set the grass color.",
+				"You can also manually adjust the color balance in the config menu."
 			],
 			"expand": [
 				"#Greener Grass Config Menu",
