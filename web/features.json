@@ -521,7 +521,11 @@
 			"added": "1.14",
 			"desc": [
 				"Grass is greener on the Quark side. Biome colors are still respected, but are greener non the less.",
-				"There's also config options to enable Alpha style grass, which gives you the Minecraft Alpha vibe, or to manually set the grass color."
+				"There's also config options to enable Alpha style grass, which gives you the Minecraft Alpha vibe, or to manually set the grass color.",
+			],
+			"expand": [
+				"#Greener Grass Config Menu",
+				"!img/features/client/greener-grass/greener-gui.png"
 			]
 		},
 		{
@@ -845,15 +849,16 @@
 			"image": "colored-runes.jpg",
 			"added": "1.14",
             "desc": [
-                "Colored Runes are a rare loot item from dungeons, temples and nether fortresses. They can be applied to enchanted items in an anvil, and doing so changes the color of the enchantment glint from purple to the color of the rune. These come in all 16 colors of the spectrum.",
+                "Colored Runes are a rare loot item from dungeons, temples and nether fortresses. They can be applied to enchanted items and lodestone compasses in an anvil, in order to change the color of the enchantment glint from purple to the color of the rune. These come in all 16 colors of the spectrum.",
                 "If you're dedicated enough, you can craft a Rainbow Rune by mixing together the runes that make the colors of the rainbow. It'll change color over time and look really cool!",
-                "1.16+: Runes can also change the color of a Lodestone Compass, to help you better find your way.",
 				"1.16.4+ Only: Colored Runes will no longer spawn in chests. Instead, you'll find Blank Runes. Click More Info to find out more."
             ],
 			"expand": [				
+				"Blank Runes are found as dungeon loot.",
+				"!img/features/tools/colored-runes/generated-rune.png",
 				"Blank Runes can be combined with any dye to create a rune of your choice.",
 				"!img/features/tools/colored-runes/dyeable-runes.jpg",
-				"Blank Runes can also be used to remove enchantment glint.",
+				"Blank Runes can be used without dyeing to remove the enchantment glint.",
 				"Additionally in 1.16.4, the cost to apply a rune to an item was reduced from 15 to 5."
 		   	]
 		},
@@ -1268,7 +1273,14 @@
 			"desc": [
 				"A new underground biome that spawns under any biome that isn't an Ocean - It comes with new Corundum Crystals, fancy semi-transparent, light emitting blocks.",
 				"Each Corundum Cave will come with two colors of crystals, chosen from a pool of the seven colors that make up the rainbow, as well as white and black.",
-				"Corundum can also be turned into pane variants, and crafted into Colored Runes (from the Tools category), if enabled. The Cluster variants are decorative only. Furthermore, if placed deep underground, they'll grow up to 4 blocks tall, and will emit some particles to let you know they're growing.",
+				"Corundum can also be turned into pane variants, and crafted into Colored Runes (from the Tools category), if enabled. The Cluster variants can be used to redirect beacon beams and change their color.",
+				"Furthermore, if placed deep underground, they'll grow up to 4 blocks tall, and will emit some particles to let you know they're growing. This growth can be prevented by using honeycomb to wax them, with the wax being removable with an axe."
+			],
+			"expand": [
+				"#Beacon Redirection",
+				"!img/features/world/underground-biome-corundum/beam-redirection.png",
+				"#Waxed Corundum Comparison",
+				"!img/features/world/underground-biome-corundum/waxed-corundum.png",
 				"Note: Prior to 1.16.4, these were called Cave Crystals, with a different look."
 			]
 		},
