@@ -785,15 +785,8 @@
 			"added": "1.16.4",
 			"desc": [
 				"A variety of 8 discs that add a wide range of ambient sound to the game. When you insert them into a Jukebox, they loop infinitely, and do not display on the UI when played.",
-				"*Water Droplets, which sounds like a small trickle of water that drips down into a cave.",
-				"*Ocean Waves, which sounds like waves crashing on the shore.",
-				"*Rainy Mood, which is the sound of heavy rainfall, perfectly cozy.",
-				"*Heavy Wind, perfect for the top of a tall tower.",
-				"*Soothing Cinders, the sound of crackling fire, perfect for a fireplace.",
-				"*Tick-Tock, on the clock, but the party don't stop.",
-				"*Cricket Song, the sounds of millions of crickets, humming you to sleep.",
-				"*Packed Venue, the sound of a crowded room, full of constant chatter.",
-				"Obtained when a Skeleton kills a Spider."
+				"The following sounds are available: Water Droplets, Ocean Waves, Rainy Mood, Heavy Wind, Soothing Cinders, Tick-Tock, Cricket Song, and Packed Venue.",
+				"Ambience Discs are acquired when a Skeleton kills a Spider."
 			]
 		},
 		{
@@ -801,8 +794,9 @@
 			"image": "ancient-tomes.jpg",
 			"added": "1.14",
 			"desc": [
-				"Ancient Tomes are a rare loot item from dungeons and stronghold libraries. They come only in the highest level of an enchantment and can be combined with an Enchanted Book of the same enchantment to create one that's a level higher than the max. This costs 35 levels to create the book and an extra 35 to apply it.",
-				"The tomes can not be directly applied to an item. They also never contain enchantments that have no level or \"Protection\" type enchantments."
+				"Ancient Tomes are a rare loot item from dungeons and stronghold libraries, being usable to upgrade enchantments.",
+				"1.16.5+: Combining an Ancient Tome in an Anvil with an item containing that enchantment will increase its level by one, up to one over the cap (e.g. Looting IV).",
+				"Pre 1.16.5: They come only in the highest level of an enchantment and can be combined with an Enchanted Book of the same enchantment to create one that's a level higher than the max. This costs 35 levels to create the book and an extra 35 to apply it."
 			]
 		},
 		{
@@ -926,7 +920,7 @@
 			"image": "better-elytra-rockets.jpg",
 			"added": "1.16.4",
 			"desc": [
-				"Firework Rockets are able to be used to start Elytra lying, even if you're not currently in that state.",
+				"Firework Rockets are able to be used to start Elytra flying, even if you're not currently in that state.",
 				"All you have to do is right click a Firework Rocket while wearing an Elytra, and you'll shoot up into the sky."
 			]
 		},
@@ -1273,7 +1267,6 @@
 			"added": "1.14",
 			"desc": [
 				"A new underground biome that spawns under any biome that isn't an Ocean - It comes with new Corundum Crystals, fancy semi-transparent, light emitting blocks.",
-				"Each Corundum Cave will come with two colors of crystals, chosen from a pool of the seven colors that make up the rainbow, as well as white and black.",
 				"Corundum can also be turned into pane variants, and crafted into Colored Runes (from the Tools category), if enabled. The Cluster variants can be used to redirect beacon beams and change their color.",
 				"Furthermore, if placed deep underground, they'll grow up to 4 blocks tall, and will emit some particles to let you know they're growing. This growth can be prevented by using honeycomb to wax them, with the wax being removable with an axe."
 			],
