@@ -31,9 +31,9 @@ import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.ModuleLoader;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.SpamlessChatMessage;
@@ -116,7 +116,8 @@ public class ImprovedSleepingModule extends QuarkModule {
 				(isDay ? "quark.misc.day_no_passage" : "quark.misc.night_no_passage"));
 		message.setStyle(message.getStyle().applyFormatting(TextFormatting.GOLD));
 
-		for (ServerPlayerEntity player : server.getPlayerList().getPlayers())
+		List<ServerPlayerEntity> serverPlayers = new ArrayList<>(server.getPlayerList().getPlayers());
+		for (ServerPlayerEntity player : serverPlayers)
 			SpamlessChatMessage.sendToPlayer(player, SLEEP_MSG, message);
 	}
 
@@ -131,7 +132,8 @@ public class ImprovedSleepingModule extends QuarkModule {
 	private static Pair<Integer, Integer> getPlayerCounts(World world) {
 		int legitPlayers = 0;
 		int sleepingPlayers = 0;
-		for(PlayerEntity player : world.getPlayers())
+		List<PlayerEntity> players = new ArrayList<>(world.getPlayers());
+		for(PlayerEntity player : players)
 			if(doesPlayerCountForSleeping(player)) {
 				legitPlayers++;
 
@@ -160,13 +162,14 @@ public class ImprovedSleepingModule extends QuarkModule {
 				server == null)
 			return;
 
+		List<PlayerEntity> worldPlayers = new ArrayList<>(world.getPlayers());
 		if (isEveryoneAsleep(world)) {
 			if (world.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE) && world instanceof ServerWorld) {
 				long time = world.getDayTime() + 24000L;
 				((ServerWorld) world).func_241114_a_(ForgeEventFactory.onSleepFinished((ServerWorld) world, time - time % 24000L, world.getDayTime()));
 			}
 
-			world.getPlayers().stream().filter(LivingEntity::isSleeping).forEach(PlayerEntity::wakeUp);
+			worldPlayers.stream().filter(LivingEntity::isSleeping).forEach(PlayerEntity::wakeUp);
 			if (world.getGameRules().getBoolean(GameRules.DO_WEATHER_CYCLE)) {
 				((ServerWorld) world).resetRainAndThunder();
 			}
@@ -183,7 +186,7 @@ public class ImprovedSleepingModule extends QuarkModule {
 		List<String> nonSleepingPlayers = new ArrayList<>();
 		int legitPlayers = 0;
 
-		for(PlayerEntity player : world.getPlayers()) {
+		for(PlayerEntity player : worldPlayers) {
 			if (doesPlayerCountForSleeping(player)) {
 				String name = player.getGameProfile().getName();
 				if (isPlayerSleeping(player)) {
@@ -202,7 +205,7 @@ public class ImprovedSleepingModule extends QuarkModule {
 
 		ImprovedSleepingModule.sleepingPlayers = sleepingPlayers;
 
-		if((!newSleepingPlayers.isEmpty() || !wasSleepingPlayers.isEmpty()) && world.getPlayers().size() != 1) {
+		if((!newSleepingPlayers.isEmpty() || !wasSleepingPlayers.isEmpty()) && worldPlayers.size() != 1) {
 			boolean isDay = world.getCelestialAngleRadians(0F) < 0.5;
 
 			int requiredPlayers = Math.max((int) Math.ceil((legitPlayers * percentReq)), 0);
@@ -233,7 +236,8 @@ public class ImprovedSleepingModule extends QuarkModule {
 
 			message.append(sibling.deepCopy());
 
-			for (ServerPlayerEntity player : server.getPlayerList().getPlayers())
+			List<ServerPlayerEntity> serverPlayers = new ArrayList<>(server.getPlayerList().getPlayers());
+			for (ServerPlayerEntity player : serverPlayers)
 				SpamlessChatMessage.sendToPlayer(player, SLEEP_MSG, message);
 		}
 	}
@@ -241,6 +245,7 @@ public class ImprovedSleepingModule extends QuarkModule {
 	@SubscribeEvent
 	public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
 		World logoutWorld = event.getPlayer().world;
+		// no copy as no loops are done
 		List<? extends PlayerEntity> players = logoutWorld.getPlayers();
 		if(players.size() == 1) {
 			PlayerEntity lastPlayer = players.get(0);
