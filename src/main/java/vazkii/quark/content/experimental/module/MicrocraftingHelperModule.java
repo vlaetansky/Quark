@@ -1,7 +1,5 @@
-package vazkii.quark.content.management.module;
+package vazkii.quark.content.experimental.module;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,13 +34,12 @@ import net.minecraftforge.client.event.GuiScreenEvent.DrawScreenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.MouseClickedEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 
-@LoadModule(category =  ModuleCategory.CLIENT, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
+@LoadModule(category =  ModuleCategory.EXPERIMENTAL, enabledByDefault = false, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class MicrocraftingHelperModule extends QuarkModule {
 
 	private static Screen currentScreen;
@@ -62,7 +59,7 @@ public class MicrocraftingHelperModule extends QuarkModule {
 			if(pair != null) {
 				GhostRecipe ghost = pair.getLeft();
 				GhostIngredient ghostIngr = pair.getRight();
-				Ingredient ingr = ObfuscationReflectionHelper.getPrivateValue(GhostIngredient.class, ghostIngr, "ingredient"); // TODO AT
+				Ingredient ingr = ghostIngr.ingredient;
 
 				IRecipe<?> recipeToSet = getRecipeToSet(recipeBook, ingr, true);
 				if(recipeToSet == null)
@@ -74,7 +71,7 @@ public class MicrocraftingHelperModule extends QuarkModule {
 					ItemStack testStack = recipeToSet.getRecipeOutput();
 					for(int j = 1; j < ghost.size(); j++) { // start at 1 to skip output
 						GhostIngredient testGhostIngr = ghost.get(j);
-						Ingredient testIngr = ObfuscationReflectionHelper.getPrivateValue(GhostIngredient.class, testGhostIngr, "ingredient"); // TODO AT
+						Ingredient testIngr = testGhostIngr.ingredient;
 
 						if(testIngr.test(testStack)) // TODO NBT sensitivity?
 							ourCount++;
@@ -161,21 +158,16 @@ public class MicrocraftingHelperModule extends QuarkModule {
 	}
 
 	private IRecipe<?> getRecipeToSet(RecipeBookGui recipeBook, Ingredient ingr, boolean craftableOnly) {
-		TextFieldWidget text = ObfuscationReflectionHelper.getPrivateValue(RecipeBookGui.class, recipeBook, "searchBar"); // TODO AT
+		TextFieldWidget text = recipeBook.searchBar;
 
 		for(ItemStack stack : ingr.getMatchingStacks()) {
 			text.setText(stack.getDisplayName().copyRaw().getString().toLowerCase(Locale.ROOT));
 
-			try {
-				Method update = ObfuscationReflectionHelper.findMethod(RecipeBookGui.class, "updateSearch", new Class[0]); // TODO AT
-				update.invoke(recipeBook);
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				e.printStackTrace();
-			}
+			recipeBook.updateSearch();
 
-			RecipeBookPage page = ObfuscationReflectionHelper.getPrivateValue(RecipeBookGui.class, recipeBook, "recipeBookPage"); // TODO AT
+			RecipeBookPage page = recipeBook.recipeBookPage;
 			if(page != null) {
-				List<RecipeList> recipeLists = ObfuscationReflectionHelper.getPrivateValue(RecipeBookPage.class, page, "recipeLists"); // TODO AT
+				List<RecipeList> recipeLists = page.recipeLists;
 				recipeLists = new ArrayList<>(recipeLists); // ensure we're not messing with the original
 				
 				if(recipeLists != null && recipeLists.size() > 0) {
@@ -248,7 +240,7 @@ public class MicrocraftingHelperModule extends QuarkModule {
 		Slot slot = cscreen.getSlotUnderMouse();
 
 		if(recipeBook != null && slot != null) {
-			GhostRecipe ghost = ObfuscationReflectionHelper.getPrivateValue(RecipeBookGui.class, recipeBook, "ghostRecipe"); // TODO AT
+			GhostRecipe ghost = recipeBook.ghostRecipe;
 			if(ghost != null && ghost.getRecipe() != null) {
 				for(int i = 1; i < ghost.size(); i++) { // start at 1 to skip output
 					GhostIngredient ghostIngr = ghost.get(i);
