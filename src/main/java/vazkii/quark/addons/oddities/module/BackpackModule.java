@@ -35,13 +35,11 @@ import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.addons.oddities.client.screen.BackpackInventoryScreen;
 import vazkii.quark.addons.oddities.container.BackpackContainer;
 import vazkii.quark.addons.oddities.item.BackpackItem;
-import vazkii.quark.base.Quark;
 import vazkii.quark.base.block.QuarkBlock;
-import vazkii.quark.base.client.handler.RequiredModTooltipHandler;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.HandleBackpackMessage;
@@ -54,6 +52,9 @@ public class BackpackModule extends QuarkModule {
 	
 	@Config(flag = "ravager_hide")
 	public static boolean enableRavagerHide = true;
+	
+	@Config
+	public static boolean itemsInBackpackTick = true;
 	
 	@Config public static int baseRavagerHideDrop = 1;
 	@Config public static double extraChancePerLooting = 0.5;

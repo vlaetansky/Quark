@@ -127,6 +127,16 @@ public class BackpackItem extends DyeableArmorItem implements IQuarkItem, IItemC
 					enchants.put(Enchantments.BINDING_CURSE, 1);
 					changedEnchants = true;
 				}
+				
+				if(BackpackModule.itemsInBackpackTick) {
+					LazyOptional<IItemHandler> handlerOpt  = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+					IItemHandler handler = handlerOpt.orElse(null); 
+					for(int i = 0; i < handler.getSlots(); i++) {
+						ItemStack inStack = handler.getStackInSlot(i);
+						if(!inStack.isEmpty())
+							inStack.getItem().inventoryTick(inStack, worldIn, entityIn, i, false);
+					}
+				}
 			} else {
 				ItemStack copy = stack.copy();
 				stack.setCount(0);
