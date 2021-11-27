@@ -30,6 +30,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent.DrawScreenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.MouseClickedEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
@@ -42,11 +43,13 @@ import vazkii.quark.base.module.QuarkModule;
 @LoadModule(category =  ModuleCategory.EXPERIMENTAL, enabledByDefault = false, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class MicrocraftingHelperModule extends QuarkModule {
 
-	private static Screen currentScreen;
+	@OnlyIn(Dist.CLIENT) private static Screen currentScreen;
+	
 	private static Stack<StackedRecipe> recipes = new Stack<>(); 
 	private static int compoundCount = 1;
 
 	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
 	public void onClick(MouseClickedEvent.Pre event) {
 		Minecraft mc = Minecraft.getInstance();
 		Screen screen = mc.currentScreen;
@@ -94,6 +97,7 @@ public class MicrocraftingHelperModule extends QuarkModule {
 	}
 
 	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
 	public void onDrawGui(DrawScreenEvent.Post event) {
 		if(!recipes.isEmpty()) {
 			Minecraft mc = Minecraft.getInstance();
@@ -137,6 +141,7 @@ public class MicrocraftingHelperModule extends QuarkModule {
 	}
 
 	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
 	public void onTick(ClientTickEvent event) {
 		Minecraft mc = Minecraft.getInstance();
 		Screen prevScreen = currentScreen;
@@ -203,6 +208,7 @@ public class MicrocraftingHelperModule extends QuarkModule {
 		return null;
 	}
 	
+	@OnlyIn(Dist.CLIENT)
 	private int compareRecipes(IRecipe<?> r1, IRecipe<?> r2) {
 		if(r1 == r2)
 			return 0;
@@ -219,6 +225,7 @@ public class MicrocraftingHelperModule extends QuarkModule {
 		return id1.compareTo(id2);
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	private BooleanSupplier getClearCondition(Ingredient ingr) {
 		Minecraft mc = Minecraft.getInstance();
 		return () -> {
@@ -236,6 +243,7 @@ public class MicrocraftingHelperModule extends QuarkModule {
 		};
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	private Pair<GhostRecipe, GhostIngredient> getHoveredGhost(ContainerScreen<?> cscreen, RecipeBookGui recipeBook) {
 		Slot slot = cscreen.getSlotUnderMouse();
 
