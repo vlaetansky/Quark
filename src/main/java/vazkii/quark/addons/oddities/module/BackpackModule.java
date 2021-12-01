@@ -1,28 +1,28 @@
 package vazkii.quark.addons.oddities.module;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.inventory.InventoryScreen;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemModelsProperties;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiOpenEvent;
@@ -64,7 +64,7 @@ public class BackpackModule extends QuarkModule {
 	
 	public static Block bonded_ravager_hide;
 	
-    public static ContainerType<BackpackContainer> container;
+    public static MenuType<BackpackContainer> container;
     private static ItemStack heldStack = null;
 
 	@OnlyIn(Dist.CLIENT)
@@ -73,23 +73,23 @@ public class BackpackModule extends QuarkModule {
 	@Override
 	public void construct() {
 		backpack = new BackpackItem(this);
-		ravager_hide = new QuarkItem("ravager_hide", this, new Item.Properties().rarity(Rarity.RARE).group(ItemGroup.MATERIALS)).setCondition(() -> enableRavagerHide);
+		ravager_hide = new QuarkItem("ravager_hide", this, new Item.Properties().rarity(Rarity.RARE).tab(CreativeModeTab.TAB_MATERIALS)).setCondition(() -> enableRavagerHide);
 		
 		container = IForgeContainerType.create(BackpackContainer::fromNetwork);
 		RegistryHelper.register(container, "backpack");
 		
-		bonded_ravager_hide = new QuarkBlock("bonded_ravager_hide", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.create(Material.WOOL, DyeColor.BLACK)
-				.hardnessAndResistance(1F)
-				.sound(SoundType.CLOTH))
+		bonded_ravager_hide = new QuarkBlock("bonded_ravager_hide", this, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.of(Material.WOOL, DyeColor.BLACK)
+				.strength(1F)
+				.sound(SoundType.WOOL))
 		.setCondition(() -> enableRavagerHide);
 	}
 	
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		ScreenManager.registerFactory(container, BackpackInventoryScreen::new);
+		MenuScreens.register(container, BackpackInventoryScreen::new);
 		
-		enqueue(() -> ItemModelsProperties.registerProperty(backpack, new ResourceLocation("has_items"), 
+		enqueue(() -> ItemProperties.register(backpack, new ResourceLocation("has_items"), 
 				(stack, world, entity) -> (!BackpackModule.superOpMode && BackpackItem.doesBackpackHaveItems(stack)) ? 1 : 0));
 	}
 	
@@ -103,17 +103,17 @@ public class BackpackModule extends QuarkModule {
 				chance--;
 				amount++;
 			}
-			if(chance > 0 && entity.world.rand.nextDouble() < chance)
+			if(chance > 0 && entity.level.random.nextDouble() < chance)
 				amount++;
 			
-			event.getDrops().add(new ItemEntity(entity.world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), new ItemStack(ravager_hide, amount)));
+			event.getDrops().add(new ItemEntity(entity.level, entity.getX(), entity.getY(), entity.getZ(), new ItemStack(ravager_hide, amount)));
 		}
 	}
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public void onOpenGUI(GuiOpenEvent event) {
-		PlayerEntity player = Minecraft.getInstance().player;
+		Player player = Minecraft.getInstance().player;
 		if(player != null && isInventoryGUI(event.getGui()) && !player.isCreative() && isEntityWearingBackpack(player)) {
 			requestBackpack();
 			event.setCanceled(true);
@@ -124,12 +124,12 @@ public class BackpackModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void clientTick(ClientTickEvent event) {
 		Minecraft mc = Minecraft.getInstance();
-		if(isInventoryGUI(mc.currentScreen) && !backpackRequested && isEntityWearingBackpack(mc.player)) {
+		if(isInventoryGUI(mc.screen) && !backpackRequested && isEntityWearingBackpack(mc.player)) {
 			requestBackpack();
 			backpackRequested = true;
-		} else if(mc.currentScreen instanceof BackpackInventoryScreen) {
+		} else if(mc.screen instanceof BackpackInventoryScreen) {
 			if(heldStack != null) {
-				mc.player.inventory.setItemStack(heldStack);
+				mc.player.inventory.setCarried(heldStack);
 				heldStack = null;
 			}
 			
@@ -138,7 +138,7 @@ public class BackpackModule extends QuarkModule {
 	}
 
 	private void requestBackpack() {
-		heldStack = Minecraft.getInstance().player.inventory.getItemStack();
+		heldStack = Minecraft.getInstance().player.inventory.getCarried();
 		QuarkNetwork.sendToServer(new HandleBackpackMessage(true));
 	}
 
@@ -146,8 +146,8 @@ public class BackpackModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void removeCurseTooltip(ItemTooltipEvent event) {
 		if(!superOpMode && event.getItemStack().getItem() instanceof BackpackItem)
-			for(ITextComponent s : event.getToolTip())
-				if(s.getString().equals(Enchantments.BINDING_CURSE.getDisplayName(1).getString())) {
+			for(Component s : event.getToolTip())
+				if(s.getString().equals(Enchantments.BINDING_CURSE.getFullname(1).getString())) {
 					event.getToolTip().remove(s);
 					return;
 				}
@@ -161,7 +161,7 @@ public class BackpackModule extends QuarkModule {
 	public static boolean isEntityWearingBackpack(Entity e) {
 		if(e instanceof LivingEntity) {
 			LivingEntity living = (LivingEntity) e;
-			ItemStack chestArmor = living.getItemStackFromSlot(EquipmentSlotType.CHEST);
+			ItemStack chestArmor = living.getItemBySlot(EquipmentSlot.CHEST);
 			return chestArmor.getItem() instanceof BackpackItem;
 		}
 
@@ -171,7 +171,7 @@ public class BackpackModule extends QuarkModule {
 	public static boolean isEntityWearingBackpack(Entity e, ItemStack stack) {
 		if(e instanceof LivingEntity) {
 			LivingEntity living = (LivingEntity) e;
-			ItemStack chestArmor = living.getItemStackFromSlot(EquipmentSlotType.CHEST);
+			ItemStack chestArmor = living.getItemBySlot(EquipmentSlot.CHEST);
 			return chestArmor == stack;
 		}
 

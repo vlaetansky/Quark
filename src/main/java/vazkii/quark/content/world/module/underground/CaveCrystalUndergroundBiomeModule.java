@@ -8,21 +8,21 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.MaterialColor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
-import net.minecraft.tileentity.BeaconTileEntity;
-import net.minecraft.tileentity.BeaconTileEntity.BeamSegment;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3i;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.Heightmap;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.level.block.entity.BeaconBlockEntity;
+import net.minecraft.world.level.block.entity.BeaconBlockEntity.BeaconBeamSection;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.core.Vec3i;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.BiomeDictionary;
 import vazkii.quark.api.IIndirectConnector;
 import vazkii.quark.base.Quark;
@@ -70,23 +70,23 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 	public static boolean staticEnabled;
 
 	public static List<CaveCrystalBlock> crystals = Lists.newArrayList();
-	public static ITag<Block> crystalTag;
+	public static Tag<Block> crystalTag;
 
 	public static Block crystal(int floorIdx) {
-		return crystals.get(MathHelper.clamp(floorIdx, 0, crystals.size() - 1));
+		return crystals.get(Mth.clamp(floorIdx, 0, crystals.size() - 1));
 	}
 
 	@Override
 	public void construct() {
-		crystal("red", 0xff0000, MaterialColor.RED);
-		crystal("orange", 0xff8000, MaterialColor.ADOBE);
-		crystal("yellow", 0xffff00, MaterialColor.YELLOW);
-		crystal("green", 0x00ff00, MaterialColor.GREEN);
-		crystal("blue", 0x00ffff, MaterialColor.LIGHT_BLUE);
-		crystal("indigo", 0x0000ff, MaterialColor.BLUE);
-		crystal("violet", 0xff00ff, MaterialColor.MAGENTA);
+		crystal("red", 0xff0000, MaterialColor.COLOR_RED);
+		crystal("orange", 0xff8000, MaterialColor.COLOR_ORANGE);
+		crystal("yellow", 0xffff00, MaterialColor.COLOR_YELLOW);
+		crystal("green", 0x00ff00, MaterialColor.COLOR_GREEN);
+		crystal("blue", 0x00ffff, MaterialColor.COLOR_LIGHT_BLUE);
+		crystal("indigo", 0x0000ff, MaterialColor.COLOR_BLUE);
+		crystal("violet", 0xff00ff, MaterialColor.COLOR_MAGENTA);
 		crystal("white", 0xffffff, MaterialColor.SNOW);
-		crystal("black", 0x000000, MaterialColor.BLACK);
+		crystal("black", 0x000000, MaterialColor.COLOR_BLACK);
 		
 		super.construct();
 	}
@@ -130,29 +130,29 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 
 	// The value that comes out of this is fed onto a constant for the FOR loop that
 	// computes the beacon segments, so we return 0 to run that code, or MAX_VALUE to not
-	public static int tickBeacon(BeaconTileEntity beacon) {
+	public static int tickBeacon(BeaconBlockEntity beacon) {
 		if(!staticEnabled || !enableBeaconRedirection)
 			return 0; 
 
-		World world = beacon.getWorld();
-		BlockPos beaconPos = beacon.getPos();
+		Level world = beacon.getLevel();
+		BlockPos beaconPos = beacon.getBlockPos();
 		BlockPos currPos = beaconPos;
 
 		int horizontalMoves = 64;
-		int targetHeight = world.getHeight(Heightmap.Type.WORLD_SURFACE, beaconPos.getX(), beaconPos.getZ());
+		int targetHeight = world.getHeight(Heightmap.Types.WORLD_SURFACE, beaconPos.getX(), beaconPos.getZ());
 
-		beacon.beamColorSegments.clear();
+		beacon.checkingBeamSections.clear();
 		boolean broke = false;
 		
 		float[] currColor = new float[] { 1, 1, 1 };
-		ExtendedBeamSegment currSegment = new ExtendedBeamSegment(Direction.UP, Vector3i.NULL_VECTOR, currColor);
+		ExtendedBeamSegment currSegment = new ExtendedBeamSegment(Direction.UP, Vec3i.ZERO, currColor);
 
 		List<BlockPos> seenPositions = new LinkedList<>();
 		boolean check = true;
 		boolean setColor = false;
 		
 		while(currPos.getY() < 256 && currPos.getY() > 0 && horizontalMoves > 0) {
-			currPos = currPos.offset(currSegment.dir);
+			currPos = currPos.relative(currSegment.dir);
 			if(currSegment.dir.getAxis().isHorizontal())
 				horizontalMoves--;
 
@@ -161,12 +161,12 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 			float[] targetColor = blockstate.getBeaconColorMultiplier(world, currPos, beaconPos);
 
 			if(block instanceof CaveCrystalClusterBlock) {
-				Direction dir = blockstate.get(CaveCrystalClusterBlock.FACING);
+				Direction dir = blockstate.getValue(CaveCrystalClusterBlock.FACING);
 				if(dir == currSegment.dir)
-					currSegment.incrementHeight();
+					currSegment.increaseHeight();
 				else {
 					check = true;
-					beacon.beamColorSegments.add(currSegment);
+					beacon.checkingBeamSections.add(currSegment);
 					
 					targetColor = ((CaveCrystalClusterBlock) block).base.colorComponents;
 					if(targetColor[0] == 1F && targetColor[1] == 1F && targetColor[2] == 1F)
@@ -178,10 +178,10 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 				}
 			} else if(targetColor != null) {
 				if(Arrays.equals(targetColor, currColor))
-					currSegment.incrementHeight();
+					currSegment.increaseHeight();
 				else {
 					check = true;
-					beacon.beamColorSegments.add(currSegment);
+					beacon.checkingBeamSections.add(currSegment);
 
 					float[] mixedColor = new float[]{(currColor[0] + targetColor[0]) / 2.0F, (currColor[1] + targetColor[1]) / 2.0F, (currColor[2] + targetColor[2]) / 2.0F};
 					
@@ -194,12 +194,12 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 					currSegment = new ExtendedBeamSegment(currSegment.dir, currPos.subtract(beaconPos), mixedColor);
 				}
 			} else {
-				if (blockstate.getOpacity(world, currPos) >= 15 || block == Blocks.BEDROCK) {
+				if (blockstate.getLightBlock(world, currPos) >= 15 || block == Blocks.BEDROCK) {
 					broke = true;
 					break;
 				}
 
-				currSegment.incrementHeight();
+				currSegment.increaseHeight();
 			}
 			
 			if(check) {
@@ -214,25 +214,25 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 			broke = true;
 
 		if(!broke) {
-			beacon.beamColorSegments.add(currSegment);
-			beacon.beaconSize = targetHeight + 1;
+			beacon.checkingBeamSections.add(currSegment);
+			beacon.lastCheckY = targetHeight + 1;
 		} else {
-			beacon.beamColorSegments.clear();
-			beacon.beaconSize = targetHeight;
+			beacon.checkingBeamSections.clear();
+			beacon.lastCheckY = targetHeight;
 		}
 		
 
 		return Integer.MAX_VALUE;
 	}
 
-	public static class ExtendedBeamSegment extends BeamSegment {
+	public static class ExtendedBeamSegment extends BeaconBeamSection {
 
 		public final Direction dir;
-		public final Vector3i offset;
+		public final Vec3i offset;
 		
 		private boolean isTurn = false;
 
-		public ExtendedBeamSegment(Direction dir, Vector3i offset, float[] colorsIn) {
+		public ExtendedBeamSegment(Direction dir, Vec3i offset, float[] colorsIn) {
 			super(colorsIn);
 			this.offset = offset;
 			this.dir = dir;
@@ -247,8 +247,8 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 		}
 		
 		@Override
-		public void incrementHeight() { // increase visibility
-			super.incrementHeight();
+		public void increaseHeight() { // increase visibility
+			super.increaseHeight();
 		}
 
 	}
@@ -271,8 +271,8 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 		}
 		
 		@Override
-		public boolean canConnectIndirectly(World world, BlockPos ourPos, BlockPos sourcePos, BlockState ourState, BlockState sourceState) {
-			BlockPos offsetPos = ourPos.offset(ourState.get(CaveCrystalClusterBlock.FACING).getOpposite());
+		public boolean canConnectIndirectly(Level world, BlockPos ourPos, BlockPos sourcePos, BlockState ourState, BlockState sourceState) {
+			BlockPos offsetPos = ourPos.relative(ourState.getValue(CaveCrystalClusterBlock.FACING).getOpposite());
 			if(!offsetPos.equals(sourcePos))
 				return false;
 			

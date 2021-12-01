@@ -9,9 +9,9 @@ import com.google.gson.JsonObject;
 
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.ints.IntLists;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
 import vazkii.quark.base.module.config.ConfigFlagManager;
 
@@ -37,18 +37,18 @@ public class FlagIngredient extends Ingredient {
 
     @Override
     @Nonnull
-    public ItemStack[] getMatchingStacks() {
+    public ItemStack[] getItems() {
         if (!isEnabled())
             return new ItemStack[0];
-        return parent.getMatchingStacks();
+        return parent.getItems();
     }
 
     @Override
     @Nonnull
-    public IntList getValidItemStacksPacked() {
+    public IntList getStackingIds() {
         if (!isEnabled())
             return IntLists.EMPTY_LIST;
-        return parent.getValidItemStacksPacked();
+        return parent.getStackingIds();
     }
 
     @Override
@@ -88,22 +88,22 @@ public class FlagIngredient extends Ingredient {
 
         @Nonnull
         @Override
-        public FlagIngredient parse(@Nonnull PacketBuffer buffer) {
-            return new FlagIngredient(Ingredient.read(buffer), buffer.readString());
+        public FlagIngredient parse(@Nonnull FriendlyByteBuf buffer) {
+            return new FlagIngredient(Ingredient.fromNetwork(buffer), buffer.readUtf());
         }
 
         @Nonnull
         @Override
         public FlagIngredient parse(@Nonnull JsonObject json) {
-            Ingredient value = Ingredient.deserialize(json.get("value"));
+            Ingredient value = Ingredient.fromJson(json.get("value"));
             String flag = json.getAsJsonPrimitive("flag").getAsString();
             return new FlagIngredient(value, flag);
         }
 
         @Override
-        public void write(@Nonnull PacketBuffer buffer, @Nonnull FlagIngredient ingredient) {
-            ingredient.parent.write(buffer);
-            buffer.writeString(ingredient.flag);
+        public void write(@Nonnull FriendlyByteBuf buffer, @Nonnull FlagIngredient ingredient) {
+            ingredient.parent.toNetwork(buffer);
+            buffer.writeUtf(ingredient.flag);
         }
 
     }

@@ -10,29 +10,29 @@
  */
 package vazkii.quark.content.experimental.shiba.client.layer;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.IEntityRenderer;
-import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.resources.ResourceLocation;
 import vazkii.quark.base.Quark;
 import vazkii.quark.content.experimental.shiba.client.model.ShibaModel;
 import vazkii.quark.content.experimental.shiba.entity.ShibaEntity;
 
-public class ShibaCollarLayer extends LayerRenderer<ShibaEntity, ShibaModel> {
+public class ShibaCollarLayer extends RenderLayer<ShibaEntity, ShibaModel> {
 
 	private static final ResourceLocation WOLF_COLLAR = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/shiba/collar.png");
 
-	public ShibaCollarLayer(IEntityRenderer<ShibaEntity, ShibaModel> renderer) {
+	public ShibaCollarLayer(RenderLayerParent<ShibaEntity, ShibaModel> renderer) {
 		super(renderer);
 	}
 
 	@Override
-	public void render(MatrixStack matrix, IRenderTypeBuffer buffer, int light, ShibaEntity foxhound,  float limbAngle, float limbDistance, float tickDelta, float customAngle, float headYaw, float headPitch) {
-		if (foxhound.isTamed() && !foxhound.isInvisible()) {
-			float[] afloat = foxhound.getCollarColor().getColorComponentValues();
-			renderCutoutModel(getEntityModel(), WOLF_COLLAR, matrix, buffer, light, foxhound, afloat[0], afloat[1], afloat[2]);
+	public void render(PoseStack matrix, MultiBufferSource buffer, int light, ShibaEntity foxhound,  float limbAngle, float limbDistance, float tickDelta, float customAngle, float headYaw, float headPitch) {
+		if (foxhound.isTame() && !foxhound.isInvisible()) {
+			float[] afloat = foxhound.getCollarColor().getTextureDiffuseColors();
+			renderColoredCutoutModel(getParentModel(), WOLF_COLLAR, matrix, buffer, light, foxhound, afloat[0], afloat[1], afloat[2]);
 		}
 	}
 

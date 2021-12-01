@@ -18,10 +18,10 @@ import com.google.common.collect.ImmutableSet;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
-import net.minecraft.client.network.play.NetworkPlayerInfo;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderPlayerEvent;
@@ -52,7 +52,7 @@ public class ContributorRewardHandler {
 
 	@OnlyIn(Dist.CLIENT)
 	public static void getLocalName() {
-		name = Minecraft.getInstance().getSession().getUsername().toLowerCase(Locale.ROOT);
+		name = Minecraft.getInstance().getUser().getName().toLowerCase(Locale.ROOT);
 	}
 
 	public static void init() {
@@ -62,7 +62,7 @@ public class ContributorRewardHandler {
 		thread = new ThreadContributorListLoader();
 	}
 
-	public static int getTier(PlayerEntity player) {
+	public static int getTier(Player player) {
 		return getTier(player.getGameProfile().getName());
 	}
 	
@@ -73,13 +73,13 @@ public class ContributorRewardHandler {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void onRenderPlayer(RenderPlayerEvent.Post event) {
-		PlayerEntity player = event.getPlayer();
-		String uuid = PlayerEntity.getUUID(player.getGameProfile()).toString();
-		if(player instanceof AbstractClientPlayerEntity && DEV_UUID.contains(uuid) && !done.contains(uuid)) {
-			AbstractClientPlayerEntity clientPlayer = (AbstractClientPlayerEntity) player;
-			if(clientPlayer.hasPlayerInfo()) {
-				NetworkPlayerInfo info = ((AbstractClientPlayerEntity) player).playerInfo;
-				Map<MinecraftProfileTexture.Type, ResourceLocation> textures = info.playerTextures;
+		Player player = event.getPlayer();
+		String uuid = Player.createPlayerUUID(player.getGameProfile()).toString();
+		if(player instanceof AbstractClientPlayer && DEV_UUID.contains(uuid) && !done.contains(uuid)) {
+			AbstractClientPlayer clientPlayer = (AbstractClientPlayer) player;
+			if(clientPlayer.isCapeLoaded()) {
+				PlayerInfo info = ((AbstractClientPlayer) player).playerInfo;
+				Map<MinecraftProfileTexture.Type, ResourceLocation> textures = info.textureLocations;
 				ResourceLocation loc = new ResourceLocation("quark", "textures/misc/dev_cape.png");
 				textures.put(MinecraftProfileTexture.Type.CAPE, loc);
 				textures.put(MinecraftProfileTexture.Type.ELYTRA, loc);

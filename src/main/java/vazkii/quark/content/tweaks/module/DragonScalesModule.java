@@ -1,11 +1,11 @@
 package vazkii.quark.content.tweaks.module;
 
-import net.minecraft.entity.boss.dragon.EnderDragonEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -24,18 +24,18 @@ public class DragonScalesModule extends QuarkModule {
 	public void construct() {
 		ForgeRegistries.RECIPE_SERIALIZERS.register(ElytraDuplicationRecipe.SERIALIZER.setRegistryName("quark:elytra_duplication"));
 		
-		dragon_scale = new QuarkItem("dragon_scale", this, new Item.Properties().group(ItemGroup.MATERIALS));
+		dragon_scale = new QuarkItem("dragon_scale", this, new Item.Properties().tab(CreativeModeTab.TAB_MATERIALS));
 	}
 	
 	@SubscribeEvent
 	public void onEntityTick(LivingUpdateEvent event) {
-		if(event.getEntityLiving() instanceof EnderDragonEntity && !event.getEntity().getEntityWorld().isRemote) {
-			EnderDragonEntity dragon = (EnderDragonEntity) event.getEntity();
+		if(event.getEntityLiving() instanceof EnderDragon && !event.getEntity().getCommandSenderWorld().isClientSide) {
+			EnderDragon dragon = (EnderDragon) event.getEntity();
 
-			if(dragon.getFightManager() != null && dragon.getFightManager().hasPreviouslyKilledDragon() && dragon.deathTicks == 100) {
-				Vector3d pos = dragon.getPositionVec();
-				ItemEntity item = new ItemEntity(dragon.world, pos.x, pos.y, pos.z, new ItemStack(dragon_scale, 1));
-				dragon.world.addEntity(item);
+			if(dragon.getDragonFight() != null && dragon.getDragonFight().hasPreviouslyKilledDragon() && dragon.dragonDeathTime == 100) {
+				Vec3 pos = dragon.position();
+				ItemEntity item = new ItemEntity(dragon.level, pos.x, pos.y, pos.z, new ItemStack(dragon_scale, 1));
+				dragon.level.addFreshEntity(item);
 			}
 		}
 	}

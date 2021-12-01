@@ -9,17 +9,17 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.color.ItemColors;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.color.item.ItemColors;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.world.item.ItemStack;
 import vazkii.quark.content.management.module.ItemSharingModule;
 import vazkii.quark.content.tools.module.ColorRunesModule;
 
@@ -27,7 +27,7 @@ import vazkii.quark.content.tools.module.ColorRunesModule;
 public abstract class ItemRendererMixin {
 
 	@Inject(method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/renderer/model/ItemCameraTransforms$TransformType;ZLcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer;IILnet/minecraft/client/renderer/model/IBakedModel;)V", at = @At("HEAD"))
-	private void setColorRuneTargetStack(ItemStack itemStackIn, ItemCameraTransforms.TransformType transformTypeIn, boolean leftHand, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn, IBakedModel modelIn, CallbackInfo callbackInfo) {
+	private void setColorRuneTargetStack(ItemStack itemStackIn, ItemTransforms.TransformType transformTypeIn, boolean leftHand, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn, BakedModel modelIn, CallbackInfo callbackInfo) {
 		ColorRunesModule.setTargetStack(itemStackIn);
 	}
 
@@ -77,13 +77,13 @@ public abstract class ItemRendererMixin {
 	@Inject(method = "renderQuads", at = @At(value = "HEAD"), cancellable = true)
 	// [VanillaCopy] the entire method lmao
 	// Quark: add the alpha value from ItemSharingModule
-	public void renderQuads(MatrixStack ms, IVertexBuilder builder, List<BakedQuad> quads, ItemStack stack, int lightmap, int overlay, CallbackInfo ci) {
+	public void renderQuads(PoseStack ms, VertexConsumer builder, List<BakedQuad> quads, ItemStack stack, int lightmap, int overlay, CallbackInfo ci) {
 		if (ItemSharingModule.alphaValue != 1.0F) {
 			boolean flag = !stack.isEmpty();
-			MatrixStack.Entry entry = ms.getLast();
+			PoseStack.Pose entry = ms.last();
 			
 			for(BakedQuad bakedquad : quads) {
-				int i = flag && bakedquad.hasTintIndex() ? getItemColors().getColor(stack, bakedquad.getTintIndex()) : -1;
+				int i = flag && bakedquad.isTinted() ? getItemColors().getColor(stack, bakedquad.getTintIndex()) : -1;
 
 				float r = (i >> 16 & 255) / 255.0F;
 				float g = (i >> 8 & 255) / 255.0F;

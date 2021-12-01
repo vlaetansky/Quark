@@ -2,16 +2,16 @@ package vazkii.quark.base.client.config.gui;
 
 import java.util.Arrays;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
 import net.minecraftforge.fml.client.gui.widget.Slider;
 import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.module.config.type.ColorMatrixConfig;
@@ -37,19 +37,19 @@ public class ColorMatrixInputScreen extends AbstractInputScreen<ColorMatrixConfi
 		int x = width / 2 - 33;
 		int y = 55;
 		
-		ITextComponent prefix = new StringTextComponent("");
-		ITextComponent suffix = new StringTextComponent("");
+		Component prefix = new TextComponent("");
+		Component suffix = new TextComponent("");
 		
 		for(int i = 0; i < 9; i++)
 			addButton(new Slider(x + w * (i % 3), y + 25 * (i / 3), w - p, 20, prefix, suffix, 0f, 2f, color.colorMatrix[i], false, false, this::onSlide));
 		
-		addButton(new Button(x + w * 0, y + 115, w - p, 20, new StringTextComponent("Identity"), this::onSlide));
-		addButton(new Button(x + w * 1, y + 115, w - p, 20, new StringTextComponent("Dreary"), this::onSlide));
-		addButton(new Button(x + w * 2, y + 115, w - p, 20, new StringTextComponent("Vibrant"), this::onSlide));
+		addButton(new Button(x + w * 0, y + 115, w - p, 20, new TextComponent("Identity"), this::onSlide));
+		addButton(new Button(x + w * 1, y + 115, w - p, 20, new TextComponent("Dreary"), this::onSlide));
+		addButton(new Button(x + w * 2, y + 115, w - p, 20, new TextComponent("Vibrant"), this::onSlide));
 	}
 	
 	@Override
-	public void render(MatrixStack mstack, int mouseX, int mouseY, float pticks) {
+	public void render(PoseStack mstack, int mouseX, int mouseY, float pticks) {
 		super.render(mstack, mouseX, mouseY, pticks);
 		
 		int x = width / 2 - 203;
@@ -57,15 +57,15 @@ public class ColorMatrixInputScreen extends AbstractInputScreen<ColorMatrixConfi
 		int size = 60;
 
 		int titleLeft = width / 2 + 66;
-		drawCenteredString(mstack, font, new StringTextComponent(category.getGuiDisplayName()).mergeStyle(TextFormatting.BOLD), titleLeft, 20, 0xFFFFFF);
-		drawCenteredString(mstack, font, new StringTextComponent("Presets"), titleLeft, 155, 0xFFFFFF);
+		drawCenteredString(mstack, font, new TextComponent(category.getGuiDisplayName()).withStyle(ChatFormatting.BOLD), titleLeft, 20, 0xFFFFFF);
+		drawCenteredString(mstack, font, new TextComponent("Presets"), titleLeft, 155, 0xFFFFFF);
 
 		int sliders = 0;
 		boolean needsUpdate = false;
-		for(Widget w : buttons)
+		for(AbstractWidget w : buttons)
 			if(w instanceof Slider) {
 				Slider s = (Slider) w;
-				if(mouseX < s.x || mouseY < s.y || mouseX >= s.x + s.getWidth() || mouseY >= s.y + s.getHeightRealms())
+				if(mouseX < s.x || mouseY < s.y || mouseX >= s.x + s.getWidth() || mouseY >= s.y + s.getHeight())
 					s.dragging = false;
 				
 				double val = correct(s);
@@ -76,29 +76,29 @@ public class ColorMatrixInputScreen extends AbstractInputScreen<ColorMatrixConfi
 				}
 				
 				String displayVal = String.format("%.2f", val);
-				font.drawStringWithShadow(mstack, displayVal, s.x + s.getWidth() / 2 - font.getStringWidth(displayVal) / 2 , s.y + 6, 0xFFFFFF);
+				font.drawShadow(mstack, displayVal, s.x + s.getWidth() / 2 - font.width(displayVal) / 2 , s.y + 6, 0xFFFFFF);
 				
 				switch(sliders) {
 				case 0:
-					font.drawStringWithShadow(mstack, "R =", s.x - 20, s.y + 5, 0xFF0000);
-					font.drawStringWithShadow(mstack, "R", s.x + s.getWidth() / 2 - 2, s.y - 12, 0xFF0000);
+					font.drawShadow(mstack, "R =", s.x - 20, s.y + 5, 0xFF0000);
+					font.drawShadow(mstack, "R", s.x + s.getWidth() / 2 - 2, s.y - 12, 0xFF0000);
 					break;
 				case 1:
-					font.drawStringWithShadow(mstack, "G", s.x + s.getWidth() / 2 - 2, s.y - 12, 0x00FF00);
+					font.drawShadow(mstack, "G", s.x + s.getWidth() / 2 - 2, s.y - 12, 0x00FF00);
 					break;
 				case 2:
-					font.drawStringWithShadow(mstack, "B", s.x + s.getWidth() / 2 - 2, s.y - 12, 0x0077FF);
+					font.drawShadow(mstack, "B", s.x + s.getWidth() / 2 - 2, s.y - 12, 0x0077FF);
 					break;
 				case 3:
-					font.drawStringWithShadow(mstack, "G =", s.x - 20, s.y + 5, 0x00FF00);
+					font.drawShadow(mstack, "G =", s.x - 20, s.y + 5, 0x00FF00);
 					break;
 				case 6:
-					font.drawStringWithShadow(mstack, "B =", s.x - 20, s.y + 5, 0x0077FF);
+					font.drawShadow(mstack, "B =", s.x - 20, s.y + 5, 0x0077FF);
 					break;
 				default: break;
 				}
 				if((sliders % 3) != 0)
-					font.drawStringWithShadow(mstack, "+", s.x - 9, s.y + 5, 0xFFFFFF);
+					font.drawShadow(mstack, "+", s.x - 9, s.y + 5, 0xFFFFFF);
 				
 				sliders++;
 			}
@@ -122,13 +122,13 @@ public class ColorMatrixInputScreen extends AbstractInputScreen<ColorMatrixConfi
 			fill(mstack, cx + size / 2 - 1, cy + size / 2 - 1, cx + size, cy + size, 0x22000000);
 			fill(mstack, cx + size / 2, cy + size / 2, cx + size, cy + size, convolvedFolliage);
 			
-			font.drawString(mstack, name, cx + 2, cy + 2, 0x55000000);
+			font.draw(mstack, name, cx + 2, cy + 2, 0x55000000);
 			
-			minecraft.getItemRenderer().renderItemIntoGUI(new ItemStack(Items.OAK_SAPLING), cx + size - 18, cy + size  - 16);
-			mstack.push();
+			minecraft.getItemRenderer().renderGuiItem(new ItemStack(Items.OAK_SAPLING), cx + size - 18, cy + size  - 16);
+			mstack.pushPose();
 			mstack.translate(0, 0, 999);
 			fill(mstack, cx + size / 2, cy + size / 2, cx + size, cy + size, convolvedFolliage & 0x55FFFFFF);
-			mstack.pop();
+			mstack.popPose();
 		}
 		
 		if(needsUpdate)
@@ -185,7 +185,7 @@ public class ColorMatrixInputScreen extends AbstractInputScreen<ColorMatrixConfi
 		int sliders = 0;
 		mutable.colorMatrix = Arrays.copyOf(matrices[idx], matrices[idx].length);
 		
-		for(Widget w : buttons)
+		for(AbstractWidget w : buttons)
 			if(w instanceof Slider) {
 				Slider s = (Slider) w;
 				s.setValue(matrices[idx][sliders]);

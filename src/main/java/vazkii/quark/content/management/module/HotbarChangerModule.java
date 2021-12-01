@@ -2,17 +2,17 @@ package vazkii.quark.content.management.module;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import net.minecraft.client.MainWindow;
+import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.ChatFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
@@ -32,7 +32,7 @@ import vazkii.quark.base.network.message.ChangeHotbarMessage;
 public class HotbarChangerModule extends QuarkModule {
 
 	@OnlyIn(Dist.CLIENT)
-	private static KeyBinding changeHotbarKey;
+	private static KeyMapping changeHotbarKey;
 
 	private static final ResourceLocation WIDGETS = new ResourceLocation("textures/gui/widgets.png");
 
@@ -65,18 +65,18 @@ public class HotbarChangerModule extends QuarkModule {
 
 	private void acceptInput() {
 		Minecraft mc = Minecraft.getInstance();
-		boolean down = changeHotbarKey.isKeyDown();
+		boolean down = changeHotbarKey.isDown();
 		boolean wasDown = keyDown;
 		keyDown = down;
-		if(mc.isGameFocused()) {
+		if(mc.isWindowActive()) {
 			if(down && !wasDown)
 				hotbarChangeOpen = !hotbarChangeOpen;
 			else if(hotbarChangeOpen)
 				for(int i = 0; i < 3; i++)
-					if(mc.gameSettings.keyBindsHotbar[i].isKeyDown()) {
+					if(mc.options.keyHotbarSlots[i].isDown()) {
 						QuarkNetwork.sendToServer(new ChangeHotbarMessage(i + 1));
 						hotbarChangeOpen = false;
-						currentHeldItem = mc.player.inventory.currentItem;
+						currentHeldItem = mc.player.inventory.selected;
 						return;
 					}
 
@@ -104,39 +104,39 @@ public class HotbarChangerModule extends QuarkModule {
 			return;
 
 		Minecraft mc = Minecraft.getInstance();
-		PlayerEntity player = mc.player;
-		MatrixStack matrix = event.getMatrixStack();
+		Player player = mc.player;
+		PoseStack matrix = event.getMatrixStack();
 
 		if(event.getType() == ElementType.HOTBAR) {
-			MainWindow res = event.getWindow();
+			Window res = event.getWindow();
 			float realHeight = getRealHeight(event.getPartialTicks());
-			float xStart = res.getScaledWidth() / 2f - 91;
-			float yStart = res.getScaledHeight() - realHeight;
+			float xStart = res.getGuiScaledWidth() / 2f - 91;
+			float yStart = res.getGuiScaledHeight() - realHeight;
 
 			ItemRenderer render = mc.getItemRenderer();
 
 			RenderSystem.enableBlend();
 			RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-			mc.textureManager.bindTexture(WIDGETS);
+			mc.textureManager.bind(WIDGETS);
 			for(int i = 0; i < 3; i++) {
-				matrix.push();
+				matrix.pushPose();
 				RenderSystem.color4f(1F, 1F, 1F, 0.75F);
 				matrix.translate(xStart, yStart + i * 21, 0);
-				mc.ingameGUI.blit(matrix, 0, 0, 0, 0, 182, 22);
-				matrix.pop();
+				mc.gui.blit(matrix, 0, 0, 0, 0, 182, 22);
+				matrix.popPose();
 			}
 
 			for(int i = 0; i < 3; i++)
-				mc.fontRenderer.drawStringWithShadow(matrix, TextFormatting.BOLD + Integer.toString(i + 1), xStart - 9, yStart + i * 21 + 7, 0xFFFFFF);
+				mc.font.drawShadow(matrix, ChatFormatting.BOLD + Integer.toString(i + 1), xStart - 9, yStart + i * 21 + 7, 0xFFFFFF);
 
 			for(int i = 0; i < 27; i++) {
-				ItemStack invStack = player.inventory.getStackInSlot(i + 9);
+				ItemStack invStack = player.inventory.getItem(i + 9);
 				int x = (int) (xStart + (i % 9) * 20 + 3);
 				int y = (int) (yStart + (i / 9) * 21 + 3);
 
-				render.renderItemAndEffectIntoGUI(invStack, x, y);
-				render.renderItemOverlays(mc.fontRenderer, invStack, x, y);
+				render.renderAndDecorateItem(invStack, x, y);
+				render.renderGuiItemDecorations(mc.font, invStack, x, y);
 			}
 		}
 	}
@@ -145,9 +145,9 @@ public class HotbarChangerModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void onTick(ClientTickEvent event) {
 		if(event.phase == Phase.END) {
-			PlayerEntity player = Minecraft.getInstance().player;
-			if(player != null && currentHeldItem != -1 && player.inventory.currentItem != currentHeldItem) {
-				player.inventory.currentItem = currentHeldItem;
+			Player player = Minecraft.getInstance().player;
+			if(player != null && currentHeldItem != -1 && player.inventory.selected != currentHeldItem) {
+				player.inventory.selected = currentHeldItem;
 				currentHeldItem = -1;	
 			}
 		} 

@@ -1,17 +1,17 @@
 package vazkii.quark.content.tweaks.module;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.DyeItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.SignTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -36,10 +36,10 @@ public class SignEditingModule extends QuarkModule {
 			return;
 
 		Minecraft mc = Minecraft.getInstance();
-		TileEntity tile = mc.world.getTileEntity(pos);
+		BlockEntity tile = mc.level.getBlockEntity(pos);
 
-		if(tile instanceof SignTileEntity)
-			mc.player.openSignEditor((SignTileEntity) tile);
+		if(tile instanceof SignBlockEntity)
+			mc.player.openTextEdit((SignBlockEntity) tile);
 	}
 
 	@SubscribeEvent
@@ -47,32 +47,32 @@ public class SignEditingModule extends QuarkModule {
 		if(event.getUseBlock() == Result.DENY)
 			return;	
 		
-		TileEntity tile = event.getWorld().getTileEntity(event.getPos());
-		PlayerEntity player = event.getPlayer();
-		ItemStack stack = player.getHeldItemMainhand();
+		BlockEntity tile = event.getWorld().getBlockEntity(event.getPos());
+		Player player = event.getPlayer();
+		ItemStack stack = player.getMainHandItem();
 
-		if(player instanceof ServerPlayerEntity 
-				&& tile instanceof SignTileEntity 
-				&& !doesSignHaveCommand((SignTileEntity) tile)
+		if(player instanceof ServerPlayer 
+				&& tile instanceof SignBlockEntity 
+				&& !doesSignHaveCommand((SignBlockEntity) tile)
 				&& (!requiresEmptyHand || stack.isEmpty()) 
 				&& !(stack.getItem() instanceof DyeItem)
 				&& !tile.getBlockState().getBlock().getRegistryName().getNamespace().equals("signbutton")
-				&& player.canPlayerEdit(event.getPos(), event.getFace(), event.getItemStack()) 
+				&& player.mayUseItemAt(event.getPos(), event.getFace(), event.getItemStack()) 
 				&& !event.getEntity().isDiscrete()) {
 
-			SignTileEntity sign = (SignTileEntity) tile;
-			sign.setPlayer(player);
+			SignBlockEntity sign = (SignBlockEntity) tile;
+			sign.setAllowedPlayerEditor(player);
 			sign.isEditable = true;
 
-			QuarkNetwork.sendToPlayer(new EditSignMessage(event.getPos()), (ServerPlayerEntity) player);
+			QuarkNetwork.sendToPlayer(new EditSignMessage(event.getPos()), (ServerPlayer) player);
 			
 			event.setCanceled(true);
-			event.setCancellationResult(ActionResultType.SUCCESS);
+			event.setCancellationResult(InteractionResult.SUCCESS);
 		}
 	}
 
-	private boolean doesSignHaveCommand(SignTileEntity sign) {
-		for(ITextComponent itextcomponent : sign.signText) { 
+	private boolean doesSignHaveCommand(SignBlockEntity sign) {
+		for(Component itextcomponent : sign.messages) { 
 			Style style = itextcomponent == null ? null : itextcomponent.getStyle();
 			if (style != null && style.getClickEvent() != null) {
 				ClickEvent clickevent = style.getClickEvent();

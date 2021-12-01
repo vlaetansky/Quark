@@ -1,14 +1,14 @@
 package vazkii.quark.content.tweaks.module;
 
-import net.minecraft.entity.AgeableEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.item.Items;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.AgableMob;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -27,26 +27,26 @@ public class PoisonPotatoUsageModule extends QuarkModule {
 	
 	@SubscribeEvent
 	public void onInteract(EntityInteract event) {
-		if(event.getTarget() instanceof AgeableEntity && event.getItemStack().getItem() == Items.POISONOUS_POTATO) {
-			AgeableEntity ageable = (AgeableEntity) event.getTarget();
-			if(ageable.isChild() && !isEntityPoisoned(ageable)) {
-				if(!event.getWorld().isRemote) {
-					Vector3d pos = ageable.getPositionVec();
-					if(ageable.world.rand.nextDouble() < chance) {
-						ageable.playSound(SoundEvents.ENTITY_GENERIC_EAT, 0.5f, 0.25f);
-						ageable.world.addParticle(ParticleTypes.ENTITY_EFFECT, pos.x, pos.y, pos.z, 0.2, 0.8, 0);
+		if(event.getTarget() instanceof AgableMob && event.getItemStack().getItem() == Items.POISONOUS_POTATO) {
+			AgableMob ageable = (AgableMob) event.getTarget();
+			if(ageable.isBaby() && !isEntityPoisoned(ageable)) {
+				if(!event.getWorld().isClientSide) {
+					Vec3 pos = ageable.position();
+					if(ageable.level.random.nextDouble() < chance) {
+						ageable.playSound(SoundEvents.GENERIC_EAT, 0.5f, 0.25f);
+						ageable.level.addParticle(ParticleTypes.ENTITY_EFFECT, pos.x, pos.y, pos.z, 0.2, 0.8, 0);
 						poisonEntity(ageable);
 						if (poisonEffect)
-							ageable.addPotionEffect(new EffectInstance(Effects.POISON, 200));
+							ageable.addEffect(new MobEffectInstance(MobEffects.POISON, 200));
 					} else {
-						ageable.playSound(SoundEvents.ENTITY_GENERIC_EAT, 0.5f, 0.5f + ageable.world.rand.nextFloat() / 2);
-						ageable.world.addParticle(ParticleTypes.SMOKE, pos.x, pos.y, pos.z, 0, 0.1, 0);
+						ageable.playSound(SoundEvents.GENERIC_EAT, 0.5f, 0.5f + ageable.level.random.nextFloat() / 2);
+						ageable.level.addParticle(ParticleTypes.SMOKE, pos.x, pos.y, pos.z, 0, 0.1, 0);
 					}
 
 					if (!event.getPlayer().isCreative())
 						event.getItemStack().shrink(1);
 
-				} else event.getPlayer().swingArm(event.getHand());
+				} else event.getPlayer().swing(event.getHand());
 
 			}
 		}
@@ -54,10 +54,10 @@ public class PoisonPotatoUsageModule extends QuarkModule {
 	
 	@SubscribeEvent
 	public void onEntityUpdate(LivingUpdateEvent event) {
-		if(event.getEntity() instanceof AnimalEntity) {
-			AnimalEntity animal = (AnimalEntity) event.getEntity();
-			if(animal.isChild() && isEntityPoisoned(animal))
-				animal.setGrowingAge(-24000);
+		if(event.getEntity() instanceof Animal) {
+			Animal animal = (Animal) event.getEntity();
+			if(animal.isBaby() && isEntityPoisoned(animal))
+				animal.setAge(-24000);
 		}
 	}
 	

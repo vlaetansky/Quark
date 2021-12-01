@@ -1,13 +1,13 @@
 package vazkii.quark.content.building.tile;
 
-import net.minecraft.tileentity.ChestTileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.phys.AABB;
 import vazkii.quark.content.building.module.VariantChestsModule;
 
-public class VariantChestTileEntity extends ChestTileEntity {
+public class VariantChestTileEntity extends ChestBlockEntity {
 
-	protected VariantChestTileEntity(TileEntityType<?> typeIn) {
+	protected VariantChestTileEntity(BlockEntityType<?> typeIn) {
 		super(typeIn);
 	}
 
@@ -16,8 +16,8 @@ public class VariantChestTileEntity extends ChestTileEntity {
 	}
 
 	@Override
-	public AxisAlignedBB getRenderBoundingBox() {
-		return new AxisAlignedBB(pos.getX() - 1, pos.getY(), pos.getZ() - 1, pos.getX() + 2, pos.getY() + 2, pos.getZ() + 2);
+	public AABB getRenderBoundingBox() {
+		return new AABB(worldPosition.getX() - 1, worldPosition.getY(), worldPosition.getZ() - 1, worldPosition.getX() + 2, worldPosition.getY() + 2, worldPosition.getZ() + 2);
 	}
 
 }

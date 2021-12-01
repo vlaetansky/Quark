@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.feature.structure.StructurePiece;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
 
 public class StructureBlockReplacementHandler {
 
@@ -32,7 +32,7 @@ public class StructureBlockReplacementHandler {
 		return structureHolder.get();
 	}
 
-	public static void setActiveStructure(Structure<?> structure, List<StructurePiece> components) {
+	public static void setActiveStructure(StructureFeature<?> structure, List<StructurePiece> components) {
 		StructureHolder curr = getCurrentSturctureHolder();
 		if(curr == null) {
 			curr = new StructureHolder();
@@ -46,7 +46,7 @@ public class StructureBlockReplacementHandler {
 	public static interface StructureFunction extends BiFunction<BlockState, StructureHolder, BlockState> {}
 
 	public static class StructureHolder {
-		public Structure<?> currentStructure;
+		public StructureFeature<?> currentStructure;
 		public List<StructurePiece> currentComponents;
 	}
 

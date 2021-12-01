@@ -2,41 +2,41 @@ package vazkii.quark.content.tools.client.render;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.resources.ResourceLocation;
+import com.mojang.math.Vector3f;
 import vazkii.quark.content.tools.entity.PickarangEntity;
 
 public class PickarangRenderer extends EntityRenderer<PickarangEntity> {
 
-	public PickarangRenderer(EntityRendererManager renderManager) {
+	public PickarangRenderer(EntityRenderDispatcher renderManager) {
 		super(renderManager);
 	}
 	
 	@Override
-	public void render(PickarangEntity entity, float yaw, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int light) {
-		matrix.push();
+	public void render(PickarangEntity entity, float yaw, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int light) {
+		matrix.pushPose();
 		matrix.translate(0, 0.2, 0);
-		matrix.rotate(Vector3f.XP.rotationDegrees(90F));
+		matrix.mulPose(Vector3f.XP.rotationDegrees(90F));
 		
 		Minecraft mc = Minecraft.getInstance();
-		float time = entity.ticksExisted + (mc.isGamePaused() ? 0 : partialTicks);
-		matrix.rotate(Vector3f.ZP.rotationDegrees(time * 20F));
+		float time = entity.tickCount + (mc.isPaused() ? 0 : partialTicks);
+		matrix.mulPose(Vector3f.ZP.rotationDegrees(time * 20F));
 
-		mc.getItemRenderer().renderItem(entity.getStack(), TransformType.FIXED, light, OverlayTexture.NO_OVERLAY, matrix, buffer);
+		mc.getItemRenderer().renderStatic(entity.getStack(), TransformType.FIXED, light, OverlayTexture.NO_OVERLAY, matrix, buffer);
 		
-		matrix.pop();
+		matrix.popPose();
 	}
 
 	@Override
-	public ResourceLocation getEntityTexture(@Nonnull PickarangEntity entity) {
+	public ResourceLocation getTextureLocation(@Nonnull PickarangEntity entity) {
 		return null;
 	}
 

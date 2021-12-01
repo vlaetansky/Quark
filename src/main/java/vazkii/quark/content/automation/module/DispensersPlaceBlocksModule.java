@@ -8,23 +8,23 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.DispenserBlock;
-import net.minecraft.block.SlabBlock;
-import net.minecraft.block.StairsBlock;
-import net.minecraft.dispenser.IBlockSource;
-import net.minecraft.dispenser.IDispenseItemBehavior;
-import net.minecraft.dispenser.OptionalDispenseBehavior;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.DirectionalPlaceContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.core.BlockSource;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.context.DirectionalPlaceContext;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -44,7 +44,7 @@ public class DispensersPlaceBlocksModule extends QuarkModule {
 		BlockBehaviour behavior = new BlockBehaviour();
 		
 		enqueue(() -> {
-			Map<Item, IDispenseItemBehavior> registry = DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY;
+			Map<Item, DispenseItemBehavior> registry = DispenserBlock.DISPENSER_REGISTRY;
 			for(Block b : ForgeRegistries.BLOCKS) {
 				ResourceLocation res = b.getRegistryName();
 				if(!blacklist.contains(Objects.toString(res))) {
@@ -56,25 +56,25 @@ public class DispensersPlaceBlocksModule extends QuarkModule {
 		});
 	}
 
-	public static class BlockBehaviour extends OptionalDispenseBehavior {
+	public static class BlockBehaviour extends OptionalDispenseItemBehavior {
 
 		@Nonnull
 		@Override
-		public ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
-			successful = false;
+		public ItemStack execute(BlockSource source, ItemStack stack) {
+			success = false;
 
-			Direction direction = source.getBlockState().get(DispenserBlock.FACING);
+			Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
 			Direction against = direction;
-			BlockPos pos = source.getBlockPos().offset(direction);
+			BlockPos pos = source.getPos().relative(direction);
 
 			BlockItem item = (BlockItem) stack.getItem();
 			Block block = item.getBlock();
-			if(block instanceof StairsBlock && direction.getAxis() != Axis.Y)
+			if(block instanceof StairBlock && direction.getAxis() != Axis.Y)
 				direction = direction.getOpposite();
 			else if(block instanceof SlabBlock)
 				against = Direction.UP;
 
-			successful = item.tryPlace(new NotStupidDirectionalPlaceContext(source.getWorld(), pos, direction, stack, against)) == ActionResultType.SUCCESS;
+			success = item.place(new NotStupidDirectionalPlaceContext(source.getLevel(), pos, direction, stack, against)) == InteractionResult.SUCCESS;
 
 			return stack;
 		}
@@ -87,9 +87,9 @@ public class DispensersPlaceBlocksModule extends QuarkModule {
 		protected boolean replaceClicked = true;
 		protected Direction direction;
 
-		public NotStupidDirectionalPlaceContext(World worldIn, BlockPos p_i50051_2_, Direction p_i50051_3_, ItemStack p_i50051_4_, Direction against) {
+		public NotStupidDirectionalPlaceContext(Level worldIn, BlockPos p_i50051_2_, Direction p_i50051_3_, ItemStack p_i50051_4_, Direction against) {
 			super(worldIn, p_i50051_2_, p_i50051_3_, p_i50051_4_, against);
-			replaceClicked = worldIn.getBlockState(func_242401_i().getPos()).isReplaceable(this); // func_242401_i = getRayTraceResult
+			replaceClicked = worldIn.getBlockState(getHitResult().getBlockPos()).canBeReplaced(this); // getHitResult = getRayTraceResult
 			direction = p_i50051_3_;
 		}
 

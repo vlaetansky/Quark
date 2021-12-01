@@ -17,55 +17,55 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.AgeableEntity;
-import net.minecraft.entity.CreatureAttribute;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntitySize;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.Pose;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.AttributeModifier.Operation;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.BreedGoal;
-import net.minecraft.entity.ai.goal.FollowParentGoal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.PanicGoal;
-import net.minecraft.entity.ai.goal.TemptGoal;
-import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
-import net.minecraft.entity.effect.LightningBoltEntity;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.pathfinding.PathNodeType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.AgableMob;
+import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.BreedGoal;
+import net.minecraft.world.entity.ai.goal.FollowParentGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.PanicGoal;
+import net.minecraft.world.entity.ai.goal.TemptGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -74,12 +74,12 @@ import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.content.mobs.ai.RaveGoal;
 import vazkii.quark.content.mobs.module.CrabsModule;
 
-public class CrabEntity extends AnimalEntity implements IEntityAdditionalSpawnData {
+public class CrabEntity extends Animal implements IEntityAdditionalSpawnData {
 
 	public static final ResourceLocation CRAB_LOOT_TABLE = new ResourceLocation("quark", "entities/crab");
 
-	private static final DataParameter<Float> SIZE_MODIFIER = EntityDataManager.createKey(CrabEntity.class, DataSerializers.FLOAT);
-	private static final DataParameter<Integer> VARIANT = EntityDataManager.createKey(CrabEntity.class, DataSerializers.VARINT);
+	private static final EntityDataAccessor<Float> SIZE_MODIFIER = SynchedEntityData.defineId(CrabEntity.class, EntityDataSerializers.FLOAT);
+	private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(CrabEntity.class, EntityDataSerializers.INT);
 
 	private static int lightningCooldown;
 	private Ingredient temptationItems;
@@ -88,29 +88,29 @@ public class CrabEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 	private boolean crabRave;
 	private BlockPos jukeboxPosition;
 
-	public CrabEntity(EntityType<? extends CrabEntity> type, World worldIn) {
+	public CrabEntity(EntityType<? extends CrabEntity> type, Level worldIn) {
 		this(type, worldIn, 1);
 	}
 
-	public CrabEntity(EntityType<? extends CrabEntity> type, World worldIn, float sizeModifier) {
+	public CrabEntity(EntityType<? extends CrabEntity> type, Level worldIn, float sizeModifier) {
 		super(type, worldIn);
-		this.setPathPriority(PathNodeType.LAVA, -1.0F);
+		this.setPathfindingMalus(BlockPathTypes.LAVA, -1.0F);
 		if (sizeModifier != 1)
-			dataManager.set(SIZE_MODIFIER, sizeModifier);
+			entityData.set(SIZE_MODIFIER, sizeModifier);
 	}
 
-	public static boolean spawnPredicate(EntityType<? extends AnimalEntity> type, IWorld world, SpawnReason reason, BlockPos pos, Random random) {
-		return world.getBlockState(pos.down()).getBlock().isIn(CrabsModule.crabSpawnableTag) && world.getLight(pos) > 8;
+	public static boolean spawnPredicate(EntityType<? extends Animal> type, LevelAccessor world, MobSpawnType reason, BlockPos pos, Random random) {
+		return world.getBlockState(pos.below()).getBlock().is(CrabsModule.crabSpawnableTag) && world.getMaxLocalRawBrightness(pos) > 8;
 	}
 
-	public static void rave(IWorld world, BlockPos pos, boolean raving) {
-		for(CrabEntity crab : world.getEntitiesWithinAABB(CrabEntity.class, (new AxisAlignedBB(pos)).grow(3.0D)))
+	public static void rave(LevelAccessor world, BlockPos pos, boolean raving) {
+		for(CrabEntity crab : world.getEntitiesOfClass(CrabEntity.class, (new AABB(pos)).inflate(3.0D)))
 			crab.party(pos, raving);
 	}
 
 	@Override
-	public float getBlockPathWeight(BlockPos pos, IWorldReader world) {
-		return world.getBlockState(pos.down()).getBlock().isIn(CrabsModule.crabSpawnableTag) ? 10.0F : world.getBrightness(pos) - 0.5F;
+	public float getWalkTargetValue(BlockPos pos, LevelReader world) {
+		return world.getBlockState(pos.below()).getBlock().is(CrabsModule.crabSpawnableTag) ? 10.0F : world.getBrightness(pos) - 0.5F;
 	}
 
 	@Override
@@ -120,16 +120,16 @@ public class CrabEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 
 	@Nonnull
 	@Override
-	public CreatureAttribute getCreatureAttribute() {
-		return CreatureAttribute.ARTHROPOD;
+	public MobType getMobType() {
+		return MobType.ARTHROPOD;
 	}
 
 	@Override
-	protected void registerData() {
-		super.registerData();
+	protected void defineSynchedData() {
+		super.defineSynchedData();
 
-		dataManager.register(SIZE_MODIFIER, 1f);
-		dataManager.register(VARIANT, -1);
+		entityData.define(SIZE_MODIFIER, 1f);
+		entityData.define(VARIANT, -1);
 	}
 
 	@Nullable
@@ -151,12 +151,12 @@ public class CrabEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 	}
 
 	@Override
-	protected float getStandingEyeHeight(Pose pose, EntitySize size) {
+	protected float getStandingEyeHeight(Pose pose, EntityDimensions size) {
 		return 0.2f * size.height;
 	}
 
 	public float getSizeModifier() {
-		return dataManager.get(SIZE_MODIFIER);
+		return entityData.get(SIZE_MODIFIER);
 	}
 
 	@Override
@@ -166,18 +166,18 @@ public class CrabEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 		this.goalSelector.addGoal(3, new BreedGoal(this, 1.0D));
 		this.goalSelector.addGoal(4, new TemptGoal(this, 1.2D, false, getTemptationItems()));
 		this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.1D));
-		this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-		this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 6.0F));
-		this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
+		this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+		this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
+		this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
 	}
 
-	public static AttributeModifierMap.MutableAttribute prepareAttributes() {
-		return MobEntity.func_233666_p_()
-				.createMutableAttribute(Attributes.MAX_HEALTH, 20.0D)
-				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25D)
-				.createMutableAttribute(Attributes.ARMOR, 3.0D)
-				.createMutableAttribute(Attributes.ARMOR_TOUGHNESS, 2.0D)
-				.createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 0.5D);
+	public static AttributeSupplier.Builder prepareAttributes() {
+		return Mob.createMobAttributes()
+				.add(Attributes.MAX_HEALTH, 20.0D)
+				.add(Attributes.MOVEMENT_SPEED, 0.25D)
+				.add(Attributes.ARMOR, 3.0D)
+				.add(Attributes.ARMOR_TOUGHNESS, 2.0D)
+				.add(Attributes.KNOCKBACK_RESISTANCE, 0.5D);
 	}
 
 //	@Override
@@ -189,45 +189,45 @@ public class CrabEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 	public void tick() {
 		super.tick();
 
-		if(!world.isRemote && dataManager.get(VARIANT) == -1) {
+		if(!level.isClientSide && entityData.get(VARIANT) == -1) {
 			int variant = 0;
-			if(rand.nextBoolean()) {
-				variant += rand.nextInt(2) + 1;
+			if(random.nextBoolean()) {
+				variant += random.nextInt(2) + 1;
 			}
 
-			dataManager.set(VARIANT, variant);
+			entityData.set(VARIANT, variant);
 		}
 
-		if (inWater)
-			stepHeight = 1F;
+		if (wasTouchingWater)
+			maxUpStep = 1F;
 		else
-			stepHeight = 0.6F;
+			maxUpStep = 0.6F;
 
 		if (lightningCooldown > 0) {
 			lightningCooldown--;
-			extinguish();
+			clearFire();
 		}
 
-		Vector3d pos = getPositionVec();
-		if(isRaving() && (jukeboxPosition == null || jukeboxPosition.distanceSq(pos.x, pos.y, pos.z, true) > 24.0D || world.getBlockState(jukeboxPosition).getBlock() != Blocks.JUKEBOX))
+		Vec3 pos = position();
+		if(isRaving() && (jukeboxPosition == null || jukeboxPosition.distSqr(pos.x, pos.y, pos.z, true) > 24.0D || level.getBlockState(jukeboxPosition).getBlock() != Blocks.JUKEBOX))
 			party(null, false);
 
-		if(isRaving() && world.isRemote && ticksExisted % 10 == 0) {
-			BlockPos below = getPosition().down();
-			BlockState belowState = world.getBlockState(below);
+		if(isRaving() && level.isClientSide && tickCount % 10 == 0) {
+			BlockPos below = blockPosition().below();
+			BlockState belowState = level.getBlockState(below);
 			if(belowState.getMaterial() == Material.SAND)
-				world.playEvent(2001, below, Block.getStateId(belowState));
+				level.levelEvent(2001, below, Block.getId(belowState));
 		}
 	}
 
 	@Nonnull
 	@Override
-	public EntitySize getSize(Pose poseIn) {
-		return super.getSize(poseIn).scale(this.getSizeModifier());
+	public EntityDimensions getDimensions(Pose poseIn) {
+		return super.getDimensions(poseIn).scale(this.getSizeModifier());
 	}
 
 	@Override
-	public boolean isPushedByWater() {
+	public boolean isPushedByFluid() {
 		return false;
 	}
 
@@ -240,54 +240,54 @@ public class CrabEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 	public boolean isInvulnerableTo(@Nonnull DamageSource source) {
 		return super.isInvulnerableTo(source) ||
 				source == DamageSource.LIGHTNING_BOLT ||
-				getSizeModifier() > 1 && source.isFireDamage();
+				getSizeModifier() > 1 && source.isFire();
 	}
 	
 	@Override
-	public void func_241841_a(ServerWorld sworld, LightningBoltEntity lightningBolt) { // onStruckByLightning
-		if (lightningCooldown > 0 || world.isRemote)
+	public void thunderHit(ServerLevel sworld, LightningBolt lightningBolt) { // onStruckByLightning
+		if (lightningCooldown > 0 || level.isClientSide)
 			return;
 
 		float sizeMod = getSizeModifier();
 		if (sizeMod <= 15) {
 
-			this.getAttribute(Attributes.MAX_HEALTH).applyPersistentModifier(new AttributeModifier("Lightning Bonus", 0.5, Operation.ADDITION));
-			this.getAttribute(Attributes.MOVEMENT_SPEED).applyPersistentModifier(new AttributeModifier("Lightning Debuff", -0.05, Operation.ADDITION));
-			this.getAttribute(Attributes.ARMOR).applyPersistentModifier(new AttributeModifier("Lightning Bonus", 0.125, Operation.ADDITION));
+			this.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier("Lightning Bonus", 0.5, Operation.ADDITION));
+			this.getAttribute(Attributes.MOVEMENT_SPEED).addPermanentModifier(new AttributeModifier("Lightning Debuff", -0.05, Operation.ADDITION));
+			this.getAttribute(Attributes.ARMOR).addPermanentModifier(new AttributeModifier("Lightning Bonus", 0.125, Operation.ADDITION));
 
 			float sizeModifier = Math.min(sizeMod + 1, 16);
-			this.dataManager.set(SIZE_MODIFIER, sizeModifier);
-			recalculateSize();
+			this.entityData.set(SIZE_MODIFIER, sizeModifier);
+			refreshDimensions();
 
 			lightningCooldown = 150;
 		}
 	}
 
 	@Override
-	public void applyEntityCollision(@Nonnull Entity entityIn) {
+	public void push(@Nonnull Entity entityIn) {
 		if (getSizeModifier() <= 1)
-			super.applyEntityCollision(entityIn);
+			super.push(entityIn);
 	}
 
 	@Override
-	protected void collideWithEntity(Entity entityIn) {
-		super.collideWithEntity(entityIn);
-		if (world.getDifficulty() != Difficulty.PEACEFUL && !noSpike) {
+	protected void doPush(Entity entityIn) {
+		super.doPush(entityIn);
+		if (level.getDifficulty() != Difficulty.PEACEFUL && !noSpike) {
 			if (entityIn instanceof LivingEntity && !(entityIn instanceof CrabEntity))
-				entityIn.attackEntityFrom(DamageSource.CACTUS, 1f);
+				entityIn.hurt(DamageSource.CACTUS, 1f);
 		}
 	}
 
 	@Override
-	public boolean isBreedingItem(ItemStack stack) {
+	public boolean isFood(ItemStack stack) {
 		return !stack.isEmpty() && getTemptationItems().test(stack);
 	}
 
 	private Ingredient getTemptationItems() {
 		if(temptationItems == null)
 			temptationItems =  Ingredient.merge(Lists.newArrayList(
-					Ingredient.fromItems(Items.WHEAT, Items.CHICKEN),
-					Ingredient.fromTag(ItemTags.FISHES)
+					Ingredient.of(Items.WHEAT, Items.CHICKEN),
+					Ingredient.of(ItemTags.FISHES)
 					));
 		
 		return temptationItems;
@@ -295,18 +295,18 @@ public class CrabEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 
 	@Nullable
 	@Override // createChild
-	public AgeableEntity func_241840_a(ServerWorld sworld, @Nonnull AgeableEntity other) {
-		return new CrabEntity(CrabsModule.crabType, world);
+	public AgableMob getBreedOffspring(ServerLevel sworld, @Nonnull AgableMob other) {
+		return new CrabEntity(CrabsModule.crabType, level);
 	}
 	
 	@Nonnull
 	@Override
-	protected ResourceLocation getLootTable() {
+	protected ResourceLocation getDefaultLootTable() {
 		return CRAB_LOOT_TABLE;
 	}
 
 	public int getVariant() {
-		return Math.max(0, dataManager.get(VARIANT));
+		return Math.max(0, entityData.get(VARIANT));
 	}
 
 	public void party(BlockPos pos, boolean isPartying) {
@@ -317,7 +317,7 @@ public class CrabEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void setPartying(BlockPos pos, boolean isPartying) {
+	public void setRecordPlayingNearby(BlockPos pos, boolean isPartying) {
 		party(pos, isPartying);
 	}
 
@@ -326,51 +326,51 @@ public class CrabEntity extends AnimalEntity implements IEntityAdditionalSpawnDa
 	}
 
 	@Override
-	public void notifyDataManagerChange(@Nonnull DataParameter<?> parameter) {
+	public void onSyncedDataUpdated(@Nonnull EntityDataAccessor<?> parameter) {
 		if (parameter.equals(SIZE_MODIFIER))
-			recalculateSize();
+			refreshDimensions();
 
-		super.notifyDataManagerChange(parameter);
+		super.onSyncedDataUpdated(parameter);
 	}
 
 	@Nonnull
 	@Override
-	public IPacket<?> createSpawnPacket() {
+	public Packet<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 	@Override
-	public void writeSpawnData(PacketBuffer buffer) {
+	public void writeSpawnData(FriendlyByteBuf buffer) {
 		buffer.writeFloat(getSizeModifier());
 	}
 
 	@Override
-	public void readSpawnData(PacketBuffer buffer) {
-		dataManager.set(SIZE_MODIFIER, buffer.readFloat());
+	public void readSpawnData(FriendlyByteBuf buffer) {
+		entityData.set(SIZE_MODIFIER, buffer.readFloat());
 	}
 
 	@Override
-	public void readAdditional(CompoundNBT compound) {
-		super.readAdditional(compound);
+	public void readAdditionalSaveData(CompoundTag compound) {
+		super.readAdditionalSaveData(compound);
 
 		lightningCooldown = compound.getInt("LightningCooldown");
 		noSpike = compound.getBoolean("NoSpike");
 
 		if (compound.contains("EnemyCrabRating")) {
 			float sizeModifier = compound.getFloat("EnemyCrabRating");
-			dataManager.set(SIZE_MODIFIER, sizeModifier);
+			entityData.set(SIZE_MODIFIER, sizeModifier);
 		}
 
 		if(compound.contains("Variant"))
-			dataManager.set(VARIANT, compound.getInt("Variant"));
+			entityData.set(VARIANT, compound.getInt("Variant"));
 	}
 
 	@Override
-	public void writeAdditional(CompoundNBT compound) {
-		super.writeAdditional(compound);
+	public void addAdditionalSaveData(CompoundTag compound) {
+		super.addAdditionalSaveData(compound);
 		compound.putFloat("EnemyCrabRating", getSizeModifier());
 		compound.putInt("LightningCooldown", lightningCooldown);
-		compound.putInt("Variant", dataManager.get(VARIANT));
+		compound.putInt("Variant", entityData.get(VARIANT));
 		compound.putBoolean("NoSpike", noSpike);
 	}
 

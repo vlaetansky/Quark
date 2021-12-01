@@ -4,10 +4,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import vazkii.quark.content.management.module.EasyTransferingModule;
 
-@Mixin(ContainerScreen.class)
+@Mixin(AbstractContainerScreen.class)
 public class ContainerScreenMixin {
 
 	@ModifyVariable(method = "mouseClicked(DDI)Z",

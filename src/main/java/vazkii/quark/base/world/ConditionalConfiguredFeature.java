@@ -3,14 +3,14 @@ package vazkii.quark.base.world;
 import java.util.Random;
 import java.util.function.BooleanSupplier;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ISeedReader;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.IFeatureConfig;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 
-public class ConditionalConfiguredFeature<FC extends IFeatureConfig, F extends Feature<FC>> extends ConfiguredFeature<FC, F> {
+public class ConditionalConfiguredFeature<FC extends FeatureConfiguration, F extends Feature<FC>> extends ConfiguredFeature<FC, F> {
 
 	public final ConfiguredFeature<FC, F> parent;
 	public final BooleanSupplier condition;
@@ -22,8 +22,8 @@ public class ConditionalConfiguredFeature<FC extends IFeatureConfig, F extends F
 	}
 
 	@Override // place
-	public boolean func_242765_a(ISeedReader p_242765_1_, ChunkGenerator p_242765_2_, Random p_242765_3_, BlockPos p_242765_4_) {
-		return condition.getAsBoolean() && super.func_242765_a(p_242765_1_, p_242765_2_, p_242765_3_, p_242765_4_);
+	public boolean place(WorldGenLevel p_242765_1_, ChunkGenerator p_242765_2_, Random p_242765_3_, BlockPos p_242765_4_) {
+		return condition.getAsBoolean() && super.place(p_242765_1_, p_242765_2_, p_242765_3_, p_242765_4_);
 	}
 
 }

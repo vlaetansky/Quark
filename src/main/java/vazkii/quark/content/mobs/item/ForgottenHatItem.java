@@ -8,20 +8,20 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Multimap;
 
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
-import net.minecraft.util.NonNullList;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterials;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.core.NonNullList;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeMod;
@@ -40,14 +40,14 @@ public class ForgottenHatItem extends ArmorItem implements IQuarkItem {
 
 	@OnlyIn(Dist.CLIENT)
 	@SuppressWarnings("rawtypes")
-	private BipedModel model;
+	private HumanoidModel model;
 
 	public ForgottenHatItem(QuarkModule module) {
-		super(ArmorMaterial.LEATHER, EquipmentSlotType.HEAD, 
+		super(ArmorMaterials.LEATHER, EquipmentSlot.HEAD, 
 				new Item.Properties()
-				.maxStackSize(1)
-				.maxDamage(0)
-				.group(ItemGroup.TOOLS)
+				.stacksTo(1)
+				.durability(0)
+				.tab(CreativeModeTab.TAB_TOOLS)
 				.rarity(Rarity.RARE));
 
 		RegistryHelper.registerItem(this, "forgotten_hat");
@@ -60,14 +60,14 @@ public class ForgottenHatItem extends ArmorItem implements IQuarkItem {
 	}
 
 	@Override
-	public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
+	public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
 		return TEXTURE;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	@SuppressWarnings("unchecked")
-	public <A extends BipedModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, A _default) {
+	public <A extends HumanoidModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, A _default) {
 		if(model == null)
 			model = new ForgottenHatModel();
 
@@ -81,7 +81,7 @@ public class ForgottenHatItem extends ArmorItem implements IQuarkItem {
 
 
 	@Override
-	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack) {
+	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
 		if(attributes == null) {
 			Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 			UUID uuid = UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150");
@@ -93,13 +93,13 @@ public class ForgottenHatItem extends ArmorItem implements IQuarkItem {
 		}
 
 
-		return slot == this.slot ? attributes : super.getAttributeModifiers(slot);
+		return slot == this.slot ? attributes : super.getDefaultAttributeModifiers(slot);
 	}
 
 	@Override
-	public void fillItemGroup(@Nonnull ItemGroup group, @Nonnull NonNullList<ItemStack> items) {
-		if(isEnabled() || group == ItemGroup.SEARCH)
-			super.fillItemGroup(group, items);
+	public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
+		if(isEnabled() || group == CreativeModeTab.TAB_SEARCH)
+			super.fillItemCategory(group, items);
 	}
 
 	@Override

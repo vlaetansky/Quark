@@ -7,11 +7,11 @@ import java.util.function.BooleanSupplier;
 
 import com.google.common.collect.Maps;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.world.gen.GenerationStage.Decoration;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.VariantHandler;
@@ -55,9 +55,9 @@ public class NewStoneTypesModule extends QuarkModule {
 	public void construct() {
 		marbleBlock = makeStone("marble", marble, BigStoneClustersModule.marble, () -> enableMarble, MaterialColor.QUARTZ);
 		limestoneBlock = makeStone("limestone", limestone, BigStoneClustersModule.limestone, () -> enableLimestone, MaterialColor.STONE);
-		jasperBlock = makeStone("jasper", jasper, BigStoneClustersModule.jasper, () -> enableJasper, MaterialColor.RED_TERRACOTTA);
+		jasperBlock = makeStone("jasper", jasper, BigStoneClustersModule.jasper, () -> enableJasper, MaterialColor.TERRACOTTA_RED);
 		slateBlock = makeStone("slate", slate, BigStoneClustersModule.slate, () -> enableSlate, MaterialColor.ICE);
-		myaliteBlock = makeStone("myalite", myalite, BigStoneClustersModule.myalite, () -> enableMyalite, MaterialColor.PURPLE, MyaliteBlock::new);
+		myaliteBlock = makeStone("myalite", myalite, BigStoneClustersModule.myalite, () -> enableMyalite, MaterialColor.COLOR_PURPLE, MyaliteBlock::new);
 	}
 	
 	private Block makeStone(String name, StoneTypeConfig config, BigStoneClusterConfig bigConfig, BooleanSupplier enabledCond, MaterialColor color) {
@@ -67,20 +67,20 @@ public class NewStoneTypesModule extends QuarkModule {
 	private Block makeStone(String name, StoneTypeConfig config, BigStoneClusterConfig bigConfig, BooleanSupplier enabledCond, MaterialColor color, QuarkBlock.Constructor<QuarkBlock> constr) {
 		BooleanSupplier trueEnabledCond = () -> (!ModuleLoader.INSTANCE.isModuleEnabled(BigStoneClustersModule.class) || !bigConfig.enabled) && enabledCond.getAsBoolean();
 		
-		Block.Properties props = Block.Properties.create(Material.ROCK, color)
-				.setRequiresTool() // needs tool
+		Block.Properties props = Block.Properties.of(Material.STONE, color)
+				.requiresCorrectToolForDrops() // needs tool
 				.harvestTool(ToolType.PICKAXE)
-				.hardnessAndResistance(1.5F, 6.0F); 
+				.strength(1.5F, 6.0F); 
 		
-		QuarkBlock normal = constr.make(name, this, ItemGroup.BUILDING_BLOCKS, props).setCondition(enabledCond);
-		QuarkBlock polished = constr.make("polished_" + name, this, ItemGroup.BUILDING_BLOCKS, props).setCondition(enabledCond);
+		QuarkBlock normal = constr.make(name, this, CreativeModeTab.TAB_BUILDING_BLOCKS, props).setCondition(enabledCond);
+		QuarkBlock polished = constr.make("polished_" + name, this, CreativeModeTab.TAB_BUILDING_BLOCKS, props).setCondition(enabledCond);
 		polishedBlocks.put(normal, polished);
 
 		VariantHandler.addSlabStairsWall(normal);
 		VariantHandler.addSlabAndStairs(polished);
 		
 		defers.add(() ->
-			WorldGenHandler.addGenerator(this, new OreGenerator(config.dimensions, config.oregen, normal.getDefaultState(), OreGenerator.ALL_DIMS_STONE_MATCHER, trueEnabledCond), Decoration.UNDERGROUND_ORES, WorldGenWeights.NEW_STONES)
+			WorldGenHandler.addGenerator(this, new OreGenerator(config.dimensions, config.oregen, normal.defaultBlockState(), OreGenerator.ALL_DIMS_STONE_MATCHER, trueEnabledCond), Decoration.UNDERGROUND_ORES, WorldGenWeights.NEW_STONES)
 		);
 		
 		return normal;

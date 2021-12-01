@@ -4,13 +4,15 @@ import java.util.function.BooleanSupplier;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.SpawnEggItem;
-import net.minecraft.util.NonNullList;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.core.NonNullList;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.module.QuarkModule;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class QuarkSpawnEggItem extends SpawnEggItem implements IQuarkItem {
 
@@ -25,9 +27,9 @@ public class QuarkSpawnEggItem extends SpawnEggItem implements IQuarkItem {
 	}
 
 	@Override
-	public void fillItemGroup(@Nonnull ItemGroup group, @Nonnull NonNullList<ItemStack> items) {
-		if(isEnabled() || group == ItemGroup.SEARCH)
-			super.fillItemGroup(group, items);
+	public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
+		if(isEnabled() || group == CreativeModeTab.TAB_SEARCH)
+			super.fillItemCategory(group, items);
 	}
 
 	@Override

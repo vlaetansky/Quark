@@ -1,17 +1,17 @@
 package vazkii.quark.content.tools.module;
 
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.item.CompassItem;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.loot.ItemLootEntry;
-import net.minecraft.loot.LootEntry;
-import net.minecraft.loot.LootTables;
-import net.minecraft.tags.ITag;
+import net.minecraft.world.item.CompassItem;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.tags.Tag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -46,7 +46,7 @@ public class ColorRunesModule extends QuarkModule {
 	public static final int RUNE_TYPES = 17;
 
 	private static final ThreadLocal<ItemStack> targetStack = new ThreadLocal<>();
-	public static ITag<Item> runesTag, runesLootableTag;
+	public static Tag<Item> runesTag, runesLootableTag;
 	public static Item blank_rune;
 
 	@Config public static int dungeonWeight = 10;
@@ -74,7 +74,7 @@ public class ColorRunesModule extends QuarkModule {
 		if (!ItemNBTHelper.getBoolean(target, TAG_RUNE_ATTACHED, false))
 			return -1;
 
-		ItemStack proxied = ItemStack.read(ItemNBTHelper.getCompound(target, TAG_RUNE_COLOR, false));
+		ItemStack proxied = ItemStack.of(ItemNBTHelper.getCompound(target, TAG_RUNE_COLOR, false));
 		LazyOptional<IRuneColorProvider> proxyCap = get(proxied);
 		int color = proxyCap.orElse((s) -> -1).getRuneColor(target);
 		return color;
@@ -83,43 +83,43 @@ public class ColorRunesModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public static RenderType getGlint() {
 		int color = changeColor();
-		return color >= 0 && color <= RUNE_TYPES ? GlintRenderType.glintColor.get(color) : RenderType.getGlint();
+		return color >= 0 && color <= RUNE_TYPES ? GlintRenderType.glintColor.get(color) : RenderType.glint();
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static RenderType getEntityGlint() {
 		int color = changeColor();
-		return color >= 0 && color <= RUNE_TYPES ? GlintRenderType.entityGlintColor.get(color) : RenderType.getEntityGlint();
+		return color >= 0 && color <= RUNE_TYPES ? GlintRenderType.entityGlintColor.get(color) : RenderType.entityGlint();
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static RenderType getGlintDirect() {
 		int color = changeColor();
-		return color >= 0 && color <= RUNE_TYPES ? GlintRenderType.glintDirectColor.get(color) : RenderType.getGlintDirect();
+		return color >= 0 && color <= RUNE_TYPES ? GlintRenderType.glintDirectColor.get(color) : RenderType.glintDirect();
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static RenderType getEntityGlintDirect() {
 		int color = changeColor();
-		return color >= 0 && color <= RUNE_TYPES ? GlintRenderType.entityGlintDirectColor.get(color) : RenderType.getEntityGlintDirect();
+		return color >= 0 && color <= RUNE_TYPES ? GlintRenderType.entityGlintDirectColor.get(color) : RenderType.entityGlintDirect();
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static RenderType getArmorGlint() {
 		int color = changeColor();
-		return color >= 0 && color <= RUNE_TYPES ? GlintRenderType.armorGlintColor.get(color) : RenderType.getArmorGlint();
+		return color >= 0 && color <= RUNE_TYPES ? GlintRenderType.armorGlintColor.get(color) : RenderType.armorGlint();
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static RenderType getArmorEntityGlint() {
 		int color = changeColor();
-		return color >= 0 && color <= RUNE_TYPES ? GlintRenderType.armorEntityGlintColor.get(color) : RenderType.getArmorEntityGlint();
+		return color >= 0 && color <= RUNE_TYPES ? GlintRenderType.armorEntityGlintColor.get(color) : RenderType.armorEntityGlint();
 	}
 
 	@Override
 	public void construct() {
 		for(DyeColor color : DyeColor.values())
-			new RuneItem(color.getString() + "_rune", this, color.getId(), true);
+			new RuneItem(color.getSerializedName() + "_rune", this, color.getId(), true);
 		new RuneItem("rainbow_rune", this, 16, true);
 		blank_rune =  new RuneItem("blank_rune", this, 17, false);
 	}
@@ -134,19 +134,19 @@ public class ColorRunesModule extends QuarkModule {
 	public void onLootTableLoad(LootTableLoadEvent event) {
 		int weight = 0;
 
-		if(event.getName().equals(LootTables.CHESTS_SIMPLE_DUNGEON))
+		if(event.getName().equals(BuiltInLootTables.SIMPLE_DUNGEON))
 			weight = dungeonWeight;
-		else if(event.getName().equals(LootTables.CHESTS_NETHER_BRIDGE))
+		else if(event.getName().equals(BuiltInLootTables.NETHER_BRIDGE))
 			weight = netherFortressWeight;
-		else if(event.getName().equals(LootTables.CHESTS_JUNGLE_TEMPLE))
+		else if(event.getName().equals(BuiltInLootTables.JUNGLE_TEMPLE))
 			weight = jungleTempleWeight;
-		else if(event.getName().equals(LootTables.CHESTS_DESERT_PYRAMID))
+		else if(event.getName().equals(BuiltInLootTables.DESERT_PYRAMID))
 			weight = desertTempleWeight;
 
 		if(weight > 0) {
-			LootEntry entry = ItemLootEntry.builder(blank_rune)
-					.weight(weight)
-					.quality(itemQuality)
+			LootPoolEntryContainer entry = LootItem.lootTableItem(blank_rune)
+					.setWeight(weight)
+					.setQuality(itemQuality)
 					.build();
 			MiscUtil.addToLootTable(event.getTable(), entry);
 		}
@@ -158,7 +158,7 @@ public class ColorRunesModule extends QuarkModule {
 		ItemStack right = event.getRight();
 		ItemStack output = event.getOutput();
 
-		if(!left.isEmpty() && !right.isEmpty() && canHaveRune(left) && right.getItem().isIn(runesTag)) {
+		if(!left.isEmpty() && !right.isEmpty() && canHaveRune(left) && right.getItem().is(runesTag)) {
 			ItemStack out = (output.isEmpty() ? left : output).copy();
 			ItemNBTHelper.setBoolean(out, TAG_RUNE_ATTACHED, true);
 			ItemNBTHelper.setCompound(out, TAG_RUNE_COLOR, right.serializeNBT());
@@ -169,7 +169,7 @@ public class ColorRunesModule extends QuarkModule {
 	}
 
 	private static boolean canHaveRune(ItemStack stack) {
-		return stack.isEnchanted() || (stack.getItem() == Items.COMPASS && CompassItem.func_234670_d_(stack)); // func_234670_d_ = is lodestone compass
+		return stack.isEnchanted() || (stack.getItem() == Items.COMPASS && CompassItem.isLodestoneCompass(stack)); // isLodestoneCompass = is lodestone compass
 	}
 
 	private static LazyOptional<IRuneColorProvider> get(ICapabilityProvider provider) {

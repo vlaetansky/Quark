@@ -1,10 +1,10 @@
 package vazkii.quark.base.client.config.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public abstract class AbstractInputScreen<T> extends AbstractQScreen {
 	
@@ -18,7 +18,7 @@ public abstract class AbstractInputScreen<T> extends AbstractQScreen {
 	}
 	
 	@Override
-	public void render(MatrixStack mstack, int mouseX, int mouseY, float pticks) {
+	public void render(PoseStack mstack, int mouseX, int mouseY, float pticks) {
 		renderBackground(mstack);
 
 		super.render(mstack, mouseX, mouseY, pticks);
@@ -33,9 +33,9 @@ public abstract class AbstractInputScreen<T> extends AbstractQScreen {
 		int left = (width - (bWidth + pad) * 3) / 2;
 		int vStart = height - 30;
 		
-		addButton(new Button(left, vStart, bWidth, 20, new TranslationTextComponent("quark.gui.config.default"), this::setDefault));
-		addButton(resetButton = new Button(left + bWidth + pad, vStart, bWidth, 20, new TranslationTextComponent("quark.gui.config.discard"), this::reset));
-		addButton(doneButton = new Button(left + (bWidth + pad) * 2, vStart, bWidth, 20, new TranslationTextComponent("gui.done"), this::save));
+		addButton(new Button(left, vStart, bWidth, 20, new TranslatableComponent("quark.gui.config.default"), this::setDefault));
+		addButton(resetButton = new Button(left + bWidth + pad, vStart, bWidth, 20, new TranslatableComponent("quark.gui.config.discard"), this::reset));
+		addButton(doneButton = new Button(left + (bWidth + pad) * 2, vStart, bWidth, 20, new TranslatableComponent("gui.done"), this::save));
 		
 		onInit();
 		update();

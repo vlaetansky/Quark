@@ -1,6 +1,6 @@
 package vazkii.quark.content.management.module;
 
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.base.client.handler.InventoryButtonHandler;

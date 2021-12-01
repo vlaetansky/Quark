@@ -4,23 +4,23 @@ import java.util.OptionalInt;
 import java.util.Random;
 import java.util.function.BooleanSupplier;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SaplingBlock;
-import net.minecraft.block.trees.Tree;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.world.gen.Heightmap;
-import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
-import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.FeatureSpread;
-import net.minecraft.world.gen.feature.TwoLayerFeature;
-import net.minecraft.world.gen.foliageplacer.FancyFoliagePlacer;
-import net.minecraft.world.gen.trunkplacer.FancyTrunkPlacer;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SaplingBlock;
+import net.minecraft.world.level.block.grower.AbstractTreeGrower;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.feature.stateproviders.SimpleStateProvider;
+import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.util.UniformInt;
+import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
+import net.minecraft.world.level.levelgen.feature.foliageplacers.FancyFoliagePlacer;
+import net.minecraft.world.level.levelgen.feature.trunkplacers.FancyTrunkPlacer;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
@@ -33,20 +33,20 @@ public class BlossomSaplingBlock extends SaplingBlock implements IQuarkBlock {
 	private BooleanSupplier enabledSupplier = () -> true;
 
 	public BlossomSaplingBlock(String colorName, QuarkModule module, BlossomTree tree, Block leaf) {
-		super(tree, Block.Properties.from(Blocks.OAK_SAPLING));
+		super(tree, Block.Properties.copy(Blocks.OAK_SAPLING));
 		this.module = module;
 
 		RegistryHelper.registerBlock(this, colorName + "_blossom_sapling");
-		RegistryHelper.setCreativeTab(this, ItemGroup.DECORATIONS);
+		RegistryHelper.setCreativeTab(this, CreativeModeTab.TAB_DECORATIONS);
 		tree.sapling = this;
 		
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-		if(isEnabled() || group == ItemGroup.SEARCH)
-			super.fillItemGroup(group, items);
+	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+		if(isEnabled() || group == CreativeModeTab.TAB_SEARCH)
+			super.fillItemCategory(group, items);
 	}
 
 	@Override
@@ -65,29 +65,29 @@ public class BlossomSaplingBlock extends SaplingBlock implements IQuarkBlock {
 		return enabledSupplier.getAsBoolean();
 	}
 
-	public static class BlossomTree extends Tree {
+	public static class BlossomTree extends AbstractTreeGrower {
 
-		public final BaseTreeFeatureConfig config;
+		public final TreeConfiguration config;
 		public final BlockState leaf;
 		public BlossomSaplingBlock sapling;
 
 		public BlossomTree(Block leafBlock) {
-			config = (new BaseTreeFeatureConfig.Builder(
-					new SimpleBlockStateProvider(Blocks.SPRUCE_LOG.getDefaultState()),
-					new SimpleBlockStateProvider(leafBlock.getDefaultState()), 
-					new FancyFoliagePlacer(FeatureSpread.func_242252_a(2), FeatureSpread.func_242252_a(4), 4), // <- Copy of what Features.FANCY_OAK uses
+			config = (new TreeConfiguration.TreeConfigurationBuilder(
+					new SimpleStateProvider(Blocks.SPRUCE_LOG.defaultBlockState()),
+					new SimpleStateProvider(leafBlock.defaultBlockState()), 
+					new FancyFoliagePlacer(UniformInt.fixed(2), UniformInt.fixed(4), 4), // <- Copy of what Features.FANCY_OAK uses
 					new FancyTrunkPlacer(3, 11, 0), 
-					new TwoLayerFeature(0, 0, 0, OptionalInt.of(4))))
-					.setIgnoreVines()
-					.func_236702_a_(Heightmap.Type.MOTION_BLOCKING)
+					new TwoLayersFeatureSize(0, 0, 0, OptionalInt.of(4))))
+					.ignoreVines()
+					.heightmap(Heightmap.Types.MOTION_BLOCKING)
 					.build();
 			
-			leaf = leafBlock.getDefaultState();
+			leaf = leafBlock.defaultBlockState();
 		}
 
 		@Override
-		protected ConfiguredFeature<BaseTreeFeatureConfig, ?> getTreeFeature(Random rand, boolean hjskfsd) {
-			return Feature.TREE.withConfiguration(config);
+		protected ConfiguredFeature<TreeConfiguration, ?> getConfiguredFeature(Random rand, boolean hjskfsd) {
+			return Feature.TREE.configured(config);
 		}
 		
 	}

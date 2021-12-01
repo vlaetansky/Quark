@@ -1,10 +1,10 @@
 package vazkii.quark.content.building.module;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.block.QuarkPillarBlock;
@@ -19,15 +19,15 @@ public class MidoriModule extends QuarkModule {
 
 	@Override
 	public void construct() {
-		new QuarkItem("cactus_paste", this, new Item.Properties().group(ItemGroup.MATERIALS));
+		new QuarkItem("cactus_paste", this, new Item.Properties().tab(CreativeModeTab.TAB_MATERIALS));
 		
-		Block.Properties props = Block.Properties.create(Material.ROCK, MaterialColor.LIME)
-				.setRequiresTool()
+		Block.Properties props = Block.Properties.of(Material.STONE, MaterialColor.COLOR_LIGHT_GREEN)
+				.requiresCorrectToolForDrops()
         		.harvestTool(ToolType.PICKAXE)
-        		.hardnessAndResistance(1.5F, 6.0F);
+        		.strength(1.5F, 6.0F);
 		
-		VariantHandler.addSlabAndStairs(new QuarkBlock("midori_block", this, ItemGroup.BUILDING_BLOCKS, props));
-		new QuarkPillarBlock("midori_pillar", this, ItemGroup.BUILDING_BLOCKS, props);
+		VariantHandler.addSlabAndStairs(new QuarkBlock("midori_block", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props));
+		new QuarkPillarBlock("midori_pillar", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props);
 	}
 	
 }

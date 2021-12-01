@@ -5,18 +5,18 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.tileentity.BeaconTileEntityRenderer;
-import net.minecraft.tileentity.BeaconTileEntity;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BeaconRenderer;
+import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 import vazkii.quark.content.world.client.render.QuarkBeaconTileEntityRenderer;
 
-@Mixin(BeaconTileEntityRenderer.class)
+@Mixin(BeaconRenderer.class)
 public class BeaconTileEntityRendererMixin {
 
 	@Inject(method = "render", at = @At("HEAD"), cancellable = true)
-	public void render(BeaconTileEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn, CallbackInfo callbackInfo) {
+	public void render(BeaconBlockEntity tileEntityIn, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn, CallbackInfo callbackInfo) {
 		if(QuarkBeaconTileEntityRenderer.render(tileEntityIn, partialTicks, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn))
 			callbackInfo.cancel();
 	}

@@ -10,25 +10,25 @@ import java.util.function.BooleanSupplier;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.recipebook.GhostRecipe;
-import net.minecraft.client.gui.recipebook.GhostRecipe.GhostIngredient;
-import net.minecraft.client.gui.recipebook.RecipeBookGui;
-import net.minecraft.client.gui.recipebook.RecipeBookPage;
-import net.minecraft.client.gui.recipebook.RecipeList;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.screen.inventory.CraftingScreen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.text.ITextProperties;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.recipebook.GhostRecipe;
+import net.minecraft.client.gui.screens.recipebook.GhostRecipe.GhostIngredient;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
+import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.CraftingScreen;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent.DrawScreenEvent;
@@ -52,11 +52,11 @@ public class MicrocraftingHelperModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void onClick(MouseClickedEvent.Pre event) {
 		Minecraft mc = Minecraft.getInstance();
-		Screen screen = mc.currentScreen;
+		Screen screen = mc.screen;
 
 		if(screen instanceof CraftingScreen && event.getButton() == 1) { // TODO more inclusive checking
 			CraftingScreen cscreen = (CraftingScreen) screen;
-			RecipeBookGui recipeBook = cscreen.getRecipeGui();
+			RecipeBookComponent recipeBook = cscreen.getRecipeBookComponent();
 
 			Pair<GhostRecipe, GhostIngredient> pair = getHoveredGhost(cscreen, recipeBook);
 			if(pair != null) {
@@ -64,14 +64,14 @@ public class MicrocraftingHelperModule extends QuarkModule {
 				GhostIngredient ghostIngr = pair.getRight();
 				Ingredient ingr = ghostIngr.ingredient;
 
-				IRecipe<?> recipeToSet = getRecipeToSet(recipeBook, ingr, true);
+				Recipe<?> recipeToSet = getRecipeToSet(recipeBook, ingr, true);
 				if(recipeToSet == null)
 					recipeToSet = getRecipeToSet(recipeBook, ingr, false);
 
 				if(recipeToSet != null) {
 					int ourCount = 0;
 
-					ItemStack testStack = recipeToSet.getRecipeOutput();
+					ItemStack testStack = recipeToSet.getResultItem();
 					for(int j = 1; j < ghost.size(); j++) { // start at 1 to skip output
 						GhostIngredient testGhostIngr = ghost.get(j);
 						Ingredient testIngr = testGhostIngr.ingredient;
@@ -88,7 +88,7 @@ public class MicrocraftingHelperModule extends QuarkModule {
 					}
 
 					ghost.clear();
-					mc.playerController.sendPlaceRecipePacket(mc.player.openContainer.windowId, recipeToSet, true);
+					mc.gameMode.handlePlaceRecipe(mc.player.containerMenu.containerId, recipeToSet, true);
 				}
 
 				event.setCanceled(true);
@@ -102,15 +102,15 @@ public class MicrocraftingHelperModule extends QuarkModule {
 		if(!recipes.isEmpty()) {
 			Minecraft mc = Minecraft.getInstance();
 
-			Screen screen = mc.currentScreen;
+			Screen screen = mc.screen;
 			if(screen instanceof CraftingScreen) { // TODO more inclusive checking
 				CraftingScreen cscreen = (CraftingScreen) screen;
-				MatrixStack mstack = event.getMatrixStack();
+				PoseStack mstack = event.getMatrixStack();
 				ItemRenderer render = mc.getItemRenderer();
 				int left = cscreen.getGuiLeft() + 95;
 				int top = cscreen.getGuiTop() + 6;
 
-				mc.textureManager.bindTexture(MiscUtil.GENERAL_ICONS);
+				mc.textureManager.bind(MiscUtil.GENERAL_ICONS);
 				Screen.blit(mstack, left, top, 0, 0, 108, 80, 20, 256, 256);
 
 				int start = Math.max(0, recipes.size() - 3);
@@ -121,19 +121,19 @@ public class MicrocraftingHelperModule extends QuarkModule {
 					int y = top + 2;
 
 					ItemStack drawStack = recipe.displayItem;
-					render.renderItemIntoGUI(drawStack, x, y);
-					render.renderItemOverlays(mc.fontRenderer, drawStack, x, y);
+					render.renderGuiItem(drawStack, x, y);
+					render.renderGuiItemDecorations(mc.font, drawStack, x, y);
 
 					if(index > 0)
-						mc.fontRenderer.drawString(mstack, "<", x - 6, y + 4, 0x3f3f3f);
+						mc.font.draw(mstack, "<", x - 6, y + 4, 0x3f3f3f);
 				}
 				
-				Pair<GhostRecipe, GhostIngredient> pair = getHoveredGhost(cscreen, cscreen.getRecipeGui());
+				Pair<GhostRecipe, GhostIngredient> pair = getHoveredGhost(cscreen, cscreen.getRecipeBookComponent());
 				if(pair != null) {
 					GhostIngredient ingr = pair.getRight();
 					if(ingr != null) {
-						List<ITextProperties> tooltip = Arrays.asList(new TranslationTextComponent("Right Click to Craft")); // TODO localize
-						cscreen.renderWrappedToolTip(mstack, tooltip, event.getMouseX(), event.getMouseY() - 15, mc.fontRenderer);
+						List<FormattedText> tooltip = Arrays.asList(new TranslatableComponent("Right Click to Craft")); // TODO localize
+						cscreen.renderWrappedToolTip(mstack, tooltip, event.getMouseX(), event.getMouseY() - 15, mc.font);
 					}
 				}
 			}
@@ -145,7 +145,7 @@ public class MicrocraftingHelperModule extends QuarkModule {
 	public void onTick(ClientTickEvent event) {
 		Minecraft mc = Minecraft.getInstance();
 		Screen prevScreen = currentScreen;
-		currentScreen = mc.currentScreen;
+		currentScreen = mc.screen;
 
 		// TODO changing recipe does not clear the stack as it should
 		if(prevScreen != currentScreen)
@@ -154,7 +154,7 @@ public class MicrocraftingHelperModule extends QuarkModule {
 		if(!recipes.isEmpty()) {
 			StackedRecipe top = recipes.peek();
 			if(top.clearCondition.getAsBoolean()) {
-				mc.playerController.sendPlaceRecipePacket(mc.player.openContainer.windowId, top.recipe, true);
+				mc.gameMode.handlePlaceRecipe(mc.player.containerMenu.containerId, top.recipe, true);
 				compoundCount = top.count;
 				recipes.pop();
 			}
@@ -162,22 +162,22 @@ public class MicrocraftingHelperModule extends QuarkModule {
 		else compoundCount = 1;
 	}
 
-	private IRecipe<?> getRecipeToSet(RecipeBookGui recipeBook, Ingredient ingr, boolean craftableOnly) {
-		TextFieldWidget text = recipeBook.searchBar;
+	private Recipe<?> getRecipeToSet(RecipeBookComponent recipeBook, Ingredient ingr, boolean craftableOnly) {
+		EditBox text = recipeBook.searchBox;
 
-		for(ItemStack stack : ingr.getMatchingStacks()) {
-			text.setText(stack.getDisplayName().copyRaw().getString().toLowerCase(Locale.ROOT));
+		for(ItemStack stack : ingr.getItems()) {
+			text.setValue(stack.getHoverName().plainCopy().getString().toLowerCase(Locale.ROOT));
 
-			recipeBook.updateSearch();
+			recipeBook.checkSearchStringUpdate();
 
 			RecipeBookPage page = recipeBook.recipeBookPage;
 			if(page != null) {
-				List<RecipeList> recipeLists = page.recipeLists;
+				List<RecipeCollection> recipeLists = page.recipeCollections;
 				recipeLists = new ArrayList<>(recipeLists); // ensure we're not messing with the original
 				
 				if(recipeLists != null && recipeLists.size() > 0) {
 					recipeLists.removeIf(rl -> {
-						List<IRecipe<?>> list = rl.getDisplayRecipes(craftableOnly);
+						List<Recipe<?>> list = rl.getDisplayRecipes(craftableOnly);
 						return list == null || list.isEmpty();
 					});
 					
@@ -188,17 +188,17 @@ public class MicrocraftingHelperModule extends QuarkModule {
 						if(rl1 == rl2)
 							return 0;
 						
-						IRecipe<?> r1 = rl1.getDisplayRecipes(craftableOnly).get(0);
-						IRecipe<?> r2 = rl2.getDisplayRecipes(craftableOnly).get(0);
+						Recipe<?> r1 = rl1.getDisplayRecipes(craftableOnly).get(0);
+						Recipe<?> r2 = rl2.getDisplayRecipes(craftableOnly).get(0);
 						return compareRecipes(r1, r2);
 					});
 					
-					for(RecipeList list : recipeLists) {
-						List<IRecipe<?>> recipeList = list.getDisplayRecipes(craftableOnly);
+					for(RecipeCollection list : recipeLists) {
+						List<Recipe<?>> recipeList = list.getDisplayRecipes(craftableOnly);
 						Collections.sort(recipeList, this::compareRecipes);
 						
 						for(int i = 0; i < recipeList.size(); i++)
-							if(ingr.test(recipeList.get(i).getRecipeOutput()))
+							if(ingr.test(recipeList.get(i).getResultItem()))
 								return recipeList.get(i);
 					}
 				}
@@ -209,7 +209,7 @@ public class MicrocraftingHelperModule extends QuarkModule {
 	}
 	
 	@OnlyIn(Dist.CLIENT)
-	private int compareRecipes(IRecipe<?> r1, IRecipe<?> r2) {
+	private int compareRecipes(Recipe<?> r1, Recipe<?> r2) {
 		if(r1 == r2)
 			return 0;
 		
@@ -230,7 +230,7 @@ public class MicrocraftingHelperModule extends QuarkModule {
 		Minecraft mc = Minecraft.getInstance();
 		return () -> {
 			int missing = compoundCount;
-			for(ItemStack invStack : mc.player.inventory.mainInventory) {
+			for(ItemStack invStack : mc.player.inventory.items) {
 				if(ingr.test(invStack)) {
 					missing -= invStack.getCount();
 
@@ -244,7 +244,7 @@ public class MicrocraftingHelperModule extends QuarkModule {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private Pair<GhostRecipe, GhostIngredient> getHoveredGhost(ContainerScreen<?> cscreen, RecipeBookGui recipeBook) {
+	private Pair<GhostRecipe, GhostIngredient> getHoveredGhost(AbstractContainerScreen<?> cscreen, RecipeBookComponent recipeBook) {
 		Slot slot = cscreen.getSlotUnderMouse();
 
 		if(recipeBook != null && slot != null) {
@@ -253,7 +253,7 @@ public class MicrocraftingHelperModule extends QuarkModule {
 				for(int i = 1; i < ghost.size(); i++) { // start at 1 to skip output
 					GhostIngredient ghostIngr = ghost.get(i);
 
-					if(ghostIngr.getX() == slot.xPos && ghostIngr.getY() == slot.yPos)
+					if(ghostIngr.getX() == slot.x && ghostIngr.getY() == slot.y)
 						return Pair.of(ghost, ghostIngr);
 				}
 			}
@@ -264,12 +264,12 @@ public class MicrocraftingHelperModule extends QuarkModule {
 
 	private static class StackedRecipe {
 
-		public final IRecipe<?> recipe;
+		public final Recipe<?> recipe;
 		public final ItemStack displayItem;
 		public final int count;
 		public final BooleanSupplier clearCondition;
 
-		StackedRecipe(IRecipe<?> recipe, ItemStack displayItem, int count, BooleanSupplier clearCondition) {
+		StackedRecipe(Recipe<?> recipe, ItemStack displayItem, int count, BooleanSupplier clearCondition) {
 			this.recipe = recipe;
 			this.count = count;
 			this.clearCondition = clearCondition;

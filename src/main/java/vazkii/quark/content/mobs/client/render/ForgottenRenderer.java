@@ -1,11 +1,11 @@
 package vazkii.quark.content.mobs.client.render;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.SkeletonRenderer;
-import net.minecraft.entity.monster.AbstractSkeletonEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.monster.AbstractSkeleton;
+import net.minecraft.resources.ResourceLocation;
 import vazkii.quark.base.Quark;
 import vazkii.quark.content.mobs.client.layer.forgotten.ForgottenClothingLayer;
 import vazkii.quark.content.mobs.client.layer.forgotten.ForgottenEyesLayer;
@@ -16,7 +16,7 @@ public class ForgottenRenderer extends SkeletonRenderer {
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/forgotten/main.png");
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public ForgottenRenderer(EntityRendererManager renderManagerIn) {
+	public ForgottenRenderer(EntityRenderDispatcher renderManagerIn) {
 		super(renderManagerIn);
 		addLayer(new ForgottenClothingLayer<>(this));
 		addLayer(new ForgottenEyesLayer(this));
@@ -24,12 +24,12 @@ public class ForgottenRenderer extends SkeletonRenderer {
 	}
 
 	@Override
-	public ResourceLocation getEntityTexture(AbstractSkeletonEntity entity) {
+	public ResourceLocation getTextureLocation(AbstractSkeleton entity) {
 		return TEXTURE;
 	}
 
 	@Override
-	protected void preRenderCallback(AbstractSkeletonEntity entitylivingbaseIn, MatrixStack matrixStackIn, float partialTickTime) {
+	protected void scale(AbstractSkeleton entitylivingbaseIn, PoseStack matrixStackIn, float partialTickTime) {
 		matrixStackIn.scale(1.2F, 1.2F, 1.2F);
 	}
 

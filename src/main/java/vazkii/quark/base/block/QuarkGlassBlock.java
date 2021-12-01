@@ -2,19 +2,21 @@ package vazkii.quark.base.block;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockDisplayReader;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.base.module.QuarkModule;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 /**
  * @author WireSegal
@@ -22,40 +24,40 @@ import vazkii.quark.base.module.QuarkModule;
  */
 public class QuarkGlassBlock extends QuarkBlock {
 
-	public QuarkGlassBlock(String regname, QuarkModule module, ItemGroup creativeTab, Properties properties) {
+	public QuarkGlassBlock(String regname, QuarkModule module, CreativeModeTab creativeTab, Properties properties) {
 		super(regname, module, creativeTab, properties
-				.notSolid()
-				.setAllowsSpawn((state, world, pos, entityType) -> false)
-				.setOpaque((state, world, pos) -> false)
-				.setSuffocates((state, world, pos) -> false)
-				.setBlocksVision((state, world, pos) -> false));
+				.noOcclusion()
+				.isValidSpawn((state, world, pos, entityType) -> false)
+				.isRedstoneConductor((state, world, pos) -> false)
+				.isSuffocating((state, world, pos) -> false)
+				.isViewBlocking((state, world, pos) -> false));
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public boolean isSideInvisible(@Nonnull BlockState state, BlockState adjacentBlockState, @Nonnull Direction side) {
-		return adjacentBlockState.isIn(this) || super.isSideInvisible(state, adjacentBlockState, side);
+	public boolean skipRendering(@Nonnull BlockState state, BlockState adjacentBlockState, @Nonnull Direction side) {
+		return adjacentBlockState.is(this) || super.skipRendering(state, adjacentBlockState, side);
 	}
 
 	@Override
 	@Nonnull
-	public VoxelShape getRayTraceShape(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, @Nonnull ISelectionContext context) {
-		return VoxelShapes.empty();
+	public VoxelShape getVisualShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
+		return Shapes.empty();
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public float getAmbientOcclusionLightValue(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
+	public float getShadeBrightness(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos) {
 		return 1.0F;
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(@Nonnull BlockState state, @Nonnull IBlockReader reader, @Nonnull BlockPos pos) {
+	public boolean propagatesSkylightDown(@Nonnull BlockState state, @Nonnull BlockGetter reader, @Nonnull BlockPos pos) {
 		return true;
 	}
 
 	@Override
-	public boolean shouldDisplayFluidOverlay(BlockState state, IBlockDisplayReader world, BlockPos pos, FluidState fluidState) {
+	public boolean shouldDisplayFluidOverlay(BlockState state, BlockAndTintGetter world, BlockPos pos, FluidState fluidState) {
 		return true;
 	}
 

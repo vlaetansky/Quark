@@ -2,21 +2,23 @@ package vazkii.quark.base.client.config.gui.widget;
 
 import java.util.function.Supplier;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.TextComponent;
 import vazkii.quark.api.config.IConfigObject;
 import vazkii.quark.base.handler.MiscUtil;
+
+import net.minecraft.client.gui.components.Button.OnPress;
 
 public class CheckboxButton extends Button {
 
 	private final Supplier<Boolean> checkedSupplier;
 	
-	public CheckboxButton(int x, int y, Supplier<Boolean> checkedSupplier, IPressable onClick) {
-		super(x, y, 20, 20, new StringTextComponent(""), onClick);
+	public CheckboxButton(int x, int y, Supplier<Boolean> checkedSupplier, OnPress onClick) {
+		super(x, y, 20, 20, new TextComponent(""), onClick);
 		this.checkedSupplier = checkedSupplier;
 	}
 	
@@ -25,7 +27,7 @@ public class CheckboxButton extends Button {
 	}
 	
 	@Override
-	public void renderButton(MatrixStack mstack, int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
+	public void renderButton(PoseStack mstack, int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
 		super.renderButton(mstack, p_renderButton_1_, p_renderButton_2_, p_renderButton_3_);
 		
 		RenderSystem.color3f(1F, 1F, 1F);
@@ -33,7 +35,7 @@ public class CheckboxButton extends Button {
 		int u = enabled ? 0 : 16;
 		int v = 93;
 
-		Minecraft.getInstance().textureManager.bindTexture(MiscUtil.GENERAL_ICONS);
+		Minecraft.getInstance().textureManager.bind(MiscUtil.GENERAL_ICONS);
 		blit(mstack, x + 2, y + 1, u, v, 16, 16);
 	}
 

@@ -1,7 +1,7 @@
 package vazkii.quark.base.network.message;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import vazkii.arl.network.IMessage;
 import vazkii.quark.addons.oddities.container.CrateContainer;
@@ -21,8 +21,8 @@ public class ScrollCrateMessage implements IMessage {
 	@Override
 	public boolean receive(Context context) {
 		context.enqueueWork(() -> {
-			ServerPlayerEntity player = context.getSender();
-			Container container = player.openContainer;
+			ServerPlayer player = context.getSender();
+			AbstractContainerMenu container = player.containerMenu;
 			
 			if(container instanceof CrateContainer)
 				((CrateContainer) container).scroll(down, false);

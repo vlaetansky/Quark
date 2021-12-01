@@ -1,11 +1,11 @@
 package vazkii.quark.content.automation.module;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -25,12 +25,12 @@ public class GravisandModule extends QuarkModule {
 
 	@Override
 	public void construct() {
-		gravisand = new GravisandBlock("gravisand", this, ItemGroup.REDSTONE, Block.Properties.from(Blocks.SAND));
+		gravisand = new GravisandBlock("gravisand", this, CreativeModeTab.TAB_REDSTONE, Block.Properties.copy(Blocks.SAND));
 
-		gravisandType = EntityType.Builder.<GravisandEntity>create(GravisandEntity::new, EntityClassification.MISC)
-				.size(0.98F, 0.98F)
-				.trackingRange(10)
-				.func_233608_b_(20) // update interval
+		gravisandType = EntityType.Builder.<GravisandEntity>of(GravisandEntity::new, MobCategory.MISC)
+				.sized(0.98F, 0.98F)
+				.clientTrackingRange(10)
+				.updateInterval(20) // update interval
 				.setCustomClientFactory((spawnEntity, world) -> new GravisandEntity(gravisandType, world))
 				.build("gravisand");
 		RegistryHelper.register(gravisandType, "gravisand");

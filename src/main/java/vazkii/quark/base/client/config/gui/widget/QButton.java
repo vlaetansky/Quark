@@ -7,13 +7,13 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.TextComponent;
 import vazkii.arl.util.ClientTicker;
 import vazkii.quark.base.client.config.gui.QuarkConfigHomeScreen;
 import vazkii.quark.base.client.handler.TopLayerTooltipHandler;
@@ -79,7 +79,7 @@ public class QButton extends Button {
 	private Celebration celebrating;
 	
 	public QButton(int x, int y) {
-		super(x, y, 20, 20, new StringTextComponent("q"), QButton::click);
+		super(x, y, 20, 20, new TextComponent("q"), QButton::click);
 		
 		Calendar calendar = Calendar.getInstance();
 		int month = calendar.get(Calendar.MONTH) + 1;
@@ -100,7 +100,7 @@ public class QButton extends Button {
 	}
 	
 	@Override
-	public void renderButton(MatrixStack mstack, int mouseX, int mouseY, float pticks) {
+	public void renderButton(PoseStack mstack, int mouseX, int mouseY, float pticks) {
 		super.renderButton(mstack, mouseX, mouseY, pticks);
 		
 		int iconIndex = Math.min(4, ContributorRewardHandler.localPatronTier);
@@ -127,18 +127,18 @@ public class QButton extends Button {
 				
 				boolean hovered = mouseX >= x && mouseY >= y && mouseX < (x + width) && mouseY < (y + height);
 				if(hovered)
-					TopLayerTooltipHandler.setTooltip(Arrays.asList(I18n.format("quark.gui.celebration." + celebrating.name)), mouseX, mouseY);
+					TopLayerTooltipHandler.setTooltip(Arrays.asList(I18n.get("quark.gui.celebration." + celebrating.name)), mouseX, mouseY);
 			}
 			
 			int u = 256 - iconIndex * w;
 			
-			Minecraft.getInstance().textureManager.bindTexture(MiscUtil.GENERAL_ICONS);
+			Minecraft.getInstance().textureManager.bind(MiscUtil.GENERAL_ICONS);
 			blit(mstack, rx, ry, u, v, w, h);
 		}
 	}
 	
 	public static void click(Button b) {
-		Minecraft.getInstance().displayGuiScreen(new QuarkConfigHomeScreen(Minecraft.getInstance().currentScreen));
+		Minecraft.getInstance().setScreen(new QuarkConfigHomeScreen(Minecraft.getInstance().screen));
 	}
 	
 	private static class Celebration {

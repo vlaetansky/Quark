@@ -16,62 +16,62 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.entity.AgeableEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.BegGoal;
-import net.minecraft.entity.ai.goal.BreedGoal;
-import net.minecraft.entity.ai.goal.FollowOwnerGoal;
-import net.minecraft.entity.ai.goal.HurtByTargetGoal;
-import net.minecraft.entity.ai.goal.LeapAtTargetGoal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.ai.goal.NonTamedTargetGoal;
-import net.minecraft.entity.ai.goal.OwnerHurtTargetGoal;
-import net.minecraft.entity.ai.goal.SitGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
-import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.passive.RabbitEntity;
-import net.minecraft.entity.passive.SheepEntity;
-import net.minecraft.entity.passive.WolfEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.pathfinding.PathNodeType;
-import net.minecraft.potion.Effects;
-import net.minecraft.tileentity.AbstractFurnaceTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.world.entity.AgableMob;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.BegGoal;
+import net.minecraft.world.entity.ai.goal.BreedGoal;
+import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.LeapAtTargetGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.target.NonTameRandomTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
+import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.Rabbit;
+import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Registry;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.fml.network.NetworkHooks;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.content.mobs.ai.FindPlaceToSleepGoal;
@@ -79,51 +79,51 @@ import vazkii.quark.content.mobs.ai.SleepGoal;
 import vazkii.quark.content.mobs.module.FoxhoundModule;
 import vazkii.quark.content.tweaks.ai.WantLoveGoal;
 
-public class FoxhoundEntity extends WolfEntity implements IMob {
+public class FoxhoundEntity extends Wolf implements Enemy {
 
 	public static final ResourceLocation FOXHOUND_LOOT_TABLE = new ResourceLocation("quark", "entities/foxhound");
 
-	private static final DataParameter<Boolean> TEMPTATION = EntityDataManager.createKey(FoxhoundEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> SLEEPING = EntityDataManager.createKey(FoxhoundEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> IS_BLUE = EntityDataManager.createKey(FoxhoundEntity.class, DataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> TEMPTATION = SynchedEntityData.defineId(FoxhoundEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(FoxhoundEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> IS_BLUE = SynchedEntityData.defineId(FoxhoundEntity.class, EntityDataSerializers.BOOLEAN);
 
 	private int timeUntilPotatoEmerges = 0;
 
-	public FoxhoundEntity(EntityType<? extends FoxhoundEntity> type, World worldIn) {
+	public FoxhoundEntity(EntityType<? extends FoxhoundEntity> type, Level worldIn) {
 		super(type, worldIn);
-		this.setPathPriority(PathNodeType.WATER, -1.0F);
-		this.setPathPriority(PathNodeType.LAVA, 1.0F);
-		this.setPathPriority(PathNodeType.DANGER_FIRE, 1.0F);
-		this.setPathPriority(PathNodeType.DAMAGE_FIRE, 1.0F);
+		this.setPathfindingMalus(BlockPathTypes.WATER, -1.0F);
+		this.setPathfindingMalus(BlockPathTypes.LAVA, 1.0F);
+		this.setPathfindingMalus(BlockPathTypes.DANGER_FIRE, 1.0F);
+		this.setPathfindingMalus(BlockPathTypes.DAMAGE_FIRE, 1.0F);
 	}
 
 	@Override
-	protected void registerData() {
-		super.registerData();
+	protected void defineSynchedData() {
+		super.defineSynchedData();
 		setCollarColor(DyeColor.ORANGE);
-		dataManager.register(TEMPTATION, false);
-		dataManager.register(SLEEPING, false);
-		dataManager.register(IS_BLUE, false);
+		entityData.define(TEMPTATION, false);
+		entityData.define(SLEEPING, false);
+		entityData.define(IS_BLUE, false);
 	}
 
 	@Override
-	public int getMaxSpawnedInChunk() {
+	public int getMaxSpawnClusterSize() {
 		return 4;
 	}
 
 	@Override
-	public boolean isNoDespawnRequired() {
-		return super.isNoDespawnRequired();
+	public boolean isPersistenceRequired() {
+		return super.isPersistenceRequired();
 	}
 
 	@Override
-	public boolean preventDespawn() {
-		return isTamed();
+	public boolean requiresCustomPersistence() {
+		return isTame();
 	}
 
 	@Override
-	public boolean canDespawn(double distanceToClosestPlayer) {
-		return !isTamed();
+	public boolean removeWhenFarAway(double distanceToClosestPlayer) {
+		return !isTame();
 	}
 
 //	@Override
@@ -132,21 +132,21 @@ public class FoxhoundEntity extends WolfEntity implements IMob {
 //	}
 	
 	@Override
-	public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, ILivingEntityData spawnDataIn, CompoundNBT dataTag) {
-		Biome biome = worldIn.getBiome(new BlockPos(getPositionVec()));
-		ResourceLocation res = worldIn.getWorld().func_241828_r().getRegistry(Registry.BIOME_KEY).getKey(biome);
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, SpawnGroupData spawnDataIn, CompoundTag dataTag) {
+		Biome biome = worldIn.getBiome(new BlockPos(position()));
+		ResourceLocation res = worldIn.getLevel().registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(biome);
 		
-		if(res.equals(Biomes.SOUL_SAND_VALLEY.getLocation()))
+		if(res.equals(Biomes.SOUL_SAND_VALLEY.location()))
 			setBlue(true);
 		
-		return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+		return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
 
-		if (!world.isRemote && world.getDifficulty() == Difficulty.PEACEFUL && !isTamed()) {
+		if (!level.isClientSide && level.getDifficulty() == Difficulty.PEACEFUL && !isTame()) {
 			remove();
 			return;
 		}
@@ -165,45 +165,45 @@ public class FoxhoundEntity extends WolfEntity implements IMob {
 
 		if (WantLoveGoal.needsPets(this)) {
 			Entity owner = getOwner();
-			if (owner != null && owner.getDistanceSq(this) < 1 && !owner.isInWater() && !owner.isImmuneToFire() && (!(owner instanceof PlayerEntity) || !((PlayerEntity) owner).isCreative()))
-				owner.setFire(5);
+			if (owner != null && owner.distanceToSqr(this) < 1 && !owner.isInWater() && !owner.fireImmune() && (!(owner instanceof Player) || !((Player) owner).isCreative()))
+				owner.setSecondsOnFire(5);
 		}
 
-		Vector3d pos = getPositionVec();
-		if(this.world.isRemote) {
-			BasicParticleType particle = ParticleTypes.FLAME;
+		Vec3 pos = position();
+		if(this.level.isClientSide) {
+			SimpleParticleType particle = ParticleTypes.FLAME;
 			if(isSleeping())
 				particle = ParticleTypes.SMOKE;
 			else if(isBlue())
 				particle = ParticleTypes.SOUL_FIRE_FLAME;
 			
-			this.world.addParticle(particle, pos.x + (this.rand.nextDouble() - 0.5D) * this.getWidth(), pos.y + (this.rand.nextDouble() - 0.5D) * this.getHeight(), pos.z + (this.rand.nextDouble() - 0.5D) * this.getWidth(), 0.0D, 0.0D, 0.0D);
+			this.level.addParticle(particle, pos.x + (this.random.nextDouble() - 0.5D) * this.getBbWidth(), pos.y + (this.random.nextDouble() - 0.5D) * this.getBbHeight(), pos.z + (this.random.nextDouble() - 0.5D) * this.getBbWidth(), 0.0D, 0.0D, 0.0D);
 		}
 
-		if(isTamed()) {
-			BlockPos below = getPosition().down();
-			TileEntity tile = world.getTileEntity(below);
-			if (tile instanceof AbstractFurnaceTileEntity) {
-				AbstractFurnaceTileEntity furnace = (AbstractFurnaceTileEntity) tile;
-				int cookTime = furnace.cookTime;
+		if(isTame()) {
+			BlockPos below = blockPosition().below();
+			BlockEntity tile = level.getBlockEntity(below);
+			if (tile instanceof AbstractFurnaceBlockEntity) {
+				AbstractFurnaceBlockEntity furnace = (AbstractFurnaceBlockEntity) tile;
+				int cookTime = furnace.cookingProgress;
 				if (cookTime > 0 && cookTime % 3 == 0) {
-					List<FoxhoundEntity> foxhounds = world.getEntitiesWithinAABB(FoxhoundEntity.class, new AxisAlignedBB(getPosition()),
-							(fox) -> fox != null && fox.isTamed());
+					List<FoxhoundEntity> foxhounds = level.getEntitiesOfClass(FoxhoundEntity.class, new AABB(blockPosition()),
+							(fox) -> fox != null && fox.isTame());
 					if(!foxhounds.isEmpty() && foxhounds.get(0) == this)
-						furnace.cookTime = furnace.cookTime == 3 ? 5 :Math.min(furnace.cookTimeTotal - 1, cookTime + 1);
+						furnace.cookingProgress = furnace.cookingProgress == 3 ? 5 :Math.min(furnace.cookingTotalTime - 1, cookTime + 1);
 				}
 			}
 		}
 	}
 
 	@Override
-	public boolean isWet() {
+	public boolean isInWaterOrRain() {
 		return false;
 	}
 
 	@Nonnull
 	@Override
-	protected ResourceLocation getLootTable() {
+	protected ResourceLocation getDefaultLootTable() {
 		return FOXHOUND_LOOT_TABLE;
 	}
 
@@ -212,85 +212,85 @@ public class FoxhoundEntity extends WolfEntity implements IMob {
 	@Override
 	protected void registerGoals() {
 		this.sleepGoal = new SleepGoal(this);
-		this.goalSelector.addGoal(1, new SwimGoal(this));
+		this.goalSelector.addGoal(1, new FloatGoal(this));
 		this.goalSelector.addGoal(2, this.sleepGoal);
-		this.goalSelector.addGoal(3, new SitGoal(this));
+		this.goalSelector.addGoal(3, new SitWhenOrderedToGoal(this));
 		this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4F));
 		this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.0D, true));
 		this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
 		this.goalSelector.addGoal(7, new BreedGoal(this, 1.0D));
 		this.goalSelector.addGoal(8, new FindPlaceToSleepGoal(this, 0.8D, true));
 		this.goalSelector.addGoal(9, new FindPlaceToSleepGoal(this, 0.8D, false));
-		this.goalSelector.addGoal(10, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
+		this.goalSelector.addGoal(10, new WaterAvoidingRandomStrollGoal(this, 1.0D));
 		this.goalSelector.addGoal(11, new BegGoal(this, 8.0F));
-		this.goalSelector.addGoal(12, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-		this.goalSelector.addGoal(12, new LookRandomlyGoal(this));
+		this.goalSelector.addGoal(12, new LookAtPlayerGoal(this, Player.class, 8.0F));
+		this.goalSelector.addGoal(12, new RandomLookAroundGoal(this));
 		this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
 		this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
-		this.targetSelector.addGoal(3, new HurtByTargetGoal(this).setCallsForHelp());
-		this.targetSelector.addGoal(4, new NonTamedTargetGoal<>(this, AnimalEntity.class, false,
-				target -> target instanceof SheepEntity || target instanceof RabbitEntity));
-		this.targetSelector.addGoal(4, new NonTamedTargetGoal<>(this, PlayerEntity.class, false,
-				target -> !isTamed()));
+		this.targetSelector.addGoal(3, new HurtByTargetGoal(this).setAlertOthers());
+		this.targetSelector.addGoal(4, new NonTameRandomTargetGoal<>(this, Animal.class, false,
+				target -> target instanceof Sheep || target instanceof Rabbit));
+		this.targetSelector.addGoal(4, new NonTameRandomTargetGoal<>(this, Player.class, false,
+				target -> !isTame()));
 //		this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, AbstractSkeletonEntity.class, false));
 	}
 
 	@Override
-	public int getAngerTime() {
-		if (!isTamed() && world.getDifficulty() != Difficulty.PEACEFUL)
+	public int getRemainingPersistentAngerTime() {
+		if (!isTame() && level.getDifficulty() != Difficulty.PEACEFUL)
 			return 0;
-		return super.getAngerTime();
+		return super.getRemainingPersistentAngerTime();
 	}
 	
 	@Override
-	public boolean attackEntityAsMob(Entity entityIn) {
-		if (entityIn.getType().isImmuneToFire()) {
-			if (entityIn instanceof PlayerEntity)
+	public boolean doHurtTarget(Entity entityIn) {
+		if (entityIn.getType().fireImmune()) {
+			if (entityIn instanceof Player)
 				return false;
-			return super.attackEntityAsMob(entityIn);
+			return super.doHurtTarget(entityIn);
 		}
 
-		boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this).setFireDamage(),
+		boolean flag = entityIn.hurt(DamageSource.mobAttack(this).setIsFire(),
 				((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
 
 		if (flag) {
-			entityIn.setFire(5);
-			this.applyEnchantments(this, entityIn);
+			entityIn.setSecondsOnFire(5);
+			this.doEnchantDamageEffects(this, entityIn);
 		}
 
 		return flag;
 	}
 
 	@Override
-	public boolean attackEntityFrom(@Nonnull DamageSource source, float amount) {
+	public boolean hurt(@Nonnull DamageSource source, float amount) {
 		setWoke();
-		return super.attackEntityFrom(source, amount);
+		return super.hurt(source, amount);
 	}
 
 	@Nonnull
 	@Override
-	public ActionResultType func_230254_b_(PlayerEntity player, @Nonnull Hand hand) {
-		ItemStack itemstack = player.getHeldItem(hand);
+	public InteractionResult mobInteract(Player player, @Nonnull InteractionHand hand) {
+		ItemStack itemstack = player.getItemInHand(hand);
 
-		if(itemstack.getItem() == Items.BONE && !isTamed())
-			return ActionResultType.PASS;
+		if(itemstack.getItem() == Items.BONE && !isTame())
+			return InteractionResult.PASS;
 
-		if (!this.isTamed() && !itemstack.isEmpty()) {
-			if (itemstack.getItem() == Items.COAL && (world.getDifficulty() == Difficulty.PEACEFUL || player.isCreative() || player.getActivePotionEffect(Effects.FIRE_RESISTANCE) != null) && !world.isRemote) {
-				if (rand.nextDouble() < FoxhoundModule.tameChance) {
-					this.setTamedBy(player);
-					this.navigator.clearPath();
-					this.setAttackTarget(null);
-					this.func_233687_w_(true);
+		if (!this.isTame() && !itemstack.isEmpty()) {
+			if (itemstack.getItem() == Items.COAL && (level.getDifficulty() == Difficulty.PEACEFUL || player.isCreative() || player.getEffect(MobEffects.FIRE_RESISTANCE) != null) && !level.isClientSide) {
+				if (random.nextDouble() < FoxhoundModule.tameChance) {
+					this.tame(player);
+					this.navigation.stop();
+					this.setTarget(null);
+					this.setOrderedToSit(true);
 					this.setHealth(20.0F);
-					this.world.setEntityState(this, (byte)7);
+					this.level.broadcastEntityEvent(this, (byte)7);
 				} else {
-					this.world.setEntityState(this, (byte)6);
+					this.level.broadcastEntityEvent(this, (byte)6);
 				}
 
 				if (!player.isCreative())
 					itemstack.shrink(1);
-				return ActionResultType.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}
 		}
 
@@ -304,26 +304,26 @@ public class FoxhoundEntity extends WolfEntity implements IMob {
 		//			return true;
 		//		}
 
-		if (!world.isRemote) {
+		if (!level.isClientSide) {
 			setWoke();
 		}
 
-		return super.func_230254_b_(player, hand);
+		return super.mobInteract(player, hand);
 	}
 
 	@Override
-	public boolean canMateWith(AnimalEntity otherAnimal) {
-		return super.canMateWith(otherAnimal) && otherAnimal instanceof FoxhoundEntity;
+	public boolean canMate(Animal otherAnimal) {
+		return super.canMate(otherAnimal) && otherAnimal instanceof FoxhoundEntity;
 	}
 
 	@Override // createChild
-	public WolfEntity func_241840_a(ServerWorld sworld, AgeableEntity otherParent) {
-		FoxhoundEntity kid = new FoxhoundEntity(FoxhoundModule.foxhoundType, this.world);
-		UUID uuid = this.getOwnerId();
+	public Wolf getBreedOffspring(ServerLevel sworld, AgableMob otherParent) {
+		FoxhoundEntity kid = new FoxhoundEntity(FoxhoundModule.foxhoundType, this.level);
+		UUID uuid = this.getOwnerUUID();
 
 		if (uuid != null) {
-			kid.setOwnerId(uuid);
-			kid.setTamed(true);
+			kid.setOwnerUUID(uuid);
+			kid.setTame(true);
 		}
 		
 		if(isBlue())
@@ -333,8 +333,8 @@ public class FoxhoundEntity extends WolfEntity implements IMob {
 	}
 
 	@Override
-	public void writeAdditional(CompoundNBT compound) {
-		super.writeAdditional(compound);
+	public void addAdditionalSaveData(CompoundTag compound) {
+		super.addAdditionalSaveData(compound);
 		
 		compound.putInt("OhLawdHeComin", timeUntilPotatoEmerges);
 		compound.putBoolean("IsSlep", isSleeping());
@@ -342,11 +342,11 @@ public class FoxhoundEntity extends WolfEntity implements IMob {
 	}
 
 	@Override
-	public void readAdditional(CompoundNBT compound) {
-		super.readAdditional(compound);
+	public void readAdditionalSaveData(CompoundTag compound) {
+		super.readAdditionalSaveData(compound);
 		
 		timeUntilPotatoEmerges = compound.getInt("OhLawdHeComin");
-		setSleeping(compound.getBoolean("IsSlep"));
+		setInSittingPose(compound.getBoolean("IsSlep"));
 		setBlue(compound.getBoolean("IsBlue"));
 	}
 
@@ -355,10 +355,10 @@ public class FoxhoundEntity extends WolfEntity implements IMob {
 		if (isSleeping()) {
 			return null;
 		}
-		if (this.func_233678_J__()) {
+		if (this.isAngry()) {
 			return QuarkSounds.ENTITY_FOXHOUND_GROWL;
-		} else if (this.rand.nextInt(3) == 0) {
-			return this.isTamed() && this.getHealth() < 10.0F ? QuarkSounds.ENTITY_FOXHOUND_WHINE : QuarkSounds.ENTITY_FOXHOUND_PANT;
+		} else if (this.random.nextInt(3) == 0) {
+			return this.isTame() && this.getHealth() < 10.0F ? QuarkSounds.ENTITY_FOXHOUND_WHINE : QuarkSounds.ENTITY_FOXHOUND_PANT;
 		} else {
 			return QuarkSounds.ENTITY_FOXHOUND_IDLE;
 		}
@@ -376,20 +376,20 @@ public class FoxhoundEntity extends WolfEntity implements IMob {
 
 	@Override
 	public boolean isSleeping() {
-		return dataManager.get(SLEEPING);
+		return entityData.get(SLEEPING);
 	}
 	
 	public boolean isBlue() {
-		return dataManager.get(IS_BLUE);
+		return entityData.get(IS_BLUE);
 	}
 
 	@Override
-	public void setSleeping(boolean sleeping) {
-		dataManager.set(SLEEPING, sleeping);
+	public void setInSittingPose(boolean sleeping) {
+		entityData.set(SLEEPING, sleeping);
 	}
 	
 	public void setBlue(boolean blue) {
-		dataManager.set(IS_BLUE, blue);
+		entityData.set(IS_BLUE, blue);
 	}
 
 //	public static boolean canSpawnHere(IServerWorld world, BlockPos pos, Random rand) {
@@ -402,12 +402,12 @@ public class FoxhoundEntity extends WolfEntity implements IMob {
 //	}
 
 	@Override
-	public float getBlockPathWeight(BlockPos pos, IWorldReader worldIn) {
-		return worldIn.getBlockState(pos.down()).getBlock().isIn(FoxhoundModule.foxhoundSpawnableTag) ? 10.0F : worldIn.getBrightness(pos) - 0.5F;
+	public float getWalkTargetValue(BlockPos pos, LevelReader worldIn) {
+		return worldIn.getBlockState(pos.below()).getBlock().is(FoxhoundModule.foxhoundSpawnableTag) ? 10.0F : worldIn.getBrightness(pos) - 0.5F;
 	}
 	
-	public static boolean spawnPredicate(EntityType<? extends FoxhoundEntity> type, IServerWorld world, SpawnReason reason, BlockPos pos, Random rand) {
-		return world.getDifficulty() != Difficulty.PEACEFUL && world.getBlockState(pos.down()).isIn(FoxhoundModule.foxhoundSpawnableTag);
+	public static boolean spawnPredicate(EntityType<? extends FoxhoundEntity> type, ServerLevelAccessor world, MobSpawnType reason, BlockPos pos, Random rand) {
+		return world.getDifficulty() != Difficulty.PEACEFUL && world.getBlockState(pos.below()).is(FoxhoundModule.foxhoundSpawnableTag);
 	}
 
 	public SleepGoal getSleepGoal() {
@@ -417,14 +417,14 @@ public class FoxhoundEntity extends WolfEntity implements IMob {
 	private void setWoke() {
 		SleepGoal sleep = getSleepGoal();
 		if(sleep != null) {
-			setSleeping(false);
+			setInSittingPose(false);
 			sleep.setSleeping(false);
 		}
 	}
 
 	@Nonnull
 	@Override
-	public IPacket<?> createSpawnPacket() {
+	public Packet<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 }

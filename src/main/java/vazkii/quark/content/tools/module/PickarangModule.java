@@ -1,13 +1,13 @@
 package vazkii.quark.content.tools.module;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.IndirectEntityDamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.IndirectEntityDamageSource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
@@ -54,10 +54,10 @@ public class PickarangModule extends QuarkModule {
 
 	@Override
 	public void construct() {
-		pickarangType = EntityType.Builder.<PickarangEntity>create(PickarangEntity::new, EntityClassification.MISC)
-				.size(0.4F, 0.4F)
-				.trackingRange(4)
-				.func_233608_b_(10) // update interval
+		pickarangType = EntityType.Builder.<PickarangEntity>of(PickarangEntity::new, MobCategory.MISC)
+				.sized(0.4F, 0.4F)
+				.clientTrackingRange(4)
+				.updateInterval(10) // update interval
 				.setCustomClientFactory((spawnEntity, world) -> new PickarangEntity(pickarangType, world))
 				.build("pickarang");
 		RegistryHelper.register(pickarangType, "pickarang");
@@ -68,17 +68,17 @@ public class PickarangModule extends QuarkModule {
 	
 	private static Item.Properties propertiesFor(int level, int durability, boolean netherite) {
 		Item.Properties properties = new Item.Properties()
-				.maxStackSize(1)
-				.group(ItemGroup.TOOLS)
+				.stacksTo(1)
+				.tab(CreativeModeTab.TAB_TOOLS)
 				.addToolType(ToolType.PICKAXE, harvestLevel)
 				.addToolType(ToolType.AXE, harvestLevel)
 				.addToolType(ToolType.SHOVEL, harvestLevel);
 
 		if (durability > 0)
-			properties.maxDamage(durability);
+			properties.durability(durability);
 		
 		if(netherite)
-			properties.isImmuneToFire();
+			properties.fireResistant();
 		
 		return properties;
 	}
@@ -101,7 +101,7 @@ public class PickarangModule extends QuarkModule {
 		ACTIVE_PICKARANG.set(pickarang);
 	}
 
-	public static DamageSource createDamageSource(PlayerEntity player) {
+	public static DamageSource createDamageSource(Player player) {
 		PickarangEntity pickarang = ACTIVE_PICKARANG.get();
 
 		if (pickarang == null)
@@ -114,7 +114,7 @@ public class PickarangModule extends QuarkModule {
 		if(!isEnabled || vanillaVal)
 			return vanillaVal;
 		
-		Entity riding = entity.getRidingEntity();
+		Entity riding = entity.getVehicle();
 		if(riding instanceof PickarangEntity)
 			return ((PickarangEntity) riding).netherite;
 		

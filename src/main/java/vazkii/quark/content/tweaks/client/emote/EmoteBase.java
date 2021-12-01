@@ -10,8 +10,8 @@
  */
 package vazkii.quark.content.tweaks.client.emote;
 
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.aurelienribon.tweenengine.Timeline;
@@ -25,16 +25,16 @@ public abstract class EmoteBase {
 	public final EmoteDescriptor desc;
 
 	private final TweenManager emoteManager;
-	private final BipedModel<?> model;
-	private final BipedModel<?> armorModel;
-	private final BipedModel<?> armorLegsModel;
+	private final HumanoidModel<?> model;
+	private final HumanoidModel<?> armorModel;
+	private final HumanoidModel<?> armorLegsModel;
 	private final EmoteState state;
-	private final PlayerEntity player;
+	private final Player player;
 	
 	public float timeDone, totalTime, animatedTime;
 	private long lastMs;
 
-	public EmoteBase(EmoteDescriptor desc, PlayerEntity player, BipedModel<?> model, BipedModel<?> armorModel, BipedModel<?> armorLegsModel) {
+	public EmoteBase(EmoteDescriptor desc, Player player, HumanoidModel<?> model, HumanoidModel<?> armorModel, HumanoidModel<?> armorLegsModel) {
 		this.desc = desc;
 		emoteManager = new TweenManager();
 		state = new EmoteState(this);
@@ -51,12 +51,12 @@ public abstract class EmoteBase {
 		lastMs = System.currentTimeMillis();
 	}
 
-	void startTimeline(PlayerEntity player, BipedModel<?> model) {
+	void startTimeline(Player player, HumanoidModel<?> model) {
 		Timeline timeline = getTimeline(player, model).start(emoteManager);
 		totalTime = timeline.getFullDuration();
 	}
 
-	public abstract Timeline getTimeline(PlayerEntity player, BipedModel<?> model);
+	public abstract Timeline getTimeline(Player player, HumanoidModel<?> model);
 
 	public abstract boolean usesBodyPart(int part);
 
@@ -80,7 +80,7 @@ public abstract class EmoteBase {
 	}
 	
 	public boolean isDone() {
-		return timeDone >= totalTime || player.swingProgress > 0 || player.hurtTime > 0;
+		return timeDone >= totalTime || player.attackAnim > 0 || player.hurtTime > 0;
 	}
 
 

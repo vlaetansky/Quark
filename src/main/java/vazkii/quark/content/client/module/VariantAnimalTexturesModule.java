@@ -12,10 +12,10 @@ import java.util.function.Supplier;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.BeeEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
@@ -91,7 +91,7 @@ public class VariantAnimalTexturesModule extends QuarkModule {
 
 	@SuppressWarnings("unchecked")
 	private void registerAndStackBeeRenderers() {
-		VariantBeeRenderer.OLD_BEE_RENDER_FACTORY = (IRenderFactory<BeeEntity>) ((RenderingRegistryAccessor) RenderingRegistryAccessor.getINSTANCE()).getEntityRenderers().get(EntityType.BEE);
+		VariantBeeRenderer.OLD_BEE_RENDER_FACTORY = (IRenderFactory<Bee>) ((RenderingRegistryAccessor) RenderingRegistryAccessor.getINSTANCE()).getEntityRenderers().get(EntityType.BEE);
 		RenderingRegistry.registerEntityRenderingHandler(EntityType.BEE, VariantBeeRenderer::new);
 	}
 
@@ -102,7 +102,7 @@ public class VariantAnimalTexturesModule extends QuarkModule {
 	
 	@OnlyIn(Dist.CLIENT)
 	public static ResourceLocation getTextureOrShiny(Entity e, VariantTextureType type, Supplier<ResourceLocation> nonShiny) {
-		UUID id = e.getUniqueID();
+		UUID id = e.getUUID();
 		long most = id.getMostSignificantBits();
 		if(shinyAnimalChance > 0 && (most % shinyAnimalChance) == 0)
 			return shinyTextures.get(type);
@@ -116,7 +116,7 @@ public class VariantAnimalTexturesModule extends QuarkModule {
 		if(!enabled)
 			return styles.get(styles.size() - 1);
 		
-		UUID id = e.getUniqueID();
+		UUID id = e.getUUID();
 		long most = id.getMostSignificantBits();
 		int choice = Math.abs((int) (most % styles.size()));
 		return styles.get(choice);

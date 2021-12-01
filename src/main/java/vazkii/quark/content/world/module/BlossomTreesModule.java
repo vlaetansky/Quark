@@ -5,9 +5,9 @@ import java.util.Map;
 
 import com.google.common.base.Functions;
 
-import net.minecraft.block.ComposterBlock;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.world.gen.GenerationStage.Decoration;
+import net.minecraft.world.level.block.ComposterBlock;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.minecraftforge.common.BiomeDictionary;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.LoadModule;
@@ -38,12 +38,12 @@ public class BlossomTreesModule extends QuarkModule {
 	
 	@Override
 	public void construct() {
-		add("blue", MaterialColor.LIGHT_BLUE, blue);
-		add("lavender", MaterialColor.PINK, lavender);
-		add("orange", MaterialColor.ORANGE_TERRACOTTA, orange);
-		add("pink", MaterialColor.PINK, pink);
-		add("yellow", MaterialColor.YELLOW, yellow);
-		add("red", MaterialColor.RED, red);
+		add("blue", MaterialColor.COLOR_LIGHT_BLUE, blue);
+		add("lavender", MaterialColor.COLOR_PINK, lavender);
+		add("orange", MaterialColor.TERRACOTTA_ORANGE, orange);
+		add("pink", MaterialColor.COLOR_PINK, pink);
+		add("yellow", MaterialColor.COLOR_YELLOW, yellow);
+		add("red", MaterialColor.COLOR_RED, red);
 	}
 	
 	@Override
@@ -54,9 +54,9 @@ public class BlossomTreesModule extends QuarkModule {
 		enqueue(() -> {
 			for(BlossomTree tree : trees.keySet()) {
 				if(tree.leaf.getBlock().asItem() != null)
-					ComposterBlock.CHANCES.put(tree.leaf.getBlock().asItem(), 0.3F);
+					ComposterBlock.COMPOSTABLES.put(tree.leaf.getBlock().asItem(), 0.3F);
 				if(tree.sapling.asItem() != null)
-					ComposterBlock.CHANCES.put(tree.sapling.asItem(), 0.3F);
+					ComposterBlock.COMPOSTABLES.put(tree.sapling.asItem(), 0.3F);
 			}
 		});
 	}

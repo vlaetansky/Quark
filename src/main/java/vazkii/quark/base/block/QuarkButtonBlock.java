@@ -5,24 +5,26 @@ import java.util.function.BooleanSupplier;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.block.AbstractButtonBlock;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.world.level.block.ButtonBlock;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.NonNullList;
+import net.minecraft.sounds.SoundEvent;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.module.QuarkModule;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 /**
  * @author WireSegal
  * Created at 9:14 PM on 10/8/19.
  */
-public abstract class QuarkButtonBlock extends AbstractButtonBlock implements IQuarkBlock {
+public abstract class QuarkButtonBlock extends ButtonBlock implements IQuarkBlock {
 
     private final QuarkModule module;
     private BooleanSupplier enabledSupplier = () -> true;
 
-    public QuarkButtonBlock(String regname, QuarkModule module, ItemGroup creativeTab, Properties properties) {
+    public QuarkButtonBlock(String regname, QuarkModule module, CreativeModeTab creativeTab, Properties properties) {
         super(false, properties);
         this.module = module;
 
@@ -33,15 +35,15 @@ public abstract class QuarkButtonBlock extends AbstractButtonBlock implements IQ
 
     @Nonnull
     @Override
-    protected abstract SoundEvent getSoundEvent(boolean powered);
+    protected abstract SoundEvent getSound(boolean powered);
 
     @Override 
-    public abstract int getActiveDuration();
+    public abstract int getPressDuration();
     
     @Override
-    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        if(isEnabled() || group == ItemGroup.SEARCH)
-            super.fillItemGroup(group, items);
+    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+        if(isEnabled() || group == CreativeModeTab.TAB_SEARCH)
+            super.fillItemCategory(group, items);
     }
 
     @Override

@@ -4,12 +4,12 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ChainBlock;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ChainBlock;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import vazkii.quark.api.IIndirectConnector;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -41,8 +41,8 @@ public class ChainsConnectBlocksModule extends QuarkModule {
 		}
 		
 		@Override
-		public boolean canConnectIndirectly(World world, BlockPos ourPos, BlockPos sourcePos, BlockState ourState, BlockState sourceState) {
-			Axis axis = ourState.get(ChainBlock.AXIS);
+		public boolean canConnectIndirectly(Level world, BlockPos ourPos, BlockPos sourcePos, BlockState ourState, BlockState sourceState) {
+			Axis axis = ourState.getValue(ChainBlock.AXIS);
 			
 			switch(axis) {
 			case X:
@@ -59,7 +59,7 @@ public class ChainsConnectBlocksModule extends QuarkModule {
 			}
 			
 			if(sourceState.getBlock() == ourState.getBlock()) {
-				Axis otherAxis = sourceState.get(ChainBlock.AXIS);
+				Axis otherAxis = sourceState.getValue(ChainBlock.AXIS);
 				return axis == otherAxis;
 			}
 			

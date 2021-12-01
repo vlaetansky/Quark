@@ -14,8 +14,8 @@ import static vazkii.quark.content.tweaks.client.emote.EmoteBase.PI_F;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -29,7 +29,7 @@ public class EmoteState {
 		this.emote = emote;
 	}
 
-	public void save(BipedModel<?> model) {
+	public void save(HumanoidModel<?> model) {
 		float[] values = new float[1];
 		for(int i = 0; i < ModelAccessor.STATE_COUNT; i++) {
 			ModelAccessor.INSTANCE.getValues(model, i, values);
@@ -37,7 +37,7 @@ public class EmoteState {
 		}
 	}
 
-	public void load(BipedModel<?> model) {
+	public void load(HumanoidModel<?> model) {
 		if(states.length == 0) {
 			states = new float[ModelAccessor.STATE_COUNT];
 		} else {
@@ -52,7 +52,7 @@ public class EmoteState {
 		}
 	}
 
-	public void rotateAndOffset(PlayerEntity player) {
+	public void rotateAndOffset(Player player) {
 		if(states.length == 0)
 			return;
 
@@ -60,7 +60,7 @@ public class EmoteState {
 		float rotY = states[ModelAccessor.MODEL_Y];
 		float rotZ = states[ModelAccessor.MODEL_Z];
 
-		float height = player.getHeight();
+		float height = player.getBbHeight();
 
 		RenderSystem.translatef(0, height / 2, 0);
 

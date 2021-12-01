@@ -3,24 +3,24 @@ package vazkii.quark.content.client.tooltip;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import net.minecraft.block.ShulkerBoxBlock;
-import net.minecraft.client.MainWindow;
+import net.minecraft.world.level.block.ShulkerBoxBlock;
+import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.LockableLootTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderTooltipEvent;
@@ -41,7 +41,7 @@ public class ShulkerBoxTooltips {
 	@OnlyIn(Dist.CLIENT)
 	public static void makeTooltip(ItemTooltipEvent event) {
 		if(SimilarBlockTypeHandler.isShulkerBox(event.getItemStack()) && event.getItemStack().hasTag()) {
-			CompoundNBT cmp = ItemNBTHelper.getCompound(event.getItemStack(), "BlockEntityTag", true);
+			CompoundTag cmp = ItemNBTHelper.getCompound(event.getItemStack(), "BlockEntityTag", true);
 			
 			if (cmp != null) {
 				if(cmp.contains("LootTable"))
@@ -52,20 +52,20 @@ public class ShulkerBoxTooltips {
 					cmp.putString("id", "minecraft:shulker_box");
 				}
 				
-				TileEntity te = TileEntity.readTileEntity(((BlockItem) event.getItemStack().getItem()).getBlock().getDefaultState(), cmp);
+				BlockEntity te = BlockEntity.loadStatic(((BlockItem) event.getItemStack().getItem()).getBlock().defaultBlockState(), cmp);
 				if (te != null && te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
-					List<ITextComponent> tooltip = event.getToolTip();
-					List<ITextComponent> tooltipCopy = new ArrayList<>(tooltip);
+					List<Component> tooltip = event.getToolTip();
+					List<Component> tooltipCopy = new ArrayList<>(tooltip);
 
 					for (int i = 1; i < tooltipCopy.size(); i++) {
-						ITextComponent t = tooltipCopy.get(i);
+						Component t = tooltipCopy.get(i);
 						String s = t.getString();
 						if (!s.startsWith("\u00a7") || s.startsWith("\u00a7o"))
 							tooltip.remove(t);
 					}
 
 					if (ImprovedTooltipsModule.shulkerBoxRequireShift && !Screen.hasShiftDown())
-						tooltip.add(1, new TranslationTextComponent("quark.misc.shulker_box_shift"));
+						tooltip.add(1, new TranslatableComponent("quark.misc.shulker_box_shift"));
 				}
 			}
 		}
@@ -75,9 +75,9 @@ public class ShulkerBoxTooltips {
 	public static void renderTooltip(RenderTooltipEvent.PostText event) {
 		if(SimilarBlockTypeHandler.isShulkerBox(event.getStack()) && event.getStack().hasTag() && (!ImprovedTooltipsModule.shulkerBoxRequireShift || Screen.hasShiftDown())) {
 			Minecraft mc = Minecraft.getInstance();
-			MatrixStack matrix = event.getMatrixStack();
+			PoseStack matrix = event.getMatrixStack();
 
-			CompoundNBT cmp = ItemNBTHelper.getCompound(event.getStack(), "BlockEntityTag", true);
+			CompoundTag cmp = ItemNBTHelper.getCompound(event.getStack(), "BlockEntityTag", true);
 			if (cmp != null) {
 				if(cmp.contains("LootTable"))
 					return;
@@ -86,10 +86,10 @@ public class ShulkerBoxTooltips {
 					cmp = cmp.copy();
 					cmp.putString("id", "minecraft:shulker_box");
 				}
-				TileEntity te = TileEntity.readTileEntity(((BlockItem) event.getStack().getItem()).getBlock().getDefaultState(), cmp);
+				BlockEntity te = BlockEntity.loadStatic(((BlockItem) event.getStack().getItem()).getBlock().defaultBlockState(), cmp);
 				if (te != null) {
-					if(te instanceof LockableLootTileEntity)
-						((LockableLootTileEntity) te).setLootTable(null, 0);
+					if(te instanceof RandomizableContainerBlockEntity)
+						((RandomizableContainerBlockEntity) te).setLootTable(null, 0);
 					
 					LazyOptional<IItemHandler> handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 					handler.ifPresent((capability) -> {
@@ -112,9 +112,9 @@ public class ShulkerBoxTooltips {
 							currentY = event.getY() + event.getLines().size() * 10 + 5;
 
 						int right = currentX + texWidth;
-						MainWindow window = mc.getMainWindow();
-						if (right > window.getScaledWidth())
-							currentX -= (right - window.getScaledWidth());
+						Window window = mc.getWindow();
+						if (right > window.getGuiScaledWidth())
+							currentX -= (right - window.getGuiScaledWidth());
 
 						RenderSystem.pushMatrix();
 						RenderSystem.translatef(0, 0, 700);
@@ -124,7 +124,7 @@ public class ShulkerBoxTooltips {
 						if (ImprovedTooltipsModule.shulkerBoxUseColors && ((BlockItem) currentBox.getItem()).getBlock() instanceof ShulkerBoxBlock) {
 							DyeColor dye = ((ShulkerBoxBlock) ((BlockItem) currentBox.getItem()).getBlock()).getColor();
 							if (dye != null) {
-								float[] colorComponents = dye.getColorComponentValues();
+								float[] colorComponents = dye.getTextureDiffuseColors();
 								color = ((int) (colorComponents[0] * 255) << 16) |
 										((int) (colorComponents[1] * 255) << 8) |
 										(int) (colorComponents[2] * 255);
@@ -141,13 +141,13 @@ public class ShulkerBoxTooltips {
 							int yp = currentY + 6 + (i / 9) * 18;
 
 							if (!itemstack.isEmpty()) {
-								render.renderItemAndEffectIntoGUI(itemstack, xp, yp);
-								render.renderItemOverlays(mc.fontRenderer, itemstack, xp, yp);
+								render.renderAndDecorateItem(itemstack, xp, yp);
+								render.renderGuiItemDecorations(mc.font, itemstack, xp, yp);
 							}
 
 							if (!ChestSearchingModule.namesMatch(itemstack)) {
 								RenderSystem.disableDepthTest();
-								AbstractGui.fill(matrix, xp, yp, xp + 16, yp + 16, 0xAA000000);
+								GuiComponent.fill(matrix, xp, yp, xp + 16, yp + 16, 0xAA000000);
 							}
 						}
 
@@ -174,42 +174,42 @@ public class ShulkerBoxTooltips {
 	private static final int EDGE = 18;
 
 
-	public static void renderTooltipBackground(Minecraft mc, MatrixStack matrix, int x, int y, int width, int height, int color) {
-		mc.getTextureManager().bindTexture(WIDGET_RESOURCE);
+	public static void renderTooltipBackground(Minecraft mc, PoseStack matrix, int x, int y, int width, int height, int color) {
+		mc.getTextureManager().bind(WIDGET_RESOURCE);
 		RenderSystem.color3f(((color & 0xFF0000) >> 16) / 255f,
 				((color & 0x00FF00) >> 8) / 255f,
 				(color & 0x0000FF) / 255f);
 
-		AbstractGui.blit(matrix, x, y,
+		GuiComponent.blit(matrix, x, y,
 				0, 0,
 				CORNER, CORNER, 256, 256);
-		AbstractGui.blit(matrix, x + CORNER + EDGE * width, y + CORNER + EDGE * height,
+		GuiComponent.blit(matrix, x + CORNER + EDGE * width, y + CORNER + EDGE * height,
 				CORNER + BUFFER + EDGE + BUFFER, CORNER + BUFFER + EDGE + BUFFER,
 				CORNER, CORNER, 256, 256);
-		AbstractGui.blit(matrix, x + CORNER + EDGE * width, y,
+		GuiComponent.blit(matrix, x + CORNER + EDGE * width, y,
 				CORNER + BUFFER + EDGE + BUFFER, 0,
 				CORNER, CORNER, 256, 256);
-		AbstractGui.blit(matrix, x, y + CORNER + EDGE * height,
+		GuiComponent.blit(matrix, x, y + CORNER + EDGE * height,
 				0, CORNER + BUFFER + EDGE + BUFFER,
 				CORNER, CORNER, 256, 256);
 		for (int row = 0; row < height; row++) {
-			AbstractGui.blit(matrix, x, y + CORNER + EDGE * row,
+			GuiComponent.blit(matrix, x, y + CORNER + EDGE * row,
 					0, CORNER + BUFFER,
 					CORNER, EDGE, 256, 256);
-			AbstractGui.blit(matrix, x + CORNER + EDGE * width, y + CORNER + EDGE * row,
+			GuiComponent.blit(matrix, x + CORNER + EDGE * width, y + CORNER + EDGE * row,
 					CORNER + BUFFER + EDGE + BUFFER, CORNER + BUFFER,
 					CORNER, EDGE, 256, 256);
 			for (int col = 0; col < width; col++) {
 				if (row == 0) {
-					AbstractGui.blit(matrix, x + CORNER + EDGE * col, y,
+					GuiComponent.blit(matrix, x + CORNER + EDGE * col, y,
 							CORNER + BUFFER, 0,
 							EDGE, CORNER, 256, 256);
-					AbstractGui.blit(matrix, x + CORNER + EDGE * col, y + CORNER + EDGE * height,
+					GuiComponent.blit(matrix, x + CORNER + EDGE * col, y + CORNER + EDGE * height,
 							CORNER + BUFFER, CORNER + BUFFER + EDGE + BUFFER,
 							EDGE, CORNER, 256, 256);
 				}
 
-				AbstractGui.blit(matrix, x + CORNER + EDGE * col, y + CORNER + EDGE * row,
+				GuiComponent.blit(matrix, x + CORNER + EDGE * col, y + CORNER + EDGE * row,
 						CORNER + BUFFER, CORNER + BUFFER,
 						EDGE, EDGE, 256, 256);
 			}

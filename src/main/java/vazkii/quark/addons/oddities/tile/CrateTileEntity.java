@@ -5,27 +5,27 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.LockableTileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.IIntArray;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.Containers;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -35,7 +35,7 @@ import vazkii.quark.addons.oddities.container.CrateContainer;
 import vazkii.quark.addons.oddities.module.CrateModule;
 import vazkii.quark.base.handler.SortingHandler;
 
-public class CrateTileEntity extends LockableTileEntity implements ISidedInventory, ITickableTileEntity {
+public class CrateTileEntity extends BaseContainerBlockEntity implements WorldlyContainer, TickableBlockEntity {
 
 	private int totalItems = 0;
 	private int numPlayersUsing;
@@ -46,7 +46,7 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 	private int[] visibleSlots = new int[0];
 	boolean needsUpdate = false;
 
-	protected final IIntArray crateData = new IIntArray() {
+	protected final ContainerData crateData = new ContainerData() {
 		@Override
 		public int get(int index) {
 			return index == 0 ? totalItems : stacks.size();
@@ -58,7 +58,7 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 		}
 		
 		@Override
-		public int size() {
+		public int getCount() {
 			return 2;
 		}
 	};
@@ -72,7 +72,7 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 
 		for(ItemStack stack : stacks)
 			if(!stack.isEmpty())
-				InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+				Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), stack);
 	}
 
 	@Override
@@ -84,41 +84,41 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
+	public CompoundTag save(CompoundTag compound) {
 		compound.putInt("totalItems", totalItems);
 
-		ListNBT list = new ListNBT();
+		ListTag list = new ListTag();
 		for(ItemStack stack : stacks) {
-			CompoundNBT stackCmp = new CompoundNBT();
-			stack.write(stackCmp);
+			CompoundTag stackCmp = new CompoundTag();
+			stack.save(stackCmp);
 			list.add(stackCmp);
 		}
 		compound.put("stacks", list);
 
-		return super.write(compound);
+		return super.save(compound);
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt) {
+	public void load(BlockState state, CompoundTag nbt) {
 		totalItems = nbt.getInt("totalItems");
 
-		ListNBT list = nbt.getList("stacks", 10);
+		ListTag list = nbt.getList("stacks", 10);
 		stacks = new ArrayList<>(list.size());
 		for(int i = 0; i < list.size(); i++)
-			stacks.add(ItemStack.read(list.getCompound(i)));
+			stacks.add(ItemStack.of(list.getCompound(i)));
 
-		super.read(state, nbt);
+		super.load(state, nbt);
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int slot) {
+	public ItemStack getItem(int slot) {
 		return slot < stacks.size() ? stacks.get(slot) : ItemStack.EMPTY;
 	}
 
 	@Override
-	public ItemStack removeStackFromSlot(int slot) {
+	public ItemStack removeItemNoUpdate(int slot) {
 		if(slot < stacks.size()) {
-			ItemStack stack = getStackInSlot(slot);
+			ItemStack stack = getItem(slot);
 			totalItems -= stack.getCount();
 			needsUpdate = true;
 
@@ -129,8 +129,8 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
-		ItemStack stackAt = getStackInSlot(slot);
+	public void setItem(int slot, ItemStack stack) {
+		ItemStack stackAt = getItem(slot);
 
 		if(slot >= stacks.size()) {
 			stacks.add(stack);
@@ -143,8 +143,8 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 	}
 
 	@Override
-	public ItemStack decrStackSize(int slot, int count) {
-		ItemStack stack = getStackInSlot(slot);
+	public ItemStack removeItem(int slot, int count) {
+		ItemStack stack = getItem(slot);
 		ItemStack retstack = stack.split(count);
 		totalItems -= count;
 
@@ -155,8 +155,8 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 	}
 
 	@Override
-	public void markDirty() {
-		super.markDirty();
+	public void setChanged() {
+		super.setChanged();
 
 		totalItems = 0;
 		for(ItemStack stack : stacks)
@@ -164,12 +164,12 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 	}
 
 	@Override
-	public int getSizeInventory() {
+	public int getContainerSize() {
 		return Math.min(CrateModule.maxItems, stacks.size() + 1);
 	}
 
 	@Override
-	public void clear() {
+	public void clearContent() {
 		stacks.clear();
 		totalItems = 0;
 	}
@@ -180,12 +180,12 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction dir) {
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction dir) {
 		return true;
 	}
 
 	@Override
-	public boolean canInsertItem(int index, ItemStack stack, Direction dir) {
+	public boolean canPlaceItemThroughFace(int index, ItemStack stack, Direction dir) {
 		return (totalItems + stack.getCount()) <= CrateModule.maxItems;
 	}
 
@@ -201,18 +201,18 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 	}
 
 	@Override
-	protected ITextComponent getDefaultName() {
-		return new TranslationTextComponent(CrateModule.crate.getTranslationKey());
+	protected Component getDefaultName() {
+		return new TranslatableComponent(CrateModule.crate.getDescriptionId());
 	}
 
 	@Override
-	protected Container createMenu(int id, PlayerInventory player) {
+	protected AbstractContainerMenu createMenu(int id, Inventory player) {
 		return new CrateContainer(id, player, this, crateData);
 	}
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
-		if(!removed && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		if(!remove && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 			return wrapper.cast();
 
 		return super.getCapability(capability, facing);
@@ -221,16 +221,16 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 	// Vaniller copy =========================
 
 	@Override
-	public boolean isUsableByPlayer(PlayerEntity player) {
-		if (this.world.getTileEntity(this.pos) != this) {
+	public boolean stillValid(Player player) {
+		if (this.level.getBlockEntity(this.worldPosition) != this) {
 			return false;
 		} else {
-			return !(player.getDistanceSq((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) > 64.0D);
+			return !(player.distanceToSqr((double)this.worldPosition.getX() + 0.5D, (double)this.worldPosition.getY() + 0.5D, (double)this.worldPosition.getZ() + 0.5D) > 64.0D);
 		}
 	}
 
 	@Override
-	public void openInventory(PlayerEntity player) {
+	public void startOpen(Player player) {
 		if (!player.isSpectator()) {
 			if (this.numPlayersUsing < 0) {
 				this.numPlayersUsing = 0;
@@ -238,9 +238,9 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 
 			++this.numPlayersUsing;
 			BlockState blockstate = this.getBlockState();
-			boolean flag = blockstate.get(CrateBlock.PROPERTY_OPEN);
+			boolean flag = blockstate.getValue(CrateBlock.PROPERTY_OPEN);
 			if (!flag) {
-				this.playSound(blockstate, SoundEvents.BLOCK_BARREL_OPEN);
+				this.playSound(blockstate, SoundEvents.BARREL_OPEN);
 				this.setOpenProperty(blockstate, true);
 			}
 
@@ -250,37 +250,37 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 	}
 
 	private void scheduleTick() {
-		this.world.getPendingBlockTicks().scheduleTick(this.getPos(), this.getBlockState().getBlock(), 5);
+		this.level.getBlockTicks().scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
 	}
 
 	public void crateTick() {
-		int i = this.pos.getX();
-		int j = this.pos.getY();
-		int k = this.pos.getZ();
-		this.numPlayersUsing = calculatePlayersUsing(this.world, this, i, j, k);
+		int i = this.worldPosition.getX();
+		int j = this.worldPosition.getY();
+		int k = this.worldPosition.getZ();
+		this.numPlayersUsing = calculatePlayersUsing(this.level, this, i, j, k);
 		if (this.numPlayersUsing > 0) {
 			this.scheduleTick();
 		} else {
 			BlockState blockstate = this.getBlockState();
-			if (!blockstate.isIn(CrateModule.crate)) {
-				this.remove();
+			if (!blockstate.is(CrateModule.crate)) {
+				this.setRemoved();
 				return;
 			}
 
-			boolean flag = blockstate.get(CrateBlock.PROPERTY_OPEN);
+			boolean flag = blockstate.getValue(CrateBlock.PROPERTY_OPEN);
 			if (flag) {
-				this.playSound(blockstate, SoundEvents.BLOCK_BARREL_CLOSE);
+				this.playSound(blockstate, SoundEvents.BARREL_CLOSE);
 				this.setOpenProperty(blockstate, false);
 			}
 		}
 	}
 
-	public static int calculatePlayersUsing(World p_213976_0_, LockableTileEntity p_213976_1_, int p_213976_2_, int p_213976_3_, int p_213976_4_) {
+	public static int calculatePlayersUsing(Level p_213976_0_, BaseContainerBlockEntity p_213976_1_, int p_213976_2_, int p_213976_3_, int p_213976_4_) {
 		int i = 0;
 
-		for(PlayerEntity playerentity : p_213976_0_.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB((double)((float)p_213976_2_ - 5.0F), (double)((float)p_213976_3_ - 5.0F), (double)((float)p_213976_4_ - 5.0F), (double)((float)(p_213976_2_ + 1) + 5.0F), (double)((float)(p_213976_3_ + 1) + 5.0F), (double)((float)(p_213976_4_ + 1) + 5.0F)))) {
-			if (playerentity.openContainer instanceof CrateContainer) {
-				IInventory iinventory = ((CrateContainer)playerentity.openContainer).crate;
+		for(Player playerentity : p_213976_0_.getEntitiesOfClass(Player.class, new AABB((double)((float)p_213976_2_ - 5.0F), (double)((float)p_213976_3_ - 5.0F), (double)((float)p_213976_4_ - 5.0F), (double)((float)(p_213976_2_ + 1) + 5.0F), (double)((float)(p_213976_3_ + 1) + 5.0F), (double)((float)(p_213976_4_ + 1) + 5.0F)))) {
+			if (playerentity.containerMenu instanceof CrateContainer) {
+				Container iinventory = ((CrateContainer)playerentity.containerMenu).crate;
 				if (iinventory == p_213976_1_) {
 					++i;
 				}
@@ -291,7 +291,7 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 	}
 
 	@Override
-	public void closeInventory(PlayerEntity player) {
+	public void stopOpen(Player player) {
 		if (!player.isSpectator()) {
 			--this.numPlayersUsing;
 		}
@@ -299,14 +299,14 @@ public class CrateTileEntity extends LockableTileEntity implements ISidedInvento
 	}
 
 	private void setOpenProperty(BlockState state, boolean open) {
-		this.world.setBlockState(this.getPos(), state.with(CrateBlock.PROPERTY_OPEN, Boolean.valueOf(open)), 3);
+		this.level.setBlock(this.getBlockPos(), state.setValue(CrateBlock.PROPERTY_OPEN, Boolean.valueOf(open)), 3);
 	}
 
 	private void playSound(BlockState state, SoundEvent sound) {
-		double d0 = (double)this.pos.getX() + 0.5D;
-		double d1 = (double)this.pos.getY() + 0.5D;
-		double d2 = (double)this.pos.getZ() + 0.5D;
-		this.world.playSound((PlayerEntity)null, d0, d1, d2, sound, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
+		double d0 = (double)this.worldPosition.getX() + 0.5D;
+		double d1 = (double)this.worldPosition.getY() + 0.5D;
+		double d2 = (double)this.worldPosition.getZ() + 0.5D;
+		this.level.playSound((Player)null, d0, d1, d2, sound, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F);
 	}
 
 }

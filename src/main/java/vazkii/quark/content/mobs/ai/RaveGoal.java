@@ -12,24 +12,26 @@ package vazkii.quark.content.mobs.ai;
 
 import java.util.EnumSet;
 
-import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.Goal;
 import vazkii.quark.content.mobs.entity.CrabEntity;
+
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 public class RaveGoal extends Goal {
 	private final CrabEntity crab;
 
 	public RaveGoal(CrabEntity crab) {
 		this.crab = crab;
-		this.setMutexFlags(EnumSet.of(Flag.MOVE, Flag.JUMP));
+		this.setFlags(EnumSet.of(Flag.MOVE, Flag.JUMP));
 	}
 
 	@Override
-	public boolean shouldExecute() {
+	public boolean canUse() {
 		return crab.isRaving();
 	}
 
 	@Override
-	public void startExecuting() {
-		this.crab.getNavigator().clearPath();
+	public void start() {
+		this.crab.getNavigation().stop();
 	}
 }

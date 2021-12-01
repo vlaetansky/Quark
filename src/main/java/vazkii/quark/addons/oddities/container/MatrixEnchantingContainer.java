@@ -3,34 +3,34 @@ package vazkii.quark.addons.oddities.container;
 import javax.annotation.Nonnull;
 
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.Tags;
 import vazkii.quark.addons.oddities.module.MatrixEnchantingModule;
 import vazkii.quark.addons.oddities.tile.MatrixEnchantingTableTileEntity;
 
-public class MatrixEnchantingContainer extends Container {
+public class MatrixEnchantingContainer extends AbstractContainerMenu {
 
 	public final MatrixEnchantingTableTileEntity enchanter;
 
-	public MatrixEnchantingContainer(int id, PlayerInventory playerInv, MatrixEnchantingTableTileEntity tile) {
+	public MatrixEnchantingContainer(int id, Inventory playerInv, MatrixEnchantingTableTileEntity tile) {
 		super(MatrixEnchantingModule.containerType, id);
 		enchanter = tile;
 
 		// Item Slot
 		addSlot(new Slot(tile, 0, 15, 20) {
 			@Override 
-			public int getSlotStackLimit() { 
+			public int getMaxStackSize() { 
 				return 1; 
 			}
 		});
@@ -38,7 +38,7 @@ public class MatrixEnchantingContainer extends Container {
 		// Lapis Slot
 		addSlot(new Slot(tile, 1, 15, 44) {
 			@Override
-			public boolean isItemValid(ItemStack stack) {
+			public boolean mayPlace(ItemStack stack) {
 				return isLapis(stack);
 			}
 		});
@@ -46,13 +46,13 @@ public class MatrixEnchantingContainer extends Container {
 		// Output Slot
 		addSlot(new Slot(tile, 2, 59, 32) {
 			@Override
-			public boolean isItemValid(ItemStack stack) {
+			public boolean mayPlace(ItemStack stack) {
 				return false;
 			}
 
 			@Nonnull
 			@Override
-			public ItemStack onTake(PlayerEntity thePlayer, @Nonnull ItemStack stack) {
+			public ItemStack onTake(Player thePlayer, @Nonnull ItemStack stack) {
 				finish(thePlayer, stack);
 				return super.onTake(thePlayer, stack);
 			}
@@ -66,71 +66,71 @@ public class MatrixEnchantingContainer extends Container {
 			addSlot(new Slot(playerInv, k, 8 + k * 18, 142));
 	}
 	
-	public static MatrixEnchantingContainer fromNetwork(int windowId, PlayerInventory playerInventory, PacketBuffer buf) {
+	public static MatrixEnchantingContainer fromNetwork(int windowId, Inventory playerInventory, FriendlyByteBuf buf) {
 		BlockPos pos = buf.readBlockPos();
-		MatrixEnchantingTableTileEntity te = (MatrixEnchantingTableTileEntity) playerInventory.player.world.getTileEntity(pos);
+		MatrixEnchantingTableTileEntity te = (MatrixEnchantingTableTileEntity) playerInventory.player.level.getBlockEntity(pos);
 		return new MatrixEnchantingContainer(windowId, playerInventory, te);
 	}
 
 	private boolean isLapis(ItemStack stack) {
-		return stack.getItem().isIn(Tags.Items.GEMS_LAPIS);
+		return stack.getItem().is(Tags.Items.GEMS_LAPIS);
 	}
 
-	private void finish(PlayerEntity player, ItemStack stack) {
-		enchanter.setInventorySlotContents(0, ItemStack.EMPTY);
+	private void finish(Player player, ItemStack stack) {
+		enchanter.setItem(0, ItemStack.EMPTY);
 
-		player.addStat(Stats.ENCHANT_ITEM);
+		player.awardStat(Stats.ENCHANT_ITEM);
 
-		if(player instanceof ServerPlayerEntity)
-			CriteriaTriggers.ENCHANTED_ITEM.trigger((ServerPlayerEntity) player, stack, 1);
+		if(player instanceof ServerPlayer)
+			CriteriaTriggers.ENCHANTED_ITEM.trigger((ServerPlayer) player, stack, 1);
 
-		player.world.playSound(null, enchanter.getPos(), SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0F,  player.world.rand.nextFloat() * 0.1F + 0.9F);
+		player.level.playSound(null, enchanter.getBlockPos(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 1.0F,  player.level.random.nextFloat() * 0.1F + 0.9F);
 	}
 
 	@Override
-	public boolean canInteractWith(@Nonnull PlayerEntity playerIn) {
-		World world = enchanter.getWorld();
-		BlockPos pos = enchanter.getPos();
+	public boolean stillValid(@Nonnull Player playerIn) {
+		Level world = enchanter.getLevel();
+		BlockPos pos = enchanter.getBlockPos();
 		if(world.getBlockState(pos).getBlock() != MatrixEnchantingModule.matrixEnchanter)
 			return false;
 		else
-			return playerIn.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64.0D;
+			return playerIn.distanceToSqr(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64.0D;
 	}
 
 	@Nonnull
 	@Override
-	public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+	public ItemStack quickMoveStack(Player playerIn, int index) {
 		ItemStack originalStack = ItemStack.EMPTY;
-		Slot slot = inventorySlots.get(index);
+		Slot slot = slots.get(index);
 
-		if (slot != null && slot.getHasStack()) {
-			ItemStack stackInSlot = slot.getStack();
+		if (slot != null && slot.hasItem()) {
+			ItemStack stackInSlot = slot.getItem();
 			originalStack = stackInSlot.copy();
 
 			if(index < 3) {
-				if (!mergeItemStack(stackInSlot, 3, 39, true))
+				if (!moveItemStackTo(stackInSlot, 3, 39, true))
 					return ItemStack.EMPTY;
 			}
 			else if(isLapis(stackInSlot)) {
-				if(!mergeItemStack(stackInSlot, 1, 2, true))
+				if(!moveItemStackTo(stackInSlot, 1, 2, true))
 					return ItemStack.EMPTY;
 			}
 			else {
-				if(inventorySlots.get(0).getHasStack() || !inventorySlots.get(0).isItemValid(stackInSlot))
+				if(slots.get(0).hasItem() || !slots.get(0).mayPlace(stackInSlot))
 					return ItemStack.EMPTY;
 
 				if(stackInSlot.hasTag()) // Forge: Fix MC-17431
-					inventorySlots.get(0).putStack(stackInSlot.split(1));
+					slots.get(0).set(stackInSlot.split(1));
 
 				else if(!stackInSlot.isEmpty()) {
-					inventorySlots.get(0).putStack(new ItemStack(stackInSlot.getItem(), 1));
+					slots.get(0).set(new ItemStack(stackInSlot.getItem(), 1));
 					stackInSlot.shrink(1);
 				}
 			}
 
 			if(stackInSlot.isEmpty())
-				slot.putStack(ItemStack.EMPTY);
-			else slot.onSlotChanged();
+				slot.set(ItemStack.EMPTY);
+			else slot.setChanged();
 
 			if(stackInSlot.getCount() == originalStack.getCount())
 				return ItemStack.EMPTY;

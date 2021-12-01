@@ -1,16 +1,16 @@
 package vazkii.quark.content.world.module;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameterSets;
-import net.minecraft.loot.LootTable;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.gen.GenerationStage.Decoration;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.arl.util.RegistryHelper;
@@ -32,7 +32,7 @@ public class MonsterBoxModule extends QuarkModule {
 	public static final String TAG_MONSTER_BOX_SPAWNED = "quark:monster_box_spawned";
 	public static final ResourceLocation MONSTER_BOX_LOOT_TABLE = new ResourceLocation(Quark.MOD_ID, "misc/monster_box");
 	
-	public static TileEntityType<MonsterBoxTileEntity> tileEntityType;
+	public static BlockEntityType<MonsterBoxTileEntity> tileEntityType;
 	
 	@Config(description = "The chance for the monster box generator to try and place one in a chunk, 1 is 100%\nThis can be higher than 100% if you want multiple per chunk, , 0 is 0%") 
 	public static double chancePerChunk = 0.8;
@@ -53,7 +53,7 @@ public class MonsterBoxModule extends QuarkModule {
 	public void construct() {
 		monster_box = new MonsterBoxBlock(this);
 		
-        tileEntityType = TileEntityType.Builder.create(MonsterBoxTileEntity::new, monster_box).build(null);
+        tileEntityType = BlockEntityType.Builder.of(MonsterBoxTileEntity::new, monster_box).build(null);
         RegistryHelper.register(tileEntityType, "monster_box");
 	}
 	
@@ -65,13 +65,13 @@ public class MonsterBoxModule extends QuarkModule {
 	@SubscribeEvent
 	public void onDrops(LivingDropsEvent event) {
 		LivingEntity entity = event.getEntityLiving();
-		if(enableExtraLootTable && entity.getEntityWorld() instanceof ServerWorld 
+		if(enableExtraLootTable && entity.getCommandSenderWorld() instanceof ServerLevel 
 				&& entity.getPersistentData().getBoolean(TAG_MONSTER_BOX_SPAWNED) 
-				&& entity.world.getGameRules().getBoolean(GameRules.DO_MOB_LOOT)
-				&& event.getSource().getTrueSource() instanceof PlayerEntity) {
-			LootTable loot = ((ServerWorld) entity.getEntityWorld()).getServer().getLootTableManager().getLootTableFromLocation(MONSTER_BOX_LOOT_TABLE);
+				&& entity.level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)
+				&& event.getSource().getEntity() instanceof Player) {
+			LootTable loot = ((ServerLevel) entity.getCommandSenderWorld()).getServer().getLootTables().get(MONSTER_BOX_LOOT_TABLE);
 			if(loot != null)
-				loot.generate(new LootContext.Builder((ServerWorld) entity.getEntityWorld()).build(LootParameterSets.EMPTY), entity::entityDropItem);
+				loot.getRandomItems(new LootContext.Builder((ServerLevel) entity.getCommandSenderWorld()).create(LootContextParamSets.EMPTY), entity::spawnAtLocation);
 		}
 	}
 	

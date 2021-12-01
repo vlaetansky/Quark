@@ -2,23 +2,23 @@ package vazkii.quark.content.building.recipe;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.ICraftingRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tags.ITag;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.tags.Tag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public class MixedChestRecipe implements ICraftingRecipe, IShapedRecipe<CraftingInventory> {
+public class MixedChestRecipe implements CraftingRecipe, IShapedRecipe<CraftingContainer> {
 	
     public static final Serializer SERIALIZER = new Serializer();
 
@@ -27,7 +27,7 @@ public class MixedChestRecipe implements ICraftingRecipe, IShapedRecipe<Crafting
 	
 	final boolean log;
 	final ItemStack output;
-	final ITag.INamedTag<Item> tag;
+	final Tag.Named<Item> tag;
 	final ItemStack placeholder;
 	
 	public MixedChestRecipe(ResourceLocation res, boolean log) {
@@ -40,12 +40,12 @@ public class MixedChestRecipe implements ICraftingRecipe, IShapedRecipe<Crafting
 	}
 	
 	@Override
-	public boolean canFit(int x, int y) {
+	public boolean canCraftInDimensions(int x, int y) {
 		return x == 3 && y == 3;
 	}
 
 	@Override
-	public ItemStack getCraftingResult(CraftingInventory arg0) {
+	public ItemStack assemble(CraftingContainer arg0) {
 		return output.copy();
 	}
 
@@ -55,28 +55,28 @@ public class MixedChestRecipe implements ICraftingRecipe, IShapedRecipe<Crafting
 	}
 
 	@Override
-	public ItemStack getRecipeOutput() {
+	public ItemStack getResultItem() {
 		return output.copy();	
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return SERIALIZER;
 	}
 
 	@Override
-	public boolean matches(CraftingInventory inv, World world) {
-		if(inv.getStackInSlot(4).isEmpty()) {
+	public boolean matches(CraftingContainer inv, Level world) {
+		if(inv.getItem(4).isEmpty()) {
 			ItemStack first = null;
 			boolean foundDifference = false;
 			
 			for(int i = 0; i < 9; i++)
 				if(i != 4) { // ignore center
-					ItemStack stack = inv.getStackInSlot(i);
-					if(!stack.isEmpty() && stack.getItem().isIn(tag)) {
+					ItemStack stack = inv.getItem(i);
+					if(!stack.isEmpty() && stack.getItem().is(tag)) {
 						if(first == null)
 							first = stack;
-						else if(!ItemStack.areItemsEqual(first, stack))
+						else if(!ItemStack.isSame(first, stack))
 							foundDifference = true;
 					} else return false;
 				}
@@ -101,7 +101,7 @@ public class MixedChestRecipe implements ICraftingRecipe, IShapedRecipe<Crafting
 	public NonNullList<Ingredient> getIngredients() {
 		if(ingredients == null) {
 			NonNullList<Ingredient> list = NonNullList.withSize(9, Ingredient.EMPTY);
-			Ingredient ingr = Ingredient.fromStacks(placeholder);
+			Ingredient ingr = Ingredient.of(placeholder);
 			for(int i = 0; i < 8; i++)
 				list.set(i < 4 ? i : i + 1, ingr);
 			ingredients = list;
@@ -111,28 +111,28 @@ public class MixedChestRecipe implements ICraftingRecipe, IShapedRecipe<Crafting
 	}
 	
 	@Override
-	public boolean isDynamic() {
+	public boolean isSpecial() {
 		return true;
 	}
 	
-	private static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<MixedChestRecipe> {
+	private static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<MixedChestRecipe> {
 		
         public Serializer() {
             setRegistryName("quark:mixed_chest");
         }
 
 		@Override
-		public MixedChestRecipe read(ResourceLocation arg0, JsonObject arg1) {
+		public MixedChestRecipe fromJson(ResourceLocation arg0, JsonObject arg1) {
 			return new MixedChestRecipe(arg0, arg1.get("log").getAsBoolean());
 		}
 
 		@Override
-		public MixedChestRecipe read(ResourceLocation arg0, PacketBuffer arg1) {
+		public MixedChestRecipe fromNetwork(ResourceLocation arg0, FriendlyByteBuf arg1) {
 			return new MixedChestRecipe(arg0, arg1.readBoolean());
 		}
 
 		@Override
-		public void write(PacketBuffer arg0, MixedChestRecipe arg1) {
+		public void toNetwork(FriendlyByteBuf arg0, MixedChestRecipe arg1) {
 			arg0.writeBoolean(arg1.log);
 		}
 		

@@ -1,11 +1,11 @@
 package vazkii.quark.content.building.module;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.DyeColor;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.core.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
@@ -29,10 +29,10 @@ public class StoolsModule extends QuarkModule {
 		for(DyeColor dye : DyeColor.values())
 			new StoolBlock(this, dye);
 		
-		stoolEntity = EntityType.Builder.<StoolEntity>create(StoolEntity::new, EntityClassification.MISC)
-                .size(6F / 16F, 0.5F)
-                .trackingRange(3)
-                .func_233608_b_(Integer.MAX_VALUE) // update interval
+		stoolEntity = EntityType.Builder.<StoolEntity>of(StoolEntity::new, MobCategory.MISC)
+                .sized(6F / 16F, 0.5F)
+                .clientTrackingRange(3)
+                .updateInterval(Integer.MAX_VALUE) // update interval
                 .setShouldReceiveVelocityUpdates(false)
                 .setCustomClientFactory((spawnEntity, world) -> new StoolEntity(stoolEntity, world))
                 .build("stool");
@@ -41,7 +41,7 @@ public class StoolsModule extends QuarkModule {
 	
 	@SubscribeEvent
 	public void itemUsed(RightClickBlock event) {
-		if(event.getPlayer().isSneaking() && event.getItemStack().getItem() instanceof BlockItem && event.getFace() == Direction.UP) {
+		if(event.getPlayer().isShiftKeyDown() && event.getItemStack().getItem() instanceof BlockItem && event.getFace() == Direction.UP) {
 			BlockState state = event.getWorld().getBlockState(event.getPos());
 			if(state.getBlock() instanceof StoolBlock)
 				((StoolBlock) state.getBlock()).blockClicked(event.getWorld(), event.getPos());

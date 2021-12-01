@@ -20,14 +20,14 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import vazkii.quark.base.Quark;
 
-public enum EnumStonelingVariant implements ILivingEntityData {
+public enum EnumStonelingVariant implements SpawnGroupData {
 	STONE("stone", Blocks.COBBLESTONE, Blocks.STONE),
 	ANDESITE("andesite", Blocks.ANDESITE, Blocks.POLISHED_ANDESITE),
 	DIORITE("diorite", Blocks.DIORITE, Blocks.POLISHED_DIORITE),
@@ -47,7 +47,7 @@ public enum EnumStonelingVariant implements ILivingEntityData {
 
 	public static EnumStonelingVariant byIndex(byte index) {
 		EnumStonelingVariant[] values = values();
-		return values[MathHelper.clamp(index, 0, values.length - 1)];
+		return values[Mth.clamp(index, 0, values.length - 1)];
 	}
 
 	public byte getIndex() {

@@ -8,35 +8,35 @@ import java.util.UUID;
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.collect.ImmutableMap;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.StairsBlock;
-import net.minecraft.client.MainWindow;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.StairBlock;
+import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.state.Property;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.state.properties.Half;
-import net.minecraft.state.properties.SlabType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.RayTraceResult.Type;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.KeybindTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.Half;
+import net.minecraft.world.level.block.state.properties.SlabType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.HitResult.Type;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.KeybindComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
@@ -68,7 +68,7 @@ public class LockRotationModule extends QuarkModule {
 	private LockProfile clientProfile;
 
 	@OnlyIn(Dist.CLIENT)
-	private KeyBinding keybind;
+	private KeyMapping keybind;
 
 	@Override
 	public void configChanged() {
@@ -86,23 +86,23 @@ public class LockRotationModule extends QuarkModule {
 		keybind = ModKeybindHandler.init("lock_rotation", "k", ModKeybindHandler.MISC_GROUP);
 	}
 
-	public static BlockState fixBlockRotation(BlockState state, BlockItemUseContext ctx) {
+	public static BlockState fixBlockRotation(BlockState state, BlockPlaceContext ctx) {
 		if (state == null || ctx.getPlayer() == null || !ModuleLoader.INSTANCE.isModuleEnabled(LockRotationModule.class))
 			return state;
 
-		UUID uuid = ctx.getPlayer().getUniqueID();
+		UUID uuid = ctx.getPlayer().getUUID();
 		if(lockProfiles.containsKey(uuid)) {
 			LockProfile profile = lockProfiles.get(uuid);
-			BlockState transformed = getRotatedState(ctx.getWorld(), ctx.getPos(), state, profile.facing.getOpposite(), profile.half);
+			BlockState transformed = getRotatedState(ctx.getLevel(), ctx.getClickedPos(), state, profile.facing.getOpposite(), profile.half);
 			
 			if(!transformed.equals(state))
-				return Block.getValidBlockForPosition(transformed, ctx.getWorld(), ctx.getPos());
+				return Block.updateFromNeighbourShapes(transformed, ctx.getLevel(), ctx.getClickedPos());
 		}
 
 		return state;
 	}
 
-	public static BlockState getRotatedState(World world, BlockPos pos, BlockState state, Direction face, int half) {
+	public static BlockState getRotatedState(Level world, BlockPos pos, BlockState state, Direction face, int half) {
 		BlockState setState = state;
 		ImmutableMap<Property<?>, Comparable<?>> props = state.getValues();
 		Block block = state.getBlock();
@@ -113,36 +113,36 @@ public class LockRotationModule extends QuarkModule {
 		
 		// General Facing
 		else if(props.containsKey(BlockStateProperties.FACING))
-			setState = state.with(BlockStateProperties.FACING, face);
+			setState = state.setValue(BlockStateProperties.FACING, face);
 
 		// Vertical Slabs
 		else if (props.containsKey(VerticalSlabBlock.TYPE) && props.get(VerticalSlabBlock.TYPE) != VerticalSlabType.DOUBLE && face.getAxis() != Axis.Y)
-			setState = state.with(VerticalSlabBlock.TYPE, Objects.requireNonNull(VerticalSlabType.fromDirection(face)));
+			setState = state.setValue(VerticalSlabBlock.TYPE, Objects.requireNonNull(VerticalSlabType.fromDirection(face)));
 
 		// Horizontal Facing
 		else if(props.containsKey(BlockStateProperties.HORIZONTAL_FACING) && face.getAxis() != Axis.Y) {
-			if(block instanceof StairsBlock)
-				setState = state.with(BlockStateProperties.HORIZONTAL_FACING, face.getOpposite());
-			else setState = state.with(BlockStateProperties.HORIZONTAL_FACING, face);
+			if(block instanceof StairBlock)
+				setState = state.setValue(BlockStateProperties.HORIZONTAL_FACING, face.getOpposite());
+			else setState = state.setValue(BlockStateProperties.HORIZONTAL_FACING, face);
 		} 
 
 		// Pillar Axis
 		else if(props.containsKey(BlockStateProperties.AXIS))
-			setState = state.with(BlockStateProperties.AXIS, face.getAxis());
+			setState = state.setValue(BlockStateProperties.AXIS, face.getAxis());
 
 		// Hopper Facing
-		else if(props.containsKey(BlockStateProperties.FACING_EXCEPT_UP))
-			setState = state.with(BlockStateProperties.FACING_EXCEPT_UP, face == Direction.DOWN ? face : face.getOpposite());
+		else if(props.containsKey(BlockStateProperties.FACING_HOPPER))
+			setState = state.setValue(BlockStateProperties.FACING_HOPPER, face == Direction.DOWN ? face : face.getOpposite());
 
 		// Half
 		if(half != -1) {
 			// Slab type
 			if(props.containsKey(BlockStateProperties.SLAB_TYPE) && props.get(BlockStateProperties.SLAB_TYPE) != SlabType.DOUBLE)
-				setState = setState.with(BlockStateProperties.SLAB_TYPE, half == 1 ? SlabType.TOP : SlabType.BOTTOM);
+				setState = setState.setValue(BlockStateProperties.SLAB_TYPE, half == 1 ? SlabType.TOP : SlabType.BOTTOM);
 			
 			// Half (stairs)
 			else if(props.containsKey(BlockStateProperties.HALF))
-				setState = setState.with(BlockStateProperties.HALF, half == 1 ? Half.TOP : Half.BOTTOM);
+				setState = setState.setValue(BlockStateProperties.HALF, half == 1 ? Half.TOP : Half.BOTTOM);
 		}
 		
 		return setState;
@@ -150,7 +150,7 @@ public class LockRotationModule extends QuarkModule {
 
 	@SubscribeEvent
 	public void onPlayerLogoff(PlayerLoggedOutEvent event) {
-		lockProfiles.remove(event.getPlayer().getUniqueID());
+		lockProfiles.remove(event.getPlayer().getUUID());
 	}
 
 	@SubscribeEvent
@@ -167,15 +167,15 @@ public class LockRotationModule extends QuarkModule {
 
 	private void acceptInput() {
 		Minecraft mc = Minecraft.getInstance();
-		boolean down = keybind.isKeyDown();
-		if(mc.isGameFocused() && down) {
+		boolean down = keybind.isDown();
+		if(mc.isWindowActive() && down) {
 			LockProfile newProfile;
-			RayTraceResult result = mc.objectMouseOver;
+			HitResult result = mc.hitResult;
 
-			if(result instanceof BlockRayTraceResult && result.getType() == Type.BLOCK) {
-				BlockRayTraceResult bresult = (BlockRayTraceResult) result;
-				Vector3d hitVec = bresult.getHitVec();
-				Direction face = bresult.getFace();
+			if(result instanceof BlockHitResult && result.getType() == Type.BLOCK) {
+				BlockHitResult bresult = (BlockHitResult) result;
+				Vec3 hitVec = bresult.getLocation();
+				Direction face = bresult.getDirection();
 
 				int half = (int) ((hitVec.y - (int) hitVec.y) * 2);
 				if(face.getAxis() == Axis.Y)
@@ -184,8 +184,8 @@ public class LockRotationModule extends QuarkModule {
 				newProfile = new LockProfile(face.getOpposite(), half);
 
 			} else {
-				Vector3d look = mc.player.getLookVec();
-				newProfile = new LockProfile(Direction.getFacingFromVector((float) look.x, (float) look.y, (float) look.z), -1);
+				Vec3 look = mc.player.getLookAngle();
+				newProfile = new LockProfile(Direction.getNearest((float) look.x, (float) look.y, (float) look.z), -1);
 			}
 
 			if(clientProfile != null && clientProfile.equals(newProfile))
@@ -200,18 +200,18 @@ public class LockRotationModule extends QuarkModule {
 	public void onHUDRender(RenderGameOverlayEvent.Post event) {
 		if(event.getType() == ElementType.ALL && clientProfile != null) {
 			Minecraft mc = Minecraft.getInstance();
-			MatrixStack matrix = event.getMatrixStack();
+			PoseStack matrix = event.getMatrixStack();
 			
 			RenderSystem.enableBlend();
 			RenderSystem.enableAlphaTest();
 			RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			RenderSystem.color4f(1F, 1F, 1F, 0.5F);
 
-			mc.textureManager.bindTexture(MiscUtil.GENERAL_ICONS);
+			mc.textureManager.bind(MiscUtil.GENERAL_ICONS);
 
-			MainWindow window = event.getWindow();
-			int x = window.getScaledWidth() / 2 + 20;
-			int y = window.getScaledHeight() / 2 - 8;
+			Window window = event.getWindow();
+			int x = window.getGuiScaledWidth() / 2 + 20;
+			int y = window.getGuiScaledHeight() / 2 - 8;
 			Screen.blit(matrix, x, y, clientProfile.facing.ordinal() * 16, 65, 16, 16, 256, 256);
 
 			if(clientProfile.half > -1)
@@ -219,16 +219,16 @@ public class LockRotationModule extends QuarkModule {
 		}
 	}
 
-	public static void setProfile(PlayerEntity player, LockProfile profile) {
-		UUID uuid = player.getUniqueID();
+	public static void setProfile(Player player, LockProfile profile) {
+		UUID uuid = player.getUUID();
 		
 		if(profile == null)
 			lockProfiles.remove(uuid);
 		else {
 			boolean locked = player.getPersistentData().getBoolean(TAG_LOCKED_ONCE);
 			if(!locked) {
-				ITextComponent keybind = new KeybindTextComponent("quark.keybind.lock_rotation").mergeStyle(TextFormatting.AQUA);
-				ITextComponent text = new TranslationTextComponent("quark.misc.rotation_lock", keybind);
+				Component keybind = new KeybindComponent("quark.keybind.lock_rotation").withStyle(ChatFormatting.AQUA);
+				Component text = new TranslatableComponent("quark.misc.rotation_lock", keybind);
 				player.sendMessage(text, UUID.randomUUID());
 
 				player.getPersistentData().putBoolean(TAG_LOCKED_ONCE, true);
@@ -248,22 +248,22 @@ public class LockRotationModule extends QuarkModule {
 			this.half = half;
 		}
 
-		public static LockProfile readProfile(PacketBuffer buf, Field field) {
+		public static LockProfile readProfile(FriendlyByteBuf buf, Field field) {
 			boolean valid = buf.readBoolean();
 			if(!valid)
 				return null;
 
 			int face = buf.readInt();
 			int half = buf.readInt();
-			return new LockProfile(Direction.byIndex(face), half);
+			return new LockProfile(Direction.from3DDataValue(face), half);
 		}
 
-		public static void writeProfile(PacketBuffer buf, Field field, LockProfile p) {
+		public static void writeProfile(FriendlyByteBuf buf, Field field, LockProfile p) {
 			if(p == null)
 				buf.writeBoolean(false);
 			else {
 				buf.writeBoolean(true);
-				buf.writeInt(p.facing.getIndex());
+				buf.writeInt(p.facing.get3DDataValue());
 				buf.writeInt(p.half);
 			}
 		}

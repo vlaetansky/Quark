@@ -5,17 +5,17 @@ import java.util.Objects;
 
 import com.mojang.datafixers.util.Pair;
 
-import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemModelsProperties;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelLoader;
@@ -71,10 +71,10 @@ public class TotemOfHoldingModule extends QuarkModule {
         soulCompass = new SoulCompassItem(this);
         soulCompass.setCondition(() -> enableSoulCompass);
 
-        totemType = EntityType.Builder.create(TotemOfHoldingEntity::new, EntityClassification.MISC)
-                .size(0.5F, 1F)
-                .func_233608_b_(128) // update interval
-                .immuneToFire()
+        totemType = EntityType.Builder.of(TotemOfHoldingEntity::new, MobCategory.MISC)
+                .sized(0.5F, 1F)
+                .updateInterval(128) // update interval
+                .fireImmune()
                 .setShouldReceiveVelocityUpdates(false)
                 .setCustomClientFactory((spawnEntity, world) -> new TotemOfHoldingEntity(totemType, world))
                 .build("totem");
@@ -86,7 +86,7 @@ public class TotemOfHoldingModule extends QuarkModule {
     public void clientSetup() {
         RenderingRegistry.registerEntityRenderingHandler(totemType, TotemOfHoldingRenderer::new);
         
-        enqueue(() -> ItemModelsProperties.registerProperty(soulCompass, new ResourceLocation("angle"), SoulCompassItem::angle));
+        enqueue(() -> ItemProperties.register(soulCompass, new ResourceLocation("angle"), SoulCompassItem::angle));
     }
 
     @Override
@@ -98,19 +98,19 @@ public class TotemOfHoldingModule extends QuarkModule {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onPlayerDrops(LivingDropsEvent event) {
         LivingEntity entity = event.getEntityLiving();
-        if (!(entity instanceof PlayerEntity))
+        if (!(entity instanceof Player))
             return;
 
         Collection<ItemEntity> drops = event.getDrops();
 
-        if(!event.isCanceled() && (enableOnPK || !(event.getSource().getTrueSource() instanceof PlayerEntity) || entity == event.getSource().getTrueSource())) {
-            PlayerEntity player = (PlayerEntity) entity;
-            CompoundNBT data = player.getPersistentData();
-            CompoundNBT persistent = data.getCompound(PlayerEntity.PERSISTED_NBT_TAG);
+        if(!event.isCanceled() && (enableOnPK || !(event.getSource().getEntity() instanceof Player) || entity == event.getSource().getEntity())) {
+            Player player = (Player) entity;
+            CompoundTag data = player.getPersistentData();
+            CompoundTag persistent = data.getCompound(Player.PERSISTED_NBT_TAG);
 
             if(!drops.isEmpty()) {
-                TotemOfHoldingEntity totem = new TotemOfHoldingEntity(totemType, player.world);
-                totem.setPosition(player.getPosX(), Math.max(3, player.getPosY() + 1), player.getPosZ());
+                TotemOfHoldingEntity totem = new TotemOfHoldingEntity(totemType, player.level);
+                totem.setPos(player.getX(), Math.max(3, player.getY() + 1), player.getZ());
                 totem.setOwner(player);
                 totem.setCustomName(player.getDisplayName());
                 drops.stream()
@@ -118,26 +118,26 @@ public class TotemOfHoldingModule extends QuarkModule {
                         .map(ItemEntity::getItem)
                         .filter(stack -> !stack.isEmpty())
                         .forEach(totem::addItem);
-                if (!player.world.isRemote)
-                    player.world.addEntity(totem);
+                if (!player.level.isClientSide)
+                    player.level.addFreshEntity(totem);
 
-                persistent.putString(TAG_LAST_TOTEM, totem.getUniqueID().toString());
+                persistent.putString(TAG_LAST_TOTEM, totem.getUUID().toString());
 
                 event.setCanceled(true);
             } else persistent.putString(TAG_LAST_TOTEM, "");
 
-            BlockPos pos = player.getPosition(); // getPosition
+            BlockPos pos = player.blockPosition(); // getPosition
             persistent.putInt(TAG_DEATH_X, pos.getX());
             persistent.putInt(TAG_DEATH_Z, pos.getZ());
-            persistent.putString(TAG_DEATH_DIM, player.world.getDimensionKey().getLocation().toString());
+            persistent.putString(TAG_DEATH_DIM, player.level.dimension().location().toString());
 
-            if(!data.contains(PlayerEntity.PERSISTED_NBT_TAG))
-                data.put(PlayerEntity.PERSISTED_NBT_TAG, persistent);
+            if(!data.contains(Player.PERSISTED_NBT_TAG))
+                data.put(Player.PERSISTED_NBT_TAG, persistent);
         }
     }
 
-    public static String getTotemUUID(PlayerEntity player) {
-        CompoundNBT cmp = player.getPersistentData().getCompound(PlayerEntity.PERSISTED_NBT_TAG);
+    public static String getTotemUUID(Player player) {
+        CompoundTag cmp = player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
         if(cmp.contains(TAG_LAST_TOTEM))
             return cmp.getString(TAG_LAST_TOTEM);
 
@@ -145,8 +145,8 @@ public class TotemOfHoldingModule extends QuarkModule {
     }
 
     public static Pair<BlockPos, String> getPlayerDeathPosition(Entity e) {
-        if(e instanceof PlayerEntity) {
-            CompoundNBT cmp = e.getPersistentData().getCompound(PlayerEntity.PERSISTED_NBT_TAG);
+        if(e instanceof Player) {
+            CompoundTag cmp = e.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
             if(cmp.contains(TAG_LAST_TOTEM)) {
                 int x = cmp.getInt(TAG_DEATH_X);
                 int z = cmp.getInt(TAG_DEATH_Z);

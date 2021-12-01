@@ -1,7 +1,7 @@
 package vazkii.quark.base.network;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.IPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.network.NetworkDirection;
 import vazkii.arl.network.IMessage;
@@ -56,7 +56,7 @@ public final class QuarkNetwork {
 		network.register(EditSignMessage.class, NetworkDirection.PLAY_TO_CLIENT);
 	}
 	
-	public static void sendToPlayer(IMessage msg, ServerPlayerEntity player) {
+	public static void sendToPlayer(IMessage msg, ServerPlayer player) {
 		network.sendToPlayer(msg, player);
 	}
 	
@@ -64,8 +64,8 @@ public final class QuarkNetwork {
 		network.sendToServer(msg);
 	}
 	
-	public static void sendToPlayers(IMessage msg, Iterable<ServerPlayerEntity> players) {
-		for(ServerPlayerEntity player : players)
+	public static void sendToPlayers(IMessage msg, Iterable<ServerPlayer> players) {
+		for(ServerPlayer player : players)
 			network.sendToPlayer(msg, player);
 	}
 	
@@ -73,7 +73,7 @@ public final class QuarkNetwork {
 		sendToPlayers(msg, server.getPlayerList().getPlayers());
 	}
 
-	public static IPacket<?> toVanillaPacket(IMessage msg, NetworkDirection direction) {
+	public static Packet<?> toVanillaPacket(IMessage msg, NetworkDirection direction) {
 		return network.channel.toVanillaPacket(msg, direction);
 	}
 	

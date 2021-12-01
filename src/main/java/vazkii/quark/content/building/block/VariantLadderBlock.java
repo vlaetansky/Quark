@@ -1,15 +1,15 @@
 package vazkii.quark.content.building.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.LadderBlock;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LadderBlock;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraftforge.common.ToolType;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.RenderLayerHandler;
@@ -25,7 +25,7 @@ public class VariantLadderBlock extends LadderBlock {
 		super(props);
 		
 		RegistryHelper.registerBlock(this, type + "_ladder");
-		RegistryHelper.setCreativeTab(this, ItemGroup.DECORATIONS);
+		RegistryHelper.setCreativeTab(this, CreativeModeTab.TAB_DECORATIONS);
 		
 		this.module = module;
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
@@ -35,20 +35,20 @@ public class VariantLadderBlock extends LadderBlock {
 	
 	public VariantLadderBlock(String type, QuarkModule module, boolean flammable) {
 		this(type, module, 
-				Block.Properties.from(Blocks.LADDER)
+				Block.Properties.copy(Blocks.LADDER)
 				.harvestTool(ToolType.AXE), 
 			flammable);
 	}
 	
 	@Override
-	public boolean isFlammable(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
+	public boolean isFlammable(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
 		return flammable;
 	}
 	
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-		if(isEnabled() || group == ItemGroup.SEARCH)
-			super.fillItemGroup(group, items);
+	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+		if(isEnabled() || group == CreativeModeTab.TAB_SEARCH)
+			super.fillItemCategory(group, items);
 	}
 	
 	public boolean isEnabled() {

@@ -9,48 +9,48 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Multimap;
 
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.AttributeModifierManager;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap.MutableAttribute;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.item.ExperienceOrbEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileHelper;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.Hand;
-import net.minecraft.util.IndirectEntityDamageSource;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.RayTraceResult.Type;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier.Builder;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.IndirectEntityDamageSource;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.HitResult.Type;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -58,11 +58,11 @@ import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.content.mobs.entity.ToretoiseEntity;
 import vazkii.quark.content.tools.module.PickarangModule;
 
-public class PickarangEntity extends ProjectileEntity {
+public class PickarangEntity extends Projectile {
 
-	private static final DataParameter<ItemStack> STACK = EntityDataManager.createKey(PickarangEntity.class, DataSerializers.ITEMSTACK);
-	private static final DataParameter<Boolean> RETURNING = EntityDataManager.createKey(PickarangEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> NETHERITE_SYNCED = EntityDataManager.createKey(PickarangEntity.class, DataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<ItemStack> STACK = SynchedEntityData.defineId(PickarangEntity.class, EntityDataSerializers.ITEM_STACK);
+	private static final EntityDataAccessor<Boolean> RETURNING = SynchedEntityData.defineId(PickarangEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> NETHERITE_SYNCED = SynchedEntityData.defineId(PickarangEntity.class, EntityDataSerializers.BOOLEAN);
 
 	protected LivingEntity owner;
 	private UUID ownerId;
@@ -81,21 +81,21 @@ public class PickarangEntity extends ProjectileEntity {
 	private static final String TAG_ITEM_STACK = "itemStack";
 	private static final String TAG_NETHERITE = "netherite";
 
-	public PickarangEntity(EntityType<? extends PickarangEntity> type, World worldIn) {
+	public PickarangEntity(EntityType<? extends PickarangEntity> type, Level worldIn) {
 		super(type, worldIn);
 	}
 
-	public PickarangEntity(World worldIn, LivingEntity throwerIn) {
+	public PickarangEntity(Level worldIn, LivingEntity throwerIn) {
 		super(PickarangModule.pickarangType, worldIn);
-		Vector3d pos = throwerIn.getPositionVec();
-		this.setPosition(pos.x, pos.y + throwerIn.getEyeHeight(), pos.z);
-		ownerId = throwerIn.getUniqueID();
+		Vec3 pos = throwerIn.position();
+		this.setPos(pos.x, pos.y + throwerIn.getEyeHeight(), pos.z);
+		ownerId = throwerIn.getUUID();
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public boolean isInRangeToRenderDist(double distance) {
-		double d0 = this.getBoundingBox().getAverageEdgeLength() * 4.0D;
+	public boolean shouldRenderAtSqrDistance(double distance) {
+		double d0 = this.getBoundingBox().getSize() * 4.0D;
 		if (Double.isNaN(d0)) d0 = 4.0D;
 
 		d0 = d0 * 64.0D;
@@ -103,36 +103,36 @@ public class PickarangEntity extends ProjectileEntity {
 	}
 
 	public void shoot(Entity entityThrower, float rotationPitchIn, float rotationYawIn, float pitchOffset, float velocity, float inaccuracy) {
-		float f = -MathHelper.sin(rotationYawIn * ((float)Math.PI / 180F)) * MathHelper.cos(rotationPitchIn * ((float)Math.PI / 180F));
-		float f1 = -MathHelper.sin((rotationPitchIn + pitchOffset) * ((float)Math.PI / 180F));
-		float f2 = MathHelper.cos(rotationYawIn * ((float)Math.PI / 180F)) * MathHelper.cos(rotationPitchIn * ((float)Math.PI / 180F));
+		float f = -Mth.sin(rotationYawIn * ((float)Math.PI / 180F)) * Mth.cos(rotationPitchIn * ((float)Math.PI / 180F));
+		float f1 = -Mth.sin((rotationPitchIn + pitchOffset) * ((float)Math.PI / 180F));
+		float f2 = Mth.cos(rotationYawIn * ((float)Math.PI / 180F)) * Mth.cos(rotationPitchIn * ((float)Math.PI / 180F));
 		this.shoot(f, f1, f2, velocity, inaccuracy);
-		Vector3d Vector3d = entityThrower.getMotion();
-		this.setMotion(this.getMotion().add(Vector3d.x, entityThrower.onGround ? 0.0D : Vector3d.y, Vector3d.z));
+		Vec3 Vector3d = entityThrower.getDeltaMovement();
+		this.setDeltaMovement(this.getDeltaMovement().add(Vector3d.x, entityThrower.onGround ? 0.0D : Vector3d.y, Vector3d.z));
 	}
 
 
 	@Override
 	public void shoot(double x, double y, double z, float velocity, float inaccuracy) {
-		Vector3d Vector3d = (new Vector3d(x, y, z)).normalize().add(this.rand.nextGaussian() * 0.0075F * inaccuracy, this.rand.nextGaussian() * 0.0075F * inaccuracy, this.rand.nextGaussian() * 0.0075F * inaccuracy).scale(velocity);
-		this.setMotion(Vector3d);
-		float f = MathHelper.sqrt(horizontalMag(Vector3d));
-		this.rotationYaw = (float)(MathHelper.atan2(Vector3d.x, Vector3d.z) * (180F / (float)Math.PI));
-		this.rotationPitch = (float)(MathHelper.atan2(Vector3d.y, f) * (180F / (float)Math.PI));
-		this.prevRotationYaw = this.rotationYaw;
-		this.prevRotationPitch = this.rotationPitch;
+		Vec3 Vector3d = (new Vec3(x, y, z)).normalize().add(this.random.nextGaussian() * 0.0075F * inaccuracy, this.random.nextGaussian() * 0.0075F * inaccuracy, this.random.nextGaussian() * 0.0075F * inaccuracy).scale(velocity);
+		this.setDeltaMovement(Vector3d);
+		float f = Mth.sqrt(getHorizontalDistanceSqr(Vector3d));
+		this.yRot = (float)(Mth.atan2(Vector3d.x, Vector3d.z) * (180F / (float)Math.PI));
+		this.xRot = (float)(Mth.atan2(Vector3d.y, f) * (180F / (float)Math.PI));
+		this.yRotO = this.yRot;
+		this.xRotO = this.xRot;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void setVelocity(double x, double y, double z) {
-		this.setMotion(x, y, z);
-		if (this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F) {
-			float f = MathHelper.sqrt(x * x + z * z);
-			this.rotationYaw = (float)(MathHelper.atan2(x, z) * (180F / (float)Math.PI));
-			this.rotationPitch = (float)(MathHelper.atan2(y, f) * (180F / (float)Math.PI));
-			this.prevRotationYaw = this.rotationYaw;
-			this.prevRotationPitch = this.rotationPitch;
+	public void lerpMotion(double x, double y, double z) {
+		this.setDeltaMovement(x, y, z);
+		if (this.xRotO == 0.0F && this.yRotO == 0.0F) {
+			float f = Mth.sqrt(x * x + z * z);
+			this.yRot = (float)(Mth.atan2(x, z) * (180F / (float)Math.PI));
+			this.xRot = (float)(Mth.atan2(y, f) * (180F / (float)Math.PI));
+			this.yRotO = this.yRot;
+			this.xRotO = this.xRot;
 		}
 
 	}
@@ -144,34 +144,34 @@ public class PickarangEntity extends ProjectileEntity {
 	}
 
 	@Override
-	protected void registerData() {
-		dataManager.register(STACK, new ItemStack(PickarangModule.pickarang));
-		dataManager.register(RETURNING, false);
-		dataManager.register(NETHERITE_SYNCED, false);
+	protected void defineSynchedData() {
+		entityData.define(STACK, new ItemStack(PickarangModule.pickarang));
+		entityData.define(RETURNING, false);
+		entityData.define(NETHERITE_SYNCED, false);
 	}
 
 	protected void checkImpact() {
-		if(world.isRemote)
+		if(level.isClientSide)
 			return;
 
-		Vector3d motion = getMotion();
-		Vector3d position = getPositionVec();
-		Vector3d rayEnd = position.add(motion);
+		Vec3 motion = getDeltaMovement();
+		Vec3 position = position();
+		Vec3 rayEnd = position.add(motion);
 
 		boolean doEntities = true;
 		int tries = 100;
 
-		while(isAlive() && !dataManager.get(RETURNING)) {
+		while(isAlive() && !entityData.get(RETURNING)) {
 			if(doEntities) {
-				EntityRayTraceResult result = raycastEntities(position, rayEnd);
+				EntityHitResult result = raycastEntities(position, rayEnd);
 				if(result != null)
-					onImpact(result);
+					onHit(result);
 				else doEntities = false;
 			} else {
-				RayTraceResult result = world.rayTraceBlocks(new RayTraceContext(position, rayEnd, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this));
+				HitResult result = level.clip(new ClipContext(position, rayEnd, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
 				if(result.getType() == Type.MISS)
 					return;
-				else onImpact(result);
+				else onHit(result);
 			}
 
 			if(tries-- <= 0) {
@@ -182,49 +182,49 @@ public class PickarangEntity extends ProjectileEntity {
 	}
 
 	@Nullable
-	protected EntityRayTraceResult raycastEntities(Vector3d from, Vector3d to) {
-		return ProjectileHelper.rayTraceEntities(world, this, from, to, getBoundingBox().expand(getMotion()).grow(1.0D), (entity) -> 
+	protected EntityHitResult raycastEntities(Vec3 from, Vec3 to) {
+		return ProjectileUtil.getEntityHitResult(level, this, from, to, getBoundingBox().expandTowards(getDeltaMovement()).inflate(1.0D), (entity) -> 
 		!entity.isSpectator() 
 		&& entity.isAlive() 
-		&& (entity.canBeCollidedWith() || entity instanceof PickarangEntity) 
+		&& (entity.isPickable() || entity instanceof PickarangEntity) 
 		&& entity != getThrower() 
-		&& (entitiesHit == null || !entitiesHit.contains(entity.getEntityId())));
+		&& (entitiesHit == null || !entitiesHit.contains(entity.getId())));
 	}
 
 	@Override
-	protected void onImpact(@Nonnull RayTraceResult result) {
+	protected void onHit(@Nonnull HitResult result) {
 		LivingEntity owner = getThrower();
 
-		if(result.getType() == Type.BLOCK && result instanceof BlockRayTraceResult) {
-			BlockPos hit = ((BlockRayTraceResult) result).getPos();
-			BlockState state = world.getBlockState(hit);
+		if(result.getType() == Type.BLOCK && result instanceof BlockHitResult) {
+			BlockPos hit = ((BlockHitResult) result).getBlockPos();
+			BlockState state = level.getBlockState(hit);
 
-			if(getPiercingModifier() == 0 || state.getMaterial().isOpaque())
+			if(getPiercingModifier() == 0 || state.getMaterial().isSolidBlocking())
 				addHit();
 
-			if(!(owner instanceof ServerPlayerEntity))
+			if(!(owner instanceof ServerPlayer))
 				return;
 
-			ServerPlayerEntity player = (ServerPlayerEntity) owner;
+			ServerPlayer player = (ServerPlayer) owner;
 
-			float hardness = state.getBlockHardness(world, hit);
+			float hardness = state.getDestroySpeed(level, hit);
 			if (hardness <= PickarangModule.maxHardness && hardness >= 0) {
-				ItemStack prev = player.getHeldItemMainhand();
-				player.setHeldItem(Hand.MAIN_HAND, getStack());
+				ItemStack prev = player.getMainHandItem();
+				player.setItemInHand(InteractionHand.MAIN_HAND, getStack());
 
-				if (player.interactionManager.tryHarvestBlock(hit))
-					world.playEvent(null, 2001, hit, Block.getStateId(state));
+				if (player.gameMode.destroyBlock(hit))
+					level.levelEvent(null, 2001, hit, Block.getId(state));
 				else
 					clank();
 
-				setStack(player.getHeldItemMainhand());
+				setStack(player.getMainHandItem());
 
-				player.setHeldItem(Hand.MAIN_HAND, prev);
+				player.setItemInHand(InteractionHand.MAIN_HAND, prev);
 			} else
 				clank();
 
-		} else if(result.getType() == Type.ENTITY && result instanceof EntityRayTraceResult) {
-			Entity hit = ((EntityRayTraceResult) result).getEntity();
+		} else if(result.getType() == Type.ENTITY && result instanceof EntityHitResult) {
+			Entity hit = ((EntityHitResult) result).getEntity();
 
 			if(hit != owner) {
 				addHit(hit);
@@ -233,15 +233,15 @@ public class PickarangEntity extends ProjectileEntity {
 					clank();
 				} else {
 					ItemStack pickarang = getStack();
-					Multimap<Attribute, AttributeModifier> modifiers = pickarang.getAttributeModifiers(EquipmentSlotType.MAINHAND);
+					Multimap<Attribute, AttributeModifier> modifiers = pickarang.getAttributeModifiers(EquipmentSlot.MAINHAND);
 
 					if (owner != null) {
-						ItemStack prev = owner.getHeldItemMainhand();
-						owner.setHeldItem(Hand.MAIN_HAND, pickarang);
-						owner.getAttributeManager().reapplyModifiers(modifiers); 
+						ItemStack prev = owner.getMainHandItem();
+						owner.setItemInHand(InteractionHand.MAIN_HAND, pickarang);
+						owner.getAttributes().addTransientAttributeModifiers(modifiers); 
 
-						int ticksSinceLastSwing = owner.ticksSinceLastSwing;
-						owner.ticksSinceLastSwing = (int) (1.0 / owner.getAttributeValue(Attributes.ATTACK_SPEED) * 20.0) + 1;
+						int ticksSinceLastSwing = owner.attackStrengthTicker;
+						owner.attackStrengthTicker = (int) (1.0 / owner.getAttributeValue(Attributes.ATTACK_SPEED) * 20.0) + 1;
 
 						float prevHealth = hit instanceof LivingEntity ? ((LivingEntity) hit).getHealth() : 0;
 
@@ -259,10 +259,10 @@ public class PickarangEntity extends ProjectileEntity {
 								}
 							}
 
-							if (owner instanceof PlayerEntity)
-								((PlayerEntity) owner).attackTargetEntityWithCurrentItem(hit);
+							if (owner instanceof Player)
+								((Player) owner).attack(hit);
 							else
-								owner.attackEntityAsMob(hit);
+								owner.doHurtTarget(hit);
 
 							if (hit instanceof LivingEntity && ((LivingEntity) hit).getHealth() == prevHealth)
 								clank();
@@ -271,23 +271,23 @@ public class PickarangEntity extends ProjectileEntity {
 
 						PickarangModule.setActivePickarang(null);
 
-						owner.ticksSinceLastSwing = ticksSinceLastSwing;
+						owner.attackStrengthTicker = ticksSinceLastSwing;
 
-						setStack(owner.getHeldItemMainhand());
-						owner.setHeldItem(Hand.MAIN_HAND, prev);
-						owner.getAttributeManager().reapplyModifiers(modifiers);
+						setStack(owner.getMainHandItem());
+						owner.setItemInHand(InteractionHand.MAIN_HAND, prev);
+						owner.getAttributes().addTransientAttributeModifiers(modifiers);
 					} else {
-						MutableAttribute mapBuilder = new MutableAttribute();
-						mapBuilder.createMutableAttribute(Attributes.ATTACK_DAMAGE, 1); 
-						AttributeModifierMap map = mapBuilder.create();
-						AttributeModifierManager manager = new AttributeModifierManager(map);
-						manager.reapplyModifiers(modifiers);
+						Builder mapBuilder = new Builder();
+						mapBuilder.add(Attributes.ATTACK_DAMAGE, 1); 
+						AttributeSupplier map = mapBuilder.build();
+						AttributeMap manager = new AttributeMap(map);
+						manager.addTransientAttributeModifiers(modifiers);
 						
 						ItemStack stack = getStack();
-						stack.attemptDamageItem(1, world.rand, null);
+						stack.hurt(1, level.random, null);
 						setStack(stack);
-						hit.attackEntityFrom(new IndirectEntityDamageSource("player", this, this).setProjectile(),
-								(float) manager.getAttributeValue(Attributes.ATTACK_DAMAGE));
+						hit.hurt(new IndirectEntityDamageSource("player", this, this).setProjectile(),
+								(float) manager.getValue(Attributes.ATTACK_DAMAGE));
 					}
 				}
 			}
@@ -307,7 +307,7 @@ public class PickarangEntity extends ProjectileEntity {
 	public void addHit(Entity entity) {
 		if (entitiesHit == null)
 			entitiesHit = new IntOpenHashSet(5);
-		entitiesHit.add(entity.getEntityId());
+		entitiesHit.add(entity.getId());
 		postHit();
 	}
 
@@ -315,7 +315,7 @@ public class PickarangEntity extends ProjectileEntity {
 		if((entitiesHit == null ? 0 : entitiesHit.size()) + blockHitCount > getPiercingModifier())
 			setReturning();
 		else if (getPiercingModifier() > 0)
-			setMotion(getMotion().scale(0.8));
+			setDeltaMovement(getDeltaMovement().scale(0.8));
 	}
 
 	public void addHit() {
@@ -324,84 +324,84 @@ public class PickarangEntity extends ProjectileEntity {
 	}
 
 	protected void setReturning() {
-		dataManager.set(RETURNING, true);
+		entityData.set(RETURNING, true);
 	}
 
 	@Override
-	public boolean isPushedByWater() {
+	public boolean isPushedByFluid() {
 		return false;
 	}
 
 	@Override
 	public void tick() {
-		Vector3d pos = getPositionVec();
+		Vec3 pos = position();
 
-		this.lastTickPosX = pos.x;
-		this.lastTickPosY = pos.y;
-		this.lastTickPosZ = pos.z;
+		this.xOld = pos.x;
+		this.yOld = pos.y;
+		this.zOld = pos.z;
 		super.tick();
 
-		if(!dataManager.get(RETURNING))
+		if(!entityData.get(RETURNING))
 			checkImpact();
 
-		Vector3d ourMotion = this.getMotion();
-		setPosition(pos.x + ourMotion.x, pos.y + ourMotion.y, pos.z + ourMotion.z);
+		Vec3 ourMotion = this.getDeltaMovement();
+		setPos(pos.x + ourMotion.x, pos.y + ourMotion.y, pos.z + ourMotion.z);
 
-		float f = MathHelper.sqrt(horizontalMag(ourMotion));
-		this.rotationYaw = (float)(MathHelper.atan2(ourMotion.x, ourMotion.z) * (180F / (float)Math.PI));
+		float f = Mth.sqrt(getHorizontalDistanceSqr(ourMotion));
+		this.yRot = (float)(Mth.atan2(ourMotion.x, ourMotion.z) * (180F / (float)Math.PI));
 
-		this.rotationPitch = (float)(MathHelper.atan2(ourMotion.y, f) * (180F / (float)Math.PI));
-		while (this.rotationPitch - this.prevRotationPitch < -180.0F) this.prevRotationPitch -= 360.0F;
+		this.xRot = (float)(Mth.atan2(ourMotion.y, f) * (180F / (float)Math.PI));
+		while (this.xRot - this.xRotO < -180.0F) this.xRotO -= 360.0F;
 
-		while(this.rotationPitch - this.prevRotationPitch >= 180.0F) this.prevRotationPitch += 360.0F;
+		while(this.xRot - this.xRotO >= 180.0F) this.xRotO += 360.0F;
 
-		while(this.rotationYaw - this.prevRotationYaw < -180.0F) this.prevRotationYaw -= 360.0F;
+		while(this.yRot - this.yRotO < -180.0F) this.yRotO -= 360.0F;
 
-		while(this.rotationYaw - this.prevRotationYaw >= 180.0F) this.prevRotationYaw += 360.0F;
+		while(this.yRot - this.yRotO >= 180.0F) this.yRotO += 360.0F;
 
-		this.rotationPitch = MathHelper.lerp(0.2F, this.prevRotationPitch, this.rotationPitch);
-		this.rotationYaw = MathHelper.lerp(0.2F, this.prevRotationYaw, this.rotationYaw);
+		this.xRot = Mth.lerp(0.2F, this.xRotO, this.xRot);
+		this.yRot = Mth.lerp(0.2F, this.yRotO, this.yRot);
 		float drag;
 		if (this.isInWater()) {
 			for(int i = 0; i < 4; ++i) {
-				this.world.addParticle(ParticleTypes.BUBBLE, pos.x - ourMotion.x * 0.25D, pos.y - ourMotion.y * 0.25D, pos.z - ourMotion.z * 0.25D, ourMotion.x, ourMotion.y, ourMotion.z);
+				this.level.addParticle(ParticleTypes.BUBBLE, pos.x - ourMotion.x * 0.25D, pos.y - ourMotion.y * 0.25D, pos.z - ourMotion.z * 0.25D, ourMotion.x, ourMotion.y, ourMotion.z);
 			}
 
 			drag = 0.8F;
 		} else drag = 0.99F;
 
-		this.setMotion(ourMotion.scale(drag));
+		this.setDeltaMovement(ourMotion.scale(drag));
 
-		pos = getPositionVec();
-		this.setPosition(pos.x, pos.y, pos.z);
+		pos = position();
+		this.setPos(pos.x, pos.y, pos.z);
 
 		if(!isAlive())
 			return;
 
 		ItemStack stack = getStack();
 		
-		if(dataManager.get(NETHERITE_SYNCED)) {
+		if(entityData.get(NETHERITE_SYNCED)) {
 			if(Math.random() < 0.4)
-				this.world.addParticle(ParticleTypes.FLAME, 
+				this.level.addParticle(ParticleTypes.FLAME, 
 						pos.x - ourMotion.x * 0.25D + (Math.random() - 0.5) * 0.4, 
 						pos.y - ourMotion.y * 0.25D + (Math.random() - 0.5) * 0.4, 
 						pos.z - ourMotion.z * 0.25D + (Math.random() - 0.5) * 0.4, 
 						(Math.random() - 0.5) * 0.1, 
 						(Math.random() - 0.5) * 0.1, 
 						(Math.random() - 0.5) * 0.1);
-		} else if(!world.isRemote && netherite)
-			dataManager.set(NETHERITE_SYNCED, true);
+		} else if(!level.isClientSide && netherite)
+			entityData.set(NETHERITE_SYNCED, true);
 		
-		boolean returning = dataManager.get(RETURNING);
+		boolean returning = entityData.get(RETURNING);
 		liveTime++;
 
 		LivingEntity owner = getThrower();
-		if(owner == null || !owner.isAlive() || !(owner instanceof PlayerEntity)) {
-			if(!world.isRemote) {
-				while(isEntityInsideOpaqueBlock())
-					setPosition(getPosX(), getPosY() + 1, getPosZ());
+		if(owner == null || !owner.isAlive() || !(owner instanceof Player)) {
+			if(!level.isClientSide) {
+				while(isInWall())
+					setPos(getX(), getY() + 1, getZ());
 					
-				entityDropItem(stack, 0);
+				spawnAtLocation(stack, 0);
 				remove();
 			}
 
@@ -411,57 +411,57 @@ public class PickarangEntity extends ProjectileEntity {
 		if(!returning) {
 			if(liveTime > PickarangModule.timeout)
 				setReturning();
-			if (!world.getWorldBorder().contains(getBoundingBox()))
+			if (!level.getWorldBorder().isWithinBounds(getBoundingBox()))
 				spark();
 		} else {
-			noClip = true;
+			noPhysics = true;
 
 			int eff = getEfficiencyModifier();
 
-			List<ItemEntity> items = world.getEntitiesWithinAABB(ItemEntity.class, getBoundingBox().grow(2));
-			List<ExperienceOrbEntity> xp = world.getEntitiesWithinAABB(ExperienceOrbEntity.class, getBoundingBox().grow(2));
+			List<ItemEntity> items = level.getEntitiesOfClass(ItemEntity.class, getBoundingBox().inflate(2));
+			List<ExperienceOrb> xp = level.getEntitiesOfClass(ExperienceOrb.class, getBoundingBox().inflate(2));
 
-			Vector3d ourPos = getPositionVec();
+			Vec3 ourPos = position();
 			for(ItemEntity item : items) {
 				if (item.isPassenger())
 					continue;
 				item.startRiding(this);
 
-				item.setPickupDelay(2);
+				item.setPickUpDelay(2);
 			}
 
-			for(ExperienceOrbEntity xpOrb : xp) {
+			for(ExperienceOrb xpOrb : xp) {
 				if (xpOrb.isPassenger())
 					continue;
 				xpOrb.startRiding(this);
 
-				xpOrb.delayBeforeCanPickup = 2;
+				xpOrb.throwTime = 2;
 			}
 
-			Vector3d ownerPos = owner.getPositionVec().add(0, 1, 0);
-			Vector3d motion = ownerPos.subtract(ourPos);
+			Vec3 ownerPos = owner.position().add(0, 1, 0);
+			Vec3 motion = ownerPos.subtract(ourPos);
 			double motionMag = 3.25 + eff * 0.25;
 
-			if(motion.lengthSquared() < motionMag) {
-				PlayerEntity player = (PlayerEntity) owner;
-				ItemStack stackInSlot = player.inventory.getStackInSlot(slot);
+			if(motion.lengthSqr() < motionMag) {
+				Player player = (Player) owner;
+				ItemStack stackInSlot = player.inventory.getItem(slot);
 
-				if(!world.isRemote) {
+				if(!level.isClientSide) {
 					playSound(QuarkSounds.ENTITY_PICKARANG_PICKUP, 1, 1);
 
 					if(!stack.isEmpty()) if (player.isAlive() && stackInSlot.isEmpty())
-						player.inventory.setInventorySlotContents(slot, stack);
-					else if (!player.isAlive() || !player.inventory.addItemStackToInventory(stack))
-						player.dropItem(stack, false);
+						player.inventory.setItem(slot, stack);
+					else if (!player.isAlive() || !player.inventory.add(stack))
+						player.drop(stack, false);
 
 					if (player.isAlive()) {
 						for (ItemEntity item : items)
 							if(item.isAlive())
 								giveItemToPlayer(player, item);
 
-						for (ExperienceOrbEntity xpOrb : xp) 
+						for (ExperienceOrb xpOrb : xp) 
 							if(xpOrb.isAlive())
-								xpOrb.onCollideWithPlayer(player);
+								xpOrb.playerTouch(player);
 
 						for (Entity riding : getPassengers()) {
 							if (!riding.isAlive())
@@ -469,34 +469,34 @@ public class PickarangEntity extends ProjectileEntity {
 
 							if (riding instanceof ItemEntity)
 								giveItemToPlayer(player, (ItemEntity) riding);
-							else if (riding instanceof ExperienceOrbEntity)
-								riding.onCollideWithPlayer(player);
+							else if (riding instanceof ExperienceOrb)
+								riding.playerTouch(player);
 						}
 					}
 
 					remove();
 				}
 			} else
-				setMotion(motion.normalize().scale(0.7 + eff * 0.325F));
+				setDeltaMovement(motion.normalize().scale(0.7 + eff * 0.325F));
 		}
 	}
 
-	private void giveItemToPlayer(PlayerEntity player, ItemEntity itemEntity) {
-		itemEntity.setPickupDelay(0);
-		itemEntity.onCollideWithPlayer(player);
+	private void giveItemToPlayer(Player player, ItemEntity itemEntity) {
+		itemEntity.setPickUpDelay(0);
+		itemEntity.playerTouch(player);
 
 		if (itemEntity.isAlive()) {
 			// Player could not pick up everything
 			ItemStack drop = itemEntity.getItem();
-			player.dropItem(drop, false);
+			player.drop(drop, false);
 			itemEntity.remove();
 		}
 	}
 
 	@Nullable
 	public LivingEntity getThrower() {
-		if (this.owner == null && this.ownerId != null && this.world instanceof ServerWorld) {
-			Entity entity = ((ServerWorld)this.world).getEntityByUuid(this.ownerId);
+		if (this.owner == null && this.ownerId != null && this.level instanceof ServerLevel) {
+			Entity entity = ((ServerLevel)this.level).getEntity(this.ownerId);
 			if (entity instanceof LivingEntity) {
 				this.owner = (LivingEntity)entity;
 			} else {
@@ -508,75 +508,75 @@ public class PickarangEntity extends ProjectileEntity {
 	}
 
 	@Override
-	protected boolean canFitPassenger(Entity passenger) {
-		return super.canFitPassenger(passenger) || passenger instanceof ItemEntity || passenger instanceof ExperienceOrbEntity;
+	protected boolean canAddPassenger(Entity passenger) {
+		return super.canAddPassenger(passenger) || passenger instanceof ItemEntity || passenger instanceof ExperienceOrb;
 	}
 
 	@Override
-	public double getMountedYOffset() {
+	public double getPassengersRidingOffset() {
 		return 0;
 	}
 
 	@Nonnull
 	@Override
-	public SoundCategory getSoundCategory() {
-		return SoundCategory.PLAYERS;
+	public SoundSource getSoundSource() {
+		return SoundSource.PLAYERS;
 	}
 
 	public int getEfficiencyModifier() {
-		return EnchantmentHelper.getEnchantmentLevel(Enchantments.EFFICIENCY, getStack());
+		return EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_EFFICIENCY, getStack());
 	}
 
 	public int getPiercingModifier() {
-		return EnchantmentHelper.getEnchantmentLevel(Enchantments.PIERCING, getStack());
+		return EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PIERCING, getStack());
 	}
 
 	public ItemStack getStack() {
-		return dataManager.get(STACK);
+		return entityData.get(STACK);
 	}
 
 	public void setStack(ItemStack stack) {
-		dataManager.set(STACK, stack);
+		entityData.set(STACK, stack);
 	}
 
 	@Override
-	public void readAdditional(@Nonnull CompoundNBT compound) {
-		dataManager.set(RETURNING, compound.getBoolean(TAG_RETURNING));
+	public void readAdditionalSaveData(@Nonnull CompoundTag compound) {
+		entityData.set(RETURNING, compound.getBoolean(TAG_RETURNING));
 		liveTime = compound.getInt(TAG_LIVE_TIME);
 		blockHitCount = compound.getInt(TAG_BLOCKS_BROKEN);
 		slot = compound.getInt(TAG_RETURN_SLOT);
 
 		if (compound.contains(TAG_ITEM_STACK))
-			setStack(ItemStack.read(compound.getCompound(TAG_ITEM_STACK)));
+			setStack(ItemStack.of(compound.getCompound(TAG_ITEM_STACK)));
 		else
 			setStack(new ItemStack(PickarangModule.pickarang));
 
 		if (compound.contains("owner", 10)) {
-			INBT owner = compound.get("owner");
+			Tag owner = compound.get("owner");
 			if (owner != null)
-				this.ownerId = NBTUtil.readUniqueId(owner);
+				this.ownerId = NbtUtils.loadUUID(owner);
 		}
 		
 		netherite = compound.getBoolean(TAG_NETHERITE);
 	}
 
 	@Override
-	public void writeAdditional(@Nonnull CompoundNBT compound) {
-		compound.putBoolean(TAG_RETURNING, dataManager.get(RETURNING));
+	public void addAdditionalSaveData(@Nonnull CompoundTag compound) {
+		compound.putBoolean(TAG_RETURNING, entityData.get(RETURNING));
 		compound.putInt(TAG_LIVE_TIME, liveTime);
 		compound.putInt(TAG_BLOCKS_BROKEN, blockHitCount);
 		compound.putInt(TAG_RETURN_SLOT, slot);
 
 		compound.put(TAG_ITEM_STACK, getStack().serializeNBT());
 		if (this.ownerId != null)
-			compound.put("owner", NBTUtil.func_240626_a_(this.ownerId));
+			compound.put("owner", NbtUtils.createUUID(this.ownerId));
 		
 		compound.putBoolean(TAG_NETHERITE, netherite);
 	}
 
 	@Nonnull
 	@Override
-	public IPacket<?> createSpawnPacket() {
+	public Packet<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 

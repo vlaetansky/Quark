@@ -3,22 +3,22 @@ package vazkii.quark.content.automation.module;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.ai.goal.TemptGoal;
-import net.minecraft.entity.item.ExperienceOrbEntity;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.GameRules;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.ai.goal.TemptGoal;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.GameRules;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -41,7 +41,7 @@ import vazkii.quark.content.automation.tile.FeedingTroughTileEntity;
  */
 @LoadModule(category = ModuleCategory.AUTOMATION, hasSubscriptions = true)
 public class FeedingTroughModule extends QuarkModule {
-    public static TileEntityType<FeedingTroughTileEntity> tileEntityType;
+    public static BlockEntityType<FeedingTroughTileEntity> tileEntityType;
 
     @Config(description = "How long, in game ticks, between animals being able to eat from the trough")
     @Config.Min(1)
@@ -65,7 +65,7 @@ public class FeedingTroughModule extends QuarkModule {
         if (event.side == LogicalSide.SERVER) {
             if (event.phase == TickEvent.Phase.START) {
                 breedingOccurred.remove();
-                for (TileEntity tile : event.world.loadedTileEntityList) {
+                for (BlockEntity tile : event.world.blockEntityList) {
                     if (tile instanceof FeedingTroughTileEntity)
                         troughs.add((FeedingTroughTileEntity) tile);
                 }
@@ -79,26 +79,26 @@ public class FeedingTroughModule extends QuarkModule {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onBreed(BabyEntitySpawnEvent event) {
-        if (event.getCausedByPlayer() == null && event.getParentA().world.getGameRules().getBoolean(GameRules.DO_MOB_LOOT))
+        if (event.getCausedByPlayer() == null && event.getParentA().level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))
             breedingOccurred.set(true);
     }
 
     @SubscribeEvent
     public void onOrbSpawn(EntityJoinWorldEvent event) {
-        if (event.getEntity() instanceof ExperienceOrbEntity && breedingOccurred.get()) {
+        if (event.getEntity() instanceof ExperienceOrb && breedingOccurred.get()) {
             event.setCanceled(true);
             breedingOccurred.remove();
         }
     }
 
-    public static PlayerEntity temptWithTroughs(TemptGoal goal, PlayerEntity found) {
+    public static Player temptWithTroughs(TemptGoal goal, Player found) {
         if (!ModuleLoader.INSTANCE.isModuleEnabled(FeedingTroughModule.class) ||
-                (found != null && (goal.isTempting(found.getHeldItemMainhand()) || goal.isTempting(found.getHeldItemOffhand()))))
+                (found != null && (goal.shouldFollowItem(found.getMainHandItem()) || goal.shouldFollowItem(found.getOffhandItem()))))
             return found;
 
-        if (!(goal.creature instanceof AnimalEntity) ||
-                !((AnimalEntity) goal.creature).canFallInLove() ||
-                ((AnimalEntity) goal.creature).getGrowingAge() != 0)
+        if (!(goal.mob instanceof Animal) ||
+                !((Animal) goal.mob).canFallInLove() ||
+                ((Animal) goal.mob).getAge() != 0)
             return found;
 
         double shortestDistanceSq = Double.MAX_VALUE;
@@ -107,24 +107,24 @@ public class FeedingTroughModule extends QuarkModule {
 
         Set<FeedingTroughTileEntity> troughs = loadedTroughs.get();
         for (FeedingTroughTileEntity tile : troughs) {
-            BlockPos pos = tile.getPos();
-            double distanceSq = pos.distanceSq(goal.creature.getPositionVec(), true);
+            BlockPos pos = tile.getBlockPos();
+            double distanceSq = pos.distSqr(goal.mob.position(), true);
             if (distanceSq <= range * range && distanceSq < shortestDistanceSq) {
                 FakePlayer foodHolder = tile.getFoodHolder(goal);
                 if (foodHolder != null) {
                     shortestDistanceSq = distanceSq;
                     target = foodHolder;
-                    location = pos.toImmutable();
+                    location = pos.immutable();
                 }
             }
         }
 
         if (target != null) {
-        	Vector3d eyesPos = goal.creature.getPositionVec().add(0, goal.creature.getEyeHeight(), 0);
-            Vector3d targetPos = new Vector3d(location.getX(), location.getY(), location.getZ()).add(0.5, 0.0625, 0.5);
-            BlockRayTraceResult ray = goal.creature.world.rayTraceBlocks(new RayTraceContext(eyesPos, targetPos, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, goal.creature));
+        	Vec3 eyesPos = goal.mob.position().add(0, goal.mob.getEyeHeight(), 0);
+            Vec3 targetPos = new Vec3(location.getX(), location.getY(), location.getZ()).add(0.5, 0.0625, 0.5);
+            BlockHitResult ray = goal.mob.level.clip(new ClipContext(eyesPos, targetPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, goal.mob));
 
-            if (ray.getType() == RayTraceResult.Type.BLOCK && ray.getPos().equals(location))
+            if (ray.getType() == HitResult.Type.BLOCK && ray.getBlockPos().equals(location))
                 return target;
         }
 
@@ -133,9 +133,9 @@ public class FeedingTroughModule extends QuarkModule {
 
     @Override
     public void construct() {
-        Block feedingTrough = new FeedingTroughBlock("feeding_trough", this, ItemGroup.DECORATIONS,
-                Block.Properties.create(Material.WOOD).hardnessAndResistance(0.6F).sound(SoundType.WOOD));
-        tileEntityType = TileEntityType.Builder.create(FeedingTroughTileEntity::new, feedingTrough).build(null);
+        Block feedingTrough = new FeedingTroughBlock("feeding_trough", this, CreativeModeTab.TAB_DECORATIONS,
+                Block.Properties.of(Material.WOOD).strength(0.6F).sound(SoundType.WOOD));
+        tileEntityType = BlockEntityType.Builder.of(FeedingTroughTileEntity::new, feedingTrough).build(null);
         RegistryHelper.register(tileEntityType, "feeding_trough");
     }
 }

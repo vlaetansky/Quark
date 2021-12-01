@@ -2,12 +2,12 @@ package vazkii.quark.base.client.config.gui;
 
 import org.apache.commons.lang3.text.WordUtils;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.ChatFormatting;
 import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.config.ConfigObject;
@@ -39,7 +39,7 @@ public class CategoryScreen extends AbstractScrollingWidgetScreen {
 	}
 	
 	@Override
-	public void render(MatrixStack mstack, int mouseX, int mouseY, float pticks) {
+	public void render(PoseStack mstack, int mouseX, int mouseY, float pticks) {
 		super.render(mstack, mouseX, mouseY, pticks);
 		
 		int left = 20;
@@ -58,8 +58,8 @@ public class CategoryScreen extends AbstractScrollingWidgetScreen {
 			}
 		}
 		
-		font.drawString(mstack, TextFormatting.BOLD + I18n.format("quark.gui.config.header", modName), left, 10, 0x48ddbc);
-		font.drawString(mstack, breadcrumbs, left, 20, 0xFFFFFF);
+		font.draw(mstack, ChatFormatting.BOLD + I18n.get("quark.gui.config.header", modName), left, 10, 0x48ddbc);
+		font.draw(mstack, breadcrumbs, left, 20, 0xFFFFFF);
 	}
 
 	@Override

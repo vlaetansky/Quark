@@ -1,21 +1,21 @@
 package vazkii.quark.content.client.render.variant;
 
 import net.minecraft.client.renderer.entity.DolphinRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.entity.passive.DolphinEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.world.entity.animal.Dolphin;
+import net.minecraft.resources.ResourceLocation;
 import vazkii.quark.content.client.module.VariantAnimalTexturesModule;
 import vazkii.quark.content.client.module.VariantAnimalTexturesModule.VariantTextureType;
 
 public class VariantDolphinRenderer extends DolphinRenderer {
 
-	public VariantDolphinRenderer(EntityRendererManager renderManagerIn) {
+	public VariantDolphinRenderer(EntityRenderDispatcher renderManagerIn) {
 		super(renderManagerIn);
 	}
 
 	@Override
-	public ResourceLocation getEntityTexture(DolphinEntity entity) {
-		return VariantAnimalTexturesModule.getTextureOrShiny(entity, VariantTextureType.DOLPHIN, () -> super.getEntityTexture(entity));
+	public ResourceLocation getTextureLocation(Dolphin entity) {
+		return VariantAnimalTexturesModule.getTextureOrShiny(entity, VariantTextureType.DOLPHIN, () -> super.getTextureLocation(entity));
 	}
 	
 }

@@ -1,10 +1,10 @@
 package vazkii.quark.content.building.module;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.tags.Tag;
+import net.minecraft.resources.ResourceLocation;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -16,7 +16,7 @@ import vazkii.quark.content.world.module.BlossomTreesModule;
 @LoadModule(category = ModuleCategory.BUILDING)
 public class HedgesModule extends QuarkModule {
 
-	public static ITag<Block> hedgesTag;
+	public static Tag<Block> hedgesTag;
 	
 	@Override
 	public void construct() {

@@ -2,7 +2,7 @@ package vazkii.quark.api;
 
 import java.util.Comparator;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public interface ICustomSorting {
 

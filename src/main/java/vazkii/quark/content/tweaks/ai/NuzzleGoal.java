@@ -12,21 +12,23 @@ package vazkii.quark.content.tweaks.ai;
 
 import java.util.EnumSet;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.pathfinding.FlyingPathNavigator;
-import net.minecraft.pathfinding.GroundPathNavigator;
-import net.minecraft.pathfinding.PathNavigator;
-import net.minecraft.pathfinding.PathNodeType;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.sounds.SoundEvent;
+
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 public class NuzzleGoal extends Goal {
 
-	private final TameableEntity creature;
+	private final TamableAnimal creature;
 	private LivingEntity owner;
 	private final double followSpeed;
-	private final PathNavigator petPathfinder;
+	private final PathNavigation petPathfinder;
 	private int timeUntilRebuildPath;
 	private final float maxDist;
 	private final float whineDist;
@@ -34,28 +36,28 @@ public class NuzzleGoal extends Goal {
 	private float oldWaterCost;
 	private final SoundEvent whine;
 
-	public NuzzleGoal(TameableEntity creature, double followSpeed, float maxDist, float whineDist, SoundEvent whine) {
+	public NuzzleGoal(TamableAnimal creature, double followSpeed, float maxDist, float whineDist, SoundEvent whine) {
 		this.creature = creature;
 		this.followSpeed = followSpeed;
-		this.petPathfinder = creature.getNavigator();
+		this.petPathfinder = creature.getNavigation();
 		this.maxDist = maxDist;
 		this.whineDist = whineDist;
 		this.whine = whine;
-		this.setMutexFlags(EnumSet.of(Flag.MOVE, Flag.LOOK, Flag.TARGET));
+		this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK, Flag.TARGET));
 
-		if (!(creature.getNavigator() instanceof GroundPathNavigator) && !(creature.getNavigator() instanceof FlyingPathNavigator))
+		if (!(creature.getNavigation() instanceof GroundPathNavigation) && !(creature.getNavigation() instanceof FlyingPathNavigation))
 			throw new IllegalArgumentException("Unsupported mob type for FollowOwnerGoal");
 	}
 
 	@Override
-	public boolean shouldExecute() {
+	public boolean canUse() {
 		if (!WantLoveGoal.needsPets(creature))
 			return false;
 
 		LivingEntity living = this.creature.getOwner();
 
 		if (living == null || living.isSpectator() ||
-				this.creature.isSitting())
+				this.creature.isOrderedToSit())
 			return false;
 		else {
 			this.owner = living;
@@ -64,42 +66,42 @@ public class NuzzleGoal extends Goal {
 	}
 
 	@Override
-	public boolean shouldContinueExecuting() {
+	public boolean canContinueToUse() {
 		if (!WantLoveGoal.needsPets(creature))
 			return false;
-		return !this.petPathfinder.noPath() && this.creature.getDistanceSq(this.owner) > (this.maxDist * this.maxDist) && !this.creature.isSitting();
+		return !this.petPathfinder.isDone() && this.creature.distanceToSqr(this.owner) > (this.maxDist * this.maxDist) && !this.creature.isOrderedToSit();
 	}
 
 	@Override
-	public void startExecuting() {
+	public void start() {
 		this.timeUntilRebuildPath = 0;
 		this.whineCooldown = 10;
-		this.oldWaterCost = this.creature.getPathPriority(PathNodeType.WATER);
-		this.creature.setPathPriority(PathNodeType.WATER, 0.0F);
+		this.oldWaterCost = this.creature.getPathfindingMalus(BlockPathTypes.WATER);
+		this.creature.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
 	}
 
 	@Override
-	public void resetTask() {
+	public void stop() {
 		this.owner = null;
-		this.petPathfinder.clearPath();
-		this.creature.setPathPriority(PathNodeType.WATER, this.oldWaterCost);
+		this.petPathfinder.stop();
+		this.creature.setPathfindingMalus(BlockPathTypes.WATER, this.oldWaterCost);
 	}
 
 	@Override
 	public void tick() {
-		this.creature.getLookController().setLookPositionWithEntity(this.owner, 10.0F, this.creature.getVerticalFaceSpeed());
+		this.creature.getLookControl().setLookAt(this.owner, 10.0F, this.creature.getMaxHeadXRot());
 
-		if (!this.creature.isSitting()) {
+		if (!this.creature.isOrderedToSit()) {
 			if (--this.timeUntilRebuildPath <= 0) {
 				this.timeUntilRebuildPath = 10;
 
-				this.petPathfinder.tryMoveToEntityLiving(this.owner, this.followSpeed);
+				this.petPathfinder.moveTo(this.owner, this.followSpeed);
 			}
 		}
 
-		if (creature.getDistanceSq(owner) < whineDist) {
+		if (creature.distanceToSqr(owner) < whineDist) {
 			if (--this.whineCooldown <= 0) {
-				this.whineCooldown = 80 + creature.getRNG().nextInt(40);
+				this.whineCooldown = 80 + creature.getRandom().nextInt(40);
 				creature.playSound(whine, 1F, 0.5F + (float) Math.random() * 0.5F);
 			}
 		}

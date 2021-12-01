@@ -1,32 +1,32 @@
 package vazkii.quark.addons.oddities.client.render;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.model.BookModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.RenderMaterial;
-import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.model.BookModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import com.mojang.math.Vector3f;
 import vazkii.quark.addons.oddities.tile.MatrixEnchantingTableTileEntity;
 
-public class MatrixEnchantingTableTileEntityRenderer extends TileEntityRenderer<MatrixEnchantingTableTileEntity> {
+public class MatrixEnchantingTableTileEntityRenderer extends BlockEntityRenderer<MatrixEnchantingTableTileEntity> {
 
-	public MatrixEnchantingTableTileEntityRenderer(TileEntityRendererDispatcher p_i226006_1_) {
+	public MatrixEnchantingTableTileEntityRenderer(BlockEntityRenderDispatcher p_i226006_1_) {
 		super(p_i226006_1_);
 	}
 
 	@Override
-	public void render(MatrixEnchantingTableTileEntity te, float pticks, MatrixStack matrix, IRenderTypeBuffer buffer, int light, int overlay) {
+	public void render(MatrixEnchantingTableTileEntity te, float pticks, PoseStack matrix, MultiBufferSource buffer, int light, int overlay) {
 		float time = te.tickCount + pticks;
 
 		float f1 = te.bookRotation - te.bookRotationPrev;
@@ -40,13 +40,13 @@ public class MatrixEnchantingTableTileEntityRenderer extends TileEntityRenderer<
 
 		renderBook(te, time, rot, pticks, matrix, buffer, light, overlay);
 
-		ItemStack item = te.getStackInSlot(0);
+		ItemStack item = te.getItem(0);
 		if(!item.isEmpty())
 			renderItem(item, time, bookOpen, rot, matrix, buffer, light, overlay);
 	}
 
-	private void renderItem(ItemStack item, float time, float bookOpen, float rot, MatrixStack matrix, IRenderTypeBuffer buffer, int light, int overlay) {
-		matrix.push();
+	private void renderItem(ItemStack item, float time, float bookOpen, float rot, PoseStack matrix, MultiBufferSource buffer, int light, int overlay) {
+		matrix.pushPose();
 		matrix.translate(0.5F, 0.8F, 0.5F);
 		matrix.scale(0.6F, 0.6F, 0.6F);
 
@@ -54,27 +54,27 @@ public class MatrixEnchantingTableTileEntityRenderer extends TileEntityRenderer<
 		rot -= 90F;
 		rot *= bookOpen;
 
-		matrix.rotate(Vector3f.YP.rotationDegrees(rot));
+		matrix.mulPose(Vector3f.YP.rotationDegrees(rot));
 		matrix.translate(0, bookOpen * 1.4F, Math.sin(bookOpen * Math.PI));
-		matrix.rotate(Vector3f.XP.rotationDegrees(-90F * (bookOpen - 1F)));
+		matrix.mulPose(Vector3f.XP.rotationDegrees(-90F * (bookOpen - 1F)));
 
 		float trans = (float) Math.sin(time * 0.06) * bookOpen * 0.2F;
 		matrix.translate(0F, trans, 0F);
 
 		ItemRenderer render = Minecraft.getInstance().getItemRenderer();
-		render.renderItem(item, ItemCameraTransforms.TransformType.FIXED, light, overlay, matrix, buffer);
-		matrix.pop();
+		render.renderStatic(item, ItemTransforms.TransformType.FIXED, light, overlay, matrix, buffer);
+		matrix.popPose();
 	}
 
-	public static final RenderMaterial TEXTURE_BOOK = new RenderMaterial(AtlasTexture.LOCATION_BLOCKS_TEXTURE, new ResourceLocation("entity/enchanting_table_book"));
+	public static final Material TEXTURE_BOOK = new Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation("entity/enchanting_table_book"));
 	private final BookModel modelBook = new BookModel();
 
 	// Copy of vanilla's book render
-	private void renderBook(MatrixEnchantingTableTileEntity tileEntityIn, float time, float bookRot, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
-		matrixStackIn.push();
+	private void renderBook(MatrixEnchantingTableTileEntity tileEntityIn, float time, float bookRot, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+		matrixStackIn.pushPose();
 		matrixStackIn.translate(0.5D, 0.75D, 0.5D);
 		float f = (float) tileEntityIn.tickCount + partialTicks;
-		matrixStackIn.translate(0.0D, (double)(0.1F + MathHelper.sin(f * 0.1F) * 0.01F), 0.0D);
+		matrixStackIn.translate(0.0D, (double)(0.1F + Mth.sin(f * 0.1F) * 0.01F), 0.0D);
 
 		float f1;
 		for(f1 = tileEntityIn.bookRotation - tileEntityIn.bookRotationPrev; f1 >= (float)Math.PI; f1 -= ((float)Math.PI * 2F)) {
@@ -86,16 +86,16 @@ public class MatrixEnchantingTableTileEntityRenderer extends TileEntityRenderer<
 		}
 
 		float f2 = tileEntityIn.bookRotationPrev + f1 * partialTicks;
-		matrixStackIn.rotate(Vector3f.YP.rotation(-f2));
-		matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(80.0F));
-		float f3 = MathHelper.lerp(partialTicks, tileEntityIn.pageFlipPrev, tileEntityIn.pageFlip);
-		float f4 = MathHelper.frac(f3 + 0.25F) * 1.6F - 0.3F;
-		float f5 = MathHelper.frac(f3 + 0.75F) * 1.6F - 0.3F;
-		float f6 = MathHelper.lerp(partialTicks, tileEntityIn.bookSpreadPrev, tileEntityIn.bookSpread);
-		this.modelBook.setBookState(f, MathHelper.clamp(f4, 0.0F, 1.0F), MathHelper.clamp(f5, 0.0F, 1.0F), f6);
-		IVertexBuilder ivertexbuilder = TEXTURE_BOOK.getBuffer(bufferIn, RenderType::getEntitySolid);
-		this.modelBook.render(matrixStackIn, ivertexbuilder, combinedLightIn, combinedOverlayIn, 1.0F, 1.0F, 1.0F, 1.0F);
-		matrixStackIn.pop();
+		matrixStackIn.mulPose(Vector3f.YP.rotation(-f2));
+		matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(80.0F));
+		float f3 = Mth.lerp(partialTicks, tileEntityIn.pageFlipPrev, tileEntityIn.pageFlip);
+		float f4 = Mth.frac(f3 + 0.25F) * 1.6F - 0.3F;
+		float f5 = Mth.frac(f3 + 0.75F) * 1.6F - 0.3F;
+		float f6 = Mth.lerp(partialTicks, tileEntityIn.bookSpreadPrev, tileEntityIn.bookSpread);
+		this.modelBook.setupAnim(f, Mth.clamp(f4, 0.0F, 1.0F), Mth.clamp(f5, 0.0F, 1.0F), f6);
+		VertexConsumer ivertexbuilder = TEXTURE_BOOK.buffer(bufferIn, RenderType::entitySolid);
+		this.modelBook.renderToBuffer(matrixStackIn, ivertexbuilder, combinedLightIn, combinedOverlayIn, 1.0F, 1.0F, 1.0F, 1.0F);
+		matrixStackIn.popPose();
 	}
 
 }

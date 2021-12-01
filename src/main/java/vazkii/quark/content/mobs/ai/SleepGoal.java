@@ -12,9 +12,11 @@ package vazkii.quark.content.mobs.ai;
 
 import java.util.EnumSet;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
 import vazkii.quark.content.mobs.entity.FoxhoundEntity;
+
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 public class SleepGoal extends Goal {
 
@@ -24,34 +26,34 @@ public class SleepGoal extends Goal {
 
 	public SleepGoal(FoxhoundEntity foxhound) {
 		this.foxhound = foxhound;
-		this.setMutexFlags(EnumSet.of(Flag.MOVE, Flag.JUMP, Flag.LOOK, Flag.TARGET));
+		this.setFlags(EnumSet.of(Flag.MOVE, Flag.JUMP, Flag.LOOK, Flag.TARGET));
 	}
 
 	@Override
-	public boolean shouldExecute() {
-		if (!this.foxhound.isTamed() || this.foxhound.isInWater() || !this.foxhound.onGround)
+	public boolean canUse() {
+		if (!this.foxhound.isTame() || this.foxhound.isInWater() || !this.foxhound.onGround)
 			return false;
 		else {
 			LivingEntity living = this.foxhound.getOwner();
 
 			if (living == null) return true;
 			else
-				return (!(this.foxhound.getDistanceSq(living) < 144.0D) || living.getRevengeTarget() == null) && this.isSleeping;
+				return (!(this.foxhound.distanceToSqr(living) < 144.0D) || living.getLastHurtByMob() == null) && this.isSleeping;
 		}
 	}
 
 	@Override
-	public void startExecuting() {
-		this.foxhound.getNavigator().clearPath();
-		wasSitting = foxhound.isSitting(); 
-		this.foxhound.func_233687_w_(true); // setSitting
-		this.foxhound.setSleeping(true);
+	public void start() {
+		this.foxhound.getNavigation().stop();
+		wasSitting = foxhound.isOrderedToSit(); 
+		this.foxhound.setOrderedToSit(true); // setSitting
+		this.foxhound.setInSittingPose(true);
 	}
 
 	@Override
-	public void resetTask() {
-		this.foxhound.func_233687_w_(wasSitting); // setSitting
-		this.foxhound.setSleeping(false);
+	public void stop() {
+		this.foxhound.setOrderedToSit(wasSitting); // setSitting
+		this.foxhound.setInSittingPose(false);
 	}
 
 	public void setSleeping(boolean sitting) {

@@ -3,8 +3,8 @@ package vazkii.quark.base.handler;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.Item;
 
 public class ItemOverrideHandler {
 
@@ -16,7 +16,7 @@ public class ItemOverrideHandler {
 			if(defaultItemKeys.containsKey(item))
 				changeItemLocalizationKey(item, defaultItemKeys.get(item));
 		} else {
-			String currKey = item.translationKey;
+			String currKey = item.descriptionId;
 			if(!defaultItemKeys.containsKey(item))
 				defaultItemKeys.put(item, currKey);
 			
@@ -29,7 +29,7 @@ public class ItemOverrideHandler {
 			if(defaultBlockKeys.containsKey(block))
 				changeBlockLocalizationKey(block, defaultBlockKeys.get(block));
 		} else {
-			String currKey = block.translationKey;
+			String currKey = block.descriptionId;
 			if(!defaultBlockKeys.containsKey(block))
 				defaultBlockKeys.put(block, currKey);
 			
@@ -38,12 +38,12 @@ public class ItemOverrideHandler {
 	}
 	
 	private static void changeItemLocalizationKey(Item item, String newKey) {
-		item.translationKey = newKey;
+		item.descriptionId = newKey;
 	}
 	
 	
 	private static void changeBlockLocalizationKey(Block block, String newKey) {
-		block.translationKey = newKey;
+		block.descriptionId = newKey;
 	}
 	
 }

@@ -1,18 +1,18 @@
 package vazkii.quark.content.tools.item;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.util.ItemNBTHelper;
@@ -28,18 +28,18 @@ public class AbacusItem extends QuarkItem {
 	public static int MAX_COUNT = 48;
 
 	public AbacusItem(QuarkModule module) {
-		super("abacus", module, new Item.Properties().group(ItemGroup.TOOLS).maxStackSize(1));
+		super("abacus", module, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS).stacksTo(1));
 	}
 
 	@Override
-	public ActionResultType onItemUse(ItemUseContext context) {
-		ItemStack stack = context.getItem();
+	public InteractionResult useOn(UseOnContext context) {
+		ItemStack stack = context.getItemInHand();
 		BlockPos curr = getBlockPos(stack);
 		if(curr != null)
 			setBlockPos(stack, null);
-		else setBlockPos(stack, context.getPos());
+		else setBlockPos(stack, context.getClickedPos());
 
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	public static void setBlockPos(ItemStack stack, BlockPos pos) {
@@ -62,11 +62,11 @@ public class AbacusItem extends QuarkItem {
 		return new BlockPos(x, y, z);
 	}
 
-	public static int getCount(ItemStack stack, BlockPos target, World world) {
+	public static int getCount(ItemStack stack, BlockPos target, Level world) {
 		BlockPos pos = getBlockPos(stack); 
 
-		if(pos != null && !world.isAirBlock(target))
-			return target.manhattanDistance(pos);
+		if(pos != null && !world.isEmptyBlock(target))
+			return target.distManhattan(pos);
 
 		return -1;
 	}
@@ -75,13 +75,13 @@ public class AbacusItem extends QuarkItem {
 	public static int getCount(ItemStack stack, LivingEntity entityIn) {
 		int count = -1;
 		Minecraft mc = Minecraft.getInstance();
-		PlayerEntity player = mc.player;
+		Player player = mc.player;
 
 		if(entityIn == player) {
-			RayTraceResult result = mc.objectMouseOver;
-			if(result instanceof BlockRayTraceResult) {
-				BlockPos target = ((BlockRayTraceResult) result).getPos();
-				count = getCount(stack, target, player.world);
+			HitResult result = mc.hitResult;
+			if(result instanceof BlockHitResult) {
+				BlockPos target = ((BlockHitResult) result).getBlockPos();
+				count = getCount(stack, target, player.level);
 			}
 		}
 	
@@ -89,7 +89,7 @@ public class AbacusItem extends QuarkItem {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public static float count(ItemStack stack, ClientWorld world, LivingEntity entityIn) {
+	public static float count(ItemStack stack, ClientLevel world, LivingEntity entityIn) {
 		int count = getCount(stack, entityIn);
 		if(count == -1)
 			return 9999;

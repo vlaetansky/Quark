@@ -1,9 +1,9 @@
 package vazkii.quark.addons.oddities.module;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.extensions.IForgeContainerType;
@@ -20,8 +20,8 @@ import vazkii.quark.base.module.config.Config;
 @LoadModule(category = ModuleCategory.ODDITIES)
 public class CrateModule extends QuarkModule {
 
-    public static TileEntityType<CrateTileEntity> crateType;
-	public static ContainerType<CrateContainer> containerType;
+    public static BlockEntityType<CrateTileEntity> crateType;
+	public static MenuType<CrateContainer> containerType;
 	
 	public static Block crate;
 	
@@ -34,14 +34,14 @@ public class CrateModule extends QuarkModule {
 		containerType = IForgeContainerType.create(CrateContainer::fromNetwork);
 		RegistryHelper.register(containerType, "crate");
 		
-		crateType = TileEntityType.Builder.create(CrateTileEntity::new, crate).build(null);
+		crateType = BlockEntityType.Builder.of(CrateTileEntity::new, crate).build(null);
 		RegistryHelper.register(crateType, "crate");
 	}
 	
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		ScreenManager.registerFactory(containerType, CrateScreen::new);
+		MenuScreens.register(containerType, CrateScreen::new);
 	}
 	
 }

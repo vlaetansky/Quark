@@ -2,12 +2,14 @@ package vazkii.quark.content.tweaks.ai;
 
 import java.util.EnumSet;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 import vazkii.quark.content.tweaks.module.PatTheDogsModule;
+
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 /**
  * @author WireSegal
@@ -17,41 +19,41 @@ public class WantLoveGoal extends Goal {
 
     private static final String PET_TIME = "quark:PetTime";
 
-    public static void setPetTime(TameableEntity entity) {
-        entity.getPersistentData().putLong(PET_TIME, entity.world.getGameTime());
+    public static void setPetTime(TamableAnimal entity) {
+        entity.getPersistentData().putLong(PET_TIME, entity.level.getGameTime());
     }
 
-    public static boolean canPet(TameableEntity entity) {
+    public static boolean canPet(TamableAnimal entity) {
         return timeSinceLastPet(entity) > 20;
     }
 
-    public static boolean needsPets(TameableEntity entity) {
+    public static boolean needsPets(TamableAnimal entity) {
         if (PatTheDogsModule.dogsWantLove <= 0)
             return false;
 
         return timeSinceLastPet(entity) > PatTheDogsModule.dogsWantLove;
     }
 
-    public static long timeSinceLastPet(TameableEntity entity) {
-        if (!entity.isTamed())
+    public static long timeSinceLastPet(TamableAnimal entity) {
+        if (!entity.isTame())
             return 0;
 
         long lastPetAt = entity.getPersistentData().getLong(PET_TIME);
-        return entity.world.getGameTime() - lastPetAt;
+        return entity.level.getGameTime() - lastPetAt;
     }
 
-    private final TameableEntity creature;
+    private final TamableAnimal creature;
     private LivingEntity leapTarget;
     public final float leapUpMotion;
 
-    public WantLoveGoal(TameableEntity creature, float leapMotion) {
+    public WantLoveGoal(TamableAnimal creature, float leapMotion) {
         this.creature = creature;
         this.leapUpMotion = leapMotion;
-        this.setMutexFlags(EnumSet.of(Flag.MOVE, Flag.LOOK, Flag.JUMP, Flag.TARGET));
+        this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK, Flag.JUMP, Flag.TARGET));
     }
 
     @Override
-    public boolean shouldExecute() {
+    public boolean canUse() {
         if (!needsPets(creature))
             return false;
 
@@ -60,30 +62,30 @@ public class WantLoveGoal extends Goal {
         if (this.leapTarget == null)
             return false;
         else {
-            double distanceToTarget = this.creature.getDistanceSq(this.leapTarget);
+            double distanceToTarget = this.creature.distanceToSqr(this.leapTarget);
 
             return 4 <= distanceToTarget && distanceToTarget <= 16 &&
-                    this.creature.onGround && this.creature.getRNG().nextInt(5) == 0;
+                    this.creature.onGround && this.creature.getRandom().nextInt(5) == 0;
         }
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
+    public boolean canContinueToUse() {
         if (!WantLoveGoal.needsPets(creature))
             return false;
         return !this.creature.onGround;
     }
 
     @Override
-    public void startExecuting() {
-    	Vector3d leapPos = leapTarget.getPositionVec();
-    	Vector3d creaturePos = creature.getPositionVec();
+    public void start() {
+    	Vec3 leapPos = leapTarget.position();
+    	Vec3 creaturePos = creature.position();
     	
         double dX = leapPos.x - creaturePos.x;
         double dZ = leapPos.z - creaturePos.z;
-        float leapMagnitude = MathHelper.sqrt(dX * dX + dZ * dZ);
+        float leapMagnitude = Mth.sqrt(dX * dX + dZ * dZ);
 
-        Vector3d motion = this.creature.getMotion();
+        Vec3 motion = this.creature.getDeltaMovement();
 
         if (leapMagnitude >= 0.0001) {
             motion = motion.add(
@@ -94,7 +96,7 @@ public class WantLoveGoal extends Goal {
 
         motion = motion.add(0, leapUpMotion, 0);
 
-        this.creature.setMotion(motion);
+        this.creature.setDeltaMovement(motion);
     }
 }
 

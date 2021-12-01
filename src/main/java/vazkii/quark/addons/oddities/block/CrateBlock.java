@@ -4,77 +4,79 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.monster.piglin.PiglinTasks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.fml.network.NetworkHooks;
 import vazkii.quark.addons.oddities.tile.CrateTileEntity;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.module.QuarkModule;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class CrateBlock extends QuarkBlock {
 
 	public static final BooleanProperty PROPERTY_OPEN = BlockStateProperties.OPEN;
 
 	public CrateBlock(QuarkModule module) {
-		super("crate", module, ItemGroup.DECORATIONS, Properties.from(Blocks.BARREL));
-		setDefaultState(stateContainer.getBaseState().with(PROPERTY_OPEN, false));
+		super("crate", module, CreativeModeTab.TAB_DECORATIONS, Properties.copy(Blocks.BARREL));
+		registerDefaultState(stateDefinition.any().setValue(PROPERTY_OPEN, false));
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-		if(worldIn.isRemote) {
-			return ActionResultType.SUCCESS;
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+		if(worldIn.isClientSide) {
+			return InteractionResult.SUCCESS;
 		} else {
-			TileEntity tileentity = worldIn.getTileEntity(pos);
+			BlockEntity tileentity = worldIn.getBlockEntity(pos);
 			if(tileentity instanceof CrateTileEntity) {
-				if(player instanceof ServerPlayerEntity)
-					NetworkHooks.openGui((ServerPlayerEntity) player, (CrateTileEntity) worldIn.getTileEntity(pos), pos);
+				if(player instanceof ServerPlayer)
+					NetworkHooks.openGui((ServerPlayer) player, (CrateTileEntity) worldIn.getBlockEntity(pos), pos);
 
-				PiglinTasks.func_234478_a_(player, true);
+				PiglinAi.angerNearbyPiglins(player, true);
 			}
 
-			return ActionResultType.CONSUME;
+			return InteractionResult.CONSUME;
 		}
 	}
 
 	@Override
-	public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-		if(stack.hasDisplayName()) {
-			TileEntity tileentity = worldIn.getTileEntity(pos);
+	public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+		if(stack.hasCustomHoverName()) {
+			BlockEntity tileentity = worldIn.getBlockEntity(pos);
 			if(tileentity instanceof CrateTileEntity)
-				((CrateTileEntity) tileentity).setCustomName(stack.getDisplayName());
+				((CrateTileEntity) tileentity).setCustomName(stack.getHoverName());
 		}
 	}
 
 	@Override
-	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
-		TileEntity tileentity = worldIn.getTileEntity(pos);
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand) {
+		BlockEntity tileentity = worldIn.getBlockEntity(pos);
 		if(tileentity instanceof CrateTileEntity)
 			((CrateTileEntity)tileentity).crateTick();
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if(!state.isIn(newState.getBlock())) {
-			TileEntity tileentity = worldIn.getTileEntity(pos);
+	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		if(!state.is(newState.getBlock())) {
+			BlockEntity tileentity = worldIn.getBlockEntity(pos);
 
 			if(tileentity instanceof CrateTileEntity) {
 				CrateTileEntity crate = (CrateTileEntity) tileentity;
@@ -82,7 +84,7 @@ public class CrateBlock extends QuarkBlock {
 			}
 		}
 
-		super.onReplaced(state, worldIn, pos, newState, isMoving);
+		super.onRemove(state, worldIn, pos, newState, isMoving);
 	}
 
 	@Override
@@ -91,12 +93,12 @@ public class CrateBlock extends QuarkBlock {
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return new CrateTileEntity();
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		builder.add(PROPERTY_OPEN);
 	}
 

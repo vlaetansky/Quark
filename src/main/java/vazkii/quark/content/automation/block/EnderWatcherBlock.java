@@ -1,19 +1,19 @@
 package vazkii.quark.content.automation.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.automation.tile.EnderWatcherTileEntity;
@@ -21,30 +21,30 @@ import vazkii.quark.content.automation.tile.EnderWatcherTileEntity;
 public class EnderWatcherBlock extends QuarkBlock {
 	
 	public static final BooleanProperty WATCHED = BooleanProperty.create("watched");
-	public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
+	public static final IntegerProperty POWER = BlockStateProperties.POWER;
 
 	public EnderWatcherBlock(QuarkModule module) {
-		super("ender_watcher", module, ItemGroup.REDSTONE, 
-				Block.Properties.create(Material.IRON, MaterialColor.GREEN)
-				.hardnessAndResistance(3F, 10F)
+		super("ender_watcher", module, CreativeModeTab.TAB_REDSTONE, 
+				Block.Properties.of(Material.METAL, MaterialColor.COLOR_GREEN)
+				.strength(3F, 10F)
 				.sound(SoundType.METAL));
 		
-		setDefaultState(getDefaultState().with(WATCHED, false).with(POWER, 0));
+		registerDefaultState(defaultBlockState().setValue(WATCHED, false).setValue(POWER, 0));
 	}
 	
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		builder.add(WATCHED, POWER);
 	}
 
 	@Override
-	public boolean canProvidePower(BlockState state) {
+	public boolean isSignalSource(BlockState state) {
 		return true;
 	}
 	
 	@Override
-	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-		return blockState.get(POWER);
+	public int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
+		return blockState.getValue(POWER);
 	}
 	
 	@Override
@@ -53,7 +53,7 @@ public class EnderWatcherBlock extends QuarkBlock {
 	}
 	
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return new EnderWatcherTileEntity();
 	}
 

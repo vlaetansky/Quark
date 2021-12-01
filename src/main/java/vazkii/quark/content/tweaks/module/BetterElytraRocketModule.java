@@ -1,12 +1,12 @@
 package vazkii.quark.content.tweaks.module;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.FireworkRocketEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.FireworkRocketItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.FireworkRocketEntity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.FireworkRocketItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.module.LoadModule;
@@ -18,23 +18,23 @@ public class BetterElytraRocketModule extends QuarkModule {
 
 	@SubscribeEvent
 	public void onUseRocket(PlayerInteractEvent.RightClickItem event) {
-		PlayerEntity player = event.getPlayer();
-		if(!player.isElytraFlying() && player.getItemStackFromSlot(EquipmentSlotType.CHEST).canElytraFly(player)) {
-			World world = player.world;
+		Player player = event.getPlayer();
+		if(!player.isFallFlying() && player.getItemBySlot(EquipmentSlot.CHEST).canElytraFly(player)) {
+			Level world = player.level;
 			ItemStack itemstack = event.getItemStack();
 
 			if(itemstack.getItem() instanceof FireworkRocketItem) {
-				if(!world.isRemote) {
-					world.addEntity(new FireworkRocketEntity(world, itemstack, player));
-					if(!player.abilities.isCreativeMode)
+				if(!world.isClientSide) {
+					world.addFreshEntity(new FireworkRocketEntity(world, itemstack, player));
+					if(!player.abilities.instabuild)
 						itemstack.shrink(1);
 				}
 				
 				player.startFallFlying();
-				player.jump();
+				player.jumpFromGround();
 
 				event.setCanceled(true);
-				event.setCancellationResult(world.isRemote ? ActionResultType.SUCCESS : ActionResultType.CONSUME);
+				event.setCancellationResult(world.isClientSide ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
 			}
 
 		}

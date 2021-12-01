@@ -15,40 +15,40 @@ import javax.annotation.Nonnull;
 import com.google.common.base.Predicates;
 import com.google.common.base.Throwables;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootEntry;
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.LootTable;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.vector.Vector2f;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.LightType;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.server.ServerChunkProvider;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Container;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.server.level.ServerChunkCache;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent.KeyboardKeyPressedEvent;
@@ -75,8 +75,8 @@ public class MiscUtil {
 
 	static {
 		MethodHandles.Lookup lookup = MethodHandles.lookup();
-		Field lootTablePools = ObfuscationReflectionHelper.findField(LootTable.class, "field_186466_c");
-		Field lootPoolEntries = ObfuscationReflectionHelper.findField(LootPool.class, "field_186453_a");
+		Field lootTablePools = ObfuscationReflectionHelper.findField(LootTable.class, "pools");
+		Field lootPoolEntries = ObfuscationReflectionHelper.findField(LootPool.class, "entries");
 		try {
 			LOOT_TABLE_POOLS = lookup.unreflectGetter(lootTablePools);
 			LOOT_POOL_ENTRIES = lookup.unreflectGetter(lootPoolEntries);
@@ -128,7 +128,7 @@ public class MiscUtil {
 			Blocks.WARPED_PLANKS
 	};
 
-	public static void addToLootTable(LootTable table, LootEntry entry) {
+	public static void addToLootTable(LootTable table, LootPoolEntryContainer entry) {
 		List<LootPool> pools = getPools(table);
 		if (!pools.isEmpty()) {
 			getEntries(pools.get(0)).add(entry);
@@ -144,17 +144,17 @@ public class MiscUtil {
 		}
 	}
 
-	public static List<LootEntry> getEntries(LootPool pool) {
+	public static List<LootPoolEntryContainer> getEntries(LootPool pool) {
 		try {
-			return (List<LootEntry>) LOOT_POOL_ENTRIES.invokeExact(pool);
+			return (List<LootPoolEntryContainer>) LOOT_POOL_ENTRIES.invokeExact(pool);
 		} catch (Throwable throwable) {
 			Throwables.throwIfUnchecked(throwable);
 			throw new RuntimeException(throwable);
 		}
 	}
 
-	public static void damageStack(PlayerEntity player, Hand hand, ItemStack stack, int dmg) {
-		stack.damageItem(dmg, player, (p) -> p.sendBreakAnimation(hand));
+	public static void damageStack(Player player, InteractionHand hand, ItemStack stack, int dmg) {
+		stack.hurtAndBreak(dmg, player, (p) -> p.broadcastBreakEvent(hand));
 	}
 
 	public static <T, V> void editFinalField(Class<T> clazz, String fieldName, Object obj, V value) {
@@ -183,7 +183,7 @@ public class MiscUtil {
 		}
 	}
 
-	public static Vector2f getMinecraftAngles(Vector3d direction) {
+	public static Vec2 getMinecraftAngles(Vec3 direction) {
 		// <sin(-y) * cos(p), -sin(-p), cos(-y) * cos(p)>
 
 		direction = direction.normalize();
@@ -191,61 +191,61 @@ public class MiscUtil {
 		double pitch = Math.asin(direction.y);
 		double yaw = Math.asin(direction.x / Math.cos(pitch));
 
-		return new Vector2f((float) (pitch * 180 / Math.PI), (float) (-yaw * 180 / Math.PI));
+		return new Vec2((float) (pitch * 180 / Math.PI), (float) (-yaw * 180 / Math.PI));
 	}
 
 	public static boolean isEntityInsideOpaqueBlock(Entity entity) {
-		BlockPos pos = entity.getPosition();
-		return !entity.noClip && entity.world.getBlockState(pos).isSuffocating(entity.world, pos);
+		BlockPos pos = entity.blockPosition();
+		return !entity.noPhysics && entity.level.getBlockState(pos).isSuffocating(entity.level, pos);
 	}
 
-	public static boolean validSpawnLight(IServerWorld world, BlockPos pos, Random rand) {
-		if (world.getLightFor(LightType.SKY, pos) > rand.nextInt(32)) {
+	public static boolean validSpawnLight(ServerLevelAccessor world, BlockPos pos, Random rand) {
+		if (world.getBrightness(LightLayer.SKY, pos) > rand.nextInt(32)) {
 			return false;
 		} else {
-			int light = world.getWorld().isThundering() ? world.getNeighborAwareLightSubtracted(pos, 10) : world.getLight(pos);
+			int light = world.getLevel().isThundering() ? world.getMaxLocalRawBrightness(pos, 10) : world.getMaxLocalRawBrightness(pos);
 			return light <= rand.nextInt(8);
 		}
 	}
 
-	public static boolean validSpawnLocation(@Nonnull EntityType<? extends MobEntity> type, @Nonnull IWorld world, SpawnReason reason, BlockPos pos) {
-		BlockPos below = pos.down();
-		if (reason == SpawnReason.SPAWNER)
+	public static boolean validSpawnLocation(@Nonnull EntityType<? extends Mob> type, @Nonnull LevelAccessor world, MobSpawnType reason, BlockPos pos) {
+		BlockPos below = pos.below();
+		if (reason == MobSpawnType.SPAWNER)
 			return true;
 		BlockState state = world.getBlockState(below);
-		return state.getMaterial() == Material.ROCK && state.canEntitySpawn(world, below, type);
+		return state.getMaterial() == Material.STONE && state.isValidSpawn(world, below, type);
 	}
 
 	public static <T> List<T> massRegistryGet(Collection<String> coll, Registry<T> registry) {
 		return coll.stream().map(ResourceLocation::new).map(name -> registry.getOptional(name)).filter(Optional::isPresent).map(Optional::get).filter(Predicates.notNull()).collect(Collectors.toList());
 	}
 
-	public static void syncTE(TileEntity tile) {
-		SUpdateTileEntityPacket packet = tile.getUpdatePacket();
+	public static void syncTE(BlockEntity tile) {
+		ClientboundBlockEntityDataPacket packet = tile.getUpdatePacket();
 
-		if(packet != null && tile.getWorld() instanceof ServerWorld) {
-			((ServerChunkProvider) tile.getWorld().getChunkProvider()).chunkManager
-			.getTrackingPlayers(new ChunkPos(tile.getPos()), false)
-			.forEach(e -> e.connection.sendPacket(packet));
+		if(packet != null && tile.getLevel() instanceof ServerLevel) {
+			((ServerChunkCache) tile.getLevel().getChunkSource()).chunkMap
+			.getPlayers(new ChunkPos(tile.getBlockPos()), false)
+			.forEach(e -> e.connection.send(packet));
 		}
 	}
 
-	public static BlockPos locateBiome(ServerWorld world, ResourceLocation biomeToFind, BlockPos start, int searchRadius, int searchIncrement) {
-		Biome biome = world.getServer().func_244267_aX().getRegistry(Registry.BIOME_KEY).getOptional(biomeToFind).orElse(null);
+	public static BlockPos locateBiome(ServerLevel world, ResourceLocation biomeToFind, BlockPos start, int searchRadius, int searchIncrement) {
+		Biome biome = world.getServer().registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getOptional(biomeToFind).orElse(null);
 
-		return biome == null ? null : world.func_241116_a_(biome, start, searchRadius, searchIncrement);
+		return biome == null ? null : world.findNearestBiome(biome, start, searchRadius, searchIncrement);
 	}
 	
-	public static ItemStack putIntoInv(ItemStack stack, TileEntity tile, Direction face, boolean simulate, boolean doSimulation) {
+	public static ItemStack putIntoInv(ItemStack stack, BlockEntity tile, Direction face, boolean simulate, boolean doSimulation) {
 		IItemHandler handler = null;
 		
 		LazyOptional<IItemHandler> opt = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, face); 
 		if(opt.isPresent())
 			handler = opt.orElse(null);
-		else if(tile instanceof ISidedInventory)
-			handler = new SidedInvWrapper((ISidedInventory) tile, face);
-		else if(tile instanceof IInventory)
-			handler = new InvWrapper((IInventory) tile);
+		else if(tile instanceof WorldlyContainer)
+			handler = new SidedInvWrapper((WorldlyContainer) tile, face);
+		else if(tile instanceof Container)
+			handler = new InvWrapper((Container) tile);
 
 		if(handler != null)
 			return (simulate && !doSimulation) ? ItemStack.EMPTY : ItemHandlerHelper.insertItem(handler, stack, simulate);
@@ -253,7 +253,7 @@ public class MiscUtil {
 		return stack;
 	}
 	
-	public static boolean canPutIntoInv(ItemStack stack, TileEntity tile, Direction face, boolean doSimulation) {
+	public static boolean canPutIntoInv(ItemStack stack, BlockEntity tile, Direction face, boolean doSimulation) {
 		return putIntoInv(stack, tile, face, true, doSimulation).isEmpty();
 	}
 	
@@ -266,7 +266,7 @@ public class MiscUtil {
 	public static int getGuiTextColor(String name, int base) {
 		int ret = base;
 		
-		String hex = I18n.format("quark.gui.color." + name);
+		String hex = I18n.get("quark.gui.color." + name);
 		if(hex.matches("\\#[A-F0-9]{6}"))
 			ret = Integer.valueOf(hex.substring(1), 16);
 		return ret;
@@ -289,7 +289,7 @@ public class MiscUtil {
 
 				if(progress >= keys.length) {
 					progress = 0;
-					Util.getOSType().openURI("https://www.youtube.com/watch?v=" + ids[new Random().nextInt(ids.length)]);
+					Util.getPlatform().openUri("https://www.youtube.com/watch?v=" + ids[new Random().nextInt(ids.length)]);
 				}
 			} else progress = 0;
 		}

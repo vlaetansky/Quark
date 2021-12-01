@@ -2,12 +2,12 @@ package vazkii.quark.content.mobs.client.render;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.resources.ResourceLocation;
+import com.mojang.math.Vector3f;
 import vazkii.quark.content.mobs.client.model.FrogModel;
 import vazkii.quark.content.mobs.entity.FrogEntity;
 
@@ -24,23 +24,23 @@ public class FrogRenderer extends MobRenderer<FrogEntity, FrogModel> {
 	private static final ResourceLocation TEXTURE_VOID = new ResourceLocation("quark", "textures/model/entity/events/void_frog.png");
 	private static final ResourceLocation TEXTURE_SWEATER_VOID = new ResourceLocation("quark", "textures/model/entity/events/sweater_void_frog.png");
 
-	public FrogRenderer(EntityRendererManager manager) {
+	public FrogRenderer(EntityRenderDispatcher manager) {
 		super(manager, new FrogModel(), 0.2F);
 	}
 
 	@Override
-	protected void applyRotations(@Nonnull FrogEntity frog, @Nonnull MatrixStack matrix, float ageInTicks, float rotationYaw, float partialTicks) {
-		super.applyRotations(frog, matrix, ageInTicks, rotationYaw, partialTicks);
+	protected void setupRotations(@Nonnull FrogEntity frog, @Nonnull PoseStack matrix, float ageInTicks, float rotationYaw, float partialTicks) {
+		super.setupRotations(frog, matrix, ageInTicks, rotationYaw, partialTicks);
 
 		if (frog.isVoid()) {
-			matrix.translate(0.0D, frog.getHeight(), 0.0D);
-			matrix.rotate(Vector3f.ZP.rotationDegrees(180.0F));
+			matrix.translate(0.0D, frog.getBbHeight(), 0.0D);
+			matrix.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
 		}
 	}
 
 	@Nonnull
 	@Override
-	public ResourceLocation getEntityTexture(@Nonnull FrogEntity entity) {
+	public ResourceLocation getTextureLocation(@Nonnull FrogEntity entity) {
 		if (entity.isVoid())
 			return entity.hasSweater() ? TEXTURE_SWEATER_VOID : TEXTURE_VOID;
 

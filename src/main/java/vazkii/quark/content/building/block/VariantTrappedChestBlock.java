@@ -6,24 +6,24 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Supplier;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ChestBlock;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.Stats;
-import net.minecraft.tileentity.ChestTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.ModList;
@@ -34,6 +34,8 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.building.module.VariantChestsModule.IChestTextureProvider;
 import vazkii.quark.content.building.tile.VariantTrappedChestTileEntity;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 @OnlyIn(value = Dist.CLIENT, _interface = IBlockItemProvider.class)
 public class VariantTrappedChestBlock extends ChestBlock implements IBlockItemProvider, IQuarkBlock, IChestTextureProvider {
 
@@ -43,10 +45,10 @@ public class VariantTrappedChestBlock extends ChestBlock implements IBlockItemPr
 
 	private String path;
 	
-	public VariantTrappedChestBlock(String type, QuarkModule module, Supplier<TileEntityType<? extends ChestTileEntity>> supplier, Properties props) {
+	public VariantTrappedChestBlock(String type, QuarkModule module, Supplier<BlockEntityType<? extends ChestBlockEntity>> supplier, Properties props) {
 		super(props, supplier);
 		RegistryHelper.registerBlock(this, type + "_trapped_chest");
-		RegistryHelper.setCreativeTab(this, ItemGroup.REDSTONE);
+		RegistryHelper.setCreativeTab(this, CreativeModeTab.TAB_REDSTONE);
 
 		this.type = type;
 		this.module = module;
@@ -55,14 +57,14 @@ public class VariantTrappedChestBlock extends ChestBlock implements IBlockItemPr
 	}
 
 	@Override
-	public boolean isFlammable(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
+	public boolean isFlammable(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
 		return false;
 	}
 	
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-		if(module.enabled || group == ItemGroup.SEARCH)
-			super.fillItemGroup(group, items);
+	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+		if(module.enabled || group == CreativeModeTab.TAB_SEARCH)
+			super.fillItemCategory(group, items);
 	}
 
 	@Override
@@ -83,7 +85,7 @@ public class VariantTrappedChestBlock extends ChestBlock implements IBlockItemPr
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn) {
+	public BlockEntity newBlockEntity(BlockGetter worldIn) {
 		return new VariantTrappedChestTileEntity();
 	}
 
@@ -96,7 +98,7 @@ public class VariantTrappedChestBlock extends ChestBlock implements IBlockItemPr
 
 	public static class Compat extends VariantTrappedChestBlock {
 
-		public Compat(String type, String mod, QuarkModule module, Supplier<TileEntityType<? extends ChestTileEntity>> supplier, Properties props) {
+		public Compat(String type, String mod, QuarkModule module, Supplier<BlockEntityType<? extends ChestBlockEntity>> supplier, Properties props) {
 			super(type, module, supplier, props);
 			setCondition(() -> ModList.get().isLoaded(mod));
 		}
@@ -116,23 +118,23 @@ public class VariantTrappedChestBlock extends ChestBlock implements IBlockItemPr
 	// VANILLA TrappedChestBlock copy
 
 	@Override
-	protected Stat<ResourceLocation> getOpenStat() {
+	protected Stat<ResourceLocation> getOpenChestStat() {
 		return Stats.CUSTOM.get(Stats.TRIGGER_TRAPPED_CHEST);
 	}
 	
 	@Override
-	public boolean canProvidePower(BlockState p_149744_1_) {
+	public boolean isSignalSource(BlockState p_149744_1_) {
 		return true;
 	}
 
 	@Override
-	public int getWeakPower(BlockState p_180656_1_, IBlockReader p_180656_2_, BlockPos p_180656_3_, Direction p_180656_4_) {
-		return MathHelper.clamp(ChestTileEntity.getPlayersUsing(p_180656_2_, p_180656_3_), 0, 15);
+	public int getSignal(BlockState p_180656_1_, BlockGetter p_180656_2_, BlockPos p_180656_3_, Direction p_180656_4_) {
+		return Mth.clamp(ChestBlockEntity.getOpenCount(p_180656_2_, p_180656_3_), 0, 15);
 	}
 
 	@Override
-	public int getStrongPower(BlockState p_176211_1_, IBlockReader p_176211_2_, BlockPos p_176211_3_, Direction p_176211_4_) {
-		return p_176211_4_ == Direction.UP ? p_176211_1_.getWeakPower(p_176211_2_, p_176211_3_, p_176211_4_) : 0;
+	public int getDirectSignal(BlockState p_176211_1_, BlockGetter p_176211_2_, BlockPos p_176211_3_, Direction p_176211_4_) {
+		return p_176211_4_ == Direction.UP ? p_176211_1_.getSignal(p_176211_2_, p_176211_3_, p_176211_4_) : 0;
 	}
 
 }

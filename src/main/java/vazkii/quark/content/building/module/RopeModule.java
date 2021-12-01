@@ -2,20 +2,20 @@ package vazkii.quark.content.building.module;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.DispenserBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.dispenser.IBlockSource;
-import net.minecraft.dispenser.OptionalDispenseBehavior;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.core.BlockSource;
+import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
@@ -35,42 +35,42 @@ public class RopeModule extends QuarkModule {
 
 	@Override
 	public void construct() {
-		rope = new RopeBlock("rope", this, ItemGroup.DECORATIONS,
-				Block.Properties.create(Material.WOOL, MaterialColor.BROWN)
-						.hardnessAndResistance(0.5f)
-						.sound(SoundType.CLOTH));
+		rope = new RopeBlock("rope", this, CreativeModeTab.TAB_DECORATIONS,
+				Block.Properties.of(Material.WOOL, MaterialColor.COLOR_BROWN)
+						.strength(0.5f)
+						.sound(SoundType.WOOL));
 	}
 	
 	@Override
 	public void configChanged() {
 		if(enableDispenserBehavior)
-			DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY.put(rope.asItem(), new BehaviourRope());
+			DispenserBlock.DISPENSER_REGISTRY.put(rope.asItem(), new BehaviourRope());
 		else
-			DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY.remove(rope.asItem());
+			DispenserBlock.DISPENSER_REGISTRY.remove(rope.asItem());
 	}
 	
-	public static class BehaviourRope extends OptionalDispenseBehavior {
+	public static class BehaviourRope extends OptionalDispenseItemBehavior {
 		
 		@Nonnull
 		@Override
-		protected ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
-			Direction facing = source.getBlockState().get(DispenserBlock.FACING);
-			BlockPos pos = source.getBlockPos().offset(facing);
-			World world = source.getWorld();
-			this.successful = false;
+		protected ItemStack execute(BlockSource source, ItemStack stack) {
+			Direction facing = source.getBlockState().getValue(DispenserBlock.FACING);
+			BlockPos pos = source.getPos().relative(facing);
+			Level world = source.getLevel();
+			this.success = false;
 			
 			BlockState state = world.getBlockState(pos);
 			if(state.getBlock() == rope) {
 				if(((RopeBlock) rope).pullDown(world, pos)) {
-					this.successful = true;
+					this.success = true;
 					stack.shrink(1);
 					return stack;
 				}
-			} else if(world.isAirBlock(pos) && rope.getDefaultState().isValidPosition(world, pos)) {
+			} else if(world.isEmptyBlock(pos) && rope.defaultBlockState().canSurvive(world, pos)) {
 				SoundType soundtype = rope.getSoundType(state, world, pos, null);
-				world.setBlockState(pos, rope.getDefaultState());
-				world.playSound(null, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-				this.successful = true;
+				world.setBlockAndUpdate(pos, rope.defaultBlockState());
+				world.playSound(null, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+				this.success = true;
 				stack.shrink(1);
 				
 				return stack;

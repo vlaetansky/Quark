@@ -1,19 +1,19 @@
 package vazkii.quark.base.client.config.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
 import vazkii.quark.base.client.config.obj.AbstractStringInputObject;
 
 public class StringInputScreen<T> extends AbstractInputScreen<T> {
 
 	private final AbstractStringInputObject<T> object;
 	
-	private TextFieldWidget input;
+	private EditBox input;
 	
 	public StringInputScreen(Screen parent, AbstractStringInputObject<T> object) {
 		super(parent);
@@ -21,22 +21,22 @@ public class StringInputScreen<T> extends AbstractInputScreen<T> {
 	}
 	
 	@Override
-	public void render(MatrixStack mstack, int mouseX, int mouseY, float pticks) {
+	public void render(PoseStack mstack, int mouseX, int mouseY, float pticks) {
 		super.render(mstack, mouseX, mouseY, pticks);
 		
-		drawCenteredString(mstack, font, new StringTextComponent(object.getGuiDisplayName()).mergeStyle(TextFormatting.BOLD), width / 2, 20, 0xFFFFFF);
-		drawCenteredString(mstack, font, I18n.format("quark.gui.config.defaultvalue", object.defaultObj),  width / 2, 30, 0xFFFFFF);
+		drawCenteredString(mstack, font, new TextComponent(object.getGuiDisplayName()).withStyle(ChatFormatting.BOLD), width / 2, 20, 0xFFFFFF);
+		drawCenteredString(mstack, font, I18n.get("quark.gui.config.defaultvalue", object.defaultObj),  width / 2, 30, 0xFFFFFF);
 		
 		input.render(mstack, mouseX, mouseY, pticks);
 	}
 	
 	@Override
 	void onInit() {
-		input = new TextFieldWidget(font, width / 2 - 100, 60, 200, 20, new StringTextComponent(""));
-		input.setValidator(object::isStringValid);
-		input.setMaxStringLength(object.getMaxStringLength());
+		input = new EditBox(font, width / 2 - 100, 60, 200, 20, new TextComponent(""));
+		input.setFilter(object::isStringValid);
+		input.setMaxLength(object.getMaxStringLength());
 		input.setResponder(this::update);
-		setFocusedDefault(input);
+		setInitialFocus(input);
 		children.add(input);
 	}
 	
@@ -65,7 +65,7 @@ public class StringInputScreen<T> extends AbstractInputScreen<T> {
 	
 	@Override
 	void update() {
-		input.setText(object.getCurrentObj().toString());
+		input.setValue(object.getCurrentObj().toString());
 		super.update();
 	}
 	
@@ -76,7 +76,7 @@ public class StringInputScreen<T> extends AbstractInputScreen<T> {
 
 	@Override
 	T compute() {
-		return object.fromString(input.getText());
+		return object.fromString(input.getValue());
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public class StringInputScreen<T> extends AbstractInputScreen<T> {
 	
 	@Override
 	void commit() {
-		object.setCurrentObj(object.fromString(input.getText()));
+		object.setCurrentObj(object.fromString(input.getValue()));
 	}
 	
 }

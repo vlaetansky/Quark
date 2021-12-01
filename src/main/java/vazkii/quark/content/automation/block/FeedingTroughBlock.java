@@ -3,33 +3,35 @@ package vazkii.quark.content.automation.block;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Containers;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.automation.tile.FeedingTroughTileEntity;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 /**
  * @author WireSegal
@@ -37,71 +39,71 @@ import vazkii.quark.content.automation.tile.FeedingTroughTileEntity;
  */
 public class FeedingTroughBlock extends QuarkBlock {
 
-    private static final SoundType WOOD_WITH_PLANT_STEP = new SoundType(1.0F, 1.0F, SoundEvents.BLOCK_WOOD_BREAK, SoundEvents.BLOCK_GRASS_STEP, SoundEvents.BLOCK_WOOD_PLACE, SoundEvents.BLOCK_WOOD_HIT, SoundEvents.BLOCK_WOOD_FALL);
+    private static final SoundType WOOD_WITH_PLANT_STEP = new SoundType(1.0F, 1.0F, SoundEvents.WOOD_BREAK, SoundEvents.GRASS_STEP, SoundEvents.WOOD_PLACE, SoundEvents.WOOD_HIT, SoundEvents.WOOD_FALL);
 
     public static BooleanProperty FULL = BooleanProperty.create("full");
 
-    public static final VoxelShape CUBOID_SHAPE = makeCuboidShape(0, 0, 0, 16, 8, 16);
-    public static final VoxelShape EMPTY_SHAPE = VoxelShapes.combineAndSimplify(CUBOID_SHAPE,
-            makeCuboidShape(2, 2, 2, 14, 8, 14), IBooleanFunction.ONLY_FIRST);
+    public static final VoxelShape CUBOID_SHAPE = box(0, 0, 0, 16, 8, 16);
+    public static final VoxelShape EMPTY_SHAPE = Shapes.join(CUBOID_SHAPE,
+            box(2, 2, 2, 14, 8, 14), BooleanOp.ONLY_FIRST);
 
-    public static final VoxelShape FULL_SHAPE = VoxelShapes.combineAndSimplify(CUBOID_SHAPE,
-            makeCuboidShape(2, 6, 2, 14, 8, 14), IBooleanFunction.ONLY_FIRST);
+    public static final VoxelShape FULL_SHAPE = Shapes.join(CUBOID_SHAPE,
+            box(2, 6, 2, 14, 8, 14), BooleanOp.ONLY_FIRST);
 
 
-    public FeedingTroughBlock(String regname, QuarkModule module, ItemGroup creativeTab, Properties properties) {
+    public FeedingTroughBlock(String regname, QuarkModule module, CreativeModeTab creativeTab, Properties properties) {
         super(regname, module, creativeTab, properties);
-        setDefaultState(getDefaultState().with(FULL, false));
+        registerDefaultState(defaultBlockState().setValue(FULL, false));
     }
 
     @Nonnull
     @Override
-    public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull IBlockReader world, @Nonnull BlockPos pos, ISelectionContext context) {
+    public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, CollisionContext context) {
         return EMPTY_SHAPE;
     }
 
     @Nonnull
     @Override
-    public VoxelShape getRaytraceShape(BlockState state, IBlockReader world, BlockPos pos) {
+    public VoxelShape getInteractionShape(BlockState state, BlockGetter world, BlockPos pos) {
         return CUBOID_SHAPE;
     }
 
     @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        return state.get(FULL) ? FULL_SHAPE : EMPTY_SHAPE;
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        return state.getValue(FULL) ? FULL_SHAPE : EMPTY_SHAPE;
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FULL);
     }
 
     @Override
-    public SoundType getSoundType(BlockState state, IWorldReader world, BlockPos pos, @Nullable Entity entity) {
-        if (state.get(FULL))
+    public SoundType getSoundType(BlockState state, LevelReader world, BlockPos pos, @Nullable Entity entity) {
+        if (state.getValue(FULL))
             return WOOD_WITH_PLANT_STEP;
         return super.getSoundType(state, world, pos, entity);
     }
 
     @Override
-    public void onFallenUpon(World world, BlockPos pos, Entity entity, float distance) {
-        if (world.getBlockState(pos).get(FULL))
-            entity.onLivingFall(distance, 0.2F);
+    public void fallOn(Level world, BlockPos pos, Entity entity, float distance) {
+        if (world.getBlockState(pos).getValue(FULL))
+            entity.causeFallDamage(distance, 0.2F);
         else
-            super.onFallenUpon(world, pos, entity, distance);
+            super.fallOn(world, pos, entity, distance);
     }
 
     @Override
-    public void onReplaced(BlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            TileEntity tile = world.getTileEntity(pos);
+            BlockEntity tile = world.getBlockEntity(pos);
             if (tile instanceof FeedingTroughTileEntity) {
-                InventoryHelper.dropInventoryItems(world, pos, (FeedingTroughTileEntity)tile);
-                world.updateComparatorOutputLevel(pos, this);
+                Containers.dropContents(world, pos, (FeedingTroughTileEntity)tile);
+                world.updateNeighbourForOutputSignal(pos, this);
             }
 
-            super.onReplaced(state, world, pos, newState, isMoving);
+            super.onRemove(state, world, pos, newState, isMoving);
         }
     }
 
@@ -111,46 +113,46 @@ public class FeedingTroughBlock extends QuarkBlock {
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
         return new FeedingTroughTileEntity();
     }
 
     @Override
-    public boolean hasComparatorInputOverride(BlockState state) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
     @Override
-    public int getComparatorInputOverride(BlockState state, World world, BlockPos pos) {
-        return Container.calcRedstone(world.getTileEntity(pos));
+    public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos) {
+        return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(world.getBlockEntity(pos));
     }
 
     
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-        if (world.isRemote)
-            return ActionResultType.SUCCESS;
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult trace) {
+        if (world.isClientSide)
+            return InteractionResult.SUCCESS;
         else {
-            INamedContainerProvider container = this.getContainer(state, world, pos);
+            MenuProvider container = this.getMenuProvider(state, world, pos);
             if (container != null)
-                player.openContainer(container);
+                player.openMenu(container);
 
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
     }
 
     @Override
-    public boolean eventReceived(BlockState state, World world, BlockPos pos, int id, int param) {
-        super.eventReceived(state, world, pos, id, param);
-        TileEntity tile = world.getTileEntity(pos);
-        return tile != null && tile.receiveClientEvent(id, param);
+    public boolean triggerEvent(BlockState state, Level world, BlockPos pos, int id, int param) {
+        super.triggerEvent(state, world, pos, id, param);
+        BlockEntity tile = world.getBlockEntity(pos);
+        return tile != null && tile.triggerEvent(id, param);
     }
 
     @Override
     @Nullable
-    public INamedContainerProvider getContainer(BlockState state, World world, BlockPos pos) {
-        TileEntity tile = world.getTileEntity(pos);
-        return tile instanceof INamedContainerProvider ? (INamedContainerProvider)tile : null;
+    public MenuProvider getMenuProvider(BlockState state, Level world, BlockPos pos) {
+        BlockEntity tile = world.getBlockEntity(pos);
+        return tile instanceof MenuProvider ? (MenuProvider)tile : null;
     }
 
 }

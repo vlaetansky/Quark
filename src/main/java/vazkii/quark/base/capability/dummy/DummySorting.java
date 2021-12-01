@@ -12,7 +12,7 @@ package vazkii.quark.base.capability.dummy;
 
 import java.util.Comparator;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import vazkii.quark.api.ICustomSorting;
 
 public class DummySorting implements ICustomSorting {

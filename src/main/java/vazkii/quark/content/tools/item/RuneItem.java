@@ -3,11 +3,11 @@ package vazkii.quark.content.tools.item;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -28,13 +28,13 @@ public class RuneItem extends QuarkItem implements IRuneColorProvider {
     private final boolean glow;
 
     public RuneItem(String regname, QuarkModule module, int color, boolean glow) {
-        super(regname, module, new Item.Properties().group(ItemGroup.MATERIALS));
+        super(regname, module, new Item.Properties().tab(CreativeModeTab.TAB_MATERIALS));
         this.color = color;
         this.glow = glow;
     }
 
     @Override
-    public boolean hasEffect(ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         return glow;
     }
 
@@ -46,7 +46,7 @@ public class RuneItem extends QuarkItem implements IRuneColorProvider {
 
     @Nullable
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
         final LazyOptional<IRuneColorProvider> holder = LazyOptional.of(() -> this);
 
         return new ICapabilityProvider() {

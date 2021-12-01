@@ -13,15 +13,15 @@ package vazkii.quark.content.tweaks.client.emote;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.entity.model.PlayerModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.aurelienribon.tweenengine.TweenAccessor;
 
 @OnlyIn(Dist.CLIENT)
-public class ModelAccessor implements TweenAccessor<BipedModel<?>> {
+public class ModelAccessor implements TweenAccessor<HumanoidModel<?>> {
 
 	public static final ModelAccessor INSTANCE = new ModelAccessor();
 
@@ -64,14 +64,14 @@ public class ModelAccessor implements TweenAccessor<BipedModel<?>> {
 	public static final int MODEL_Y = MODEL + ROT_Y;
 	public static final int MODEL_Z = MODEL + ROT_Z;
 
-	private final Map<BipedModel<?>, float[]> MODEL_VALUES = new WeakHashMap<>();
+	private final Map<HumanoidModel<?>, float[]> MODEL_VALUES = new WeakHashMap<>();
 
-	public void resetModel(BipedModel<?> model) {
+	public void resetModel(HumanoidModel<?> model) {
 		MODEL_VALUES.remove(model);
 	}
 
 	@Override
-	public int getValues(BipedModel<?> target, int tweenType, float[] returnValues) {
+	public int getValues(HumanoidModel<?> target, int tweenType, float[] returnValues) {
 		int axis = tweenType % MODEL_PROPS;
 		int bodyPart = tweenType - axis;
 
@@ -86,36 +86,36 @@ public class ModelAccessor implements TweenAccessor<BipedModel<?>> {
 			return 1;
 		}
 
-		ModelRenderer model = getBodyPart(target, bodyPart);
+		ModelPart model = getBodyPart(target, bodyPart);
 		if(model == null)
 			return 0;
 
 		switch(axis) {
 			case ROT_X:
-				returnValues[0] = model.rotateAngleX; break;
+				returnValues[0] = model.xRot; break;
 			case ROT_Y:
-				returnValues[0] = model.rotateAngleY; break;
+				returnValues[0] = model.yRot; break;
 			case ROT_Z:
-				returnValues[0] = model.rotateAngleZ; break;
+				returnValues[0] = model.zRot; break;
 		}
 
 		return 1;
 	}
 
-	private ModelRenderer getBodyPart(BipedModel<?> model, int part) {
+	private ModelPart getBodyPart(HumanoidModel<?> model, int part) {
 		switch(part) {
-			case HEAD : return model.bipedHead;
-			case BODY : return model.bipedBody;
-			case RIGHT_ARM : return model.bipedRightArm;
-			case LEFT_ARM : return model.bipedLeftArm;
-			case RIGHT_LEG : return model.bipedRightLeg;
-			case LEFT_LEG : return model.bipedLeftLeg;
+			case HEAD : return model.head;
+			case BODY : return model.body;
+			case RIGHT_ARM : return model.rightArm;
+			case LEFT_ARM : return model.leftArm;
+			case RIGHT_LEG : return model.rightLeg;
+			case LEFT_LEG : return model.leftLeg;
 		}
 		return null;
 	}
 
 	@Override
-	public void setValues(BipedModel<?> target, int tweenType, float[] newValues) {
+	public void setValues(HumanoidModel<?> target, int tweenType, float[] newValues) {
 		int axis = tweenType % MODEL_PROPS;
 		int bodyPart = tweenType - axis;
 
@@ -129,42 +129,42 @@ public class ModelAccessor implements TweenAccessor<BipedModel<?>> {
 			return;
 		}
 
-		ModelRenderer model = getBodyPart(target, bodyPart);
+		ModelPart model = getBodyPart(target, bodyPart);
 		messWithModel(target, model, axis, newValues[0]);
 	}
 
-	private void messWithModel(BipedModel<?> biped, ModelRenderer part, int axis, float val) {
+	private void messWithModel(HumanoidModel<?> biped, ModelPart part, int axis, float val) {
 		setPartAxis(part, axis, val);
 		if(biped instanceof PlayerModel)
 			messWithPlayerModel((PlayerModel<?>) biped, part, axis, val);
 	}
 
-	private void messWithPlayerModel(PlayerModel<?> biped, ModelRenderer part, int axis, float val) {
-		if(part == biped.bipedHead) {
-			setPartAxis(biped.bipedHeadwear, axis, val);
-		} else if(part == biped.bipedLeftArm)
-			setPartAxis(biped.bipedLeftArmwear, axis, val);
-		else if(part == biped.bipedRightArm)
-			setPartAxis(biped.bipedRightArmwear, axis, val);
-		else if(part == biped.bipedLeftLeg)
-			setPartAxis(biped.bipedLeftLegwear, axis, val);
-		else if(part == biped.bipedRightLeg)
-			setPartAxis(biped.bipedRightLegwear, axis, val);
-		else if(part == biped.bipedBody)
-			setPartAxis(biped.bipedBodyWear, axis, val);
+	private void messWithPlayerModel(PlayerModel<?> biped, ModelPart part, int axis, float val) {
+		if(part == biped.head) {
+			setPartAxis(biped.hat, axis, val);
+		} else if(part == biped.leftArm)
+			setPartAxis(biped.leftSleeve, axis, val);
+		else if(part == biped.rightArm)
+			setPartAxis(biped.rightSleeve, axis, val);
+		else if(part == biped.leftLeg)
+			setPartAxis(biped.leftPants, axis, val);
+		else if(part == biped.rightLeg)
+			setPartAxis(biped.rightPants, axis, val);
+		else if(part == biped.body)
+			setPartAxis(biped.jacket, axis, val);
 	}
 
-	private void setPartAxis(ModelRenderer part, int axis, float val) {
+	private void setPartAxis(ModelPart part, int axis, float val) {
 		if(part == null)
 			return;
 		
 		switch(axis) {
 			case ROT_X:
-				part.rotateAngleX = val; break;
+				part.xRot = val; break;
 			case ROT_Y:
-				part.rotateAngleY = val; break;
+				part.yRot = val; break;
 			case ROT_Z:
-				part.rotateAngleZ = val; break;
+				part.zRot = val; break;
 		}
 	}
 

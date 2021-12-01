@@ -5,11 +5,11 @@ import java.util.List;
 import com.google.common.collect.ImmutableSet;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.client.util.InputMappings.Type;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.client.KeyMapping;
+import com.mojang.blaze3d.platform.InputConstants.Type;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -25,10 +25,10 @@ import vazkii.quark.base.module.QuarkModule;
 public class BackButtonKeybind extends QuarkModule {
 
 	@OnlyIn(Dist.CLIENT)
-	private static KeyBinding backKey;
+	private static KeyMapping backKey;
 	
 	@OnlyIn(Dist.CLIENT)
-	private static List<Widget> widgets;
+	private static List<AbstractWidget> widgets;
 
 	@Override
 	public void clientSetup() {
@@ -44,28 +44,28 @@ public class BackButtonKeybind extends QuarkModule {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public void onKeyInput(KeyboardKeyPressedEvent.Post event) {
-		if(backKey.getKey().getType() == Type.KEYSYM && event.getKeyCode() == backKey.getKey().getKeyCode())
+		if(backKey.getKey().getType() == Type.KEYSYM && event.getKeyCode() == backKey.getKey().getValue())
 			clicc();
 	}
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public void onMouseInput(MouseClickedEvent.Post event) {
-		if(backKey.getKey().getType() == Type.MOUSE && event.getButton() == backKey.getKey().getKeyCode())
+		if(backKey.getKey().getType() == Type.MOUSE && event.getButton() == backKey.getKey().getValue())
 			clicc();
 	}
 
 	private void clicc() {
 		ImmutableSet<String> buttons = ImmutableSet.of(
-				I18n.format("gui.back"),
-				I18n.format("gui.done"), 
-				I18n.format("gui.cancel"), 
-				I18n.format("gui.toTitle"),
-				I18n.format("gui.toMenu"));
+				I18n.get("gui.back"),
+				I18n.get("gui.done"), 
+				I18n.get("gui.cancel"), 
+				I18n.get("gui.toTitle"),
+				I18n.get("gui.toMenu"));
 
 		// Iterate this way to ensure we match the more important back buttons first
 		for(String b : buttons)
-			for(Widget w : widgets) {
+			for(AbstractWidget w : widgets) {
 				if(w instanceof Button && ((Button) w).getMessage().getString().equals(b) && w.visible && w.active) {
 					w.onClick(0, 0);
 					return;
@@ -73,8 +73,8 @@ public class BackButtonKeybind extends QuarkModule {
 			}
 		
 		Minecraft mc = Minecraft.getInstance();
-		if(mc.world != null)
-			mc.displayGuiScreen(null);
+		if(mc.level != null)
+			mc.setScreen(null);
 	}
 
 }

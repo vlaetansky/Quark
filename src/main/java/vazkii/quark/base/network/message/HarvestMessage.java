@@ -1,6 +1,6 @@
 package vazkii.quark.base.network.message;
 
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import vazkii.arl.network.IMessage;
 import vazkii.quark.content.tweaks.module.SimpleHarvestModule;

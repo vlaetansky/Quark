@@ -4,12 +4,15 @@ import java.util.function.BooleanSupplier;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.PressurePlateBlock;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.world.level.block.PressurePlateBlock;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.NonNullList;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.module.QuarkModule;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.PressurePlateBlock.Sensitivity;
 
 /**
  * @author WireSegal
@@ -20,7 +23,7 @@ public abstract class QuarkPressurePlateBlock extends PressurePlateBlock impleme
     private final QuarkModule module;
     private BooleanSupplier enabledSupplier = () -> true;
 
-    public QuarkPressurePlateBlock(Sensitivity sensitivity, String regname, QuarkModule module, ItemGroup creativeTab, Properties properties) {
+    public QuarkPressurePlateBlock(Sensitivity sensitivity, String regname, QuarkModule module, CreativeModeTab creativeTab, Properties properties) {
         super(sensitivity, properties);
         this.module = module;
 
@@ -30,9 +33,9 @@ public abstract class QuarkPressurePlateBlock extends PressurePlateBlock impleme
     }
 
     @Override
-    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        if(isEnabled() || group == ItemGroup.SEARCH)
-            super.fillItemGroup(group, items);
+    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+        if(isEnabled() || group == CreativeModeTab.TAB_SEARCH)
+            super.fillItemCategory(group, items);
     }
 
     @Override

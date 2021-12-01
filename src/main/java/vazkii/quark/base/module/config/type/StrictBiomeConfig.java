@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import vazkii.quark.base.module.config.Config;
 
 public class StrictBiomeConfig extends AbstractConfigType implements IBiomeConfig {

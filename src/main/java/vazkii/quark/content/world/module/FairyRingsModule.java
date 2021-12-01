@@ -6,11 +6,11 @@ import java.util.Optional;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.gen.GenerationStage.Decoration;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
@@ -43,7 +43,7 @@ public class FairyRingsModule extends QuarkModule {
 		for(String s : oresRaw) {
 			Optional<Block> b = Registry.BLOCK.getOptional(new ResourceLocation(s));
 			if (b.isPresent()) {
-				ores.add(b.get().getDefaultState());
+				ores.add(b.get().defaultBlockState());
 			}
 			else {
 				new IllegalArgumentException("Block " + s + " does not exist!").printStackTrace();

@@ -8,77 +8,77 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableSet;
 
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.EntitySize;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.Pose;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.ai.goal.PrioritizedGoal;
-import net.minecraft.entity.ai.goal.RangedBowAttackGoal;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.monster.SkeletonEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.BowItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.WrappedGoal;
+import net.minecraft.world.entity.ai.goal.RangedBowAttackGoal;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.NetworkHooks;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.mobs.module.ForgottenModule;
 import vazkii.quark.content.tools.module.ColorRunesModule;
 
-public class ForgottenEntity extends SkeletonEntity {
+public class ForgottenEntity extends Skeleton {
 
-	public static final DataParameter<ItemStack> SHEATHED_ITEM = EntityDataManager.createKey(ForgottenEntity.class, DataSerializers.ITEMSTACK);
+	public static final EntityDataAccessor<ItemStack> SHEATHED_ITEM = SynchedEntityData.defineId(ForgottenEntity.class, EntityDataSerializers.ITEM_STACK);
 
 	public static final ResourceLocation FORGOTTEN_LOOT_TABLE = new ResourceLocation("quark", "entities/forgotten");
 
-	public ForgottenEntity(EntityType<? extends ForgottenEntity> type, World world) {
+	public ForgottenEntity(EntityType<? extends ForgottenEntity> type, Level world) {
 		super(type, world);
 	}
 
 	@Override
-	protected void registerData() {
-		super.registerData();
-		dataManager.register(SHEATHED_ITEM, ItemStack.EMPTY);
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		entityData.define(SHEATHED_ITEM, ItemStack.EMPTY);
 	}
 
-	public static AttributeModifierMap.MutableAttribute registerAttributes() {
-		return MonsterEntity.func_234295_eP_()
-				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.3D)
-				.createMutableAttribute(Attributes.MAX_HEALTH, 60)
-				.createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1);
+	public static AttributeSupplier.Builder registerAttributes() {
+		return Monster.createMonsterAttributes()
+				.add(Attributes.MOVEMENT_SPEED, 0.3D)
+				.add(Attributes.MAX_HEALTH, 60)
+				.add(Attributes.KNOCKBACK_RESISTANCE, 1);
 	}
 
 	@Override
 	@Nullable
-	public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-		ILivingEntityData ilivingentitydata = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-		setCombatTask();
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
+		SpawnGroupData ilivingentitydata = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+		reassessWeaponGoal();
 		
 		return ilivingentitydata;
 	}
@@ -87,76 +87,76 @@ public class ForgottenEntity extends SkeletonEntity {
 	public void tick() {
 		super.tick();
 
-		if(!world.isRemote) {
-			LivingEntity target = getAttackTarget();
+		if(!level.isClientSide) {
+			LivingEntity target = getTarget();
 			boolean shouldUseBow = target == null;
 			if(!shouldUseBow) {
-				 EffectInstance eff = target.getActivePotionEffect(Effects.BLINDNESS);
+				 MobEffectInstance eff = target.getEffect(MobEffects.BLINDNESS);
 				 shouldUseBow = eff == null || eff.getDuration() < 20;
 			}
 			
-			boolean isUsingBow = getHeldItemMainhand().getItem() instanceof BowItem;
+			boolean isUsingBow = getMainHandItem().getItem() instanceof BowItem;
 			if(shouldUseBow != isUsingBow)
 				swap();
 		}
 
-		double w = getWidth() * 2;
-		double h = getHeight();
-		world.addParticle(ParticleTypes.AMBIENT_ENTITY_EFFECT, getPosX() + Math.random() * w - w/2, getPosY() + Math.random() * h, getPosZ() + Math.random() * w - w/2, 0, 0, 0);
+		double w = getBbWidth() * 2;
+		double h = getBbHeight();
+		level.addParticle(ParticleTypes.AMBIENT_ENTITY_EFFECT, getX() + Math.random() * w - w/2, getY() + Math.random() * h, getZ() + Math.random() * w - w/2, 0, 0, 0);
 	}
 
 	private void swap() {
-		ItemStack curr = getHeldItemMainhand();
-		ItemStack off = dataManager.get(SHEATHED_ITEM);
+		ItemStack curr = getMainHandItem();
+		ItemStack off = entityData.get(SHEATHED_ITEM);
 
-		setHeldItem(Hand.MAIN_HAND, off);
-		dataManager.set(SHEATHED_ITEM, curr);
+		setItemInHand(InteractionHand.MAIN_HAND, off);
+		entityData.set(SHEATHED_ITEM, curr);
 
-		Stream<PrioritizedGoal> stream = goalSelector.getRunningGoals();
-		stream.map(PrioritizedGoal::getGoal)
+		Stream<WrappedGoal> stream = goalSelector.getRunningGoals();
+		stream.map(WrappedGoal::getGoal)
 		.filter(g -> g instanceof MeleeAttackGoal || g instanceof RangedBowAttackGoal<?>)
-		.forEach(Goal::resetTask);
+		.forEach(Goal::stop);
 
-		setCombatTask();
+		reassessWeaponGoal();
 	}
 
 
 	@Nonnull
 	@Override
-	protected ResourceLocation getLootTable() {
+	protected ResourceLocation getDefaultLootTable() {
 		return FORGOTTEN_LOOT_TABLE;
 	}
 
 	@Override
-	public void writeAdditional(CompoundNBT compound) {
-		super.writeAdditional(compound);
+	public void addAdditionalSaveData(CompoundTag compound) {
+		super.addAdditionalSaveData(compound);
 
-		CompoundNBT sheathed = new CompoundNBT();
-		dataManager.get(SHEATHED_ITEM).write(sheathed);
+		CompoundTag sheathed = new CompoundTag();
+		entityData.get(SHEATHED_ITEM).save(sheathed);
 		compound.put("sheathed", sheathed);
 	}
 
 	@Override
-	public void readAdditional(CompoundNBT compound) {
-		super.readAdditional(compound);
+	public void readAdditionalSaveData(CompoundTag compound) {
+		super.readAdditionalSaveData(compound);
 
-		CompoundNBT sheathed = compound.getCompound("sheathed");
-		dataManager.set(SHEATHED_ITEM, ItemStack.read(sheathed));
+		CompoundTag sheathed = compound.getCompound("sheathed");
+		entityData.set(SHEATHED_ITEM, ItemStack.of(sheathed));
 	}
 
 	@Override
-	protected float getStandingEyeHeight(Pose poseIn, EntitySize sizeIn) {
+	protected float getStandingEyeHeight(Pose poseIn, EntityDimensions sizeIn) {
 		return 2.1F;
 	}
 
 	@Override
-	protected void dropSpecialItems(DamageSource source, int looting, boolean recentlyHitIn) {
+	protected void dropCustomDeathLoot(DamageSource source, int looting, boolean recentlyHitIn) {
 		// NO-OP
 	}
 
 	@Override
-	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
-		super.setEquipmentBasedOnDifficulty(difficulty);
+	protected void populateDefaultEquipmentSlots(DifficultyInstance difficulty) {
+		super.populateDefaultEquipmentSlots(difficulty);
 
 		prepareEquipment();
 	}
@@ -165,13 +165,13 @@ public class ForgottenEntity extends SkeletonEntity {
 		ItemStack bow = new ItemStack(Items.BOW);
 		ItemStack sheathed = new ItemStack(Items.IRON_SWORD);
 
-		EnchantmentHelper.addRandomEnchantment(rand, bow, 20, false);
-		EnchantmentHelper.addRandomEnchantment(rand, sheathed, 20, false);
+		EnchantmentHelper.enchantItem(random, bow, 20, false);
+		EnchantmentHelper.enchantItem(random, sheathed, 20, false);
 
-		if(ModuleLoader.INSTANCE.isModuleEnabled(ColorRunesModule.class) && rand.nextBoolean()) {
-			List<Item> items = ColorRunesModule.runesLootableTag.getAllElements();
-			ItemStack item = new ItemStack(items.get(rand.nextInt(items.size())));
-			CompoundNBT runeNbt = item.serializeNBT();
+		if(ModuleLoader.INSTANCE.isModuleEnabled(ColorRunesModule.class) && random.nextBoolean()) {
+			List<Item> items = ColorRunesModule.runesLootableTag.getValues();
+			ItemStack item = new ItemStack(items.get(random.nextInt(items.size())));
+			CompoundTag runeNbt = item.serializeNBT();
 
 			ItemNBTHelper.setBoolean(bow, ColorRunesModule.TAG_RUNE_ATTACHED, true);
 			ItemNBTHelper.setBoolean(sheathed, ColorRunesModule.TAG_RUNE_ATTACHED, true);
@@ -180,19 +180,19 @@ public class ForgottenEntity extends SkeletonEntity {
 			ItemNBTHelper.setCompound(sheathed, ColorRunesModule.TAG_RUNE_COLOR, runeNbt);
 		}
 
-		setItemStackToSlot(EquipmentSlotType.MAINHAND, bow);
-		dataManager.set(SHEATHED_ITEM, sheathed);
+		setItemSlot(EquipmentSlot.MAINHAND, bow);
+		entityData.set(SHEATHED_ITEM, sheathed);
 
-		setItemStackToSlot(EquipmentSlotType.HEAD, new ItemStack(ForgottenModule.forgotten_hat));
+		setItemSlot(EquipmentSlot.HEAD, new ItemStack(ForgottenModule.forgotten_hat));
 	}
 
 	@Override
-	protected AbstractArrowEntity fireArrow(ItemStack arrowStack, float distanceFactor) {
-		AbstractArrowEntity arrow = super.fireArrow(arrowStack, distanceFactor);
-		if(arrow instanceof ArrowEntity) {
+	protected AbstractArrow getArrow(ItemStack arrowStack, float distanceFactor) {
+		AbstractArrow arrow = super.getArrow(arrowStack, distanceFactor);
+		if(arrow instanceof Arrow) {
 			ItemStack stack = new ItemStack(Items.TIPPED_ARROW);
-			PotionUtils.appendEffects(stack, ImmutableSet.of(new EffectInstance(Effects.BLINDNESS, 100, 0)));
-			((ArrowEntity) arrow).setPotionEffect(stack);
+			PotionUtils.setCustomEffects(stack, ImmutableSet.of(new MobEffectInstance(MobEffects.BLINDNESS, 100, 0)));
+			((Arrow) arrow).setEffectsFromItem(stack);
 		}
 
 		return arrow;
@@ -200,7 +200,7 @@ public class ForgottenEntity extends SkeletonEntity {
 	
 	@Nonnull
 	@Override
-	public IPacket<?> createSpawnPacket() {
+	public Packet<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 

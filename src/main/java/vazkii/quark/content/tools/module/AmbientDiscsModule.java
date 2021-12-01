@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ISound;
-import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.entity.monster.SkeletonEntity;
-import net.minecraft.entity.monster.SpiderEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.JukeboxTileEntity;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.entity.monster.Spider;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -52,21 +52,21 @@ public class AmbientDiscsModule extends QuarkModule {
 	
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onMobDeath(LivingDeathEvent event) {
-		if(dropOnSpiderKill && event.getEntity() instanceof SpiderEntity && event.getSource().getTrueSource() instanceof SkeletonEntity) {
-			Item item = discs.get(event.getEntity().world.rand.nextInt(discs.size()));
-			event.getEntity().entityDropItem(item, 0);
+		if(dropOnSpiderKill && event.getEntity() instanceof Spider && event.getSource().getEntity() instanceof Skeleton) {
+			Item item = discs.get(event.getEntity().level.random.nextInt(discs.size()));
+			event.getEntity().spawnAtLocation(item, 0);
 		}
 	}
 	
 	@OnlyIn(Dist.CLIENT)
-	public static void onJukeboxLoad(JukeboxTileEntity tile) {
+	public static void onJukeboxLoad(JukeboxBlockEntity tile) {
 		Minecraft mc = Minecraft.getInstance();
-		WorldRenderer render = mc.worldRenderer;
-		BlockPos pos = tile.getPos();
+		LevelRenderer render = mc.levelRenderer;
+		BlockPos pos = tile.getBlockPos();
 		
-		ISound sound = render.mapSoundPositions.get(pos);
-		SoundHandler soundEngine = mc.getSoundHandler();
-		if(sound == null || !soundEngine.isPlaying(sound)) {
+		SoundInstance sound = render.playingRecords.get(pos);
+		SoundManager soundEngine = mc.getSoundManager();
+		if(sound == null || !soundEngine.isActive(sound)) {
 			if(sound != null) {
 				soundEngine.play(sound);
 			} else {

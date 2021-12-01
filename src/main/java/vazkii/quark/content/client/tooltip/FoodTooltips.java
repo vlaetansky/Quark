@@ -2,19 +2,19 @@ package vazkii.quark.content.client.tooltip;
 
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.item.Food;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.EffectType;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderTooltipEvent;
@@ -26,10 +26,10 @@ public class FoodTooltips {
 
 	@OnlyIn(Dist.CLIENT)
 	public static void makeTooltip(ItemTooltipEvent event, boolean showFood, boolean showSaturation) {
-		if(event.getItemStack().isFood()) {
-			Food food = event.getItemStack().getItem().getFood();
+		if(event.getItemStack().isEdible()) {
+			FoodProperties food = event.getItemStack().getItem().getFoodProperties();
 			if (food != null) {
-				int pips = food.getHealing();
+				int pips = food.getNutrition();
 				if(pips == 0)
 					return;
 				
@@ -40,7 +40,7 @@ public class FoodTooltips {
 					s.append("  ");
 
 				int saturationSimplified = 0;
-				float saturation = food.getSaturation();
+				float saturation = food.getSaturationModifier();
 				if(saturation < 1) {
 					if(saturation > 0.7)
 						saturationSimplified = 1;
@@ -51,9 +51,9 @@ public class FoodTooltips {
 					else saturationSimplified = 4;
 				}
 
-				ITextComponent spaces = new StringTextComponent(s.toString());
-				ITextComponent saturationText = new TranslationTextComponent("quark.misc.saturation" + saturationSimplified).mergeStyle(TextFormatting.GRAY);
-				List<ITextComponent> tooltip = event.getToolTip();
+				Component spaces = new TextComponent(s.toString());
+				Component saturationText = new TranslatableComponent("quark.misc.saturation" + saturationSimplified).withStyle(ChatFormatting.GRAY);
+				List<Component> tooltip = event.getToolTip();
 
 				if (tooltip.isEmpty()) {
 					if(showFood)
@@ -76,20 +76,20 @@ public class FoodTooltips {
 
 	@OnlyIn(Dist.CLIENT)
 	public static void renderTooltip(RenderTooltipEvent.PostText event) {
-		if(event.getStack().isFood()) {
-			Food food = event.getStack().getItem().getFood();
+		if(event.getStack().isEdible()) {
+			FoodProperties food = event.getStack().getItem().getFoodProperties();
 			if (food != null) {
 				RenderSystem.color3f(1F, 1F, 1F);
 				Minecraft mc = Minecraft.getInstance();
-				MatrixStack matrix = event.getMatrixStack();
+				PoseStack matrix = event.getMatrixStack();
 				
-				int pips = food.getHealing();
+				int pips = food.getNutrition();
 				if(pips == 0)
 					return;
 
 				boolean poison = false;
-				for (Pair<EffectInstance, Float> effect : food.getEffects()) {
-					if (effect.getFirst() != null && effect.getFirst().getPotion() != null && effect.getFirst().getPotion().getEffectType() == EffectType.HARMFUL) {
+				for (Pair<MobEffectInstance, Float> effect : food.getEffects()) {
+					if (effect.getFirst() != null && effect.getFirst().getEffect() != null && effect.getFirst().getEffect().getCategory() == MobEffectCategory.HARMFUL) {
 						poison = true;
 						break;
 					}
@@ -107,9 +107,9 @@ public class FoodTooltips {
 						count--;
 				}
 
-				matrix.push();
+				matrix.pushPose();
 				matrix.translate(0, 0, 500);
-				mc.getTextureManager().bindTexture(ForgeIngameGui.GUI_ICONS_LOCATION);
+				mc.getTextureManager().bind(ForgeIngameGui.GUI_ICONS_LOCATION);
 
 				for (int i = 0; i < renderCount; i++) {
 					int x = event.getX() + i * 9 - 1;
@@ -119,7 +119,7 @@ public class FoodTooltips {
 						u += 117;
 					int v = 27;
 
-					AbstractGui.blit(matrix, x, y, u, v, 9, 9, 256, 256);
+					GuiComponent.blit(matrix, x, y, u, v, 9, 9, 256, 256);
 
 					u = 52;
 					if (fract && i == 0)
@@ -127,12 +127,12 @@ public class FoodTooltips {
 					if (poison)
 						u += 36;
 
-					AbstractGui.blit(matrix, x, y, u, v, 9, 9, 256, 256);
+					GuiComponent.blit(matrix, x, y, u, v, 9, 9, 256, 256);
 				}
 				
 				if(compress)
-					mc.fontRenderer.drawStringWithShadow(matrix, "x" + (count + (fract ? ".5" : "")), event.getX() + 10, y + 1, 0xFF666666);
-				matrix.pop();
+					mc.font.drawShadow(matrix, "x" + (count + (fract ? ".5" : "")), event.getX() + 10, y + 1, 0xFF666666);
+				matrix.popPose();
 			}
 		}
 	}

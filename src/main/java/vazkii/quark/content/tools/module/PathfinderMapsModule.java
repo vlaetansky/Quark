@@ -7,23 +7,23 @@ import java.util.Random;
 import javax.annotation.Nonnull;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.merchant.villager.VillagerProfession;
-import net.minecraft.entity.merchant.villager.VillagerTrades.ITrade;
-import net.minecraft.item.FilledMapItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.MerchantOffer;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.MapData;
-import net.minecraft.world.storage.MapDecoration.Type;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.VillagerTrades.ItemListing;
+import net.minecraft.world.item.MapItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import net.minecraft.world.level.saveddata.maps.MapDecoration.Type;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.Quark;
@@ -91,7 +91,7 @@ public class PathfinderMapsModule extends QuarkModule {
 	public void onTradesLoaded(VillagerTradesEvent event) {
 		if(event.getType() == VillagerProfession.CARTOGRAPHER)
 			synchronized (mutex) {
-				Int2ObjectMap<List<ITrade>> trades = event.getTrades();
+				Int2ObjectMap<List<ItemListing>> trades = event.getTrades();
 				for(TradeInfo info : tradeList)
 					if(info != null)
 						trades.get(info.level).add(new PathfinderMapTrade(info));
@@ -111,8 +111,8 @@ public class PathfinderMapsModule extends QuarkModule {
 		}
 	}
 
-	private void loadTradeInfo(RegistryKey<Biome> biome, boolean enabled, int level, int minPrice, int maxPrice, int color) {
-		builtinTrades.add(new TradeInfo(biome.getLocation(), enabled, level, minPrice, maxPrice, color));
+	private void loadTradeInfo(ResourceKey<Biome> biome, boolean enabled, int level, int minPrice, int maxPrice, int color) {
+		builtinTrades.add(new TradeInfo(biome.location(), enabled, level, minPrice, maxPrice, color));
 	}
 	
 	private void loadCustomTradeInfo(ResourceLocation biome, boolean enabled, int level, int minPrice, int maxPrice, int color, String name) {
@@ -144,25 +144,25 @@ public class PathfinderMapsModule extends QuarkModule {
 			}
 	}
 
-	public static ItemStack createMap(World world, BlockPos pos, TradeInfo info) {
-		if(!(world instanceof ServerWorld))
+	public static ItemStack createMap(Level world, BlockPos pos, TradeInfo info) {
+		if(!(world instanceof ServerLevel))
 			return ItemStack.EMPTY;
 
-		BlockPos biomePos = MiscUtil.locateBiome((ServerWorld) world, info.biome, pos, searchRadius, searchDistanceIncrement);
+		BlockPos biomePos = MiscUtil.locateBiome((ServerLevel) world, info.biome, pos, searchRadius, searchDistanceIncrement);
 		
 		if(biomePos == null)
 			return ItemStack.EMPTY;
 			
-		ItemStack stack = FilledMapItem.setupNewMap(world, biomePos.getX(), biomePos.getZ(), (byte) 2, true, true);
+		ItemStack stack = MapItem.create(world, biomePos.getX(), biomePos.getZ(), (byte) 2, true, true);
 		// fillExplorationMap
-		FilledMapItem.func_226642_a_((ServerWorld) world, stack);
-		MapData.addTargetDecoration(stack, biomePos, "+", Type.RED_X);
-		stack.setDisplayName(new TranslationTextComponent(info.name));
+		MapItem.renderBiomePreviewMap((ServerLevel) world, stack);
+		MapItemSavedData.addTargetDecoration(stack, biomePos, "+", Type.RED_X);
+		stack.setHoverName(new TranslatableComponent(info.name));
 
 		return stack;
 	}
 
-	private static class PathfinderMapTrade implements ITrade {
+	private static class PathfinderMapTrade implements ItemListing {
 
 		public final TradeInfo info;
 
@@ -177,7 +177,7 @@ public class PathfinderMapsModule extends QuarkModule {
 			
 			int i = random.nextInt(info.maxPrice - info.minPrice + 1) + info.minPrice;
 
-			ItemStack itemstack = createMap(entity.world, entity.getPosition(), info);
+			ItemStack itemstack = createMap(entity.level, entity.blockPosition(), info);
 			if(itemstack.isEmpty())
 				return null;
 			

@@ -6,13 +6,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.WorldGenRegion;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.server.level.WorldGenRegion;
 import vazkii.quark.base.world.generator.multichunk.ClusterBasedGenerator;
 import vazkii.quark.content.world.config.UndergroundBiomeConfig;
+
+import vazkii.quark.base.world.generator.multichunk.ClusterBasedGenerator.IFinishableContext;
+import vazkii.quark.base.world.generator.multichunk.ClusterBasedGenerator.IGenerationContext;
 
 public class UndergroundBiomeGenerator extends ClusterBasedGenerator {
 
@@ -32,7 +35,7 @@ public class UndergroundBiomeGenerator extends ClusterBasedGenerator {
 	public BlockPos[] getSourcesInChunk(WorldGenRegion world, Random random, ChunkGenerator generator, BlockPos chunkCorner) {
 		if(info.rarity > 0 && random.nextInt(info.rarity) == 0) {
 			return new BlockPos[] {
-					chunkCorner.add(random.nextInt(16), info.minYLevel + random.nextInt(info.maxYLevel - info.minYLevel), random.nextInt(16))
+					chunkCorner.offset(random.nextInt(16), info.minYLevel + random.nextInt(info.maxYLevel - info.minYLevel), random.nextInt(16))
 			};
 		}
 

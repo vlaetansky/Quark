@@ -4,12 +4,12 @@ import java.util.Objects;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.color.block.BlockColor;
+import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.interf.IBlockColorProvider;
@@ -36,7 +36,7 @@ public class QuarkInheritedPaneBlock extends QuarkPaneBlock implements IQuarkBlo
 	}
 
 	public QuarkInheritedPaneBlock(IQuarkBlock parent) {
-		this(parent, Block.Properties.from(parent.getBlock()));
+		this(parent, Block.Properties.copy(parent.getBlock()));
 	}
 
 	@Override
@@ -46,19 +46,19 @@ public class QuarkInheritedPaneBlock extends QuarkPaneBlock implements IQuarkBlo
 
 	@Nullable
 	@Override
-	public float[] getBeaconColorMultiplier(BlockState state, IWorldReader world, BlockPos pos, BlockPos beaconPos) {
-		return parent.getBlock().getBeaconColorMultiplier(parent.getBlock().getDefaultState(), world, pos, beaconPos);
+	public float[] getBeaconColorMultiplier(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
+		return parent.getBlock().getBeaconColorMultiplier(parent.getBlock().defaultBlockState(), world, pos, beaconPos);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IBlockColor getBlockColor() {
+	public BlockColor getBlockColor() {
 		return parent instanceof IBlockColorProvider ? ((IBlockColorProvider) parent).getBlockColor() : null;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IItemColor getItemColor() {
+	public ItemColor getItemColor() {
 		return parent instanceof IItemColorProvider ? ((IItemColorProvider) parent).getItemColor() : null;
 	}
 }

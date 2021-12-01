@@ -2,16 +2,16 @@ package vazkii.quark.content.world.gen;
 
 import java.util.Random;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biome.Category;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.WorldGenRegion;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biome.BiomeCategory;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.server.level.WorldGenRegion;
 import net.minecraftforge.common.Tags;
 import vazkii.quark.base.module.config.type.DimensionConfig;
 import vazkii.quark.base.world.generator.Generator;
@@ -31,29 +31,29 @@ public class FairyRingGenerator extends Generator {
 		
 		Biome biome = getBiome(worldIn, center, false);
 		
-		Biome.Category category = biome.getCategory();
+		Biome.BiomeCategory category = biome.getBiomeCategory();
 		double chance = 0;
-		if(category == Category.FOREST)
+		if(category == BiomeCategory.FOREST)
 			chance = FairyRingsModule.forestChance;
-		else if(category == Category.PLAINS)
+		else if(category == BiomeCategory.PLAINS)
 			chance = FairyRingsModule.plainsChance;
 		
 		if(rand.nextDouble() < chance) {
 			BlockPos pos = center;
 			BlockState state = worldIn.getBlockState(pos);
 			
-			while(state.getMaterial() != Material.ORGANIC && pos.getY() > 30) {
-				pos = pos.down();
+			while(state.getMaterial() != Material.GRASS && pos.getY() > 30) {
+				pos = pos.below();
 				state = worldIn.getBlockState(pos);
 			}
 			
-			if(state.getMaterial() == Material.ORGANIC)
-				spawnFairyRing(worldIn, pos.down(), rand);
+			if(state.getMaterial() == Material.GRASS)
+				spawnFairyRing(worldIn, pos.below(), rand);
 		}		
 	}
 	
-	public static void spawnFairyRing(IWorld world, BlockPos pos, Random rand) {
-		BlockState flower = Blocks.OXEYE_DAISY.getDefaultState();
+	public static void spawnFairyRing(LevelAccessor world, BlockPos pos, Random rand) {
+		BlockState flower = Blocks.OXEYE_DAISY.defaultBlockState();
 		
 		for(int i = -3; i <= 3; i++)
 			for(int j = -3; j <= 3; j++) {
@@ -62,31 +62,31 @@ public class FairyRingGenerator extends Generator {
 					continue;
 				
 				for(int k = 5; k > -4; k--) {
-					BlockPos fpos = pos.add(i, k, j);
-					BlockPos fposUp = fpos.up();
+					BlockPos fpos = pos.offset(i, k, j);
+					BlockPos fposUp = fpos.above();
 					BlockState state = world.getBlockState(fpos);	
-					if(state.getMaterial() == Material.ORGANIC && world.isAirBlock(fposUp)) {
-						world.setBlockState(fpos.up(), flower, 2);
+					if(state.getMaterial() == Material.GRASS && world.isEmptyBlock(fposUp)) {
+						world.setBlock(fpos.above(), flower, 2);
 						break;
 					}
 				}
 			}
 		
-		BlockPos orePos = pos.down(rand.nextInt(10) + 25);
+		BlockPos orePos = pos.below(rand.nextInt(10) + 25);
 		BlockState stoneState = world.getBlockState(orePos);
 		int down = 0;
-		while(!stoneState.getBlock().isIn(Tags.Blocks.STONE) && down < 10) {
-			orePos = orePos.down();	
+		while(!stoneState.getBlock().is(Tags.Blocks.STONE) && down < 10) {
+			orePos = orePos.below();	
 			stoneState = world.getBlockState(orePos);	
 			down++;
 		}
 		
-		if(stoneState.getBlock().isIn(Tags.Blocks.STONE)) {
+		if(stoneState.getBlock().is(Tags.Blocks.STONE)) {
 			BlockState ore = FairyRingsModule.ores.get(rand.nextInt(FairyRingsModule.ores.size()));
-			world.setBlockState(orePos, ore, 2);
+			world.setBlock(orePos, ore, 2);
 			for(Direction face : Direction.values())
 				if(rand.nextBoolean())
-					world.setBlockState(orePos.offset(face), ore, 2);
+					world.setBlock(orePos.relative(face), ore, 2);
 		}
 	}
 	

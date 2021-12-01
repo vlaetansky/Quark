@@ -6,32 +6,32 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.PistonHeadBlock;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.piston.PistonHeadBlock;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import vazkii.quark.addons.oddities.tile.MagnetizedBlockTileEntity;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.module.QuarkModule;
@@ -44,14 +44,14 @@ public class MovingMagnetizedBlock extends QuarkBlock {
 	public static final DirectionProperty FACING = PistonHeadBlock.FACING;
 
 	public MovingMagnetizedBlock(QuarkModule module) {
-		super("magnetized_block", module, null, Block.Properties.create(Material.PISTON).hardnessAndResistance(-1.0F).variableOpacity().noDrops().notSolid());
-		this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));
+		super("magnetized_block", module, null, Block.Properties.of(Material.PISTON).strength(-1.0F).dynamicShape().noDrops().noOcclusion());
+		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
 	}
 
 	@Nonnull
 	@Override
-	public BlockRenderType getRenderType(BlockState state) {
-		return BlockRenderType.INVISIBLE;
+	public RenderShape getRenderShape(BlockState state) {
+		return RenderShape.INVISIBLE;
 	}
 
 	@Override
@@ -61,12 +61,12 @@ public class MovingMagnetizedBlock extends QuarkBlock {
 
 	@Nullable
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return null;
 	}
 
 	@Override
-	public void onReplaced(BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
 		if (state.getBlock() != newState.getBlock()) {
 			MagnetizedBlockTileEntity tile = getMagnetTileEntity(worldIn, pos);
 			if (tile != null)
@@ -75,7 +75,7 @@ public class MovingMagnetizedBlock extends QuarkBlock {
 	}
 
 	@Override 
-	public boolean isTransparent(BlockState state) {
+	public boolean useShapeForLightOcclusion(BlockState state) {
 		return true;
 	}
 
@@ -90,71 +90,71 @@ public class MovingMagnetizedBlock extends QuarkBlock {
 //	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-		if (!worldIn.isRemote && worldIn.getTileEntity(pos) == null) {
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+		if (!worldIn.isClientSide && worldIn.getBlockEntity(pos) == null) {
 			worldIn.removeBlock(pos, false);
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		} else
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 	}
 
 	@Override
 	@Nonnull
 	public List<ItemStack> getDrops(@Nonnull BlockState state, @Nonnull LootContext.Builder builder) {
-		MagnetizedBlockTileEntity tile = this.getMagnetTileEntity(builder.getWorld(), builder.assertPresent(LootParameters.field_237457_g_)); // origin
+		MagnetizedBlockTileEntity tile = this.getMagnetTileEntity(builder.getLevel(), builder.getParameter(LootContextParams.ORIGIN)); // origin
 		return tile == null ? Collections.emptyList() : tile.getMagnetState().getDrops(builder);
 	}
 
 	@Override
 	@Nonnull
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return VoxelShapes.empty();
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+		return Shapes.empty();
 	}
 
 	@Override
 	@Nonnull
-	public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, ISelectionContext context) {
+	public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, CollisionContext context) {
 		MagnetizedBlockTileEntity tile = this.getMagnetTileEntity(worldIn, pos);
-		return tile != null ? tile.getCollisionShape(worldIn, pos) : VoxelShapes.empty();
+		return tile != null ? tile.getCollisionShape(worldIn, pos) : Shapes.empty();
 	}
 
 	@Nullable
-	private MagnetizedBlockTileEntity getMagnetTileEntity(IBlockReader world, Vector3d origin) {
+	private MagnetizedBlockTileEntity getMagnetTileEntity(BlockGetter world, Vec3 origin) {
 		BlockPos pos = new BlockPos(origin);
 		return getMagnetTileEntity(world, pos);
 	}
 	
 	@Nullable
-	private MagnetizedBlockTileEntity getMagnetTileEntity(IBlockReader world, BlockPos pos) {
-		TileEntity tile = world.getTileEntity(pos);
+	private MagnetizedBlockTileEntity getMagnetTileEntity(BlockGetter world, BlockPos pos) {
+		BlockEntity tile = world.getBlockEntity(pos);
 		return tile instanceof MagnetizedBlockTileEntity ? (MagnetizedBlockTileEntity)tile : null;
 	}
 
 	@Override
 	@Nonnull
-	public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state) {
+	public ItemStack getCloneItemStack(BlockGetter worldIn, BlockPos pos, BlockState state) {
 		return ItemStack.EMPTY;
 	}
 
 	@Override
 	@Nonnull
 	public BlockState rotate(@Nonnull BlockState state, Rotation rot) {
-		return state.with(FACING, rot.rotate(state.get(FACING)));
+		return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
 	}
 
 	@Override
 	@Nonnull
 	public BlockState mirror(@Nonnull BlockState state, Mirror mirrorIn) {
-		return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+		return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		builder.add(FACING);
 	}
 
 	@Override
-	public boolean allowsMovement(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, PathType type) {
+	public boolean isPathfindable(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, PathComputationType type) {
 		return false;
 	}
 }

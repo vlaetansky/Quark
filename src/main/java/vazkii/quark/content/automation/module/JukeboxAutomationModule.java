@@ -2,21 +2,21 @@ package vazkii.quark.content.automation.module;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.DispenserBlock;
-import net.minecraft.block.JukeboxBlock;
-import net.minecraft.dispenser.IBlockSource;
-import net.minecraft.dispenser.OptionalDispenseBehavior;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.MusicDiscItem;
-import net.minecraft.tileentity.JukeboxTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.JukeboxBlock;
+import net.minecraft.core.BlockSource;
+import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.RecordItem;
+import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -39,22 +39,22 @@ public class JukeboxAutomationModule extends QuarkModule {
 	public void setup() {
 		MusicDiscBehaviour behaviour = new MusicDiscBehaviour();
 		ForgeRegistries.ITEMS.forEach(i -> {
-			if(i instanceof MusicDiscItem)
-				DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY.put(i, behaviour);
+			if(i instanceof RecordItem)
+				DispenserBlock.DISPENSER_REGISTRY.put(i, behaviour);
 		});
 	}
 
 	@SubscribeEvent
-	public void attachCaps(AttachCapabilitiesEvent<TileEntity> event) {
-		if(event.getObject() instanceof JukeboxTileEntity)
-			event.addCapability(JUKEBOX_ITEM_HANDLER, new JukeboxItemHandler((JukeboxTileEntity) event.getObject()));
+	public void attachCaps(AttachCapabilitiesEvent<BlockEntity> event) {
+		if(event.getObject() instanceof JukeboxBlockEntity)
+			event.addCapability(JUKEBOX_ITEM_HANDLER, new JukeboxItemHandler((JukeboxBlockEntity) event.getObject()));
 	}
 
 	public static class JukeboxItemHandler implements ICapabilityProvider, IItemHandler {
 
-		final JukeboxTileEntity tile;
+		final JukeboxBlockEntity tile;
 
-		public JukeboxItemHandler(JukeboxTileEntity tile) {
+		public JukeboxItemHandler(JukeboxBlockEntity tile) {
 			this.tile = tile;
 		}
 
@@ -79,11 +79,11 @@ public class JukeboxAutomationModule extends QuarkModule {
 			if(!stackAt.isEmpty()) {
 				ItemStack copy = stackAt.copy();
 				if(!simulate) {
-		            tile.getWorld().playEvent(1010, tile.getPos(), 0);
+		            tile.getLevel().levelEvent(1010, tile.getBlockPos(), 0);
 					tile.setRecord(ItemStack.EMPTY);
 					
-					BlockState state = tile.getBlockState().with(JukeboxBlock.HAS_RECORD, false);
-					tile.getWorld().setBlockState(tile.getPos(), state, 1|2);
+					BlockState state = tile.getBlockState().setValue(JukeboxBlock.HAS_RECORD, false);
+					tile.getLevel().setBlock(tile.getBlockPos(), state, 1|2);
 				}
 
 				return copy;
@@ -112,28 +112,28 @@ public class JukeboxAutomationModule extends QuarkModule {
 
 	}
 
-	public static class MusicDiscBehaviour extends OptionalDispenseBehavior {
+	public static class MusicDiscBehaviour extends OptionalDispenseItemBehavior {
 
 		@Nonnull
 		@Override
-		protected ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
-			Direction dir = source.getBlockState().get(DispenserBlock.FACING);
-			BlockPos pos = source.getBlockPos().offset(dir);
-			World world = source.getWorld();
+		protected ItemStack execute(BlockSource source, ItemStack stack) {
+			Direction dir = source.getBlockState().getValue(DispenserBlock.FACING);
+			BlockPos pos = source.getPos().relative(dir);
+			Level world = source.getLevel();
 			BlockState state = world.getBlockState(pos);
 
 			if(state.getBlock() == Blocks.JUKEBOX) {
-				JukeboxTileEntity jukebox = (JukeboxTileEntity) world.getTileEntity(pos);
+				JukeboxBlockEntity jukebox = (JukeboxBlockEntity) world.getBlockEntity(pos);
 				if (jukebox != null) {
 					ItemStack currentRecord = jukebox.getRecord();
-					((JukeboxBlock) state.getBlock()).insertRecord(world, pos, state, stack);
-					world.playEvent(null, 1010, pos, Item.getIdFromItem(stack.getItem()));
+					((JukeboxBlock) state.getBlock()).setRecord(world, pos, state, stack);
+					world.levelEvent(null, 1010, pos, Item.getId(stack.getItem()));
 
 					return currentRecord;
 				}
 			}
 
-			return super.dispenseStack(source, stack);
+			return super.execute(source, stack);
 		}
 
 	}

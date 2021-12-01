@@ -1,10 +1,10 @@
 package vazkii.quark.content.building.module;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkInheritedPaneBlock;
 import vazkii.quark.base.module.LoadModule;
@@ -17,16 +17,16 @@ public class FramedGlassModule extends QuarkModule {
 
 	@Override
 	public void construct() {
-		Block.Properties props = Block.Properties.create(Material.GLASS)
-				.hardnessAndResistance(3F, 10F)
+		Block.Properties props = Block.Properties.of(Material.GLASS)
+				.strength(3F, 10F)
 				.sound(SoundType.GLASS)
 				.harvestLevel(1)
 				.harvestTool(ToolType.PICKAXE);
 		
-		new QuarkInheritedPaneBlock(new FramedGlassBlock("framed_glass", this, ItemGroup.BUILDING_BLOCKS, props, false));
+		new QuarkInheritedPaneBlock(new FramedGlassBlock("framed_glass", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props, false));
 		
 		for(DyeColor dye : DyeColor.values())
-			new QuarkInheritedPaneBlock(new FramedGlassBlock(dye.getTranslationKey() + "_framed_glass", this, ItemGroup.BUILDING_BLOCKS, props, true));
+			new QuarkInheritedPaneBlock(new FramedGlassBlock(dye.getName() + "_framed_glass", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props, true));
 	}
 
 }

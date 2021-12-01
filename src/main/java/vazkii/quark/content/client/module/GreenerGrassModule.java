@@ -5,12 +5,12 @@ import java.util.Map;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.color.BlockColors;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.client.color.block.BlockColors;
+import net.minecraft.client.color.block.BlockColor;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -69,13 +69,13 @@ public class GreenerGrassModule extends QuarkModule {
 		BlockColors colors = Minecraft.getInstance().getBlockColors();
 
 		// Can't be AT'd as it's changed by forge
-		Map<IRegistryDelegate<Block>, IBlockColor> map = ObfuscationReflectionHelper.getPrivateValue(BlockColors.class, colors, "field_186725_a");
+		Map<IRegistryDelegate<Block>, BlockColor> map = ObfuscationReflectionHelper.getPrivateValue(BlockColors.class, colors, "blockColors");
 
 		for(String id : ids) {
 			Registry.BLOCK.getOptional(new ResourceLocation(id)).ifPresent(b -> {
 				if (b.delegate == null)
 					return;
-				IBlockColor color = map.get(b.delegate);
+				BlockColor color = map.get(b.delegate);
 				if(color != null)
 					colors.register(getGreenerColor(color, leaves), b);
 			});
@@ -83,7 +83,7 @@ public class GreenerGrassModule extends QuarkModule {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private IBlockColor getGreenerColor(IBlockColor color, boolean leaves) {
+	private BlockColor getGreenerColor(BlockColor color, boolean leaves) {
 		return (state, world, pos, tintIndex) -> {
 			int originalColor = color.getColor(state, world, pos, tintIndex);
 			if(!enabled || (leaves && !affectLeaves))

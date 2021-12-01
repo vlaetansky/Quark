@@ -7,43 +7,43 @@ import javax.annotation.Nonnull;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentData;
-import net.minecraft.item.EnchantedBookItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootFunction;
-import net.minecraft.loot.LootFunctionType;
-import net.minecraft.loot.conditions.ILootCondition;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraft.world.item.EnchantedBookItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import vazkii.quark.content.tools.module.AncientTomesModule;
 
 /**
  * @author WireSegal
  * Created at 1:48 PM on 7/4/20.
  */
-public class EnchantTome extends LootFunction {
-    public EnchantTome(ILootCondition[] conditions) {
+public class EnchantTome extends LootItemConditionalFunction {
+    public EnchantTome(LootItemCondition[] conditions) {
         super(conditions);
     }
 
     @Override
     @Nonnull
-    public LootFunctionType getFunctionType() {
+    public LootItemFunctionType getType() {
         return AncientTomesModule.tomeEnchantType;
     }
 
     @Override
     @Nonnull
-    public ItemStack doApply(@Nonnull ItemStack stack, LootContext context) {
+    public ItemStack run(@Nonnull ItemStack stack, LootContext context) {
         Enchantment enchantment = validEnchants.get(context.getRandom().nextInt(validEnchants.size()));
-        EnchantedBookItem.addEnchantment(stack, new EnchantmentData(enchantment, enchantment.getMaxLevel()));
+        EnchantedBookItem.addEnchantment(stack, new EnchantmentInstance(enchantment, enchantment.getMaxLevel()));
         return stack;
     }
 
-    public static class Serializer extends LootFunction.Serializer<EnchantTome> {
+    public static class Serializer extends LootItemConditionalFunction.Serializer<EnchantTome> {
         @Override
         @Nonnull
-        public EnchantTome deserialize(@Nonnull JsonObject object, @Nonnull JsonDeserializationContext deserializationContext, @Nonnull ILootCondition[] conditionsIn) {
+        public EnchantTome deserialize(@Nonnull JsonObject object, @Nonnull JsonDeserializationContext deserializationContext, @Nonnull LootItemCondition[] conditionsIn) {
             return new EnchantTome(conditionsIn);
         }
     }

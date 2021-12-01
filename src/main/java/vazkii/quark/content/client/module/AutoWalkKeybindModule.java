@@ -1,8 +1,8 @@
 package vazkii.quark.content.client.module;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.KeyMapping;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
@@ -17,7 +17,7 @@ import vazkii.quark.base.module.QuarkModule;
 public class AutoWalkKeybindModule extends QuarkModule {
 
 	@OnlyIn(Dist.CLIENT)
-	private KeyBinding keybind;
+	private KeyMapping keybind;
 
 	private boolean autorunning;
 	private boolean hadAutoJump;
@@ -44,20 +44,20 @@ public class AutoWalkKeybindModule extends QuarkModule {
 	private void acceptInput() {
 		Minecraft mc = Minecraft.getInstance();
 
-		if(mc.gameSettings.keyBindForward.isKeyDown()) {
+		if(mc.options.keyUp.isDown()) {
 			if(autorunning)
-				mc.gameSettings.autoJump = hadAutoJump;
+				mc.options.autoJump = hadAutoJump;
 			
 			autorunning = false;
 		}
 		
-		else if(keybind.isKeyDown()) {
+		else if(keybind.isDown()) {
 			autorunning = !autorunning;
 
 			if(autorunning) {
-				hadAutoJump = mc.gameSettings.autoJump;
-				mc.gameSettings.autoJump = true;
-			} else mc.gameSettings.autoJump = hadAutoJump;
+				hadAutoJump = mc.options.autoJump;
+				mc.options.autoJump = true;
+			} else mc.options.autoJump = hadAutoJump;
 		}
 	}
 
@@ -66,9 +66,9 @@ public class AutoWalkKeybindModule extends QuarkModule {
 	public void onInput(InputUpdateEvent event) {
 		Minecraft mc = Minecraft.getInstance();
 		if(mc.player != null && autorunning) {
-			event.getMovementInput().forwardKeyDown = true;
+			event.getMovementInput().up = true;
 			// [VanillaCopy] magic numbers copied from net.minecraft.util.MovementInputFromOptions
-			event.getMovementInput().moveForward = ((ClientPlayerEntity) event.getPlayer()).isForcedDown() ? 0.3F : 1F;
+			event.getMovementInput().forwardImpulse = ((LocalPlayer) event.getPlayer()).isMovingSlowly() ? 0.3F : 1F;
 		}
 	}
 

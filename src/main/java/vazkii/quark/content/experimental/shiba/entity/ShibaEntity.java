@@ -5,48 +5,48 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.AgeableEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.BreedGoal;
-import net.minecraft.entity.ai.goal.FollowOwnerGoal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.SitGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.ai.goal.TemptGoal;
-import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity.PickupStatus;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.DyeItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.SwordItem;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.AgableMob;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.BreedGoal;
+import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.TemptGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.AbstractArrow.Pickup;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.fml.network.NetworkHooks;
 import vazkii.quark.content.experimental.module.ShibaModule;
 import vazkii.quark.content.experimental.shiba.ai.DeliverFetchedItemGoal;
@@ -54,124 +54,124 @@ import vazkii.quark.content.experimental.shiba.ai.FetchArrowGoal;
 import vazkii.quark.content.tweaks.ai.NuzzleGoal;
 import vazkii.quark.content.tweaks.ai.WantLoveGoal;
 
-public class ShibaEntity extends TameableEntity {
+public class ShibaEntity extends TamableAnimal {
 
-	private static final DataParameter<Integer> COLLAR_COLOR = EntityDataManager.createKey(ShibaEntity.class, DataSerializers.VARINT);
-	private static final DataParameter<ItemStack> MOUTH_ITEM = EntityDataManager.createKey(ShibaEntity.class, DataSerializers.ITEMSTACK);
-	private static final DataParameter<Integer> FETCHING = EntityDataManager.createKey(ShibaEntity.class, DataSerializers.VARINT);
+	private static final EntityDataAccessor<Integer> COLLAR_COLOR = SynchedEntityData.defineId(ShibaEntity.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<ItemStack> MOUTH_ITEM = SynchedEntityData.defineId(ShibaEntity.class, EntityDataSerializers.ITEM_STACK);
+	private static final EntityDataAccessor<Integer> FETCHING = SynchedEntityData.defineId(ShibaEntity.class, EntityDataSerializers.INT);
 
-	public ShibaEntity(EntityType<? extends ShibaEntity> type, World worldIn) {
+	public ShibaEntity(EntityType<? extends ShibaEntity> type, Level worldIn) {
 		super(type, worldIn);
-		setTamed(false);
+		setTame(false);
 	}
 
 	@Override
 	protected void registerGoals() {
-		goalSelector.addGoal(1, new SwimGoal(this));
-		goalSelector.addGoal(2, new SitGoal(this));
+		goalSelector.addGoal(1, new FloatGoal(this));
+		goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
 		goalSelector.addGoal(3, new FetchArrowGoal(this));
 		goalSelector.addGoal(4, new DeliverFetchedItemGoal(this, 1.1D, -1F, 32.0F, false));
 		goalSelector.addGoal(5, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
-		goalSelector.addGoal(6, new TemptGoal(this, 1, Ingredient.fromItems(Items.BONE), false));
+		goalSelector.addGoal(6, new TemptGoal(this, 1, Ingredient.of(Items.BONE), false));
 		goalSelector.addGoal(7, new BreedGoal(this, 1.0D));
-		goalSelector.addGoal(8, new NuzzleGoal(this, 0.5F, 16, 2, SoundEvents.ENTITY_WOLF_WHINE));
+		goalSelector.addGoal(8, new NuzzleGoal(this, 0.5F, 16, 2, SoundEvents.WOLF_WHINE));
 		goalSelector.addGoal(9, new WantLoveGoal(this, 0.2F));
-		goalSelector.addGoal(10, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-		goalSelector.addGoal(11, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-		goalSelector.addGoal(12, new LookRandomlyGoal(this));
+		goalSelector.addGoal(10, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+		goalSelector.addGoal(11, new LookAtPlayerGoal(this, Player.class, 8.0F));
+		goalSelector.addGoal(12, new RandomLookAroundGoal(this));
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
 
-		AbstractArrowEntity fetching = getFetching();
-		if(fetching != null && (isSleeping() || fetching.world != world || !fetching.isAlive() || fetching.pickupStatus == PickupStatus.DISALLOWED))
+		AbstractArrow fetching = getFetching();
+		if(fetching != null && (isSleeping() || fetching.level != level || !fetching.isAlive() || fetching.pickup == Pickup.DISALLOWED))
 			setFetching(null);
 
-		if(!isSleeping() && !world.isRemote && fetching == null && getMouthItem().isEmpty()) {
+		if(!isSleeping() && !level.isClientSide && fetching == null && getMouthItem().isEmpty()) {
 			LivingEntity owner = getOwner();
 			if(owner != null) {
-				AxisAlignedBB check = owner.getBoundingBox().grow(2);
-				List<AbstractArrowEntity> arrows = world.getEntitiesWithinAABB(AbstractArrowEntity.class, check, 
-						a -> a.func_234616_v_() == owner && a.pickupStatus != PickupStatus.DISALLOWED);
+				AABB check = owner.getBoundingBox().inflate(2);
+				List<AbstractArrow> arrows = level.getEntitiesOfClass(AbstractArrow.class, check, 
+						a -> a.getOwner() == owner && a.pickup != Pickup.DISALLOWED);
 
 				if(arrows.size() > 0) {
-					AbstractArrowEntity arrow = arrows.get(world.rand.nextInt(arrows.size()));
+					AbstractArrow arrow = arrows.get(level.random.nextInt(arrows.size()));
 					setFetching(arrow);
 				}
 			}
 		}
 	}
 
-	public AbstractArrowEntity getFetching() {
-		int id = dataManager.get(FETCHING);
+	public AbstractArrow getFetching() {
+		int id = entityData.get(FETCHING);
 		if(id == -1)
 			return null;
 
-		Entity e = world.getEntityByID(id);
-		if(e == null || !(e instanceof AbstractArrowEntity))
+		Entity e = level.getEntity(id);
+		if(e == null || !(e instanceof AbstractArrow))
 			return null;
 
-		return (AbstractArrowEntity) e;
+		return (AbstractArrow) e;
 	}
 
-	public void setFetching(AbstractArrowEntity e) {
-		dataManager.set(FETCHING, e == null ? -1 : e.getEntityId());
+	public void setFetching(AbstractArrow e) {
+		entityData.set(FETCHING, e == null ? -1 : e.getId());
 	}
 
 	@Override
-	public boolean isBreedingItem(ItemStack stack) {
+	public boolean isFood(ItemStack stack) {
 		Item item = stack.getItem();
-		return item.isFood() && item.getFood().isMeat();
+		return item.isEdible() && item.getFoodProperties().isMeat();
 	}
 
 	@Nonnull
 	@Override
-	public IPacket<?> createSpawnPacket() {
+	public Packet<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 	@Override
-	protected void registerData() {
-		super.registerData();
-		dataManager.register(COLLAR_COLOR, DyeColor.RED.getId());
-		dataManager.register(MOUTH_ITEM, ItemStack.EMPTY);
-		dataManager.register(FETCHING, -1);
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		entityData.define(COLLAR_COLOR, DyeColor.RED.getId());
+		entityData.define(MOUTH_ITEM, ItemStack.EMPTY);
+		entityData.define(FETCHING, -1);
 	}
 
 	public DyeColor getCollarColor() {
-		return DyeColor.byId(this.dataManager.get(COLLAR_COLOR));
+		return DyeColor.byId(this.entityData.get(COLLAR_COLOR));
 	}
 
 	public void setCollarColor(DyeColor collarcolor) {
-		this.dataManager.set(COLLAR_COLOR, collarcolor.getId());
+		this.entityData.set(COLLAR_COLOR, collarcolor.getId());
 	}
 
 	public ItemStack getMouthItem() {
-		return dataManager.get(MOUTH_ITEM);
+		return entityData.get(MOUTH_ITEM);
 	}
 
 	public void setMouthItem(ItemStack stack) {
-		this.dataManager.set(MOUTH_ITEM, stack);
+		this.entityData.set(MOUTH_ITEM, stack);
 	}
 
 	@Override
-	public int getMaxSpawnedInChunk() {
+	public int getMaxSpawnClusterSize() {
 		return 8;
 	}
 
 	@Override
-	public boolean canMateWith(AnimalEntity otherAnimal) {
+	public boolean canMate(Animal otherAnimal) {
 		if (otherAnimal == this) {
 			return false;
-		} else if (!this.isTamed()) {
+		} else if (!this.isTame()) {
 			return false;
 		} else if (!(otherAnimal instanceof ShibaEntity)) {
 			return false;
 		} else {
 			ShibaEntity wolfentity = (ShibaEntity) otherAnimal;
-			if (!wolfentity.isTamed()) {
+			if (!wolfentity.isTame()) {
 				return false;
 			} else if (wolfentity.isSleeping()) {
 				return false;
@@ -182,73 +182,73 @@ public class ShibaEntity extends TameableEntity {
 	}
 
 	@Override
-	public void writeAdditional(CompoundNBT compound) {
-		super.writeAdditional(compound);
+	public void addAdditionalSaveData(CompoundTag compound) {
+		super.addAdditionalSaveData(compound);
 		compound.putByte("CollarColor", (byte)this.getCollarColor().getId());
 
-		CompoundNBT itemcmp = new CompoundNBT();
+		CompoundTag itemcmp = new CompoundTag();
 		ItemStack holding = getMouthItem();
 		if(!holding.isEmpty())
-			holding.write(itemcmp);
+			holding.save(itemcmp);
 		compound.put("MouthItem", itemcmp);
 	}
 
 	@Override
-	public void readAdditional(CompoundNBT compound) {
-		super.readAdditional(compound);
+	public void readAdditionalSaveData(CompoundTag compound) {
+		super.readAdditionalSaveData(compound);
 		if (compound.contains("CollarColor", 99))
 			this.setCollarColor(DyeColor.byId(compound.getInt("CollarColor")));
 
 		if(compound.contains("MouthItem")) {
-			CompoundNBT itemcmp = compound.getCompound("MouthItem");
-			setMouthItem(ItemStack.read(itemcmp));
+			CompoundTag itemcmp = compound.getCompound("MouthItem");
+			setMouthItem(ItemStack.of(itemcmp));
 		}
 	}
 
 	@Override
-	public ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
-		ItemStack itemstack = player.getHeldItem(hand);
+	public InteractionResult mobInteract(Player player, InteractionHand hand) {
+		ItemStack itemstack = player.getItemInHand(hand);
 		Item item = itemstack.getItem();
-		if(player.isDiscrete() && player.getHeldItemMainhand().isEmpty()) {
-			if(hand == Hand.MAIN_HAND && WantLoveGoal.canPet(this)) {
-				if(player.world instanceof ServerWorld) {
-					Vector3d pos = getPositionVec();
-					((ServerWorld) player.world).spawnParticle(ParticleTypes.HEART, pos.x, pos.y + 0.5, pos.z, 1, 0, 0, 0, 0.1);
-					playSound(SoundEvents.ENTITY_WOLF_WHINE, 0.6F, 0.5F + (float) Math.random() * 0.5F);
-				} else player.swingArm(Hand.MAIN_HAND);
+		if(player.isDiscrete() && player.getMainHandItem().isEmpty()) {
+			if(hand == InteractionHand.MAIN_HAND && WantLoveGoal.canPet(this)) {
+				if(player.level instanceof ServerLevel) {
+					Vec3 pos = position();
+					((ServerLevel) player.level).sendParticles(ParticleTypes.HEART, pos.x, pos.y + 0.5, pos.z, 1, 0, 0, 0, 0.1);
+					playSound(SoundEvents.WOLF_WHINE, 0.6F, 0.5F + (float) Math.random() * 0.5F);
+				} else player.swing(InteractionHand.MAIN_HAND);
 
 				WantLoveGoal.setPetTime(this);
 			}
 
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		} else
-			if (this.world.isRemote) {
-				boolean flag = this.isOwner(player) || this.isTamed() || item == Items.BONE && !this.isTamed();
-				return flag ? ActionResultType.CONSUME : ActionResultType.PASS;
+			if (this.level.isClientSide) {
+				boolean flag = this.isOwnedBy(player) || this.isTame() || item == Items.BONE && !this.isTame();
+				return flag ? InteractionResult.CONSUME : InteractionResult.PASS;
 			} else {
-				if (this.isTamed()) {
+				if (this.isTame()) {
 					ItemStack mouthItem = getMouthItem();
 					if(!mouthItem.isEmpty()) {
 						ItemStack copy = mouthItem.copy();
-						if(!player.addItemStackToInventory(copy))
-							entityDropItem(copy);
+						if(!player.addItem(copy))
+							spawnAtLocation(copy);
 
-						if(player.world instanceof ServerWorld) {
-							Vector3d pos = getPositionVec();
-							((ServerWorld) player.world).spawnParticle(ParticleTypes.HEART, pos.x, pos.y + 0.5, pos.z, 1, 0, 0, 0, 0.1);
-							playSound(SoundEvents.ENTITY_WOLF_WHINE, 0.6F, 0.5F + (float) Math.random() * 0.5F);
+						if(player.level instanceof ServerLevel) {
+							Vec3 pos = position();
+							((ServerLevel) player.level).sendParticles(ParticleTypes.HEART, pos.x, pos.y + 0.5, pos.z, 1, 0, 0, 0, 0.1);
+							playSound(SoundEvents.WOLF_WHINE, 0.6F, 0.5F + (float) Math.random() * 0.5F);
 						}
 						setMouthItem(ItemStack.EMPTY);
-						return ActionResultType.SUCCESS;
+						return InteractionResult.SUCCESS;
 					}
 
-					if (this.isBreedingItem(itemstack) && this.getHealth() < this.getMaxHealth()) {
-						if (!player.abilities.isCreativeMode) {
+					if (this.isFood(itemstack) && this.getHealth() < this.getMaxHealth()) {
+						if (!player.abilities.instabuild) {
 							itemstack.shrink(1);
 						}
 
-						this.heal((float)item.getFood().getHealing());
-						return ActionResultType.SUCCESS;
+						this.heal((float)item.getFoodProperties().getNutrition());
+						return InteractionResult.SUCCESS;
 					}
 
 					if (!(item instanceof DyeItem)) {
@@ -258,16 +258,16 @@ public class ShibaEntity extends TameableEntity {
 							itemstack.setCount(itemstack.getCount() - 1);
 
 							setMouthItem(copy);
-							return ActionResultType.SUCCESS;
+							return InteractionResult.SUCCESS;
 						}
 
-						ActionResultType actionresulttype = super.func_230254_b_(player, hand);
-						if ((!actionresulttype.isSuccessOrConsume() || this.isChild()) && this.isOwner(player)) {
-							this.func_233687_w_(!this.isSitting());
-							this.isJumping = false;
-							this.navigator.clearPath();
-							this.setAttackTarget((LivingEntity)null);
-							return ActionResultType.SUCCESS;
+						InteractionResult actionresulttype = super.mobInteract(player, hand);
+						if ((!actionresulttype.consumesAction() || this.isBaby()) && this.isOwnedBy(player)) {
+							this.setOrderedToSit(!this.isOrderedToSit());
+							this.jumping = false;
+							this.navigation.stop();
+							this.setTarget((LivingEntity)null);
+							return InteractionResult.SUCCESS;
 						}
 
 						return actionresulttype;
@@ -276,39 +276,39 @@ public class ShibaEntity extends TameableEntity {
 					DyeColor dyecolor = ((DyeItem)item).getDyeColor();
 					if (dyecolor != this.getCollarColor()) {
 						this.setCollarColor(dyecolor);
-						if (!player.abilities.isCreativeMode) {
+						if (!player.abilities.instabuild) {
 							itemstack.shrink(1);
 						}
 
-						return ActionResultType.SUCCESS;
+						return InteractionResult.SUCCESS;
 					}
 				} else if (item == Items.BONE) {
-					if (!player.abilities.isCreativeMode) {
+					if (!player.abilities.instabuild) {
 						itemstack.shrink(1);
 					}
 
-					if (this.rand.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player)) {
+					if (this.random.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player)) {
 						WantLoveGoal.setPetTime(this);
 
-						this.setTamedBy(player);
-						this.navigator.clearPath();
-						this.setAttackTarget((LivingEntity)null);
-						this.func_233687_w_(true);
-						this.world.setEntityState(this, (byte)7);
+						this.tame(player);
+						this.navigation.stop();
+						this.setTarget((LivingEntity)null);
+						this.setOrderedToSit(true);
+						this.level.broadcastEntityEvent(this, (byte)7);
 					} else {
-						this.world.setEntityState(this, (byte)6);
+						this.level.broadcastEntityEvent(this, (byte)6);
 					}
 
-					return ActionResultType.SUCCESS;
+					return InteractionResult.SUCCESS;
 				}
 
-				return super.func_230254_b_(player, hand);
+				return super.mobInteract(player, hand);
 			}
 	}
 
 	@Override
-	public void setTamed(boolean tamed) {
-		super.setTamed(tamed);
+	public void setTame(boolean tamed) {
+		super.setTame(tamed);
 		if(tamed) {
 			getAttribute(Attributes.MAX_HEALTH).setBaseValue(20);
 			setHealth(20);
@@ -319,25 +319,25 @@ public class ShibaEntity extends TameableEntity {
 
 	@Override
 	protected void playStepSound(BlockPos pos, BlockState blockIn) {
-		playSound(SoundEvents.ENTITY_WOLF_STEP, 0.15F, 1.0F);
+		playSound(SoundEvents.WOLF_STEP, 0.15F, 1.0F);
 	}
 
 	@Override
 	protected SoundEvent getAmbientSound() {
-		if(rand.nextInt(3) == 0)
-			return getHealth() < 10.0F ? SoundEvents.ENTITY_WOLF_WHINE : SoundEvents.ENTITY_WOLF_PANT;
+		if(random.nextInt(3) == 0)
+			return getHealth() < 10.0F ? SoundEvents.WOLF_WHINE : SoundEvents.WOLF_PANT;
 		else
-			return SoundEvents.ENTITY_WOLF_AMBIENT;
+			return SoundEvents.WOLF_AMBIENT;
 	}
 
 	@Override
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-		return SoundEvents.ENTITY_WOLF_HURT;
+		return SoundEvents.WOLF_HURT;
 	}
 
 	@Override
 	protected SoundEvent getDeathSound() {
-		return SoundEvents.ENTITY_WOLF_DEATH;
+		return SoundEvents.WOLF_DEATH;
 	}
 
 	@Override
@@ -346,12 +346,12 @@ public class ShibaEntity extends TameableEntity {
 	}
 
 	@Override // make baby
-	public AgeableEntity func_241840_a(ServerWorld world, AgeableEntity mate) {
+	public AgableMob getBreedOffspring(ServerLevel world, AgableMob mate) {
 		ShibaEntity wolfentity = ShibaModule.shibaType.create(world);
-		UUID uuid = this.getOwnerId();
+		UUID uuid = this.getOwnerUUID();
 		if (uuid != null) {
-			wolfentity.setOwnerId(uuid);
-			wolfentity.setTamed(true);
+			wolfentity.setOwnerUUID(uuid);
+			wolfentity.setTame(true);
 		}
 
 		return wolfentity;

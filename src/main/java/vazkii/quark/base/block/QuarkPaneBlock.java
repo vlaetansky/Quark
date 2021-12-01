@@ -4,17 +4,17 @@ import java.util.function.BooleanSupplier;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.PaneBlock;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.IronBarsBlock;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.NonNullList;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
 
-public class QuarkPaneBlock extends PaneBlock implements IQuarkBlock {
+public class QuarkPaneBlock extends IronBarsBlock implements IQuarkBlock {
 	
 	public final QuarkModule module;
 	private BooleanSupplier enabledSupplier = () -> true;
@@ -24,16 +24,16 @@ public class QuarkPaneBlock extends PaneBlock implements IQuarkBlock {
 
 		this.module = module;
 		RegistryHelper.registerBlock(this, name);
-		RegistryHelper.setCreativeTab(this, ItemGroup.DECORATIONS);
+		RegistryHelper.setCreativeTab(this, CreativeModeTab.TAB_DECORATIONS);
 		
 		if(renderType != null)
 			RenderLayerHandler.setRenderType(this, renderType);
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {	
-		if(group == ItemGroup.SEARCH || isEnabled())
-			super.fillItemGroup(group, items);
+	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {	
+		if(group == CreativeModeTab.TAB_SEARCH || isEnabled())
+			super.fillItemCategory(group, items);
 	}
 
 	@Nullable

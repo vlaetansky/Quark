@@ -14,31 +14,31 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ITickableSound;
-import net.minecraft.client.audio.LocatableSound;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.client.resources.sounds.TickableSoundInstance;
+import net.minecraft.client.resources.sounds.AbstractSoundInstance;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class EmoteSound extends LocatableSound implements ITickableSound {
+public class EmoteSound extends AbstractSoundInstance implements TickableSoundInstance {
 
 	protected boolean donePlaying;
 
-	private final WeakReference<PlayerEntity> player;
+	private final WeakReference<Player> player;
 	private final EmoteTemplate template;
 	private final boolean endWithSequence;
 
-	public static void add(List<EmoteSound> allSounds, List<EmoteSound> sounds, PlayerEntity player, EmoteTemplate template,
+	public static void add(List<EmoteSound> allSounds, List<EmoteSound> sounds, Player player, EmoteTemplate template,
 						   ResourceLocation soundEvent, float volume, float pitch,
 						   boolean repeating, boolean endWithSequence) {
 		EmoteSound emoteSound = new EmoteSound(player, template, soundEvent, volume, pitch, repeating, endWithSequence);
 		sounds.add(emoteSound);
 		allSounds.add(emoteSound);
-		Minecraft.getInstance().getSoundHandler().play(emoteSound);
+		Minecraft.getInstance().getSoundManager().play(emoteSound);
 	}
 
 	public static void endAll(List<EmoteSound> sounds) {
@@ -52,8 +52,8 @@ public class EmoteSound extends LocatableSound implements ITickableSound {
 				sound.donePlaying = true;
 	}
 
-	public EmoteSound(PlayerEntity player, EmoteTemplate template, ResourceLocation sound, float volume, float pitch, boolean repeating, boolean endWithSequence) {
-		super(sound, SoundCategory.PLAYERS);
+	public EmoteSound(Player player, EmoteTemplate template, ResourceLocation sound, float volume, float pitch, boolean repeating, boolean endWithSequence) {
+		super(sound, SoundSource.PLAYERS);
 		this.player = new WeakReference<>(player);
 		this.template = template;
 		this.endWithSequence = endWithSequence;
@@ -62,14 +62,14 @@ public class EmoteSound extends LocatableSound implements ITickableSound {
 		this.pitch = pitch;
 
 		if (repeating) {
-			this.repeat = true;
-			this.repeatDelay = 0;
+			this.looping = true;
+			this.delay = 0;
 		}
 	}
 
 	@Override
 	public void tick() {
-		PlayerEntity player = this.player.get();
+		Player player = this.player.get();
 
 		if (player == null || !player.isAlive())
 			donePlaying = true;
@@ -78,7 +78,7 @@ public class EmoteSound extends LocatableSound implements ITickableSound {
 			if (emote == null || emote.desc.template != template)
 				donePlaying = true;
 			else {
-				Vector3d pos = player.getPositionVec();
+				Vec3 pos = player.position();
 				x = (float) pos.x;
 				y = (float) pos.y;
 				z = (float) pos.z;
@@ -87,7 +87,7 @@ public class EmoteSound extends LocatableSound implements ITickableSound {
 	}
 
 	@Override
-	public boolean isDonePlaying() {
+	public boolean isStopped() {
 		return this.donePlaying;
 	}
 }

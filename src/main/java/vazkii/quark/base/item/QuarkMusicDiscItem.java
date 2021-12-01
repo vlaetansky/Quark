@@ -6,26 +6,26 @@ import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ISound;
-import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.MusicDiscItem;
-import net.minecraft.item.Rarity;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.RecordItem;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.NonNullList;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.module.QuarkModule;
 
-public class QuarkMusicDiscItem extends MusicDiscItem implements IQuarkItem {
+public class QuarkMusicDiscItem extends RecordItem implements IQuarkItem {
 
 	private final QuarkModule module;
 	private final boolean isAmbient;
@@ -34,7 +34,7 @@ public class QuarkMusicDiscItem extends MusicDiscItem implements IQuarkItem {
 	private BooleanSupplier enabledSupplier = () -> true;
 
 	public QuarkMusicDiscItem(int comparatorValue, Supplier<SoundEvent> sound, String name, QuarkModule module, boolean isAmbient) {
-		super(comparatorValue, sound, (new Item.Properties()).maxStackSize(1).group(ItemGroup.MISC).rarity(Rarity.RARE));
+		super(comparatorValue, sound, (new Item.Properties()).stacksTo(1).tab(CreativeModeTab.TAB_MISC).rarity(Rarity.RARE));
 
 		RegistryHelper.registerItem(this, "music_disc_" + name);
 		this.module = module;
@@ -43,9 +43,9 @@ public class QuarkMusicDiscItem extends MusicDiscItem implements IQuarkItem {
 	}
 
 	@Override
-	public void fillItemGroup(@Nonnull ItemGroup group, @Nonnull NonNullList<ItemStack> items) {
-		if(isEnabled() || group == ItemGroup.SEARCH)
-			super.fillItemGroup(group, items);
+	public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
+		if(isEnabled() || group == CreativeModeTab.TAB_SEARCH)
+			super.fillItemCategory(group, items);
 	}
 
 	@Override
@@ -68,16 +68,16 @@ public class QuarkMusicDiscItem extends MusicDiscItem implements IQuarkItem {
 	public boolean playAmbientSound(BlockPos pos) {
 		if(isAmbient) {
 	        Minecraft mc = Minecraft.getInstance();
-	        SoundHandler soundEngine = mc.getSoundHandler();
-	        WorldRenderer render = mc.worldRenderer;
+	        SoundManager soundEngine = mc.getSoundManager();
+	        LevelRenderer render = mc.levelRenderer;
 			
-			SimpleSound simplesound = new SimpleSound(soundSupplier.get().getName(), SoundCategory.RECORDS, 4.0F, 1.0F, true, 0, ISound.AttenuationType.LINEAR, pos.getX(), pos.getY(), pos.getZ(), false);
+			SimpleSoundInstance simplesound = new SimpleSoundInstance(soundSupplier.get().getLocation(), SoundSource.RECORDS, 4.0F, 1.0F, true, 0, SoundInstance.Attenuation.LINEAR, pos.getX(), pos.getY(), pos.getZ(), false);
 	       
-			render.mapSoundPositions.put(pos, simplesound);
+			render.playingRecords.put(pos, simplesound);
 	        soundEngine.play(simplesound);
 	        
-	        if(mc.world != null)
-	        	mc.world.addParticle(ParticleTypes.NOTE,pos.getX() + Math.random(), pos.getY() + 1.1, pos.getZ() + Math.random(), Math.random(), 0, 0);
+	        if(mc.level != null)
+	        	mc.level.addParticle(ParticleTypes.NOTE,pos.getX() + Math.random(), pos.getY() + 1.1, pos.getZ() + Math.random(), Math.random(), 0, 0);
 			
 			return true;
 		}

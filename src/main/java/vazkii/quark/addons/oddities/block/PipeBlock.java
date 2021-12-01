@@ -5,32 +5,32 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.IWaterLoggable;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.addons.oddities.tile.PipeTileEntity;
 import vazkii.quark.base.block.QuarkBlock;
@@ -38,16 +38,16 @@ import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
 
-public class PipeBlock extends QuarkBlock implements IWaterLoggable {
+public class PipeBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 
-	private static final VoxelShape CENTER_SHAPE = VoxelShapes.create(0.3125, 0.3125, 0.3125, 0.6875, 0.6875, 0.6875);
+	private static final VoxelShape CENTER_SHAPE = Shapes.box(0.3125, 0.3125, 0.3125, 0.6875, 0.6875, 0.6875);
 
-	private static final VoxelShape DOWN_SHAPE = VoxelShapes.create(0.3125, 0, 0.3125, 0.6875, 0.6875, 0.6875);
-	private static final VoxelShape UP_SHAPE = VoxelShapes.create(0.3125, 0.3125, 0.3125, 0.6875, 1, 0.6875);
-	private static final VoxelShape NORTH_SHAPE = VoxelShapes.create(0.3125, 0.3125, 0, 0.6875, 0.6875, 0.6875);
-	private static final VoxelShape SOUTH_SHAPE = VoxelShapes.create(0.3125, 0.3125, 0.3125, 0.6875, 0.6875, 1);
-	private static final VoxelShape WEST_SHAPE = VoxelShapes.create(0, 0.3125, 0.3125, 0.6875, 0.6875, 0.6875);
-	private static final VoxelShape EAST_SHAPE = VoxelShapes.create(0.3125, 0.3125, 0.3125, 1, 0.6875, 0.6875);
+	private static final VoxelShape DOWN_SHAPE = Shapes.box(0.3125, 0, 0.3125, 0.6875, 0.6875, 0.6875);
+	private static final VoxelShape UP_SHAPE = Shapes.box(0.3125, 0.3125, 0.3125, 0.6875, 1, 0.6875);
+	private static final VoxelShape NORTH_SHAPE = Shapes.box(0.3125, 0.3125, 0, 0.6875, 0.6875, 0.6875);
+	private static final VoxelShape SOUTH_SHAPE = Shapes.box(0.3125, 0.3125, 0.3125, 0.6875, 0.6875, 1);
+	private static final VoxelShape WEST_SHAPE = Shapes.box(0, 0.3125, 0.3125, 0.6875, 0.6875, 0.6875);
+	private static final VoxelShape EAST_SHAPE = Shapes.box(0.3125, 0.3125, 0.3125, 1, 0.6875, 0.6875);
 
 	public static final BooleanProperty DOWN = BooleanProperty.create("down");
 	public static final BooleanProperty UP = BooleanProperty.create("up");
@@ -68,17 +68,17 @@ public class PipeBlock extends QuarkBlock implements IWaterLoggable {
 	private static final VoxelShape[] shapeCache = new VoxelShape[64];
 
 	public PipeBlock(QuarkModule module) {
-		super("pipe", module, ItemGroup.REDSTONE, 
-				Block.Properties.create(Material.GLASS)
-				.hardnessAndResistance(3F, 10F)
+		super("pipe", module, CreativeModeTab.TAB_REDSTONE, 
+				Block.Properties.of(Material.GLASS)
+				.strength(3F, 10F)
 				.sound(SoundType.GLASS)
-				.notSolid());
+				.noOcclusion());
 		
-		setDefaultState(getDefaultState()
-				.with(DOWN, false).with(UP, false)
-				.with(NORTH, false).with(SOUTH, false)
-				.with(WEST, false).with(EAST, false)
-				.with(WATERLOGGED, false));
+		registerDefaultState(defaultBlockState()
+				.setValue(DOWN, false).setValue(UP, false)
+				.setValue(NORTH, false).setValue(SOUTH, false)
+				.setValue(WEST, false).setValue(EAST, false)
+				.setValue(WATERLOGGED, false));
 		
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
 	}
@@ -89,8 +89,8 @@ public class PipeBlock extends QuarkBlock implements IWaterLoggable {
 	}
 	
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-		ItemStack stack = player.getHeldItem(handIn);
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+		ItemStack stack = player.getItemInHand(handIn);
 		
 		// fix pipes if they're ruined
 		if(stack.getItem() == Items.STICK) {
@@ -104,17 +104,17 @@ public class PipeBlock extends QuarkBlock implements IWaterLoggable {
 			do {
 				for(BlockPos cand : candidates) {
 					for(Direction d : Direction.values()) {
-						BlockPos offPos = cand.offset(d);
+						BlockPos offPos = cand.relative(d);
 						BlockState offState = worldIn.getBlockState(offPos);
 						if(offState.getBlock() == this && !candidates.contains(offPos) && !found.contains(offPos))
 							newCandidates.add(offPos);
 					}
 					
 					BlockState curr = worldIn.getBlockState(cand);
-					BlockState target = getTargetState(worldIn, cand, curr.get(WATERLOGGED));
+					BlockState target = getTargetState(worldIn, cand, curr.getValue(WATERLOGGED));
 					if(!target.equals(curr)) {
 						fixedAny = true;
-						worldIn.setBlockState(cand, target, 2 | 4);
+						worldIn.setBlock(cand, target, 2 | 4);
 					}
 				}
 				
@@ -124,50 +124,50 @@ public class PipeBlock extends QuarkBlock implements IWaterLoggable {
 			} while(!candidates.isEmpty());
 			
 			if(fixedAny)
-				return ActionResultType.SUCCESS;
+				return InteractionResult.SUCCESS;
 		}
 		
-		return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+		return super.use(state, worldIn, pos, player, handIn, hit);
 	}
 	
 	@Nonnull
 	@Override
 	public FluidState getFluidState(BlockState state) {
-		return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
 	}
 	
 	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-		BlockState targetState = getTargetState(worldIn, pos, state.get(WATERLOGGED));
+	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+		BlockState targetState = getTargetState(worldIn, pos, state.getValue(WATERLOGGED));
 		if(!targetState.equals(state))
-			worldIn.setBlockState(pos, targetState, 2 | 4);
+			worldIn.setBlock(pos, targetState, 2 | 4);
 	}
 	
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return getTargetState(context.getWorld(), context.getPos(), context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER);
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		return getTargetState(context.getLevel(), context.getClickedPos(), context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER);
 	}
 	
-	private BlockState getTargetState(World worldIn, BlockPos pos, boolean waterlog) {
-		BlockState newState = getDefaultState();
-		newState = newState.with(WATERLOGGED, waterlog);
+	private BlockState getTargetState(Level worldIn, BlockPos pos, boolean waterlog) {
+		BlockState newState = defaultBlockState();
+		newState = newState.setValue(WATERLOGGED, waterlog);
 		
 		for(Direction facing : Direction.values()) {
 			BooleanProperty prop = CONNECTIONS[facing.ordinal()];
 			PipeTileEntity.ConnectionType type = PipeTileEntity.getConnectionTo(worldIn, pos, facing);
 
-			newState = newState.with(prop, type.isSolid);
+			newState = newState.setValue(prop, type.isSolid);
 		}
 		
 		return newState;
 	}
 	
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		int index = 0;
 		for(Direction dir : Direction.values()) {
 			int ord = dir.ordinal();
-			if(state.get(CONNECTIONS[ord]))
+			if(state.getValue(CONNECTIONS[ord]))
 				index += (1 << ord);
 		}
 		
@@ -178,7 +178,7 @@ public class PipeBlock extends QuarkBlock implements IWaterLoggable {
 			for(Direction dir : Direction.values()) {
 				boolean connected = isConnected(state, dir);
 				if(connected)
-					currShape = VoxelShapes.or(currShape, SIDE_BOXES[dir.ordinal()]);
+					currShape = Shapes.or(currShape, SIDE_BOXES[dir.ordinal()]);
 			}
 			
 			shapeCache[index] = currShape;
@@ -190,35 +190,35 @@ public class PipeBlock extends QuarkBlock implements IWaterLoggable {
 
 	public static boolean isConnected(BlockState state, Direction side) {
 		BooleanProperty prop = CONNECTIONS[side.ordinal()];
-		return state.get(prop);
+		return state.getValue(prop);
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		builder.add(UP, DOWN, NORTH, SOUTH, WEST, EAST, WATERLOGGED);
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState state) {
+	public boolean hasAnalogOutputSignal(BlockState state) {
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
-		TileEntity tile = worldIn.getTileEntity(pos);
+	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
+		BlockEntity tile = worldIn.getBlockEntity(pos);
 		if(tile instanceof PipeTileEntity)
 			return ((PipeTileEntity) tile).getComparatorOutput();
 		return 0;
 	}
 	
 	@Override
-	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		TileEntity tileentity = worldIn.getTileEntity(pos);
+	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		BlockEntity tileentity = worldIn.getBlockEntity(pos);
 
 		if(tileentity instanceof PipeTileEntity)
 			((PipeTileEntity) tileentity).dropAllItems();
 		
-		super.onReplaced(state, worldIn, pos, newState, isMoving);
+		super.onRemove(state, worldIn, pos, newState, isMoving);
 	}
 
 	@Override
@@ -227,7 +227,7 @@ public class PipeBlock extends QuarkBlock implements IWaterLoggable {
 	}
 	
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return new PipeTileEntity();	
 	}
 	

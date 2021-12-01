@@ -8,23 +8,23 @@ import com.google.common.collect.ImmutableSet;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.screen.inventory.CreativeScreen;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemModelsProperties;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tags.ITag;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.tags.Tag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -51,7 +51,7 @@ public class SeedPouchModule extends QuarkModule {
 
 	public static Item seed_pouch;
 
-    public static ITag<Item> seedPouchHoldableTag;
+    public static Tag<Item> seedPouchHoldableTag;
 	
 	@Config public static int maxItems = 640;
 	@Config public static boolean showAllVariantsInCreative = true;
@@ -72,7 +72,7 @@ public class SeedPouchModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void clientSetup() {
-		enqueue(() -> ItemModelsProperties.registerProperty(seed_pouch, new ResourceLocation("pouch_items"), SeedPouchItem::itemFraction));
+		enqueue(() -> ItemProperties.register(seed_pouch, new ResourceLocation("pouch_items"), SeedPouchItem::itemFraction));
 	}
 
 	@SubscribeEvent
@@ -85,13 +85,13 @@ public class SeedPouchModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void onRightClick(GuiScreenEvent.MouseClickedEvent.Pre event) {
 		Minecraft mc = Minecraft.getInstance();
-		Screen gui = mc.currentScreen;
-		if(gui instanceof ContainerScreen && !(gui instanceof CreativeScreen) && event.getButton() == 1) {
-			ContainerScreen<?> container = (ContainerScreen<?>) gui;
+		Screen gui = mc.screen;
+		if(gui instanceof AbstractContainerScreen && !(gui instanceof CreativeModeInventoryScreen) && event.getButton() == 1) {
+			AbstractContainerScreen<?> container = (AbstractContainerScreen<?>) gui;
 			Slot under = container.getSlotUnderMouse();
 			if(under != null) {
-				ItemStack underStack = under.getStack();
-				ItemStack held = mc.player.inventory.getItemStack();
+				ItemStack underStack = under.getItem();
+				ItemStack held = mc.player.inventory.getCarried();
 
 				if(underStack.getItem() == seed_pouch) {
 					Pair<ItemStack, Integer> contents = SeedPouchItem.getContents(underStack);
@@ -102,9 +102,9 @@ public class SeedPouchModule extends QuarkModule {
 
 							ItemStack result = seed.copy();
 							result.setCount(takeOut);
-							mc.player.inventory.setItemStack(result);
+							mc.player.inventory.setCarried(result);
 
-							QuarkNetwork.sendToServer(new WithdrawSeedsMessage(under.slotNumber));
+							QuarkNetwork.sendToServer(new WithdrawSeedsMessage(under.index));
 
 							shouldCancelNextRelease = true;
 							event.setCanceled(true);
@@ -126,11 +126,11 @@ public class SeedPouchModule extends QuarkModule {
 
 	@SubscribeEvent
 	public void onItemPickup(EntityItemPickupEvent event) {
-		PlayerEntity player = event.getPlayer();
+		Player player = event.getPlayer();
 		ItemStack stack = event.getItem().getItem();
 
-		ItemStack main = player.getHeldItemMainhand();
-		ItemStack off = player.getHeldItemOffhand();
+		ItemStack main = player.getMainHandItem();
+		ItemStack off = player.getOffhandItem();
 
 		ImmutableSet<ItemStack> stacks = ImmutableSet.of(main, off);
 		for(ItemStack heldStack : stacks)
@@ -138,7 +138,7 @@ public class SeedPouchModule extends QuarkModule {
 				Pair<ItemStack, Integer> contents = SeedPouchItem.getContents(heldStack);
 				if(contents != null) {
 					ItemStack pouchStack = contents.getLeft();
-					if(ItemStack.areItemsEqual(pouchStack, stack)) {
+					if(ItemStack.isSame(pouchStack, stack)) {
 						int curr = contents.getRight();
 						int missing = maxItems - curr;
 
@@ -148,8 +148,8 @@ public class SeedPouchModule extends QuarkModule {
 						stack.setCount(count - toAdd);
 						SeedPouchItem.setCount(heldStack, curr + toAdd);
 
-						if(player.world instanceof ServerWorld)
-							((ServerWorld) player.world).playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, SoundCategory.PLAYERS, 0.2F, (player.world.rand.nextFloat() - player.world.rand.nextFloat()) * 1.4F + 2.0F);
+						if(player.level instanceof ServerLevel)
+							((ServerLevel) player.level).playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ARMOR_EQUIP_LEATHER, SoundSource.PLAYERS, 0.2F, (player.level.random.nextFloat() - player.level.random.nextFloat()) * 1.4F + 2.0F);
 
 						if(stack.getCount() == 0)
 							break;
@@ -165,18 +165,18 @@ public class SeedPouchModule extends QuarkModule {
 		if(stack.getItem() == seed_pouch) {
 			Pair<ItemStack, Integer> contents = SeedPouchItem.getContents(stack);
 			if(contents != null) {	
-				List<ITextComponent> tooltip = event.getToolTip();
+				List<Component> tooltip = event.getToolTip();
 
 				int stacks = Math.max(1, (contents.getRight() - 1) / contents.getLeft().getMaxStackSize() + 1);
 				int len = 16 + stacks * 8;
 
 				String s = "";
 				Minecraft mc = Minecraft.getInstance();
-				while(mc.fontRenderer.getStringWidth(s) < len)
+				while(mc.font.width(s) < len)
 					s += " ";
 
-				tooltip.add(1, new StringTextComponent(s));
-				tooltip.add(1, new StringTextComponent(s));
+				tooltip.add(1, new TextComponent(s));
+				tooltip.add(1, new TextComponent(s));
 			}
 
 		}
@@ -200,20 +200,20 @@ public class SeedPouchModule extends QuarkModule {
 				int count = contents.getRight();
 				int stacks = Math.max(1, (count - 1) / seed.getMaxStackSize() + 1);
 
-				GlStateManager.pushMatrix();
-				GlStateManager.translated(x, y + 12, 500);
+				GlStateManager._pushMatrix();
+				GlStateManager._translated(x, y + 12, 500);
 				for(int i = 0; i < stacks; i++) {
 					if(i == (stacks - 1))
 						seed.setCount(count);
 
-					GlStateManager.pushMatrix();
-					GlStateManager.translated(8 * i, Math.sin(i * 498543) * 2, 0);
+					GlStateManager._pushMatrix();
+					GlStateManager._translated(8 * i, Math.sin(i * 498543) * 2, 0);
 
-					render.renderItemAndEffectIntoGUI(seed, 0, 0);
-					render.renderItemOverlays(mc.fontRenderer, seed, 0, 0);
-					GlStateManager.popMatrix();
+					render.renderAndDecorateItem(seed, 0, 0);
+					render.renderGuiItemDecorations(mc.font, seed, 0, 0);
+					GlStateManager._popMatrix();
 				}
-				GlStateManager.popMatrix();
+				GlStateManager._popMatrix();
 			}
 		}
 	}

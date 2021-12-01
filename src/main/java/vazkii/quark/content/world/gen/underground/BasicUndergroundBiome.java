@@ -1,7 +1,7 @@
 package vazkii.quark.content.world.gen.underground;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
 import vazkii.quark.content.world.gen.UndergroundBiomeGenerator.Context;
 
 public class BasicUndergroundBiome extends UndergroundBiome {
@@ -23,19 +23,19 @@ public class BasicUndergroundBiome extends UndergroundBiome {
 	@Override
 	public void fillFloor(Context context, BlockPos pos, BlockState state) {
 		if(floorState != null)
-			context.world.setBlockState(pos, floorState, 2);
+			context.world.setBlock(pos, floorState, 2);
 	}
 
 	@Override
 	public void fillCeiling(Context context, BlockPos pos, BlockState state) {	
 		if(ceilingState != null)
-			context.world.setBlockState(pos, ceilingState, 2);
+			context.world.setBlock(pos, ceilingState, 2);
 	}
 
 	@Override
 	public void fillWall(Context context, BlockPos pos, BlockState state) {
 		if(wallState != null)
-			context.world.setBlockState(pos, wallState, 2);
+			context.world.setBlock(pos, wallState, 2);
 	}
 
 	@Override

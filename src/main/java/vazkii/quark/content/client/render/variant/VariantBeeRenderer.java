@@ -9,23 +9,23 @@ import com.google.common.collect.ImmutableList;
 
 import net.minecraft.client.renderer.entity.BeeRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.entity.passive.BeeEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import vazkii.quark.base.Quark;
 import vazkii.quark.content.client.module.VariantAnimalTexturesModule;
 
 public class VariantBeeRenderer extends BeeRenderer {
 
-	public static IRenderFactory<BeeEntity> OLD_BEE_RENDER_FACTORY = null;
-	private EntityRenderer<? super BeeEntity> OLD_BEE_RENDER = null;
+	public static IRenderFactory<Bee> OLD_BEE_RENDER_FACTORY = null;
+	private EntityRenderer<? super Bee> OLD_BEE_RENDER = null;
 	private static final List<String> VARIANTS = ImmutableList.of(
 			"acebee", "agenbee", "arobee", "beefluid", "beesexual", 
 			"beequeer", "enbee", "gaybee", "interbee", "lesbeean", 
 			"panbee", "polysexbee", "transbee", "helen");
 	
-	public VariantBeeRenderer(EntityRendererManager renderManagerIn) {
+	public VariantBeeRenderer(EntityRenderDispatcher renderManagerIn) {
 		super(renderManagerIn);
 		if(OLD_BEE_RENDER_FACTORY != null) {
 			OLD_BEE_RENDER = OLD_BEE_RENDER_FACTORY.createRenderFor(renderManagerIn);
@@ -33,8 +33,8 @@ public class VariantBeeRenderer extends BeeRenderer {
 	}
 	
 	@Override
-	public ResourceLocation getEntityTexture(BeeEntity entity) {
-		UUID id = entity.getUniqueID();
+	public ResourceLocation getTextureLocation(Bee entity) {
+		UUID id = entity.getUUID();
 		long most = id.getMostSignificantBits();
 		
 		// From https://news.gallup.com/poll/329708/lgbt-identification-rises-latest-estimate.aspx
@@ -68,10 +68,10 @@ public class VariantBeeRenderer extends BeeRenderer {
 		}
 
 		if(OLD_BEE_RENDER != null) {
-			return OLD_BEE_RENDER.getEntityTexture(entity);
+			return OLD_BEE_RENDER.getTextureLocation(entity);
 		}
 		
-		return super.getEntityTexture(entity);
+		return super.getTextureLocation(entity);
 	}
 
 }

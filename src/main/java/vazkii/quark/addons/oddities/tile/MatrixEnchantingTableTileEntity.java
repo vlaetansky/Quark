@@ -9,24 +9,24 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentData;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.EnchantedBookItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.EnchantedBookItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.addons.oddities.container.EnchantmentMatrix;
 import vazkii.quark.addons.oddities.container.EnchantmentMatrix.Piece;
@@ -35,7 +35,7 @@ import vazkii.quark.addons.oddities.module.MatrixEnchantingModule;
 import vazkii.quark.api.IEnchantmentInfluencer;
 import vazkii.quark.api.IModifiableEnchantmentInfluencer;
 
-public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile implements INamedContainerProvider {
+public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile implements MenuProvider {
 
 	public static final int OPER_ADD = 0;
 	public static final int OPER_PLACE = 1;
@@ -66,7 +66,7 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 	public void tick() {
 		super.tick();
 
-		ItemStack item = getStackInSlot(0);
+		ItemStack item = getItem(0);
 		if(item.isEmpty()) {
 			if(matrix != null) {
 				matrixDirty = true;
@@ -75,12 +75,12 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 		} else {
 			loadMatrix(item);
 
-			if(world.getGameTime() % 20 == 0 || matrixDirty)
+			if(level.getGameTime() % 20 == 0 || matrixDirty)
 				updateEnchantPower();
 		}
 		
-		if(charge <= 0 && !world.isRemote) {
-			ItemStack lapis = getStackInSlot(1);
+		if(charge <= 0 && !level.isClientSide) {
+			ItemStack lapis = getItem(1);
 			if(!lapis.isEmpty()) {
 				lapis.shrink(1);
 				charge += MatrixEnchantingModule.chargePerLapis;
@@ -94,7 +94,7 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 		}
 	}
 
-	public void onOperation(PlayerEntity player, int operation, int arg0, int arg1, int arg2) {
+	public void onOperation(Player player, int operation, int arg0, int arg1, int arg2) {
 		if(matrix == null)
 			return;
 
@@ -119,19 +119,19 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 
 	private void apply(Predicate<EnchantmentMatrix> oper) {
 		if(oper.test(matrix)) {
-			ItemStack item = getStackInSlot(0);
+			ItemStack item = getItem(0);
 			commitMatrix(item);
 		}
 	}
 
-	private boolean generateAndPay(EnchantmentMatrix matrix, PlayerEntity player) {
+	private boolean generateAndPay(EnchantmentMatrix matrix, Player player) {
 		if(matrix.canGeneratePiece(bookshelfPower, enchantability) && matrix.validateXp(player, bookshelfPower)) {
 			boolean creative = player.isCreative();
 			int cost = matrix.getNewPiecePrice();
 			if(charge > 0 || creative) {
 				if (matrix.generatePiece(influences, bookshelfPower)) {
 					if (!creative) {
-						player.addExperienceLevel(-cost);
+						player.giveExperienceLevels(-cost);
 						charge = Math.max(charge - 1, 0);
 					}
 				}
@@ -142,11 +142,11 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 	}
 
 	private void makeOutput() {
-		if(world.isRemote)
+		if(level.isClientSide)
 			return;
 
-		setInventorySlotContents(2, ItemStack.EMPTY);
-		ItemStack in = getStackInSlot(0);
+		setItem(2, ItemStack.EMPTY);
+		ItemStack in = getItem(0);
 		if(!in.isEmpty() && matrix != null && !matrix.placedPieces.isEmpty()) {
 			ItemStack out = in.copy();
 			boolean book = false;
@@ -171,13 +171,13 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 
 			if(book) 
 				for(Entry<Enchantment, Integer> e : enchantments.entrySet())
-					EnchantedBookItem.addEnchantment(out, new EnchantmentData(e.getKey(), e.getValue()));
+					EnchantedBookItem.addEnchantment(out, new EnchantmentInstance(e.getKey(), e.getValue()));
 			else {
 				EnchantmentHelper.setEnchantments(enchantments, out);
 				ItemNBTHelper.getNBT(out).remove(TAG_STACK_MATRIX);
 			}
 
-			setInventorySlotContents(2, out);
+			setItem(2, out);
 		}
 	}
 
@@ -188,12 +188,12 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 			matrix = null;
 			
 			if(stack.isEnchantable()) {
-				matrix = new EnchantmentMatrix(stack, world.rand);
+				matrix = new EnchantmentMatrix(stack, level.random);
 				matrixDirty = true;
 				makeUUID();
 
 				if(ItemNBTHelper.verifyExistence(stack, TAG_STACK_MATRIX)) {
-					CompoundNBT cmp = ItemNBTHelper.getCompound(stack, TAG_STACK_MATRIX, true);
+					CompoundTag cmp = ItemNBTHelper.getCompound(stack, TAG_STACK_MATRIX, true);
 					if(cmp != null)
 						matrix.readFromNBT(cmp);
 				}
@@ -202,10 +202,10 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 	}
 
 	private void commitMatrix(ItemStack stack) {
-		if(world.isRemote)
+		if(level.isClientSide)
 			return;
 
-		CompoundNBT cmp = new CompoundNBT();
+		CompoundTag cmp = new CompoundTag();
 		matrix.writeToNBT(cmp);
 		ItemNBTHelper.setCompound(stack, TAG_STACK_MATRIX, cmp);
 
@@ -215,12 +215,12 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 	}
 
 	private void makeUUID() {
-		if(!world.isRemote)
+		if(!level.isClientSide)
 			matrixId = UUID.randomUUID();
 	}
 
 	private void updateEnchantPower() {
-		ItemStack item = getStackInSlot(0);
+		ItemStack item = getItem(0);
 		influences.clear();
 		if(item.isEmpty())
 			return;
@@ -232,13 +232,13 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 		for (int j = -1; j <= 1; ++j) {
 			for (int k = -1; k <= 1; ++k) {
 				if(isAirGap(j, k, allowWater)) {
-					power += getEnchantPowerAt(world, pos.add(k * 2, 0, j * 2));
-					power += getEnchantPowerAt(world, pos.add(k * 2, 1, j * 2));
+					power += getEnchantPowerAt(level, worldPosition.offset(k * 2, 0, j * 2));
+					power += getEnchantPowerAt(level, worldPosition.offset(k * 2, 1, j * 2));
 					if (k != 0 && j != 0) {
-						power += getEnchantPowerAt(world, pos.add(k * 2, 0, j));
-						power += getEnchantPowerAt(world, pos.add(k * 2, 1, j));
-						power += getEnchantPowerAt(world, pos.add(k, 0, j * 2));
-						power += getEnchantPowerAt(world, pos.add(k, 1, j * 2));
+						power += getEnchantPowerAt(level, worldPosition.offset(k * 2, 0, j));
+						power += getEnchantPowerAt(level, worldPosition.offset(k * 2, 1, j));
+						power += getEnchantPowerAt(level, worldPosition.offset(k, 0, j * 2));
+						power += getEnchantPowerAt(level, worldPosition.offset(k, 1, j * 2));
 					}
 				}
 			}
@@ -249,17 +249,17 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 	
 	private boolean isAirGap(int j, int k, boolean allowWater) {
 		if(j != 0 || k != 0) {
-			BlockPos test = pos.add(k, 0, j);
-			BlockPos testUp = test.up();
+			BlockPos test = worldPosition.offset(k, 0, j);
+			BlockPos testUp = test.above();
 			
-			return (world.isAirBlock(test) || (allowWater && world.getBlockState(test).getBlock() == Blocks.WATER))
-					&& (world.isAirBlock(testUp) || (allowWater && world.getBlockState(testUp).getBlock() == Blocks.WATER));
+			return (level.isEmptyBlock(test) || (allowWater && level.getBlockState(test).getBlock() == Blocks.WATER))
+					&& (level.isEmptyBlock(testUp) || (allowWater && level.getBlockState(testUp).getBlock() == Blocks.WATER));
 		}
 		
 		return false;
 	}
 	
-	private float getEnchantPowerAt(World world, BlockPos pos) {
+	private float getEnchantPowerAt(Level world, BlockPos pos) {
 		BlockState state = world.getBlockState(pos);
 
 		if(MatrixEnchantingModule.allowInfluencing) {
@@ -275,7 +275,7 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 						// TODO 1.18: hardcode vanilla candles 
 					    if(influencer instanceof IModifiableEnchantmentInfluencer) {
 					        IModifiableEnchantmentInfluencer modifiableInfluencer = (IModifiableEnchantmentInfluencer) influencer;
-                            influencedEnchants = modifiableInfluencer.getModifiedEnchantments(world, pos, state, getStackInSlot(0), new ArrayList<>(influencedEnchants));
+                            influencedEnchants = modifiableInfluencer.getModifiedEnchantments(world, pos, state, getItem(0), new ArrayList<>(influencedEnchants));
                         }
                         for(Enchantment e : influencedEnchants) {
                             int curr = influences.getOrDefault(e, 0);
@@ -291,10 +291,10 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 	}
 
 	@Override
-	public void writeSharedNBT(CompoundNBT cmp) {
+	public void writeSharedNBT(CompoundTag cmp) {
 		super.writeSharedNBT(cmp);
 
-		CompoundNBT matrixCmp = new CompoundNBT();
+		CompoundTag matrixCmp = new CompoundTag();
 		if(matrix != null) {
 			matrix.writeToNBT(matrixCmp);
 
@@ -308,7 +308,7 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 	}
 
 	@Override
-	public void readSharedNBT(CompoundNBT cmp) {
+	public void readSharedNBT(CompoundTag cmp) {
 		super.readSharedNBT(cmp);
 
 		if(cmp.contains(TAG_MATRIX)) {
@@ -317,9 +317,9 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 			UUID newId = new UUID(most, least);
 
 			if(!newId.equals(matrixId)) {
-				CompoundNBT matrixCmp = cmp.getCompound(TAG_MATRIX);
+				CompoundTag matrixCmp = cmp.getCompound(TAG_MATRIX);
 				matrixId = newId;
-				matrix = new EnchantmentMatrix(getStackInSlot(0), new Random());
+				matrix = new EnchantmentMatrix(getItem(0), new Random());
 				matrix.readFromNBT(matrixCmp);
 			}
 			clientMatrixDirty = true;
@@ -329,12 +329,12 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 	}
 
 	@Override
-	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
 		return new MatrixEnchantingContainer(id, inv, this);
 	}
 
 	@Override
-	public ITextComponent getDisplayName() {
+	public Component getDisplayName() {
 		return getName();
 	}
 

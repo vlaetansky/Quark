@@ -5,19 +5,19 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.TridentRenderer;
-import net.minecraft.entity.projectile.TridentEntity;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ThrownTridentRenderer;
+import net.minecraft.world.entity.projectile.ThrownTrident;
 import vazkii.quark.content.tools.module.ColorRunesModule;
 
-@Mixin(TridentRenderer.class)
+@Mixin(ThrownTridentRenderer.class)
 public class TridentRendererMixin {
 
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/matrix/MatrixStack;push()V"))
-	private void setColorRuneTargetStack(TridentEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, CallbackInfo callbackInfo) {
-		ColorRunesModule.setTargetStack(entityIn.getArrowStack());
+	private void setColorRuneTargetStack(ThrownTrident entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, CallbackInfo callbackInfo) {
+		ColorRunesModule.setTargetStack(entityIn.getPickupItem());
 	}
 	
 }

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -38,7 +38,7 @@ public class NetworkProfilingHandler {
 				int c = i.tick();
 				if(c > 0) {
 					double cd = ((double) c) / 5.0;
-					TextFormatting tf = (System.currentTimeMillis() - i.getLast() < 100) ? TextFormatting.RED : TextFormatting.RESET;
+					ChatFormatting tf = (System.currentTimeMillis() - i.getLast() < 100) ? ChatFormatting.RED : ChatFormatting.RESET;
 					
 					event.getLeft().add(tf + "PACKET " + s + ": " + cd + "/s (" + i.getCount() + ")");
 				}

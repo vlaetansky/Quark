@@ -15,24 +15,24 @@ import java.time.LocalDate;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.ai.goal.TemptGoal;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.TemptGoal;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import vazkii.quark.content.mobs.module.FrogsModule;
 
 public class TemptGoalButNice extends TemptGoal {
 	private final Ingredient temptItemNice;
 
-	public TemptGoalButNice(CreatureEntity temptedEntityIn, double speedIn, boolean scaredByPlayerMovementIn, Ingredient temptItemIn, Ingredient temptItemNice) {
+	public TemptGoalButNice(PathfinderMob temptedEntityIn, double speedIn, boolean scaredByPlayerMovementIn, Ingredient temptItemIn, Ingredient temptItemNice) {
 		super(temptedEntityIn, speedIn, scaredByPlayerMovementIn, temptItemIn);
 		this.temptItemNice = temptItemNice;
 	}
 
 	@Override
-	public boolean isTempting(@Nonnull ItemStack stack) {
+	public boolean shouldFollowItem(@Nonnull ItemStack stack) {
 		LocalDate date = LocalDate.now();
 		return FrogsModule.enableBigFunny && DayOfWeek.from(date) == DayOfWeek.WEDNESDAY ?
-				temptItemNice.test(stack) : super.isTempting(stack);
+				temptItemNice.test(stack) : super.shouldFollowItem(stack);
 	}
 }

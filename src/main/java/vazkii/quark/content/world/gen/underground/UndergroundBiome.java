@@ -2,21 +2,21 @@ package vazkii.quark.content.world.gen.underground;
 
 import java.util.function.Predicate;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
+import net.minecraft.tags.Tag;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelAccessor;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.content.world.gen.UndergroundBiomeGenerator.Context;
 
 public abstract class UndergroundBiome {
 	
-	private static ITag<Block> fillerTag = null;
+	private static Tag<Block> fillerTag = null;
 	
 	public static final Predicate<BlockState> STONE_TYPES_MATCHER = (state) -> {
 		if(state == null)
@@ -24,17 +24,17 @@ public abstract class UndergroundBiome {
 		
 		Block block = state.getBlock();
 		if(fillerTag == null)
-			fillerTag = BlockTags.makeWrapperTag(Quark.MOD_ID + ":underground_biome_replaceable");
+			fillerTag = BlockTags.bind(Quark.MOD_ID + ":underground_biome_replaceable");
 		
-		return block.isIn(fillerTag);
+		return block.is(fillerTag);
 	};
 	
 	public double dungeonChance;
 
 	public final void fill(Context context, BlockPos pos) {
-		IWorld world = context.world;
+		LevelAccessor world = context.world;
 		BlockState state = world.getBlockState(pos);
-		if(state.getBlockHardness(world, pos) == -1 || world.canBlockSeeSky(pos))
+		if(state.getDestroySpeed(world, pos) == -1 || world.canSeeSkyFromBelowWater(pos))
 			return;
 
 		if(isFloor(world, pos, state)) {
@@ -73,43 +73,43 @@ public abstract class UndergroundBiome {
 		// NO-OP
 	}
 
-	public boolean isFloor(IWorld world, BlockPos pos, BlockState state) {
-		if(!state.isOpaqueCube(world, pos))
+	public boolean isFloor(LevelAccessor world, BlockPos pos, BlockState state) {
+		if(!state.isSolidRender(world, pos))
 			return false;
 
-		BlockPos upPos = pos.up();
-		return world.isAirBlock(upPos) || world.getBlockState(upPos).getMaterial().isReplaceable();
+		BlockPos upPos = pos.above();
+		return world.isEmptyBlock(upPos) || world.getBlockState(upPos).getMaterial().isReplaceable();
 	}
 
-	public boolean isCeiling(IWorld world, BlockPos pos, BlockState state) {
-		if(!state.isOpaqueCube(world, pos))
+	public boolean isCeiling(LevelAccessor world, BlockPos pos, BlockState state) {
+		if(!state.isSolidRender(world, pos))
 			return false;
 
-		BlockPos downPos = pos.down();
-		return world.isAirBlock(downPos) || world.getBlockState(downPos).getMaterial().isReplaceable();
+		BlockPos downPos = pos.below();
+		return world.isEmptyBlock(downPos) || world.getBlockState(downPos).getMaterial().isReplaceable();
 	}
 
-	public boolean isWall(IWorld world, BlockPos pos, BlockState state) {
-		if(!state.isOpaqueCube(world, pos) || !STONE_TYPES_MATCHER.test(state))
+	public boolean isWall(LevelAccessor world, BlockPos pos, BlockState state) {
+		if(!state.isSolidRender(world, pos) || !STONE_TYPES_MATCHER.test(state))
 			return false;
 
 		return isBorder(world, pos);
 	}
 
-	public Direction getBorderSide(IWorld world, BlockPos pos) {
+	public Direction getBorderSide(LevelAccessor world, BlockPos pos) {
 		BlockState state = world.getBlockState(pos);
 		for(Direction facing : MiscUtil.HORIZONTALS) {
-			BlockPos offsetPos = pos.offset(facing);
+			BlockPos offsetPos = pos.relative(facing);
 			BlockState stateAt = world.getBlockState(offsetPos);
 			
-			if(state != stateAt && world.isAirBlock(offsetPos) || stateAt.getMaterial().isReplaceable())
+			if(state != stateAt && world.isEmptyBlock(offsetPos) || stateAt.getMaterial().isReplaceable())
 				return facing;
 		}
 
 		return null;
 	}
 	
-	public boolean isBorder(IWorld world, BlockPos pos) {
+	public boolean isBorder(LevelAccessor world, BlockPos pos) {
 		return getBorderSide(world, pos) != null;
 	}
 

@@ -2,13 +2,13 @@ package vazkii.quark.content.world.module;
 
 import com.google.common.collect.ImmutableSet;
 
-import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.gen.DimensionSettings;
-import net.minecraft.world.gen.feature.StructureFeature;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.feature.structure.VillageConfig;
-import net.minecraft.world.gen.settings.DimensionStructuresSettings;
-import net.minecraft.world.gen.settings.StructureSeparationSettings;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
+import net.minecraft.world.level.levelgen.StructureSettings;
+import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -39,32 +39,32 @@ public class BigDungeonModule extends QuarkModule {
 	@Config
 	public static CompoundBiomeConfig biomeConfig = CompoundBiomeConfig.fromBiomeTypes(true, BiomeDictionary.Type.OCEAN, BiomeDictionary.Type.BEACH, BiomeDictionary.Type.NETHER, BiomeDictionary.Type.END);
 
-	public static final BigDungeonStructure STRUCTURE = new BigDungeonStructure(VillageConfig.field_236533_a_);
-	private static StructureFeature<?, ?> feature;
+	public static final BigDungeonStructure STRUCTURE = new BigDungeonStructure(JigsawConfiguration.CODEC);
+	private static ConfiguredStructureFeature<?, ?> feature;
 
 	@Override
 	public void construct() {
 		//		new FloodFillItem(this);
 		RegistryHelper.register(STRUCTURE);
 
-		Structure.field_236365_a_.put(Quark.MOD_ID + ":big_dungeon", STRUCTURE);
+		StructureFeature.STRUCTURES_REGISTRY.put(Quark.MOD_ID + ":big_dungeon", STRUCTURE);
 	}
 
 	@Override
 	public void setup() {
 		STRUCTURE.setup();	
 
-		StructureSeparationSettings settings = new StructureSeparationSettings(20, 11, 79234823);
+		StructureFeatureConfiguration settings = new StructureFeatureConfiguration(20, 11, 79234823);
 
-		ImmutableSet.of(DimensionSettings.field_242734_c, DimensionSettings.field_242735_d, DimensionSettings.field_242736_e, 
-				DimensionSettings.field_242737_f, DimensionSettings.field_242738_g, DimensionSettings.field_242739_h)
+		ImmutableSet.of(NoiseGeneratorSettings.OVERWORLD, NoiseGeneratorSettings.AMPLIFIED, NoiseGeneratorSettings.NETHER, 
+				NoiseGeneratorSettings.END, NoiseGeneratorSettings.CAVES, NoiseGeneratorSettings.FLOATING_ISLANDS)
 		.stream()
-		.map(WorldGenRegistries.NOISE_SETTINGS::getValueForKey)
-		.map(DimensionSettings::getStructures)
-		.map(DimensionStructuresSettings::func_236195_a_) // get map
+		.map(BuiltinRegistries.NOISE_GENERATOR_SETTINGS::get)
+		.map(NoiseGeneratorSettings::structureSettings)
+		.map(StructureSettings::structureConfig) // get map
 		.forEach(m -> m.put(STRUCTURE, settings));
 
-		feature = STRUCTURE.func_236391_a_(new VillageConfig(() -> BigDungeonStructure.startPattern, maxRooms));
+		feature = STRUCTURE.configured(new JigsawConfiguration(() -> BigDungeonStructure.startPattern, maxRooms));
 	}
 
 	@SubscribeEvent

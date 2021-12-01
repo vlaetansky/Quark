@@ -3,11 +3,11 @@ package vazkii.quark.base.client.config.gui.widget;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.ChatFormatting;
 import vazkii.quark.api.config.IConfigElement;
 import vazkii.quark.api.config.IConfigObject;
 import vazkii.quark.base.client.config.ConfigCategory;
@@ -52,7 +52,7 @@ public class ConfigElementList<T extends IConfigElement & IWidgetProvider> exten
 		}
 		
 		@Override
-		public void render(MatrixStack mstack, int index, int rowTop, int rowLeft, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float pticks) {
+		public void render(PoseStack mstack, int index, int rowTop, int rowLeft, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float pticks) {
 			super.render(mstack, index, rowTop, rowLeft, rowWidth, rowHeight, mouseX, mouseY, hovered, pticks);
 			
 			Minecraft mc = Minecraft.getInstance();
@@ -68,16 +68,16 @@ public class ConfigElementList<T extends IConfigElement & IWidgetProvider> exten
 				
 				String name = element.getGuiDisplayName();
 				if(element.isDirty())
-					name += TextFormatting.GOLD + "*";
+					name += ChatFormatting.GOLD + "*";
 				
-				int len = mc.fontRenderer.getStringWidth(name);
+				int len = mc.font.width(name);
 				int maxLen = rowWidth - 85;
 				String originalName = null;
 				if(len > maxLen) {
 					originalName = name;
 					do {
 						name = name.substring(0, name.length() - 1);
-						len = mc.fontRenderer.getStringWidth(name);
+						len = mc.font.width(name);
 					} while(len > maxLen);
 					
 					name += "...";
@@ -95,19 +95,19 @@ public class ConfigElementList<T extends IConfigElement & IWidgetProvider> exten
 				}
 				
 				if(tooltip != null) {
-					int hoverLeft = left + mc.fontRenderer.getStringWidth(name + " ");
-					int hoverRight = hoverLeft + mc.fontRenderer.getStringWidth("(?)");
+					int hoverLeft = left + mc.font.width(name + " ");
+					int hoverRight = hoverLeft + mc.font.width("(?)");
 					
-					name += (TextFormatting.AQUA + " (?)");
+					name += (ChatFormatting.AQUA + " (?)");
 					if(mouseX >= hoverLeft && mouseX < hoverRight && mouseY >= top && mouseY < (top + 10))
 						TopLayerTooltipHandler.setTooltip(tooltip, mouseX, mouseY);
 				}
 				
-				mc.fontRenderer.drawStringWithShadow(mstack, name, left, top, 0xFFFFFF);
-				mc.fontRenderer.drawStringWithShadow(mstack, element.getSubtitle(), left, top + 10, 0x999999);
+				mc.font.drawShadow(mstack, name, left, top, 0xFFFFFF);
+				mc.font.drawShadow(mstack, element.getSubtitle(), left, top + 10, 0x999999);
 			} else {
-				String s = I18n.format("quark.gui.config.subcategories");
-				mc.fontRenderer.drawStringWithShadow(mstack, s, rowLeft + (rowWidth - mc.fontRenderer.getStringWidth(s)) / 2, rowTop + 7, 0x6666FF);
+				String s = I18n.get("quark.gui.config.subcategories");
+				mc.font.drawShadow(mstack, s, rowLeft + (rowWidth - mc.font.width(s)) / 2, rowTop + 7, 0x6666FF);
 			}
 		}
 

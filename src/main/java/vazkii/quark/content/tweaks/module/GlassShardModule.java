@@ -3,16 +3,16 @@ package vazkii.quark.content.tweaks.module;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.tags.ITag;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.tags.Tag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.block.QuarkInheritedPaneBlock;
@@ -31,7 +31,7 @@ public class GlassShardModule extends QuarkModule {
 
     public static QuarkBlock dirtyGlass;
 
-    public static ITag<Item> shardTag;
+    public static Tag<Item> shardTag;
 
     public static Item clearShard;
     public static Item dirtyShard;
@@ -40,15 +40,15 @@ public class GlassShardModule extends QuarkModule {
 
     @Override
     public void construct() {
-        dirtyGlass = new DirtyGlassBlock("dirty_glass", this, ItemGroup.DECORATIONS,
-                Block.Properties.create(Material.GLASS, MaterialColor.BROWN).hardnessAndResistance(0.3F).sound(SoundType.GLASS));
+        dirtyGlass = new DirtyGlassBlock("dirty_glass", this, CreativeModeTab.TAB_DECORATIONS,
+                Block.Properties.of(Material.GLASS, MaterialColor.COLOR_BROWN).strength(0.3F).sound(SoundType.GLASS));
         new QuarkInheritedPaneBlock(dirtyGlass);
 
-        clearShard = new QuarkItem("clear_shard", this, new Item.Properties().group(ItemGroup.MATERIALS));
-        dirtyShard = new QuarkItem("dirty_shard", this, new Item.Properties().group(ItemGroup.MATERIALS));
+        clearShard = new QuarkItem("clear_shard", this, new Item.Properties().tab(CreativeModeTab.TAB_MATERIALS));
+        dirtyShard = new QuarkItem("dirty_shard", this, new Item.Properties().tab(CreativeModeTab.TAB_MATERIALS));
 
         for(DyeColor color : DyeColor.values())
-            shardColors.put(color, new QuarkItem(color.getString() + "_shard", this, new Item.Properties().group(ItemGroup.MATERIALS)));
+            shardColors.put(color, new QuarkItem(color.getSerializedName() + "_shard", this, new Item.Properties().tab(CreativeModeTab.TAB_MATERIALS)));
     }
 
     @Override

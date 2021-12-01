@@ -16,13 +16,13 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.Items;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Items;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.GameData;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -31,15 +31,15 @@ import vazkii.quark.base.Quark;
 
 public final class OverrideRegistryHandler {
 	
-	public static void registerBlock(Block block, String baseName, @Nullable ItemGroup group) {
+	public static void registerBlock(Block block, String baseName, @Nullable CreativeModeTab group) {
 		register(block, Blocks.class, baseName);
 		registerBlockItem(block, group);
 	}
 
-	private static void registerBlockItem(Block block, @Nullable ItemGroup group) {
+	private static void registerBlockItem(Block block, @Nullable CreativeModeTab group) {
 		Item.Properties props = new Item.Properties();
 		if(group != null)
-			props = props.group(group);
+			props = props.tab(group);
 		
 		BlockItem item = new BlockItem(block, props);
 		registerItem(item, block.getRegistryName().getPath());

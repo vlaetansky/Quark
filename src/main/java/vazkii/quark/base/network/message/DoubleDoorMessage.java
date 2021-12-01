@@ -1,8 +1,8 @@
 package vazkii.quark.base.network.message;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import vazkii.arl.network.IMessage;
 import vazkii.quark.content.tweaks.module.DoubleDoorOpeningModule;
@@ -19,8 +19,8 @@ public class DoubleDoorMessage implements IMessage {
 		this.pos = pos;
 	}
 
-	private World extractWorld(ServerPlayerEntity entity) {
-		return entity == null ? null : entity.world;
+	private Level extractWorld(ServerPlayer entity) {
+		return entity == null ? null : entity.level;
 	}
 
 	@Override

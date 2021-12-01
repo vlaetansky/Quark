@@ -11,10 +11,10 @@
 package vazkii.quark.base.network.message;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.IngameGui;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -25,12 +25,12 @@ public class SpamlessChatMessage implements IMessage {
 
 	private static final long serialVersionUID = -4716987873031723456L;
 
-	public ITextComponent message;
+	public Component message;
 	public int id;
 
 	public SpamlessChatMessage() { }
 
-	public SpamlessChatMessage(ITextComponent message, int id) {
+	public SpamlessChatMessage(Component message, int id) {
 		this.message = message;
 		this.id = id;
 	}
@@ -39,16 +39,16 @@ public class SpamlessChatMessage implements IMessage {
 	@OnlyIn(Dist.CLIENT)
 	public boolean receive(NetworkEvent.Context context) {
 		context.enqueueWork(() -> {
-			IngameGui gui = Minecraft.getInstance().ingameGUI;
-			gui.getChatGUI().func_238493_a_(message, id, gui.getTicks(), false); // print message and delete if same ID, called by printChatMessageWithOptionalDeletion
+			Gui gui = Minecraft.getInstance().gui;
+			gui.getChat().addMessage(message, id, gui.getGuiTicks(), false); // print message and delete if same ID, called by printChatMessageWithOptionalDeletion
 		});
 		
 		return true;
 	}
 
-	public static void sendToPlayer(PlayerEntity player, int id, ITextComponent component) {
-		if (player instanceof ServerPlayerEntity)
-			QuarkNetwork.sendToPlayer(new SpamlessChatMessage(component, id), (ServerPlayerEntity) player);
+	public static void sendToPlayer(Player player, int id, Component component) {
+		if (player instanceof ServerPlayer)
+			QuarkNetwork.sendToPlayer(new SpamlessChatMessage(component, id), (ServerPlayer) player);
 	}
 
 }

@@ -1,9 +1,9 @@
 package vazkii.quark.content.automation.module;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -18,11 +18,11 @@ import vazkii.quark.content.automation.block.ObsidianPressurePlateBlock;
 public class ObsidianPlateModule extends QuarkModule {
     @Override
     public void construct() {
-        new ObsidianPressurePlateBlock("obsidian_pressure_plate", this, ItemGroup.REDSTONE,
-                Block.Properties.create(Material.ROCK, MaterialColor.BLACK)
-                		.setRequiresTool()
+        new ObsidianPressurePlateBlock("obsidian_pressure_plate", this, CreativeModeTab.TAB_REDSTONE,
+                Block.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK)
+                		.requiresCorrectToolForDrops()
                 		.harvestTool(ToolType.PICKAXE)
-                        .doesNotBlockMovement()
-                        .hardnessAndResistance(2F, 1200.0F));
+                        .noCollission()
+                        .strength(2F, 1200.0F));
     }
 }

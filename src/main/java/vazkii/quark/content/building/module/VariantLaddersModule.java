@@ -3,13 +3,13 @@ package vazkii.quark.content.building.module;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.LadderBlock;
-import net.minecraft.block.TrapDoorBlock;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LadderBlock;
+import net.minecraft.world.level.block.TrapDoorBlock;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelReader;
 import vazkii.quark.base.handler.FuelHandler;
 import vazkii.quark.base.handler.ItemOverrideHandler;
 import vazkii.quark.base.handler.MiscUtil;
@@ -59,15 +59,15 @@ public class VariantLaddersModule extends QuarkModule {
 		ItemOverrideHandler.changeBlockLocalizationKey(Blocks.LADDER, "block.quark.oak_ladder", changeNames && enabled);
 	}
 
-	public static boolean isTrapdoorLadder(boolean defaultValue, IWorldReader world, BlockPos pos) {
+	public static boolean isTrapdoorLadder(boolean defaultValue, LevelReader world, BlockPos pos) {
 		if(defaultValue || !moduleEnabled)
 			return defaultValue;
 
 		BlockState curr = world.getBlockState(pos);
-		if(curr.getProperties().contains(TrapDoorBlock.OPEN) && curr.get(TrapDoorBlock.OPEN)) {
-			BlockState down = world.getBlockState(pos.down());
+		if(curr.getProperties().contains(TrapDoorBlock.OPEN) && curr.getValue(TrapDoorBlock.OPEN)) {
+			BlockState down = world.getBlockState(pos.below());
 			if(down.getBlock() instanceof LadderBlock)
-				return down.get(LadderBlock.FACING) == curr.get(TrapDoorBlock.HORIZONTAL_FACING);
+				return down.getValue(LadderBlock.FACING) == curr.getValue(TrapDoorBlock.FACING);
 		}
 
 		return false;

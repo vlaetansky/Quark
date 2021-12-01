@@ -3,21 +3,21 @@ package vazkii.quark.content.mobs.item;
 import javax.annotation.Nonnull;
 
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.item.Rarity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.base.item.QuarkItem;
@@ -25,6 +25,8 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.mobs.entity.EnumStonelingVariant;
 import vazkii.quark.content.mobs.entity.StonelingEntity;
 import vazkii.quark.content.mobs.module.StonelingsModule;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class DiamondHeartItem extends QuarkItem {
 
@@ -34,18 +36,18 @@ public class DiamondHeartItem extends QuarkItem {
 
 	@Nonnull
 	@Override
-	public ActionResultType onItemUse(ItemUseContext context) {
-		PlayerEntity player = context.getPlayer();
-		World world = context.getWorld();
-		BlockPos pos = context.getPos();
-		Hand hand = context.getHand();
-		Direction facing = context.getFace();
+	public InteractionResult useOn(UseOnContext context) {
+		Player player = context.getPlayer();
+		Level world = context.getLevel();
+		BlockPos pos = context.getClickedPos();
+		InteractionHand hand = context.getHand();
+		Direction facing = context.getClickedFace();
 
 		if (player != null) {
 			BlockState stateAt = world.getBlockState(pos);
-			ItemStack stack = player.getHeldItem(hand);
+			ItemStack stack = player.getItemInHand(hand);
 
-			if (player.canPlayerEdit(pos, facing, stack) && stateAt.getBlockHardness(world, pos) != -1) {
+			if (player.mayUseItemAt(pos, facing, stack) && stateAt.getDestroySpeed(world, pos) != -1) {
 
 				EnumStonelingVariant variant = null;
 				for (EnumStonelingVariant possibleVariant : EnumStonelingVariant.values()) {
@@ -54,30 +56,30 @@ public class DiamondHeartItem extends QuarkItem {
 				}
 
 				if (variant != null) {
-					if (!world.isRemote && world instanceof IServerWorld) {
-						world.setBlockState(pos, Blocks.AIR.getDefaultState());
-						world.playEvent(2001, pos, Block.getStateId(stateAt));
+					if (!world.isClientSide && world instanceof ServerLevelAccessor) {
+						world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+						world.levelEvent(2001, pos, Block.getId(stateAt));
 
 						StonelingEntity stoneling = new StonelingEntity(StonelingsModule.stonelingType, world);
-						stoneling.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+						stoneling.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 						stoneling.setPlayerMade(true);
-						stoneling.rotationYaw = player.rotationYaw + 180F;
-						stoneling.onInitialSpawn((IServerWorld) world, world.getDifficultyForLocation(pos), SpawnReason.STRUCTURE, variant, null);
-						world.addEntity(stoneling);
+						stoneling.yRot = player.yRot + 180F;
+						stoneling.finalizeSpawn((ServerLevelAccessor) world, world.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, variant, null);
+						world.addFreshEntity(stoneling);
 						
-						if(player instanceof ServerPlayerEntity)
-							CriteriaTriggers.SUMMONED_ENTITY.trigger((ServerPlayerEntity) player, stoneling);
+						if(player instanceof ServerPlayer)
+							CriteriaTriggers.SUMMONED_ENTITY.trigger((ServerPlayer) player, stoneling);
 
-						if (!player.abilities.isCreativeMode)
+						if (!player.abilities.instabuild)
 							stack.shrink(1);
 					}
 
-					return ActionResultType.SUCCESS;
+					return InteractionResult.SUCCESS;
 				}
 			}
 		}
 		
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 
 	@Nonnull
@@ -88,7 +90,7 @@ public class DiamondHeartItem extends QuarkItem {
 	
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public boolean hasEffect(ItemStack stack) {
+	public boolean isFoil(ItemStack stack) {
 		return true;
 	}
 

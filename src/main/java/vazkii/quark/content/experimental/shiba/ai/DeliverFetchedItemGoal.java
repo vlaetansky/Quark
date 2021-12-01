@@ -1,6 +1,6 @@
 package vazkii.quark.content.experimental.shiba.ai;
 
-import net.minecraft.entity.ai.goal.FollowOwnerGoal;
+import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import vazkii.quark.content.experimental.shiba.entity.ShibaEntity;
 
 public class DeliverFetchedItemGoal extends FollowOwnerGoal {
@@ -19,23 +19,23 @@ public class DeliverFetchedItemGoal extends FollowOwnerGoal {
 		
 		timeTilNextJump--;
 		if(timeTilNextJump <= 0) {
-			timeTilNextJump = shiba.world.rand.nextInt(5) + 10;
+			timeTilNextJump = shiba.level.random.nextInt(5) + 10;
 			
 			if(shiba.onGround) {
-				shiba.addVelocity(0, 0.3, 0);
+				shiba.push(0, 0.3, 0);
 				shiba.setJumping(true);
 			}
 		}
 	}
 	
 	@Override
-	public boolean shouldExecute() {
-		return super.shouldExecute() && !shiba.getMouthItem().isEmpty();
+	public boolean canUse() {
+		return super.canUse() && !shiba.getMouthItem().isEmpty();
 	}
 	
 	@Override
-	public boolean shouldContinueExecuting() {
-		return super.shouldContinueExecuting() && !shiba.getMouthItem().isEmpty();
+	public boolean canContinueToUse() {
+		return super.canContinueToUse() && !shiba.getMouthItem().isEmpty();
 	}
 
 }

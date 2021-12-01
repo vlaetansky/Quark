@@ -2,16 +2,16 @@ package vazkii.quark.content.world.gen;
 
 import java.util.Random;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3i;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.WorldGenRegion;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.server.level.WorldGenRegion;
 import vazkii.quark.base.module.config.type.DimensionConfig;
 import vazkii.quark.base.world.generator.multichunk.MultiChunkFeatureGenerator;
 import vazkii.quark.content.world.module.ChorusVegetationModule;
@@ -29,9 +29,9 @@ public class ChorusVegetationGenerator extends MultiChunkFeatureGenerator {
 
 	@Override
 	public BlockPos[] getSourcesInChunk(WorldGenRegion world, Random random, ChunkGenerator generator, BlockPos chunkCorner) {
-		if(!chunkCorner.withinDistance(Vector3i.NULL_VECTOR, 1050) && ChorusVegetationModule.rarity > 0 && random.nextInt(ChorusVegetationModule.rarity) == 0) {
+		if(!chunkCorner.closerThan(Vec3i.ZERO, 1050) && ChorusVegetationModule.rarity > 0 && random.nextInt(ChorusVegetationModule.rarity) == 0) {
 			Biome b = getBiome(world, chunkCorner, true);
-			if(b.getRegistryName().equals(Biomes.END_HIGHLANDS.getLocation()))
+			if(b.getRegistryName().equals(Biomes.END_HIGHLANDS.location()))
 				return new BlockPos[] { chunkCorner };
 		}
 		
@@ -41,7 +41,7 @@ public class ChorusVegetationGenerator extends MultiChunkFeatureGenerator {
 	@Override
 	public void generateChunkPart(BlockPos src, ChunkGenerator generator, Random rand, BlockPos pos, WorldGenRegion worldIn) {
 		for(int i = 0; i < ChorusVegetationModule.chunkAttempts; i++) {
-			BlockPos placePos = pos.add(rand.nextInt(16), 100, rand.nextInt(16));
+			BlockPos placePos = pos.offset(rand.nextInt(16), 100, rand.nextInt(16));
 			
 			Biome b = getBiome(worldIn, placePos, true);
 			double chance = getChance(b);
@@ -59,12 +59,12 @@ public class ChorusVegetationGenerator extends MultiChunkFeatureGenerator {
 					if(stateAt.getBlock() == Blocks.END_STONE)
 						break;
 					
-					placePos = placePos.down();
+					placePos = placePos.below();
 				}
 				
-				if(worldIn.getBlockState(placePos).getBlock() == Blocks.END_STONE && worldIn.getBlockState(placePos.up()).isAir()) {
+				if(worldIn.getBlockState(placePos).getBlock() == Blocks.END_STONE && worldIn.getBlockState(placePos.above()).isAir()) {
 					Block block = (rand.nextDouble() < 0.1) ? ChorusVegetationModule.chorus_twist : ChorusVegetationModule.chorus_weeds;
-					worldIn.setBlockState(placePos.up(), block.getDefaultState(), 2);
+					worldIn.setBlock(placePos.above(), block.defaultBlockState(), 2);
 				}
 			}
 		}
@@ -73,9 +73,9 @@ public class ChorusVegetationGenerator extends MultiChunkFeatureGenerator {
 	private double getChance(Biome b) {
 		ResourceLocation res = b.getRegistryName();
 		
-		if(res.equals(Biomes.END_HIGHLANDS.getLocation()))
+		if(res.equals(Biomes.END_HIGHLANDS.location()))
 			return ChorusVegetationModule.highlandsChance;
-		else if(res.equals(Biomes.END_MIDLANDS.getLocation()))
+		else if(res.equals(Biomes.END_MIDLANDS.location()))
 			return ChorusVegetationModule.midlandsChance;
 		else return ChorusVegetationModule.otherEndBiomesChance;
 	}

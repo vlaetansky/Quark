@@ -1,9 +1,9 @@
 package vazkii.quark.content.tweaks.module;
 
-import net.minecraft.item.ItemModelsProperties;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.TickEvent.Phase;
@@ -28,19 +28,19 @@ public class CompassesWorkEverywhereModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		// func_239418_a_ = addPropertyOverride
+		// register = addPropertyOverride
 		if(enabled && (enableCompassNerf || enableNether || enableEnd))
-			enqueue(() -> ItemModelsProperties.registerProperty(Items.COMPASS, new ResourceLocation("angle"), new CompassAngleGetter.Impl()));
+			enqueue(() -> ItemProperties.register(Items.COMPASS, new ResourceLocation("angle"), new CompassAngleGetter.Impl()));
 		
 		if(enabled && enableClockNerf)
-			enqueue(() -> ItemModelsProperties.registerProperty(Items.CLOCK, new ResourceLocation("time"), new ClockTimeGetter.Impl()));
+			enqueue(() -> ItemProperties.register(Items.CLOCK, new ResourceLocation("time"), new ClockTimeGetter.Impl()));
 	}
 	
 	@SubscribeEvent
 	public void onUpdate(PlayerTickEvent event) {
 		if(event.phase == Phase.START) {
-			for(int i = 0; i < event.player.inventory.getSizeInventory(); i++) {
-				ItemStack stack = event.player.inventory.getStackInSlot(i);
+			for(int i = 0; i < event.player.inventory.getContainerSize(); i++) {
+				ItemStack stack = event.player.inventory.getItem(i);
 				if(stack.getItem() == Items.COMPASS)
 					CompassAngleGetter.tickCompass(event.player, stack);
 				else if(stack.getItem() == Items.CLOCK)

@@ -8,18 +8,18 @@ import java.util.Optional;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.extensions.IForgeContainerType;
@@ -45,8 +45,8 @@ import vazkii.quark.base.module.config.Config;
 @LoadModule(category = ModuleCategory.ODDITIES, hasSubscriptions = true)
 public class MatrixEnchantingModule extends QuarkModule {
 
-	public static TileEntityType<MatrixEnchantingTableTileEntity> tileEntityType;
-	public static ContainerType<MatrixEnchantingContainer> containerType;
+	public static BlockEntityType<MatrixEnchantingTableTileEntity> tileEntityType;
+	public static MenuType<MatrixEnchantingContainer> containerType;
 
 	@Config(description = "The maximum enchanting power the matrix enchanter can accept")
 	public static int maxBookshelves = 15;
@@ -142,14 +142,14 @@ public class MatrixEnchantingModule extends QuarkModule {
 		containerType = IForgeContainerType.create(MatrixEnchantingContainer::fromNetwork);
 		RegistryHelper.register(containerType, "matrix_enchanting");
 
-		tileEntityType = TileEntityType.Builder.create(MatrixEnchantingTableTileEntity::new, matrixEnchanter).build(null);
+		tileEntityType = BlockEntityType.Builder.of(MatrixEnchantingTableTileEntity::new, matrixEnchanter).build(null);
 		RegistryHelper.register(tileEntityType, "matrix_enchanting");
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		ScreenManager.registerFactory(containerType, MatrixEnchantingScreen::new);
+		MenuScreens.register(containerType, MatrixEnchantingScreen::new);
 		ClientRegistry.bindTileEntityRenderer(tileEntityType, MatrixEnchantingTableTileEntityRenderer::new);	
 	}
 
@@ -158,13 +158,13 @@ public class MatrixEnchantingModule extends QuarkModule {
 	public void onTooltip(ItemTooltipEvent event) {
 		ItemStack stack = event.getItemStack();
 		if(showTooltip && ItemNBTHelper.verifyExistence(stack, MatrixEnchantingTableTileEntity.TAG_STACK_MATRIX))
-			event.getToolTip().add(new TranslationTextComponent("quark.gui.enchanting.pending").mergeStyle(TextFormatting.AQUA));
+			event.getToolTip().add(new TranslatableComponent("quark.gui.enchanting.pending").withStyle(ChatFormatting.AQUA));
 	}
 	
 	@SubscribeEvent
 	public void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
 		if(event.getPlacedBlock().getBlock().equals(Blocks.ENCHANTING_TABLE) && automaticallyConvert)
-			event.getWorld().setBlockState(event.getPos(), matrixEnchanter.getDefaultState(), 3);
+			event.getWorld().setBlock(event.getPos(), matrixEnchanter.defaultBlockState(), 3);
 	}
 	
 	@SubscribeEvent
@@ -173,7 +173,7 @@ public class MatrixEnchantingModule extends QuarkModule {
 			return;
 		
 		if(event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.ENCHANTING_TABLE && automaticallyConvert)
-			event.getWorld().setBlockState(event.getPos(), matrixEnchanter.getDefaultState(), 3);
+			event.getWorld().setBlock(event.getPos(), matrixEnchanter.defaultBlockState(), 3);
 	}
 	
 	@Override

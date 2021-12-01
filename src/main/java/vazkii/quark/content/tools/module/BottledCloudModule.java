@@ -1,12 +1,12 @@
 package vazkii.quark.content.tools.module;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ActionResultType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.InteractionResult;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -23,7 +23,7 @@ import vazkii.quark.content.tools.tile.CloudTileEntity;
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true)
 public class BottledCloudModule extends QuarkModule {
 
-    public static TileEntityType<CloudTileEntity> tileEntityType;
+    public static BlockEntityType<CloudTileEntity> tileEntityType;
     public static Block cloud;
     public static Item bottled_cloud;
     
@@ -38,7 +38,7 @@ public class BottledCloudModule extends QuarkModule {
 		cloud = new CloudBlock(this);
 		bottled_cloud = new BottledCloudItem(this);
 		
-    	tileEntityType = TileEntityType.Builder.create(CloudTileEntity::new, cloud).build(null);
+    	tileEntityType = BlockEntityType.Builder.of(CloudTileEntity::new, cloud).build(null);
 		RegistryHelper.register(tileEntityType, "cloud");
 	} 
 	
@@ -50,16 +50,16 @@ public class BottledCloudModule extends QuarkModule {
 	@SubscribeEvent
 	public void onRightClick(PlayerInteractEvent.RightClickItem event) {
 		ItemStack stack = event.getItemStack();
-		PlayerEntity player = event.getPlayer();
-		if(stack.getItem() == Items.GLASS_BOTTLE && player.getPosY() > cloudLevelBottom && player.getPosY() < cloudLevelTop) {
+		Player player = event.getPlayer();
+		if(stack.getItem() == Items.GLASS_BOTTLE && player.getY() > cloudLevelBottom && player.getY() < cloudLevelTop) {
 			stack.shrink(1);
 			
 			ItemStack returnStack = new ItemStack(bottled_cloud);
-			if(!player.addItemStackToInventory(returnStack))
-				player.dropItem(returnStack, false);
+			if(!player.addItem(returnStack))
+				player.drop(returnStack, false);
 			
 			event.setCanceled(true);
-			event.setCancellationResult(ActionResultType.SUCCESS);
+			event.setCancellationResult(InteractionResult.SUCCESS);
 		}
 	}
 	

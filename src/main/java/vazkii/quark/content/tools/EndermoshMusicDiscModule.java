@@ -1,12 +1,12 @@
 package vazkii.quark.content.tools;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.loot.ItemLootEntry;
-import net.minecraft.loot.LootEntry;
-import net.minecraft.loot.LootTables;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.Dimension;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.LootTableLoadEvent;
@@ -34,7 +34,7 @@ public class EndermoshMusicDiscModule extends QuarkModule {
 	
 	@OnlyIn(Dist.CLIENT) private boolean isFightingDragon;
 	@OnlyIn(Dist.CLIENT) private int delay;
-	@OnlyIn(Dist.CLIENT) private SimpleSound sound;
+	@OnlyIn(Dist.CLIENT) private SimpleSoundInstance sound;
 
 	@Override
 	public void construct() {
@@ -45,10 +45,10 @@ public class EndermoshMusicDiscModule extends QuarkModule {
 	public void onLootTableLoad(LootTableLoadEvent event) {
 		if(addToEndCityLoot) {
 			ResourceLocation res = event.getName();
-			if(res.equals(LootTables.CHESTS_END_CITY_TREASURE)) {
-				LootEntry entry = ItemLootEntry.builder(endermosh)
-						.weight(lootWeight)
-						.quality(lootQuality)
+			if(res.equals(BuiltInLootTables.END_CITY_TREASURE)) {
+				LootPoolEntryContainer entry = LootItem.lootTableItem(endermosh)
+						.setWeight(lootWeight)
+						.setQuality(lootQuality)
 						.build();
 
 				MiscUtil.addToLootTable(event.getTable(), entry);
@@ -63,27 +63,27 @@ public class EndermoshMusicDiscModule extends QuarkModule {
 			boolean wasFightingDragon = isFightingDragon;
 
 			Minecraft mc = Minecraft.getInstance();
-			isFightingDragon = mc.world != null 
-					&& mc.world.getDimensionKey().getLocation().equals(Dimension.THE_END.getLocation())
-					&& mc.ingameGUI.getBossOverlay().shouldPlayEndBossMusic();
+			isFightingDragon = mc.level != null 
+					&& mc.level.dimension().location().equals(LevelStem.END.location())
+					&& mc.gui.getBossOverlay().shouldPlayMusic();
 			
 			final int targetDelay = 50;
 			
 			if(isFightingDragon) {
 				if(delay == targetDelay) {
-					sound = SimpleSound.music(QuarkSounds.MUSIC_ENDERMOSH);
-					mc.getSoundHandler().playDelayed(sound, 0);
-					mc.ingameGUI.func_238451_a_(endermosh.getDescription());
+					sound = SimpleSoundInstance.forMusic(QuarkSounds.MUSIC_ENDERMOSH);
+					mc.getSoundManager().playDelayed(sound, 0);
+					mc.gui.setNowPlaying(endermosh.getDisplayName());
 				}
 
-				double x = mc.player.getPosX();
-				double z = mc.player.getPosZ();
+				double x = mc.player.getX();
+				double z = mc.player.getZ();
 
-				if(mc.currentScreen == null && ((x*x) + (z*z)) < 3000) // is not in screen and within island
+				if(mc.screen == null && ((x*x) + (z*z)) < 3000) // is not in screen and within island
 					delay++;
 				
 			} else if(wasFightingDragon && sound != null) {
-				mc.getSoundHandler().stop(sound);
+				mc.getSoundManager().stop(sound);
 				delay = 0;
 				sound = null;
 			}

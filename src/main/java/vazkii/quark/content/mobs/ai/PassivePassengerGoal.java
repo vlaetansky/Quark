@@ -12,19 +12,21 @@ package vazkii.quark.content.mobs.ai;
 
 import java.util.EnumSet;
 
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
+
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 public class PassivePassengerGoal extends Goal {
-	private final MobEntity entity;
+	private final Mob entity;
 
-	public PassivePassengerGoal(MobEntity entity) {
+	public PassivePassengerGoal(Mob entity) {
 		this.entity = entity;
-		setMutexFlags(EnumSet.of(Flag.MOVE, Flag.LOOK, Flag.JUMP, Flag.TARGET));
+		setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK, Flag.JUMP, Flag.TARGET));
 	}
 
 	@Override
-	public boolean shouldExecute() {
+	public boolean canUse() {
 		return entity.isPassenger();
 	}
 }

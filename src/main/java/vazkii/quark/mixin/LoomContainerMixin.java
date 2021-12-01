@@ -4,10 +4,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-import net.minecraft.inventory.container.LoomContainer;
+import net.minecraft.world.inventory.LoomMenu;
 import vazkii.quark.content.tweaks.module.MoreBannerLayersModule;
 
-@Mixin(LoomContainer.class)
+@Mixin(LoomMenu.class)
 public class LoomContainerMixin {
 
 	@ModifyConstant(method = "onCraftMatrixChanged", constant = @Constant(intValue = 6))

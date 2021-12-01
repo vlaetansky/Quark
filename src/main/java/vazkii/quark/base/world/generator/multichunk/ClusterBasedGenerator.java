@@ -3,9 +3,9 @@ package vazkii.quark.base.world.generator.multichunk;
 import java.util.Random;
 import java.util.function.BooleanSupplier;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.WorldGenRegion;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.server.level.WorldGenRegion;
 import vazkii.quark.base.module.config.type.ClusterSizeConfig;
 import vazkii.quark.base.module.config.type.DimensionConfig;
 import vazkii.quark.base.world.generator.Generator;

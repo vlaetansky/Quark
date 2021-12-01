@@ -6,18 +6,18 @@ import java.util.Random;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.BlockHitResult;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.api.ITrowelable;
 import vazkii.quark.api.IUsageTickerOverride;
@@ -33,26 +33,26 @@ public class TrowelItem extends QuarkItem implements IUsageTickerOverride {
 	
 	public TrowelItem(QuarkModule module) {
 		super("trowel", module, new Item.Properties()
-				.maxDamage(255)
-				.group(ItemGroup.TOOLS));
+				.durability(255)
+				.tab(CreativeModeTab.TAB_TOOLS));
 	}
 	
 	@Nonnull
 	@Override
-	public ActionResultType onItemUse(ItemUseContext context) {
-		PlayerEntity player = context.getPlayer();
-		Hand hand = context.getHand();
+	public InteractionResult useOn(UseOnContext context) {
+		Player player = context.getPlayer();
+		InteractionHand hand = context.getHand();
 		
 		List<ItemStack> targets = new ArrayList<>();
-		for(int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
-			ItemStack stack = player.inventory.getStackInSlot(i);
+		for(int i = 0; i < Inventory.getSelectionSize(); i++) {
+			ItemStack stack = player.inventory.getItem(i);
 			if(isValidTarget(stack))
 				targets.add(stack);
 		}
 		
-		ItemStack ourStack = player.getHeldItem(hand);
+		ItemStack ourStack = player.getItemInHand(hand);
 		if(targets.isEmpty())
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 
 		long seed = ItemNBTHelper.getLong(ourStack, TAG_PLACING_SEED, 0);
 		Random rand = new Random(seed);
@@ -60,29 +60,29 @@ public class TrowelItem extends QuarkItem implements IUsageTickerOverride {
 		
 		ItemStack target = targets.get(rand.nextInt(targets.size()));
 		int count = target.getCount();
-		ActionResultType result = placeBlock(target, context);
+		InteractionResult result = placeBlock(target, context);
 		if(player.isCreative())
 			target.setCount(count);
 		
-		if(result.isSuccessOrConsume()) {
-			CompoundNBT cmp = target.serializeNBT();
+		if(result.consumesAction()) {
+			CompoundTag cmp = target.serializeNBT();
 			ItemNBTHelper.setCompound(ourStack, TAG_LAST_STACK, cmp);
 			
 			if(TrowelModule.maxDamage > 0)
-				MiscUtil.damageStack(player, hand, context.getItem(), 1);
+				MiscUtil.damageStack(player, hand, context.getItemInHand(), 1);
 		}
 		
 		return result;
 	}
 	
-	private ActionResultType placeBlock(ItemStack itemstack, ItemUseContext context) {
+	private InteractionResult placeBlock(ItemStack itemstack, UseOnContext context) {
 		if(isValidTarget(itemstack)) {
 			Item item = itemstack.getItem();
-			BlockItemUseContext newContext = new TrowelBlockItemUseContext(context, itemstack);
-			return item.onItemUse(newContext);
+			BlockPlaceContext newContext = new TrowelBlockItemUseContext(context, itemstack);
+			return item.useOn(newContext);
 		}
 
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 	
 	private static boolean isValidTarget(ItemStack stack) {
@@ -91,8 +91,8 @@ public class TrowelItem extends QuarkItem implements IUsageTickerOverride {
 	}
 
 	public static ItemStack getLastStack(ItemStack stack) {
-		CompoundNBT cmp = ItemNBTHelper.getCompound(stack, TAG_LAST_STACK, false);
-		return ItemStack.read(cmp);
+		CompoundTag cmp = ItemNBTHelper.getCompound(stack, TAG_LAST_STACK, false);
+		return ItemStack.of(cmp);
 	}
 	
 	@Override
@@ -101,7 +101,7 @@ public class TrowelItem extends QuarkItem implements IUsageTickerOverride {
 	}
 	
 	@Override
-	public boolean isDamageable() {
+	public boolean canBeDepleted() {
 		return TrowelModule.maxDamage > 0;
 	}
 	
@@ -110,11 +110,11 @@ public class TrowelItem extends QuarkItem implements IUsageTickerOverride {
 		return getLastStack(stack);
 	}
 	
-	class TrowelBlockItemUseContext extends BlockItemUseContext {
+	class TrowelBlockItemUseContext extends BlockPlaceContext {
 
-		public TrowelBlockItemUseContext(ItemUseContext context, ItemStack stack) {
-			super(context.getWorld(), context.getPlayer(), context.getHand(), stack, 
-					new BlockRayTraceResult(context.getHitVec(), context.getFace(), context.getPos(), context.isInside()));
+		public TrowelBlockItemUseContext(UseOnContext context, ItemStack stack) {
+			super(context.getLevel(), context.getPlayer(), context.getHand(), stack, 
+					new BlockHitResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), context.isInside()));
 		}
 		
 	}

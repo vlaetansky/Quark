@@ -2,45 +2,45 @@ package vazkii.quark.content.mobs.entity;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.particles.BlockParticleData;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.particles.RedstoneParticleData;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.NetworkHooks;
 import vazkii.quark.base.handler.QuarkSounds;
 
 public class SoulBeadEntity extends Entity {
 
-	private static final DataParameter<Integer> TARGET_X = EntityDataManager.createKey(SoulBeadEntity.class, DataSerializers.VARINT);
-	private static final DataParameter<Integer> TARGET_Z = EntityDataManager.createKey(SoulBeadEntity.class, DataSerializers.VARINT);
+	private static final EntityDataAccessor<Integer> TARGET_X = SynchedEntityData.defineId(SoulBeadEntity.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> TARGET_Z = SynchedEntityData.defineId(SoulBeadEntity.class, EntityDataSerializers.INT);
 
 	private int liveTicks = 0;
 	private static final String TAG_TARGET_X = "targetX";
 	private static final String TAG_TARGET_Z = "targetZ";
 	
-	public SoulBeadEntity(EntityType<? extends SoulBeadEntity> type, World worldIn) {
+	public SoulBeadEntity(EntityType<? extends SoulBeadEntity> type, Level worldIn) {
 		super(type, worldIn);
 	}
 	
 	public void setTarget(int x, int z) {
-		dataManager.set(TARGET_X, x);
-		dataManager.set(TARGET_Z, z);
+		entityData.set(TARGET_X, x);
+		entityData.set(TARGET_Z, z);
 	}
 
 	@Override
-	protected void registerData() {
-		dataManager.register(TARGET_X, 0);
-		dataManager.register(TARGET_Z, 0);
+	protected void defineSynchedData() {
+		entityData.define(TARGET_X, 0);
+		entityData.define(TARGET_Z, 0);
 	}
 	
 	@Override
@@ -58,11 +58,11 @@ public class SoulBeadEntity extends Entity {
 		if((maxLiveTime - liveTicks) < particles)
 			particles = (maxLiveTime - liveTicks);
 		
-		double posX = getPosX();
-		double posY = getPosY();
-		double posZ = getPosZ();
+		double posX = getX();
+		double posY = getY();
+		double posZ = getZ();
 		
-		Vector3d vec = new Vector3d((double) dataManager.get(TARGET_X), posY, (double) dataManager.get(TARGET_Z)).subtract(posX, posY, posZ).normalize().scale(scale);
+		Vec3 vec = new Vec3((double) entityData.get(TARGET_X), posY, (double) entityData.get(TARGET_Z)).subtract(posX, posY, posZ).normalize().scale(scale);
 		double bpx = posX + vec.x * liveTicks + Math.cos(trigArg) * rotateSpread;
 		double bpy = posY + vec.y * liveTicks + liveTicks * rise;
 		double bpz = posZ + vec.z * liveTicks + Math.sin(trigArg) * rotateSpread;
@@ -71,34 +71,34 @@ public class SoulBeadEntity extends Entity {
 			double px = bpx + (Math.random() - 0.5) * posSpread;
 			double py = bpy + (Math.random() - 0.5) * posSpread;
 			double pz = bpz + (Math.random() - 0.5) * posSpread;
-			world.addParticle(new RedstoneParticleData(0.2F, 0.12F, 0.1F, 1F), px, py, pz, 0, 0, 0);
+			level.addParticle(new DustParticleOptions(0.2F, 0.12F, 0.1F, 1F), px, py, pz, 0, 0, 0);
 			if(Math.random() < 0.05)
-				world.addParticle(new BlockParticleData(ParticleTypes.FALLING_DUST, Blocks.SOUL_SAND.getDefaultState()), px, py, pz, 0, 0, 0);
+				level.addParticle(new BlockParticleOption(ParticleTypes.FALLING_DUST, Blocks.SOUL_SAND.defaultBlockState()), px, py, pz, 0, 0, 0);
 		}
 		
 		if(Math.random() < 0.1)
-			world.playSound(null, bpx, bpy, bpz, QuarkSounds.ENTITY_SOUL_BEAD_IDLE, SoundCategory.PLAYERS, 0.2F, 1F);
+			level.playSound(null, bpx, bpy, bpz, QuarkSounds.ENTITY_SOUL_BEAD_IDLE, SoundSource.PLAYERS, 0.2F, 1F);
 
 		liveTicks++;
 		if(liveTicks > maxLiveTime)
-			setDead();
+			removeAfterChangingDimensions();
 	}
 	
 	@Override
-	public void writeAdditional(@Nonnull CompoundNBT compound) {
-		dataManager.set(TARGET_X, compound.getInt(TAG_TARGET_X));
-		dataManager.set(TARGET_Z, compound.getInt(TAG_TARGET_Z));
+	public void addAdditionalSaveData(@Nonnull CompoundTag compound) {
+		entityData.set(TARGET_X, compound.getInt(TAG_TARGET_X));
+		entityData.set(TARGET_Z, compound.getInt(TAG_TARGET_Z));
 	}
 
 	@Override
-	protected void readAdditional(@Nonnull CompoundNBT compound) {
-		compound.putInt(TAG_TARGET_X, dataManager.get(TARGET_X));
-		compound.putInt(TAG_TARGET_Z, dataManager.get(TARGET_Z));
+	protected void readAdditionalSaveData(@Nonnull CompoundTag compound) {
+		compound.putInt(TAG_TARGET_X, entityData.get(TARGET_X));
+		compound.putInt(TAG_TARGET_Z, entityData.get(TARGET_Z));
 	}
 
 	@Nonnull
 	@Override
-	public IPacket<?> createSpawnPacket() {
+	public Packet<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 

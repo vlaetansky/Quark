@@ -4,16 +4,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntitySpawnPlacementRegistry;
-import net.minecraft.entity.EntitySpawnPlacementRegistry.IPlacementPredicate;
-import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.world.biome.MobSpawnInfo;
-import net.minecraft.world.gen.Heightmap;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.SpawnPlacements.SpawnPredicate;
+import net.minecraft.world.entity.SpawnPlacements.Type;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.world.MobSpawnInfoBuilder;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -29,13 +29,13 @@ public class EntitySpawnHandler {
 
 	private static List<TrackedSpawnConfig> trackedSpawnConfigs = new LinkedList<>();
 
-	public static <T extends MobEntity> void registerSpawn(QuarkModule module, EntityType<T> entityType, EntityClassification classification, PlacementType placementType, Heightmap.Type heightMapType, IPlacementPredicate<T> placementPredicate, EntitySpawnConfig config) {
-		EntitySpawnPlacementRegistry.register(entityType, placementType, heightMapType, placementPredicate);
+	public static <T extends Mob> void registerSpawn(QuarkModule module, EntityType<T> entityType, MobCategory classification, Type placementType, Heightmap.Types heightMapType, SpawnPredicate<T> placementPredicate, EntitySpawnConfig config) {
+		SpawnPlacements.register(entityType, placementType, heightMapType, placementPredicate);
 
 		track(module, entityType, classification, config, false);
 	}
 	
-	public static <T extends MobEntity> void track(QuarkModule module, EntityType<T> entityType, EntityClassification classification, EntitySpawnConfig config, boolean secondary) {
+	public static <T extends Mob> void track(QuarkModule module, EntityType<T> entityType, MobCategory classification, EntitySpawnConfig config, boolean secondary) {
 		config.setModule(module);
 		trackedSpawnConfigs.add(new TrackedSpawnConfig(entityType, classification, config, secondary));
 	}
@@ -46,7 +46,7 @@ public class EntitySpawnHandler {
 
 	public static void addEgg(EntityType<?> entityType, int color1, int color2, QuarkModule module, BooleanSupplier enabledSupplier) {
 		new QuarkSpawnEggItem(entityType, color1,  color2, entityType.getRegistryName().getPath() + "_spawn_egg", module, 
-				new Item.Properties().group(ItemGroup.MISC))
+				new Item.Properties().tab(CreativeModeTab.TAB_MISC))
 		.setCondition(enabledSupplier);
 	}
 
@@ -55,7 +55,7 @@ public class EntitySpawnHandler {
 		MobSpawnInfoBuilder builder = ev.getSpawns();
 
 		for(TrackedSpawnConfig c : trackedSpawnConfigs) {
-			List<MobSpawnInfo.Spawners> l = builder.getSpawner(c.classification);
+			List<MobSpawnSettings.SpawnerData> l = builder.getSpawner(c.classification);
 			if(!c.secondary)
 				l.removeIf(e -> e.type.equals(c.entityType));
 			
@@ -64,7 +64,7 @@ public class EntitySpawnHandler {
 				
 			if(c.config instanceof CostSensitiveEntitySpawnConfig) {
 				CostSensitiveEntitySpawnConfig csc = (CostSensitiveEntitySpawnConfig) c.config;
-				builder.withSpawnCost(c.entityType, csc.spawnCost, csc.maxCost);
+				builder.addMobCharge(c.entityType, csc.spawnCost, csc.maxCost);
 			}
 		}
 	}
@@ -77,12 +77,12 @@ public class EntitySpawnHandler {
 	private static class TrackedSpawnConfig {
 
 		final EntityType<?> entityType;
-		final EntityClassification classification;
+		final MobCategory classification;
 		final EntitySpawnConfig config;
 		final boolean secondary;
-		MobSpawnInfo.Spawners entry;
+		MobSpawnSettings.SpawnerData entry;
 
-		TrackedSpawnConfig(EntityType<?> entityType, EntityClassification classification, EntitySpawnConfig config, boolean secondary) {
+		TrackedSpawnConfig(EntityType<?> entityType, MobCategory classification, EntitySpawnConfig config, boolean secondary) {
 			this.entityType = entityType;
 			this.classification = classification;
 			this.config = config;
@@ -91,7 +91,7 @@ public class EntitySpawnHandler {
 		}
 
 		void refresh() {
-			entry = new MobSpawnInfo.Spawners(entityType, config.spawnWeight, Math.min(config.minGroupSize, config.maxGroupSize), Math.max(config.minGroupSize, config.maxGroupSize));
+			entry = new MobSpawnSettings.SpawnerData(entityType, config.spawnWeight, Math.min(config.minGroupSize, config.maxGroupSize), Math.max(config.minGroupSize, config.maxGroupSize));
 		}
 
 	}

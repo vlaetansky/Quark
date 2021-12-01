@@ -1,11 +1,11 @@
 package vazkii.quark.content.building.module;
 
-import net.minecraft.block.AbstractBlock.Properties;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.state.Property;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.resources.ResourceLocation;
 import vazkii.quark.base.block.QuarkPaneBlock;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.handler.StructureBlockReplacementHandler;
@@ -26,7 +26,7 @@ public class GoldBarsModule extends QuarkModule {
 	
 	@Override
 	public void construct() {
-		gold_bars = new QuarkPaneBlock("gold_bars", this, Properties.from(Blocks.IRON_BARS), RenderTypeSkeleton.CUTOUT);
+		gold_bars = new QuarkPaneBlock("gold_bars", this, Properties.copy(Blocks.IRON_BARS), RenderTypeSkeleton.CUTOUT);
 		
 		StructureBlockReplacementHandler.functions.add(GoldBarsModule::getGenerationBarBlockState);
 	}
@@ -45,12 +45,12 @@ public class GoldBarsModule extends QuarkModule {
 			String name = res.toString();
 			
 			if("minecraft:fortress".equals(name)) {
-				BlockState newState = gold_bars.getDefaultState();
+				BlockState newState = gold_bars.defaultBlockState();
 				for(Property prop : current.getProperties())
 					// both blocks have same properties in vanilla, so this check isn't needed,
 					// but some mods add additional block states to fences, then this would fail
 					if (newState.hasProperty(prop))
-					newState = newState.with(prop, current.get(prop));
+					newState = newState.setValue(prop, current.getValue(prop));
 				return newState;
 			}
 		}

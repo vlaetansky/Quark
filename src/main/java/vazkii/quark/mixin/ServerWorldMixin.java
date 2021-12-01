@@ -6,13 +6,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import vazkii.quark.content.mobs.entity.CrabEntity;
 import vazkii.quark.content.tweaks.module.ImprovedSleepingModule;
 
-@Mixin(ServerWorld.class)
+@Mixin(ServerLevel.class)
 public class ServerWorldMixin {
 
 	@Shadow
@@ -24,8 +24,8 @@ public class ServerWorldMixin {
 	}
 
 	@Inject(method = "playEvent", at = @At("HEAD"))
-	private void rave(PlayerEntity player, int type, BlockPos pos, int data, CallbackInfo callbackInfo) {
+	private void rave(Player player, int type, BlockPos pos, int data, CallbackInfo callbackInfo) {
 		if(type == 1010)
-			CrabEntity.rave((ServerWorld) (Object) this, pos, data != 0);
+			CrabEntity.rave((ServerLevel) (Object) this, pos, data != 0);
 	}
 }

@@ -98,7 +98,7 @@ public class ColorMatrixConfig extends AbstractConfigType implements IWidgetProv
 	@OnlyIn(Dist.CLIENT)
 	public void addWidgets(CategoryScreen parent, List<WidgetWrapper> widgets) {
 		Minecraft minecraft = Minecraft.getInstance();
-		widgets.add(new WidgetWrapper(new PencilButton(230, 3, b -> minecraft.displayGuiScreen(new ColorMatrixInputScreen(parent, this, category)))));
+		widgets.add(new WidgetWrapper(new PencilButton(230, 3, b -> minecraft.setScreen(new ColorMatrixInputScreen(parent, this, category)))));
 	}
 
 	@Override

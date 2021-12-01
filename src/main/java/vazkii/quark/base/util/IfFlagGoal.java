@@ -5,7 +5,9 @@ import java.util.function.BooleanSupplier;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.Goal;
+
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 /**
  * @author WireSegal
@@ -22,28 +24,28 @@ public class IfFlagGoal extends Goal {
     }
 
     @Override
-    public boolean shouldExecute() {
-        return isEnabled.getAsBoolean() && parent.shouldExecute();
+    public boolean canUse() {
+        return isEnabled.getAsBoolean() && parent.canUse();
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
-        return isEnabled.getAsBoolean() && parent.shouldContinueExecuting();
+    public boolean canContinueToUse() {
+        return isEnabled.getAsBoolean() && parent.canContinueToUse();
     }
 
     @Override
-    public boolean isPreemptible() {
-        return parent.isPreemptible();
+    public boolean isInterruptable() {
+        return parent.isInterruptable();
     }
 
     @Override
-    public void startExecuting() {
-        parent.startExecuting();
+    public void start() {
+        parent.start();
     }
 
     @Override
-    public void resetTask() {
-        parent.resetTask();
+    public void stop() {
+        parent.stop();
     }
 
     @Override
@@ -53,7 +55,7 @@ public class IfFlagGoal extends Goal {
 
     @Nonnull
     @Override
-    public EnumSet<Flag> getMutexFlags() {
-        return parent.getMutexFlags();
+    public EnumSet<Flag> getFlags() {
+        return parent.getFlags();
     }
 }

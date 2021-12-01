@@ -3,9 +3,9 @@ package vazkii.quark.base.handler;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
@@ -39,7 +39,7 @@ public class RenderLayerHandler {
 		}
 		
 		for(Block b : mapping.keySet())
-			RenderTypeLookup.setRenderLayer(b, renderTypes.get(mapping.get(b)));
+			ItemBlockRenderTypes.setRenderLayer(b, renderTypes.get(mapping.get(b)));
 		
 		inheritances.clear();
 		mapping.clear();
@@ -63,10 +63,10 @@ public class RenderLayerHandler {
 		if(renderTypes == null) {
 			renderTypes = new HashMap<>();
 			
-			renderTypes.put(RenderTypeSkeleton.SOLID, RenderType.getSolid());
-			renderTypes.put(RenderTypeSkeleton.CUTOUT, RenderType.getCutout());
-			renderTypes.put(RenderTypeSkeleton.CUTOUT_MIPPED, RenderType.getCutoutMipped());
-			renderTypes.put(RenderTypeSkeleton.TRANSLUCENT, RenderType.getTranslucent());
+			renderTypes.put(RenderTypeSkeleton.SOLID, RenderType.solid());
+			renderTypes.put(RenderTypeSkeleton.CUTOUT, RenderType.cutout());
+			renderTypes.put(RenderTypeSkeleton.CUTOUT_MIPPED, RenderType.cutoutMipped());
+			renderTypes.put(RenderTypeSkeleton.TRANSLUCENT, RenderType.translucent());
 		}
 	}
 	

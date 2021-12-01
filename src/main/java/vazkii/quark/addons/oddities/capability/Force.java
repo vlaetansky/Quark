@@ -1,8 +1,8 @@
 package vazkii.quark.addons.oddities.capability;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3i;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 
 /**
  * @author WireSegal
@@ -44,9 +44,9 @@ public class Force {
     }
 
 
-    public Vector3i add(Vector3i force) {
-        return new Vector3i(force.getX() + direction.getXOffset() * magnitude,
-                force.getY() + direction.getYOffset() * magnitude,
-                force.getZ() + direction.getZOffset() * magnitude);
+    public Vec3i add(Vec3i force) {
+        return new Vec3i(force.getX() + direction.getStepX() * magnitude,
+                force.getY() + direction.getStepY() * magnitude,
+                force.getZ() + direction.getStepZ() * magnitude);
     }
 }

@@ -1,13 +1,13 @@
 package vazkii.quark.content.tweaks.module;
 
-import net.minecraft.entity.passive.WolfEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.AnimalTameEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -31,12 +31,12 @@ public class PatTheDogsModule extends QuarkModule {
 
     @SubscribeEvent
     public void onWolfAppear(EntityJoinWorldEvent event) {
-        if (dogsWantLove > 0 && event.getEntity() instanceof WolfEntity) {
-            WolfEntity wolf = (WolfEntity) event.getEntity();
-            boolean alreadySetUp = wolf.goalSelector.goals.stream().anyMatch((goal) -> goal.getGoal() instanceof WantLoveGoal);
+        if (dogsWantLove > 0 && event.getEntity() instanceof Wolf) {
+            Wolf wolf = (Wolf) event.getEntity();
+            boolean alreadySetUp = wolf.goalSelector.availableGoals.stream().anyMatch((goal) -> goal.getGoal() instanceof WantLoveGoal);
 
             if (!alreadySetUp) {
-                wolf.goalSelector.addGoal(4, new NuzzleGoal(wolf, 0.5F, 16, 2, SoundEvents.ENTITY_WOLF_WHINE));
+                wolf.goalSelector.addGoal(4, new NuzzleGoal(wolf, 0.5F, 16, 2, SoundEvents.WOLF_WHINE));
                 wolf.goalSelector.addGoal(5, new WantLoveGoal(wolf, 0.2F));
             }
         }
@@ -44,22 +44,22 @@ public class PatTheDogsModule extends QuarkModule {
 
     @SubscribeEvent
     public void onInteract(PlayerInteractEvent.EntityInteract event) {
-        if(event.getTarget() instanceof WolfEntity) {
-            WolfEntity wolf = (WolfEntity) event.getTarget();
-            PlayerEntity player = event.getPlayer();
+        if(event.getTarget() instanceof Wolf) {
+            Wolf wolf = (Wolf) event.getTarget();
+            Player player = event.getPlayer();
 
-            if(player.isDiscrete() && player.getHeldItemMainhand().isEmpty()) {
-                if(event.getHand() == Hand.MAIN_HAND && WantLoveGoal.canPet(wolf)) {
-                    if(player.world instanceof ServerWorld) {
-                    	Vector3d pos = wolf.getPositionVec();
-                        ((ServerWorld) player.world).spawnParticle(ParticleTypes.HEART, pos.x, pos.y + 0.5, pos.z, 1, 0, 0, 0, 0.1);
-                        wolf.playSound(SoundEvents.ENTITY_WOLF_WHINE, 1F, 0.5F + (float) Math.random() * 0.5F);
-                    } else player.swingArm(Hand.MAIN_HAND);
+            if(player.isDiscrete() && player.getMainHandItem().isEmpty()) {
+                if(event.getHand() == InteractionHand.MAIN_HAND && WantLoveGoal.canPet(wolf)) {
+                    if(player.level instanceof ServerLevel) {
+                    	Vec3 pos = wolf.position();
+                        ((ServerLevel) player.level).sendParticles(ParticleTypes.HEART, pos.x, pos.y + 0.5, pos.z, 1, 0, 0, 0, 0.1);
+                        wolf.playSound(SoundEvents.WOLF_WHINE, 1F, 0.5F + (float) Math.random() * 0.5F);
+                    } else player.swing(InteractionHand.MAIN_HAND);
 
                     WantLoveGoal.setPetTime(wolf);
 
-                    if (wolf instanceof FoxhoundEntity && !player.isInWater() && !player.isPotionActive(Effects.FIRE_RESISTANCE) && !player.isCreative())
-                        player.setFire(5);
+                    if (wolf instanceof FoxhoundEntity && !player.isInWater() && !player.hasEffect(MobEffects.FIRE_RESISTANCE) && !player.isCreative())
+                        player.setSecondsOnFire(5);
                 }
 
                 event.setCanceled(true);
@@ -69,8 +69,8 @@ public class PatTheDogsModule extends QuarkModule {
 
     @SubscribeEvent
     public void onTame(AnimalTameEvent event) {
-        if(event.getAnimal() instanceof WolfEntity) {
-            WolfEntity wolf = (WolfEntity) event.getAnimal();
+        if(event.getAnimal() instanceof Wolf) {
+            Wolf wolf = (Wolf) event.getAnimal();
             WantLoveGoal.setPetTime(wolf);
         }
     }

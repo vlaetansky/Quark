@@ -3,9 +3,9 @@ package vazkii.quark.content.management.module;
 import java.util.function.BooleanSupplier;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.base.client.handler.InventoryButtonHandler;
@@ -35,7 +35,7 @@ public class InventorySortingModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		KeyBinding sortPlayer = ModKeybindHandler.init("sort_player", null, ModKeybindHandler.INV_GROUP);
+		KeyMapping sortPlayer = ModKeybindHandler.init("sort_player", null, ModKeybindHandler.INV_GROUP);
 
 		InventoryButtonHandler.addButtonProvider(this, ButtonTargetType.PLAYER_INVENTORY, 0,
 				sortPlayer,
@@ -77,6 +77,6 @@ public class InventorySortingModule extends QuarkModule {
 
 	@OnlyIn(Dist.CLIENT)
 	private void click() {
-		Minecraft.getInstance().getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+		Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 	}
 }

@@ -1,18 +1,18 @@
 package vazkii.quark.content.tweaks.module;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.DoorBlock;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.state.properties.DoorHingeSide;
-import net.minecraft.state.properties.DoubleBlockHalf;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.properties.DoorHingeSide;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event.Result;
@@ -30,10 +30,10 @@ public class DoubleDoorOpeningModule extends QuarkModule {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
-		if(!event.getWorld().isRemote || event.getPlayer().isDiscrete() || event.isCanceled() || event.getResult() == Result.DENY || event.getUseBlock() == Result.DENY)
+		if(!event.getWorld().isClientSide || event.getPlayer().isDiscrete() || event.isCanceled() || event.getResult() == Result.DENY || event.getUseBlock() == Result.DENY)
 			return;
 
-		World world = event.getWorld();
+		Level world = event.getWorld();
 		BlockPos pos = event.getPos();
 		
 		if(world.getBlockState(pos).getBlock() instanceof DoorBlock) {
@@ -42,23 +42,23 @@ public class DoubleDoorOpeningModule extends QuarkModule {
 		}
 	}
 	
-	public static void openDoor(World world, PlayerEntity player, BlockPos pos) {
+	public static void openDoor(Level world, Player player, BlockPos pos) {
 		if(!ModuleLoader.INSTANCE.isModuleEnabled(DoubleDoorOpeningModule.class) || world == null)
 			return;
 		
 		BlockState state = world.getBlockState(pos);
-		Direction direction = state.get(DoorBlock.FACING);
-		boolean isOpen = state.get(DoorBlock.OPEN);
-		DoorHingeSide isMirrored = state.get(DoorBlock.HINGE);
+		Direction direction = state.getValue(DoorBlock.FACING);
+		boolean isOpen = state.getValue(DoorBlock.OPEN);
+		DoorHingeSide isMirrored = state.getValue(DoorBlock.HINGE);
 
-		BlockPos mirrorPos = pos.offset(isMirrored == DoorHingeSide.RIGHT ? direction.rotateYCCW() : direction.rotateY());
-		BlockPos doorPos = state.get(DoorBlock.HALF) == DoubleBlockHalf.LOWER ? mirrorPos : mirrorPos.down();
+		BlockPos mirrorPos = pos.relative(isMirrored == DoorHingeSide.RIGHT ? direction.getCounterClockWise() : direction.getClockWise());
+		BlockPos doorPos = state.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER ? mirrorPos : mirrorPos.below();
 		BlockState other = world.getBlockState(doorPos);
 
-		if(state.getMaterial() != Material.IRON && other.getBlock() == state.getBlock() && other.get(DoorBlock.FACING) == direction && other.get(DoorBlock.OPEN) == isOpen && other.get(DoorBlock.HINGE) != isMirrored) {
-			RayTraceResult res = new BlockRayTraceResult(new Vector3d(doorPos.getX() + 0.5, doorPos.getY() + 0.5, doorPos.getZ() + 0.5), direction, doorPos, false);
-			if(res instanceof BlockRayTraceResult)
-				other.onBlockActivated(world, player, Hand.MAIN_HAND, (BlockRayTraceResult) res);
+		if(state.getMaterial() != Material.METAL && other.getBlock() == state.getBlock() && other.getValue(DoorBlock.FACING) == direction && other.getValue(DoorBlock.OPEN) == isOpen && other.getValue(DoorBlock.HINGE) != isMirrored) {
+			HitResult res = new BlockHitResult(new Vec3(doorPos.getX() + 0.5, doorPos.getY() + 0.5, doorPos.getZ() + 0.5), direction, doorPos, false);
+			if(res instanceof BlockHitResult)
+				other.use(world, player, InteractionHand.MAIN_HAND, (BlockHitResult) res);
 		}
 	}
 	

@@ -5,9 +5,9 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableSet;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ComposterBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ComposterBlock;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
@@ -35,7 +35,7 @@ public class LeafCarpetModule extends QuarkModule {
 		enqueue(() -> {
 			for(LeafCarpetBlock c : carpets) {
 				if(c.asItem() != null)
-					ComposterBlock.CHANCES.put(c.asItem(), 0.2F);
+					ComposterBlock.COMPOSTABLES.put(c.asItem(), 0.2F);
 			}
 		});
 	}

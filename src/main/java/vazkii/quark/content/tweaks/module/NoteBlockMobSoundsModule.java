@@ -1,15 +1,15 @@
 package vazkii.quark.content.tweaks.module;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.WallSkullBlock;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.WallSkullBlock;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.event.world.NoteBlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.handler.MiscUtil;
@@ -29,7 +29,7 @@ public class NoteBlockMobSoundsModule extends QuarkModule {
 
 	@SubscribeEvent
 	public void noteBlockPlayed(NoteBlockEvent.Play event) {
-		IWorld world = event.getWorld();
+		LevelAccessor world = event.getWorld();
 		BlockPos pos = event.getPos();
 		if(world.getBlockState(pos).getBlock() != Blocks.NOTE_BLOCK)
 			return;
@@ -45,25 +45,25 @@ public class NoteBlockMobSoundsModule extends QuarkModule {
 			event.setCanceled(true);
 			
 			float pitch = (float) Math.pow(2.0, (event.getVanillaNoteId() - 12) / 12.0);
-			world.playSound(null, pos.up(), sound, SoundCategory.BLOCKS, 1F, pitch);
+			world.playSound(null, pos.above(), sound, SoundSource.BLOCKS, 1F, pitch);
 		}
 	}
 
-	public SoundEvent getSoundEvent(IWorld world, BlockPos pos, Direction direction) {
-		BlockState state = world.getBlockState(pos.offset(direction)); 
+	public SoundEvent getSoundEvent(LevelAccessor world, BlockPos pos, Direction direction) {
+		BlockState state = world.getBlockState(pos.relative(direction)); 
 		Block block = state.getBlock();
 		
-		if(block instanceof WallSkullBlock && state.get(WallSkullBlock.FACING) == direction) {
+		if(block instanceof WallSkullBlock && state.getValue(WallSkullBlock.FACING) == direction) {
 			if(block == Blocks.SKELETON_WALL_SKULL)
-				return SoundEvents.ENTITY_SKELETON_AMBIENT;
+				return SoundEvents.SKELETON_AMBIENT;
 			else if(block == Blocks.WITHER_SKELETON_WALL_SKULL)
-				return SoundEvents.ENTITY_WITHER_SKELETON_AMBIENT;
+				return SoundEvents.WITHER_SKELETON_AMBIENT;
 			else if(block == Blocks.ZOMBIE_WALL_HEAD)
-				return SoundEvents.ENTITY_ZOMBIE_AMBIENT;
+				return SoundEvents.ZOMBIE_AMBIENT;
 			else if(block == Blocks.CREEPER_WALL_HEAD)
-				return SoundEvents.ENTITY_CREEPER_PRIMED;
+				return SoundEvents.CREEPER_PRIMED;
 			else if(block == Blocks.DRAGON_WALL_HEAD)
-				return SoundEvents.ENTITY_ENDER_DRAGON_AMBIENT;
+				return SoundEvents.ENDER_DRAGON_AMBIENT;
 		}
 		
 		return null;

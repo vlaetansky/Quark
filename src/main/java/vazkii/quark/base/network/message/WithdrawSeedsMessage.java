@@ -2,8 +2,8 @@ package vazkii.quark.base.network.message;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import vazkii.arl.network.IMessage;
 import vazkii.quark.content.tools.item.SeedPouchItem;
@@ -24,9 +24,9 @@ public class WithdrawSeedsMessage implements IMessage {
 	@Override
 	public boolean receive(Context context) {
 		context.enqueueWork(() -> {
-			PlayerEntity player = context.getSender();
-			ItemStack pouch = player.openContainer.getSlot(slot).getStack();
-			ItemStack held = player.inventory.getItemStack();
+			Player player = context.getSender();
+			ItemStack pouch = player.containerMenu.getSlot(slot).getItem();
+			ItemStack held = player.inventory.getCarried();
 
 			if(pouch.getItem() == SeedPouchModule.seed_pouch) {
     			Pair<ItemStack, Integer> contents = SeedPouchItem.getContents(pouch);
@@ -38,7 +38,7 @@ public class WithdrawSeedsMessage implements IMessage {
     					
     					ItemStack result = seed.copy();
     					result.setCount(takeOut);
-    					player.inventory.setItemStack(result);
+    					player.inventory.setCarried(result);
 
     					SeedPouchItem.setCount(pouch, pouchCount - takeOut);
     				}

@@ -3,15 +3,17 @@ package vazkii.quark.content.world.gen;
 import java.util.Random;
 import java.util.function.BooleanSupplier;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.WorldGenRegion;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.server.level.WorldGenRegion;
 import vazkii.quark.base.world.generator.multichunk.ClusterBasedGenerator;
 import vazkii.quark.content.world.config.AirStoneClusterConfig;
 import vazkii.quark.content.world.config.BigStoneClusterConfig;
 import vazkii.quark.content.world.module.BigStoneClustersModule;
+
+import vazkii.quark.base.world.generator.multichunk.ClusterBasedGenerator.IGenerationContext;
 
 public class BigStoneClusterGenerator extends ClusterBasedGenerator {
 
@@ -39,7 +41,7 @@ public class BigStoneClusterGenerator extends ClusterBasedGenerator {
 			int lower = Math.abs(config.minYLevel);
 			int range = Math.abs(config.maxYLevel - config.minYLevel);
 
-			BlockPos pos = chunkLeft.add(random.nextInt(16), random.nextInt(range) + lower, random.nextInt(16));
+			BlockPos pos = chunkLeft.offset(random.nextInt(16), random.nextInt(range) + lower, random.nextInt(16));
 			sources[0] = pos;
 		} else sources = new BlockPos[0];
 
@@ -55,15 +57,15 @@ public class BigStoneClusterGenerator extends ClusterBasedGenerator {
 	public IGenerationContext createContext(BlockPos src, ChunkGenerator generator, Random random, BlockPos chunkCorner, WorldGenRegion world) {
 		return (pos, noise) -> {
 			if(canPlaceBlock(world, pos))
-				world.setBlockState(pos, placeState, 0);
+				world.setBlock(pos, placeState, 0);
 		};
 	}
 	
-	private boolean canPlaceBlock(IServerWorld world, BlockPos pos) {
+	private boolean canPlaceBlock(ServerLevelAccessor world, BlockPos pos) {
 		if(config instanceof AirStoneClusterConfig && ((AirStoneClusterConfig) config).generateInAir)
 			return world.getBlockState(pos).isAir();
 		
-		return BigStoneClustersModule.blockReplacePredicate.test(world.getWorld(), world.getBlockState(pos).getBlock());
+		return BigStoneClustersModule.blockReplacePredicate.test(world.getLevel(), world.getBlockState(pos).getBlock());
 	}
 	
 }

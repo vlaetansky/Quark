@@ -3,10 +3,10 @@ package vazkii.quark.base.handler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.Constants;
@@ -45,13 +45,13 @@ public class ProxiedItemStackHandler implements IItemHandler, IItemHandlerModifi
 		this.size = size;
 	}
 
-	private ListNBT getStackList() {
-		ListNBT list = ItemNBTHelper.getList(stack, key, Constants.NBT.TAG_COMPOUND, true);
+	private ListTag getStackList() {
+		ListTag list = ItemNBTHelper.getList(stack, key, Constants.NBT.TAG_COMPOUND, true);
 		if (list == null)
-			ItemNBTHelper.setList(stack, key, list = new ListNBT());
+			ItemNBTHelper.setList(stack, key, list = new ListTag());
 
 		while (list.size() < size)
-			list.add(new CompoundNBT());
+			list.add(new CompoundTag());
 
 		return list;
 	}
@@ -62,7 +62,7 @@ public class ProxiedItemStackHandler implements IItemHandler, IItemHandlerModifi
 	}
 
 	private ItemStack readStack(int index) {
-		return ItemStack.read(getStackList().getCompound(index));
+		return ItemStack.of(getStackList().getCompound(index));
 	}
 
 	@Override

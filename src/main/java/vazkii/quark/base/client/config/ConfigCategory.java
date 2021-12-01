@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 
 import org.apache.commons.lang3.text.WordUtils;
 
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.api.config.IConfigElement;
@@ -161,7 +161,7 @@ public class ConfigCategory extends AbstractConfigElement implements IConfigCate
 			ret = ((IWidgetProvider) holderObject).getSubtitle();
 		else {
 			int size = subElements.size();
-			ret = (size == 1 ? I18n.format("quark.gui.config.onechild") : I18n.format("quark.gui.config.nchildren", subElements.size()));
+			ret = (size == 1 ? I18n.get("quark.gui.config.onechild") : I18n.get("quark.gui.config.nchildren", subElements.size()));
 		}
 		
 		if(ret.length() > 30)

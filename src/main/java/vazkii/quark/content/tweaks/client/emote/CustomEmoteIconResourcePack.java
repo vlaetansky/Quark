@@ -16,17 +16,17 @@ import javax.annotation.Nonnull;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 
-import net.minecraft.resources.ResourcePack;
-import net.minecraft.resources.ResourcePackType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.ResourceLocationException;
+import net.minecraft.server.packs.AbstractPackResources;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.ResourceLocationException;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.base.Quark;
 import vazkii.quark.content.tweaks.module.EmotesModule;
 
 @OnlyIn(Dist.CLIENT)
-public class CustomEmoteIconResourcePack extends ResourcePack {
+public class CustomEmoteIconResourcePack extends AbstractPackResources {
 
 	private final List<String> verifiedNames = new ArrayList<>();
 	private final List<String> existingNames = new ArrayList<>();
@@ -37,15 +37,15 @@ public class CustomEmoteIconResourcePack extends ResourcePack {
 
 	@Nonnull
 	@Override
-	public Set<String> getResourceNamespaces(@Nonnull ResourcePackType type) {
-		if (type == ResourcePackType.CLIENT_RESOURCES)
+	public Set<String> getNamespaces(@Nonnull PackType type) {
+		if (type == PackType.CLIENT_RESOURCES)
 			return ImmutableSet.of(EmoteHandler.CUSTOM_EMOTE_NAMESPACE);
 		return ImmutableSet.of();
 	}
 
 	@Nonnull
 	@Override
-	protected InputStream getInputStream(@Nonnull String name) throws IOException {
+	protected InputStream getResource(@Nonnull String name) throws IOException {
 		if(name.equals("pack.mcmeta"))
 			return Quark.class.getResourceAsStream("/proxypack.mcmeta");
 		
@@ -61,11 +61,11 @@ public class CustomEmoteIconResourcePack extends ResourcePack {
 	
 	@Nonnull
 	@Override
-	public Collection<ResourceLocation> getAllResourceLocations(@Nonnull ResourcePackType type, @Nonnull String pathIn, String idk, int maxDepth, @Nonnull Predicate<String> filter) {
-		File rootPath = new File(this.file, type.getDirectoryName());
+	public Collection<ResourceLocation> getResources(@Nonnull PackType type, @Nonnull String pathIn, String idk, int maxDepth, @Nonnull Predicate<String> filter) {
+		File rootPath = new File(this.file, type.getDirectory());
 		List<ResourceLocation> allResources = Lists.newArrayList();
 
-		for (String namespace : this.getResourceNamespaces(type))
+		for (String namespace : this.getNamespaces(type))
 			this.crawl(new File(new File(rootPath, namespace), pathIn), maxDepth, namespace, allResources, pathIn + "/", filter);
 
 		return allResources;
@@ -95,7 +95,7 @@ public class CustomEmoteIconResourcePack extends ResourcePack {
 	}
 
 	@Override
-	protected boolean resourceExists(@Nonnull String name) {
+	protected boolean hasResource(@Nonnull String name) {
 		if(!verifiedNames.contains(name)) {
 			File file = getFile(name);
 			if(file.exists())

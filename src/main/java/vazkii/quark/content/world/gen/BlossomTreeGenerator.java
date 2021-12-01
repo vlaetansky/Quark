@@ -2,16 +2,16 @@ package vazkii.quark.content.world.gen;
 
 import java.util.Random;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SaplingBlock;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.Heightmap.Type;
-import net.minecraft.world.gen.WorldGenRegion;
-import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SaplingBlock;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.Heightmap.Types;
+import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.world.level.levelgen.feature.Feature;
 import vazkii.quark.base.world.generator.Generator;
 import vazkii.quark.content.world.block.BlossomSaplingBlock.BlossomTree;
 import vazkii.quark.content.world.config.BlossomTreeConfig;
@@ -29,18 +29,18 @@ public class BlossomTreeGenerator extends Generator {
 
 	@Override
 	public void generateChunk(WorldGenRegion worldIn, ChunkGenerator generator, Random rand, BlockPos pos) {
-		BlockPos placePos = pos.add(rand.nextInt(16), 0, rand.nextInt(16));
+		BlockPos placePos = pos.offset(rand.nextInt(16), 0, rand.nextInt(16));
 		if(config.biomeConfig.canSpawn(getBiome(worldIn, placePos, false)) && rand.nextInt(config.rarity) == 0) {
-			placePos = worldIn.getHeight(Type.MOTION_BLOCKING, placePos).down();
+			placePos = worldIn.getHeightmapPos(Types.MOTION_BLOCKING, placePos).below();
 
 			BlockState state = worldIn.getBlockState(placePos);
 			if(state.getBlock().canSustainPlant(state, worldIn, pos, Direction.UP, (SaplingBlock) Blocks.OAK_SAPLING)) {
-				BlockPos up = placePos.up();
+				BlockPos up = placePos.above();
 				BlockState upState = worldIn.getBlockState(up);
-				if(upState.isReplaceable(Fluids.WATER))
-					worldIn.setBlockState(up, Blocks.AIR.getDefaultState(), 0);
+				if(upState.canBeReplaced(Fluids.WATER))
+					worldIn.setBlock(up, Blocks.AIR.defaultBlockState(), 0);
 				
-				Feature.TREE.func_241855_a(worldIn, generator, rand, placePos, tree.config);
+				Feature.TREE.place(worldIn, generator, rand, placePos, tree.config);
 			}
 		}
 	}

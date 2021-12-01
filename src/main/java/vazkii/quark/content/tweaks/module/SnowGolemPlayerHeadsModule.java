@@ -1,12 +1,12 @@
 package vazkii.quark.content.tweaks.module;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.monster.WitchEntity;
-import net.minecraft.entity.passive.SnowGolemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Witch;
+import net.minecraft.world.entity.animal.SnowGolem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.arl.util.ItemNBTHelper;
@@ -21,13 +21,13 @@ public class SnowGolemPlayerHeadsModule extends QuarkModule {
 	public void onDrops(LivingDropsEvent event) {
 		Entity e = event.getEntity();
 
-		if(e.hasCustomName() && e instanceof SnowGolemEntity && event.getSource().getTrueSource() != null && event.getSource().getTrueSource() instanceof WitchEntity) {
-			SnowGolemEntity snowman = (SnowGolemEntity) e;
-			if(snowman.isPumpkinEquipped()) { 
+		if(e.hasCustomName() && e instanceof SnowGolem && event.getSource().getEntity() != null && event.getSource().getEntity() instanceof Witch) {
+			SnowGolem snowman = (SnowGolem) e;
+			if(snowman.hasPumpkin()) { 
 				ItemStack stack = new ItemStack(Items.PLAYER_HEAD);
 				ItemNBTHelper.setString(stack, "SkullOwner", e.getCustomName().getString());
-				Vector3d pos = e.getPositionVec();
-				event.getDrops().add(new ItemEntity(e.getEntityWorld(), pos.x, pos.y, pos.z, stack));
+				Vec3 pos = e.position();
+				event.getDrops().add(new ItemEntity(e.getCommandSenderWorld(), pos.x, pos.y, pos.z, stack));
 			}
 		}
 	}

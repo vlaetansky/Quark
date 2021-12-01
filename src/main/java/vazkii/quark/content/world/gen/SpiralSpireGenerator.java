@@ -2,13 +2,13 @@ package vazkii.quark.content.world.gen;
 
 import java.util.Random;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3i;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.WorldGenRegion;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.server.level.WorldGenRegion;
 import vazkii.quark.base.module.config.type.DimensionConfig;
 import vazkii.quark.base.world.generator.multichunk.MultiChunkFeatureGenerator;
 import vazkii.quark.content.world.module.NewStoneTypesModule;
@@ -27,17 +27,17 @@ public class SpiralSpireGenerator extends MultiChunkFeatureGenerator {
 
 	@Override
 	public void generateChunkPart(BlockPos src, ChunkGenerator generator, Random random, BlockPos chunkCorner, WorldGenRegion world) {
-		double dist = (chunkCorner.distanceSq(src)) / ((16 * SpiralSpiresModule.radius) * (16 * SpiralSpiresModule.radius));
+		double dist = (chunkCorner.distSqr(src)) / ((16 * SpiralSpiresModule.radius) * (16 * SpiralSpiresModule.radius));
 		if(dist > 0.5 && random.nextDouble() < (1.5F - dist))
 			return;
 		
-		BlockPos pos = chunkCorner.add(random.nextInt(16), 256, random.nextInt(16));
+		BlockPos pos = chunkCorner.offset(random.nextInt(16), 256, random.nextInt(16));
 		Biome biome = getBiome(world, pos, false);
 		if(!SpiralSpiresModule.biomes.canSpawn(biome))
 			return;
 		
 		while(world.getBlockState(pos).getBlock() != Blocks.END_STONE) {
-			pos = pos.down();
+			pos = pos.below();
 			
 			if(pos.getY() < 10)
 				return;
@@ -48,7 +48,7 @@ public class SpiralSpireGenerator extends MultiChunkFeatureGenerator {
 
 	@Override
 	public BlockPos[] getSourcesInChunk(WorldGenRegion world, Random random, ChunkGenerator generator, BlockPos chunkCorner) {
-		if(!chunkCorner.withinDistance(Vector3i.NULL_VECTOR, 1050) && SpiralSpiresModule.rarity > 0 && random.nextInt(SpiralSpiresModule.rarity) == 0)
+		if(!chunkCorner.closerThan(Vec3i.ZERO, 1050) && SpiralSpiresModule.rarity > 0 && random.nextInt(SpiralSpiresModule.rarity) == 0)
 			return new BlockPos[] { chunkCorner };
 		
 		return new BlockPos[0];
@@ -61,7 +61,7 @@ public class SpiralSpireGenerator extends MultiChunkFeatureGenerator {
 		int y = start;
 		
 		for(; y < height; y++) {
-			BlockPos test = pos.up(y);
+			BlockPos test = pos.above(y);
 			BlockState state = world.getBlockState(test);
 			if(!state.isAir() && !(state.getBlock() == Blocks.END_STONE || state.getBlock() == Blocks.CRYING_OBSIDIAN || state.getBlock() == Blocks.OBSIDIAN || state.getBlock() == SpiralSpiresModule.myalite_crystal))
 				return;
@@ -69,7 +69,7 @@ public class SpiralSpireGenerator extends MultiChunkFeatureGenerator {
 		y = start;
 		
 		for(; y < height; y++) {
-			if(y < 0 && !world.getBlockState(pos.up(y)).isSolid())
+			if(y < 0 && !world.getBlockState(pos.above(y)).canOcclude())
 				continue;
 			
 			double r = Math.abs(((Math.PI / 2) - Math.atan((Math.max(0, y) + 0.5) / (height / heightComposition))) * 4);
@@ -79,8 +79,8 @@ public class SpiralSpireGenerator extends MultiChunkFeatureGenerator {
 				for(int j = -ri; j < ri; j++) 
 					if(i * i + j * j < ri * ri) {
 						boolean edge = i == -ri || i == (ri - 1) || j == -ri || j == (ri - 1);
-						BlockState state = (edge && rand.nextFloat() < 0.3 ? NewStoneTypesModule.myaliteBlock : SpiralSpiresModule.dusky_myalite).getDefaultState();
-						world.setBlockState(pos.add(i, y, j), state, 2);
+						BlockState state = (edge && rand.nextFloat() < 0.3 ? NewStoneTypesModule.myaliteBlock : SpiralSpiresModule.dusky_myalite).defaultBlockState();
+						world.setBlock(pos.offset(i, y, j), state, 2);
 					}
 		}
 		
@@ -97,7 +97,7 @@ public class SpiralSpireGenerator extends MultiChunkFeatureGenerator {
 		if(rand.nextBoolean())
 			spin *= -1;
 		
-		BlockState state = SpiralSpiresModule.myalite_crystal.getDefaultState();
+		BlockState state = SpiralSpiresModule.myalite_crystal.defaultBlockState();
 		
 		for(int i = 0; i < fullSteps; i++) {
 			double t = (double) i * spin;
@@ -105,7 +105,7 @@ public class SpiralSpireGenerator extends MultiChunkFeatureGenerator {
 			int z = (int) (Math.cos(t / substeps) * i * spread / substeps);
 			int yp = y + (int) Math.round(((double) i / substeps) * upwardMotion);
 			
-			BlockPos next = pos.add(x, yp, z);
+			BlockPos next = pos.offset(x, yp, z);
 			
 			float chance = 1F;
 			if(i > deteroirate) {
@@ -115,7 +115,7 @@ public class SpiralSpireGenerator extends MultiChunkFeatureGenerator {
 			}
 			
 			if(rand.nextFloat() < chance)
-				world.setBlockState(next, state, 2);
+				world.setBlock(next, state, 2);
 		}
 	}
 

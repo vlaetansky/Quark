@@ -6,23 +6,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.item.EnchantedBookItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.loot.ItemLootEntry;
-import net.minecraft.loot.LootEntry;
-import net.minecraft.loot.LootFunctionType;
-import net.minecraft.loot.LootTables;
-import net.minecraft.loot.conditions.ILootCondition;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.EnchantedBookItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -66,7 +66,7 @@ public class AncientTomesModule extends QuarkModule {
 	@Config public static int normalUpgradeCost = 10;
 	@Config public static int limitBreakUpgradeCost = 30;
 
-	public static LootFunctionType tomeEnchantType;
+	public static LootItemFunctionType tomeEnchantType;
 
 	@Config(name = "Valid Enchantments")
 	public static List<String> enchantNames = generateDefaultEnchantmentList();
@@ -79,27 +79,27 @@ public class AncientTomesModule extends QuarkModule {
 	public void onLootTableLoad(LootTableLoadEvent event) {
 		int weight = 0;
 		ResourceLocation res = event.getName();
-		if(res.equals(LootTables.CHESTS_STRONGHOLD_LIBRARY))
+		if(res.equals(BuiltInLootTables.STRONGHOLD_LIBRARY))
 			weight = libraryWeight;
-		else if(res.equals(LootTables.CHESTS_SIMPLE_DUNGEON))
+		else if(res.equals(BuiltInLootTables.SIMPLE_DUNGEON))
 			weight = dungeonWeight;
-		else if(res.equals(LootTables.CHESTS_NETHER_BRIDGE))
+		else if(res.equals(BuiltInLootTables.NETHER_BRIDGE))
 			weight = netherFortressWeight;
-		else if(res.equals(LootTables.CHESTS_WOODLAND_MANSION))
+		else if(res.equals(BuiltInLootTables.WOODLAND_MANSION))
 			weight = woodlandMansionWeight;
-		else if(res.equals(LootTables.CHESTS_UNDERWATER_RUIN_BIG) || res.equals(LootTables.CHESTS_UNDERWATER_RUIN_SMALL))
+		else if(res.equals(BuiltInLootTables.UNDERWATER_RUIN_BIG) || res.equals(BuiltInLootTables.UNDERWATER_RUIN_SMALL))
 			weight = underwaterRuinWeight;
-		else if(res.equals(LootTables.BASTION_TREASURE))
+		else if(res.equals(BuiltInLootTables.BASTION_TREASURE))
 			weight = bastionWeight;
 
 		else if(res.equals(MonsterBoxModule.MONSTER_BOX_LOOT_TABLE))
 			weight = monsterBoxWeight;
 
 		if(weight > 0) {
-			LootEntry entry = ItemLootEntry.builder(ancient_tome)
-					.weight(weight)
-					.quality(itemQuality)
-					.acceptFunction(() -> new EnchantTome(new ILootCondition[0]))
+			LootPoolEntryContainer entry = LootItem.lootTableItem(ancient_tome)
+					.setWeight(weight)
+					.setQuality(itemQuality)
+					.apply(() -> new EnchantTome(new LootItemCondition[0]))
 					.build();
 
 			MiscUtil.addToLootTable(event.getTable(), entry);
@@ -110,7 +110,7 @@ public class AncientTomesModule extends QuarkModule {
 	public void construct() {
 		ancient_tome = new AncientTomeItem(this);
 
-		tomeEnchantType = new LootFunctionType(new EnchantTome.Serializer());
+		tomeEnchantType = new LootItemFunctionType(new EnchantTome.Serializer());
 		Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(Quark.MOD_ID, "tome_enchant"), tomeEnchantType);
 
 	}
@@ -156,7 +156,7 @@ public class AncientTomesModule extends QuarkModule {
 					int level = entry.getValue();
 					if (level > enchantment.getMaxLevel()) {
 						hasOverLevel = true;
-						if (enchantment.canApply(left)) {
+						if (enchantment.canEnchant(left)) {
 							hasMatching = true;
 							//remove incompatible enchantments
 							for (Iterator<Enchantment> iterator = currentEnchants.keySet().iterator(); iterator.hasNext(); ) {
@@ -170,7 +170,7 @@ public class AncientTomesModule extends QuarkModule {
 							}
 							currentEnchants.put(enchantment, level);
 						}
-					} else if (enchantment.canApply(left)) {
+					} else if (enchantment.canEnchant(left)) {
 						boolean compatible = true;
 						//don't apply incompatible enchantments
 						for (Enchantment comparingEnchantment : currentEnchants.keySet()) {
@@ -195,8 +195,8 @@ public class AncientTomesModule extends QuarkModule {
 						String name = event.getName();
 						int cost = normalUpgradeCost;
 						
-						if(name != null && !name.isEmpty() && (!out.hasDisplayName() || !out.getDisplayName().getString().equals(name))) {
-							out.setDisplayName(new StringTextComponent(name));
+						if(name != null && !name.isEmpty() && (!out.hasCustomHoverName() || !out.getHoverName().getString().equals(name))) {
+							out.setHoverName(new TextComponent(name));
 							cost++;
 						}
 						
@@ -212,22 +212,22 @@ public class AncientTomesModule extends QuarkModule {
 
 	private static List<String> generateDefaultEnchantmentList() {
 		Enchantment[] enchants = new Enchantment[] {
-				Enchantments.FEATHER_FALLING,
+				Enchantments.FALL_PROTECTION,
 				Enchantments.THORNS,
 				Enchantments.SHARPNESS,
 				Enchantments.SMITE,
 				Enchantments.BANE_OF_ARTHROPODS,
 				Enchantments.KNOCKBACK,
 				Enchantments.FIRE_ASPECT,
-				Enchantments.LOOTING,
-				Enchantments.SWEEPING,
-				Enchantments.EFFICIENCY,
+				Enchantments.MOB_LOOTING,
+				Enchantments.SWEEPING_EDGE,
+				Enchantments.BLOCK_EFFICIENCY,
 				Enchantments.UNBREAKING,
-				Enchantments.FORTUNE,
-				Enchantments.POWER,
-				Enchantments.PUNCH,
-				Enchantments.LUCK_OF_THE_SEA,
-				Enchantments.LURE,
+				Enchantments.BLOCK_FORTUNE,
+				Enchantments.POWER_ARROWS,
+				Enchantments.PUNCH_ARROWS,
+				Enchantments.FISHING_LUCK,
+				Enchantments.FISHING_SPEED,
 				Enchantments.LOYALTY,
 				Enchantments.RIPTIDE,
 				Enchantments.IMPALING,
@@ -257,11 +257,11 @@ public class AncientTomesModule extends QuarkModule {
 		if (stack.getItem() != ancient_tome)
 			return null;
 
-		ListNBT listnbt = EnchantedBookItem.getEnchantments(stack);
+		ListTag listnbt = EnchantedBookItem.getEnchantments(stack);
 
 		for(int i = 0; i < listnbt.size(); ++i) {
-			CompoundNBT compoundnbt = listnbt.getCompound(i);
-			Optional<Enchantment> opt = Registry.ENCHANTMENT.getOptional(ResourceLocation.tryCreate(compoundnbt.getString("id")));
+			CompoundTag compoundnbt = listnbt.getCompound(i);
+			Optional<Enchantment> opt = Registry.ENCHANTMENT.getOptional(ResourceLocation.tryParse(compoundnbt.getString("id")));
 			if(opt.isPresent())
 				return opt.orElse(null);
 		}

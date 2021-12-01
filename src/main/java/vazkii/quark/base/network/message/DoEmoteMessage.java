@@ -3,8 +3,8 @@ package vazkii.quark.base.network.message;
 import java.util.UUID;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
@@ -31,8 +31,8 @@ public class DoEmoteMessage implements IMessage {
 	@OnlyIn(Dist.CLIENT)
 	public boolean receive(Context context) {
 		context.enqueueWork(() -> {
-			World world = Minecraft.getInstance().world;
-			PlayerEntity player = world.getPlayerByUuid(playerUUID);
+			Level world = Minecraft.getInstance().level;
+			Player player = world.getPlayerByUUID(playerUUID);
 			EmoteHandler.putEmote(player, emote, tier);
 		});
 		

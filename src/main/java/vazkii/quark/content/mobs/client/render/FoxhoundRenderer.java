@@ -15,9 +15,9 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import vazkii.quark.base.Quark;
 import vazkii.quark.content.mobs.client.layer.FoxhoundCollarLayer;
 import vazkii.quark.content.mobs.client.model.FoxhoundModel;
@@ -39,22 +39,22 @@ public class FoxhoundRenderer extends MobRenderer<FoxhoundEntity, FoxhoundModel>
 	
 	private static final int SHINY_CHANCE = 256;
 	
-	public FoxhoundRenderer(EntityRendererManager render) {
+	public FoxhoundRenderer(EntityRenderDispatcher render) {
 		super(render, new FoxhoundModel(), 0.5F);
 		addLayer(new FoxhoundCollarLayer(this));
 	}
 
 	@Nullable
 	@Override
-	public ResourceLocation getEntityTexture(@Nonnull FoxhoundEntity entity) {
+	public ResourceLocation getTextureLocation(@Nonnull FoxhoundEntity entity) {
 		if(entity.isBlue())
-			return entity.isSleeping() ? SOULHOUND_SLEEPING : (entity.getAngerTime() > 0 ? SOULHOUND_HOSTILE : SOULHOUND_IDLE); 
+			return entity.isSleeping() ? SOULHOUND_SLEEPING : (entity.getRemainingPersistentAngerTime() > 0 ? SOULHOUND_HOSTILE : SOULHOUND_IDLE); 
 
-		UUID id = entity.getUniqueID();
+		UUID id = entity.getUUID();
 		long most = id.getMostSignificantBits();
 		if(SHINY_CHANCE > 0 && (most % SHINY_CHANCE) == 0)
-			return entity.isSleeping() ? BASALT_FOXHOUND_SLEEPING : (entity.getAngerTime() > 0 ? BASALT_FOXHOUND_HOSTILE : BASALT_FOXHOUND_IDLE);
+			return entity.isSleeping() ? BASALT_FOXHOUND_SLEEPING : (entity.getRemainingPersistentAngerTime() > 0 ? BASALT_FOXHOUND_HOSTILE : BASALT_FOXHOUND_IDLE);
 		
-		return entity.isSleeping() ? FOXHOUND_SLEEPING : (entity.getAngerTime() > 0 ? FOXHOUND_HOSTILE : FOXHOUND_IDLE);
+		return entity.isSleeping() ? FOXHOUND_SLEEPING : (entity.getRemainingPersistentAngerTime() > 0 ? FOXHOUND_HOSTILE : FOXHOUND_IDLE);
 	}
 }

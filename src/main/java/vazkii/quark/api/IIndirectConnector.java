@@ -6,9 +6,9 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public interface IIndirectConnector {
 	
@@ -22,6 +22,6 @@ public interface IIndirectConnector {
 		return (w, pp, op, sp, os, ss, d) -> canConnectIndirectly(w, op, sp, os, ss);
 	}
 	
-	public boolean canConnectIndirectly(World world, BlockPos ourPos, BlockPos sourcePos, BlockState ourState, BlockState sourceState);
+	public boolean canConnectIndirectly(Level world, BlockPos ourPos, BlockPos sourcePos, BlockState ourState, BlockState sourceState);
 	
 }

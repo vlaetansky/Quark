@@ -5,20 +5,20 @@ import java.text.SimpleDateFormat;
 
 import org.lwjgl.glfw.GLFW;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.MainWindow;
+import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.ScreenShotHelper;
-import net.minecraft.util.text.KeybindTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.Screenshot;
+import net.minecraft.network.chat.KeybindComponent;
+import net.minecraft.ChatFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
@@ -78,7 +78,7 @@ public class CameraModule extends QuarkModule {
 	};
 
 	@OnlyIn(Dist.CLIENT)
-	private static KeyBinding cameraModeKey;
+	private static KeyMapping cameraModeKey;
 	
 	private static int currentHeldItem = -1;
 	private static int currShader = 0;
@@ -106,14 +106,14 @@ public class CameraModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void keystroke(KeyInputEvent event) {
 		Minecraft mc = Minecraft.getInstance();
-		if(mc.world != null && event.getAction() == GLFW.GLFW_PRESS) {
-			if(cameraModeKey.isKeyDown()) {
+		if(mc.level != null && event.getAction() == GLFW.GLFW_PRESS) {
+			if(cameraModeKey.isDown()) {
 				cameraMode = !cameraMode;
 				queuedRefresh = true;
 				return;
 			}
 
-			if(cameraMode && mc.currentScreen == null) {
+			if(cameraMode && mc.screen == null) {
 				int key = event.getKey();
 				
 				boolean affected = false;
@@ -146,14 +146,14 @@ public class CameraModule extends QuarkModule {
 					break;
 				case 257: // ENTER
 					if(!queueScreenshot && !screenshotting)
-						mc.getSoundHandler().play(SimpleSound.master(QuarkSounds.ITEM_CAMERA_SHUTTER, 1.0F));
+						mc.getSoundManager().play(SimpleSoundInstance.forUI(QuarkSounds.ITEM_CAMERA_SHUTTER, 1.0F));
 
 					queueScreenshot = true;
 				}
 
 				if(affected) {
 					queuedRefresh = true;
-					currentHeldItem = mc.player.inventory.currentItem;
+					currentHeldItem = mc.player.inventory.selected;
 				}
 			}
 		}
@@ -164,40 +164,40 @@ public class CameraModule extends QuarkModule {
 	public void renderTick(RenderTickEvent event) {
 		Minecraft mc = Minecraft.getInstance();
 
-		PlayerEntity player = mc.player;
-		if(player != null && currentHeldItem != -1 && player.inventory.currentItem != currentHeldItem) {
-			player.inventory.currentItem = currentHeldItem;
+		Player player = mc.player;
+		if(player != null && currentHeldItem != -1 && player.inventory.selected != currentHeldItem) {
+			player.inventory.selected = currentHeldItem;
 			currentHeldItem = -1;	
 		}
 		
-		if(mc.world == null) {
+		if(mc.level == null) {
 			cameraMode = false;
 			queuedRefresh = true;
 		} else if(queuedRefresh)
 			refreshShader(); 
 
-		if(event.phase == Phase.END && cameraMode && mc.currentScreen == null) {
+		if(event.phase == Phase.END && cameraMode && mc.screen == null) {
 			if(queueScreenshot)
 				screenshotting = true;
 
-			MatrixStack stack = new MatrixStack();
+			PoseStack stack = new PoseStack();
 			renderCameraHUD(mc, stack);
 
 			if(queueScreenshot) {
 				queueScreenshot = false;
-				ScreenShotHelper.saveScreenshot(mc.gameDir, mc.getMainWindow().getFramebufferWidth(), mc.getMainWindow().getFramebufferHeight(), mc.getFramebuffer(), (msg) -> {
+				Screenshot.grab(mc.gameDirectory, mc.getWindow().getWidth(), mc.getWindow().getHeight(), mc.getMainRenderTarget(), (msg) -> {
 					mc.execute(() -> {
-						mc.ingameGUI.getChatGUI().printChatMessage(msg);
+						mc.gui.getChat().addMessage(msg);
 					});
 				});
 			}
 		}
 	}
 
-	private static void renderCameraHUD(Minecraft mc, MatrixStack matrix) {
-		MainWindow mw = mc.getMainWindow();
-		int twidth = mw.getScaledWidth();
-		int theight = mw.getScaledHeight();
+	private static void renderCameraHUD(Minecraft mc, PoseStack matrix) {
+		Window mw = mc.getWindow();
+		int twidth = mw.getGuiScaledWidth();
+		int theight = mw.getGuiScaledHeight();
 		int width = twidth;
 		int height = theight;
 
@@ -269,12 +269,12 @@ public class CameraModule extends QuarkModule {
 			break;
 		case 2: // Postcard
 			String worldName = "N/A";
-			if(mc.getIntegratedServer() != null) 
-				worldName = mc.getIntegratedServer().getName();
-			else if(mc.getCurrentServerData() != null)
-				worldName = mc.getCurrentServerData().serverName;
+			if(mc.getSingleplayerServer() != null) 
+				worldName = mc.getSingleplayerServer().name();
+			else if(mc.getCurrentServer() != null)
+				worldName = mc.getCurrentServer().name;
 			
-			overlayText = I18n.format("quark.camera.greetings", worldName);
+			overlayText = I18n.get("quark.camera.greetings", worldName);
 			overlayX = paddingHoriz + 20;
 			overlayY = paddingVert + 20;
 			overlayScale = 3;
@@ -287,31 +287,31 @@ public class CameraModule extends QuarkModule {
 			overlayColor = 0x44000000;
 			break;
 		case 4: // Held Item
-			overlayText = mc.player.getHeldItemMainhand().getDisplayName().getString();
-			overlayX = twidth / 2 - mc.fontRenderer.getStringWidth(overlayText);
+			overlayText = mc.player.getMainHandItem().getHoverName().getString();
+			overlayX = twidth / 2 - mc.font.width(overlayText);
 			overlayY = paddingVert + 40;
 			break;
 		}
 
 		if(overlayX == -1)
-			overlayX = twidth - paddingHoriz - mc.fontRenderer.getStringWidth(overlayText) * (int) overlayScale - 40;
+			overlayX = twidth - paddingHoriz - mc.font.width(overlayText) * (int) overlayScale - 40;
 		if(overlayY == -1)
 			overlayY = theight - paddingVert - 10 - (10 * (int) overlayScale);
 
 
 		if(!overlayText.isEmpty()) {
-			matrix.push();
+			matrix.pushPose();
 			matrix.translate(overlayX, overlayY, 0);
 			matrix.scale((float) overlayScale, (float) overlayScale, 1.0F);
 			if(overlayShadow)
-				mc.fontRenderer.drawStringWithShadow(matrix, overlayText, 0, 0, overlayColor);
-			else mc.fontRenderer.drawString(matrix, overlayText, 0, 0, overlayColor);
-			matrix.pop();
+				mc.font.drawShadow(matrix, overlayText, 0, 0, overlayColor);
+			else mc.font.draw(matrix, overlayText, 0, 0, overlayColor);
+			matrix.popPose();
 		}
 
 		if(!screenshotting) {
 			// =============================================== DRAW RULERS ===============================================
-			matrix.push();
+			matrix.pushPose();
 			matrix.translate(paddingHoriz, paddingVert, 0);
 			switch(currRulers) {
 			case 1: // Rule of Thirds
@@ -333,7 +333,7 @@ public class CameraModule extends QuarkModule {
 				hruler(matrix, height / 2, width);
 				break;
 			}
-			matrix.pop();
+			matrix.popPose();
 
 			int left = 30;
 			int top = theight - 65;
@@ -343,29 +343,29 @@ public class CameraModule extends QuarkModule {
 			String text = "none";
 			if(shader != null)
 				text = shader.getPath().replaceAll(".+/(.+)\\.json", "$1");
-			text = TextFormatting.BOLD + "[1] " + TextFormatting.RESET + I18n.format("quark.camera.filter") + TextFormatting.GOLD + I18n.format("quark.camera.filter." + text);
-			mc.fontRenderer.drawStringWithShadow(matrix, text, left, top, 0xFFFFFF);
+			text = ChatFormatting.BOLD + "[1] " + ChatFormatting.RESET + I18n.get("quark.camera.filter") + ChatFormatting.GOLD + I18n.get("quark.camera.filter." + text);
+			mc.font.drawShadow(matrix, text, left, top, 0xFFFFFF);
 
-			text = TextFormatting.BOLD + "[2] " + TextFormatting.RESET + I18n.format("quark.camera.rulers") + TextFormatting.GOLD + I18n.format("quark.camera.rulers" + currRulers);
-			mc.fontRenderer.drawStringWithShadow(matrix, text, left, top + 12, 0xFFFFFF);
+			text = ChatFormatting.BOLD + "[2] " + ChatFormatting.RESET + I18n.get("quark.camera.rulers") + ChatFormatting.GOLD + I18n.get("quark.camera.rulers" + currRulers);
+			mc.font.drawShadow(matrix, text, left, top + 12, 0xFFFFFF);
 
-			text = TextFormatting.BOLD + "[3] " + TextFormatting.RESET + I18n.format("quark.camera.borders") + TextFormatting.GOLD + I18n.format("quark.camera.borders" + currBorders);
-			mc.fontRenderer.drawStringWithShadow(matrix, text, left, top + 24, 0xFFFFFF);
+			text = ChatFormatting.BOLD + "[3] " + ChatFormatting.RESET + I18n.get("quark.camera.borders") + ChatFormatting.GOLD + I18n.get("quark.camera.borders" + currBorders);
+			mc.font.drawShadow(matrix, text, left, top + 24, 0xFFFFFF);
 
-			text = TextFormatting.BOLD + "[4] " + TextFormatting.RESET + I18n.format("quark.camera.overlay") + TextFormatting.GOLD + I18n.format("quark.camera.overlay" + currOverlay);
-			mc.fontRenderer.drawStringWithShadow(matrix, text, left, top + 36, 0xFFFFFF);
+			text = ChatFormatting.BOLD + "[4] " + ChatFormatting.RESET + I18n.get("quark.camera.overlay") + ChatFormatting.GOLD + I18n.get("quark.camera.overlay" + currOverlay);
+			mc.font.drawShadow(matrix, text, left, top + 36, 0xFFFFFF);
 
-			text = TextFormatting.BOLD + "[5] " + TextFormatting.RESET + I18n.format("quark.camera.reset");
-			mc.fontRenderer.drawStringWithShadow(matrix, text, left, top + 48, 0xFFFFFF);
+			text = ChatFormatting.BOLD + "[5] " + ChatFormatting.RESET + I18n.get("quark.camera.reset");
+			mc.font.drawShadow(matrix, text, left, top + 48, 0xFFFFFF);
 			
-			text = TextFormatting.AQUA + I18n.format("quark.camera.header");
-			mc.fontRenderer.drawStringWithShadow(matrix, text, twidth / 2 - mc.fontRenderer.getStringWidth(text) / 2, 6, 0xFFFFFF);
+			text = ChatFormatting.AQUA + I18n.get("quark.camera.header");
+			mc.font.drawShadow(matrix, text, twidth / 2 - mc.font.width(text) / 2, 6, 0xFFFFFF);
 			
-			text = I18n.format("quark.camera.info", new KeybindTextComponent("quark.keybind.camera_mode").getString());
-			mc.fontRenderer.drawStringWithShadow(matrix, text, twidth / 2 - mc.fontRenderer.getStringWidth(text) / 2, 16, 0xFFFFFF);
+			text = I18n.get("quark.camera.info", new KeybindComponent("quark.keybind.camera_mode").getString());
+			mc.font.drawShadow(matrix, text, twidth / 2 - mc.font.width(text) / 2, 16, 0xFFFFFF);
 			
 			ResourceLocation CAMERA_TEXTURE = new ResourceLocation(Quark.MOD_ID, "textures/misc/camera.png");
-			mc.textureManager.bindTexture(CAMERA_TEXTURE);
+			mc.textureManager.bind(CAMERA_TEXTURE);
 			Screen.blit(matrix, left - 22, top + 18, 0, 0, 0, 16, 16, 16, 16);
 		}
 	}
@@ -376,33 +376,33 @@ public class CameraModule extends QuarkModule {
 
 		Minecraft mc = Minecraft.getInstance();
 		GameRenderer render = mc.gameRenderer;
-		mc.gameSettings.hideGUI = cameraMode;
+		mc.options.hideGui = cameraMode;
 
 		if(cameraMode) {
 			ResourceLocation shader = SHADERS[currShader];
 
 			if(shader != null) {
-				render.loadShader(shader);
+				render.loadEffect(shader);
 				return;
 			}
 		} 
 		else if(ModuleLoader.INSTANCE.isModuleEnabled(OverlayShaderModule.class)) {
 			for(ResourceLocation l : SHADERS) {
 				if(l != null && l.getPath().contains(OverlayShaderModule.shader + ".json")) {
-					render.loadShader(l);
+					render.loadEffect(l);
 					return;
 				}
 			}
 		} 
 		
-		render.loadEntityShader(null);
+		render.checkEntityPostEffect(null);
 	}
 
-	private static void vruler(MatrixStack matrix, int x, int height) {
+	private static void vruler(PoseStack matrix, int x, int height) {
 		Screen.fill(matrix, x, 0, x + 1, height, RULER_COLOR);
 	}
 
-	private static void hruler(MatrixStack matrix, int y, int width) {
+	private static void hruler(PoseStack matrix, int y, int width) {
 		Screen.fill(matrix, 0, y, width, y + 1, RULER_COLOR);
 	}
 

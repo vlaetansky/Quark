@@ -2,22 +2,22 @@ package vazkii.quark.content.world.block;
 
 import java.util.Random;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.particles.ParticleTypes;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraft.world.lighting.LightEngine;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.lighting.LayerLightEngine;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.IPlantable;
@@ -28,45 +28,45 @@ import vazkii.quark.base.module.QuarkModule;
 public class GlowceliumBlock extends QuarkBlock {
 
 	public GlowceliumBlock(QuarkModule module) {
-		super("glowcelium", module, ItemGroup.BUILDING_BLOCKS,
-				Block.Properties.create(Material.ORGANIC, MaterialColor.LIGHT_BLUE)
-						.tickRandomly()
-						.hardnessAndResistance(0.5F)
-						.setLightLevel(b -> 7)
+		super("glowcelium", module, CreativeModeTab.TAB_BUILDING_BLOCKS,
+				Block.Properties.of(Material.GRASS, MaterialColor.COLOR_LIGHT_BLUE)
+						.randomTicks()
+						.strength(0.5F)
+						.lightLevel(b -> 7)
 						.harvestTool(ToolType.SHOVEL)
-						.sound(SoundType.PLANT));
+						.sound(SoundType.GRASS));
 	}
 
 	@Override
-	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
-		if(!worldIn.isRemote) {
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random) {
+		if(!worldIn.isClientSide) {
 			if(!canExist(state, worldIn, pos))
-				worldIn.setBlockState(pos, Blocks.DIRT.getDefaultState());
+				worldIn.setBlockAndUpdate(pos, Blocks.DIRT.defaultBlockState());
 			else for(int i = 0; i < 4; ++i) {
-				BlockPos blockpos = pos.add(random.nextInt(3) - 1, random.nextInt(5) - 3, random.nextInt(3) - 1);
+				BlockPos blockpos = pos.offset(random.nextInt(3) - 1, random.nextInt(5) - 3, random.nextInt(3) - 1);
                 if(worldIn.getBlockState(blockpos).getBlock() == Blocks.DIRT && canGrowTo(state, worldIn, blockpos)) 
-					worldIn.setBlockState(blockpos, getDefaultState());
+					worldIn.setBlockAndUpdate(blockpos, defaultBlockState());
 			}
 		}
 	}
 
 	// Some vanilla copypasta from SpreadableSnowyDirtBlock
 	
-	private static boolean canExist(BlockState state, IWorldReader world, BlockPos pos) {
-		BlockPos blockpos = pos.up();
+	private static boolean canExist(BlockState state, LevelReader world, BlockPos pos) {
+		BlockPos blockpos = pos.above();
 		BlockState blockstate = world.getBlockState(blockpos);
-		int i = LightEngine.func_215613_a(world, state, pos, blockstate, blockpos, Direction.UP, blockstate.getOpacity(world, blockpos));
+		int i = LayerLightEngine.getLightBlockInto(world, state, pos, blockstate, blockpos, Direction.UP, blockstate.getLightBlock(world, blockpos));
 		return i < world.getMaxLightLevel();
 	}
 
-	private static boolean canGrowTo(BlockState state, IWorldReader world, BlockPos pos) {
-		BlockPos blockpos = pos.up();
-		return canExist(state, world, pos) && !world.getFluidState(blockpos).isTagged(FluidTags.WATER);
+	private static boolean canGrowTo(BlockState state, LevelReader world, BlockPos pos) {
+		BlockPos blockpos = pos.above();
+		return canExist(state, world, pos) && !world.getFluidState(blockpos).is(FluidTags.WATER);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	   public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+	   public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
 		super.animateTick(stateIn, worldIn, pos, rand);
 
 		if(rand.nextInt(40) == 0)
@@ -74,7 +74,7 @@ public class GlowceliumBlock extends QuarkBlock {
 	}
 	
 	@Override
-	public boolean canSustainPlant(BlockState state, IBlockReader world, BlockPos pos, Direction facing, IPlantable plantable) {
+	public boolean canSustainPlant(BlockState state, BlockGetter world, BlockPos pos, Direction facing, IPlantable plantable) {
 		return Blocks.MYCELIUM.canSustainPlant(state, world, pos, facing, plantable);
 	}
 

@@ -3,9 +3,9 @@ package vazkii.quark.content.mobs.client.render;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import vazkii.quark.content.mobs.client.model.CrabModel;
 import vazkii.quark.content.mobs.entity.CrabEntity;
 
@@ -17,13 +17,13 @@ public class CrabRenderer extends MobRenderer<CrabEntity, CrabModel> {
 			new ResourceLocation("quark", "textures/model/entity/crab/green.png")
 	};
 
-	public CrabRenderer(EntityRendererManager render) {
+	public CrabRenderer(EntityRenderDispatcher render) {
 		super(render, new CrabModel(), 0.4F);
 	}
 
 	@Nullable
 	@Override
-	public ResourceLocation getEntityTexture(@Nonnull CrabEntity entity) {
+	public ResourceLocation getTextureLocation(@Nonnull CrabEntity entity) {
 		return TEXTURES[Math.min(TEXTURES.length - 1, entity.getVariant())];
 	}
 }

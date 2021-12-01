@@ -7,34 +7,34 @@ import javax.annotation.Nullable;
 
 import com.mojang.authlib.GameProfile;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.item.ItemFrameEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BannerItem;
-import net.minecraft.item.FilledMapItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BannerItem;
+import net.minecraft.world.item.MapItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.MapData;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -42,42 +42,42 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import vazkii.quark.base.util.MovableFakePlayer;
 import vazkii.quark.content.building.module.GlassItemFrameModule;
 
-public class GlassItemFrameEntity extends ItemFrameEntity implements IEntityAdditionalSpawnData {
+public class GlassItemFrameEntity extends ItemFrame implements IEntityAdditionalSpawnData {
 
-	public static final DataParameter<Boolean> IS_SHINY = EntityDataManager.createKey(GlassItemFrameEntity.class, DataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Boolean> IS_SHINY = SynchedEntityData.defineId(GlassItemFrameEntity.class, EntityDataSerializers.BOOLEAN);
 	
 	private static final String TAG_SHINY = "isShiny";
 	
 	private boolean didHackery = false;
 	private FakePlayer fakePlayer = null;
 
-	public GlassItemFrameEntity(EntityType<? extends GlassItemFrameEntity> type, World worldIn) {
+	public GlassItemFrameEntity(EntityType<? extends GlassItemFrameEntity> type, Level worldIn) {
 		super(type, worldIn);
 	}
 
-	public GlassItemFrameEntity(World worldIn, BlockPos blockPos, Direction face) {
+	public GlassItemFrameEntity(Level worldIn, BlockPos blockPos, Direction face) {
 		super(GlassItemFrameModule.glassFrameEntity, worldIn);
-		hangingPosition = blockPos;
-		this.updateFacingWithBoundingBox(face);
+		pos = blockPos;
+		this.setDirection(face);
 	}
 	
 	@Override
-	public ActionResultType processInitialInteract(PlayerEntity player, Hand hand) {
-		ItemStack item = getDisplayedItem();
-		if(!player.isSneaking() && !item.isEmpty() && !(item.getItem() instanceof BannerItem)) {
+	public InteractionResult interact(Player player, InteractionHand hand) {
+		ItemStack item = getItem();
+		if(!player.isShiftKeyDown() && !item.isEmpty() && !(item.getItem() instanceof BannerItem)) {
 			BlockPos behind = getBehindPos();
-			TileEntity tile = world.getTileEntity(behind);
+			BlockEntity tile = level.getBlockEntity(behind);
 			
 			if(tile != null && tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
-				BlockState behindState = world.getBlockState(behind);
-				ActionResultType result = behindState.onBlockActivated(world, player, hand, new BlockRayTraceResult(new Vector3d(getPosX(), getPosY(), getPosZ()), facingDirection, behind, true));
+				BlockState behindState = level.getBlockState(behind);
+				InteractionResult result = behindState.use(level, player, hand, new BlockHitResult(new Vec3(getX(), getY(), getZ()), direction, behind, true));
 				
-				if(result.isSuccessOrConsume())
+				if(result.consumesAction())
 					return result;
 			}
 		}
 		
-		return super.processInitialInteract(player, hand);
+		return super.interact(player, hand);
 	}
 	
 	@Override
@@ -85,103 +85,103 @@ public class GlassItemFrameEntity extends ItemFrameEntity implements IEntityAddi
 		super.tick();
 		
 		if(GlassItemFrameModule.glassItemFramesUpdateMaps) {
-			ItemStack stack = getDisplayedItem();
-			if(stack.getItem() instanceof FilledMapItem && world instanceof ServerWorld) {
-				ServerWorld sworld = (ServerWorld) world;
+			ItemStack stack = getItem();
+			if(stack.getItem() instanceof MapItem && level instanceof ServerLevel) {
+				ServerLevel sworld = (ServerLevel) level;
 				ItemStack clone = stack.copy();
 
-				MapData data = FilledMapItem.getMapData(clone, world);
+				MapItemSavedData data = MapItem.getOrCreateSavedData(clone, level);
 				if(data != null && !data.locked) {
 					if(fakePlayer == null)
 						fakePlayer = new MovableFakePlayer(sworld, new GameProfile(UUID.randomUUID(), "ItemFrame"));
 					
-					FilledMapItem item = (FilledMapItem) stack.getItem();
+					MapItem item = (MapItem) stack.getItem();
 					
-					clone.setAttachedEntity(null);
-					fakePlayer.setPosition(getPosX(), getPosY(), getPosZ());
-					fakePlayer.inventory.setInventorySlotContents(0, clone);
+					clone.setEntityRepresentation(null);
+					fakePlayer.setPos(getX(), getY(), getZ());
+					fakePlayer.inventory.setItem(0, clone);
 					
-					item.updateMapData(world, fakePlayer, data);
+					item.update(level, fakePlayer, data);
 				}
 			}
 		}
 	}
 
 	@Override
-	protected void registerData() {
-		super.registerData();
+	protected void defineSynchedData() {
+		super.defineSynchedData();
 		
-		dataManager.register(IS_SHINY, false);
+		entityData.define(IS_SHINY, false);
 	}
 	
 	@Override
-	public boolean onValidSurface() {
-		return super.onValidSurface() || isOnSign();
+	public boolean survives() {
+		return super.survives() || isOnSign();
 	}
 
 	public BlockPos getBehindPos() {
-		return hangingPosition.offset(facingDirection.getOpposite());
+		return pos.relative(direction.getOpposite());
 	}
 	
 	public boolean isOnSign() {
-		BlockState blockstate = world.getBlockState(getBehindPos());
-		return blockstate.getBlock().isIn(BlockTags.STANDING_SIGNS);
+		BlockState blockstate = level.getBlockState(getBehindPos());
+		return blockstate.getBlock().is(BlockTags.STANDING_SIGNS);
 	}
 
 	@Nullable
 	@Override
-	public ItemEntity entityDropItem(@Nonnull ItemStack stack, float offset) {
+	public ItemEntity spawnAtLocation(@Nonnull ItemStack stack, float offset) {
 		if (stack.getItem() == Items.ITEM_FRAME && !didHackery) {
-			stack = new ItemStack(getItem());
+			stack = new ItemStack(getDroppedItem());
 			didHackery = true;
 		}
 
-		return super.entityDropItem(stack, offset);
+		return super.spawnAtLocation(stack, offset);
 	}
 
 	@Nonnull
 	@Override
-	public ItemStack getPickedResult(RayTraceResult target) {
-		ItemStack held = getDisplayedItem();
+	public ItemStack getPickedResult(HitResult target) {
+		ItemStack held = getItem();
 		if (held.isEmpty())
-			return new ItemStack(getItem());
+			return new ItemStack(getDroppedItem());
 		else
 			return held.copy();
 	}
 	
-	private Item getItem() {
-		return dataManager.get(IS_SHINY) ? GlassItemFrameModule.glowingGlassFrame : GlassItemFrameModule.glassFrame;
+	private Item getDroppedItem() {
+		return entityData.get(IS_SHINY) ? GlassItemFrameModule.glowingGlassFrame : GlassItemFrameModule.glassFrame;
 	}
 	
 	@Override
-	public void writeAdditional(CompoundNBT cmp) {
-		super.writeAdditional(cmp);
+	public void addAdditionalSaveData(CompoundTag cmp) {
+		super.addAdditionalSaveData(cmp);
 		
-		cmp.putBoolean(TAG_SHINY, dataManager.get(IS_SHINY));
+		cmp.putBoolean(TAG_SHINY, entityData.get(IS_SHINY));
 	}
 	
 	@Override
-	public void readAdditional(CompoundNBT cmp) {
-		super.readAdditional(cmp);
+	public void readAdditionalSaveData(CompoundTag cmp) {
+		super.readAdditionalSaveData(cmp);
 		
-		dataManager.set(IS_SHINY, cmp.getBoolean(TAG_SHINY));
+		entityData.set(IS_SHINY, cmp.getBoolean(TAG_SHINY));
 	}
 
 	@Nonnull
 	@Override
-	public IPacket<?> createSpawnPacket() {
+	public Packet<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 	@Override
-	public void writeSpawnData(PacketBuffer buffer) {
-		buffer.writeBlockPos(this.hangingPosition);
-		buffer.writeVarInt(this.facingDirection.getIndex());
+	public void writeSpawnData(FriendlyByteBuf buffer) {
+		buffer.writeBlockPos(this.pos);
+		buffer.writeVarInt(this.direction.get3DDataValue());
 	}
 
 	@Override
-	public void readSpawnData(PacketBuffer buffer) {
-		this.hangingPosition = buffer.readBlockPos();
-		this.updateFacingWithBoundingBox(Direction.byIndex(buffer.readVarInt()));
+	public void readSpawnData(FriendlyByteBuf buffer) {
+		this.pos = buffer.readBlockPos();
+		this.setDirection(Direction.from3DDataValue(buffer.readVarInt()));
 	}
 }

@@ -1,15 +1,15 @@
 package vazkii.quark.content.tools.module;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.monster.SlimeEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemModelsProperties;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.Slime;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -33,41 +33,41 @@ public class SlimeInABucketModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		enqueue(() -> ItemModelsProperties.registerProperty(slime_in_a_bucket, new ResourceLocation("excited"), 
+		enqueue(() -> ItemProperties.register(slime_in_a_bucket, new ResourceLocation("excited"), 
 				(stack, world, e) -> ItemNBTHelper.getBoolean(stack, SlimeInABucketItem.TAG_EXCITED, false) ? 1 : 0));
 	}
 
 	@SubscribeEvent
 	public void entityInteract(PlayerInteractEvent.EntityInteract event) {
 		if(event.getTarget() != null) {
-			if(event.getTarget().getType() == EntityType.SLIME && ((SlimeEntity) event.getTarget()).getSlimeSize() == 1 && event.getTarget().isAlive()) {
-				PlayerEntity player = event.getPlayer();
-				Hand hand = Hand.MAIN_HAND;
-				ItemStack stack = player.getHeldItemMainhand();
+			if(event.getTarget().getType() == EntityType.SLIME && ((Slime) event.getTarget()).getSize() == 1 && event.getTarget().isAlive()) {
+				Player player = event.getPlayer();
+				InteractionHand hand = InteractionHand.MAIN_HAND;
+				ItemStack stack = player.getMainHandItem();
 				if(stack.isEmpty() || stack.getItem() != Items.BUCKET) {
-					stack = player.getHeldItemOffhand();
-					hand = Hand.OFF_HAND;
+					stack = player.getOffhandItem();
+					hand = InteractionHand.OFF_HAND;
 				}
 
 				if(!stack.isEmpty() && stack.getItem() == Items.BUCKET) {
-					if(!event.getWorld().isRemote) {
+					if(!event.getWorld().isClientSide) {
 						ItemStack outStack = new ItemStack(slime_in_a_bucket);
-						CompoundNBT cmp = event.getTarget().serializeNBT();
+						CompoundTag cmp = event.getTarget().serializeNBT();
 						ItemNBTHelper.setCompound(outStack, SlimeInABucketItem.TAG_ENTITY_DATA, cmp);
 						
 						if(stack.getCount() == 1)
-							player.setHeldItem(hand, outStack);
+							player.setItemInHand(hand, outStack);
 						else {
 							stack.shrink(1);
 							if(stack.getCount() == 0)
-								player.setHeldItem(hand, outStack);
-							else if(!player.inventory.addItemStackToInventory(outStack))
-								player.dropItem(outStack, false);
+								player.setItemInHand(hand, outStack);
+							else if(!player.inventory.add(outStack))
+								player.drop(outStack, false);
 						}
 
 						event.getTarget().remove();
 					}
-					else player.swingArm(hand);
+					else player.swing(hand);
 				}
 			}
 		}

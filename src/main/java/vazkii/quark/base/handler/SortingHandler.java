@@ -7,35 +7,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ArrowItem;
-import net.minecraft.item.AxeItem;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BowItem;
-import net.minecraft.item.CrossbowItem;
-import net.minecraft.item.DyeItem;
-import net.minecraft.item.IItemTier;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.MinecartItem;
-import net.minecraft.item.PickaxeItem;
-import net.minecraft.item.PotionItem;
-import net.minecraft.item.ShovelItem;
-import net.minecraft.item.SwordItem;
-import net.minecraft.item.ToolItem;
-import net.minecraft.item.TridentItem;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArrowItem;
+import net.minecraft.world.item.AxeItem;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.MinecartItem;
+import net.minecraft.world.item.PickaxeItem;
+import net.minecraft.world.item.PotionItem;
+import net.minecraft.world.item.ShovelItem;
+import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.DiggerItem;
+import net.minecraft.world.item.TridentItem;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -49,7 +49,7 @@ import vazkii.quark.content.management.module.InventorySortingModule;
 public final class SortingHandler {
 
 	private static final Comparator<ItemStack> FALLBACK_COMPARATOR = jointComparator(Arrays.asList(
-			Comparator.comparingInt((ItemStack s) -> Item.getIdFromItem(s.getItem())),
+			Comparator.comparingInt((ItemStack s) -> Item.getId(s.getItem())),
 			SortingHandler::damageCompare,
 			(ItemStack s1, ItemStack s2) -> s2.getCount() - s1.getCount(),
 			(ItemStack s1, ItemStack s2) -> s2.hashCode() - s1.hashCode()));
@@ -77,19 +77,19 @@ public final class SortingHandler {
 			SortingHandler::enchantmentCompare,
 			SortingHandler::damageCompare));
 
-	public static void sortInventory(PlayerEntity player, boolean forcePlayer) {
+	public static void sortInventory(Player player, boolean forcePlayer) {
 		if (!ModuleLoader.INSTANCE.isModuleEnabled(InventorySortingModule.class))
 			return;
 
-		Container c = player.openContainer;
+		AbstractContainerMenu c = player.containerMenu;
 		boolean backpack = c instanceof BackpackContainer;
 		if ((!backpack && forcePlayer) || c == null)
-			c = player.container;
+			c = player.inventoryMenu;
 
-		boolean playerContainer = c == player.container || backpack;
+		boolean playerContainer = c == player.inventoryMenu || backpack;
 
-		for (Slot s : c.inventorySlots) {
-			IInventory inv = s.inventory;
+		for (Slot s : c.slots) {
+			Container inv = s.container;
 			if ((inv == player.inventory) == playerContainer) {
 				if (!playerContainer && s instanceof SlotItemHandler) {
 					sortInventory(((SlotItemHandler) s).getItemHandler());
@@ -104,7 +104,7 @@ public final class SortingHandler {
 		}
 
 		if(backpack)
-			for (Slot s : c.inventorySlots)
+			for (Slot s : c.slots)
 				if (s instanceof SlotCachingItemHandler) {
 					sortInventory(((SlotCachingItemHandler) s).getItemHandler());
 					break;
@@ -133,17 +133,17 @@ public final class SortingHandler {
 		mergeStacks(stacks);
 		sortStackList(stacks);
 
-		if (setInventory(handler, stacks, iStart, iEnd) == ActionResultType.FAIL)
+		if (setInventory(handler, stacks, iStart, iEnd) == InteractionResult.FAIL)
 			setInventory(handler, restore, iStart, iEnd);
 	}
 
-	private static ActionResultType setInventory(IItemHandler inventory, List<ItemStack> stacks, int iStart, int iEnd) {
+	private static InteractionResult setInventory(IItemHandler inventory, List<ItemStack> stacks, int iStart, int iEnd) {
 		for (int i = iStart; i < iEnd; i++) {
 			int j = i - iStart;
 			ItemStack stack = j >= stacks.size() ? ItemStack.EMPTY : stacks.get(j);
 
 			if (!stack.isEmpty() && !inventory.isItemValid(i, stack))
-				return ActionResultType.PASS;
+				return InteractionResult.PASS;
 		}
 
 		for (int i = iStart; i < iEnd; i++) {
@@ -153,10 +153,10 @@ public final class SortingHandler {
 			inventory.extractItem(i, inventory.getSlotLimit(i), false);
 			if (!stack.isEmpty())
 				if (!inventory.insertItem(i, stack, false).isEmpty())
-					return ActionResultType.FAIL;
+					return InteractionResult.FAIL;
 		}
 
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	public static void mergeStacks(List<ItemStack> list) {
@@ -181,7 +181,7 @@ public final class SortingHandler {
 			if (stackAt.isEmpty())
 				continue;
 
-			if (stackAt.getCount() < stackAt.getMaxStackSize() && ItemStack.areItemsEqual(stack, stackAt) && ItemStack.areItemStackTagsEqual(stack, stackAt)) {
+			if (stackAt.getCount() < stackAt.getMaxStackSize() && ItemStack.isSame(stack, stackAt) && ItemStack.tagMatches(stack, stackAt)) {
 				int setSize = stackAt.getCount() + stack.getCount();
 				int carryover = Math.max(0, setSize - stackAt.getMaxStackSize());
 				stackAt.setCount(carryover);
@@ -315,11 +315,11 @@ public final class SortingHandler {
 	}
 
 	private static int foodHealCompare(ItemStack stack1, ItemStack stack2) {
-		return stack2.getItem().getFood().getHealing() - stack1.getItem().getFood().getHealing();
+		return stack2.getItem().getFoodProperties().getNutrition() - stack1.getItem().getFoodProperties().getNutrition();
 	}
 
 	private static int foodSaturationCompare(ItemStack stack1, ItemStack stack2) {
-		return (int) (stack2.getItem().getFood().getSaturation() * 100 - stack1.getItem().getFood().getSaturation() * 100);
+		return (int) (stack2.getItem().getFoodProperties().getSaturationModifier() * 100 - stack1.getItem().getFoodProperties().getSaturationModifier() * 100);
 	}
 
 	private static int enchantmentCompare(ItemStack stack1, ItemStack stack2) {
@@ -340,32 +340,32 @@ public final class SortingHandler {
 	}
 
 	private static int toolPowerCompare(ItemStack stack1, ItemStack stack2) {
-		IItemTier mat1 = ((ToolItem) stack1.getItem()).getTier();
-		IItemTier mat2 = ((ToolItem) stack2.getItem()).getTier();
-		return (int) (mat2.getEfficiency() * 100 - mat1.getEfficiency() * 100);
+		Tier mat1 = ((DiggerItem) stack1.getItem()).getTier();
+		Tier mat2 = ((DiggerItem) stack2.getItem()).getTier();
+		return (int) (mat2.getSpeed() * 100 - mat1.getSpeed() * 100);
 	}
 
 	private static int swordPowerCompare(ItemStack stack1, ItemStack stack2) {
-		IItemTier mat1 = ((SwordItem) stack1.getItem()).getTier();
-		IItemTier mat2 = ((SwordItem) stack2.getItem()).getTier();
-		return (int) (mat2.getAttackDamage() * 100 - mat1.getAttackDamage() * 100);
+		Tier mat1 = ((SwordItem) stack1.getItem()).getTier();
+		Tier mat2 = ((SwordItem) stack2.getItem()).getTier();
+		return (int) (mat2.getAttackDamageBonus() * 100 - mat1.getAttackDamageBonus() * 100);
 	}
 
 	private static int armorSlotAndToughnessCompare(ItemStack stack1, ItemStack stack2) {
 		ArmorItem armor1 = (ArmorItem) stack1.getItem();
 		ArmorItem armor2 = (ArmorItem) stack2.getItem();
 
-		EquipmentSlotType slot1 = armor1.getEquipmentSlot();
-		EquipmentSlotType slot2 = armor2.getEquipmentSlot();
+		EquipmentSlot slot1 = armor1.getSlot();
+		EquipmentSlot slot2 = armor2.getSlot();
 
 		if (slot1 == slot2)
-			return armor2.getArmorMaterial().getDamageReductionAmount(slot2) - armor2.getArmorMaterial().getDamageReductionAmount(slot1);
+			return armor2.getMaterial().getDefenseForSlot(slot2) - armor2.getMaterial().getDefenseForSlot(slot1);
 
 		return slot2.getIndex() - slot1.getIndex();
 	}
 
 	public static int damageCompare(ItemStack stack1, ItemStack stack2) {
-		return stack1.getDamage() - stack2.getDamage();
+		return stack1.getDamageValue() - stack2.getDamageValue();
 	}
 	
 	static boolean hasCustomSorting(ItemStack stack) {
@@ -378,13 +378,13 @@ public final class SortingHandler {
 
 	private enum ItemType {
 
-		FOOD(ItemStack::isFood, FOOD_COMPARATOR),
+		FOOD(ItemStack::isEdible, FOOD_COMPARATOR),
 		TORCH(list(Blocks.TORCH)),
 		TOOL_PICKAXE(classPredicate(PickaxeItem.class), TOOL_COMPARATOR),
 		TOOL_SHOVEL(classPredicate(ShovelItem.class), TOOL_COMPARATOR),
 		TOOL_AXE(classPredicate(AxeItem.class), TOOL_COMPARATOR),
 		TOOL_SWORD(classPredicate(SwordItem.class), SWORD_COMPARATOR),
-		TOOL_GENERIC(classPredicate(ToolItem.class), TOOL_COMPARATOR),
+		TOOL_GENERIC(classPredicate(DiggerItem.class), TOOL_COMPARATOR),
 		ARMOR(classPredicate(ArmorItem.class), ARMOR_COMPARATOR),
 		BOW(classPredicate(BowItem.class), BOW_COMPARATOR),
 		CROSSBOW(classPredicate(CrossbowItem.class), BOW_COMPARATOR),

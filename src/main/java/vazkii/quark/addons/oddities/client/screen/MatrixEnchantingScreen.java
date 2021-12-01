@@ -3,21 +3,21 @@ package vazkii.quark.addons.oddities.client.screen;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 import vazkii.arl.util.ClientTicker;
 import vazkii.quark.addons.oddities.container.EnchantmentMatrix;
 import vazkii.quark.addons.oddities.container.EnchantmentMatrix.Piece;
@@ -29,11 +29,11 @@ import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.MatrixEnchanterOperationMessage;
 
-public class MatrixEnchantingScreen extends ContainerScreen<MatrixEnchantingContainer> {
+public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchantingContainer> {
 
 	public static final ResourceLocation BACKGROUND = new ResourceLocation(Quark.MOD_ID, "textures/misc/matrix_enchanting.png");
 
-	protected final PlayerInventory playerInv;
+	protected final Inventory playerInv;
 	protected final MatrixEnchantingTableTileEntity enchanter;
 
 	protected Button plusButton;
@@ -44,7 +44,7 @@ public class MatrixEnchantingScreen extends ContainerScreen<MatrixEnchantingCont
 	protected int gridHoverX, gridHoverY;
 	protected List<Integer> listPieces = null;
 
-	public MatrixEnchantingScreen(MatrixEnchantingContainer container, PlayerInventory inventory, ITextComponent component) {
+	public MatrixEnchantingScreen(MatrixEnchantingContainer container, Inventory inventory, Component component) {
 		super(container, inventory, component);
 		this.playerInv = inventory;
 		this.enchanter = container.enchanter;
@@ -55,9 +55,9 @@ public class MatrixEnchantingScreen extends ContainerScreen<MatrixEnchantingCont
 		super.init(mc, x, y);
 
 		selectedPiece = -1;
-		addButton(plusButton = new MatrixEnchantingPlusButton(guiLeft + 86, guiTop + 63, this::add));
-		pieceList = new MatrixEnchantingPieceList(this, 28, 64, guiTop + 11, guiTop + 75, 22);
-		pieceList.setLeftPos(guiLeft + 139);
+		addButton(plusButton = new MatrixEnchantingPlusButton(leftPos + 86, topPos + 63, this::add));
+		pieceList = new MatrixEnchantingPieceList(this, 28, 64, topPos + 11, topPos + 75, 22);
+		pieceList.setLeftPos(leftPos + 139);
 		children.add(pieceList);
 		updateButtonStatus();
 		
@@ -81,13 +81,13 @@ public class MatrixEnchantingScreen extends ContainerScreen<MatrixEnchantingCont
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		Minecraft mc = getMinecraft();
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		mc.getTextureManager().bindTexture(BACKGROUND);
-		int i = guiLeft;
-		int j = guiTop;
-		blit(stack, i, j, 0, 0, xSize, ySize);
+		mc.getTextureManager().bind(BACKGROUND);
+		int i = leftPos;
+		int j = topPos;
+		blit(stack, i, j, 0, 0, imageWidth, imageHeight);
 
 		if(enchanter.charge > 0 && MatrixEnchantingModule.chargePerLapis > 0) {
 			int maxHeight = 18;
@@ -103,30 +103,30 @@ public class MatrixEnchantingScreen extends ContainerScreen<MatrixEnchantingCont
 			int xpCost = enchanter.matrix.getNewPiecePrice();
 			int xpMin = enchanter.matrix.getMinXpLevel(enchanter.bookshelfPower);
 			boolean has = enchanter.matrix.validateXp(mc.player, enchanter.bookshelfPower);
-			blit(stack, x, y, 0, ySize, 10, 10);
+			blit(stack, x, y, 0, imageHeight, 10, 10);
 			String text = String.valueOf(xpCost);
 
 			if(!has && mc.player.experienceLevel < xpMin) {
-				font.drawStringWithShadow(stack, "!", x + 6, y + 3, 0xFF0000);
-				text = I18n.format("quark.gui.enchanting.min", xpMin);
+				font.drawShadow(stack, "!", x + 6, y + 3, 0xFF0000);
+				text = I18n.get("quark.gui.enchanting.min", xpMin);
 			}
 
-			x -= (font.getStringWidth(text) - 5);
+			x -= (font.width(text) - 5);
 			y += 3;
-			font.drawString(stack, text, x - 1, y, 0);
-			font.drawString(stack, text, x + 1, y, 0);
-			font.drawString(stack, text, x, y + 1, 0);
-			font.drawString(stack, text, x, y - 1, 0);
-			font.drawString(stack, text, x, y, has ? 0xc8ff8f : 0xff8f8f);
+			font.draw(stack, text, x - 1, y, 0);
+			font.draw(stack, text, x + 1, y, 0);
+			font.draw(stack, text, x, y + 1, 0);
+			font.draw(stack, text, x, y - 1, 0);
+			font.draw(stack, text, x, y, has ? 0xc8ff8f : 0xff8f8f);
 		}
 	}
 	
 	@Override
-	protected void drawGuiContainerForegroundLayer(MatrixStack matrix, int mouseX, int mouseY) {
+	protected void renderLabels(PoseStack matrix, int mouseX, int mouseY) {
 		int color = MiscUtil.getGuiTextColor("matrix_enchanting");
 		
-		font.drawString(matrix, enchanter.getDisplayName().getString(), 12, 5, color);
-		font.drawString(matrix, playerInv.getDisplayName().getString(), 8, ySize - 96 + 2, color);
+		font.draw(matrix, enchanter.getDisplayName().getString(), 12, 5, color);
+		font.draw(matrix, playerInv.getDisplayName().getString(), 8, imageHeight - 96 + 2, color);
 
 		if(enchanter.matrix != null) {
 			boolean needsRefresh = listPieces == null;
@@ -137,42 +137,42 @@ public class MatrixEnchantingScreen extends ContainerScreen<MatrixEnchantingCont
 		}
 	}
 	@Override
-	public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+	public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		renderBackground(stack);
 		super.render(stack, mouseX, mouseY, partialTicks);
 
 		if(hoveredPiece != null) {
-			List<ITextComponent> tooltip = new LinkedList<>();
-			tooltip.add(new TranslationTextComponent(hoveredPiece.enchant.getDisplayName(hoveredPiece.level).getString().replaceAll("\\u00A7.", "")).mergeStyle(TextFormatting.GOLD));
+			List<Component> tooltip = new LinkedList<>();
+			tooltip.add(new TranslatableComponent(hoveredPiece.enchant.getFullname(hoveredPiece.level).getString().replaceAll("\\u00A7.", "")).withStyle(ChatFormatting.GOLD));
 
 			if(hoveredPiece.influence > 0)
-				tooltip.add(new TranslationTextComponent("quark.gui.enchanting.influence", (int) (hoveredPiece.influence * MatrixEnchantingModule.influencePower * 100)).mergeStyle(TextFormatting.GRAY));
+				tooltip.add(new TranslatableComponent("quark.gui.enchanting.influence", (int) (hoveredPiece.influence * MatrixEnchantingModule.influencePower * 100)).withStyle(ChatFormatting.GRAY));
 
 			int max = hoveredPiece.getMaxXP();
 			if(max > 0)
-				tooltip.add(new TranslationTextComponent("quark.gui.enchanting.upgrade", hoveredPiece.xp, max).mergeStyle(TextFormatting.GRAY));
+				tooltip.add(new TranslatableComponent("quark.gui.enchanting.upgrade", hoveredPiece.xp, max).withStyle(ChatFormatting.GRAY));
 
 			if(gridHoverX == -1) {
-				tooltip.add(new StringTextComponent(""));
-				tooltip.add(new TranslationTextComponent("quark.gui.enchanting.left_click").mergeStyle(TextFormatting.GRAY));
-				tooltip.add(new TranslationTextComponent("quark.gui.enchanting.right_click").mergeStyle(TextFormatting.GRAY));
+				tooltip.add(new TextComponent(""));
+				tooltip.add(new TranslatableComponent("quark.gui.enchanting.left_click").withStyle(ChatFormatting.GRAY));
+				tooltip.add(new TranslatableComponent("quark.gui.enchanting.right_click").withStyle(ChatFormatting.GRAY));
 			} else if(selectedPiece != -1) {
 				Piece p = getPiece(selectedPiece);
 				if(p != null && p.enchant == hoveredPiece.enchant && hoveredPiece.level < hoveredPiece.enchant.getMaxLevel()) {
-					tooltip.add(new StringTextComponent(""));
-					tooltip.add(new TranslationTextComponent("quark.gui.enchanting.merge").mergeStyle(TextFormatting.GRAY));
+					tooltip.add(new TextComponent(""));
+					tooltip.add(new TranslatableComponent("quark.gui.enchanting.merge").withStyle(ChatFormatting.GRAY));
 				}
 			}
 
-			func_243308_b(stack, tooltip, mouseX, mouseY); // renderTooltip
+			renderComponentTooltip(stack, tooltip, mouseX, mouseY); // renderTooltip
 		} else 
-			renderHoveredTooltip(stack, mouseX, mouseY);
+			renderTooltip(stack, mouseX, mouseY);
 	}
 
 	@Override
 	public void mouseMoved(double mouseX, double mouseY) {
-		int gridMouseX = (int) (mouseX - guiLeft - 86);
-		int gridMouseY = (int) (mouseY - guiTop - 11);
+		int gridMouseX = (int) (mouseX - leftPos - 86);
+		int gridMouseY = (int) (mouseY - topPos - 11);
 
 		gridHoverX = gridMouseX < 0 ? -1 : gridMouseX / 10;
 		gridHoverY = gridMouseY < 0 ? -1 : gridMouseY / 10;
@@ -214,9 +214,9 @@ public class MatrixEnchantingScreen extends ContainerScreen<MatrixEnchantingCont
 		return true;
 	}
 
-	private void renderMatrixGrid(MatrixStack stack, EnchantmentMatrix matrix) {
+	private void renderMatrixGrid(PoseStack stack, EnchantmentMatrix matrix) {
 		Minecraft mc = getMinecraft();
-		mc.getTextureManager().bindTexture(BACKGROUND);
+		mc.getTextureManager().bind(BACKGROUND);
 		RenderSystem.pushMatrix();
 		RenderSystem.translatef(86, 11, 0);
 
@@ -251,7 +251,7 @@ public class MatrixEnchantingScreen extends ContainerScreen<MatrixEnchantingCont
 		RenderSystem.popMatrix();
 	}
 
-	protected void renderPiece(MatrixStack stack, Piece piece, float a) {
+	protected void renderPiece(PoseStack stack, Piece piece, float a) {
 		float r = ((piece.color >> 16) & 0xFF) / 255F;
 		float g = ((piece.color >> 8) & 0xFF) / 255F;
 		float b = (piece.color & 0xFF) / 255F;
@@ -264,14 +264,14 @@ public class MatrixEnchantingScreen extends ContainerScreen<MatrixEnchantingCont
 		RenderSystem.color3f(1F, 1F, 1F);
 	}
 
-	private void renderBlock(MatrixStack stack, int x, int y, int type, float r, float g, float b, float a, boolean hovered) {
+	private void renderBlock(PoseStack stack, int x, int y, int type, float r, float g, float b, float a, boolean hovered) {
 		RenderSystem.color4f(r, g, b, a);
-		blit(stack, x * 10, y * 10, 11 + type * 10, ySize, 10, 10);
+		blit(stack, x * 10, y * 10, 11 + type * 10, imageHeight, 10, 10);
 		if(hovered)
 			renderHover(stack, x, y);
 	}
 
-	private void renderHover(MatrixStack stack, int x, int y) {
+	private void renderHover(PoseStack stack, int x, int y) {
 		fill(stack, x * 10, y * 10, x * 10 + 10, y * 10 + 10, 0x66FFFFFF);
 	}
 
@@ -310,7 +310,7 @@ public class MatrixEnchantingScreen extends ContainerScreen<MatrixEnchantingCont
 	}
 
 	private void click() {
-		getMinecraft().getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+		getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 	}
 
 	private void updateButtonStatus() {

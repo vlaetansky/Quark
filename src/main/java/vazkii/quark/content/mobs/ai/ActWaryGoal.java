@@ -15,14 +15,14 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.function.BooleanSupplier;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import vazkii.quark.base.util.MutableVectorHolder;
 import vazkii.quark.content.mobs.entity.StonelingEntity;
 
-public class ActWaryGoal extends WaterAvoidingRandomWalkingGoal {
+public class ActWaryGoal extends WaterAvoidingRandomStrollGoal {
 
 	private final StonelingEntity stoneling;
 
@@ -32,8 +32,8 @@ public class ActWaryGoal extends WaterAvoidingRandomWalkingGoal {
 
 	private boolean startled;
 
-	private final Map<PlayerEntity, MutableVectorHolder> lastPositions = new WeakHashMap<>();
-	private final Map<PlayerEntity, MutableVectorHolder> lastSpeeds = new WeakHashMap<>();
+	private final Map<Player, MutableVectorHolder> lastPositions = new WeakHashMap<>();
+	private final Map<Player, MutableVectorHolder> lastSpeeds = new WeakHashMap<>();
 
 	public ActWaryGoal(StonelingEntity stoneling, double speed, double range, BooleanSupplier scaredBySuddenMovement) {
 		super(stoneling, speed, 1F);
@@ -49,13 +49,13 @@ public class ActWaryGoal extends WaterAvoidingRandomWalkingGoal {
 	}
 
 	private static void updatePos(MutableVectorHolder holder, Entity entity) {
-		Vector3d pos = entity.getPositionVec();
+		Vec3 pos = entity.position();
 		holder.x = pos.x;
 		holder.y = pos.y;
 		holder.z = pos.z;
 	}
 
-	private static MutableVectorHolder initPos(PlayerEntity p) {
+	private static MutableVectorHolder initPos(Player p) {
 		MutableVectorHolder holder = new MutableVectorHolder();
 		updatePos(holder, p);
 		return holder;
@@ -70,42 +70,42 @@ public class ActWaryGoal extends WaterAvoidingRandomWalkingGoal {
 	}
 
 	protected boolean shouldApplyPath() {
-		return super.shouldExecute();
+		return super.canUse();
 	}
 
 	@Override
 	public void tick() {
-		if (stoneling.getNavigator().noPath() && shouldApplyPath())
-			startExecuting();
+		if (stoneling.getNavigation().isDone() && shouldApplyPath())
+			start();
 	}
 
 	@Override
-	public boolean shouldContinueExecuting() {
-		return shouldExecute();
+	public boolean canContinueToUse() {
+		return canUse();
 	}
 
 	@Override
-	public void resetTask() {
-		stoneling.getNavigator().clearPath();
+	public void stop() {
+		stoneling.getNavigation().stop();
 	}
 
 	@Override
-	public boolean shouldExecute() {
+	public boolean canUse() {
 		if (startled || stoneling.isPlayerMade())
 			return false;
 
-		List<PlayerEntity> playersAround = stoneling.world.getEntitiesWithinAABB(PlayerEntity.class, stoneling.getBoundingBox().grow(range),
-				(player) -> player != null && !player.abilities.isCreativeMode && player.getDistanceSq(stoneling) < range * range);
+		List<Player> playersAround = stoneling.level.getEntitiesOfClass(Player.class, stoneling.getBoundingBox().inflate(range),
+				(player) -> player != null && !player.abilities.instabuild && player.distanceToSqr(stoneling) < range * range);
 
 		if (playersAround.isEmpty())
 			return false;
 
-		for (PlayerEntity player : playersAround) {
+		for (Player player : playersAround) {
 			if (player.isDiscrete()) {
 				if (scaredBySuddenMovement.getAsBoolean()) {
 					MutableVectorHolder lastSpeed = lastSpeeds.computeIfAbsent(player, p -> new MutableVectorHolder());
 					MutableVectorHolder lastPos = lastPositions.computeIfAbsent(player, ActWaryGoal::initPos);
-					Vector3d pos = player.getPositionVec();
+					Vec3 pos = player.position();
 
 					double dX = pos.x - lastPos.x;
 					double dY = pos.y - lastPos.y;

@@ -4,12 +4,14 @@ import java.util.function.BooleanSupplier;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.NonNullList;
 import vazkii.arl.item.BasicItem;
 import vazkii.quark.base.client.handler.RequiredModTooltipHandler;
 import vazkii.quark.base.module.QuarkModule;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class QuarkItem extends BasicItem implements IQuarkItem {
 
@@ -25,9 +27,9 @@ public class QuarkItem extends BasicItem implements IQuarkItem {
 	}
 
 	@Override
-	public void fillItemGroup(@Nonnull ItemGroup group, @Nonnull NonNullList<ItemStack> items) {
-		if(isEnabled() || group == ItemGroup.SEARCH)
-			super.fillItemGroup(group, items);
+	public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
+		if(isEnabled() || group == CreativeModeTab.TAB_SEARCH)
+			super.fillItemCategory(group, items);
 	}
 
 	@Override

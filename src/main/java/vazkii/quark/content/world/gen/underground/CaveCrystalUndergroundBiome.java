@@ -4,12 +4,12 @@ import java.util.Random;
 
 import it.unimi.dsi.fastutil.ints.Int2ByteArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ByteMap;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.gen.WorldGenRegion;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.WorldGenRegion;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.content.world.block.CaveCrystalBlock;
 import vazkii.quark.content.world.block.CaveCrystalClusterBlock;
@@ -19,7 +19,7 @@ import vazkii.quark.content.world.module.underground.CaveCrystalUndergroundBiome
 public class CaveCrystalUndergroundBiome extends BasicUndergroundBiome {
 
 	public CaveCrystalUndergroundBiome() {
-		super(Blocks.AIR.getDefaultState(), Blocks.STONE.getDefaultState(), Blocks.STONE.getDefaultState());
+		super(Blocks.AIR.defaultBlockState(), Blocks.STONE.defaultBlockState(), Blocks.STONE.defaultBlockState());
 	}
 
 	private static final Int2ByteMap CRYSTAL_DATA = new Int2ByteArrayMap();
@@ -46,13 +46,13 @@ public class CaveCrystalUndergroundBiome extends BasicUndergroundBiome {
 	}
 	
 	private static void makeCrystalIfApt(Context context, BlockPos pos, Direction offset, int color) {
-		BlockPos crystalPos = pos.offset(offset);
+		BlockPos crystalPos = pos.relative(offset);
 		boolean hasHorizontal = false;
 		
 		WorldGenRegion world = context.world;
 		for(Direction dir : MiscUtil.HORIZONTALS) {
-			BlockPos testPos = crystalPos.offset(dir);
-			if(world.getBlockState(testPos).isSolid()) {
+			BlockPos testPos = crystalPos.relative(dir);
+			if(world.getBlockState(testPos).canOcclude()) {
 				hasHorizontal = true;
 				break;
 			}
@@ -64,9 +64,9 @@ public class CaveCrystalUndergroundBiome extends BasicUndergroundBiome {
 		makeCrystalAt(context, crystalPos, offset, color, CaveCrystalUndergroundBiomeModule.crystalClusterChance);
 		
 		if(context.random.nextDouble() < CaveCrystalUndergroundBiomeModule.doubleCrystalChance) {
-			crystalPos = crystalPos.offset(offset);
+			crystalPos = crystalPos.relative(offset);
 			
-			if(world.isAirBlock(crystalPos))
+			if(world.isEmptyBlock(crystalPos))
 				makeCrystalAt(context, crystalPos, offset, color, 0);
 		}	
 	}
@@ -77,14 +77,14 @@ public class CaveCrystalUndergroundBiome extends BasicUndergroundBiome {
 
 		WorldGenRegion world = context.world;
 		if(context.random.nextDouble() < clusterChance)
-			world.setBlockState(crystalPos, cluster.getDefaultState().with(CaveCrystalClusterBlock.FACING, offset).with(CaveCrystalClusterBlock.WATERLOGGED, world.getFluidState(crystalPos).getFluid() == Fluids.WATER), 0);
+			world.setBlock(crystalPos, cluster.defaultBlockState().setValue(CaveCrystalClusterBlock.FACING, offset).setValue(CaveCrystalClusterBlock.WATERLOGGED, world.getFluidState(crystalPos).getType() == Fluids.WATER), 0);
 		else {
-			world.setBlockState(crystalPos, crystal.getDefaultState(), 0);
+			world.setBlock(crystalPos, crystal.defaultBlockState(), 0);
 			
 			for(Direction dir : Direction.values()) {
-				BlockPos clusterPos = crystalPos.offset(dir);
-				if(world.isAirBlock(clusterPos) && context.random.nextDouble() < CaveCrystalUndergroundBiomeModule.crystalClusterOnSidesChance)
-					world.setBlockState(clusterPos, cluster.getDefaultState().with(CaveCrystalClusterBlock.FACING, dir).with(CaveCrystalClusterBlock.WATERLOGGED, world.getFluidState(clusterPos).getFluid() == Fluids.WATER), 0);
+				BlockPos clusterPos = crystalPos.relative(dir);
+				if(world.isEmptyBlock(clusterPos) && context.random.nextDouble() < CaveCrystalUndergroundBiomeModule.crystalClusterOnSidesChance)
+					world.setBlock(clusterPos, cluster.defaultBlockState().setValue(CaveCrystalClusterBlock.FACING, dir).setValue(CaveCrystalClusterBlock.WATERLOGGED, world.getFluidState(clusterPos).getType() == Fluids.WATER), 0);
 			}
 		}
 	}

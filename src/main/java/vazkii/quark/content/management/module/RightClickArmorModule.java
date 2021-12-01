@@ -1,17 +1,17 @@
 package vazkii.quark.content.management.module;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.screen.inventory.CreativeScreen;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ElytraItem;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ElytraItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -33,15 +33,15 @@ public class RightClickArmorModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void onRightClick(GuiScreenEvent.MouseClickedEvent.Pre event) {
 		Minecraft mc = Minecraft.getInstance();
-		Screen gui = mc.currentScreen;
-		if(gui instanceof ContainerScreen && !(gui instanceof CreativeScreen) && event.getButton() == 1 && !Screen.hasShiftDown()) {
-			ContainerScreen<?> container = (ContainerScreen<?>) gui;
+		Screen gui = mc.screen;
+		if(gui instanceof AbstractContainerScreen && !(gui instanceof CreativeModeInventoryScreen) && event.getButton() == 1 && !Screen.hasShiftDown()) {
+			AbstractContainerScreen<?> container = (AbstractContainerScreen<?>) gui;
 			Slot under = container.getSlotUnderMouse();
 			if(under != null) {
-				ItemStack held = mc.player.inventory.getItemStack();
+				ItemStack held = mc.player.inventory.getCarried();
 
-				if(held.isEmpty() && swap(mc.player, under.slotNumber)) {
-					QuarkNetwork.sendToServer(new SwapArmorMessage(under.slotNumber));
+				if(held.isEmpty() && swap(mc.player, under.index)) {
+					QuarkNetwork.sendToServer(new SwapArmorMessage(under.index));
 					
 					shouldCancelNextRelease = true;
 					event.setCanceled(true);
@@ -50,32 +50,32 @@ public class RightClickArmorModule extends QuarkModule {
 		}
 	}
 	
-	public static boolean swap(PlayerEntity player, int slot) {
+	public static boolean swap(Player player, int slot) {
 		if(!ModuleLoader.INSTANCE.isModuleEnabled(RightClickArmorModule.class))
 			return false;
 		
-		Slot slotUnder = player.openContainer.getSlot(slot);
-		ItemStack stack = slotUnder.getStack();
+		Slot slotUnder = player.containerMenu.getSlot(slot);
+		ItemStack stack = slotUnder.getItem();
 		
-		EquipmentSlotType equipSlot = null;
+		EquipmentSlot equipSlot = null;
 		
 		if(stack.getItem() instanceof ArmorItem) {
 			ArmorItem armor = (ArmorItem) stack.getItem();
-			equipSlot = armor.getEquipmentSlot();
+			equipSlot = armor.getSlot();
 		} else if(stack.getItem() instanceof ElytraItem)
-			equipSlot = EquipmentSlotType.CHEST;
+			equipSlot = EquipmentSlot.CHEST;
 		
 		if(equipSlot != null) {
-			ItemStack currArmor = player.getItemStackFromSlot(equipSlot);
+			ItemStack currArmor = player.getItemBySlot(equipSlot);
 			
-			if(slotUnder.canTakeStack(player) && slotUnder.isItemValid(currArmor)) 
-				if(currArmor.isEmpty() || (EnchantmentHelper.getEnchantmentLevel(Enchantments.BINDING_CURSE, currArmor) == 0 && currArmor != stack)) {
+			if(slotUnder.mayPickup(player) && slotUnder.mayPlace(currArmor)) 
+				if(currArmor.isEmpty() || (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BINDING_CURSE, currArmor) == 0 && currArmor != stack)) {
 					int index = slotUnder.getSlotIndex();
-					if(index < slotUnder.inventory.getSizeInventory()) {
-						player.setItemStackToSlot(equipSlot, stack.copy());
+					if(index < slotUnder.container.getContainerSize()) {
+						player.setItemSlot(equipSlot, stack.copy());
 						
-						slotUnder.inventory.setInventorySlotContents(index, currArmor.copy());
-						slotUnder.onSlotChange(stack, currArmor);
+						slotUnder.container.setItem(index, currArmor.copy());
+						slotUnder.onQuickCraft(stack, currArmor);
 						return true;
 					}
 				}

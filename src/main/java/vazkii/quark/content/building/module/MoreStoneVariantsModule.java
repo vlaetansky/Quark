@@ -2,10 +2,10 @@ package vazkii.quark.content.building.module;
 
 import java.util.function.BooleanSupplier;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.block.QuarkPillarBlock;
@@ -36,10 +36,10 @@ public class MoreStoneVariantsModule extends QuarkModule {
 		
 		add("marble", MaterialColor.QUARTZ, () -> NewStoneTypesModule.enabledWithMarble);
 		add("limestone", MaterialColor.STONE, () -> NewStoneTypesModule.enabledWithLimestone);
-		add("jasper", MaterialColor.RED_TERRACOTTA, () -> NewStoneTypesModule.enabledWithJasper);
+		add("jasper", MaterialColor.TERRACOTTA_RED, () -> NewStoneTypesModule.enabledWithJasper);
 		add("slate", MaterialColor.ICE, () -> NewStoneTypesModule.enabledWithSlate);
 		
-		add("myalite", MaterialColor.PURPLE, () -> NewStoneTypesModule.enabledWithMyalite, MyaliteBlock::new, MyalitePillarBlock::new);
+		add("myalite", MaterialColor.COLOR_PURPLE, () -> NewStoneTypesModule.enabledWithMyalite, MyaliteBlock::new, MyalitePillarBlock::new);
 	}
 	
 	@Override
@@ -54,17 +54,17 @@ public class MoreStoneVariantsModule extends QuarkModule {
 	}
 	
 	private void add(String name, MaterialColor color, BooleanSupplier cond, QuarkBlock.Constructor<QuarkBlock> constr, QuarkBlock.Constructor<QuarkPillarBlock> pillarConstr) {
-		Block.Properties props = Block.Properties.create(Material.ROCK, color)
-				.setRequiresTool()
+		Block.Properties props = Block.Properties.of(Material.STONE, color)
+				.requiresCorrectToolForDrops()
         		.harvestTool(ToolType.PICKAXE)
-        		.hardnessAndResistance(1.5F, 6.0F);
+        		.strength(1.5F, 6.0F);
 		
-		QuarkBlock bricks = constr.make(name + "_bricks", this, ItemGroup.BUILDING_BLOCKS, props).setCondition(() -> cond.getAsBoolean() && enableBricks);
+		QuarkBlock bricks = constr.make(name + "_bricks", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props).setCondition(() -> cond.getAsBoolean() && enableBricks);
 		VariantHandler.addSlabStairsWall(bricks);
 		
-		constr.make("chiseled_" + name + "_bricks", this, ItemGroup.BUILDING_BLOCKS, props).setCondition(() -> cond.getAsBoolean() && enableBricks && enableChiseledBricks);
-		constr.make(name + "_pavement", this, ItemGroup.BUILDING_BLOCKS, props).setCondition(() -> cond.getAsBoolean() && enablePavement);
-		pillarConstr.make(name + "_pillar", this, ItemGroup.BUILDING_BLOCKS, props).setCondition(() -> cond.getAsBoolean() && enablePillar);
+		constr.make("chiseled_" + name + "_bricks", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props).setCondition(() -> cond.getAsBoolean() && enableBricks && enableChiseledBricks);
+		constr.make(name + "_pavement", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props).setCondition(() -> cond.getAsBoolean() && enablePavement);
+		pillarConstr.make(name + "_pillar", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props).setCondition(() -> cond.getAsBoolean() && enablePillar);
 	}
 	
 }

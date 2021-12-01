@@ -1,11 +1,11 @@
 package vazkii.quark.content.building.module;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelLoader;
@@ -36,10 +36,10 @@ public class GlassItemFrameModule extends QuarkModule {
 
     @Override
     public void construct() {
-        glassFrameEntity = EntityType.Builder.<GlassItemFrameEntity>create(GlassItemFrameEntity::new, EntityClassification.MISC)
-                .size(0.5F, 0.5F)
-                .trackingRange(10)
-                .func_233608_b_(Integer.MAX_VALUE) // update interval
+        glassFrameEntity = EntityType.Builder.<GlassItemFrameEntity>of(GlassItemFrameEntity::new, MobCategory.MISC)
+                .sized(0.5F, 0.5F)
+                .clientTrackingRange(10)
+                .updateInterval(Integer.MAX_VALUE) // update interval
                 .setShouldReceiveVelocityUpdates(false)
                 .setCustomClientFactory((spawnEntity, world) -> new GlassItemFrameEntity(glassFrameEntity, world))
                 .build("glass_frame");
@@ -49,7 +49,7 @@ public class GlassItemFrameModule extends QuarkModule {
         glowingGlassFrame = new QuarkItemFrameItem("glowing_glass_item_frame", this, 
         		(w, p, d) -> {
         			GlassItemFrameEntity e = new GlassItemFrameEntity(w, p, d);
-        			e.getDataManager().set(GlassItemFrameEntity.IS_SHINY, true);
+        			e.getEntityData().set(GlassItemFrameEntity.IS_SHINY, true);
         			return e;
         		});
     }

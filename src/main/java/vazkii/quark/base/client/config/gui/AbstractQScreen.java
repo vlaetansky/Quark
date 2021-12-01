@@ -1,12 +1,12 @@
 package vazkii.quark.base.client.config.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.gui.widget.button.Button.IPressable;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Button.OnPress;
+import net.minecraft.Util;
+import net.minecraft.network.chat.TextComponent;
 import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.base.client.config.obj.AbstractStringInputObject;
 import vazkii.quark.base.client.config.obj.ListObject;
@@ -16,33 +16,33 @@ public abstract class AbstractQScreen extends Screen {
 	private final Screen parent;
 	
 	public AbstractQScreen(Screen parent) {
-		super(new StringTextComponent(""));
+		super(new TextComponent(""));
 		this.parent = parent;
 	}
 	
 	@Override
-	public void render(MatrixStack mstack, int mouseX, int mouseY, float pticks) {
+	public void render(PoseStack mstack, int mouseX, int mouseY, float pticks) {
 		super.render(mstack, mouseX, mouseY, pticks);
 	}
 	
 	public void returnToParent(Button button) {
-		minecraft.displayGuiScreen(parent);
+		minecraft.setScreen(parent);
 	}
 	
-	public IPressable webLink(String url) {
-		return b -> Util.getOSType().openURI(url);
+	public OnPress webLink(String url) {
+		return b -> Util.getPlatform().openUri(url);
 	}
 	
-	public IPressable categoryLink(IConfigCategory category) {
-		return b -> minecraft.displayGuiScreen(new CategoryScreen(this, category));
+	public OnPress categoryLink(IConfigCategory category) {
+		return b -> minecraft.setScreen(new CategoryScreen(this, category));
 	}
 	
-	public <T> IPressable stringInput(AbstractStringInputObject<T> object) {
-		return b -> minecraft.displayGuiScreen(new StringInputScreen<T>(this, object));
+	public <T> OnPress stringInput(AbstractStringInputObject<T> object) {
+		return b -> minecraft.setScreen(new StringInputScreen<T>(this, object));
 	}
 	
-	public IPressable listInput(ListObject object) {
-		return b -> minecraft.displayGuiScreen(new ListInputScreen(this, object));
+	public OnPress listInput(ListObject object) {
+		return b -> minecraft.setScreen(new ListInputScreen(this, object));
 	}
 
 }

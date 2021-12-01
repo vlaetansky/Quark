@@ -2,49 +2,49 @@ package vazkii.quark.content.management.entity;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.NetworkHooks;
 import vazkii.quark.content.management.module.ChestsInBoatsModule;
 
-public class ChestPassengerEntity extends Entity implements IInventory {
+public class ChestPassengerEntity extends Entity implements Container {
 
 	private final NonNullList<ItemStack> items = NonNullList.withSize(27, ItemStack.EMPTY);
 	
-	private static final DataParameter<ItemStack> CHEST_TYPE = EntityDataManager.createKey(ChestPassengerEntity.class, DataSerializers.ITEMSTACK);
+	private static final EntityDataAccessor<ItemStack> CHEST_TYPE = SynchedEntityData.defineId(ChestPassengerEntity.class, EntityDataSerializers.ITEM_STACK);
 	private static final String TAG_CHEST_TYPE = "chestType";
 
-	public ChestPassengerEntity(EntityType<? extends ChestPassengerEntity> type, World worldIn) {
+	public ChestPassengerEntity(EntityType<? extends ChestPassengerEntity> type, Level worldIn) {
 		super(type, worldIn);
-		noClip = true;
+		noPhysics = true;
 	}
 	
-	public ChestPassengerEntity(World worldIn, ItemStack stack) {
+	public ChestPassengerEntity(Level worldIn, ItemStack stack) {
 		this(ChestsInBoatsModule.chestPassengerEntityType, worldIn);
 
 		ItemStack newStack = stack.copy();
 		newStack.setCount(1);
-		dataManager.set(CHEST_TYPE, newStack);
+		entityData.set(CHEST_TYPE, newStack);
 	}
 
 	@Override
-	protected void registerData() {
-		dataManager.register(CHEST_TYPE, new ItemStack(Blocks.CHEST));
+	protected void defineSynchedData() {
+		entityData.define(CHEST_TYPE, new ItemStack(Blocks.CHEST));
 	}
 
 	@Override
@@ -54,12 +54,12 @@ public class ChestPassengerEntity extends Entity implements IInventory {
 		if(!isAlive())
 			return;
 		
-		if(!isPassenger() && !world.isRemote)
+		if(!isPassenger() && !level.isClientSide)
 			remove();
 
-		Entity riding = getRidingEntity();
+		Entity riding = getVehicle();
 		if (riding != null) {
-			rotationYaw = riding.prevRotationYaw;
+			yRot = riding.yRotO;
 		}
 	}
 	
@@ -69,12 +69,12 @@ public class ChestPassengerEntity extends Entity implements IInventory {
 	}
 
 	@Override
-	public boolean canBeAttackedWithItem() {
+	public boolean isAttackable() {
 		return false;
 	}
 
 	@Override
-	public int getSizeInventory() {
+	public int getContainerSize() {
 		return items.size();
 	}
 
@@ -89,19 +89,19 @@ public class ChestPassengerEntity extends Entity implements IInventory {
 
 	@Nonnull
 	@Override
-	public ItemStack getStackInSlot(int index) {
+	public ItemStack getItem(int index) {
 		return items.get(index);
 	}
 
 	@Nonnull
 	@Override
-	public ItemStack decrStackSize(int index, int count) {
-		return ItemStackHelper.getAndSplit(items, index, count);
+	public ItemStack removeItem(int index, int count) {
+		return ContainerHelper.removeItem(items, index, count);
 	}
 
 	@Nonnull
 	@Override
-	public ItemStack removeStackFromSlot(int index) {
+	public ItemStack removeItemNoUpdate(int index) {
 		ItemStack itemstack = items.get(index);
 
 		if(itemstack.isEmpty())
@@ -113,84 +113,84 @@ public class ChestPassengerEntity extends Entity implements IInventory {
 	}
 
 	@Override
-	public void setInventorySlotContents(int index, @Nonnull ItemStack stack) {
+	public void setItem(int index, @Nonnull ItemStack stack) {
 		items.set(index, stack);
 	}
 
 	@Override
-	public int getInventoryStackLimit() {
+	public int getMaxStackSize() {
 		return 64;
 	}
 
 	@Override
-	public void markDirty() {
+	public void setChanged() {
 		// NO-OP
 	}
 
 	@Override
-	public boolean isUsableByPlayer(@Nonnull PlayerEntity player) {
-		return isAlive() && player.getDistanceSq(this) <= 64;
+	public boolean stillValid(@Nonnull Player player) {
+		return isAlive() && player.distanceToSqr(this) <= 64;
 	}
 
 	@Override
-	public void openInventory(@Nonnull PlayerEntity player) {
+	public void startOpen(@Nonnull Player player) {
 		// NO-OP
 	}
 
 	@Override
-	public void closeInventory(@Nonnull PlayerEntity player) {
+	public void stopOpen(@Nonnull Player player) {
 		// NO-OP
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, @Nonnull ItemStack stack) {
+	public boolean canPlaceItem(int index, @Nonnull ItemStack stack) {
 		return true;
 	}
 
 	@Override
-	public void clear() {
+	public void clearContent() {
 		items.clear();
 	}
 
 	@Override
-	protected void readAdditional(@Nonnull CompoundNBT compound) {
-		ItemStackHelper.loadAllItems(compound, items);
+	protected void readAdditionalSaveData(@Nonnull CompoundTag compound) {
+		ContainerHelper.loadAllItems(compound, items);
 
-		CompoundNBT itemCmp = compound.getCompound(TAG_CHEST_TYPE);
-		ItemStack stack = ItemStack.read(itemCmp);
+		CompoundTag itemCmp = compound.getCompound(TAG_CHEST_TYPE);
+		ItemStack stack = ItemStack.of(itemCmp);
 		if(!stack.isEmpty())
-			dataManager.set(CHEST_TYPE, stack);
+			entityData.set(CHEST_TYPE, stack);
 
 	}
 
 	@Override
-	protected void writeAdditional(@Nonnull CompoundNBT compound) {
-		ItemStackHelper.saveAllItems(compound, items);
+	protected void addAdditionalSaveData(@Nonnull CompoundTag compound) {
+		ContainerHelper.saveAllItems(compound, items);
 
-		CompoundNBT itemCmp = new CompoundNBT();
-		dataManager.get(CHEST_TYPE).write(itemCmp);
+		CompoundTag itemCmp = new CompoundTag();
+		entityData.get(CHEST_TYPE).save(itemCmp);
 		compound.put(TAG_CHEST_TYPE, itemCmp);
 
 	}
 
 	@Nonnull
 	@Override
-	public IPacket<?> createSpawnPacket() {
+	public Packet<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 	@Override
 	public void remove() {
-		if(!world.isRemote) {
-			InventoryHelper.dropInventoryItems(world, this, this);
-			entityDropItem(getChestType());
+		if(!level.isClientSide) {
+			Containers.dropContents(level, this, this);
+			spawnAtLocation(getChestType());
 		}
 		
 		super.remove();
 	}
 	
 	public ItemStack getChestType() {
-		return dataManager.get(CHEST_TYPE);
+		return entityData.get(CHEST_TYPE);
 	}
 
 }

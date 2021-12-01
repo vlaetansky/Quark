@@ -1,16 +1,16 @@
 package vazkii.quark.api;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public interface ICollateralMover {
 
-	default boolean isCollateralMover(World world, BlockPos source, Direction moveDirection, BlockPos pos) {
+	default boolean isCollateralMover(Level world, BlockPos source, Direction moveDirection, BlockPos pos) {
 		return true;
 	}
 	
-	MoveResult getCollateralMovement(World world, BlockPos source, Direction moveDirection, Direction side, BlockPos pos); 
+	MoveResult getCollateralMovement(Level world, BlockPos source, Direction moveDirection, Direction side, BlockPos pos); 
 	
 	public static enum MoveResult {
 		

@@ -3,29 +3,29 @@ package vazkii.quark.content.building.client.render;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.model.RenderMaterial;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.state.properties.ChestType;
-import net.minecraft.tileentity.ChestTileEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.level.block.state.properties.ChestType;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.render.GenericChestTERenderer;
 import vazkii.quark.content.building.module.VariantChestsModule.IChestTextureProvider;
 
-public class VariantChestTileEntityRenderer extends GenericChestTERenderer<ChestTileEntity> {
+public class VariantChestTileEntityRenderer extends GenericChestTERenderer<ChestBlockEntity> {
 
 	private static Map<Block, ChestTextureBatch> chestTextures = new HashMap<>();
 	
 	public static Block invBlock = null; 
 
-	public VariantChestTileEntityRenderer(TileEntityRendererDispatcher disp) {
+	public VariantChestTileEntityRenderer(BlockEntityRenderDispatcher disp) {
 		super(disp);
 	}
 
 	@Override
-	public RenderMaterial getMaterial(ChestTileEntity t, ChestType type) {
+	public Material getMaterial(ChestBlockEntity t, ChestType type) {
 		Block block = invBlock;
 		if(block == null)
 			block = t.getBlockState().getBlock();
@@ -42,7 +42,7 @@ public class VariantChestTileEntityRenderer extends GenericChestTERenderer<Chest
 	}
 
 	public static void accept(TextureStitchEvent.Pre event, Block chest) {
-		ResourceLocation atlas = event.getMap().getTextureLocation();
+		ResourceLocation atlas = event.getMap().location();
 
 		if(chest instanceof IChestTextureProvider) {
 			IChestTextureProvider prov = (IChestTextureProvider) chest;
@@ -69,12 +69,12 @@ public class VariantChestTileEntityRenderer extends GenericChestTERenderer<Chest
 	}
 
 	private static class ChestTextureBatch {
-		public final RenderMaterial normal, left, right;
+		public final Material normal, left, right;
 
 		public ChestTextureBatch(ResourceLocation atlas, ResourceLocation normal, ResourceLocation left, ResourceLocation right) {
-			this.normal = new RenderMaterial(atlas, normal);
-			this.left = new RenderMaterial(atlas, left);
-			this.right = new RenderMaterial(atlas, right);
+			this.normal = new Material(atlas, normal);
+			this.left = new Material(atlas, left);
+			this.right = new Material(atlas, right);
 		}
 
 	}

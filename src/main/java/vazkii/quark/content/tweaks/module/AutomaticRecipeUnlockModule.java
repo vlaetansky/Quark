@@ -8,19 +8,19 @@ import java.util.Queue;
 import com.google.common.collect.Lists;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.recipebook.IRecipeShownListener;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.toasts.IToast;
-import net.minecraft.client.gui.toasts.RecipeToast;
-import net.minecraft.client.gui.toasts.ToastGui;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.ImageButton;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.RecipeBookCategory;
+import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.toasts.Toast;
+import net.minecraft.client.gui.components.toasts.RecipeToast;
+import net.minecraft.client.gui.components.toasts.ToastComponent;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.inventory.RecipeBookType;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.GameRules;
+import net.minecraft.world.level.GameRules;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
@@ -43,14 +43,14 @@ public class AutomaticRecipeUnlockModule extends QuarkModule {
 
 	@SubscribeEvent 
 	public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
-		PlayerEntity player = event.getPlayer();
+		Player player = event.getPlayer();
 
-		if(player instanceof ServerPlayerEntity) {
-			ServerPlayerEntity spe = (ServerPlayerEntity) player;
+		if(player instanceof ServerPlayer) {
+			ServerPlayer spe = (ServerPlayer) player;
 			MinecraftServer server = spe.getServer();
 			if (server != null) {
-				List<IRecipe<?>> recipes = new ArrayList<>(server.getRecipeManager().getRecipes());
-				recipes.removeIf((recipe) -> ignoredRecipes.contains(Objects.toString(recipe.getId())) || recipe.getRecipeOutput().isEmpty());
+				List<Recipe<?>> recipes = new ArrayList<>(server.getRecipeManager().getRecipes());
+				recipes.removeIf((recipe) -> ignoredRecipes.contains(Objects.toString(recipe.getId())) || recipe.getResultItem().isEmpty());
 				
 				int idx = 0;
 				int maxShift = 1000;
@@ -60,14 +60,14 @@ public class AutomaticRecipeUnlockModule extends QuarkModule {
 					shift = size - idx;
 					int effShift = Math.min(maxShift, shift);
 					
-					List<IRecipe<?>> sectionedRecipes = recipes.subList(idx, idx + effShift);
-					player.unlockRecipes(sectionedRecipes);
+					List<Recipe<?>> sectionedRecipes = recipes.subList(idx, idx + effShift);
+					player.awardRecipes(sectionedRecipes);
 					idx += effShift;
 				} while(shift > maxShift);
 				
 
 				if (forceLimitedCrafting)
-					player.world.getGameRules().get(GameRules.DO_LIMITED_CRAFTING).set(true, server);
+					player.level.getGameRules().getRule(GameRules.RULE_LIMITED_CRAFTING).set(true, server);
 			}
 		}
 	}
@@ -76,11 +76,11 @@ public class AutomaticRecipeUnlockModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void onInitGui(InitGuiEvent.Post event) {
 		Screen gui = event.getGui();
-		if(disableRecipeBook && gui instanceof IRecipeShownListener) {
-			Minecraft.getInstance().player.getRecipeBook().func_242139_a().func_242152_a(RecipeBookCategory.CRAFTING, false); 
+		if(disableRecipeBook && gui instanceof RecipeUpdateListener) {
+			Minecraft.getInstance().player.getRecipeBook().getBookSettings().setOpen(RecipeBookType.CRAFTING, false); 
 
-			List<Widget> widgets = event.getWidgetList();
-			for(Widget w : widgets)
+			List<AbstractWidget> widgets = event.getWidgetList();
+			for(AbstractWidget w : widgets)
 				if(w instanceof ImageButton) {
 					event.removeWidget(w);
 					return;
@@ -92,13 +92,13 @@ public class AutomaticRecipeUnlockModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void clientTick(ClientTickEvent event) {
 		Minecraft mc = Minecraft.getInstance();
-		if(mc.player != null && mc.player.ticksExisted < 20) {
-			ToastGui toasts = mc.getToastGui();
-			Queue<IToast> toastQueue = toasts.toastsQueue;
-			for(IToast toast : toastQueue)
+		if(mc.player != null && mc.player.tickCount < 20) {
+			ToastComponent toasts = mc.getToasts();
+			Queue<Toast> toastQueue = toasts.queued;
+			for(Toast toast : toastQueue)
 				if(toast instanceof RecipeToast) {
 					RecipeToast recipeToast = (RecipeToast) toast;
-					List<IRecipe<?>> stacks = recipeToast.recipes;
+					List<Recipe<?>> stacks = recipeToast.recipes;
 					if(stacks.size() > 100) {
 						toastQueue.remove(toast);
 						return;

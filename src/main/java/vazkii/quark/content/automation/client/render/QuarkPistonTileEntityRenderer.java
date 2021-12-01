@@ -2,55 +2,55 @@ package vazkii.quark.content.automation.client.render;
 
 import java.util.Objects;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.tileentity.PistonTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import vazkii.quark.base.Quark;
 import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 
 public class QuarkPistonTileEntityRenderer {
 
-	public static boolean renderPistonBlock(PistonTileEntity piston, float pTicks, MatrixStack matrix, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
+	public static boolean renderPistonBlock(PistonMovingBlockEntity piston, float pTicks, PoseStack matrix, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 		if (!PistonsMoveTileEntitiesModule.staticEnabled || piston.getProgress(pTicks) > 1.0F) // TODO move this to a static get
 			return false;
 
-		BlockState state = piston.getPistonState();
-		BlockPos truePos = piston.getPos();
-		TileEntity tile = PistonsMoveTileEntitiesModule.getMovement(piston.getWorld(), truePos);
-		Vector3d offset = new Vector3d(piston.getOffsetX(pTicks), piston.getOffsetY(pTicks), piston.getOffsetZ(pTicks));
+		BlockState state = piston.getMovedState();
+		BlockPos truePos = piston.getBlockPos();
+		BlockEntity tile = PistonsMoveTileEntitiesModule.getMovement(piston.getLevel(), truePos);
+		Vec3 offset = new Vec3(piston.getXOff(pTicks), piston.getYOff(pTicks), piston.getZOff(pTicks));
 		
-		return renderTESafely(piston.getWorld(), truePos, state, tile, piston, pTicks, offset, matrix, bufferIn, combinedLightIn, combinedOverlayIn);
+		return renderTESafely(piston.getLevel(), truePos, state, tile, piston, pTicks, offset, matrix, bufferIn, combinedLightIn, combinedOverlayIn);
 	}
 	
-	public static boolean renderTESafely(World world, BlockPos truePos, BlockState state, TileEntity tile, TileEntity sourceTE, float pTicks, Vector3d offset, MatrixStack matrix, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
+	public static boolean renderTESafely(Level world, BlockPos truePos, BlockState state, BlockEntity tile, BlockEntity sourceTE, float pTicks, Vec3 offset, PoseStack matrix, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 		Block block = state.getBlock();
 		String id = Objects.toString(block.getRegistryName());
 		
-		MatrixStack.Entry currEntry = matrix.getLast();
+		PoseStack.Pose currEntry = matrix.last();
 		render: try {
 			if(tile == null || (block == Blocks.PISTON_HEAD) || PistonsMoveTileEntitiesModule.renderBlacklist.contains(id))
 				break render;
 			
-			matrix.push();
-			TileEntityRenderer<TileEntity> tileentityrenderer = TileEntityRendererDispatcher.instance.getRenderer(tile);
+			matrix.pushPose();
+			BlockEntityRenderer<BlockEntity> tileentityrenderer = BlockEntityRenderDispatcher.instance.getRenderer(tile);
 			if(tileentityrenderer != null) {
-				tile.setWorldAndPos(sourceTE.getWorld(), sourceTE.getPos());
-				tile.validate();
+				tile.setLevelAndPosition(sourceTE.getLevel(), sourceTE.getBlockPos());
+				tile.clearRemoved();
 
 				matrix.translate(offset.x, offset.y, offset.z);
 
-				tile.cachedBlockState = state;
+				tile.blockState = state;
 				tileentityrenderer.render(tile, pTicks, matrix, bufferIn, combinedLightIn, combinedOverlayIn);
 			}
 		} catch(Throwable e) {
@@ -58,11 +58,11 @@ public class QuarkPistonTileEntityRenderer {
 			PistonsMoveTileEntitiesModule.renderBlacklist.add(id);
 			return false;
 		} finally {
-			while(matrix.getLast() != currEntry)
-				matrix.pop();
+			while(matrix.last() != currEntry)
+				matrix.popPose();
 		}
 		
-		return state.getRenderType() != BlockRenderType.MODEL;
+		return state.getRenderShape() != RenderShape.MODEL;
 	}
 
 }

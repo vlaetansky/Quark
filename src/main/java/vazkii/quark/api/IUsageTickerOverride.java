@@ -2,7 +2,7 @@ package vazkii.quark.api;
 
 import java.util.function.Predicate;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Implement this on an Item to change its behavior with the quark usage ticker.

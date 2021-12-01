@@ -5,27 +5,27 @@ import java.util.function.BooleanSupplier;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.EnchantingTableBlock;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.particles.RedstoneParticleData;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EnchantmentTableBlock;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -38,28 +38,28 @@ import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
 
-public class MatrixEnchantingTableBlock extends EnchantingTableBlock implements IQuarkBlock {
+public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements IQuarkBlock {
 
 	private final QuarkModule module;
 	private BooleanSupplier enabledSupplier = () -> true;
 	
 	public MatrixEnchantingTableBlock(QuarkModule module) {
-		super(Block.Properties.from(Blocks.ENCHANTING_TABLE));
+		super(Block.Properties.copy(Blocks.ENCHANTING_TABLE));
 		
 		this.module = module;
 		RegistryHelper.registerBlock(this, "matrix_enchanter");
-		RegistryHelper.setCreativeTab(this, ItemGroup.DECORATIONS);
+		RegistryHelper.setCreativeTab(this, CreativeModeTab.TAB_DECORATIONS);
 	}
 
 	@Override
-	public IFormattableTextComponent getTranslatedName() {
-		return Blocks.ENCHANTING_TABLE.getTranslatedName();
+	public MutableComponent getName() {
+		return Blocks.ENCHANTING_TABLE.getName();
 	}
 	
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-		if(isEnabled() || group == ItemGroup.SEARCH)
-			super.fillItemGroup(group, items);
+	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+		if(isEnabled() || group == CreativeModeTab.TAB_SEARCH)
+			super.fillItemCategory(group, items);
 	}
 
 	@Override
@@ -80,27 +80,27 @@ public class MatrixEnchantingTableBlock extends EnchantingTableBlock implements 
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return new MatrixEnchantingTableTileEntity();
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult raytrace) {
-		if(!(worldIn.getTileEntity(pos) instanceof MatrixEnchantingTableTileEntity))
-			worldIn.setTileEntity(pos, createTileEntity(state, worldIn));
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult raytrace) {
+		if(!(worldIn.getBlockEntity(pos) instanceof MatrixEnchantingTableTileEntity))
+			worldIn.setBlockEntity(pos, createTileEntity(state, worldIn));
 
 		if(ModuleLoader.INSTANCE.isModuleEnabled(MatrixEnchantingModule.class)) {
-			if(player instanceof ServerPlayerEntity)
-				NetworkHooks.openGui((ServerPlayerEntity) player, (MatrixEnchantingTableTileEntity) worldIn.getTileEntity(pos), pos);
+			if(player instanceof ServerPlayer)
+				NetworkHooks.openGui((ServerPlayer) player, (MatrixEnchantingTableTileEntity) worldIn.getBlockEntity(pos), pos);
 		} else
-			worldIn.setBlockState(pos, Blocks.ENCHANTING_TABLE.getDefaultState());
+			worldIn.setBlockAndUpdate(pos, Blocks.ENCHANTING_TABLE.defaultBlockState());
 
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+	public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
 		boolean enabled = ModuleLoader.INSTANCE.isModuleEnabled(MatrixEnchantingModule.class);
 		boolean showInfluences = enabled && MatrixEnchantingModule.allowInfluencing;
 		boolean allowUnderwater = enabled && MatrixEnchantingModule.allowUnderwaterEnchanting;
@@ -112,11 +112,11 @@ public class MatrixEnchantingTableBlock extends EnchantingTableBlock implements 
 
 				if(rand.nextInt(16) == 0)
 					for(int k = 0; k <= 1; ++k) {
-						BlockPos blockpos = pos.add(i, k, j);
+						BlockPos blockpos = pos.offset(i, k, j);
 						BlockState state = worldIn.getBlockState(blockpos); 
 						if(state.getEnchantPowerBonus(worldIn, blockpos) > 0) {
-							BlockPos test = pos.add(i / 2, 0, j / 2);
-							if(!(worldIn.isAirBlock(test) || (allowUnderwater && worldIn.getBlockState(test).getBlock() == Blocks.WATER)))
+							BlockPos test = pos.offset(i / 2, 0, j / 2);
+							if(!(worldIn.isEmptyBlock(test) || (allowUnderwater && worldIn.getBlockState(test).getBlock() == Blocks.WATER)))
 								break;
 							
 							if(showInfluences && state.getBlock() instanceof IEnchantmentInfluencer) {
@@ -124,7 +124,7 @@ public class MatrixEnchantingTableBlock extends EnchantingTableBlock implements 
 								DyeColor color = influencer.getEnchantmentInfluenceColor(worldIn, blockpos, state);
 								
 								if(color != null) {
-									float[] comp = color.getColorComponentValues();
+									float[] comp = color.getTextureDiffuseColors();
 
                                     if(influencer instanceof IModifiableEnchantmentInfluencer) {
                                         IModifiableEnchantmentInfluencer modifiableInfluencer = (IModifiableEnchantmentInfluencer) influencer;
@@ -144,7 +144,7 @@ public class MatrixEnchantingTableBlock extends EnchantingTableBlock implements 
 										double py = blockpos.getY() + 0.5 + dy * p + Math.sin((double) p / steps * Math.PI) * 0.5 + rand.nextDouble() * 0.2 - 0.1;
 										double pz = blockpos.getZ() + 0.5 + dz * p + rand.nextDouble() * 0.2 - 0.1;
 										
-										worldIn.addParticle(new RedstoneParticleData(comp[0], comp[1], comp[2], 1F), px, py, pz, 0, 0, 0);
+										worldIn.addParticle(new DustParticleOptions(comp[0], comp[1], comp[2], 1F), px, py, pz, 0, 0, 0);
 									}
 								}
 							}
@@ -156,20 +156,20 @@ public class MatrixEnchantingTableBlock extends EnchantingTableBlock implements 
 	}
 
 	@Override
-	public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-		super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+	public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+		super.setPlacedBy(worldIn, pos, state, placer, stack);
 
-		if(stack.hasDisplayName()) {
-			TileEntity tileentity = worldIn.getTileEntity(pos);
+		if(stack.hasCustomHoverName()) {
+			BlockEntity tileentity = worldIn.getBlockEntity(pos);
 
 			if(tileentity instanceof MatrixEnchantingTableTileEntity)
-				((MatrixEnchantingTableTileEntity) tileentity).setCustomName(stack.getDisplayName());
+				((MatrixEnchantingTableTileEntity) tileentity).setCustomName(stack.getHoverName());
 		}
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		TileEntity tileentity = worldIn.getTileEntity(pos);
+	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		BlockEntity tileentity = worldIn.getBlockEntity(pos);
 
 		if(tileentity instanceof MatrixEnchantingTableTileEntity) {
 			MatrixEnchantingTableTileEntity enchanter = (MatrixEnchantingTableTileEntity) tileentity;
@@ -177,7 +177,7 @@ public class MatrixEnchantingTableBlock extends EnchantingTableBlock implements 
 			enchanter.dropItem(1);
 		}
 
-		super.onReplaced(state, worldIn, pos, newState, isMoving);
+		super.onRemove(state, worldIn, pos, newState, isMoving);
 	}
 
 }

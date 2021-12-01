@@ -2,30 +2,30 @@ package vazkii.quark.content.world.entity;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.monster.ZombieEntity;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
-public class WrappedEntity extends ZombieEntity {
+public class WrappedEntity extends Zombie {
 
 	public static final ResourceLocation WRAPPED_LOOT_TABLE = new ResourceLocation("quark", "entities/wrapped");
 	
-	public WrappedEntity(EntityType<? extends WrappedEntity> type, World worldIn) {
+	public WrappedEntity(EntityType<? extends WrappedEntity> type, Level worldIn) {
 		super(type, worldIn);
 	}
 
 	@Override
-	public boolean attackEntityAsMob(Entity entityIn) {
-		boolean flag = super.attackEntityAsMob(entityIn);
-		if (flag && this.getHeldItemMainhand().isEmpty() && entityIn instanceof LivingEntity) {
-			float f = this.world.getDifficultyForLocation(new BlockPos(getPosX(), getPosY(), getPosY())).getAdditionalDifficulty();
-			((LivingEntity)entityIn).addPotionEffect(new EffectInstance(Effects.SLOWNESS, 140 * (int)f));
+	public boolean doHurtTarget(Entity entityIn) {
+		boolean flag = super.doHurtTarget(entityIn);
+		if (flag && this.getMainHandItem().isEmpty() && entityIn instanceof LivingEntity) {
+			float f = this.level.getCurrentDifficultyAt(new BlockPos(getX(), getY(), getY())).getEffectiveDifficulty();
+			((LivingEntity)entityIn).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 140 * (int)f));
 		}
 
 		return flag;
@@ -33,7 +33,7 @@ public class WrappedEntity extends ZombieEntity {
 	
 	@Nonnull
 	@Override
-	protected ResourceLocation getLootTable() {
+	protected ResourceLocation getDefaultLootTable() {
 		return WRAPPED_LOOT_TABLE;
 	}
 

@@ -2,8 +2,8 @@ package vazkii.quark.content.tweaks.client.emote;
 
 import cpw.mods.modlauncher.Launcher;
 import cpw.mods.modlauncher.api.IEnvironment;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.aurelienribon.tweenengine.Timeline;
@@ -14,7 +14,7 @@ public class TemplateSourcedEmote extends EmoteBase {
 
 	private static final boolean DEOBF = Launcher.INSTANCE.environment().getProperty(IEnvironment.Keys.NAMING.get()).orElse("").equals("mcp");
 
-	public TemplateSourcedEmote(EmoteDescriptor desc, PlayerEntity player, BipedModel<?> model, BipedModel<?> armorModel, BipedModel<?> armorLegsModel) {
+	public TemplateSourcedEmote(EmoteDescriptor desc, Player player, HumanoidModel<?> model, HumanoidModel<?> armorModel, HumanoidModel<?> armorLegsModel) {
 		super(desc, player, model, armorModel, armorLegsModel);
 
 		if(shouldLoadTimelineOnLaunch()) {
@@ -28,7 +28,7 @@ public class TemplateSourcedEmote extends EmoteBase {
 	}
 
 	@Override
-	public Timeline getTimeline(PlayerEntity player, BipedModel<?> model) {
+	public Timeline getTimeline(Player player, HumanoidModel<?> model) {
 		return desc.template.getTimeline(desc, player, model);
 	}
 

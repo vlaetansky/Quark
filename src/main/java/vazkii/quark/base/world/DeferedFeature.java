@@ -2,24 +2,24 @@ package vazkii.quark.base.world;
 
 import java.util.Random;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ISeedReader;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
-public class DeferedFeature extends Feature<NoFeatureConfig> {
+public class DeferedFeature extends Feature<NoneFeatureConfiguration> {
 
-	private final GenerationStage.Decoration stage;
+	private final GenerationStep.Decoration stage;
 
-	public DeferedFeature(GenerationStage.Decoration stage) {
-		super(NoFeatureConfig.field_236558_a_);
+	public DeferedFeature(GenerationStep.Decoration stage) {
+		super(NoneFeatureConfiguration.CODEC);
 		this.stage = stage;
 	}
 
 	@Override
-	public boolean func_241855_a(ISeedReader seedReader, ChunkGenerator generator, Random rand, BlockPos pos, NoFeatureConfig config) {
+	public boolean place(WorldGenLevel seedReader, ChunkGenerator generator, Random rand, BlockPos pos, NoneFeatureConfiguration config) {
 		WorldGenHandler.generateChunk(seedReader, generator, pos, stage);
 		return true;
 	}

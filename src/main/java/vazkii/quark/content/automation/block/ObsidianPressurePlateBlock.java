@@ -4,19 +4,21 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 import vazkii.quark.base.block.QuarkPressurePlateBlock;
 import vazkii.quark.base.module.QuarkModule;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 /**
  * @author WireSegal
@@ -25,29 +27,29 @@ import vazkii.quark.base.module.QuarkModule;
 public class ObsidianPressurePlateBlock extends QuarkPressurePlateBlock {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-    public ObsidianPressurePlateBlock(String regname, QuarkModule module, ItemGroup creativeTab, Properties properties) {
+    public ObsidianPressurePlateBlock(String regname, QuarkModule module, CreativeModeTab creativeTab, Properties properties) {
         super(null /*Sensitivity is unused*/, regname, module, creativeTab, properties);
-        this.setDefaultState(getDefaultState().with(POWERED, false));
+        this.registerDefaultState(defaultBlockState().setValue(POWERED, false));
     }
 
     @Override
-    protected void playClickOnSound(@Nonnull IWorld worldIn, @Nonnull BlockPos pos) {
-        worldIn.playSound(null, pos, SoundEvents.BLOCK_STONE_PRESSURE_PLATE_CLICK_ON, SoundCategory.BLOCKS, 0.3F, 0.5F);
+    protected void playOnSound(@Nonnull LevelAccessor worldIn, @Nonnull BlockPos pos) {
+        worldIn.playSound(null, pos, SoundEvents.STONE_PRESSURE_PLATE_CLICK_ON, SoundSource.BLOCKS, 0.3F, 0.5F);
     }
 
     @Override
-    protected void playClickOffSound(@Nonnull IWorld worldIn, @Nonnull BlockPos pos) {
-        worldIn.playSound(null, pos, SoundEvents.BLOCK_STONE_PRESSURE_PLATE_CLICK_OFF, SoundCategory.BLOCKS, 0.3F, 0.4F);
+    protected void playOffSound(@Nonnull LevelAccessor worldIn, @Nonnull BlockPos pos) {
+        worldIn.playSound(null, pos, SoundEvents.STONE_PRESSURE_PLATE_CLICK_OFF, SoundSource.BLOCKS, 0.3F, 0.4F);
     }
 
     @Override
-    protected int computeRedstoneStrength(@Nonnull World worldIn, @Nonnull BlockPos pos) {
-        AxisAlignedBB bounds = PRESSURE_AABB.offset(pos);
-        List<? extends Entity> entities = worldIn.getEntitiesWithinAABB(PlayerEntity.class, bounds);
+    protected int getSignalStrength(@Nonnull Level worldIn, @Nonnull BlockPos pos) {
+        AABB bounds = TOUCH_AABB.move(pos);
+        List<? extends Entity> entities = worldIn.getEntitiesOfClass(Player.class, bounds);
 
         if (!entities.isEmpty()) {
             for(Entity entity : entities) {
-                if (!entity.doesEntityNotTriggerPressurePlate()) {
+                if (!entity.isIgnoringBlockTriggers()) {
                     return 15;
                 }
             }

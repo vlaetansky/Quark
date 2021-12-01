@@ -2,21 +2,21 @@ package vazkii.quark.content.building.block;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.client.color.block.BlockColor;
+import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraftforge.common.ToolType;
 import vazkii.arl.interf.IBlockColorProvider;
 import vazkii.quark.base.block.QuarkBlock;
@@ -26,43 +26,43 @@ import vazkii.quark.base.module.QuarkModule;
 
 public class LeafCarpetBlock extends QuarkBlock implements IBlockColorProvider {
 
-	private static final VoxelShape SHAPE = makeCuboidShape(0, 0, 0, 16, 1, 16);
+	private static final VoxelShape SHAPE = box(0, 0, 0, 16, 1, 16);
 	
 	private final BlockState baseState;
 	private ItemStack baseStack;
 	
 	public LeafCarpetBlock(String name, Block base, QuarkModule module) {
-		super(name + "_leaf_carpet", module, ItemGroup.DECORATIONS, 
-				Block.Properties.create(Material.CARPET)
-				.hardnessAndResistance(0F)
-				.sound(SoundType.PLANT)
+		super(name + "_leaf_carpet", module, CreativeModeTab.TAB_DECORATIONS, 
+				Block.Properties.of(Material.CLOTH_DECORATION)
+				.strength(0F)
+				.sound(SoundType.GRASS)
 				.harvestTool(ToolType.HOE)
-				.notSolid());
+				.noOcclusion());
 		
-		baseState = base.getDefaultState();
+		baseState = base.defaultBlockState();
 		
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT_MIPPED);
 	}
 	
 	@Override
-	public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
+	public boolean canBeReplaced(BlockState state, BlockPlaceContext useContext) {
 		return true;
 	}
 	
 	@Nonnull
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
 		return SHAPE;
 	}
 
 	@Nonnull
 	@Override
-	public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull IBlockReader world, @Nonnull BlockPos pos, ISelectionContext p_220071_4_) {
-		return VoxelShapes.empty();
+	public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, CollisionContext p_220071_4_) {
+		return Shapes.empty();
 	}
 
 	@Override
-	public IItemColor getItemColor() {
+	public ItemColor getItemColor() {
 		if(baseStack == null)
 			baseStack = new ItemStack(baseState.getBlock());
 
@@ -70,7 +70,7 @@ public class LeafCarpetBlock extends QuarkBlock implements IBlockColorProvider {
 	}
 
 	@Override
-	public IBlockColor getBlockColor() {
+	public BlockColor getBlockColor() {
 		return (state, worldIn, pos, tintIndex) -> Minecraft.getInstance().getBlockColors().getColor(baseState, worldIn, pos, tintIndex);
 	}
 

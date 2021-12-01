@@ -4,34 +4,34 @@ import java.util.Random;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.INameable;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Containers;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.Nameable;
+import net.minecraft.util.Mth;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import vazkii.arl.block.tile.TileSimpleInventory;
 import vazkii.quark.base.handler.MiscUtil;
 
-public abstract class BaseEnchantingTableTile extends TileSimpleInventory implements ITickableTileEntity, INameable {
+public abstract class BaseEnchantingTableTile extends TileSimpleInventory implements TickableBlockEntity, Nameable {
 
 	public int tickCount;
 	public float pageFlip, pageFlipPrev, flipT, flipA, bookSpread, bookSpreadPrev, bookRotation, bookRotationPrev, tRot;
 
 	private static final Random rand = new Random();
-	private ITextComponent customName;
+	private Component customName;
 	
-	public BaseEnchantingTableTile(TileEntityType<?> tileEntityTypeIn) {
+	public BaseEnchantingTableTile(BlockEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 	}
 
 	@Override
-	public int getSizeInventory() {
+	public int getContainerSize() {
 		return 3;
 	}
 
@@ -42,21 +42,21 @@ public abstract class BaseEnchantingTableTile extends TileSimpleInventory implem
 
 	@Nonnull
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
-		super.write(compound);
+	public CompoundTag save(CompoundTag compound) {
+		super.save(compound);
 
 		if(hasCustomName())
-			compound.putString("CustomName", ITextComponent.Serializer.toJson(customName));
+			compound.putString("CustomName", Component.Serializer.toJson(customName));
 
 		return compound;
 	}
 
 	@Override 
-	public void read(BlockState p_230337_1_, CompoundNBT compound) {
-		super.read(p_230337_1_, compound);
+	public void load(BlockState p_230337_1_, CompoundTag compound) {
+		super.load(p_230337_1_, compound);
 
 		if(compound.contains("CustomName", 8))
-			customName = ITextComponent.Serializer.getComponentFromJson(compound.getString("CustomName"));
+			customName = Component.Serializer.fromJson(compound.getString("CustomName"));
 	}
 
 	@Override
@@ -67,13 +67,13 @@ public abstract class BaseEnchantingTableTile extends TileSimpleInventory implem
 	private void performVanillaUpdate() {
 		this.bookSpreadPrev = this.bookSpread;
 		this.bookRotationPrev = this.bookRotation;
-		PlayerEntity entityplayer = this.world.getClosestPlayer((this.pos.getX() + 0.5F), (this.pos.getY() + 0.5F), (this.pos.getZ() + 0.5F), 3.0D, false);
+		Player entityplayer = this.level.getNearestPlayer((this.worldPosition.getX() + 0.5F), (this.worldPosition.getY() + 0.5F), (this.worldPosition.getZ() + 0.5F), 3.0D, false);
 
 		if (entityplayer != null)
 		{
-			double d0 = entityplayer.getPosX() - (this.pos.getX() + 0.5F);
-			double d1 = entityplayer.getPosZ() - (this.pos.getZ() + 0.5F);
-			this.tRot = (float)MathHelper.atan2(d1, d0);
+			double d0 = entityplayer.getX() - (this.worldPosition.getX() + 0.5F);
+			double d1 = entityplayer.getZ() - (this.worldPosition.getZ() + 0.5F);
+			this.tRot = (float)Mth.atan2(d1, d0);
 			this.bookSpread += 0.1F;
 
 			if (this.bookSpread < 0.5F || rand.nextInt(40) == 0)
@@ -120,25 +120,25 @@ public abstract class BaseEnchantingTableTile extends TileSimpleInventory implem
 			f2 += (Math.PI * 2F);
 
 		this.bookRotation += f2 * 0.4F;
-		this.bookSpread = MathHelper.clamp(this.bookSpread, 0.0F, 1.0F);
+		this.bookSpread = Mth.clamp(this.bookSpread, 0.0F, 1.0F);
 		++this.tickCount;
 		this.pageFlipPrev = this.pageFlip;
 		float f = (this.flipT - this.pageFlip) * 0.4F;
-		f = MathHelper.clamp(f, -0.2F, 0.2F);
+		f = Mth.clamp(f, -0.2F, 0.2F);
 		this.flipA += (f - this.flipA) * 0.9F;
 		this.pageFlip += this.flipA;
 	}
 
 	public void dropItem(int i) {
-		ItemStack stack = getStackInSlot(i);
+		ItemStack stack = getItem(i);
 		if(!stack.isEmpty())
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+			Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), stack);
 	}
 
 	@Nonnull
 	@Override
-	public ITextComponent getName() {
-		return hasCustomName() ? customName : new TranslationTextComponent("container.enchant");
+	public Component getName() {
+		return hasCustomName() ? customName : new TranslatableComponent("container.enchant");
 	}
 
 	@Override
@@ -146,7 +146,7 @@ public abstract class BaseEnchantingTableTile extends TileSimpleInventory implem
 		return customName != null;
 	}
 
-	public void setCustomName(ITextComponent customNameIn) {
+	public void setCustomName(Component customNameIn) {
 		customName = customNameIn;
 	}
 

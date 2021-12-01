@@ -5,18 +5,18 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.MainWindow;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.text.TranslationTextComponent;
+import com.mojang.blaze3d.platform.Window;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.TranslatableComponent;
 import vazkii.quark.base.client.config.gui.widget.ScrollableWidgetList;
 
 public abstract class AbstractScrollingWidgetScreen extends AbstractQScreen {
 
-	private List<Widget> scrollingWidgets = new LinkedList<>();
+	private List<AbstractWidget> scrollingWidgets = new LinkedList<>();
 	private ScrollableWidgetList<?, ?> elementList;
 	
 	private Button resetButton;
@@ -42,9 +42,9 @@ public abstract class AbstractScrollingWidgetScreen extends AbstractQScreen {
 		int left = (width - (bWidth + pad) * 3) / 2;
 		int vStart = height - 30;
 		
-		addButton(new Button(left, vStart, bWidth, 20, new TranslationTextComponent("quark.gui.config.default"), this::onClickDefault));
-		addButton(resetButton = new Button(left + bWidth + pad, vStart, bWidth, 20, new TranslationTextComponent("quark.gui.config.discard"), this::onClickDiscard));
-		addButton(new Button(left + (bWidth + pad) * 2, vStart, bWidth, 20, new TranslationTextComponent("gui.done"), this::onClickDone));
+		addButton(new Button(left, vStart, bWidth, 20, new TranslatableComponent("quark.gui.config.default"), this::onClickDefault));
+		addButton(resetButton = new Button(left + bWidth + pad, vStart, bWidth, 20, new TranslatableComponent("quark.gui.config.discard"), this::onClickDiscard));
+		addButton(new Button(left + (bWidth + pad) * 2, vStart, bWidth, 20, new TranslatableComponent("gui.done"), this::onClickDone));
 	}
 	
 	@Override
@@ -68,7 +68,7 @@ public abstract class AbstractScrollingWidgetScreen extends AbstractQScreen {
 	}
 	
 	@Override
-	public void render(MatrixStack mstack, int mouseX, int mouseY, float pticks) {
+	public void render(PoseStack mstack, int mouseX, int mouseY, float pticks) {
 		if(needsScrollUpdate) {
 			elementList.setScrollAmount(currentScroll);
 			needsScrollUpdate = false;
@@ -81,7 +81,7 @@ public abstract class AbstractScrollingWidgetScreen extends AbstractQScreen {
 		renderBackground(mstack);
 		elementList.render(mstack, mouseX, mouseY, pticks);
 		
-		List<Widget> visibleWidgets = new LinkedList<>();
+		List<AbstractWidget> visibleWidgets = new LinkedList<>();
 		scrollingWidgets.forEach(w -> {
 			if(w.visible)
 				visibleWidgets.add(w);
@@ -90,8 +90,8 @@ public abstract class AbstractScrollingWidgetScreen extends AbstractQScreen {
 		
 		super.render(mstack, mouseX, mouseY, pticks);
 		
-		MainWindow main = minecraft.getMainWindow();
-		int res = (int) main.getGuiScaleFactor();
+		Window main = minecraft.getWindow();
+		int res = (int) main.getGuiScale();
 		
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 		GL11.glScissor(0, 40 * res, width * res, (height - 80) * res);

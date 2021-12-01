@@ -1,12 +1,12 @@
 package vazkii.quark.base.client.config.gui.widget;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
 import vazkii.quark.base.client.config.gui.ListInputScreen;
 import vazkii.quark.base.client.config.gui.WidgetWrapper;
 
@@ -38,21 +38,21 @@ public class StringElementList extends ScrollableWidgetList<ListInputScreen, Str
 			
 			if(s != null) {
 				Minecraft mc = Minecraft.getInstance();
-				TextFieldWidget field = new TextFieldWidget(mc.fontRenderer, 10, 3, 210, 20, new StringTextComponent(""));
-				field.setMaxStringLength(256);
-				field.setText(initialString);
-				field.setCursorPosition(0);
+				EditBox field = new EditBox(mc.font, 10, 3, 210, 20, new TextComponent(""));
+				field.setMaxLength(256);
+				field.setValue(initialString);
+				field.moveCursorTo(0);
 				field.setResponder(str -> parent.list.set(index, str));
 				children.add(new WidgetWrapper(field));
 				
-				children.add(new WidgetWrapper(new Button(230, 3, 20, 20, new StringTextComponent("-").mergeStyle(TextFormatting.RED), b -> parent.remove(index)))); 
+				children.add(new WidgetWrapper(new Button(230, 3, 20, 20, new TextComponent("-").withStyle(ChatFormatting.RED), b -> parent.remove(index)))); 
 			} else {
-				children.add(new WidgetWrapper(new Button(10, 3, 20, 20, new StringTextComponent("+").mergeStyle(TextFormatting.GREEN), b -> parent.addNew())));
+				children.add(new WidgetWrapper(new Button(10, 3, 20, 20, new TextComponent("+").withStyle(ChatFormatting.GREEN), b -> parent.addNew())));
 			}
 		}
 		
 		@Override
-		public void render(MatrixStack mstack, int index, int rowTop, int rowLeft, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float pticks) {
+		public void render(PoseStack mstack, int index, int rowTop, int rowLeft, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float pticks) {
 			super.render(mstack, index, rowTop, rowLeft, rowWidth, rowHeight, mouseX, mouseY, hovered, pticks);
 			
 			if(initialString != null)

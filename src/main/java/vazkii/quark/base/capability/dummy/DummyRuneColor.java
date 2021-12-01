@@ -1,6 +1,6 @@
 package vazkii.quark.base.capability.dummy;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import vazkii.quark.api.IRuneColorProvider;
 
 public class DummyRuneColor implements IRuneColorProvider {

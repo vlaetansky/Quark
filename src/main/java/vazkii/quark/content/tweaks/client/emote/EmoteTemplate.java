@@ -15,9 +15,9 @@ import java.util.Stack;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.aurelienribon.tweenengine.BaseTween;
@@ -104,7 +104,7 @@ public class EmoteTemplate {
 		readAndMakeTimeline(null, null, null);
 	}
 
-	public Timeline getTimeline(EmoteDescriptor desc, PlayerEntity player, BipedModel<?> model) {
+	public Timeline getTimeline(EmoteDescriptor desc, Player player, HumanoidModel<?> model) {
 		compiled = false;
 		speed = 1;
 		tier = 0;
@@ -131,7 +131,7 @@ public class EmoteTemplate {
 		}
 	}
 	
-	public Timeline readAndMakeTimeline(EmoteDescriptor desc, PlayerEntity player, BipedModel<?> model) {
+	public Timeline readAndMakeTimeline(EmoteDescriptor desc, Player player, HumanoidModel<?> model) {
 		Timeline timeline = null;
 		usedParts = new ArrayList<>();
 		timelineStack = new Stack<>();
@@ -193,7 +193,7 @@ public class EmoteTemplate {
 		else Quark.LOG.error("[Custom Emotes] " + e.getMessage());
 	}
 
-	private Timeline handle(BipedModel<?> model, PlayerEntity player, Timeline timeline, String s) throws IllegalArgumentException {
+	private Timeline handle(HumanoidModel<?> model, Player player, Timeline timeline, String s) throws IllegalArgumentException {
 		s = s.trim();
 		if(s.startsWith("#") || s.isEmpty())
 			return timeline;
@@ -305,7 +305,7 @@ public class EmoteTemplate {
 		return poppedLine;
 	}
 
-	private static Timeline move(EmoteTemplate em, BipedModel<?> model, Timeline timeline, String[] tokens) throws IllegalArgumentException {
+	private static Timeline move(EmoteTemplate em, HumanoidModel<?> model, Timeline timeline, String[] tokens) throws IllegalArgumentException {
 		if(timeline == null)
 			throw new IllegalArgumentException("Illegal use of function move, animation not started");
 		if(tokens.length < 4)
@@ -369,7 +369,7 @@ public class EmoteTemplate {
 		return timeline;
 	}
 
-	private static Timeline sound(EmoteTemplate em, PlayerEntity player, Timeline timeline, String[] tokens) throws IllegalArgumentException {
+	private static Timeline sound(EmoteTemplate em, Player player, Timeline timeline, String[] tokens) throws IllegalArgumentException {
 		if (timeline == null)
 			throw new IllegalArgumentException("Illegal use of function sound, animation not started");
 		if (tokens.length < 2)
@@ -442,7 +442,7 @@ public class EmoteTemplate {
 		return timeline;
 	}
 	
-	private static Timeline reset(EmoteTemplate em, BipedModel<?> model, Timeline timeline, String[] tokens) throws IllegalArgumentException {
+	private static Timeline reset(EmoteTemplate em, HumanoidModel<?> model, Timeline timeline, String[] tokens) throws IllegalArgumentException {
 		if(tokens.length < 4)
 			throw new IllegalArgumentException(String.format("Illegal parameter amount for function reset: %d (at least 4 are required)", tokens.length));
 
@@ -519,7 +519,7 @@ public class EmoteTemplate {
 	}
 
 	private interface Function {
-		Timeline invoke(EmoteTemplate em, BipedModel<?> model, PlayerEntity player, Timeline timeline, String[] tokens) throws IllegalArgumentException;
+		Timeline invoke(EmoteTemplate em, HumanoidModel<?> model, Player player, Timeline timeline, String[] tokens) throws IllegalArgumentException;
 	}
 
 }

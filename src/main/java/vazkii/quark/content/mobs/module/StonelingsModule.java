@@ -1,11 +1,11 @@
 package vazkii.quark.content.mobs.module;
 
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType;
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.world.gen.Heightmap.Type;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.SpawnPlacements.Type;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.BiomeDictionary;
@@ -46,16 +46,16 @@ public class StonelingsModule extends QuarkModule {
 
 	@Override
 	public void construct() {
-		diamondHeart = new DiamondHeartItem("diamond_heart", this, new Item.Properties().group(ItemGroup.MISC));
+		diamondHeart = new DiamondHeartItem("diamond_heart", this, new Item.Properties().tab(CreativeModeTab.TAB_MISC));
 
-		stonelingType = EntityType.Builder.create(StonelingEntity::new, EntityClassification.CREATURE)
-				.size(0.5F, 0.9F)
-				.trackingRange(8)
+		stonelingType = EntityType.Builder.of(StonelingEntity::new, MobCategory.CREATURE)
+				.sized(0.5F, 0.9F)
+				.clientTrackingRange(8)
 				.setCustomClientFactory((spawnEntity, world) -> new StonelingEntity(stonelingType, world))
 				.build("stoneling");
 		RegistryHelper.register(stonelingType, "stoneling");
 
-		EntitySpawnHandler.registerSpawn(this, stonelingType, EntityClassification.MONSTER, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, StonelingEntity::spawnPredicate, spawnConfig);
+		EntitySpawnHandler.registerSpawn(this, stonelingType, MobCategory.MONSTER, Type.ON_GROUND, Types.MOTION_BLOCKING_NO_LEAVES, StonelingEntity::spawnPredicate, spawnConfig);
 		EntitySpawnHandler.addEgg(stonelingType, 0xA1A1A1, 0x505050, spawnConfig);
 		
 		EntityAttributeHandler.put(stonelingType, StonelingEntity::prepareAttributes);

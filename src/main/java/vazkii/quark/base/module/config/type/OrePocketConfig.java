@@ -3,7 +3,7 @@ package vazkii.quark.base.module.config.type;
 import java.util.Random;
 import java.util.function.Consumer;
 
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 import vazkii.quark.base.module.config.Config;
 
 public class OrePocketConfig extends AbstractConfigType {

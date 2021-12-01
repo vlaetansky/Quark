@@ -1,21 +1,21 @@
 package vazkii.quark.content.mobs.module;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.item.Food;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.SpawnPlacements.Type;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.gen.Heightmap.Type;
+import net.minecraft.tags.Tag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.BiomeDictionary;
@@ -49,7 +49,7 @@ public class CrabsModule extends QuarkModule {
 	@Config
 	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(5, 1, 3, CompoundBiomeConfig.fromBiomeTypes(false, BiomeDictionary.Type.BEACH));
 
-	public static ITag<Block> crabSpawnableTag;
+	public static Tag<Block> crabSpawnableTag;
 	
 	@Config(flag = "crab_brewing")
 	public static boolean enableBrewing = true;
@@ -57,38 +57,38 @@ public class CrabsModule extends QuarkModule {
 	@Override
 	public void construct() {
 		new QuarkItem("crab_leg", this, new Item.Properties()
-				.group(ItemGroup.FOOD)
-				.food(new Food.Builder()
+				.tab(CreativeModeTab.TAB_FOOD)
+				.food(new FoodProperties.Builder()
 						.meat()
-						.hunger(1)
-						.saturation(0.3F)
+						.nutrition(1)
+						.saturationMod(0.3F)
 						.build()));
 
 		new QuarkItem("cooked_crab_leg", this, new Item.Properties()
-				.group(ItemGroup.FOOD)
-				.food(new Food.Builder()
+				.tab(CreativeModeTab.TAB_FOOD)
+				.food(new FoodProperties.Builder()
 						.meat()
-						.hunger(8)
-						.saturation(0.8F)
+						.nutrition(8)
+						.saturationMod(0.8F)
 						.build()));
 
-		Item shell = new QuarkItem("crab_shell", this, new Item.Properties().group(ItemGroup.BREWING))
+		Item shell = new QuarkItem("crab_shell", this, new Item.Properties().tab(CreativeModeTab.TAB_BREWING))
 				.setCondition(() -> enableBrewing);
 
-		Effect resilience = new QuarkEffect("resilience", EffectType.BENEFICIAL, 0x5b1a04);
-		resilience.addAttributesModifier(Attributes.KNOCKBACK_RESISTANCE, "2ddf3f0a-f386-47b6-aeb0-6bd32851f215", 0.5, AttributeModifier.Operation.ADDITION);
+		MobEffect resilience = new QuarkEffect("resilience", MobEffectCategory.BENEFICIAL, 0x5b1a04);
+		resilience.addAttributeModifier(Attributes.KNOCKBACK_RESISTANCE, "2ddf3f0a-f386-47b6-aeb0-6bd32851f215", 0.5, AttributeModifier.Operation.ADDITION);
 
 		BrewingHandler.addPotionMix("crab_brewing",
-				() -> new FlagIngredient(Ingredient.fromItems(shell), "crabs"), resilience);
+				() -> new FlagIngredient(Ingredient.of(shell), "crabs"), resilience);
 
-		crabType = EntityType.Builder.<CrabEntity>create(CrabEntity::new, EntityClassification.CREATURE)
-				.size(0.9F, 0.5F)
-				.trackingRange(8)
+		crabType = EntityType.Builder.<CrabEntity>of(CrabEntity::new, MobCategory.CREATURE)
+				.sized(0.9F, 0.5F)
+				.clientTrackingRange(8)
 				.setCustomClientFactory((spawnEntity, world) -> new CrabEntity(crabType, world))
 				.build("crab");
 		RegistryHelper.register(crabType, "crab");
 
-		EntitySpawnHandler.registerSpawn(this, crabType, EntityClassification.CREATURE, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, CrabEntity::spawnPredicate, spawnConfig);
+		EntitySpawnHandler.registerSpawn(this, crabType, MobCategory.CREATURE, Type.ON_GROUND, Types.MOTION_BLOCKING_NO_LEAVES, CrabEntity::spawnPredicate, spawnConfig);
 		EntitySpawnHandler.addEgg(crabType, 0x893c22, 0x916548, spawnConfig);
 		
 		EntityAttributeHandler.put(crabType, CrabEntity::prepareAttributes);

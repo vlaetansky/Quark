@@ -4,10 +4,10 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType;
-import net.minecraft.entity.EntityType;
-import net.minecraft.world.gen.Heightmap.Type;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.SpawnPlacements.Type;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.BiomeDictionary;
@@ -50,16 +50,16 @@ public class ToretoiseModule extends QuarkModule {
 	
 	@Override
 	public void construct() {
-		toretoiseType = EntityType.Builder.<ToretoiseEntity>create(ToretoiseEntity::new, EntityClassification.CREATURE)
-				.size(2F, 1F)
-				.trackingRange(8)
-				.immuneToFire()
+		toretoiseType = EntityType.Builder.<ToretoiseEntity>of(ToretoiseEntity::new, MobCategory.CREATURE)
+				.sized(2F, 1F)
+				.clientTrackingRange(8)
+				.fireImmune()
 				.setCustomClientFactory((spawnEntity, world) -> new ToretoiseEntity(toretoiseType, world))
 				.build("toretoise");
 
 		RegistryHelper.register(toretoiseType, "toretoise");
 		
-		EntitySpawnHandler.registerSpawn(this, toretoiseType, EntityClassification.MONSTER, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, ToretoiseEntity::spawnPredicate, spawnConfig);
+		EntitySpawnHandler.registerSpawn(this, toretoiseType, MobCategory.MONSTER, Type.ON_GROUND, Types.MOTION_BLOCKING_NO_LEAVES, ToretoiseEntity::spawnPredicate, spawnConfig);
 		EntitySpawnHandler.addEgg(toretoiseType, 0x55413b, 0x383237, spawnConfig);
 		
 		EntityAttributeHandler.put(toretoiseType, ToretoiseEntity::prepareAttributes);

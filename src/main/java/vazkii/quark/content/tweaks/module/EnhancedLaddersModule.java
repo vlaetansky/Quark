@@ -1,27 +1,27 @@
 package vazkii.quark.content.tweaks.module;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.LadderBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LadderBlock;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tags.ITag;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.tags.Tag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.MovementInput;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.client.player.Input;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputUpdateEvent;
@@ -41,18 +41,18 @@ public class EnhancedLaddersModule extends QuarkModule {
 	@Config
     public double fallSpeed = -0.2;
 
-	private static ITag<Item> laddersTag;
+	private static Tag<Item> laddersTag;
 	
 	@Override
 	public void setup() {
 		laddersTag = ItemTags.createOptional(new ResourceLocation(Quark.MOD_ID, "ladders"));
 	}
 	
-	private static boolean canAttachTo(BlockState state, Block ladder, IWorldReader world, BlockPos pos, Direction facing) {
+	private static boolean canAttachTo(BlockState state, Block ladder, LevelReader world, BlockPos pos, Direction facing) {
 		if (ladder instanceof LadderBlock) {
-			BlockPos offset = pos.offset(facing);
+			BlockPos offset = pos.relative(facing);
 			BlockState blockstate = world.getBlockState(offset);
-			return !blockstate.canProvidePower() && blockstate.isSolidSide(world, offset, facing); 
+			return !blockstate.isSignalSource() && blockstate.isFaceSturdy(world, offset, facing); 
 		}
 
 		return false;
@@ -60,19 +60,19 @@ public class EnhancedLaddersModule extends QuarkModule {
 
 	@SubscribeEvent
 	public void onInteract(PlayerInteractEvent.RightClickBlock event) {
-		PlayerEntity player = event.getPlayer();
-		Hand hand = event.getHand();
-		ItemStack stack = player.getHeldItem(hand);
+		Player player = event.getPlayer();
+		InteractionHand hand = event.getHand();
+		ItemStack stack = player.getItemInHand(hand);
 
-		if(!stack.isEmpty() && stack.getItem().isIn(laddersTag)) {
-			Block block = Block.getBlockFromItem(stack.getItem());
-			World world = event.getWorld();
+		if(!stack.isEmpty() && stack.getItem().is(laddersTag)) {
+			Block block = Block.byItem(stack.getItem());
+			Level world = event.getWorld();
 			BlockPos pos = event.getPos();
 			while(world.getBlockState(pos).getBlock() == block) {
 				event.setCanceled(true);
-				BlockPos posDown = pos.down();
+				BlockPos posDown = pos.below();
 
-				if(World.isOutsideBuildHeight(posDown))
+				if(Level.isOutsideBuildHeight(posDown))
 					break;
 
 				BlockState stateDown = world.getBlockState(posDown);
@@ -84,19 +84,19 @@ public class EnhancedLaddersModule extends QuarkModule {
 					if(water || stateDown.getBlock().isAir(stateDown, world, posDown)) {
 						BlockState copyState = world.getBlockState(pos);
 
-						Direction facing = copyState.get(LadderBlock.FACING);
+						Direction facing = copyState.getValue(LadderBlock.FACING);
 						if(canAttachTo(copyState, block, world, posDown, facing.getOpposite())) {
-							world.setBlockState(posDown, copyState.with(BlockStateProperties.WATERLOGGED, water));
-							world.playSound(null, posDown.getX(), posDown.getY(), posDown.getZ(), SoundEvents.BLOCK_LADDER_PLACE, SoundCategory.BLOCKS, 1F, 1F);
+							world.setBlockAndUpdate(posDown, copyState.setValue(BlockStateProperties.WATERLOGGED, water));
+							world.playSound(null, posDown.getX(), posDown.getY(), posDown.getZ(), SoundEvents.LADDER_PLACE, SoundSource.BLOCKS, 1F, 1F);
 
-							if(world.isRemote)
-								player.swingArm(hand);
+							if(world.isClientSide)
+								player.swing(hand);
 
 							if(!player.isCreative()) {
 								stack.shrink(1);
 
 								if(stack.getCount() <= 0)
-									player.setHeldItem(hand, ItemStack.EMPTY);
+									player.setItemInHand(hand, ItemStack.EMPTY);
 							}
 						}
 					}
@@ -109,23 +109,23 @@ public class EnhancedLaddersModule extends QuarkModule {
 	@SubscribeEvent
 	public void onPlayerTick(TickEvent.PlayerTickEvent event) {
 		if(event.phase == TickEvent.Phase.START) {
-			PlayerEntity player = event.player;
-			if(player.isOnLadder() && player.world.isRemote) {
-				BlockPos playerPos = player.getPosition();
-				BlockPos downPos = playerPos.down();
+			Player player = event.player;
+			if(player.onClimbable() && player.level.isClientSide) {
+				BlockPos playerPos = player.blockPosition();
+				BlockPos downPos = playerPos.below();
 				
-				boolean scaffold = player.world.getBlockState(playerPos).getBlock() == Blocks.SCAFFOLDING;
+				boolean scaffold = player.level.getBlockState(playerPos).getBlock() == Blocks.SCAFFOLDING;
 				if(player.isCrouching() == scaffold &&
-						player.moveForward == 0 &&
-						player.moveVertical <= 0 &&
-						player.moveStrafing == 0 &&
-						player.rotationPitch > 70 &&
-						!player.isJumping &&
-						!player.abilities.isFlying &&
-						player.world.getBlockState(downPos).isLadder(player.world, downPos, player)) {
-					Vector3d move = new Vector3d(0, fallSpeed, 0);
-					player.setBoundingBox(player.getBoundingBox().offset(move));						
-					player.move(MoverType.SELF, Vector3d.ZERO);
+						player.zza == 0 &&
+						player.yya <= 0 &&
+						player.xxa == 0 &&
+						player.xRot > 70 &&
+						!player.jumping &&
+						!player.abilities.flying &&
+						player.level.getBlockState(downPos).isLadder(player.level, downPos, player)) {
+					Vec3 move = new Vec3(0, fallSpeed, 0);
+					player.setBoundingBox(player.getBoundingBox().move(move));						
+					player.move(MoverType.SELF, Vec3.ZERO);
 				}
 			}
 		}
@@ -134,12 +134,12 @@ public class EnhancedLaddersModule extends QuarkModule {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public void onInput(InputUpdateEvent event) {
-		PlayerEntity player = event.getPlayer();
-		if(player.isOnLadder() && player.world.getBlockState(player.getPosition()).getBlock() != Blocks.SCAFFOLDING
-				&& Minecraft.getInstance().currentScreen != null && !(player.moveForward == 0 && player.rotationPitch > 70)) {
-			MovementInput input = event.getMovementInput();
+		Player player = event.getPlayer();
+		if(player.onClimbable() && player.level.getBlockState(player.blockPosition()).getBlock() != Blocks.SCAFFOLDING
+				&& Minecraft.getInstance().screen != null && !(player.zza == 0 && player.xRot > 70)) {
+			Input input = event.getMovementInput();
 			if(input != null)
-				input.sneaking = true; // sneaking
+				input.shiftKeyDown = true; // sneaking
 		}
 	}
 

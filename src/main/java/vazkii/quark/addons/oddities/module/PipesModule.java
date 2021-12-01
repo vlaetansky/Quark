@@ -1,9 +1,9 @@
 package vazkii.quark.addons.oddities.module;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelLoader;
@@ -21,7 +21,7 @@ import vazkii.quark.base.module.config.Config;
 @LoadModule(category = ModuleCategory.ODDITIES)
 public class PipesModule extends QuarkModule {
 
-    public static TileEntityType<PipeTileEntity> tileEntityType;
+    public static BlockEntityType<PipeTileEntity> tileEntityType;
 
 	@Config(description = "How long it takes for an item to cross a pipe. Bigger = slower.") 
 	private static int pipeSpeed = 5;
@@ -40,7 +40,7 @@ public class PipesModule extends QuarkModule {
     public void construct() {
     	pipe = new PipeBlock(this);
     	
-    	tileEntityType = TileEntityType.Builder.create(PipeTileEntity::new, pipe).build(null);
+    	tileEntityType = BlockEntityType.Builder.of(PipeTileEntity::new, pipe).build(null);
 		RegistryHelper.register(tileEntityType, "pipe");
     }
     

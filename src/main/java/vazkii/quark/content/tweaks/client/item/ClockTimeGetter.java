@@ -3,13 +3,13 @@ package vazkii.quark.content.tweaks.client.item;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.IItemPropertyGetter;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.client.renderer.item.ItemPropertyFunction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.util.ItemNBTHelper;
@@ -29,7 +29,7 @@ public class ClockTimeGetter {
 	}
 	
 	@OnlyIn(Dist.CLIENT)
-	public static class Impl implements IItemPropertyGetter {
+	public static class Impl implements ItemPropertyFunction {
 		
 		private double rotation;
 		private double rota;
@@ -37,23 +37,23 @@ public class ClockTimeGetter {
 		
 		@Override
 		@OnlyIn(Dist.CLIENT)
-		public float call(@Nonnull ItemStack stack, @Nullable ClientWorld worldIn, @Nullable LivingEntity entityIn) {
+		public float call(@Nonnull ItemStack stack, @Nullable ClientLevel worldIn, @Nullable LivingEntity entityIn) {
 			if(!isCalculated(stack))
 				return 0F;
 			
 			boolean carried = entityIn != null;
-			Entity entity = carried ? entityIn : stack.getItemFrame();
+			Entity entity = carried ? entityIn : stack.getFrame();
 
-			if(worldIn == null && entity != null && entity.world instanceof ClientWorld)
-				worldIn = (ClientWorld) entity.world;
+			if(worldIn == null && entity != null && entity.level instanceof ClientLevel)
+				worldIn = (ClientLevel) entity.level;
 
 			if(worldIn == null)
 				return 0F;
 			else {
 				double angle;
 
-				if (worldIn.getDimensionType().isNatural())
-					angle = worldIn.func_242415_f(1F); // getCelestrialAngleByTime
+				if (worldIn.dimensionType().natural())
+					angle = worldIn.getTimeOfDay(1F); // getCelestrialAngleByTime
 				else
 					angle = Math.random();
 
@@ -62,15 +62,15 @@ public class ClockTimeGetter {
 			}
 		}
 		
-		private double wobble(World world, double time) {
+		private double wobble(Level world, double time) {
 			long gameTime = world.getGameTime();
 			if(gameTime != lastUpdateTick) {
 				lastUpdateTick = gameTime;
 				double d0 = time - rotation;
-				d0 = MathHelper.positiveModulo(d0 + 0.5D, 1.0D) - 0.5D;
+				d0 = Mth.positiveModulo(d0 + 0.5D, 1.0D) - 0.5D;
 				rota += d0 * 0.1D;
 				rota *= 0.9D;
-				rotation = MathHelper.positiveModulo(rotation + rota, 1.0D);
+				rotation = Mth.positiveModulo(rotation + rota, 1.0D);
 			}
 
 			return rotation;

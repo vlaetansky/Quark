@@ -16,6 +16,8 @@ import vazkii.quark.api.config.IExternalCategory;
 import vazkii.quark.api.config.IQuarkConfig;
 import vazkii.quark.base.client.config.ConfigCategory;
 
+import vazkii.quark.api.config.IQuarkConfig.Holder;
+
 public final class ExternalConfigHandler implements IQuarkConfig {
 	
 	public static ExternalConfigHandler instance;

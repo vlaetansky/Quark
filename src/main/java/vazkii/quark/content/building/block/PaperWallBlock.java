@@ -10,11 +10,11 @@
  */
 package vazkii.quark.content.building.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.block.QuarkInheritedPaneBlock;
 
@@ -22,17 +22,17 @@ public class PaperWallBlock extends QuarkInheritedPaneBlock {
 
 	public PaperWallBlock(IQuarkBlock parent, String name) {
 		super(parent, name,
-				Block.Properties.from(parent.getBlock())
-					.setLightLevel(b -> 0));
+				Block.Properties.copy(parent.getBlock())
+					.lightLevel(b -> 0));
 	}
 
 	@Override
-	public int getFlammability(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
+	public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
 		return 30;
 	}
 
 	@Override
-	public int getFireSpreadSpeed(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
+	public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
 		return 60;
 	}
 }

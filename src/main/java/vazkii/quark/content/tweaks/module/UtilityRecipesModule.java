@@ -1,8 +1,8 @@
 package vazkii.quark.content.tweaks.module;
 
-import net.minecraft.block.ComposterBlock;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import net.minecraft.world.level.block.ComposterBlock;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.event.TickEvent.WorldTickEvent;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -67,16 +67,16 @@ public class UtilityRecipesModule extends QuarkModule {
     public void worldTick(WorldTickEvent event) {
     	if(needsChange) {
             if (effectiveDragonBreath)
-                Items.DRAGON_BREATH.containerItem = null;
+                Items.DRAGON_BREATH.craftingRemainingItem = null;
             else
-                Items.DRAGON_BREATH.containerItem = Items.GLASS_BOTTLE;
+                Items.DRAGON_BREATH.craftingRemainingItem = Items.GLASS_BOTTLE;
 
             if (compostableToxins) {
-                ComposterBlock.CHANCES.put(Items.POISONOUS_POTATO, 0.85F);
-                ComposterBlock.CHANCES.put(Items.ROTTEN_FLESH, 0.3F);
+                ComposterBlock.COMPOSTABLES.put(Items.POISONOUS_POTATO, 0.85F);
+                ComposterBlock.COMPOSTABLES.put(Items.ROTTEN_FLESH, 0.3F);
             } else {
-                ComposterBlock.CHANCES.removeFloat(Items.POISONOUS_POTATO);
-                ComposterBlock.CHANCES.removeFloat(Items.ROTTEN_FLESH);
+                ComposterBlock.COMPOSTABLES.removeFloat(Items.POISONOUS_POTATO);
+                ComposterBlock.COMPOSTABLES.removeFloat(Items.ROTTEN_FLESH);
             }
             
             needsChange = false;

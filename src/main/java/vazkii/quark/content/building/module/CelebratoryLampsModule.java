@@ -1,12 +1,12 @@
 package vazkii.quark.content.building.module;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -27,8 +27,8 @@ public class CelebratoryLampsModule extends QuarkModule {
 	
 	@Override
 	public void construct() {
-		stone_lamp = new QuarkBlock("stone_lamp", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.STONE).setLightLevel(s -> lightLevel));
-		stone_brick_lamp = new QuarkBlock("stone_brick_lamp", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.STONE_BRICKS).setLightLevel(s -> lightLevel));
+		stone_lamp = new QuarkBlock("stone_lamp", this, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.copy(Blocks.STONE).lightLevel(s -> lightLevel));
+		stone_brick_lamp = new QuarkBlock("stone_brick_lamp", this, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.copy(Blocks.STONE_BRICKS).lightLevel(s -> lightLevel));
 	}
 	
 	@SubscribeEvent
@@ -38,7 +38,7 @@ public class CelebratoryLampsModule extends QuarkModule {
 			ItemStack stack = event.getItemStack();
 			Item item = stack.getItem();
 			if(item == stone_lamp.asItem() || item == stone_brick_lamp.asItem())
-				event.getToolTip().add(1, new TranslationTextComponent("quark.misc.celebration").mergeStyle(TextFormatting.GRAY));
+				event.getToolTip().add(1, new TranslatableComponent("quark.misc.celebration").withStyle(ChatFormatting.GRAY));
 		}
 	}
 	

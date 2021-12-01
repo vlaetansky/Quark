@@ -2,25 +2,25 @@ package vazkii.quark.content.tools.entity;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.particles.ParticleTypes;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.fml.network.NetworkHooks;
 import vazkii.quark.content.tools.module.SkullPikesModule;
 
 public class SkullPikeEntity extends Entity {
 
-	public SkullPikeEntity(EntityType<?> type, World world) {
+	public SkullPikeEntity(EntityType<?> type, Level world) {
 		super(type, world);
 	}
 
@@ -28,52 +28,52 @@ public class SkullPikeEntity extends Entity {
 	public void tick() {
 		super.tick();
 
-		if(world instanceof ServerWorld) {
+		if(level instanceof ServerLevel) {
 			boolean good = false;
-			BlockPos pos = getPosition();
-			BlockState state = world.getBlockState(pos);
+			BlockPos pos = blockPosition();
+			BlockState state = level.getBlockState(pos);
 
-			if(state.getBlock().isIn(SkullPikesModule.pikeTrophiesTag)) {
-				BlockPos down = pos.down();
-				BlockState downState = world.getBlockState(down);
+			if(state.getBlock().is(SkullPikesModule.pikeTrophiesTag)) {
+				BlockPos down = pos.below();
+				BlockState downState = level.getBlockState(down);
 
-				if(downState.getBlock().isIn(BlockTags.FENCES))
+				if(downState.getBlock().is(BlockTags.FENCES))
 					good = true;
 			}
 
 			if(!good)
-				setDead();
+				removeAfterChangingDimensions();
 
-			ServerWorld sworld = (ServerWorld) world;
+			ServerLevel sworld = (ServerLevel) level;
 			if(Math.random() < 0.4)
-				sworld.spawnParticle(Math.random() < 0.05 ? ParticleTypes.WARPED_SPORE : ParticleTypes.ASH, pos.getX() + 0.5, pos.getY() + 0.25, pos.getZ() + 0.5, 1, 0.25, 0.25, 0.25, 0);
+				sworld.sendParticles(Math.random() < 0.05 ? ParticleTypes.WARPED_SPORE : ParticleTypes.ASH, pos.getX() + 0.5, pos.getY() + 0.25, pos.getZ() + 0.5, 1, 0.25, 0.25, 0.25, 0);
 		}
 	}
 
 	public boolean isVisible(Entity entityIn) {
-		Vector3d vector3d = new Vector3d(getPosX(), getPosY() + 1, getPosZ());
-		Vector3d vector3d1 = new Vector3d(entityIn.getPosX(), entityIn.getPosYEye(), entityIn.getPosZ());
-		return world.rayTraceBlocks(new RayTraceContext(vector3d, vector3d1, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this)).getType() == RayTraceResult.Type.MISS;
+		Vec3 vector3d = new Vec3(getX(), getY() + 1, getZ());
+		Vec3 vector3d1 = new Vec3(entityIn.getX(), entityIn.getEyeY(), entityIn.getZ());
+		return level.clip(new ClipContext(vector3d, vector3d1, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)).getType() == HitResult.Type.MISS;
 	}
 
 	@Override
-	protected void registerData() {
+	protected void defineSynchedData() {
 		// NO-OP
 	}
 
 	@Override
-	protected void readAdditional(CompoundNBT nbt) {
+	protected void readAdditionalSaveData(CompoundTag nbt) {
 		// NO-OP
 	}
 
 	@Override
-	protected void writeAdditional(CompoundNBT nbt) {
+	protected void addAdditionalSaveData(CompoundTag nbt) {
 		// NO-OP
 	}
 
 	@Nonnull
 	@Override
-	public IPacket<?> createSpawnPacket() {
+	public Packet<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 

@@ -2,8 +2,8 @@ package vazkii.quark.content.world.module;
 
 import com.google.common.base.Functions;
 
-import net.minecraft.block.Block;
-import net.minecraft.world.gen.GenerationStage.Decoration;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;

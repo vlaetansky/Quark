@@ -2,21 +2,21 @@ package vazkii.quark.content.building.module;
 
 import java.util.Map;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.VineBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.VineBlock;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.module.LoadModule;
@@ -39,34 +39,34 @@ public class BurnVinesModule extends QuarkModule {
 		ItemStack stack = event.getItemStack();
 		if(stack.getItem() == Items.FLINT_AND_STEEL || stack.getItem() == Items.FIRE_CHARGE) {
 			BlockPos pos = event.getPos();
-			World world = event.getWorld();
+			Level world = event.getWorld();
 			BlockState state = world.getBlockState(pos);
 			
 			if(state.getBlock() == Blocks.VINE) {
-				BlockState newState = burnt_vine.getDefaultState();
-				Map<Direction, BooleanProperty> map = VineBlock.FACING_TO_PROPERTY_MAP;
+				BlockState newState = burnt_vine.defaultBlockState();
+				Map<Direction, BooleanProperty> map = VineBlock.PROPERTY_BY_DIRECTION;
 				for(Direction d : map.keySet()) {
 					BooleanProperty prop = map.get(d);
-					newState = newState.with(prop, state.get(prop));
+					newState = newState.setValue(prop, state.getValue(prop));
 				}
 				
-				world.setBlockState(pos, newState);
+				world.setBlockAndUpdate(pos, newState);
 				
-				BlockPos testPos = pos.down();
+				BlockPos testPos = pos.below();
 				BlockState testState = world.getBlockState(testPos);
 				while(testState.getBlock() == Blocks.VINE) {
 					world.removeBlock(testPos, false);
-					testPos = testPos.down();
+					testPos = testPos.below();
 					testState = world.getBlockState(testPos);
 				}
 				
-				world.playSound(event.getPlayer(), pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.PLAYERS, 0.5F, 1F);
-				if(world instanceof ServerWorld) {
-					ServerWorld sworld = (ServerWorld) world;
-					sworld.spawnParticle(ParticleTypes.FLAME, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 5, 0.25, 0.25, 0.25, 0.01);
-					sworld.spawnParticle(ParticleTypes.SMOKE, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 20, 0.25, 0.25, 0.25, 0.01);
+				world.playSound(event.getPlayer(), pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.PLAYERS, 0.5F, 1F);
+				if(world instanceof ServerLevel) {
+					ServerLevel sworld = (ServerLevel) world;
+					sworld.sendParticles(ParticleTypes.FLAME, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 5, 0.25, 0.25, 0.25, 0.01);
+					sworld.sendParticles(ParticleTypes.SMOKE, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 20, 0.25, 0.25, 0.25, 0.01);
 				}
-				event.setCancellationResult(ActionResultType.SUCCESS);
+				event.setCancellationResult(InteractionResult.SUCCESS);
 				event.setCanceled(true);
 			}
 		}

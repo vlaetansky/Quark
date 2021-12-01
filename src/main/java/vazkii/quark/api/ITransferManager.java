@@ -12,7 +12,7 @@ package vazkii.quark.api;
 
 import java.util.function.Supplier;
 
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.IItemHandler;
 
 /**
@@ -25,7 +25,7 @@ import net.minecraftforge.items.IItemHandler;
  */
 public interface ITransferManager {
 
-	boolean acceptsTransfer(PlayerEntity player);
+	boolean acceptsTransfer(Player player);
 	
 	/**
 	 * Override this if you want to add a custom IItemHandler for transfering.

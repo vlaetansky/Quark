@@ -1,13 +1,13 @@
 package vazkii.quark.content.building.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.module.QuarkModule;
 
@@ -16,17 +16,17 @@ public class VariantBookshelfBlock extends QuarkBlock {
 	private final boolean flammable;
 	
     public VariantBookshelfBlock(String type, QuarkModule module, boolean flammable) {
-        super(type + "_bookshelf", module, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.BOOKSHELF));
+        super(type + "_bookshelf", module, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.copy(Blocks.BOOKSHELF));
         this.flammable = flammable;
     }
     
     @Override
-    public boolean isFlammable(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
+    public boolean isFlammable(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
     	return flammable;
     }
     
     @Override
-    public float getEnchantPowerBonus(BlockState state, IWorldReader world, BlockPos pos) {
+    public float getEnchantPowerBonus(BlockState state, LevelReader world, BlockPos pos) {
         return 1;
     }
 }

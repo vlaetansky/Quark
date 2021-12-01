@@ -4,23 +4,23 @@ import java.util.List;
 
 import com.mojang.text2speech.Narrator;
 
-import net.minecraft.block.AbstractSignBlock;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.SignBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.SignTileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
@@ -37,10 +37,10 @@ import vazkii.quark.base.module.QuarkModule;
 public class NarratorReadoutModule extends QuarkModule {
 
 	@OnlyIn(Dist.CLIENT)
-	private KeyBinding keybind;
+	private KeyMapping keybind;
 	
 	@OnlyIn(Dist.CLIENT)
-	private KeyBinding keybindFull;
+	private KeyMapping keybindFull;
 	
 	float last;
 	
@@ -72,17 +72,17 @@ public class NarratorReadoutModule extends QuarkModule {
 	}
 	
 	@OnlyIn(Dist.CLIENT)
-	private boolean isDown(int key, int scancode, boolean mouse, KeyBinding keybind) {
+	private boolean isDown(int key, int scancode, boolean mouse, KeyMapping keybind) {
 		Minecraft mc = Minecraft.getInstance();
-		if(mc.currentScreen != null) {
+		if(mc.screen != null) {
 			if(mouse)
-				return (keybind.matchesMouseKey(key) &&
+				return (keybind.matchesMouse(key) &&
 						(keybind.getKeyModifier() == KeyModifier.NONE || keybind.getKeyModifier().isActive(KeyConflictContext.GUI)));
 			
-			else return (keybind.matchesKey(key, scancode) &&
+			else return (keybind.matches(key, scancode) &&
 					(keybind.getKeyModifier() == KeyModifier.NONE || keybind.getKeyModifier().isActive(KeyConflictContext.GUI)));
 		} 
-		else return keybind.isKeyDown();
+		else return keybind.isDown();
 	}
 	
 	@OnlyIn(Dist.CLIENT)
@@ -102,30 +102,30 @@ public class NarratorReadoutModule extends QuarkModule {
 	
 	@OnlyIn(Dist.CLIENT)
 	private String getReadout(Minecraft mc, boolean full) {
-		PlayerEntity player = mc.player;
+		Player player = mc.player;
 		if(player == null)
-			return I18n.format("quark.readout.not_ingame");
+			return I18n.get("quark.readout.not_ingame");
 
 		StringBuilder sb = new StringBuilder();
 		
-		if(mc.currentScreen == null) {
-			RayTraceResult ray = mc.objectMouseOver;
-			if(ray != null && ray instanceof BlockRayTraceResult) {
-				BlockPos pos = ((BlockRayTraceResult) ray).getPos();
-				BlockState state = mc.world.getBlockState(pos);
+		if(mc.screen == null) {
+			HitResult ray = mc.hitResult;
+			if(ray != null && ray instanceof BlockHitResult) {
+				BlockPos pos = ((BlockHitResult) ray).getBlockPos();
+				BlockState state = mc.level.getBlockState(pos);
 				
 				Item item = state.getBlock().asItem();
 				if(item != null) {
-					sb.append(I18n.format("quark.readout.looking", item.getDisplayName(new ItemStack(item)).getString()));
+					sb.append(I18n.get("quark.readout.looking", item.getName(new ItemStack(item)).getString()));
 					
 					if(full)
 						sb.append(", ");
 				}
 				
-				if(state.getBlock() instanceof AbstractSignBlock) {
-					SignTileEntity tile = (SignTileEntity) mc.world.getTileEntity(pos);
-					sb.append(I18n.format("quark.readout.sign_says"));
-					for(ITextComponent cmp : tile.signText) {
+				if(state.getBlock() instanceof SignBlock) {
+					SignBlockEntity tile = (SignBlockEntity) mc.level.getBlockEntity(pos);
+					sb.append(I18n.get("quark.readout.sign_says"));
+					for(Component cmp : tile.messages) {
 						String msg = cmp.getString().trim();
 						if(!msg.isEmpty()) {
 							sb.append(cmp.getString());
@@ -138,8 +138,8 @@ public class NarratorReadoutModule extends QuarkModule {
 			}
 			
 			if(full) {
-				ItemStack stack = player.getHeldItemMainhand();
-				ItemStack stack2 = player.getHeldItemOffhand();
+				ItemStack stack = player.getMainHandItem();
+				ItemStack stack2 = player.getOffhandItem();
 				if(stack.isEmpty()) {
 					stack = stack2;
 					stack2 = ItemStack.EMPTY;
@@ -147,38 +147,38 @@ public class NarratorReadoutModule extends QuarkModule {
 				
 				if(!stack.isEmpty()) {
 					if(!stack2.isEmpty())
-						sb.append(I18n.format("quark.readout.holding_with_off", stack.getCount(), stack.getDisplayName().getString(), stack2.getCount(), stack2.getDisplayName().getString()));
-					else sb.append(I18n.format("quark.readout.holding", stack.getCount(), stack.getDisplayName().getString()));
+						sb.append(I18n.get("quark.readout.holding_with_off", stack.getCount(), stack.getHoverName().getString(), stack2.getCount(), stack2.getHoverName().getString()));
+					else sb.append(I18n.get("quark.readout.holding", stack.getCount(), stack.getHoverName().getString()));
 					
 					sb.append(", ");
 				}
 				
-				sb.append(I18n.format("quark.readout.health", (int) mc.player.getHealth()));
+				sb.append(I18n.get("quark.readout.health", (int) mc.player.getHealth()));
 				sb.append(", ");
 				
-				sb.append(I18n.format("quark.readout.food", mc.player.getFoodStats().getFoodLevel()));
+				sb.append(I18n.get("quark.readout.food", mc.player.getFoodData().getFoodLevel()));
 			}
 		}
 
 		else {
-			if(mc.currentScreen instanceof ContainerScreen) {
-				ContainerScreen<?> cnt = (ContainerScreen<?>) mc.currentScreen;
+			if(mc.screen instanceof AbstractContainerScreen) {
+				AbstractContainerScreen<?> cnt = (AbstractContainerScreen<?>) mc.screen;
 				Slot slot = cnt.getSlotUnderMouse();
-				ItemStack stack = (slot == null ? ItemStack.EMPTY : slot.getStack());
+				ItemStack stack = (slot == null ? ItemStack.EMPTY : slot.getItem());
 				if(stack.isEmpty())
-					sb.append(I18n.format("quark.readout.no_item"));
+					sb.append(I18n.get("quark.readout.no_item"));
 				else {
-					List<ITextComponent> tooltip = cnt.getTooltipFromItem(stack);
+					List<Component> tooltip = cnt.getTooltipFromItem(stack);
 					
-					for(ITextComponent t : tooltip) {
-						ITextComponent print = t.deepCopy();
-						List<ITextComponent> bros = print.getSiblings();
+					for(Component t : tooltip) {
+						Component print = t.copy();
+						List<Component> bros = print.getSiblings();
 						
-						for(ITextComponent sib : bros) {
-							if(sib instanceof TranslationTextComponent) {
-								TranslationTextComponent ttc = (TranslationTextComponent) sib;
+						for(Component sib : bros) {
+							if(sib instanceof TranslatableComponent) {
+								TranslatableComponent ttc = (TranslatableComponent) sib;
 								if(ttc.getKey().contains("enchantment.level.")) {
-									bros.set(bros.indexOf(sib), new StringTextComponent(ttc.getKey().substring("enchantment.level.".length())));
+									bros.set(bros.indexOf(sib), new TextComponent(ttc.getKey().substring("enchantment.level.".length())));
 									break;
 								}
 							}
@@ -193,7 +193,7 @@ public class NarratorReadoutModule extends QuarkModule {
 					}
 				}
 			}
-			else sb.append(mc.currentScreen.getNarrationMessage());
+			else sb.append(mc.screen.getNarrationMessage());
 		}
 		
 

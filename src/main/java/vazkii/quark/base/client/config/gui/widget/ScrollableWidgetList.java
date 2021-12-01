@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.list.ExtendedList;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.ObjectSelectionList;
 import vazkii.quark.base.client.config.gui.AbstractScrollingWidgetScreen;
 import vazkii.quark.base.client.config.gui.WidgetWrapper;
 
-public abstract class ScrollableWidgetList<S extends AbstractScrollingWidgetScreen, E extends ScrollableWidgetList.Entry<E>> extends ExtendedList<E> {
+public abstract class ScrollableWidgetList<S extends AbstractScrollingWidgetScreen, E extends ScrollableWidgetList.Entry<E>> extends ObjectSelectionList<E> {
 
 	public final S parent;
 	
@@ -21,8 +21,8 @@ public abstract class ScrollableWidgetList<S extends AbstractScrollingWidgetScre
 		this.parent = parent;
 	}
 	
-	public void populate(Consumer<Widget> widgetConsumer) {
-		List<E> children = getEventListeners();
+	public void populate(Consumer<AbstractWidget> widgetConsumer) {
+		List<E> children = children();
 		children.clear();
 
 		findEntries();
@@ -47,20 +47,20 @@ public abstract class ScrollableWidgetList<S extends AbstractScrollingWidgetScre
 		return false;
 	}
 	
-	public static abstract class Entry<E extends Entry<E>> extends ExtendedList.AbstractListEntry<E> {
+	public static abstract class Entry<E extends Entry<E>> extends ObjectSelectionList.Entry<E> {
 		
 		public List<WidgetWrapper> children = new ArrayList<>();
 
-		public final void commitWidgets(Consumer<Widget> consumer) {
+		public final void commitWidgets(Consumer<AbstractWidget> consumer) {
 			children.stream().map(c -> c.widget).forEach(consumer);
 		}
 		
 		@Override
-		public void render(MatrixStack mstack, int index, int rowTop, int rowLeft, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float pticks) {
+		public void render(PoseStack mstack, int index, int rowTop, int rowLeft, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float pticks) {
 			children.forEach(c -> c.updatePosition(rowLeft, rowTop));
 		}
 		
-		public void drawBackground(MatrixStack mstack, int index, int rowTop, int rowLeft, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered) {
+		public void drawBackground(PoseStack mstack, int index, int rowTop, int rowLeft, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered) {
 			if(index % 2 == 0)
 				fill(mstack, rowLeft, rowTop, rowLeft + rowWidth, rowTop + rowHeight, 0x66000000);
 			

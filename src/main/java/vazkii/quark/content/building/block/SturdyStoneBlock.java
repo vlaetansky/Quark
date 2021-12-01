@@ -1,11 +1,11 @@
 package vazkii.quark.content.building.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.module.QuarkModule;
@@ -13,16 +13,16 @@ import vazkii.quark.base.module.QuarkModule;
 public class SturdyStoneBlock extends QuarkBlock {
 
 	public SturdyStoneBlock(QuarkModule module) {
-		super("sturdy_stone", module, ItemGroup.BUILDING_BLOCKS,
-				Block.Properties.create(Material.ROCK)
-				.setRequiresTool()
+		super("sturdy_stone", module, CreativeModeTab.TAB_BUILDING_BLOCKS,
+				Block.Properties.of(Material.STONE)
+				.requiresCorrectToolForDrops()
         		.harvestTool(ToolType.PICKAXE)
-				.hardnessAndResistance(4F, 10F)
+				.strength(4F, 10F)
 				.sound(SoundType.STONE));
 	}
 	
 	@Override
-	public PushReaction getPushReaction(BlockState state) {
+	public PushReaction getPistonPushReaction(BlockState state) {
 		return PushReaction.BLOCK;
 	}
 

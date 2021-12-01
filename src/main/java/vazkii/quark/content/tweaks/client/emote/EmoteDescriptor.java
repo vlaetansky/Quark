@@ -1,9 +1,9 @@
 package vazkii.quark.content.tweaks.client.emote;
 
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -49,7 +49,7 @@ public class EmoteDescriptor {
 	
 	@OnlyIn(Dist.CLIENT)
 	public String getLocalizedName() {
-		return I18n.format(getTranslationKey());
+		return I18n.get(getTranslationKey());
 	}
 	
 	public String getRegistryName() {
@@ -79,9 +79,9 @@ public class EmoteDescriptor {
 		return name;
 	}
 
-	public EmoteBase instantiate(PlayerEntity player, BipedModel<?> model, BipedModel<?> armorModel, BipedModel<?> armorLegModel) {
+	public EmoteBase instantiate(Player player, HumanoidModel<?> model, HumanoidModel<?> armorModel, HumanoidModel<?> armorLegModel) {
 		try {
-			return clazz.getConstructor(EmoteDescriptor.class, PlayerEntity.class, BipedModel.class, BipedModel.class, BipedModel.class).newInstance(this, player, model, armorModel, armorLegModel);
+			return clazz.getConstructor(EmoteDescriptor.class, Player.class, HumanoidModel.class, HumanoidModel.class, HumanoidModel.class).newInstance(this, player, model, armorModel, armorLegModel);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

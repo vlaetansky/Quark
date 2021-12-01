@@ -13,25 +13,25 @@ import java.util.stream.Collectors;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableSet;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ChestBlock;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.passive.horse.AbstractChestedHorseEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.gen.feature.jigsaw.JigsawPiece;
-import net.minecraft.world.gen.feature.jigsaw.LegacySingleJigsawPiece;
-import net.minecraft.world.gen.feature.structure.AbstractVillagePiece;
-import net.minecraft.world.gen.feature.structure.StructurePiece;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.animal.horse.AbstractChestedHorse;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.levelgen.feature.structures.StructurePoolElement;
+import net.minecraft.world.level.levelgen.feature.structures.LegacySinglePoolElement;
+import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -69,8 +69,8 @@ public class VariantChestsModule extends QuarkModule {
 	
 	private static final ImmutableSet<String> MOD_WOODS = ImmutableSet.of();
 
-	public static TileEntityType<VariantChestTileEntity> chestTEType;
-	public static TileEntityType<VariantTrappedChestTileEntity> trappedChestTEType;
+	public static BlockEntityType<VariantChestTileEntity> chestTEType;
+	public static BlockEntityType<VariantTrappedChestTileEntity> trappedChestTEType;
 
 	private static List<Supplier<Block>> chestTypes = new LinkedList<>();
 	private static List<Supplier<Block>> trappedChestTypes = new LinkedList<>();
@@ -277,11 +277,11 @@ public class VariantChestsModule extends QuarkModule {
 			if("minecraft:village".equals(name)) {
 				if(structure.currentComponents != null && structure.currentComponents.size() > 0) {
 					StructurePiece first = structure.currentComponents.get(0);
-					if(first instanceof AbstractVillagePiece) {
-						AbstractVillagePiece avp = (AbstractVillagePiece) first;
-						JigsawPiece jigsaw = avp.getJigsawPiece();
-						if(jigsaw instanceof LegacySingleJigsawPiece) {
-							LegacySingleJigsawPiece legacyJigsaw = (LegacySingleJigsawPiece) jigsaw;
+					if(first instanceof PoolElementStructurePiece) {
+						PoolElementStructurePiece avp = (PoolElementStructurePiece) first;
+						StructurePoolElement jigsaw = avp.getElement();
+						if(jigsaw instanceof LegacySinglePoolElement) {
+							LegacySinglePoolElement legacyJigsaw = (LegacySinglePoolElement) jigsaw;
 							String type = legacyJigsaw.toString();
 							Matcher match = VILLAGE_PIECE_PATTERN.matcher(type);
 							if(match.matches()) {
@@ -300,9 +300,9 @@ public class VariantChestsModule extends QuarkModule {
 			
 			if(chestMappings.containsKey(name)) {
 				Block block = chestMappings.get(name);
-				BlockState placeState = block.getDefaultState();
+				BlockState placeState = block.defaultBlockState();
 				if(placeState.getProperties().contains(ChestBlock.TYPE)) {
-					placeState = placeState.with(ChestBlock.FACING, current.get(ChestBlock.FACING)).with(ChestBlock.TYPE, current.get(ChestBlock.TYPE)).with(ChestBlock.WATERLOGGED, current.get(ChestBlock.WATERLOGGED));
+					placeState = placeState.setValue(ChestBlock.FACING, current.getValue(ChestBlock.FACING)).setValue(ChestBlock.TYPE, current.getValue(ChestBlock.TYPE)).setValue(ChestBlock.WATERLOGGED, current.getValue(ChestBlock.WATERLOGGED));
 					return placeState;
 				}
 			}
@@ -312,7 +312,7 @@ public class VariantChestsModule extends QuarkModule {
 	}
 
 	private void addChest(String name, Block from) {
-		addChest(name, Block.Properties.from(from));
+		addChest(name, Block.Properties.copy(from));
 	}
 
 	private void addChest(String name, Block.Properties props) {
@@ -324,7 +324,7 @@ public class VariantChestsModule extends QuarkModule {
 		String[] toks = nameRaw.split(":");
 		String name = toks[1];
 		String mod = toks[0];
-		addModChest(name, mod, Block.Properties.from(from));
+		addModChest(name, mod, Block.Properties.copy(from));
 	}
 
 	private void addModChest(String name, String mod, Block.Properties props) {
@@ -332,15 +332,15 @@ public class VariantChestsModule extends QuarkModule {
 		trappedChestTypes.add(() -> new VariantTrappedChestBlock.Compat(name, mod, this, () -> trappedChestTEType, props));
 	}
 
-	public static <T extends TileEntity> TileEntityType<T> registerChests(Supplier<? extends T> factory, List<Supplier<Block>> list) {
+	public static <T extends BlockEntity> BlockEntityType<T> registerChests(Supplier<? extends T> factory, List<Supplier<Block>> list) {
 		List<Block> blockTypes = list.stream().map(Supplier::get).collect(Collectors.toList());
 		allChests.addAll(blockTypes);
-		return TileEntityType.Builder.<T>create(factory, blockTypes.toArray(new Block[blockTypes.size()])).build(null);
+		return BlockEntityType.Builder.<T>of(factory, blockTypes.toArray(new Block[blockTypes.size()])).build(null);
 	}
 	
 	@Override
 	public void textureStitch(TextureStitchEvent.Pre event) {
-		if(event.getMap().getTextureLocation().toString().equals("minecraft:textures/atlas/chest.png")) {
+		if(event.getMap().location().toString().equals("minecraft:textures/atlas/chest.png")) {
 			for(Block b : allChests)
 				VariantChestTileEntityRenderer.accept(event, b);
 		}
@@ -349,27 +349,27 @@ public class VariantChestsModule extends QuarkModule {
 	@SubscribeEvent
 	public void onClickEntity(PlayerInteractEvent.EntityInteractSpecific event) {
 		Entity target = event.getTarget();
-		PlayerEntity player = event.getPlayer();
-		ItemStack held = player.getHeldItem(event.getHand());
+		Player player = event.getPlayer();
+		ItemStack held = player.getItemInHand(event.getHand());
 
-		if (!held.isEmpty() && target instanceof AbstractChestedHorseEntity) {
-			AbstractChestedHorseEntity horse = (AbstractChestedHorseEntity) target;
+		if (!held.isEmpty() && target instanceof AbstractChestedHorse) {
+			AbstractChestedHorse horse = (AbstractChestedHorse) target;
 
 			if (!horse.hasChest() && held.getItem() != Items.CHEST) {
-				if (held.getItem().isIn(Tags.Items.CHESTS_WOODEN)) {
+				if (held.getItem().is(Tags.Items.CHESTS_WOODEN)) {
 					event.setCanceled(true);
-					event.setCancellationResult(ActionResultType.SUCCESS);
+					event.setCancellationResult(InteractionResult.SUCCESS);
 
-					if (!target.world.isRemote) {
+					if (!target.level.isClientSide) {
 						ItemStack copy = held.copy();
 						copy.setCount(1);
 						held.shrink(1);
 
 						horse.getPersistentData().put(DONK_CHEST, copy.serializeNBT());
 
-						horse.setChested(true);
-						horse.initHorseChest();
-						horse.playChestEquipSound();
+						horse.setChest(true);
+						horse.createInventory();
+						horse.playChestEquipsSound();
 					}
 				}
 			}
@@ -381,9 +381,9 @@ public class VariantChestsModule extends QuarkModule {
 	@SubscribeEvent
 	public void onDeath(LivingDeathEvent event) {
 		Entity target = event.getEntityLiving();
-		if (target instanceof AbstractChestedHorseEntity) {
-			AbstractChestedHorseEntity horse = (AbstractChestedHorseEntity) target;
-			ItemStack chest = ItemStack.read(horse.getPersistentData().getCompound(DONK_CHEST));
+		if (target instanceof AbstractChestedHorse) {
+			AbstractChestedHorse horse = (AbstractChestedHorse) target;
+			ItemStack chest = ItemStack.of(horse.getPersistentData().getCompound(DONK_CHEST));
 			if (!chest.isEmpty() && horse.hasChest())
 				WAIT_TO_REPLACE_CHEST.set(chest);
 		}

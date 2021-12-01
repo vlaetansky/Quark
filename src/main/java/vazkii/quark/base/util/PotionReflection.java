@@ -7,9 +7,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionBrewing;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -36,7 +36,7 @@ public class PotionReflection {
             CREATE_MIX_PREDICATE = MethodHandles.lookup().unreflectConstructor(ctor)
                     .asType(ctorType.changeReturnType(Object.class));
 
-            Field typeConversions = ObfuscationReflectionHelper.findField(PotionBrewing.class, "field_185213_a"); // POTION_TYPE_CONVERSIONS
+            Field typeConversions = ObfuscationReflectionHelper.findField(PotionBrewing.class, "POTION_MIXES"); // POTION_TYPE_CONVERSIONS
             GET_POTION_TYPE_CONVERSIONS = MethodHandles.lookup().unreflectGetter(typeConversions)
                     .asType(MethodType.methodType(List.class));
         } catch (IllegalAccessException | ClassNotFoundException | NoSuchMethodException e) {

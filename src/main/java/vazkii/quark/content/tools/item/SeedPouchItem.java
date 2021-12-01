@@ -5,21 +5,21 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.util.ItemNBTHelper;
@@ -38,16 +38,16 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 	public SeedPouchItem(QuarkModule module) {
 		super("seed_pouch", module, 
 				new Item.Properties()
-				.maxStackSize(1)
-				.maxDamage(SeedPouchModule.maxItems + 1)
-				.group(ItemGroup.TOOLS));
+				.stacksTo(1)
+				.durability(SeedPouchModule.maxItems + 1)
+				.tab(CreativeModeTab.TAB_TOOLS));
 	}
 	
     @OnlyIn(Dist.CLIENT)
-    public static float itemFraction(ItemStack stack, ClientWorld world, LivingEntity entityIn) {
-    	if(entityIn instanceof PlayerEntity) {
-    		PlayerEntity player = (PlayerEntity) entityIn;
-    		ItemStack held = player.inventory.getItemStack();
+    public static float itemFraction(ItemStack stack, ClientLevel world, LivingEntity entityIn) {
+    	if(entityIn instanceof Player) {
+    		Player player = (Player) entityIn;
+    		ItemStack held = player.inventory.getCarried();
     		
     		if(canTakeItem(stack, held))
     			return 0F;
@@ -61,11 +61,11 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
     }
 
     public static Pair<ItemStack, Integer> getContents(ItemStack stack) {
-		CompoundNBT nbt = ItemNBTHelper.getCompound(stack, TAG_STORED_ITEM, true);
+		CompoundTag nbt = ItemNBTHelper.getCompound(stack, TAG_STORED_ITEM, true);
 		if(nbt == null)
 			return null;
 
-		ItemStack contained = ItemStack.read(nbt);
+		ItemStack contained = ItemStack.of(nbt);
 		int count = ItemNBTHelper.getInt(stack, TAG_COUNT, 0);
 		return Pair.of(contained, count);
 	}
@@ -74,17 +74,17 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 		Pair<ItemStack, Integer> contents = getContents(stack);
 		
 		if(contents == null)
-			return incoming.getItem().isIn(SeedPouchModule.seedPouchHoldableTag);
+			return incoming.getItem().is(SeedPouchModule.seedPouchHoldableTag);
 		
-		return contents.getRight() < SeedPouchModule.maxItems && ItemStack.areItemsEqual(incoming, contents.getLeft());
+		return contents.getRight() < SeedPouchModule.maxItems && ItemStack.isSame(incoming, contents.getLeft());
     }
 
 	public static void setItemStack(ItemStack stack, ItemStack target) {
 		ItemStack copy = target.copy();
 		copy.setCount(1);
 
-		CompoundNBT nbt = new CompoundNBT();
-		copy.write(nbt);
+		CompoundTag nbt = new CompoundTag();
+		copy.save(nbt);
 
 		ItemNBTHelper.setCompound(stack, TAG_STORED_ITEM, nbt);
 		setCount(stack, target.getCount());
@@ -93,13 +93,13 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 	public static void setCount(ItemStack stack, int count) {
 		if(count <= 0) {
 			stack.getTag().remove(TAG_STORED_ITEM);
-			stack.setDamage(0);
+			stack.setDamageValue(0);
 
 			return;
 		}
 		
 		ItemNBTHelper.setInt(stack, TAG_COUNT, count);
-		stack.setDamage(SeedPouchModule.maxItems + 1 - count);
+		stack.setDamageValue(SeedPouchModule.maxItems + 1 - count);
 	}
 	
 	@Override
@@ -108,23 +108,23 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 	}
 	
 	@Override
-	public ITextComponent getDisplayName(ItemStack stack) {
-		ITextComponent base = super.getDisplayName(stack);
+	public Component getName(ItemStack stack) {
+		Component base = super.getName(stack);
 	
 		Pair<ItemStack, Integer> contents = getContents(stack);
 		if(contents == null)
 			return base;
 		
-		IFormattableTextComponent comp = base.deepCopy();
-		comp.append(new StringTextComponent(" ("));
-		comp.append(contents.getLeft().getDisplayName());
-		comp.append(new StringTextComponent(")"));
+		MutableComponent comp = base.copy();
+		comp.append(new TextComponent(" ("));
+		comp.append(contents.getLeft().getHoverName());
+		comp.append(new TextComponent(")"));
 		return comp;
 }
 
 	@Override
-	public ActionResultType onItemUse(ItemUseContext context) {
-		ItemStack stack = context.getItem();
+	public InteractionResult useOn(UseOnContext context) {
+		ItemStack stack = context.getItemInHand();
 		Pair<ItemStack, Integer> contents = getContents(stack);
 		if(contents != null) {
 			ItemStack target = contents.getLeft().copy();
@@ -132,12 +132,12 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 			
 			target.setCount(Math.min(target.getMaxStackSize(), total));
 			
-			PlayerEntity player = context.getPlayer();
-			if(!player.isSneaking())
-				return placeSeed(context, target, context.getPos(), total);
+			Player player = context.getPlayer();
+			if(!player.isShiftKeyDown())
+				return placeSeed(context, target, context.getClickedPos(), total);
 			
 			else {
-				ActionResultType bestRes = ActionResultType.FAIL;
+				InteractionResult bestRes = InteractionResult.FAIL;
 				
 				int range = SeedPouchModule.shiftRange;
 				int blocks = range * range;
@@ -147,13 +147,13 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 					int x = shift + i % range;
 					int z = shift + i / range;
 					
-					ActionResultType res = placeSeed(context, target, context.getPos().add(x, 0, z), total);
+					InteractionResult res = placeSeed(context, target, context.getClickedPos().offset(x, 0, z), total);
 					contents = getContents(stack);
 					if(contents == null)
 						break;
 					total = contents.getRight();
 					
-					if(!bestRes.isSuccessOrConsume())
+					if(!bestRes.consumesAction())
 						bestRes = res;
 				}
 				
@@ -161,27 +161,27 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 			}
 		}
 		
-		return super.onItemUse(context);
+		return super.useOn(context);
 	}
 	
-	private ActionResultType placeSeed(ItemUseContext context, ItemStack target, BlockPos pos, int total) {
-		ActionResultType res = target.getItem().onItemUse(new PouchItemUseContext(context, target, pos));
-		int diff = res == ActionResultType.CONSUME ? 1 : 0;
+	private InteractionResult placeSeed(UseOnContext context, ItemStack target, BlockPos pos, int total) {
+		InteractionResult res = target.getItem().useOn(new PouchItemUseContext(context, target, pos));
+		int diff = res == InteractionResult.CONSUME ? 1 : 0;
 		if(diff > 0 && !context.getPlayer().isCreative())
-			setCount(context.getItem(), total - diff);
+			setCount(context.getItemInHand(), total - diff);
 		
 		return res;
 	}
 	
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-		super.fillItemGroup(group, items);
+	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+		super.fillItemCategory(group, items);
 		
-		if(SeedPouchModule.showAllVariantsInCreative && isEnabled() && isInGroup(group)) {
+		if(SeedPouchModule.showAllVariantsInCreative && isEnabled() && allowdedIn(group)) {
 			List<Item> tagItems = null;
 			
 			try {
-				tagItems = SeedPouchModule.seedPouchHoldableTag.getAllElements();
+				tagItems = SeedPouchModule.seedPouchHoldableTag.getValues();
 			} catch(IllegalStateException e) { // Tag not bound yet
 				return;
 			}
@@ -216,11 +216,11 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 		return 0;
 	}
 	
-	class PouchItemUseContext extends ItemUseContext {
+	class PouchItemUseContext extends UseOnContext {
 
-		protected PouchItemUseContext(ItemUseContext parent, ItemStack stack, BlockPos targetPos) {
-			super(parent.getWorld(), parent.getPlayer(), parent.getHand(), stack, 
-					new BlockRayTraceResult(parent.getHitVec(), parent.getFace(), targetPos, parent.isInside()));
+		protected PouchItemUseContext(UseOnContext parent, ItemStack stack, BlockPos targetPos) {
+			super(parent.getLevel(), parent.getPlayer(), parent.getHand(), stack, 
+					new BlockHitResult(parent.getClickLocation(), parent.getClickedFace(), targetPos, parent.isInside()));
 		}
 
 	}

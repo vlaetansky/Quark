@@ -2,22 +2,24 @@ package vazkii.quark.addons.oddities.item;
 
 import com.mojang.datafixers.util.Pair;
 
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemFrameEntity;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.addons.oddities.module.TotemOfHoldingModule;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.QuarkModule;
+
+import net.minecraft.world.item.Item.Properties;
 
 /**
  * @author WireSegal
@@ -36,30 +38,30 @@ public class SoulCompassItem extends QuarkItem {
     private static long lastUpdateTick;
 
     public SoulCompassItem(QuarkModule module) {
-        super("soul_compass", module, new Properties().group(ItemGroup.TOOLS).maxStackSize(1));
+        super("soul_compass", module, new Properties().tab(CreativeModeTab.TAB_TOOLS).stacksTo(1));
     }
     
     @OnlyIn(Dist.CLIENT)
-    public static float angle(ItemStack stack, ClientWorld world, LivingEntity entityIn) {
-        if(entityIn == null && !stack.isOnItemFrame())
+    public static float angle(ItemStack stack, ClientLevel world, LivingEntity entityIn) {
+        if(entityIn == null && !stack.isFramed())
             return 0;
 
         else {
             boolean hasEntity = entityIn != null;
-            Entity entity = (hasEntity ? entityIn : stack.getItemFrame());
+            Entity entity = (hasEntity ? entityIn : stack.getFrame());
 
             if (entity == null)
                 return 0;
 
-            if(world == null && entity != null && entity.world instanceof ClientWorld)
-                world = (ClientWorld) entity.world;
+            if(world == null && entity != null && entity.level instanceof ClientLevel)
+                world = (ClientLevel) entity.level;
 
             double angle;
             BlockPos pos = getPos(stack);
 
-            if(getDim(stack).equals(world.getDimensionKey().getLocation().toString())) {
-                double yaw = hasEntity ? entity.rotationYaw : getFrameRotation((ItemFrameEntity) entity);
-                yaw = MathHelper.positiveModulo(yaw / 360.0, 1.0);
+            if(getDim(stack).equals(world.dimension().location().toString())) {
+                double yaw = hasEntity ? entity.yRot : getFrameRotation((ItemFrame) entity);
+                yaw = Mth.positiveModulo(yaw / 360.0, 1.0);
                 double relAngle = getDeathToAngle(entity, pos) / (Math.PI * 2);
                 angle = 0.5 - (yaw - 0.25 - relAngle);
             }
@@ -68,13 +70,13 @@ public class SoulCompassItem extends QuarkItem {
             if (hasEntity)
                 angle = wobble(world, angle);
 
-            return MathHelper.positiveModulo((float) angle, 1.0F);
+            return Mth.positiveModulo((float) angle, 1.0F);
         }
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-        if(!worldIn.isRemote) {
+    public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+        if(!worldIn.isClientSide) {
             Pair<BlockPos, String> deathPos = TotemOfHoldingModule.getPlayerDeathPosition(entityIn);
             
             if(deathPos != null) {
@@ -105,28 +107,28 @@ public class SoulCompassItem extends QuarkItem {
     }
 
     @OnlyIn(Dist.CLIENT)
-    private static double wobble(World worldIn, double angle) {
+    private static double wobble(Level worldIn, double angle) {
         if(worldIn.getGameTime() != lastUpdateTick) {
             lastUpdateTick = worldIn.getGameTime();
             double relAngle = angle - rotation;
-            relAngle = MathHelper.positiveModulo(relAngle + 0.5, 1.0) - 0.5;
+            relAngle = Mth.positiveModulo(relAngle + 0.5, 1.0) - 0.5;
             rota += relAngle * 0.1;
             rota *= 0.8;
-            rotation = MathHelper.positiveModulo(rotation + rota, 1.0);
+            rotation = Mth.positiveModulo(rotation + rota, 1.0);
         }
 
         return rotation;
     }
 
     @OnlyIn(Dist.CLIENT)
-    private static double getFrameRotation(ItemFrameEntity frame) {
-        Direction facing = frame.getHorizontalFacing();
-        return MathHelper.wrapDegrees(180 + facing.getHorizontalAngle());
+    private static double getFrameRotation(ItemFrame frame) {
+        Direction facing = frame.getDirection();
+        return Mth.wrapDegrees(180 + facing.toYRot());
     }
 
     @OnlyIn(Dist.CLIENT)
     private static double getDeathToAngle(Entity entity, BlockPos blockpos) {
-        return Math.atan2(blockpos.getZ() - entity.getPosZ(), blockpos.getX() - entity.getPosX());
+        return Math.atan2(blockpos.getZ() - entity.getZ(), blockpos.getX() - entity.getX());
     }
 
 

@@ -1,19 +1,19 @@
 package vazkii.quark.content.tools.item;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceContext.BlockMode;
-import net.minecraft.util.math.RayTraceContext.FluidMode;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.ClipContext.Block;
+import net.minecraft.world.level.ClipContext.Fluid;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.Level;
 import vazkii.quark.base.handler.RayTraceHandler;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.QuarkModule;
@@ -22,23 +22,23 @@ import vazkii.quark.content.tools.module.BottledCloudModule;
 public class BottledCloudItem extends QuarkItem {
 
 	public BottledCloudItem(QuarkModule module) {
-		super("bottled_cloud", module, new Item.Properties().group(ItemGroup.TOOLS));
+		super("bottled_cloud", module, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS));
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-		ItemStack stack = player.getHeldItem(hand);
+	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+		ItemStack stack = player.getItemInHand(hand);
 		
-		RayTraceResult result = RayTraceHandler.rayTrace(player, world, player, BlockMode.OUTLINE, FluidMode.ANY);
-		if(result instanceof BlockRayTraceResult) {
-			BlockRayTraceResult bresult = (BlockRayTraceResult) result;
-			BlockPos pos = bresult.getPos();
-			if(!world.isAirBlock(pos))
-				pos = pos.offset(bresult.getFace());
+		HitResult result = RayTraceHandler.rayTrace(player, world, player, Block.OUTLINE, Fluid.ANY);
+		if(result instanceof BlockHitResult) {
+			BlockHitResult bresult = (BlockHitResult) result;
+			BlockPos pos = bresult.getBlockPos();
+			if(!world.isEmptyBlock(pos))
+				pos = pos.relative(bresult.getDirection());
 			
-			if(world.isAirBlock(pos)) {
-				if(!world.isRemote)
-					world.setBlockState(pos, BottledCloudModule.cloud.getDefaultState());
+			if(world.isEmptyBlock(pos)) {
+				if(!world.isClientSide)
+					world.setBlockAndUpdate(pos, BottledCloudModule.cloud.defaultBlockState());
 				
 				stack.shrink(1);
 				
@@ -46,16 +46,16 @@ public class BottledCloudItem extends QuarkItem {
 					ItemStack returnStack = new ItemStack(Items.GLASS_BOTTLE);
 					if(stack.isEmpty())
 						stack = returnStack;
-					else if(!player.addItemStackToInventory(returnStack))
-						player.dropItem(returnStack, false);
+					else if(!player.addItem(returnStack))
+						player.drop(returnStack, false);
 				}
 				
-				player.getCooldownTracker().setCooldown(this, 10);
-				return new ActionResult<ItemStack>(ActionResultType.SUCCESS, stack);
+				player.getCooldowns().addCooldown(this, 10);
+				return new InteractionResultHolder<ItemStack>(InteractionResult.SUCCESS, stack);
 			}
 		}
 		
-		return new ActionResult<ItemStack>(ActionResultType.PASS, stack);
+		return new InteractionResultHolder<ItemStack>(InteractionResult.PASS, stack);
 	}
 
 }

@@ -4,7 +4,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-import net.minecraft.item.BannerItem;
+import net.minecraft.world.item.BannerItem;
 import vazkii.quark.content.tweaks.module.MoreBannerLayersModule;
 
 @Mixin(BannerItem.class)

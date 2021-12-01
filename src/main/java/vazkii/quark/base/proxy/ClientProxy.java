@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
 import java.time.Month;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.Util;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -86,10 +86,10 @@ public class ClientProxy extends CommonProxy {
 		IngameConfigHandler.INSTANCE.refresh();
 
 		Minecraft mc = Minecraft.getInstance();
-		mc.runAsync(() -> {
-			if(mc.isSingleplayer() && mc.player != null && mc.getIntegratedServer() != null)
+		mc.submit(() -> {
+			if(mc.hasSingleplayerServer() && mc.player != null && mc.getSingleplayerServer() != null)
 				for(int i = 0; i < 3; i++)
-					mc.player.sendMessage(new TranslationTextComponent("quark.misc.reloaded" + i).mergeStyle(i == 0 ? TextFormatting.AQUA : TextFormatting.WHITE), Util.DUMMY_UUID);
+					mc.player.sendMessage(new TranslatableComponent("quark.misc.reloaded" + i).withStyle(i == 0 ? ChatFormatting.AQUA : ChatFormatting.WHITE), Util.NIL_UUID);
 		});
 	}
 

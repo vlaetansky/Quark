@@ -6,16 +6,16 @@ import java.util.function.BooleanSupplier;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.GenerationStage.Decoration;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.IFeatureConfig;
-import net.minecraft.world.gen.feature.OreFeatureConfig;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 import net.minecraftforge.common.BiomeDictionary;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -51,7 +51,7 @@ public class BigStoneClustersModule extends QuarkModule {
 			"minecraft:netherrack|minecraft:the_nether", "minecraft:end_stone|minecraft:the_end",
 			"quark:marble", "quark:limestone", "quark:jasper", "quark:slate");
 	
-	public static BiPredicate<World, Block> blockReplacePredicate = (w, b) -> false;
+	public static BiPredicate<Level, Block> blockReplacePredicate = (w, b) -> false;
 	
 	@Override
 	public void setup() {
@@ -72,20 +72,20 @@ public class BigStoneClustersModule extends QuarkModule {
 	}
 	
 	private void add(BigStoneClusterConfig config, Block block, BooleanSupplier condition) {
-		WorldGenHandler.addGenerator(this, new BigStoneClusterGenerator(config, block.getDefaultState(), condition), Decoration.UNDERGROUND_DECORATION, WorldGenWeights.BIG_STONE_CLUSTERS);
+		WorldGenHandler.addGenerator(this, new BigStoneClusterGenerator(config, block.defaultBlockState(), condition), Decoration.UNDERGROUND_DECORATION, WorldGenWeights.BIG_STONE_CLUSTERS);
 	}
 	
 	private void conditionalize(Block block, BooleanSupplier condition) {
-		BiPredicate<Feature<? extends IFeatureConfig>, IFeatureConfig> pred = (feature, config) -> {
-			if(config instanceof OreFeatureConfig) {
-				OreFeatureConfig oconfig = (OreFeatureConfig) config;
+		BiPredicate<Feature<? extends FeatureConfiguration>, FeatureConfiguration> pred = (feature, config) -> {
+			if(config instanceof OreConfiguration) {
+				OreConfiguration oconfig = (OreConfiguration) config;
 				return oconfig.state.getBlock() == block;
 			}
 			
 			return false;
 		};
 		
-		WorldGenHandler.conditionalizeFeatures(GenerationStage.Decoration.UNDERGROUND_ORES, pred, condition);
+		WorldGenHandler.conditionalizeFeatures(GenerationStep.Decoration.UNDERGROUND_ORES, pred, condition);
 	}
 	
 	@Override
@@ -114,7 +114,7 @@ public class BigStoneClustersModule extends QuarkModule {
 							if(w == null)
 								return false;
 							
-							return w.getDimensionKey().getLocation().toString().equals(dimFinal);
+							return w.dimension().location().toString().equals(dimFinal);
 						});
 					}
 				}

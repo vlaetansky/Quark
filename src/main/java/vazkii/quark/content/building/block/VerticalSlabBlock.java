@@ -3,38 +3,38 @@ package vazkii.quark.content.building.block;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.IWaterLoggable;
-import net.minecraft.block.SlabBlock;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.client.color.block.BlockColor;
+import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.interf.IBlockColorProvider;
@@ -43,7 +43,7 @@ import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.block.QuarkSlabBlock;
 import vazkii.quark.base.module.QuarkModule;
 
-public class VerticalSlabBlock extends QuarkBlock implements IWaterLoggable, IBlockColorProvider {
+public class VerticalSlabBlock extends QuarkBlock implements SimpleWaterloggedBlock, IBlockColorProvider {
 
 	public static final EnumProperty<VerticalSlabType> TYPE = EnumProperty.create("type", VerticalSlabType.class);
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -51,7 +51,7 @@ public class VerticalSlabBlock extends QuarkBlock implements IWaterLoggable, IBl
 	public final Block parent;
 
 	public VerticalSlabBlock(Block parent, QuarkModule module) {
-		super(parent.getRegistryName().getPath().replace("_slab", "_vertical_slab"), module, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(parent));
+		super(parent.getRegistryName().getPath().replace("_slab", "_vertical_slab"), module, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.copy(parent));
 		this.parent = parent;
 		
 		if(!(parent instanceof SlabBlock))
@@ -60,127 +60,127 @@ public class VerticalSlabBlock extends QuarkBlock implements IWaterLoggable, IBl
 		if(parent instanceof QuarkSlabBlock)
 			setCondition(((QuarkSlabBlock) parent).parent::isEnabled);
 
-		setDefaultState(getDefaultState().with(TYPE, VerticalSlabType.NORTH).with(WATERLOGGED, false));
+		registerDefaultState(defaultBlockState().setValue(TYPE, VerticalSlabType.NORTH).setValue(WATERLOGGED, false));
 	}
 	
 	@Override
 	public BlockState rotate(BlockState state, Rotation rot) {
-		return state.get(TYPE) == VerticalSlabType.DOUBLE ? state : state.with(TYPE, VerticalSlabType.fromDirection(rot.rotate(state.get(TYPE).direction)));
+		return state.getValue(TYPE) == VerticalSlabType.DOUBLE ? state : state.setValue(TYPE, VerticalSlabType.fromDirection(rot.rotate(state.getValue(TYPE).direction)));
 	}
 	
 	@Override
 	public BlockState mirror(BlockState state, Mirror mirrorIn) {
-		VerticalSlabType type = state.get(TYPE);
+		VerticalSlabType type = state.getValue(TYPE);
 		if(type == VerticalSlabType.DOUBLE || mirrorIn == Mirror.NONE)
 			return state;
 		
 		if((mirrorIn == Mirror.LEFT_RIGHT && type.direction.getAxis() == Axis.Z)
 				|| (mirrorIn == Mirror.FRONT_BACK && type.direction.getAxis() == Axis.X))
-			return state.with(TYPE, VerticalSlabType.fromDirection(state.get(TYPE).direction.getOpposite()));
+			return state.setValue(TYPE, VerticalSlabType.fromDirection(state.getValue(TYPE).direction.getOpposite()));
 		
 		return state;
 	}
 	
 	@Override
-	public boolean isTransparent(BlockState state) {
-		return state.get(TYPE) != VerticalSlabType.DOUBLE;
+	public boolean useShapeForLightOcclusion(BlockState state) {
+		return state.getValue(TYPE) != VerticalSlabType.DOUBLE;
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		builder.add(TYPE, WATERLOGGED);
 	}
 
 	@Nonnull
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return state.get(TYPE).shape;
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+		return state.getValue(TYPE).shape;
 	}
 	
 	@Override
-	public boolean isConduitFrame(BlockState state, IWorldReader world, BlockPos pos, BlockPos conduit) {
+	public boolean isConduitFrame(BlockState state, LevelReader world, BlockPos pos, BlockPos conduit) {
 		return parent.isConduitFrame(state, world, pos, conduit);
 	}
 
 	@Override
 	@Nullable
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		BlockPos blockpos = context.getPos();
-		BlockState blockstate = context.getWorld().getBlockState(blockpos);
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		BlockPos blockpos = context.getClickedPos();
+		BlockState blockstate = context.getLevel().getBlockState(blockpos);
 		if(blockstate.getBlock() == this) 
-			return blockstate.with(TYPE, VerticalSlabType.DOUBLE).with(WATERLOGGED, false);
+			return blockstate.setValue(TYPE, VerticalSlabType.DOUBLE).setValue(WATERLOGGED, false);
 		
-		FluidState fluid = context.getWorld().getFluidState(blockpos);
-		BlockState retState = getDefaultState().with(WATERLOGGED, fluid.getFluid() == Fluids.WATER);
+		FluidState fluid = context.getLevel().getFluidState(blockpos);
+		BlockState retState = defaultBlockState().setValue(WATERLOGGED, fluid.getType() == Fluids.WATER);
 		Direction direction = getDirectionForPlacement(context);
 		VerticalSlabType type = VerticalSlabType.fromDirection(direction);
 		
-		return retState.with(TYPE, type);
+		return retState.setValue(TYPE, type);
 	}
 	
-	private Direction getDirectionForPlacement(BlockItemUseContext context) {
-		Direction direction = context.getFace();
+	private Direction getDirectionForPlacement(BlockPlaceContext context) {
+		Direction direction = context.getClickedFace();
 		if(direction.getAxis() != Axis.Y)
 			return direction;
 		
-		BlockPos pos = context.getPos();
-		Vector3d vec = context.getHitVec().subtract(new Vector3d(pos.getX(), pos.getY(), pos.getZ())).subtract(0.5, 0, 0.5);
+		BlockPos pos = context.getClickedPos();
+		Vec3 vec = context.getClickLocation().subtract(new Vec3(pos.getX(), pos.getY(), pos.getZ())).subtract(0.5, 0, 0.5);
 		double angle = Math.atan2(vec.x, vec.z) * -180.0 / Math.PI;
-		return Direction.fromAngle(angle).getOpposite();
+		return Direction.fromYRot(angle).getOpposite();
 	}
 
 	@Override
-	public boolean isReplaceable(BlockState state, @Nonnull BlockItemUseContext useContext) {
-		ItemStack itemstack = useContext.getItem();
-		VerticalSlabType slabtype = state.get(TYPE);
+	public boolean canBeReplaced(BlockState state, @Nonnull BlockPlaceContext useContext) {
+		ItemStack itemstack = useContext.getItemInHand();
+		VerticalSlabType slabtype = state.getValue(TYPE);
 		return slabtype != VerticalSlabType.DOUBLE && itemstack.getItem() == this.asItem()  &&
-			(useContext.replacingClickedOnBlock() && (useContext.getFace() == slabtype.direction && getDirectionForPlacement(useContext) == slabtype.direction)
-					|| (!useContext.replacingClickedOnBlock() && useContext.getFace().getAxis() != slabtype.direction.getAxis()));
+			(useContext.replacingClickedOnBlock() && (useContext.getClickedFace() == slabtype.direction && getDirectionForPlacement(useContext) == slabtype.direction)
+					|| (!useContext.replacingClickedOnBlock() && useContext.getClickedFace().getAxis() != slabtype.direction.getAxis()));
 	}
 
 	@Nonnull
 	@Override
 	public FluidState getFluidState(BlockState state) {
-		return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
 	}
 
 	@Override
-	public boolean receiveFluid(@Nonnull IWorld worldIn, @Nonnull BlockPos pos, BlockState state, @Nonnull FluidState fluidStateIn) {
-		return state.get(TYPE) != VerticalSlabType.DOUBLE && IWaterLoggable.super.receiveFluid(worldIn, pos, state, fluidStateIn);
+	public boolean placeLiquid(@Nonnull LevelAccessor worldIn, @Nonnull BlockPos pos, BlockState state, @Nonnull FluidState fluidStateIn) {
+		return state.getValue(TYPE) != VerticalSlabType.DOUBLE && SimpleWaterloggedBlock.super.placeLiquid(worldIn, pos, state, fluidStateIn);
 	}
 
 	@Override
-	public boolean canContainFluid(IBlockReader worldIn, BlockPos pos, BlockState state, Fluid fluidIn) {
-		return state.get(TYPE) != VerticalSlabType.DOUBLE && IWaterLoggable.super.canContainFluid(worldIn, pos, state, fluidIn);
+	public boolean canPlaceLiquid(BlockGetter worldIn, BlockPos pos, BlockState state, Fluid fluidIn) {
+		return state.getValue(TYPE) != VerticalSlabType.DOUBLE && SimpleWaterloggedBlock.super.canPlaceLiquid(worldIn, pos, state, fluidIn);
 	}
 
 	@Nonnull
 	@Override
-	public BlockState updatePostPlacement(@Nonnull BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-		if(stateIn.get(WATERLOGGED))
-			worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+	public BlockState updateShape(@Nonnull BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+		if(stateIn.getValue(WATERLOGGED))
+			worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
 
-		return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+		return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
 	}
 
 	@Override
-	public boolean allowsMovement(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, PathType type) {
-		return type == PathType.WATER && worldIn.getFluidState(pos).isTagged(FluidTags.WATER); 
+	public boolean isPathfindable(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, PathComputationType type) {
+		return type == PathComputationType.WATER && worldIn.getFluidState(pos).is(FluidTags.WATER); 
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IBlockColor getBlockColor() {
+	public BlockColor getBlockColor() {
 		return parent instanceof IBlockColorProvider ? ((IBlockColorProvider) parent).getBlockColor() : null;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IItemColor getItemColor() {
+	public ItemColor getItemColor() {
 		return parent instanceof IItemColorProvider ? ((IItemColorProvider) parent).getItemColor() : null;
 	}
 
-	public enum VerticalSlabType implements IStringSerializable {
+	public enum VerticalSlabType implements StringRepresentable {
 		NORTH(Direction.NORTH),
 		SOUTH(Direction.SOUTH),
 		WEST(Direction.WEST),
@@ -192,11 +192,11 @@ public class VerticalSlabBlock extends QuarkBlock implements IWaterLoggable, IBl
 		public final VoxelShape shape;
 
 		VerticalSlabType(Direction direction) {
-			this.name = direction == null ? "double" : direction.getString();
+			this.name = direction == null ? "double" : direction.getSerializedName();
 			this.direction = direction;
 
 			if(direction == null)
-				shape = VoxelShapes.fullCube();
+				shape = Shapes.block();
 			else {
 				double min = 0;
 				double max = 8;
@@ -206,8 +206,8 @@ public class VerticalSlabBlock extends QuarkBlock implements IWaterLoggable, IBl
 				}
 
 				if(direction.getAxis() == Axis.X)
-					shape = Block.makeCuboidShape(min, 0, 0, max, 16, 16);
-				else shape = Block.makeCuboidShape(0, 0, min, 16, 16, max);
+					shape = Block.box(min, 0, 0, max, 16, 16);
+				else shape = Block.box(0, 0, min, 16, 16, max);
 			}
 		}
 
@@ -218,7 +218,7 @@ public class VerticalSlabBlock extends QuarkBlock implements IWaterLoggable, IBl
 
 		@Nonnull
 		@Override
-		public String getString() {
+		public String getSerializedName() {
 			return name;
 		}
 

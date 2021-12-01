@@ -4,8 +4,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 import vazkii.quark.base.module.config.Config;
 
 public class DimensionConfig extends AbstractConfigType {
@@ -38,11 +38,11 @@ public class DimensionConfig extends AbstractConfigType {
 		return new DimensionConfig(true);
 	}
 
-	public boolean canSpawnHere(IWorld world) {
-		if (world == null || !(world instanceof World))
+	public boolean canSpawnHere(LevelAccessor world) {
+		if (world == null || !(world instanceof Level))
 			return false;
 
-		return dimensions.contains(((World) world).getDimensionKey().getLocation().toString()) != isBlacklist;
+		return dimensions.contains(((Level) world).dimension().location().toString()) != isBlacklist;
 	}
 
 }

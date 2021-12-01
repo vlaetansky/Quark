@@ -1,13 +1,13 @@
 package vazkii.quark.base.client.config.gui;
 
-import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.client.gui.components.AbstractWidget;
 
 public class WidgetWrapper {
 
-	public final Widget widget;
+	public final AbstractWidget widget;
 	public final int relativeX, relativeY;
 	
-	public WidgetWrapper(Widget widget) {
+	public WidgetWrapper(AbstractWidget widget) {
 		this.widget = widget;
 		this.relativeX = widget.x;
 		this.relativeY = widget.y;

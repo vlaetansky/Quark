@@ -5,14 +5,14 @@ import java.util.concurrent.Callable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -57,7 +57,7 @@ public class CapabilityHandler {
 	private static class CapabilityFactory<T> implements Capability.IStorage<T> {
 
 		@Override
-		public INBT writeNBT(Capability<T> capability, T instance, Direction side) {
+		public Tag writeNBT(Capability<T> capability, T instance, Direction side) {
 			if (instance instanceof INBTSerializable)
 				return ((INBTSerializable<?>) instance).serializeNBT();
 			return null;
@@ -65,9 +65,9 @@ public class CapabilityHandler {
 
 		@Override
 		@SuppressWarnings("unchecked")
-		public void readNBT(Capability<T> capability, T instance, Direction side, INBT nbt) {
-			if (nbt instanceof CompoundNBT)
-				((INBTSerializable<INBT>) instance).deserializeNBT(nbt);
+		public void readNBT(Capability<T> capability, T instance, Direction side, Tag nbt) {
+			if (nbt instanceof CompoundTag)
+				((INBTSerializable<Tag>) instance).deserializeNBT(nbt);
 		}
 
 	}
@@ -89,14 +89,14 @@ public class CapabilityHandler {
 	}
 
 	@SubscribeEvent
-	public static void attachTileCapabilities(AttachCapabilitiesEvent<TileEntity> event) {
+	public static void attachTileCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
 		if (event.getObject() instanceof ITransferManager)
 			SelfProvider.attach(DROPOFF_MANAGER, QuarkCapabilities.TRANSFER, event);
 	}
 	
     @SubscribeEvent
-    public static void attachWorldCapabilities(AttachCapabilitiesEvent<World> event) {
-        World world = event.getObject();
+    public static void attachWorldCapabilities(AttachCapabilitiesEvent<Level> event) {
+        Level world = event.getObject();
         MagnetTracker tracker = new MagnetTracker(world);
 
         event.addCapability(MAGNET_TRACKER, new ICapabilityProvider() {

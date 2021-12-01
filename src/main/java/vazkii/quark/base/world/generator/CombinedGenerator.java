@@ -2,12 +2,12 @@ package vazkii.quark.base.world.generator;
 
 import java.util.List;
 
-import net.minecraft.util.SharedSeedRandom;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.WorldGenRegion;
+import net.minecraft.world.level.levelgen.WorldgenRandom;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.server.level.WorldGenRegion;
 
 /**
  * @author WireSegal
@@ -22,7 +22,7 @@ public class CombinedGenerator implements IGenerator {
     }
 
     @Override
-    public int generate(int seedIncrement, long seed, GenerationStage.Decoration stage, WorldGenRegion worldIn, ChunkGenerator generator, SharedSeedRandom rand, BlockPos pos) {
+    public int generate(int seedIncrement, long seed, GenerationStep.Decoration stage, WorldGenRegion worldIn, ChunkGenerator generator, WorldgenRandom rand, BlockPos pos) {
         for (IGenerator child : children) {
             if (child.canGenerate(worldIn))
                 seedIncrement = child.generate(seedIncrement, seed, stage, worldIn, generator, rand, pos);
@@ -31,7 +31,7 @@ public class CombinedGenerator implements IGenerator {
     }
 
     @Override
-    public boolean canGenerate(IServerWorld world) {
+    public boolean canGenerate(ServerLevelAccessor world) {
         return children.stream().anyMatch((it) -> it.canGenerate(world));
     }
 }

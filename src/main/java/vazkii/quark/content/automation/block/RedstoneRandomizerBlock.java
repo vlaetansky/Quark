@@ -5,28 +5,28 @@ import java.util.Random;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.RedstoneWireBlock;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particles.RedstoneParticleData;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.TickPriority;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RedStoneWireBlock;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.TickPriority;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -36,6 +36,8 @@ import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.automation.base.RandomizerPowerState;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 /**
  * @author WireSegal
  * Created at 9:57 AM on 8/26/19.
@@ -43,164 +45,164 @@ import vazkii.quark.content.automation.base.RandomizerPowerState;
 
 public class RedstoneRandomizerBlock extends QuarkBlock {
 
-    protected static final VoxelShape SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D);
+    protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final EnumProperty<RandomizerPowerState> POWERED = EnumProperty.create("powered", RandomizerPowerState.class);
 
-    public RedstoneRandomizerBlock(String regname, QuarkModule module, ItemGroup creativeTab, Properties properties) {
+    public RedstoneRandomizerBlock(String regname, QuarkModule module, CreativeModeTab creativeTab, Properties properties) {
         super(regname, module, creativeTab, properties);
 
-        setDefaultState(getDefaultState()
-                .with(FACING, Direction.NORTH)
-                .with(POWERED, RandomizerPowerState.OFF));
+        registerDefaultState(defaultBlockState()
+                .setValue(FACING, Direction.NORTH)
+                .setValue(POWERED, RandomizerPowerState.OFF));
         
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
     }
 
     @Override
-    public void tick(BlockState state, ServerWorld world, BlockPos pos, Random rand) {
+    public void tick(BlockState state, ServerLevel world, BlockPos pos, Random rand) {
         boolean isPowered = isPowered(state);
         boolean willBePowered = shouldBePowered(world, pos, state);
         if(isPowered != willBePowered) {
             if (!willBePowered)
-                state = state.with(POWERED, RandomizerPowerState.OFF);
+                state = state.setValue(POWERED, RandomizerPowerState.OFF);
             else
-                state = state.with(POWERED, rand.nextBoolean() ? RandomizerPowerState.LEFT : RandomizerPowerState.RIGHT);
+                state = state.setValue(POWERED, rand.nextBoolean() ? RandomizerPowerState.LEFT : RandomizerPowerState.RIGHT);
 
-            world.setBlockState(pos, state);
+            world.setBlockAndUpdate(pos, state);
         }
     }
 
-    protected void updateState(World world, BlockPos pos, BlockState state) {
+    protected void updateState(Level world, BlockPos pos, BlockState state) {
         boolean isPowered = isPowered(state);
         boolean willBePowered = shouldBePowered(world, pos, state);
-        if (isPowered != willBePowered && !world.getPendingBlockTicks().isTickPending(pos, this)) {
+        if (isPowered != willBePowered && !world.getBlockTicks().willTickThisTick(pos, this)) {
             TickPriority priority = isPowered ? TickPriority.VERY_HIGH : TickPriority.HIGH;
 
-            world.getPendingBlockTicks().scheduleTick(pos, this, 2, priority);
+            world.getBlockTicks().scheduleTick(pos, this, 2, priority);
         }
 
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, POWERED);
     }
 
     @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
     @Override
-    public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos pos) {
-        return hasSolidSideOnTop(world, pos.down());
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+        return canSupportRigidBlock(world, pos.below());
     }
 
     protected boolean isPowered(BlockState state) {
-        return state.get(POWERED) != RandomizerPowerState.OFF;
+        return state.getValue(POWERED) != RandomizerPowerState.OFF;
     }
 
     @Override
-    public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-        return blockState.getWeakPower(blockAccess, pos, side);
+    public int getDirectSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
+        return blockState.getSignal(blockAccess, pos, side);
     }
 
     @Override
-    public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-        RandomizerPowerState powerState = blockState.get(POWERED);
+    public int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
+        RandomizerPowerState powerState = blockState.getValue(POWERED);
         switch (powerState) {
             case RIGHT:
-                return blockState.get(FACING).rotateY() == side ? 15 : 0;
+                return blockState.getValue(FACING).getClockWise() == side ? 15 : 0;
             case LEFT:
-                return blockState.get(FACING).rotateYCCW() == side ? 15 : 0;
+                return blockState.getValue(FACING).getCounterClockWise() == side ? 15 : 0;
             default:
                 return 0;
         }
     }
 
     @Override
-    public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        if (state.isValidPosition(world, pos))
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        if (state.canSurvive(world, pos))
             this.updateState(world, pos, state);
         else
             breakAndDrop(this, state, world, pos);
     }
 
-    public static void breakAndDrop(Block block, BlockState state, World world, BlockPos pos) {
-        spawnDrops(state, world, pos, null);
+    public static void breakAndDrop(Block block, BlockState state, Level world, BlockPos pos) {
+        dropResources(state, world, pos, null);
         world.removeBlock(pos, false);
 
         for(Direction direction : Direction.values())
-            world.notifyNeighborsOfStateChange(pos.offset(direction), block);
+            world.updateNeighborsAt(pos.relative(direction), block);
     }
 
-    protected boolean shouldBePowered(World world, BlockPos pos, BlockState state) {
+    protected boolean shouldBePowered(Level world, BlockPos pos, BlockState state) {
         return this.calculateInputStrength(world, pos, state) > 0;
     }
 
-    protected int calculateInputStrength(World world, BlockPos pos, BlockState state) {
-        Direction face = state.get(FACING);
-        BlockPos checkPos = pos.offset(face);
-        int strength = world.getRedstonePower(checkPos, face);
+    protected int calculateInputStrength(Level world, BlockPos pos, BlockState state) {
+        Direction face = state.getValue(FACING);
+        BlockPos checkPos = pos.relative(face);
+        int strength = world.getSignal(checkPos, face);
         if (strength >= 15) {
             return strength;
         } else {
             BlockState checkState = world.getBlockState(checkPos);
-            return Math.max(strength, checkState.getBlock() == Blocks.REDSTONE_WIRE ? checkState.get(RedstoneWireBlock.POWER) : 0);
+            return Math.max(strength, checkState.getBlock() == Blocks.REDSTONE_WIRE ? checkState.getValue(RedStoneWireBlock.POWER) : 0);
         }
     }
 
     @Override
-    public boolean canProvidePower(BlockState state) {
+    public boolean isSignalSource(BlockState state) {
         return true;
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         if (this.shouldBePowered(world, pos, state)) {
-            world.getPendingBlockTicks().scheduleTick(pos, this, 1);
+            world.getBlockTicks().scheduleTick(pos, this, 1);
         }
     }
 
     @Override
-    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean isMoving) {
         notifyNeighbors(this, world, pos, state);
     }
 
     @Override
-    public void onReplaced(BlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
         if (!isMoving && state.getBlock() != newState.getBlock()) {
-            super.onReplaced(state, world, pos, newState, false);
+            super.onRemove(state, world, pos, newState, false);
             notifyNeighbors(this, world, pos, state);
         }
     }
 
-    public static void notifyNeighbors(Block block, World world, BlockPos pos, BlockState state) {
-        Direction face = state.get(FACING);
-        BlockPos neighborPos = pos.offset(face.getOpposite());
+    public static void notifyNeighbors(Block block, Level world, BlockPos pos, BlockState state) {
+        Direction face = state.getValue(FACING);
+        BlockPos neighborPos = pos.relative(face.getOpposite());
         if (ForgeEventFactory.onNeighborNotify(world, pos, world.getBlockState(pos), EnumSet.of(face.getOpposite()), false).isCanceled())
             return;
         world.neighborChanged(neighborPos, block, pos);
-        world.notifyNeighborsOfStateExcept(neighborPos, block, face);
+        world.updateNeighborsAtExceptFromFacing(neighborPos, block, face);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-        if (stateIn.get(POWERED) != RandomizerPowerState.OFF) {
+    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
+        if (stateIn.getValue(POWERED) != RandomizerPowerState.OFF) {
             double x = (pos.getX() + 0.5D) + (rand.nextFloat() - 0.5D) * 0.2D;
             double y = (pos.getY() + 0.4D) + (rand.nextFloat() - 0.5D) * 0.2D;
             double z = (pos.getZ() + 0.5D) + (rand.nextFloat() - 0.5D) * 0.2D;
 
-            worldIn.addParticle(RedstoneParticleData.REDSTONE_DUST, x, y, z, 0.0D, 0.0D, 0.0D);
+            worldIn.addParticle(DustParticleOptions.REDSTONE, x, y, z, 0.0D, 0.0D, 0.0D);
         }
     }
 

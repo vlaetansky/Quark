@@ -1,11 +1,11 @@
 package vazkii.quark.content.mobs.module;
 
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.item.Item;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
@@ -40,9 +40,9 @@ public class ForgottenModule extends QuarkModule {
 	public void construct() {
 		forgotten_hat = new ForgottenHatItem(this);
 
-		forgottenType = EntityType.Builder.create(ForgottenEntity::new, EntityClassification.MONSTER)
-				.size(0.7F, 2.4F)
-				.trackingRange(8)
+		forgottenType = EntityType.Builder.of(ForgottenEntity::new, MobCategory.MONSTER)
+				.sized(0.7F, 2.4F)
+				.clientTrackingRange(8)
 				.setCustomClientFactory((spawnEntity, world) -> new ForgottenEntity(forgottenType, world))
 				.build("forgotten");
 
@@ -63,16 +63,16 @@ public class ForgottenModule extends QuarkModule {
 		LivingEntity entity = event.getEntityLiving();
 		Result result = event.getResult();
 		
-		if(entity.getType() == EntityType.SKELETON && entity instanceof MobEntity && result != Result.DENY && entity.getPosY() < maxHeightForSpawn && entity.world.rand.nextDouble() < forgottenSpawnRate) {
-			MobEntity mob = (MobEntity) entity;
+		if(entity.getType() == EntityType.SKELETON && entity instanceof Mob && result != Result.DENY && entity.getY() < maxHeightForSpawn && entity.level.random.nextDouble() < forgottenSpawnRate) {
+			Mob mob = (Mob) entity;
 
-			if(result == Result.ALLOW || (mob.canSpawn(entity.world, event.getSpawnReason()) && mob.isNotColliding(entity.world))) {
-				ForgottenEntity forgotten = new ForgottenEntity(forgottenType, entity.world);
-				Vector3d epos = entity.getPositionVec();
+			if(result == Result.ALLOW || (mob.checkSpawnRules(entity.level, event.getSpawnReason()) && mob.checkSpawnObstruction(entity.level))) {
+				ForgottenEntity forgotten = new ForgottenEntity(forgottenType, entity.level);
+				Vec3 epos = entity.position();
 
-				forgotten.setPositionAndRotation(epos.x, epos.y, epos.z, entity.rotationYaw, entity.rotationPitch);
+				forgotten.absMoveTo(epos.x, epos.y, epos.z, entity.yRot, entity.xRot);
 				forgotten.prepareEquipment();
-				entity.world.addEntity(forgotten);
+				entity.level.addFreshEntity(forgotten);
 				event.setResult(Result.DENY);
 			}
 		}

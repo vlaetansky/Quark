@@ -3,14 +3,14 @@ package vazkii.quark.addons.oddities.client.screen;
 import java.util.List;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.renderer.Rectangle2d;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
 import vazkii.quark.addons.oddities.container.CrateContainer;
 import vazkii.quark.addons.oddities.module.CrateModule;
 import vazkii.quark.base.Quark;
@@ -19,70 +19,70 @@ import vazkii.quark.base.client.handler.InventoryButtonHandler.ButtonTargetType;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.content.client.module.ChestSearchingModule;
 
-public class CrateScreen extends ContainerScreen<CrateContainer> {
+public class CrateScreen extends AbstractContainerScreen<CrateContainer> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Quark.MOD_ID, "textures/gui/crate.png");
 
 	final int inventoryRows;
-	List<Rectangle2d> extraAreas;
+	List<Rect2i> extraAreas;
 
-	public CrateScreen(CrateContainer container, PlayerInventory inv, ITextComponent component) {
+	public CrateScreen(CrateContainer container, Inventory inv, Component component) {
 		super(container, inv, component);
 		
 		inventoryRows = CrateContainer.numRows;
-		ySize = 114 + this.inventoryRows * 18;
-		playerInventoryTitleY = ySize - 94;
+		imageHeight = 114 + this.inventoryRows * 18;
+		inventoryLabelY = imageHeight - 94;
 	}
 	
 	@Override
 	protected void init() {
 		super.init();
 		
-		int i = (width - xSize) / 2;
-		int j = (height - ySize) / 2;
-		extraAreas = Lists.newArrayList(new Rectangle2d(i + xSize, j, 23, 136));
+		int i = (width - imageWidth) / 2;
+		int j = (height - imageHeight) / 2;
+		extraAreas = Lists.newArrayList(new Rect2i(i + imageWidth, j, 23, 136));
 	} 
 	// TODO scroll with mouse 
 	
-	public List<Rectangle2d> getExtraAreas() {
+	public List<Rect2i> getExtraAreas() {
 		return extraAreas;
 	}
 	
 	@Override
-	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		renderBackground(matrixStack);
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
-		renderHoveredTooltip(matrixStack, mouseX, mouseY);
+		renderTooltip(matrixStack, mouseX, mouseY);
 	}
 	
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-		container.scroll(delta < 0, true);
+		menu.scroll(delta < 0, true);
 		return true;
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
+	protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		
-		minecraft.getTextureManager().bindTexture(TEXTURE);
+		minecraft.getTextureManager().bind(TEXTURE);
 		
-		int i = (width - xSize) / 2;
-		int j = (height - ySize) / 2;
-		blit(matrixStack, i, j, 0, 0, xSize + 20, ySize);
+		int i = (width - imageWidth) / 2;
+		int j = (height - imageHeight) / 2;
+		blit(matrixStack, i, j, 0, 0, imageWidth + 20, imageHeight);
 		
-		int maxScroll = (container.getStackCount() / CrateContainer.numCols) * CrateContainer.numCols;
-		int currScroll = (container.scroll * 95) / Math.max(1, maxScroll);
+		int maxScroll = (menu.getStackCount() / CrateContainer.numCols) * CrateContainer.numCols;
+		int currScroll = (menu.scroll * 95) / Math.max(1, maxScroll);
 		
 		int u = 232 + (maxScroll == 0 ? 12 : 0);
 		int by = j + 18 + currScroll;
-		blit(matrixStack, i + xSize, by, u, 0, 12, 15);
+		blit(matrixStack, i + imageWidth, by, u, 0, 12, 15);
 
 		if(!ChestSearchingModule.searchEnabled) {
-			String s = container.getTotal() + "/" + CrateModule.maxItems;
+			String s = menu.getTotal() + "/" + CrateModule.maxItems;
 			
 			int color = MiscUtil.getGuiTextColor("crate_count");
-			font.drawString(matrixStack, s, i + this.xSize - font.getStringWidth(s) - 8 - InventoryButtonHandler.getActiveButtons(ButtonTargetType.CONTAINER_INVENTORY).size() * 12, j + 6, color);
+			font.draw(matrixStack, s, i + this.imageWidth - font.width(s) - 8 - InventoryButtonHandler.getActiveButtons(ButtonTargetType.CONTAINER_INVENTORY).size() * 12, j + 6, color);
 		}
 	}
 

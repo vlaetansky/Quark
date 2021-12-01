@@ -8,13 +8,13 @@ import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.SlotItemHandler;
@@ -26,8 +26,8 @@ import vazkii.quark.content.management.module.EasyTransferingModule;
 
 public class InventoryTransferHandler {
 
-	public static void transfer(PlayerEntity player, boolean isRestock, boolean smart) {
-		if(!ModuleLoader.INSTANCE.isModuleEnabled(EasyTransferingModule.class) || player.isSpectator() || !accepts(player.openContainer, player))
+	public static void transfer(Player player, boolean isRestock, boolean smart) {
+		if(!ModuleLoader.INSTANCE.isModuleEnabled(EasyTransferingModule.class) || player.isSpectator() || !accepts(player.containerMenu, player))
 			return;
 
 		//		if(!useContainer && !player.getEntityWorld().getWorldInfo().getGameRulesInstance().getBoolean(StoreToChests.GAME_RULE)) {
@@ -69,30 +69,30 @@ public class InventoryTransferHandler {
 	//	}
 
 	private static boolean hasProvider(Object te) {
-		return te instanceof TileEntity && ((TileEntity) te).getCapability(QuarkCapabilities.TRANSFER).isPresent();
+		return te instanceof BlockEntity && ((BlockEntity) te).getCapability(QuarkCapabilities.TRANSFER).isPresent();
 	}
 
 	private static ITransferManager getProvider(Object te) {
-		return ((TileEntity) te).getCapability(QuarkCapabilities.TRANSFER).orElse(null);
+		return ((BlockEntity) te).getCapability(QuarkCapabilities.TRANSFER).orElse(null);
 	}
 
 
-	public static boolean accepts(Container container, PlayerEntity player) {
+	public static boolean accepts(AbstractContainerMenu container, Player player) {
 		if (hasProvider(container))
 			return getProvider(container).acceptsTransfer(player);
 
-		return container.inventorySlots.size() - player.inventory.mainInventory.size() >= 27;
+		return container.slots.size() - player.inventory.items.size() >= 27;
 	}
 
 	public static class Transfer {
 
-		public final PlayerEntity player;
+		public final Player player;
 		public final boolean smart;
 		//		public final boolean useContainer;
 
 		public final List<Pair<IItemHandler, Double>> itemHandlers = new ArrayList<>();
 
-		public Transfer(PlayerEntity player, boolean smart/*, boolean useContainer*/) {
+		public Transfer(Player player, boolean smart/*, boolean useContainer*/) {
 			this.player = player;
 			//			this.useContainer = useContainer;
 			this.smart = smart;
@@ -108,9 +108,9 @@ public class InventoryTransferHandler {
 				smartTransfer();
 			else roughTransfer();
 
-			player.container.detectAndSendChanges();
+			player.inventoryMenu.broadcastChanges();
 			//			if(useContainer)
-			player.openContainer.detectAndSendChanges();
+			player.containerMenu.broadcastChanges();
 		}
 
 		public void smartTransfer() {
@@ -122,13 +122,13 @@ public class InventoryTransferHandler {
 						continue;
 
 					boolean itemEqual = stack.getItem() == stackAt.getItem();
-					boolean damageEqual = stack.getDamage() == stackAt.getDamage();
-					boolean nbtEqual = ItemStack.areItemStackTagsEqual(stackAt, stack);
+					boolean damageEqual = stack.getDamageValue() == stackAt.getDamageValue();
+					boolean nbtEqual = ItemStack.tagMatches(stackAt, stack);
 
 					if(itemEqual && damageEqual && nbtEqual)
 						return true;
 
-					if(stack.isDamageable() && stack.getMaxStackSize() == 1 && itemEqual && nbtEqual)
+					if(stack.isDamageableItem() && stack.getMaxStackSize() == 1 && itemEqual && nbtEqual)
 						return true;
 				}
 
@@ -142,9 +142,9 @@ public class InventoryTransferHandler {
 
 		public void locateItemHandlers() {
 			//			if(useContainer) {
-			Container c = player.openContainer;
-			for(Slot s : c.inventorySlots) {
-				IInventory inv = s.inventory;
+			AbstractContainerMenu c = player.containerMenu;
+			for(Slot s : c.slots) {
+				Container inv = s.container;
 				if(inv != player.inventory) {
 					itemHandlers.add(Pair.of(ContainerWrapper.provideWrapper(s, c), 0.0));
 					break;
@@ -172,15 +172,15 @@ public class InventoryTransferHandler {
 		//		}
 
 		public void transfer(TransferPredicate predicate) {
-			PlayerInventory inv = player.inventory;
+			Inventory inv = player.inventory;
 
-			for(int i = PlayerInventory.getHotbarSize(); i < inv.mainInventory.size(); i++) {
-				ItemStack stackAt = inv.getStackInSlot(i);
+			for(int i = Inventory.getSelectionSize(); i < inv.items.size(); i++) {
+				ItemStack stackAt = inv.getItem(i);
 
 				if(!stackAt.isEmpty()/* && !FavoriteItems.isItemFavorited(stackAt)*/) {
 					ItemStack ret = insert(stackAt, predicate);
-					if(!ItemStack.areItemStacksEqual(stackAt, ret))
-						inv.setInventorySlotContents(i, ret);
+					if(!ItemStack.matches(stackAt, ret))
+						inv.setItem(i, ret);
 				}
 			}
 		}
@@ -215,7 +215,7 @@ public class InventoryTransferHandler {
 
 	public static class Restock extends Transfer {
 
-		public Restock(PlayerEntity player, boolean filtered) {
+		public Restock(Player player, boolean filtered) {
 			super(player, filtered);
 		}
 
@@ -231,7 +231,7 @@ public class InventoryTransferHandler {
 					ItemStack copy = stackAt.copy();
 					ItemStack ret = insertInHandler(playerInv, copy, predicate);
 
-					if(!ItemStack.areItemStacksEqual(stackAt, ret)) {
+					if(!ItemStack.matches(stackAt, ret)) {
 						inv.extractItem(i, stackAt.getCount() - ret.getCount(), false);
 					}
 				}
@@ -241,7 +241,7 @@ public class InventoryTransferHandler {
 
 	public static class PlayerInvWrapper extends InvWrapper {
 
-		public PlayerInvWrapper(IInventory inv) {
+		public PlayerInvWrapper(Container inv) {
 			super(inv);
 		}
 
@@ -263,9 +263,9 @@ public class InventoryTransferHandler {
 
 	public static class ContainerWrapper extends InvWrapper {
 
-		private final Container container;
+		private final AbstractContainerMenu container;
 
-		public static IItemHandler provideWrapper(Slot slot, Container container) {
+		public static IItemHandler provideWrapper(Slot slot, AbstractContainerMenu container) {
 			if (slot instanceof SlotItemHandler) {
 				IItemHandler handler = ((SlotItemHandler) slot).getItemHandler();
 				if (hasProvider(handler)) {
@@ -274,17 +274,17 @@ public class InventoryTransferHandler {
 					return handler;
 				}
 			} else {
-				return provideWrapper(slot.inventory, container);
+				return provideWrapper(slot.container, container);
 			}
 		}
 
-		public static IItemHandler provideWrapper(IInventory inv, Container container) {
+		public static IItemHandler provideWrapper(Container inv, AbstractContainerMenu container) {
 			if(hasProvider(inv))
 				return getProvider(inv).getTransferItemHandler(() -> new ContainerWrapper(inv, container));
 			return new ContainerWrapper(inv, container);
 		}
 
-		private ContainerWrapper(IInventory inv, Container container) {
+		private ContainerWrapper(Container inv, AbstractContainerMenu container) {
 			super(inv);
 			this.container = container;
 		}
@@ -293,16 +293,16 @@ public class InventoryTransferHandler {
 		@Override
 		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
 			Slot containerSlot = getSlot(slot);
-			if(containerSlot == null || !containerSlot.isItemValid(stack))
+			if(containerSlot == null || !containerSlot.mayPlace(stack))
 				return stack;
 
 			return super.insertItem(slot, stack, simulate);
 		}
 
 		private Slot getSlot(int slotId) {
-			IInventory inv = getInv();
-			for(Slot slot : container.inventorySlots)
-				if(slot.inventory == inv && slot.getSlotIndex() == slotId)
+			Container inv = getInv();
+			for(Slot slot : container.slots)
+				if(slot.container == inv && slot.getSlotIndex() == slotId)
 					return slot;
 
 			return null;

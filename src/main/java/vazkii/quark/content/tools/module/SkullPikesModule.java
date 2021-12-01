@@ -1,18 +1,18 @@
 package vazkii.quark.content.tools.module;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.monster.PatrollerEntity;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.PatrollingMonster;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.tags.Tag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -34,16 +34,16 @@ public class SkullPikesModule extends QuarkModule {
 
 	public static EntityType<SkullPikeEntity> skullPikeType;
 
-    public static ITag<Block> pikeTrophiesTag;
+    public static Tag<Block> pikeTrophiesTag;
     
     @Config public static double pikeRange = 5;
 	
 	@Override
 	public void construct() {
-		skullPikeType = EntityType.Builder.<SkullPikeEntity>create(SkullPikeEntity::new, EntityClassification.MISC)
-				.size(0.5F, 0.5F)
-				.trackingRange(3)
-				.func_233608_b_(Integer.MAX_VALUE) // update interval
+		skullPikeType = EntityType.Builder.<SkullPikeEntity>of(SkullPikeEntity::new, MobCategory.MISC)
+				.sized(0.5F, 0.5F)
+				.clientTrackingRange(3)
+				.updateInterval(Integer.MAX_VALUE) // update interval
 				.setShouldReceiveVelocityUpdates(false)
 				.setCustomClientFactory((spawnEntity, world) -> new SkullPikeEntity(skullPikeType, world))
 				.build("skull_pike");
@@ -65,19 +65,19 @@ public class SkullPikesModule extends QuarkModule {
 	public void onPlaceBlock(BlockEvent.EntityPlaceEvent event) {
 		BlockState state = event.getPlacedBlock();
 		
-		if(state.getBlock().isIn(pikeTrophiesTag)) {
-			IWorld iworld = event.getWorld();
+		if(state.getBlock().is(pikeTrophiesTag)) {
+			LevelAccessor iworld = event.getWorld();
 			
-			if(iworld instanceof World) {
-				World world = (World) iworld;
+			if(iworld instanceof Level) {
+				Level world = (Level) iworld;
 				BlockPos pos = event.getPos();
-				BlockPos down = pos.down();
+				BlockPos down = pos.below();
 				BlockState downState = world.getBlockState(down);
 				
-				if(downState.getBlock().isIn(BlockTags.FENCES)) {
+				if(downState.getBlock().is(BlockTags.FENCES)) {
 					SkullPikeEntity pike = new SkullPikeEntity(skullPikeType, world);
-					pike.setPosition(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
-					world.addEntity(pike);
+					pike.setPos(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+					world.addFreshEntity(pike);
 				}
 			}
 		}
@@ -86,9 +86,9 @@ public class SkullPikesModule extends QuarkModule {
     @SubscribeEvent
     public void onMonsterAppear(EntityJoinWorldEvent event) {
     	Entity e = event.getEntity();
-        if(e instanceof MonsterEntity && !(e instanceof PatrollerEntity) && e.isNonBoss()) {
-        	MonsterEntity monster = (MonsterEntity) e;
-            boolean alreadySetUp = monster.goalSelector.goals.stream().anyMatch((goal) -> goal.getGoal() instanceof RunAwayFromPikesGoal);
+        if(e instanceof Monster && !(e instanceof PatrollingMonster) && e.canChangeDimensions()) {
+        	Monster monster = (Monster) e;
+            boolean alreadySetUp = monster.goalSelector.availableGoals.stream().anyMatch((goal) -> goal.getGoal() instanceof RunAwayFromPikesGoal);
 
             if (!alreadySetUp)
             	monster.goalSelector.addGoal(3, new RunAwayFromPikesGoal(monster, (float) pikeRange, 1.0D, 1.2D));

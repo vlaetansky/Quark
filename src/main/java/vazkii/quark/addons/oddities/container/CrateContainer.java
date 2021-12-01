@@ -1,42 +1,42 @@
 package vazkii.quark.addons.oddities.container;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.IContainerListener;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.IIntArray;
-import net.minecraft.util.IntArray;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerListener;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.Direction;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import vazkii.quark.addons.oddities.module.CrateModule;
 import vazkii.quark.addons.oddities.tile.CrateTileEntity;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.ScrollCrateMessage;
 
-public class CrateContainer extends Container {
+public class CrateContainer extends AbstractContainerMenu {
 
 	public final CrateTileEntity crate;
-	public final PlayerInventory playerInv;
+	public final Inventory playerInv;
 
 	public static final int numRows = 6;
 	public static final int numCols = 9;
 	public static final int displayedSlots = numCols * numRows;
 
 	public int scroll = 0;
-	private final IIntArray crateData;
+	private final ContainerData crateData;
 
-	public CrateContainer(int id, PlayerInventory inv, CrateTileEntity crate) {
-		this(id, inv, crate, new IntArray(2));
+	public CrateContainer(int id, Inventory inv, CrateTileEntity crate) {
+		this(id, inv, crate, new SimpleContainerData(2));
 	}
 
-	public CrateContainer(int id, PlayerInventory inv, CrateTileEntity crate, IIntArray data) {
+	public CrateContainer(int id, Inventory inv, CrateTileEntity crate, ContainerData data) {
 		super(CrateModule.containerType, id);
-		crate.openInventory(inv.player);
+		crate.startOpen(inv.player);
 
 		this.crate = crate;
 		this.playerInv = inv;
@@ -55,7 +55,7 @@ public class CrateContainer extends Container {
 		for(int i1 = 0; i1 < 9; ++i1)
 			addSlot(new Slot(inv, i1, 8 + i1 * 18, 161 + i));
 
-		trackIntArray(crateData);
+		addDataSlots(crateData);
 	}
 
 	public int getTotal() {
@@ -67,19 +67,19 @@ public class CrateContainer extends Container {
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+	public ItemStack quickMoveStack(Player playerIn, int index) {
 		ItemStack itemstack = ItemStack.EMPTY;
-		Slot slot = this.inventorySlots.get(index);
+		Slot slot = this.slots.get(index);
 
-		if(slot != null && slot.getHasStack()) {
-			ItemStack itemstack1 = slot.getStack();
+		if(slot != null && slot.hasItem()) {
+			ItemStack itemstack1 = slot.getItem();
 			itemstack = itemstack1.copy();
 			boolean empty = false;
 
 			if (index < displayedSlots) {
-				if(!this.mergeItemStack(itemstack1, displayedSlots, inventorySlots.size(), true))
+				if(!this.moveItemStackTo(itemstack1, displayedSlots, slots.size(), true))
 					empty = true;
-				crate.markDirty();
+				crate.setChanged();
 			} else {
 				if(MiscUtil.canPutIntoInv(itemstack, crate, Direction.UP, true)) {
 					MiscUtil.putIntoInv(itemstack, crate, Direction.UP, false, false);
@@ -92,11 +92,11 @@ public class CrateContainer extends Container {
 				if(slot instanceof CrateSlot) {
 					CrateSlot cslot = (CrateSlot) slot;
 					int target = cslot.getTarget();
-					crate.removeStackFromSlot(target);
+					crate.removeItemNoUpdate(target);
 				}
-				else slot.putStack(ItemStack.EMPTY);
+				else slot.set(ItemStack.EMPTY);
 			} else if(!empty) {
-				slot.onSlotChanged();
+				slot.setChanged();
 				forceSync();
 			}
 
@@ -107,28 +107,28 @@ public class CrateContainer extends Container {
 		return itemstack;
 	}
 
-	public static CrateContainer fromNetwork(int windowId, PlayerInventory playerInventory, PacketBuffer buf) {
+	public static CrateContainer fromNetwork(int windowId, Inventory playerInventory, FriendlyByteBuf buf) {
 		BlockPos pos = buf.readBlockPos();
-		CrateTileEntity te = (CrateTileEntity) playerInventory.player.world.getTileEntity(pos);
+		CrateTileEntity te = (CrateTileEntity) playerInventory.player.level.getBlockEntity(pos);
 		return new CrateContainer(windowId, playerInventory, te);
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity playerIn) {
-		return crate.isUsableByPlayer(playerIn);
+	public boolean stillValid(Player playerIn) {
+		return crate.stillValid(playerIn);
 	}
 
 	@Override
-	public void onContainerClosed(PlayerEntity playerIn) {
-		super.onContainerClosed(playerIn);
-		crate.closeInventory(playerIn);
+	public void removed(Player playerIn) {
+		super.removed(playerIn);
+		crate.stopOpen(playerIn);
 	}
 
 	private void forceSync() {
-		World world = crate.getWorld();
-		if(!world.isRemote)
-			for(IContainerListener icontainerlistener : listeners)
-				icontainerlistener.sendAllContents(this, getInventory());
+		Level world = crate.getLevel();
+		if(!world.isClientSide)
+			for(ContainerListener icontainerlistener : containerListeners)
+				icontainerlistener.refreshContainer(this, getItems());
 	}
 
 	public void scroll(boolean down, boolean packet) {
@@ -151,7 +151,7 @@ public class CrateContainer extends Container {
 		}
 
 		if(did) {
-			detectAndSendChanges();
+			broadcastChanges();
 
 			if(packet)
 				QuarkNetwork.sendToServer(new ScrollCrateMessage(down));
@@ -169,36 +169,36 @@ public class CrateContainer extends Container {
 		}
 
 		private int getTarget() {
-			World world = crate.getWorld();
-			return (world.isRemote ? index : (index + scroll));
+			Level world = crate.getLevel();
+			return (world.isClientSide ? index : (index + scroll));
 		}
 
 		@Override
-		public ItemStack getStack() {
+		public ItemStack getItem() {
 			int targetIndex = getTarget();
-			int size = crate.getSizeInventory();
+			int size = crate.getContainerSize();
 			if(targetIndex >= size)
 				return ItemStack.EMPTY;
 
-			return crate.getStackInSlot(targetIndex);
+			return crate.getItem(targetIndex);
 		}
 
 		@Override
-		public void putStack(ItemStack stack) {
+		public void set(ItemStack stack) {
 			int targetIndex = getTarget();
-			inventory.setInventorySlotContents(targetIndex, stack);
+			container.setItem(targetIndex, stack);
 
-			onSlotChanged();
+			setChanged();
 			forceSync();
 		}
 
 		@Override
-		public ItemStack decrStackSize(int amount) {
-			return inventory.decrStackSize(getTarget(), amount);
+		public ItemStack remove(int amount) {
+			return container.removeItem(getTarget(), amount);
 		}
 		
 		@Override
-		public boolean isItemValid(ItemStack stack) {
+		public boolean mayPlace(ItemStack stack) {
 			return stack.getCount() + getTotal() <= CrateModule.maxItems;
 		}
 

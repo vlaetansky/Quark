@@ -2,26 +2,26 @@ package vazkii.quark.content.automation.tile;
 
 import java.util.List;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.particles.RedstoneParticleData;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceContext.BlockMode;
-import net.minecraft.util.math.RayTraceContext.FluidMode;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.ClipContext.Block;
+import net.minecraft.world.level.ClipContext.Fluid;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import vazkii.arl.block.tile.TileMod;
 import vazkii.quark.base.handler.RayTraceHandler;
 import vazkii.quark.content.automation.block.EnderWatcherBlock;
 import vazkii.quark.content.automation.module.EnderWatcherModule;
 
-public class EnderWatcherTileEntity extends TileMod implements ITickableTileEntity {
+public class EnderWatcherTileEntity extends TileMod implements TickableBlockEntity {
 	
 	public EnderWatcherTileEntity() {
 		super(EnderWatcherModule.enderWatcherTEType);
@@ -30,28 +30,28 @@ public class EnderWatcherTileEntity extends TileMod implements ITickableTileEnti
 	@Override
 	public void tick() {
 		BlockState state = getBlockState();
-		boolean wasLooking = state.get(EnderWatcherBlock.WATCHED);
-		int currWatch = state.get(EnderWatcherBlock.POWER);
+		boolean wasLooking = state.getValue(EnderWatcherBlock.WATCHED);
+		int currWatch = state.getValue(EnderWatcherBlock.POWER);
 		int range = 80;
 		
 		int newWatch = 0;
-		List<PlayerEntity> players = world.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(pos.add(-range, -range, -range), pos.add(range, range, range)));
+		List<Player> players = level.getEntitiesOfClass(Player.class, new AABB(worldPosition.offset(-range, -range, -range), worldPosition.offset(range, range, range)));
 		
 		boolean looking = false;
-		for(PlayerEntity player : players) {
-			ItemStack helm = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
+		for(Player player : players) {
+			ItemStack helm = player.getItemBySlot(EquipmentSlot.HEAD);
 			if(!helm.isEmpty() && helm.getItem() == Items.PUMPKIN)
 				continue;
 
-			RayTraceResult result = RayTraceHandler.rayTrace(player, world, player, BlockMode.OUTLINE, FluidMode.NONE, 64);
-			if(result != null && result instanceof BlockRayTraceResult && ((BlockRayTraceResult) result).getPos().equals(pos)) {
+			HitResult result = RayTraceHandler.rayTrace(player, level, player, Block.OUTLINE, Fluid.NONE, 64);
+			if(result != null && result instanceof BlockHitResult && ((BlockHitResult) result).getBlockPos().equals(worldPosition)) {
 				looking = true;
 				
-				Vector3d vec = result.getHitVec();
-				Direction dir = ((BlockRayTraceResult) result).getFace();
-				double x = Math.abs(vec.x - pos.getX() - 0.5) * (1 - Math.abs(dir.getXOffset()));
-				double y = Math.abs(vec.y - pos.getY() - 0.5) * (1 - Math.abs(dir.getYOffset()));
-				double z = Math.abs(vec.z - pos.getZ() - 0.5) * (1 - Math.abs(dir.getZOffset()));
+				Vec3 vec = result.getLocation();
+				Direction dir = ((BlockHitResult) result).getDirection();
+				double x = Math.abs(vec.x - worldPosition.getX() - 0.5) * (1 - Math.abs(dir.getStepX()));
+				double y = Math.abs(vec.y - worldPosition.getY() - 0.5) * (1 - Math.abs(dir.getStepY()));
+				double z = Math.abs(vec.z - worldPosition.getZ() - 0.5) * (1 - Math.abs(dir.getStepZ()));
 				
 				// 0.7071067811865476 being the hypotenuse of an isosceles triangle with cathetus of length 0.5
 				double fract = 1 - (Math.sqrt(x*x + y*y + z*z) / 0.7071067811865476);
@@ -59,15 +59,15 @@ public class EnderWatcherTileEntity extends TileMod implements ITickableTileEnti
 			}
 		}
 		
-		if(!world.isRemote && (looking != wasLooking || currWatch != newWatch))
-			world.setBlockState(pos, world.getBlockState(pos).with(EnderWatcherBlock.WATCHED, looking).with(EnderWatcherBlock.POWER, newWatch), 1 | 2);
+		if(!level.isClientSide && (looking != wasLooking || currWatch != newWatch))
+			level.setBlock(worldPosition, level.getBlockState(worldPosition).setValue(EnderWatcherBlock.WATCHED, looking).setValue(EnderWatcherBlock.POWER, newWatch), 1 | 2);
 		
 		if(looking) {
-			double x = pos.getX() - 0.1 + Math.random() * 1.2;
-			double y = pos.getY() - 0.1 + Math.random() * 1.2;
-			double z = pos.getZ() - 0.1 + Math.random() * 1.2;
+			double x = worldPosition.getX() - 0.1 + Math.random() * 1.2;
+			double y = worldPosition.getY() - 0.1 + Math.random() * 1.2;
+			double z = worldPosition.getZ() - 0.1 + Math.random() * 1.2;
 
-			world.addParticle(new RedstoneParticleData(1.0F, 0.0F, 0.0F, 1.0F), x, y, z, 0.0D, 0.0D, 0.0D);
+			level.addParticle(new DustParticleOptions(1.0F, 0.0F, 0.0F, 1.0F), x, y, z, 0.0D, 0.0D, 0.0D);
 		}
 	}
 

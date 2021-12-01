@@ -8,28 +8,28 @@ import javax.annotation.Nonnull;
 
 import com.mojang.authlib.GameProfile;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ai.goal.TemptGoal;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.DispenserContainer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.ItemParticleData;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.LockableLootTileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.vector.Vector2f;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.goal.TemptGoal;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.DispenserMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.util.FakePlayer;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.util.MovableFakePlayer;
@@ -40,7 +40,7 @@ import vazkii.quark.content.automation.module.FeedingTroughModule;
  * @author WireSegal
  * Created at 9:39 AM on 9/20/19.
  */
-public class FeedingTroughTileEntity extends LockableLootTileEntity implements ITickableTileEntity {
+public class FeedingTroughTileEntity extends RandomizableContainerBlockEntity implements TickableBlockEntity {
 
     private static final GameProfile DUMMY_PROFILE = new GameProfile(UUID.randomUUID(), "[FeedingTrough]");
 
@@ -51,7 +51,7 @@ public class FeedingTroughTileEntity extends LockableLootTileEntity implements I
     private int cooldown = 0;
     private long internalRng = 0;
 
-    protected FeedingTroughTileEntity(TileEntityType<? extends FeedingTroughTileEntity> type) {
+    protected FeedingTroughTileEntity(BlockEntityType<? extends FeedingTroughTileEntity> type) {
         super(type);
         this.stacks = NonNullList.withSize(9, ItemStack.EMPTY);
     }
@@ -61,28 +61,28 @@ public class FeedingTroughTileEntity extends LockableLootTileEntity implements I
     }
 
     public FakePlayer getFoodHolder(TemptGoal goal) {
-        if (foodHolder == null && world instanceof ServerWorld)
-            foodHolder = new MovableFakePlayer((ServerWorld) world, DUMMY_PROFILE);
+        if (foodHolder == null && level instanceof ServerLevel)
+            foodHolder = new MovableFakePlayer((ServerLevel) level, DUMMY_PROFILE);
 
-        AnimalEntity entity = (AnimalEntity) goal.creature;
+        Animal entity = (Animal) goal.mob;
 
         if (foodHolder != null) {
-            for (int i = 0; i < getSizeInventory(); i++) {
-                ItemStack stack = getStackInSlot(i);
-                if (goal.isTempting(stack) && entity.isBreedingItem(stack)) {
-                    foodHolder.inventory.mainInventory.set(foodHolder.inventory.currentItem, stack);
-                    Vector3d position = new Vector3d(pos.getX(), pos.getY(), pos.getZ()).add(0.5, -1, 0.5);
-                    Vector3d direction = goal.creature.getPositionVec().subtract(position).normalize();
-                    Vector2f angles = MiscUtil.getMinecraftAngles(direction);
+            for (int i = 0; i < getContainerSize(); i++) {
+                ItemStack stack = getItem(i);
+                if (goal.shouldFollowItem(stack) && entity.isFood(stack)) {
+                    foodHolder.inventory.items.set(foodHolder.inventory.selected, stack);
+                    Vec3 position = new Vec3(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ()).add(0.5, -1, 0.5);
+                    Vec3 direction = goal.mob.position().subtract(position).normalize();
+                    Vec2 angles = MiscUtil.getMinecraftAngles(direction);
 
-                    Vector3d shift = direction.scale(-0.5 / Math.max(
+                    Vec3 shift = direction.scale(-0.5 / Math.max(
                             Math.abs(direction.x), Math.max(
                                     Math.abs(direction.y),
                                     Math.abs(direction.z))));
 
-                    Vector3d truePos = position.add(shift);
+                    Vec3 truePos = position.add(shift);
 
-                    foodHolder.setLocationAndAngles(truePos.x, truePos.y, truePos.z, angles.x, angles.y);
+                    foodHolder.moveTo(truePos.x, truePos.y, truePos.z, angles.x, angles.y);
                     return foodHolder;
                 }
             }
@@ -93,29 +93,29 @@ public class FeedingTroughTileEntity extends LockableLootTileEntity implements I
 
     @Override
     public void tick() {
-        if (world != null && !world.isRemote) {
+        if (level != null && !level.isClientSide) {
             if (cooldown > 0)
                 cooldown--;
             else {
             	cooldown = FeedingTroughModule.cooldown; // minimize aabb calls
-            	List<AnimalEntity> animals = world.getEntitiesWithinAABB(AnimalEntity.class, new AxisAlignedBB(pos).grow(1.5, 0, 1.5).contract(0, 0.75, 0));
+            	List<Animal> animals = level.getEntitiesOfClass(Animal.class, new AABB(worldPosition).inflate(1.5, 0, 1.5).contract(0, 0.75, 0));
             	
-                for (AnimalEntity creature : animals) {
-                    if (creature.canFallInLove() && creature.getGrowingAge() == 0) {
-                        for (int i = 0; i < getSizeInventory(); i++) {
-                            ItemStack stack = getStackInSlot(i);
-                            if (creature.isBreedingItem(stack)) {
-                                creature.playSound(creature.getEatSound(stack), 0.5F + 0.5F * world.rand.nextInt(2), (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F + 1.0F);
+                for (Animal creature : animals) {
+                    if (creature.canFallInLove() && creature.getAge() == 0) {
+                        for (int i = 0; i < getContainerSize(); i++) {
+                            ItemStack stack = getItem(i);
+                            if (creature.isFood(stack)) {
+                                creature.playSound(creature.getEatingSound(stack), 0.5F + 0.5F * level.random.nextInt(2), (level.random.nextFloat() - level.random.nextFloat()) * 0.2F + 1.0F);
                                 addItemParticles(creature, stack, 16);
                                 
                                 if(getSpecialRand().nextDouble() < FeedingTroughModule.loveChance) {
-                                	List<AnimalEntity> animalsAround = world.getEntitiesWithinAABB(AnimalEntity.class, new AxisAlignedBB(pos).grow(FeedingTroughModule.range));
+                                	List<Animal> animalsAround = level.getEntitiesOfClass(Animal.class, new AABB(worldPosition).inflate(FeedingTroughModule.range));
                                 	if(animalsAround.size() <= FeedingTroughModule.maxAnimals)
                                 		creature.setInLove(null);
                                 }
 
                                 stack.shrink(1);
-                                markDirty();
+                                setChanged();
                                 
                                 return;
                             }
@@ -127,33 +127,33 @@ public class FeedingTroughTileEntity extends LockableLootTileEntity implements I
     }
 
     @Override
-    public void markDirty() {
-        super.markDirty();
+    public void setChanged() {
+        super.setChanged();
         BlockState state = getBlockState();
-        if (world != null && state.getBlock() instanceof FeedingTroughBlock) {
-            boolean full = state.get(FeedingTroughBlock.FULL);
+        if (level != null && state.getBlock() instanceof FeedingTroughBlock) {
+            boolean full = state.getValue(FeedingTroughBlock.FULL);
             boolean shouldBeFull = !isEmpty();
 
             if (full != shouldBeFull)
-                world.setBlockState(pos, state.with(FeedingTroughBlock.FULL, shouldBeFull), 2);
+                level.setBlock(worldPosition, state.setValue(FeedingTroughBlock.FULL, shouldBeFull), 2);
         }
     }
 
     private void addItemParticles(Entity entity, ItemStack stack, int count) {
         for(int i = 0; i < count; ++i) {
-            Vector3d direction = new Vector3d((entity.world.rand.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
-            direction = direction.rotatePitch(-entity.rotationPitch * ((float)Math.PI / 180F));
-            direction = direction.rotateYaw(-entity.rotationYaw * ((float)Math.PI / 180F));
-            double yVelocity = (-entity.world.rand.nextFloat()) * 0.6D - 0.3D;
-            Vector3d position = new Vector3d((entity.world.rand.nextFloat() - 0.5D) * 0.3D, yVelocity, 0.6D);
-            Vector3d entityPos = entity.getPositionVec();
-            position = position.rotatePitch(-entity.rotationPitch * ((float)Math.PI / 180F));
-            position = position.rotateYaw(-entity.rotationYaw * ((float)Math.PI / 180F));
+            Vec3 direction = new Vec3((entity.level.random.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
+            direction = direction.xRot(-entity.xRot * ((float)Math.PI / 180F));
+            direction = direction.yRot(-entity.yRot * ((float)Math.PI / 180F));
+            double yVelocity = (-entity.level.random.nextFloat()) * 0.6D - 0.3D;
+            Vec3 position = new Vec3((entity.level.random.nextFloat() - 0.5D) * 0.3D, yVelocity, 0.6D);
+            Vec3 entityPos = entity.position();
+            position = position.xRot(-entity.xRot * ((float)Math.PI / 180F));
+            position = position.yRot(-entity.yRot * ((float)Math.PI / 180F));
             position = position.add(entityPos.x, entityPos.y + entity.getEyeHeight(), entityPos.z);
-            if (this.world instanceof ServerWorld)
-                ((ServerWorld)this.world).spawnParticle(new ItemParticleData(ParticleTypes.ITEM, stack), position.x, position.y, position.z, 1, direction.x, direction.y + 0.05D, direction.z, 0.0D);
-            else if (this.world != null)
-                this.world.addParticle(new ItemParticleData(ParticleTypes.ITEM, stack), position.x, position.y, position.z, direction.x, direction.y + 0.05D, direction.z);
+            if (this.level instanceof ServerLevel)
+                ((ServerLevel)this.level).sendParticles(new ItemParticleOption(ParticleTypes.ITEM, stack), position.x, position.y, position.z, 1, direction.x, direction.y + 0.05D, direction.z, 0.0D);
+            else if (this.level != null)
+                this.level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack), position.x, position.y, position.z, direction.x, direction.y + 0.05D, direction.z);
         }
     }
     
@@ -164,14 +164,14 @@ public class FeedingTroughTileEntity extends LockableLootTileEntity implements I
     }
 
     @Override
-    public int getSizeInventory() {
+    public int getContainerSize() {
         return 9;
     }
 
     @Override
     public boolean isEmpty() {
-        for (int i = 0; i < getSizeInventory(); i++) {
-            ItemStack stack = getStackInSlot(i);
+        for (int i = 0; i < getContainerSize(); i++) {
+            ItemStack stack = getItem(i);
             if (!stack.isEmpty())
                 return false;
         }
@@ -181,30 +181,30 @@ public class FeedingTroughTileEntity extends LockableLootTileEntity implements I
 
     @Override
     @Nonnull
-    protected ITextComponent getDefaultName() {
-        return new TranslationTextComponent("quark.container.feeding_trough");
+    protected Component getDefaultName() {
+        return new TranslatableComponent("quark.container.feeding_trough");
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT nbt) {
-    	super.read(state, nbt);
+    public void load(BlockState state, CompoundTag nbt) {
+    	super.load(state, nbt);
     	
         this.cooldown = nbt.getInt("Cooldown");
         this.internalRng = nbt.getLong("rng");
-        this.stacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
-        if (!this.checkLootAndRead(nbt))
-            ItemStackHelper.loadAllItems(nbt, this.stacks);
+        this.stacks = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        if (!this.tryLoadLootTable(nbt))
+            ContainerHelper.loadAllItems(nbt, this.stacks);
 
     }
 
     @Override
     @Nonnull
-    public CompoundNBT write(CompoundNBT nbt) {
-        super.write(nbt);
+    public CompoundTag save(CompoundTag nbt) {
+        super.save(nbt);
         nbt.putInt("Cooldown", cooldown);
         nbt.putLong("rng", internalRng);
-        if (!this.checkLootAndWrite(nbt))
-            ItemStackHelper.saveAllItems(nbt, this.stacks);
+        if (!this.trySaveLootTable(nbt))
+            ContainerHelper.saveAllItems(nbt, this.stacks);
 
         return nbt;
     }
@@ -222,7 +222,7 @@ public class FeedingTroughTileEntity extends LockableLootTileEntity implements I
 
     @Override
     @Nonnull
-    protected Container createMenu(int id, @Nonnull PlayerInventory playerInventory) {
-        return new DispenserContainer(id, playerInventory, this);
+    protected AbstractContainerMenu createMenu(int id, @Nonnull Inventory playerInventory) {
+        return new DispenserMenu(id, playerInventory, this);
     }
 }

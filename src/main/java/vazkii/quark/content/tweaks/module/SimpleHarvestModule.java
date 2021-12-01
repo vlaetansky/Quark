@@ -19,25 +19,25 @@ import com.google.common.collect.Maps;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.CropsBlock;
-import net.minecraft.command.arguments.BlockStateParser;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.HoeItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.commands.arguments.blocks.BlockStateParser;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.HoeItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -81,9 +81,9 @@ public class SimpleHarvestModule extends QuarkModule {
 
 		if (doHarvestingSearch) {
 			GameRegistry.findRegistry(Block.class).getValues().stream()
-					.filter(b -> !isVanilla(b) && b instanceof CropsBlock)
-					.map(b -> (CropsBlock) b)
-					.forEach(b -> crops.put(b.getDefaultState().with(b.getAgeProperty(), last(b.getAgeProperty().getAllowedValues())), b.getDefaultState()));
+					.filter(b -> !isVanilla(b) && b instanceof CropBlock)
+					.map(b -> (CropBlock) b)
+					.forEach(b -> crops.put(b.defaultBlockState().setValue(b.getAgeProperty(), last(b.getAgeProperty().getPossibleValues())), b.defaultBlockState()));
 		}
 
 		for (String harvestKey : harvestableBlocks) {
@@ -93,7 +93,7 @@ public class SimpleHarvestModule extends QuarkModule {
 			if (split.length > 1)
 				result = fromString(split[1]);
 			else
-				result = initial.getBlock().getDefaultState();
+				result = initial.getBlock().defaultBlockState();
 
 			if (initial.getBlock() != Blocks.AIR)
 				crops.put(initial, result);
@@ -130,42 +130,42 @@ public class SimpleHarvestModule extends QuarkModule {
 		try {
 			BlockStateParser parser = new BlockStateParser(new StringReader(key), false).parse(false);
 			BlockState state = parser.getState();
-			return state == null ? Blocks.AIR.getDefaultState() : state;
+			return state == null ? Blocks.AIR.defaultBlockState() : state;
 		} catch (CommandSyntaxException e) {
-			return Blocks.AIR.getDefaultState();
+			return Blocks.AIR.defaultBlockState();
 		}
 	}
 
-	private static void replant(World world, BlockPos pos, BlockState inWorld, PlayerEntity player) {
-		ItemStack mainHand = player.getHeldItemMainhand();
+	private static void replant(Level world, BlockPos pos, BlockState inWorld, Player player) {
+		ItemStack mainHand = player.getMainHandItem();
 		boolean isHoe = !mainHand.isEmpty() && mainHand.getItem() instanceof HoeItem;
 
 		BlockState newBlock = crops.get(inWorld);
-		int fortune = HoeHarvestingModule.canFortuneApply(Enchantments.FORTUNE, mainHand) && isHoe ?
-				EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, mainHand) : 0;
+		int fortune = HoeHarvestingModule.canFortuneApply(Enchantments.BLOCK_FORTUNE, mainHand) && isHoe ?
+				EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, mainHand) : 0;
 
 		ItemStack copy = mainHand.copy();
 		if (copy.isEmpty())
 			copy = new ItemStack(Items.STICK);
 
 		Map<Enchantment, Integer> enchMap = EnchantmentHelper.getEnchantments(copy);
-		enchMap.put(Enchantments.FORTUNE, fortune);
+		enchMap.put(Enchantments.BLOCK_FORTUNE, fortune);
 		EnchantmentHelper.setEnchantments(enchMap, copy);
 
-		if (world instanceof ServerWorld) {
+		if (world instanceof ServerLevel) {
 			Item blockItem = inWorld.getBlock().asItem();
-	        Block.getDrops(inWorld, (ServerWorld) world, pos, world.getTileEntity(pos), player, copy).forEach((stack) -> {
+	        Block.getDrops(inWorld, (ServerLevel) world, pos, world.getBlockEntity(pos), player, copy).forEach((stack) -> {
 	        	if(stack.getItem() == blockItem)
 	        		stack.shrink(1);
 	        	
 	        	if(!stack.isEmpty())
-	        		Block.spawnAsEntity(world, pos, stack);
+	        		Block.popResource(world, pos, stack);
 	        });
-	        inWorld.spawnAdditionalDrops((ServerWorld) world, pos, copy);
+	        inWorld.spawnAfterBreak((ServerLevel) world, pos, copy);
 
-			if (!world.isRemote) {
-				world.playEvent(2001, pos, Block.getStateId(newBlock));
-				world.setBlockState(pos, newBlock);
+			if (!world.isClientSide) {
+				world.levelEvent(2001, pos, Block.getId(newBlock));
+				world.setBlockAndUpdate(pos, newBlock);
 			}
 		}
 	}
@@ -174,15 +174,15 @@ public class SimpleHarvestModule extends QuarkModule {
 	public void onClick(PlayerInteractEvent.RightClickBlock event) {
 		if (click(event.getPlayer(), event.getPos())) {
 			event.setCanceled(true);
-			event.setCancellationResult(ActionResultType.SUCCESS);
+			event.setCancellationResult(InteractionResult.SUCCESS);
 		}
 	}
 
-	public static boolean click(PlayerEntity player, BlockPos pos) {
+	public static boolean click(Player player, BlockPos pos) {
 		if (player == null)
 			return false;
 
-		ItemStack mainHand = player.getHeldItemMainhand();
+		ItemStack mainHand = player.getMainHandItem();
 		boolean isHoe = !mainHand.isEmpty() && mainHand.getItem() instanceof HoeItem;
 
 		if (!emptyHandHarvest && !isHoe)
@@ -194,21 +194,21 @@ public class SimpleHarvestModule extends QuarkModule {
 
 		for(int x = 1 - range; x < range; x++) {
 			for (int z = 1 - range; z < range; z++) {
-				BlockPos shiftPos = pos.add(x, 0, z);
+				BlockPos shiftPos = pos.offset(x, 0, z);
 
-				BlockState worldBlock = player.world.getBlockState(shiftPos);
+				BlockState worldBlock = player.level.getBlockState(shiftPos);
 				if (crops.containsKey(worldBlock)) {
-					replant(player.world, shiftPos, worldBlock, player);
+					replant(player.level, shiftPos, worldBlock, player);
 					harvests++;
 				}
 			}
 		}
 
 		if (harvests > 0) {
-			if (harvestingCostsDurability && isHoe && !player.world.isRemote)
-				mainHand.damageItem(1, player, (p) -> p.sendBreakAnimation(Hand.MAIN_HAND));
+			if (harvestingCostsDurability && isHoe && !player.level.isClientSide)
+				mainHand.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(InteractionHand.MAIN_HAND));
 
-			if (mainHand.isEmpty() && player.world.isRemote)
+			if (mainHand.isEmpty() && player.level.isClientSide)
 				QuarkNetwork.sendToServer(new HarvestMessage(pos));
 			return true;
 		}

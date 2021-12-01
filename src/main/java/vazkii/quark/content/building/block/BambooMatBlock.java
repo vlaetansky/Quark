@@ -1,58 +1,58 @@
 package vazkii.quark.content.building.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.module.QuarkModule;
 
 public class BambooMatBlock extends QuarkBlock {
 	
-	public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING_EXCEPT_UP;
+	public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING_HOPPER;
 	
 	public BambooMatBlock(QuarkModule module) {
-		super("bamboo_mat", module, ItemGroup.BUILDING_BLOCKS,
-				Block.Properties.create(Material.BAMBOO, MaterialColor.YELLOW)
-				.hardnessAndResistance(0.5F)
+		super("bamboo_mat", module, CreativeModeTab.TAB_BUILDING_BLOCKS,
+				Block.Properties.of(Material.BAMBOO, MaterialColor.COLOR_YELLOW)
+				.strength(0.5F)
 				.sound(SoundType.BAMBOO));
 		
-		setDefaultState(getDefaultState().with(FACING, Direction.NORTH));
+		registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH));
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext ctx) {
-		Direction dir = ctx.getPlacementHorizontalFacing();
-		if(ctx.getPlayer().rotationPitch > 70)
+	public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+		Direction dir = ctx.getHorizontalDirection();
+		if(ctx.getPlayer().xRot > 70)
 			dir = Direction.DOWN;
 		
 		if(dir != Direction.DOWN) {
 			Direction opposite = dir.getOpposite();
-			BlockPos target = ctx.getPos().offset(opposite);
-			BlockState state = ctx.getWorld().getBlockState(target);
+			BlockPos target = ctx.getClickedPos().relative(opposite);
+			BlockState state = ctx.getLevel().getBlockState(target);
 			
-			if(state.getBlock() != this || state.get(FACING) != opposite) {
-				target = ctx.getPos().offset(dir);
-				state = ctx.getWorld().getBlockState(target);
+			if(state.getBlock() != this || state.getValue(FACING) != opposite) {
+				target = ctx.getClickedPos().relative(dir);
+				state = ctx.getLevel().getBlockState(target);
 				
-				if(state.getBlock() == this && state.get(FACING) == dir)
+				if(state.getBlock() == this && state.getValue(FACING) == dir)
 					dir = opposite;
 			}
 		}
 		
-		return getDefaultState().with(FACING, dir);
+		return defaultBlockState().setValue(FACING, dir);
 	}
 	
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		builder.add(FACING);
 	}
 

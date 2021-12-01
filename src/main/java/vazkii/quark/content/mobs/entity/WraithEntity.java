@@ -1,74 +1,74 @@
 package vazkii.quark.content.mobs.entity;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.monster.ZombieEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.content.mobs.module.WraithModule;
 
-public class WraithEntity extends ZombieEntity {
+public class WraithEntity extends Zombie {
 
 	public static final ResourceLocation LOOT_TABLE = new ResourceLocation("quark:entities/wraith");
 
-	private static final DataParameter<String> IDLE_SOUND = EntityDataManager.createKey(WraithEntity.class, DataSerializers.STRING);
-	private static final DataParameter<String> HURT_SOUND = EntityDataManager.createKey(WraithEntity.class, DataSerializers.STRING);
-	private static final DataParameter<String> DEATH_SOUND = EntityDataManager.createKey(WraithEntity.class, DataSerializers.STRING);
+	private static final EntityDataAccessor<String> IDLE_SOUND = SynchedEntityData.defineId(WraithEntity.class, EntityDataSerializers.STRING);
+	private static final EntityDataAccessor<String> HURT_SOUND = SynchedEntityData.defineId(WraithEntity.class, EntityDataSerializers.STRING);
+	private static final EntityDataAccessor<String> DEATH_SOUND = SynchedEntityData.defineId(WraithEntity.class, EntityDataSerializers.STRING);
 	private static final String TAG_IDLE_SOUND = "IdleSound";
 	private static final String TAG_HURT_SOUND = "HurtSound";
 	private static final String TAG_DEATH_SOUND = "DeathSound";
 
-	public WraithEntity(EntityType<? extends WraithEntity> type, World worldIn) {
+	public WraithEntity(EntityType<? extends WraithEntity> type, Level worldIn) {
 		super(type, worldIn);
 	}
 
 	@Override
-	protected void registerData() {
-		super.registerData();
+	protected void defineSynchedData() {
+		super.defineSynchedData();
 
-		dataManager.register(IDLE_SOUND, "");
-		dataManager.register(HURT_SOUND, "");
-		dataManager.register(DEATH_SOUND, "");
+		entityData.define(IDLE_SOUND, "");
+		entityData.define(HURT_SOUND, "");
+		entityData.define(DEATH_SOUND, "");
 	}
 
-	public static AttributeModifierMap.MutableAttribute registerAttributes() {
-		return MonsterEntity.func_234295_eP_()
-				.createMutableAttribute(Attributes.MAX_HEALTH, 15)
-				.createMutableAttribute(Attributes.FOLLOW_RANGE, 35)
-				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.28)
-				.createMutableAttribute(Attributes.ATTACK_DAMAGE, 3)
-				.createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1)
-				.createMutableAttribute(Attributes.ARMOR, 0)
-				.createMutableAttribute(Attributes.ZOMBIE_SPAWN_REINFORCEMENTS, 0);
+	public static AttributeSupplier.Builder registerAttributes() {
+		return Monster.createMonsterAttributes()
+				.add(Attributes.MAX_HEALTH, 15)
+				.add(Attributes.FOLLOW_RANGE, 35)
+				.add(Attributes.MOVEMENT_SPEED, 0.28)
+				.add(Attributes.ATTACK_DAMAGE, 3)
+				.add(Attributes.KNOCKBACK_RESISTANCE, 1)
+				.add(Attributes.ARMOR, 0)
+				.add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 0);
 	}
 	
 	@Override
-	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
+	protected void populateDefaultEquipmentSlots(DifficultyInstance difficulty) {
 		// NO-OP
 	}
 	
@@ -88,12 +88,12 @@ public class WraithEntity extends ZombieEntity {
 	}
 
 	@Override
-	protected float getSoundPitch() {
-		return rand.nextFloat() * 0.1F + 0.75F;
+	protected float getVoicePitch() {
+		return random.nextFloat() * 0.1F + 0.75F;
 	}
 
-	public SoundEvent getSound(DataParameter<String> param) {
-		ResourceLocation loc = new ResourceLocation(dataManager.get(param));
+	public SoundEvent getSound(EntityDataAccessor<String> param) {
+		ResourceLocation loc = new ResourceLocation(entityData.get(param));
 		return ForgeRegistries.SOUND_EVENTS.getValue(loc);
 	}
 	
@@ -101,95 +101,95 @@ public class WraithEntity extends ZombieEntity {
 	public void tick() {
 		super.tick();
 		
-		AxisAlignedBB aabb = getBoundingBox();
+		AABB aabb = getBoundingBox();
 		double x = aabb.minX + Math.random() * (aabb.maxX - aabb.minX);
 		double y = aabb.minY + Math.random() * (aabb.maxY - aabb.minY);
 		double z = aabb.minZ + Math.random() * (aabb.maxZ - aabb.minZ);
-		getEntityWorld().addParticle(ParticleTypes.MYCELIUM, x, y, z, 0, 0, 0);
+		getCommandSenderWorld().addParticle(ParticleTypes.MYCELIUM, x, y, z, 0, 0, 0);
 	}
 	
 	@Override
-	public boolean attackEntityAsMob(Entity entityIn) {
-		boolean did = super.attackEntityAsMob(entityIn);
+	public boolean doHurtTarget(Entity entityIn) {
+		boolean did = super.doHurtTarget(entityIn);
 		if(did) {
 			if(entityIn instanceof LivingEntity)
-				((LivingEntity) entityIn).addPotionEffect(new EffectInstance(Effects.SLOWNESS, 60, 1));
+				((LivingEntity) entityIn).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 1));
 
-			double dx = getPosX() - entityIn.getPosX();
-			double dz = getPosZ() - entityIn.getPosZ();
-			Vector3d vec = new Vector3d(dx, 0, dz).normalize().add(0, 0.5, 0).normalize().scale(0.85);
-			setMotion(vec);
+			double dx = getX() - entityIn.getX();
+			double dz = getZ() - entityIn.getZ();
+			Vec3 vec = new Vec3(dx, 0, dz).normalize().add(0, 0.5, 0).normalize().scale(0.85);
+			setDeltaMovement(vec);
 		}
 
 		return did;
 	}
 	
 	@Override
-	public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, ILivingEntityData spawnDataIn, CompoundNBT dataTag) {
-		int idx = rand.nextInt(WraithModule.validWraithSounds.size());
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, SpawnGroupData spawnDataIn, CompoundTag dataTag) {
+		int idx = random.nextInt(WraithModule.validWraithSounds.size());
 		String sound = WraithModule.validWraithSounds.get(idx);
 		String[] split = sound.split("\\|");
 
-		dataManager.set(IDLE_SOUND, split[0]);
-		dataManager.set(HURT_SOUND, split[1]);
-		dataManager.set(DEATH_SOUND, split[2]);
+		entityData.set(IDLE_SOUND, split[0]);
+		entityData.set(HURT_SOUND, split[1]);
+		entityData.set(DEATH_SOUND, split[2]);
 		
-		return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+		return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
 	}
 	
 	@Override
-	public boolean onLivingFall(float distance, float damageMultiplier) {
+	public boolean causeFallDamage(float distance, float damageMultiplier) {
 		return false;
 	}
 	
 	@Override
-	public void writeAdditional(CompoundNBT compound) {
-		super.writeAdditional(compound);
+	public void addAdditionalSaveData(CompoundTag compound) {
+		super.addAdditionalSaveData(compound);
 
-		compound.putString(TAG_IDLE_SOUND, dataManager.get(IDLE_SOUND));
-		compound.putString(TAG_HURT_SOUND, dataManager.get(HURT_SOUND));
-		compound.putString(TAG_DEATH_SOUND, dataManager.get(DEATH_SOUND));
+		compound.putString(TAG_IDLE_SOUND, entityData.get(IDLE_SOUND));
+		compound.putString(TAG_HURT_SOUND, entityData.get(HURT_SOUND));
+		compound.putString(TAG_DEATH_SOUND, entityData.get(DEATH_SOUND));
 	}
 
 	@Override
-	public void readAdditional(CompoundNBT compound) {
-		super.readAdditional(compound);
+	public void readAdditionalSaveData(CompoundTag compound) {
+		super.readAdditionalSaveData(compound);
 
-		dataManager.set(IDLE_SOUND, compound.getString(TAG_IDLE_SOUND));
-		dataManager.set(HURT_SOUND, compound.getString(TAG_HURT_SOUND));
-		dataManager.set(DEATH_SOUND, compound.getString(TAG_DEATH_SOUND));
+		entityData.set(IDLE_SOUND, compound.getString(TAG_IDLE_SOUND));
+		entityData.set(HURT_SOUND, compound.getString(TAG_HURT_SOUND));
+		entityData.set(DEATH_SOUND, compound.getString(TAG_DEATH_SOUND));
 	}
 
 	@Override
-	protected ResourceLocation getLootTable() {
+	protected ResourceLocation getDefaultLootTable() {
 		return LOOT_TABLE;
 	}
 
 	@Override
-	public void setChild(boolean childZombie) {
+	public void setBaby(boolean childZombie) {
 		// NO-OP
 	}
 
 	@Override
-	public boolean isChild() {
+	public boolean isBaby() {
 		return false;
 	}
 	
 	@Override
-	public float getBlockPathWeight(BlockPos pos, IWorldReader worldIn) {
+	public float getWalkTargetValue(BlockPos pos, LevelReader worldIn) {
 		BlockState state = worldIn.getBlockState(pos);
 		Block block = state.getBlock();
-		return block.isIn(WraithModule.wraithSpawnableTag) ? 1F : 0F;
+		return block.is(WraithModule.wraithSpawnableTag) ? 1F : 0F;
 	}
 
 	@Override
-	public boolean attackEntityFrom(DamageSource source, float amount) {
-		if (!super.attackEntityFrom(source, amount)) {
+	public boolean hurt(DamageSource source, float amount) {
+		if (!super.hurt(source, amount)) {
 			return false;
-		} else return this.world instanceof ServerWorld;
+		} else return this.level instanceof ServerLevel;
 	}
 
 	@Override
-	protected void applyAttributeBonuses(float difficulty) {}
+	protected void handleAttributes(float difficulty) {}
 
 }

@@ -6,19 +6,19 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.util.text.event.HoverEvent;
-import net.minecraft.util.text.event.HoverEvent.Action;
-import net.minecraft.world.DimensionType;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.HoverEvent.Action;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -63,23 +63,23 @@ public class ImprovedSleepingModule extends QuarkModule {
 	private static final int AFK_MSG = "quark afk".hashCode();
 	private static final int SLEEP_MSG = "quark sleep".hashCode();
 
-	public static void updateAfk(PlayerEntity player, boolean afk) {
+	public static void updateAfk(Player player, boolean afk) {
 		if(!ModuleLoader.INSTANCE.isModuleEnabled(ImprovedSleepingModule.class) || !enableAfk)
 			return;
 
-		boolean alone = player.world.getPlayers().size() == 1;
+		boolean alone = player.level.players().size() == 1;
 		if(afk) {
 			player.getPersistentData().putBoolean(TAG_AFK, true);
 			if(!alone) {
-				TranslationTextComponent text = new TranslationTextComponent("quark.misc.now_afk");
-				text.mergeStyle(TextFormatting.AQUA);
+				TranslatableComponent text = new TranslatableComponent("quark.misc.now_afk");
+				text.withStyle(ChatFormatting.AQUA);
 				SpamlessChatMessage.sendToPlayer(player, AFK_MSG, text);
 			}
 		} else {
 			player.getPersistentData().putBoolean(TAG_AFK, false);
 			if(!alone) {
-				TranslationTextComponent text = new TranslationTextComponent("quark.misc.left_afk");
-				text.mergeStyle(TextFormatting.AQUA);
+				TranslatableComponent text = new TranslatableComponent("quark.misc.left_afk");
+				text.withStyle(ChatFormatting.AQUA);
 				SpamlessChatMessage.sendToPlayer(player, AFK_MSG, text);
 			}
 		}
@@ -92,7 +92,7 @@ public class ImprovedSleepingModule extends QuarkModule {
 		return false;
 	}
 
-	public static boolean isEveryoneAsleep(World world) {
+	public static boolean isEveryoneAsleep(Level world) {
 		Pair<Integer, Integer> counts = getPlayerCounts(world);
 		int legitPlayers = counts.getLeft();
 		int sleepingPlayers = counts.getRight();
@@ -101,39 +101,39 @@ public class ImprovedSleepingModule extends QuarkModule {
 		return (legitPlayers > 0 && ((float) sleepingPlayers / (float) reqPlayers) >= 1);
 	}
 
-	public static void whenNightPasses(ServerWorld world) {
+	public static void whenNightPasses(ServerLevel world) {
 		MinecraftServer server = world.getServer();
 
-		if (world.getPlayers().size() == 1)
+		if (world.players().size() == 1)
 			return;
 
-		boolean isDay = world.getSkylightSubtracted() < 4;
+		boolean isDay = world.getSkyDarken() < 4;
 		int msgCount = 10;
-		int msg = world.rand.nextInt(msgCount);
+		int msg = world.random.nextInt(msgCount);
 		
-		TranslationTextComponent message = new TranslationTextComponent(world.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE) ?
+		TranslatableComponent message = new TranslatableComponent(world.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT) ?
 				(isDay ? "quark.misc.day_has_passed" : ("quark.misc.night_has_passed" + msg)) :
 				(isDay ? "quark.misc.day_no_passage" : "quark.misc.night_no_passage"));
-		message.setStyle(message.getStyle().applyFormatting(TextFormatting.GOLD));
+		message.setStyle(message.getStyle().applyFormat(ChatFormatting.GOLD));
 
-		List<ServerPlayerEntity> serverPlayers = new ArrayList<>(server.getPlayerList().getPlayers());
-		for (ServerPlayerEntity player : serverPlayers)
+		List<ServerPlayer> serverPlayers = new ArrayList<>(server.getPlayerList().getPlayers());
+		for (ServerPlayer player : serverPlayers)
 			SpamlessChatMessage.sendToPlayer(player, SLEEP_MSG, message);
 	}
 
-	private static boolean doesPlayerCountForSleeping(PlayerEntity player) {
+	private static boolean doesPlayerCountForSleeping(Player player) {
 		return !player.isSpectator() && !player.getPersistentData().getBoolean(TAG_AFK);
 	}
 
-	private static boolean isPlayerSleeping(PlayerEntity player) {
-		return player.isPlayerFullyAsleep();
+	private static boolean isPlayerSleeping(Player player) {
+		return player.isSleepingLongEnough();
 	}
 
-	private static Pair<Integer, Integer> getPlayerCounts(World world) {
+	private static Pair<Integer, Integer> getPlayerCounts(Level world) {
 		int legitPlayers = 0;
 		int sleepingPlayers = 0;
-		List<PlayerEntity> players = new ArrayList<>(world.getPlayers());
-		for(PlayerEntity player : players)
+		List<Player> players = new ArrayList<>(world.players());
+		for(Player player : players)
 			if(doesPlayerCountForSleeping(player)) {
 				legitPlayers++;
 
@@ -146,36 +146,36 @@ public class ImprovedSleepingModule extends QuarkModule {
 
 	@SubscribeEvent
 	public void onWakeUp(PlayerWakeUpEvent event) {
-		PlayerEntity player = event.getPlayer();
+		Player player = event.getPlayer();
 		if (/*event.shouldSetSpawn() && */!event.updateWorld() && !event.wakeImmediately())
-			player.getPersistentData().putLong(TAG_JUST_SLEPT, player.world.getGameTime());
+			player.getPersistentData().putLong(TAG_JUST_SLEPT, player.level.getGameTime());
 	}
 
 	@SubscribeEvent
 	public void onWorldTick(TickEvent.WorldTickEvent event) {
-		World world = event.world;
+		Level world = event.world;
 		MinecraftServer server = world.getServer();
 
 		if (event.side == LogicalSide.CLIENT ||
-				!world.getDimensionKey().getLocation().equals(DimensionType.OVERWORLD.getLocation()) ||
+				!world.dimension().location().equals(DimensionType.OVERWORLD_LOCATION.location()) ||
 				event.phase != TickEvent.Phase.END ||
 				server == null)
 			return;
 
-		List<PlayerEntity> worldPlayers = new ArrayList<>(world.getPlayers());
+		List<Player> worldPlayers = new ArrayList<>(world.players());
 		if (isEveryoneAsleep(world)) {
-			if (world.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE) && world instanceof ServerWorld) {
+			if (world.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT) && world instanceof ServerLevel) {
 				long time = world.getDayTime() + 24000L;
-				((ServerWorld) world).func_241114_a_(ForgeEventFactory.onSleepFinished((ServerWorld) world, time - time % 24000L, world.getDayTime()));
+				((ServerLevel) world).setDayTime(ForgeEventFactory.onSleepFinished((ServerLevel) world, time - time % 24000L, world.getDayTime()));
 			}
 
-			worldPlayers.stream().filter(LivingEntity::isSleeping).forEach(PlayerEntity::wakeUp);
-			if (world.getGameRules().getBoolean(GameRules.DO_WEATHER_CYCLE)) {
-				((ServerWorld) world).resetRainAndThunder();
+			worldPlayers.stream().filter(LivingEntity::isSleeping).forEach(Player::stopSleeping);
+			if (world.getGameRules().getBoolean(GameRules.RULE_WEATHER_CYCLE)) {
+				((ServerLevel) world).stopWeather();
 			}
 
-			if (world instanceof ServerWorld)
-				whenNightPasses((ServerWorld) world);
+			if (world instanceof ServerLevel)
+				whenNightPasses((ServerLevel) world);
 			ImprovedSleepingModule.sleepingPlayers.clear();
 			return;
 		}
@@ -186,7 +186,7 @@ public class ImprovedSleepingModule extends QuarkModule {
 		List<String> nonSleepingPlayers = new ArrayList<>();
 		int legitPlayers = 0;
 
-		for(PlayerEntity player : worldPlayers) {
+		for(Player player : worldPlayers) {
 			if (doesPlayerCountForSleeping(player)) {
 				String name = player.getGameProfile().getName();
 				if (isPlayerSleeping(player)) {
@@ -206,23 +206,23 @@ public class ImprovedSleepingModule extends QuarkModule {
 		ImprovedSleepingModule.sleepingPlayers = sleepingPlayers;
 
 		if((!newSleepingPlayers.isEmpty() || !wasSleepingPlayers.isEmpty()) && worldPlayers.size() != 1) {
-			boolean isDay = world.getCelestialAngleRadians(0F) < 0.5;
+			boolean isDay = world.getSunAngle(0F) < 0.5;
 
 			int requiredPlayers = Math.max((int) Math.ceil((legitPlayers * percentReq)), 0);
 
-			StringTextComponent sibling = new StringTextComponent("(" + sleepingPlayers.size() + "/" + requiredPlayers + ")");
+			TextComponent sibling = new TextComponent("(" + sleepingPlayers.size() + "/" + requiredPlayers + ")");
 
-			StringTextComponent sleepingList = new StringTextComponent("");
+			TextComponent sleepingList = new TextComponent("");
 
 			for(String s : sleepingPlayers)
-				sleepingList.append(new StringTextComponent("\n\u2714 " + s).mergeStyle(TextFormatting.GREEN));
+				sleepingList.append(new TextComponent("\n\u2714 " + s).withStyle(ChatFormatting.GREEN));
 			for(String s : nonSleepingPlayers)
-				sleepingList.append(new StringTextComponent("\n\u2718 " + s).mergeStyle(TextFormatting.RED));
+				sleepingList.append(new TextComponent("\n\u2718 " + s).withStyle(ChatFormatting.RED));
 
-			TranslationTextComponent hoverText = new TranslationTextComponent("quark.misc.sleeping_list_header", sleepingList);
+			TranslatableComponent hoverText = new TranslatableComponent("quark.misc.sleeping_list_header", sleepingList);
 
-			HoverEvent hover = new HoverEvent(Action.SHOW_TEXT, hoverText.deepCopy());
-			sibling.setStyle(sibling.getStyle().setHoverEvent(hover));
+			HoverEvent hover = new HoverEvent(Action.SHOW_TEXT, hoverText.copy());
+			sibling.setStyle(sibling.getStyle().withHoverEvent(hover));
 			sibling.getStyle().setUnderlined(true);
 
 			String newPlayer = newSleepingPlayers.isEmpty() ? wasSleepingPlayers.get(0) : newSleepingPlayers.get(0);
@@ -230,31 +230,31 @@ public class ImprovedSleepingModule extends QuarkModule {
 					(newSleepingPlayers.isEmpty() ? "quark.misc.person_not_napping" : "quark.misc.person_napping") :
 					(newSleepingPlayers.isEmpty() ? "quark.misc.person_not_sleeping" : "quark.misc.person_sleeping");
 
-			TranslationTextComponent message = new TranslationTextComponent(translationKey, newPlayer);
-			message.mergeStyle(TextFormatting.GOLD);
-			message.appendString(" ");
+			TranslatableComponent message = new TranslatableComponent(translationKey, newPlayer);
+			message.withStyle(ChatFormatting.GOLD);
+			message.append(" ");
 
-			message.append(sibling.deepCopy());
+			message.append(sibling.copy());
 
-			List<ServerPlayerEntity> serverPlayers = new ArrayList<>(server.getPlayerList().getPlayers());
-			for (ServerPlayerEntity player : serverPlayers)
+			List<ServerPlayer> serverPlayers = new ArrayList<>(server.getPlayerList().getPlayers());
+			for (ServerPlayer player : serverPlayers)
 				SpamlessChatMessage.sendToPlayer(player, SLEEP_MSG, message);
 		}
 	}
 
 	@SubscribeEvent
 	public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
-		World logoutWorld = event.getPlayer().world;
+		Level logoutWorld = event.getPlayer().level;
 		// no copy as no loops are done
-		List<? extends PlayerEntity> players = logoutWorld.getPlayers();
+		List<? extends Player> players = logoutWorld.players();
 		if(players.size() == 1) {
-			PlayerEntity lastPlayer = players.get(0);
+			Player lastPlayer = players.get(0);
 			if(lastPlayer.getPersistentData().getBoolean(TAG_AFK)) {
 				lastPlayer.getPersistentData().putBoolean(TAG_AFK, false);
-				TranslationTextComponent text = new TranslationTextComponent("quark.misc.left_afk");
-				text.mergeStyle(TextFormatting.AQUA);
+				TranslatableComponent text = new TranslatableComponent("quark.misc.left_afk");
+				text.withStyle(ChatFormatting.AQUA);
 
-				if (lastPlayer instanceof ServerPlayerEntity)
+				if (lastPlayer instanceof ServerPlayer)
 					SpamlessChatMessage.sendToPlayer(lastPlayer, AFK_MSG, text);
 			}
 		}
@@ -263,7 +263,7 @@ public class ImprovedSleepingModule extends QuarkModule {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public void onClientTick(TickEvent.ClientTickEvent event) {
-		if(event.phase == TickEvent.Phase.END && Minecraft.getInstance().world != null) {
+		if(event.phase == TickEvent.Phase.END && Minecraft.getInstance().level != null) {
 			timeSinceKeystroke++;
 
 			if(timeSinceKeystroke == afkTime)
@@ -296,7 +296,7 @@ public class ImprovedSleepingModule extends QuarkModule {
 	}
 
 	private void registerPress() {
-		if(timeSinceKeystroke >= afkTime && Minecraft.getInstance().world != null)
+		if(timeSinceKeystroke >= afkTime && Minecraft.getInstance().level != null)
 			QuarkNetwork.sendToServer(new UpdateAfkMessage(false));
 		timeSinceKeystroke = 0;
 	}

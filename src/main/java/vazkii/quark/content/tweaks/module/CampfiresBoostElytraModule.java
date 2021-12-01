@@ -1,14 +1,14 @@
 package vazkii.quark.content.tweaks.module;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.CampfireBlock;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CampfireBlock;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.module.LoadModule;
@@ -24,24 +24,24 @@ public class CampfiresBoostElytraModule extends QuarkModule {
 
 	@SubscribeEvent
 	public void onPlayerTick(PlayerTickEvent event) {
-		PlayerEntity player = event.player;
+		Player player = event.player;
 		
-		if(player.isElytraFlying()) {
-			Vector3d motion = player.getMotion();
-			if(motion.getY() < maxSpeed) {
-				BlockPos pos = player.getPosition();
-				World world = player.world;
+		if(player.isFallFlying()) {
+			Vec3 motion = player.getDeltaMovement();
+			if(motion.y() < maxSpeed) {
+				BlockPos pos = player.blockPosition();
+				Level world = player.level;
 				
 				int moves = 0;
-				while(world.isAirBlock(pos) && pos.getY() > 0 && moves < 20) {
-					pos = pos.down();
+				while(world.isEmptyBlock(pos) && pos.getY() > 0 && moves < 20) {
+					pos = pos.below();
 					moves++;
 				}
 				
 				BlockState state = world.getBlockState(pos);
 				Block block = state.getBlock();
-				boolean isCampfire = block.isIn(BlockTags.CAMPFIRES);
-				if(isCampfire && block instanceof CampfireBlock && state.get(CampfireBlock.LIT) && state.get(CampfireBlock.SIGNAL_FIRE)) {
+				boolean isCampfire = block.is(BlockTags.CAMPFIRES);
+				if(isCampfire && block instanceof CampfireBlock && state.getValue(CampfireBlock.LIT) && state.getValue(CampfireBlock.SIGNAL_FIRE)) {
 					double force = boostStrength;
 					if(moves > 16)
 						force -= (force * (1.0 - ((double) moves - 16.0) / 4.0));
@@ -49,7 +49,7 @@ public class CampfiresBoostElytraModule extends QuarkModule {
 					if(block == Blocks.SOUL_CAMPFIRE)
 						force *= -1.5;
 					
-					player.setMotion(motion.getX(), Math.min(maxSpeed, motion.getY() + force), motion.getZ());
+					player.setDeltaMovement(motion.x(), Math.min(maxSpeed, motion.y() + force), motion.z());
 				}
 			}
 		}

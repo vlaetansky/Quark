@@ -15,12 +15,12 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.screen.inventory.InventoryScreen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.inventory.container.Slot;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -48,16 +48,16 @@ public final class InventoryButtonHandler {
 			Quark.LOG.info("Opened screen {}", event.getGui().getClass().getName());
 		currentButtons.clear();
 		
-		if(event.getGui() instanceof ContainerScreen && !(event.getGui() instanceof IQuarkButtonIgnored) && !GeneralConfig.isScreenIgnored(event.getGui())) {
+		if(event.getGui() instanceof AbstractContainerScreen && !(event.getGui() instanceof IQuarkButtonIgnored) && !GeneralConfig.isScreenIgnored(event.getGui())) {
 			Minecraft mc = Minecraft.getInstance();
-			ContainerScreen<?> screen = (ContainerScreen<?>) event.getGui();
+			AbstractContainerScreen<?> screen = (AbstractContainerScreen<?>) event.getGui();
 
 			if(screen instanceof InventoryScreen || screen.getClass().getName().contains("CuriosScreen"))
-				applyProviders(event, ButtonTargetType.PLAYER_INVENTORY, screen, s -> s.inventory == mc.player.inventory && s.getSlotIndex() == 17);
+				applyProviders(event, ButtonTargetType.PLAYER_INVENTORY, screen, s -> s.container == mc.player.inventory && s.getSlotIndex() == 17);
 			else {
-				if(InventoryTransferHandler.accepts(screen.getContainer(), mc.player)) { 
-					applyProviders(event, ButtonTargetType.CONTAINER_INVENTORY, screen, s -> s.inventory != mc.player.inventory && s.getSlotIndex() == 8);
-					applyProviders(event, ButtonTargetType.CONTAINER_PLAYER_INVENTORY, screen, s -> s.inventory == mc.player.inventory && s.getSlotIndex() == 17);
+				if(InventoryTransferHandler.accepts(screen.getMenu(), mc.player)) { 
+					applyProviders(event, ButtonTargetType.CONTAINER_INVENTORY, screen, s -> s.container != mc.player.inventory && s.getSlotIndex() == 8);
+					applyProviders(event, ButtonTargetType.CONTAINER_PLAYER_INVENTORY, screen, s -> s.container == mc.player.inventory && s.getSlotIndex() == 17);
 				}
 			}
 		}
@@ -65,14 +65,14 @@ public final class InventoryButtonHandler {
 
 	private static Collection<ButtonProviderHolder> forGui(Screen gui) {
 		Set<ButtonProviderHolder> holders = new HashSet<>();
-		if (gui instanceof ContainerScreen) {
-			ContainerScreen<?> screen = (ContainerScreen<?>) gui;
+		if (gui instanceof AbstractContainerScreen) {
+			AbstractContainerScreen<?> screen = (AbstractContainerScreen<?>) gui;
 
 			if (gui instanceof InventoryScreen)
 				holders.addAll(providers.get(ButtonTargetType.PLAYER_INVENTORY));
 			else {
 				Minecraft mc = Minecraft.getInstance();
-				if(InventoryTransferHandler.accepts(screen.getContainer(), mc.player)) {
+				if(InventoryTransferHandler.accepts(screen.getMenu(), mc.player)) {
 					holders.addAll(providers.get(ButtonTargetType.CONTAINER_INVENTORY));
 					holders.addAll(providers.get(ButtonTargetType.CONTAINER_PLAYER_INVENTORY));
 				}
@@ -85,8 +85,8 @@ public final class InventoryButtonHandler {
 	@SubscribeEvent
 	public static void mouseInputEvent(GuiScreenEvent.MouseClickedEvent.Pre pressed) {
 		Screen gui = pressed.getGui();
-		if (gui instanceof ContainerScreen) {
-			ContainerScreen<?> screen = (ContainerScreen<?>) gui;
+		if (gui instanceof AbstractContainerScreen) {
+			AbstractContainerScreen<?> screen = (AbstractContainerScreen<?>) gui;
 			if(GeneralConfig.isScreenIgnored(screen))
 				return;
 			
@@ -94,7 +94,7 @@ public final class InventoryButtonHandler {
 
 			for (ButtonProviderHolder holder : holders) {
 				if (holder.keybind != null &&
-						holder.keybind.matchesMouseKey(pressed.getButton()) &&
+						holder.keybind.matchesMouse(pressed.getButton()) &&
 						(holder.keybind.getKeyModifier() == KeyModifier.NONE || holder.keybind.getKeyModifier().isActive(KeyConflictContext.GUI))) {
 					holder.pressed.accept(screen);
 					pressed.setCanceled(true);
@@ -106,8 +106,8 @@ public final class InventoryButtonHandler {
 	@SubscribeEvent
 	public static void keyboardInputEvent(GuiScreenEvent.KeyboardKeyPressedEvent.Post pressed) {
 		Screen gui = pressed.getGui();
-		if (gui instanceof ContainerScreen) {
-			ContainerScreen<?> screen = (ContainerScreen<?>) gui;
+		if (gui instanceof AbstractContainerScreen) {
+			AbstractContainerScreen<?> screen = (AbstractContainerScreen<?>) gui;
 			if(GeneralConfig.isScreenIgnored(screen))
 				return;
 
@@ -115,7 +115,7 @@ public final class InventoryButtonHandler {
 
 			for (ButtonProviderHolder holder : holders) {
 				if (holder.keybind != null &&
-						holder.keybind.matchesKey(pressed.getKeyCode(), pressed.getScanCode()) &&
+						holder.keybind.matches(pressed.getKeyCode(), pressed.getScanCode()) &&
 						(holder.keybind.getKeyModifier() == KeyModifier.NONE || holder.keybind.getKeyModifier().isActive(KeyConflictContext.GUI))) {
 					holder.pressed.accept(screen);
 					pressed.setCanceled(true);
@@ -125,13 +125,13 @@ public final class InventoryButtonHandler {
 
 	}
 
-	private static void applyProviders(GuiScreenEvent.InitGuiEvent.Post event, ButtonTargetType type, ContainerScreen<?> screen, Predicate<Slot> slotPred) {
+	private static void applyProviders(GuiScreenEvent.InitGuiEvent.Post event, ButtonTargetType type, AbstractContainerScreen<?> screen, Predicate<Slot> slotPred) {
 		Collection<ButtonProviderHolder> holders = providers.get(type);
 		if(!holders.isEmpty()) {
-			for(Slot slot : screen.getContainer().inventorySlots)
+			for(Slot slot : screen.getMenu().slots)
 				if(slotPred.test(slot)) {
-					int x = slot.xPos + 6;
-					int y = slot.yPos - 13;
+					int x = slot.x + 6;
+					int y = slot.y - 13;
 					
 					if(screen instanceof BackpackInventoryScreen)
 						y -= 60;
@@ -154,13 +154,13 @@ public final class InventoryButtonHandler {
 		return currentButtons.get(type);
 	}
 
-	public static void addButtonProvider(QuarkModule module, ButtonTargetType type, int priority, KeyBinding binding, Consumer<ContainerScreen<?>> onKeybind, ButtonProvider provider) {
+	public static void addButtonProvider(QuarkModule module, ButtonTargetType type, int priority, KeyMapping binding, Consumer<AbstractContainerScreen<?>> onKeybind, ButtonProvider provider) {
 		providers.put(type, new ButtonProviderHolder(module, priority, provider,
 				binding, onKeybind));
 	}
 
-	public static void addButtonProvider(QuarkModule module, ButtonTargetType type, int priority, String keybindName, Consumer<ContainerScreen<?>> onKeybind, ButtonProvider provider) {
-		KeyBinding keybind = ModKeybindHandler.init(keybindName, null, ModKeybindHandler.INV_GROUP);
+	public static void addButtonProvider(QuarkModule module, ButtonTargetType type, int priority, String keybindName, Consumer<AbstractContainerScreen<?>> onKeybind, ButtonProvider provider) {
+		KeyMapping keybind = ModKeybindHandler.init(keybindName, null, ModKeybindHandler.INV_GROUP);
 		keybind.setKeyConflictContext(KeyConflictContext.GUI);
 		addButtonProvider(module, type, priority, keybind, onKeybind, provider);
 	}
@@ -176,7 +176,7 @@ public final class InventoryButtonHandler {
 	}
 
 	public interface ButtonProvider {
-		Button provide(ContainerScreen<?> parent, int x, int y);
+		Button provide(AbstractContainerScreen<?> parent, int x, int y);
 	}
 
 	private static class ButtonProviderHolder implements Comparable<ButtonProviderHolder> {
@@ -185,10 +185,10 @@ public final class InventoryButtonHandler {
 		private final QuarkModule module;
 		private final ButtonProvider provider;
 
-		private final KeyBinding keybind;
-		private final Consumer<ContainerScreen<?>> pressed;
+		private final KeyMapping keybind;
+		private final Consumer<AbstractContainerScreen<?>> pressed;
 
-		public ButtonProviderHolder(QuarkModule module, int priority, ButtonProvider provider, KeyBinding keybind, Consumer<ContainerScreen<?>> onPressed) {
+		public ButtonProviderHolder(QuarkModule module, int priority, ButtonProvider provider, KeyMapping keybind, Consumer<AbstractContainerScreen<?>> onPressed) {
 			this.module = module;
 			this.priority = priority;
 			this.provider = provider;
@@ -205,7 +205,7 @@ public final class InventoryButtonHandler {
 			return priority - o.priority;
 		}
 
-		public Button getButton(ContainerScreen<?> parent, int x, int y) {
+		public Button getButton(AbstractContainerScreen<?> parent, int x, int y) {
 			return module.enabled ? provider.provide(parent, x, y) : null;
 		}
 

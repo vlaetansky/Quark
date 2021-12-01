@@ -1,6 +1,6 @@
 package vazkii.quark.content.building.module;
 
-import net.minecraft.block.Blocks;
+import net.minecraft.world.level.block.Blocks;
 import vazkii.quark.base.handler.ItemOverrideHandler;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;

@@ -6,33 +6,33 @@ import java.util.Objects;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.client.MainWindow;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SoundType;
+import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.tags.ITag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.tags.Tag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceContext.BlockMode;
-import net.minecraft.util.math.RayTraceContext.FluidMode;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.ClipContext.Block;
+import net.minecraft.world.level.ClipContext.Fluid;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -67,7 +67,7 @@ public class ReacharoundPlacingModule extends QuarkModule {
 	private ReacharoundTarget currentTarget;
 	private int ticksDisplayed;
 
-	public static ITag<Item> reacharoundTag;
+	public static Tag<Item> reacharoundTag;
 
 	@Override
 	public void setup() {
@@ -81,24 +81,24 @@ public class ReacharoundPlacingModule extends QuarkModule {
 			return;
 
 		Minecraft mc = Minecraft.getInstance();
-		PlayerEntity player = mc.player;
+		Player player = mc.player;
 
 		if(player != null && currentTarget != null) {
-			MainWindow res = event.getWindow();
-			MatrixStack matrix = event.getMatrixStack();
+			Window res = event.getWindow();
+			PoseStack matrix = event.getMatrixStack();
 			String text = (currentTarget.dir.getAxis() == Axis.Y ? display : displayHorizontal);
 
-			matrix.push();
-			matrix.translate(res.getScaledWidth() / 2F, res.getScaledHeight() / 2f - 4, 0);
+			matrix.pushPose();
+			matrix.translate(res.getGuiScaledWidth() / 2F, res.getGuiScaledHeight() / 2f - 4, 0);
 
 			float scale = Math.min(5, ticksDisplayed + event.getPartialTicks()) / 5F;
 			scale *= scale;
 			int opacity = ((int) (255 * scale)) << 24;
 
 			matrix.scale(scale, 1F, 1F);
-			matrix.translate(-mc.fontRenderer.getStringWidth(text) / 2f, 0, 0);
-			mc.fontRenderer.drawString(matrix, text, 0, 0, 0xFFFFFF | opacity);
-			matrix.pop();
+			matrix.translate(-mc.font.width(text) / 2f, 0, 0);
+			mc.font.draw(matrix, text, 0, 0, 0xFFFFFF | opacity);
+			matrix.popPose();
 		}
 	}
 
@@ -108,7 +108,7 @@ public class ReacharoundPlacingModule extends QuarkModule {
 		if(event.phase == Phase.END) {
 			currentTarget = null;
 
-			PlayerEntity player = Minecraft.getInstance().player;
+			Player player = Minecraft.getInstance().player;
 			if(player != null)
 				currentTarget = getPlayerReacharoundTarget(player);
 
@@ -121,35 +121,35 @@ public class ReacharoundPlacingModule extends QuarkModule {
 
 	@SubscribeEvent
 	public void onRightClick(PlayerInteractEvent.RightClickItem event) {
-		PlayerEntity player = event.getPlayer();
+		Player player = event.getPlayer();
 		ReacharoundTarget target = getPlayerReacharoundTarget(player);
 
 		if(target != null && event.getHand() == target.hand) {
 			ItemStack stack = event.getItemStack();
-			if(!player.canPlayerEdit(target.pos, target.dir, stack))
+			if(!player.mayUseItemAt(target.pos, target.dir, stack))
 				return;
 			
 			int count = stack.getCount();
-			Hand hand = event.getHand();
+			InteractionHand hand = event.getHand();
 
-			ItemUseContext context = new ItemUseContext(player, hand, new BlockRayTraceResult(new Vector3d(0.5F, 1F, 0.5F), target.dir, target.pos, false));
-			boolean remote = player.world.isRemote;
+			UseOnContext context = new UseOnContext(player, hand, new BlockHitResult(new Vec3(0.5F, 1F, 0.5F), target.dir, target.pos, false));
+			boolean remote = player.level.isClientSide;
 			Item item = stack.getItem();
-			ActionResultType res = remote ? ActionResultType.SUCCESS : item.onItemUse(context);
+			InteractionResult res = remote ? InteractionResult.SUCCESS : item.useOn(context);
 
-			if (res != ActionResultType.PASS) {
+			if (res != InteractionResult.PASS) {
 				event.setCanceled(true);
 				event.setCancellationResult(res);
 
-				if(res == ActionResultType.SUCCESS)
-					player.swingArm(hand);
-				else if(res == ActionResultType.CONSUME) {
+				if(res == InteractionResult.SUCCESS)
+					player.swing(hand);
+				else if(res == InteractionResult.CONSUME) {
 					BlockPos placedPos = target.pos;
-					BlockState state = player.world.getBlockState(placedPos);
-					SoundType soundtype = state.getSoundType(player.world, placedPos, context.getPlayer());
+					BlockState state = player.level.getBlockState(placedPos);
+					SoundType soundtype = state.getSoundType(player.level, placedPos, context.getPlayer());
 
-					if(player.world instanceof ServerWorld)
-						((ServerWorld) player.world).playSound(null, placedPos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+					if(player.level instanceof ServerLevel)
+						((ServerLevel) player.level).playSound(null, placedPos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 
 				}
 
@@ -159,26 +159,26 @@ public class ReacharoundPlacingModule extends QuarkModule {
 		}
 	}
 
-	private ReacharoundTarget getPlayerReacharoundTarget(PlayerEntity player) {
-		Hand hand = null;
-		if(validateReacharoundStack(player.getHeldItemMainhand()))
-			hand = Hand.MAIN_HAND;
-		else if(validateReacharoundStack(player.getHeldItemOffhand()))
-			hand = Hand.OFF_HAND;
+	private ReacharoundTarget getPlayerReacharoundTarget(Player player) {
+		InteractionHand hand = null;
+		if(validateReacharoundStack(player.getMainHandItem()))
+			hand = InteractionHand.MAIN_HAND;
+		else if(validateReacharoundStack(player.getOffhandItem()))
+			hand = InteractionHand.OFF_HAND;
 		
 		if(hand == null)
 			return null;
 			
-		World world = player.world;
+		Level world = player.level;
 
-		Pair<Vector3d, Vector3d> params = RayTraceHandler.getEntityParams(player);
+		Pair<Vec3, Vec3> params = RayTraceHandler.getEntityParams(player);
 		double range = RayTraceHandler.getEntityRange(player);
-		Vector3d rayPos = params.getLeft();
-		Vector3d ray = params.getRight().scale(range);
+		Vec3 rayPos = params.getLeft();
+		Vec3 ray = params.getRight().scale(range);
 
-		RayTraceResult normalRes = RayTraceHandler.rayTrace(player, world, rayPos, ray, BlockMode.OUTLINE, FluidMode.NONE);
+		HitResult normalRes = RayTraceHandler.rayTrace(player, world, rayPos, ray, Block.OUTLINE, Fluid.NONE);
 
-		if (normalRes.getType() == RayTraceResult.Type.MISS) {
+		if (normalRes.getType() == HitResult.Type.MISS) {
 			ReacharoundTarget  target = getPlayerVerticalReacharoundTarget(player, hand, world, rayPos, ray);
 			if(target != null)
 				return target;
@@ -191,34 +191,34 @@ public class ReacharoundPlacingModule extends QuarkModule {
 		return null;
 	}
 
-	private ReacharoundTarget getPlayerVerticalReacharoundTarget(PlayerEntity player, Hand hand, World world, Vector3d rayPos, Vector3d ray) {
-		if(player.rotationPitch < 0)
+	private ReacharoundTarget getPlayerVerticalReacharoundTarget(Player player, InteractionHand hand, Level world, Vec3 rayPos, Vec3 ray) {
+		if(player.xRot < 0)
 			return null;
 
 		rayPos = rayPos.add(0, leniency, 0);
-		RayTraceResult take2Res = RayTraceHandler.rayTrace(player, world, rayPos, ray, BlockMode.OUTLINE, FluidMode.NONE);
+		HitResult take2Res = RayTraceHandler.rayTrace(player, world, rayPos, ray, Block.OUTLINE, Fluid.NONE);
 
-		if (take2Res.getType() == RayTraceResult.Type.BLOCK && take2Res instanceof BlockRayTraceResult) {
-			BlockPos pos = ((BlockRayTraceResult) take2Res).getPos().down();
+		if (take2Res.getType() == HitResult.Type.BLOCK && take2Res instanceof BlockHitResult) {
+			BlockPos pos = ((BlockHitResult) take2Res).getBlockPos().below();
 			BlockState state = world.getBlockState(pos);
 
-			if (player.getPositionVec().y - pos.getY() > 1 && (world.isAirBlock(pos) || state.getMaterial().isReplaceable()))
+			if (player.position().y - pos.getY() > 1 && (world.isEmptyBlock(pos) || state.getMaterial().isReplaceable()))
 				return new ReacharoundTarget(pos, Direction.DOWN, hand);
 		}
 
 		return null;
 	}
 
-	private ReacharoundTarget getPlayerHorizontalReacharoundTarget(PlayerEntity player, Hand hand, World world, Vector3d rayPos, Vector3d ray) {
-		Direction dir = Direction.fromAngle(player.rotationYaw);
-		rayPos = rayPos.subtract(leniency * dir.getXOffset(), 0, leniency * dir.getZOffset());
-		RayTraceResult take2Res = RayTraceHandler.rayTrace(player, world, rayPos, ray, BlockMode.OUTLINE, FluidMode.NONE);
+	private ReacharoundTarget getPlayerHorizontalReacharoundTarget(Player player, InteractionHand hand, Level world, Vec3 rayPos, Vec3 ray) {
+		Direction dir = Direction.fromYRot(player.yRot);
+		rayPos = rayPos.subtract(leniency * dir.getStepX(), 0, leniency * dir.getStepZ());
+		HitResult take2Res = RayTraceHandler.rayTrace(player, world, rayPos, ray, Block.OUTLINE, Fluid.NONE);
 
-		if (take2Res.getType() == RayTraceResult.Type.BLOCK && take2Res instanceof BlockRayTraceResult) {
-			BlockPos pos = ((BlockRayTraceResult) take2Res).getPos().offset(dir);
+		if (take2Res.getType() == HitResult.Type.BLOCK && take2Res instanceof BlockHitResult) {
+			BlockPos pos = ((BlockHitResult) take2Res).getBlockPos().relative(dir);
 			BlockState state = world.getBlockState(pos);
 
-			if ((world.isAirBlock(pos) || state.getMaterial().isReplaceable()))
+			if ((world.isEmptyBlock(pos) || state.getMaterial().isReplaceable()))
 				return new ReacharoundTarget(pos, dir.getOpposite(), hand);
 		}
 
@@ -227,16 +227,16 @@ public class ReacharoundPlacingModule extends QuarkModule {
 
 	private boolean validateReacharoundStack(ItemStack stack) {
 		Item item = stack.getItem();
-		return item instanceof BlockItem || item.isIn(reacharoundTag) || whitelist.contains(Objects.toString(item.getRegistryName()));
+		return item instanceof BlockItem || item.is(reacharoundTag) || whitelist.contains(Objects.toString(item.getRegistryName()));
 	}
 	
 	private static class ReacharoundTarget {
 		
 		final BlockPos pos;
 		final Direction dir;
-		final Hand hand;
+		final InteractionHand hand;
 		
-		public ReacharoundTarget(BlockPos pos, Direction dir, Hand hand) {
+		public ReacharoundTarget(BlockPos pos, Direction dir, InteractionHand hand) {
 			this.pos = pos;
 			this.dir = dir;
 			this.hand = hand;

@@ -12,19 +12,19 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ICraftingRecipe;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -32,25 +32,25 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
  * @author WireSegal
  * Created at 2:08 PM on 8/24/19.
  */
-public class ExclusionRecipe implements ICraftingRecipe {
+public class ExclusionRecipe implements CraftingRecipe {
     public static final Serializer SERIALIZER = new Serializer();
 
-    private final ICraftingRecipe parent;
+    private final CraftingRecipe parent;
     private final List<ResourceLocation> excluded;
 
-    public ExclusionRecipe(ICraftingRecipe parent, List<ResourceLocation> excluded) {
+    public ExclusionRecipe(CraftingRecipe parent, List<ResourceLocation> excluded) {
         this.parent = parent;
         this.excluded = excluded;
     }
 
     @Override
-    public boolean matches(@Nonnull CraftingInventory inv, @Nonnull World worldIn) {
+    public boolean matches(@Nonnull CraftingContainer inv, @Nonnull Level worldIn) {
         for (ResourceLocation recipeLoc : excluded) {
-            Optional<? extends IRecipe<?>> recipeHolder = worldIn.getRecipeManager().getRecipe(recipeLoc);
+            Optional<? extends Recipe<?>> recipeHolder = worldIn.getRecipeManager().byKey(recipeLoc);
             if (recipeHolder.isPresent()) {
-                IRecipe<?> recipe = recipeHolder.get();
-                if (recipe instanceof ICraftingRecipe &&
-                        ((ICraftingRecipe) recipe).matches(inv, worldIn)) {
+                Recipe<?> recipe = recipeHolder.get();
+                if (recipe instanceof CraftingRecipe &&
+                        ((CraftingRecipe) recipe).matches(inv, worldIn)) {
                     return false;
                 }
             }
@@ -61,19 +61,19 @@ public class ExclusionRecipe implements ICraftingRecipe {
 
     @Nonnull
     @Override
-    public ItemStack getCraftingResult(@Nonnull CraftingInventory inv) {
-        return parent.getCraftingResult(inv);
+    public ItemStack assemble(@Nonnull CraftingContainer inv) {
+        return parent.assemble(inv);
     }
 
     @Override
-    public boolean canFit(int width, int height) {
-        return parent.canFit(width, height);
+    public boolean canCraftInDimensions(int width, int height) {
+        return parent.canCraftInDimensions(width, height);
     }
 
     @Nonnull
     @Override
-    public ItemStack getRecipeOutput() {
-        return parent.getRecipeOutput();
+    public ItemStack getResultItem() {
+        return parent.getResultItem();
     }
 
     @Nonnull
@@ -84,19 +84,19 @@ public class ExclusionRecipe implements ICraftingRecipe {
 
     @Nonnull
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return SERIALIZER;
     }
 
     @Nonnull
     @Override
-    public IRecipeType<?> getType() {
+    public RecipeType<?> getType() {
         return parent.getType();
     }
 
     @Nonnull
     @Override
-    public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv) {
+    public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
         return parent.getRemainingItems(inv);
     }
 
@@ -107,8 +107,8 @@ public class ExclusionRecipe implements ICraftingRecipe {
     }
 
     @Override
-    public boolean isDynamic() {
-        return parent.isDynamic();
+    public boolean isSpecial() {
+        return parent.isSpecial();
     }
 
     @Nonnull
@@ -119,17 +119,17 @@ public class ExclusionRecipe implements ICraftingRecipe {
 
     @Nonnull
     @Override
-    public ItemStack getIcon() {
-        return parent.getIcon();
+    public ItemStack getToastSymbol() {
+        return parent.getToastSymbol();
     }
 
-    private static class ShapedExclusionRecipe extends ExclusionRecipe implements IShapedRecipe<CraftingInventory> {
-        private final IShapedRecipe<CraftingInventory> parent;
+    private static class ShapedExclusionRecipe extends ExclusionRecipe implements IShapedRecipe<CraftingContainer> {
+        private final IShapedRecipe<CraftingContainer> parent;
 
         @SuppressWarnings("unchecked")
-		public ShapedExclusionRecipe(ICraftingRecipe parent, List<ResourceLocation> excluded) {
+		public ShapedExclusionRecipe(CraftingRecipe parent, List<ResourceLocation> excluded) {
             super(parent, excluded);
-            this.parent = (IShapedRecipe<CraftingInventory>) parent;
+            this.parent = (IShapedRecipe<CraftingContainer>) parent;
         }
 
         @Override
@@ -143,7 +143,7 @@ public class ExclusionRecipe implements ICraftingRecipe {
         }
     }
 
-    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ExclusionRecipe> {
+    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ExclusionRecipe> {
        
     	public Serializer() {
             setRegistryName("quark:exclusion");
@@ -151,12 +151,12 @@ public class ExclusionRecipe implements ICraftingRecipe {
 
         @Nonnull
         @Override
-        public ExclusionRecipe read(@Nonnull ResourceLocation recipeId, @Nonnull JsonObject json) {
-            String trueType = JSONUtils.getString(json, "true_type");
+        public ExclusionRecipe fromJson(@Nonnull ResourceLocation recipeId, @Nonnull JsonObject json) {
+            String trueType = GsonHelper.getAsString(json, "true_type");
             if (trueType.equals("quark:exclusion"))
                 throw new JsonSyntaxException("Recipe type circularity");
 
-            JsonArray excluded = JSONUtils.getJsonArray(json, "exclusions");
+            JsonArray excluded = GsonHelper.getAsJsonArray(json, "exclusions");
             List<ResourceLocation> excludedRecipes = new ArrayList<>();
             for (JsonElement el : excluded) {
                 ResourceLocation loc = new ResourceLocation(el.getAsString());
@@ -164,49 +164,49 @@ public class ExclusionRecipe implements ICraftingRecipe {
                     excludedRecipes.add(loc);
             }
 
-            Optional<IRecipeSerializer<?>> serializer = Registry.RECIPE_SERIALIZER.getOptional(new ResourceLocation(trueType));
+            Optional<RecipeSerializer<?>> serializer = Registry.RECIPE_SERIALIZER.getOptional(new ResourceLocation(trueType));
             if (!serializer.isPresent())
                 throw new JsonSyntaxException("Invalid or unsupported recipe type '" + trueType + "'");
-            IRecipe<?> parent = serializer.get().read(recipeId, json);
-            if (!(parent instanceof ICraftingRecipe))
+            Recipe<?> parent = serializer.get().fromJson(recipeId, json);
+            if (!(parent instanceof CraftingRecipe))
                 throw new JsonSyntaxException("Type '" + trueType + "' is not a crafting recipe");
 
             if (parent instanceof IShapedRecipe)
-                return new ShapedExclusionRecipe((ICraftingRecipe) parent, excludedRecipes);
-            return new ExclusionRecipe((ICraftingRecipe) parent, excludedRecipes);
+                return new ShapedExclusionRecipe((CraftingRecipe) parent, excludedRecipes);
+            return new ExclusionRecipe((CraftingRecipe) parent, excludedRecipes);
         }
 
         @Nonnull
         @Override
-        public ExclusionRecipe read(@Nonnull ResourceLocation recipeId, @Nonnull PacketBuffer buffer) {
+        public ExclusionRecipe fromNetwork(@Nonnull ResourceLocation recipeId, @Nonnull FriendlyByteBuf buffer) {
             int exclusions = buffer.readVarInt();
             List<ResourceLocation> excludedRecipes = new ArrayList<>();
             for (int i = 0; i < exclusions; i++) {
-                ResourceLocation loc = new ResourceLocation(buffer.readString(32767));
+                ResourceLocation loc = new ResourceLocation(buffer.readUtf(32767));
                 if (!loc.equals(recipeId))
                     excludedRecipes.add(loc);
             }
-            String trueType = buffer.readString(32767);
+            String trueType = buffer.readUtf(32767);
 
-            IRecipeSerializer<?> serializer = Registry.RECIPE_SERIALIZER.getOptional(new ResourceLocation(trueType))
+            RecipeSerializer<?> serializer = Registry.RECIPE_SERIALIZER.getOptional(new ResourceLocation(trueType))
                     .orElseThrow(() -> new IllegalArgumentException("Invalid or unsupported recipe type '" + trueType + "'"));
-            IRecipe<?> parent = serializer.read(recipeId, buffer);
-            if (!(parent instanceof ICraftingRecipe))
+            Recipe<?> parent = serializer.fromNetwork(recipeId, buffer);
+            if (!(parent instanceof CraftingRecipe))
                 throw new IllegalArgumentException("Type '" + trueType + "' is not a crafting recipe");
 
             if (parent instanceof IShapedRecipe)
-                return new ShapedExclusionRecipe((ICraftingRecipe) parent, excludedRecipes);
-            return new ExclusionRecipe((ICraftingRecipe) parent, excludedRecipes);
+                return new ShapedExclusionRecipe((CraftingRecipe) parent, excludedRecipes);
+            return new ExclusionRecipe((CraftingRecipe) parent, excludedRecipes);
         }
 
         @Override
         @SuppressWarnings("unchecked")
-        public void write(@Nonnull PacketBuffer buffer, @Nonnull ExclusionRecipe recipe) {
+        public void toNetwork(@Nonnull FriendlyByteBuf buffer, @Nonnull ExclusionRecipe recipe) {
             buffer.writeVarInt(recipe.excluded.size());
             for (ResourceLocation loc : recipe.excluded)
-                buffer.writeString(loc.toString(), 32767);
-            buffer.writeString(Objects.toString(recipe.parent.getSerializer().getRegistryName()), 32767);
-            ((IRecipeSerializer<IRecipe<?>>) recipe.parent.getSerializer()).write(buffer, recipe.parent);
+                buffer.writeUtf(loc.toString(), 32767);
+            buffer.writeUtf(Objects.toString(recipe.parent.getSerializer().getRegistryName()), 32767);
+            ((RecipeSerializer<Recipe<?>>) recipe.parent.getSerializer()).toNetwork(buffer, recipe.parent);
         }
     }
 }

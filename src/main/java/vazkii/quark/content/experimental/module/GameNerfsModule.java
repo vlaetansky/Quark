@@ -5,24 +5,24 @@ import java.util.UUID;
 
 import com.mojang.serialization.Dynamic;
 
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.item.ExperienceOrbEntity;
-import net.minecraft.entity.monster.ZombieVillagerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.NBTDynamicOps;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.monster.ZombieVillager;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.village.GossipManager;
-import net.minecraft.village.GossipType;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.ai.gossip.GossipContainer;
+import net.minecraft.world.entity.ai.gossip.GossipType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.AnvilUpdateEvent;
@@ -77,13 +77,13 @@ public class GameNerfsModule extends QuarkModule {
 		if(!nerfMending)
 			return;
 		
-		PlayerEntity player = event.getPlayer();
-		ExperienceOrbEntity orb = event.getOrb();
+		Player player = event.getPlayer();
+		ExperienceOrb orb = event.getOrb();
 
-		player.xpCooldown = 2;
-		player.onItemPickup(orb, 1);
-		if(orb.xpValue > 0)
-			player.giveExperiencePoints(orb.xpValue);
+		player.takeXpDelay = 2;
+		player.take(orb, 1);
+		if(orb.value > 0)
+			player.giveExperiencePoints(orb.value);
 
 		orb.remove();
 		event.setCanceled(true);
@@ -119,7 +119,7 @@ public class GameNerfsModule extends QuarkModule {
 				out = left.copy();
 
 			if(!out.hasTag())
-				out.setTag(new CompoundNBT());
+				out.setTag(new CompoundTag());
 
 			Map<Enchantment, Integer> enchOutput = EnchantmentHelper.getEnchantments(out);
 			enchOutput.putAll(enchRight);
@@ -128,8 +128,8 @@ public class GameNerfsModule extends QuarkModule {
 			EnchantmentHelper.setEnchantments(enchOutput, out);
 
 			out.setRepairCost(0);
-			if(out.isDamageable())
-				out.setDamage(0);
+			if(out.isDamageableItem())
+				out.setDamageValue(0);
 
 			event.setOutput(out);
 			if(event.getCost() == 0)
@@ -143,8 +143,8 @@ public class GameNerfsModule extends QuarkModule {
 		if(!nerfMending)
 			return;
 		
-		ITextComponent itemgotmodified = new TranslationTextComponent("quark.misc.repaired").mergeStyle(TextFormatting.YELLOW);
-		int repairCost = event.getItemStack().getRepairCost();
+		Component itemgotmodified = new TranslatableComponent("quark.misc.repaired").withStyle(ChatFormatting.YELLOW);
+		int repairCost = event.getItemStack().getBaseRepairCost();
 		if(repairCost > 0)
 			event.getToolTip().add(itemgotmodified);
 	}
@@ -152,17 +152,17 @@ public class GameNerfsModule extends QuarkModule {
 	@SubscribeEvent
 	public void onTick(LivingUpdateEvent event) {
 		if(nerfVillagerDiscount && event.getEntity().getType() == EntityType.ZOMBIE_VILLAGER && !event.getEntity().getPersistentData().contains(TAG_TRADES_ADJUSTED)) {
-			ZombieVillagerEntity zombie = (ZombieVillagerEntity) event.getEntity();
+			ZombieVillager zombie = (ZombieVillager) event.getEntity();
 			
-			INBT gossipsNbt = zombie.gossips;
+			Tag gossipsNbt = zombie.gossips;
 			
-			GossipManager manager = new GossipManager();
-			manager.read(new Dynamic<>(NBTDynamicOps.INSTANCE, gossipsNbt));
+			GossipContainer manager = new GossipContainer();
+			manager.update(new Dynamic<>(NbtOps.INSTANCE, gossipsNbt));
 			
-			for(UUID uuid : manager.uuid_gossips_mapping.keySet()) {
-				GossipManager.Gossips gossips = manager.uuid_gossips_mapping.get(uuid);
-				gossips.removeGossipType(GossipType.MAJOR_POSITIVE);
-				gossips.removeGossipType(GossipType.MINOR_POSITIVE);
+			for(UUID uuid : manager.gossips.keySet()) {
+				GossipContainer.EntityGossips gossips = manager.gossips.get(uuid);
+				gossips.remove(GossipType.MAJOR_POSITIVE);
+				gossips.remove(GossipType.MINOR_POSITIVE);
 			}
 			
 			zombie.getPersistentData().putBoolean(TAG_TRADES_ADJUSTED, true);
@@ -175,7 +175,7 @@ public class GameNerfsModule extends QuarkModule {
 			event.getDrops().removeIf(e -> e.getItem().getItem() == Items.IRON_INGOT);
 		
 		if(disableWoolDrops && event.getEntity().getType() == EntityType.SHEEP)
-			event.getDrops().removeIf(e -> e.getItem().getItem().isIn(ItemTags.WOOL));
+			event.getDrops().removeIf(e -> e.getItem().getItem().is(ItemTags.WOOL));
 	}
 	
 }

@@ -3,43 +3,43 @@ package vazkii.quark.addons.oddities.client.render;
 import java.util.Iterator;
 import java.util.Random;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.Atlases;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.ModelManager;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import com.mojang.math.Vector3f;
 import vazkii.quark.addons.oddities.tile.PipeTileEntity;
 import vazkii.quark.addons.oddities.tile.PipeTileEntity.ConnectionType;
 import vazkii.quark.addons.oddities.tile.PipeTileEntity.PipeItem;
 import vazkii.quark.base.Quark;
 
-public class PipeTileEntityRenderer extends TileEntityRenderer<PipeTileEntity> {
+public class PipeTileEntityRenderer extends BlockEntityRenderer<PipeTileEntity> {
 
 	private static final ModelResourceLocation LOCATION_MODEL = new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, "pipe_flare"), "inventory");
 	
 	private Random random = new Random();
 	
-	public PipeTileEntityRenderer(TileEntityRendererDispatcher p_i226006_1_) {
+	public PipeTileEntityRenderer(BlockEntityRenderDispatcher p_i226006_1_) {
 		super(p_i226006_1_);
 	}
 
 	@Override
-	public void render(PipeTileEntity te, float pticks, MatrixStack matrix, IRenderTypeBuffer buffer, int light, int overlay) {
-		matrix.push();
+	public void render(PipeTileEntity te, float pticks, PoseStack matrix, MultiBufferSource buffer, int light, int overlay) {
+		matrix.pushPose();
 		matrix.translate(0.5, 0.5, 0.5);
 		ItemRenderer render = Minecraft.getInstance().getItemRenderer();
 		Iterator<PipeItem> items = te.getItemIterator();
@@ -47,42 +47,42 @@ public class PipeTileEntityRenderer extends TileEntityRenderer<PipeTileEntity> {
 		while(items.hasNext())
 			renderItem(items.next(), render, matrix, buffer, pticks, light, overlay);
 		
-		BlockRendererDispatcher blockrendererdispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
-		ModelManager modelmanager = blockrendererdispatcher.getBlockModelShapes().getModelManager();
-		IBakedModel model = modelmanager.getModel(LOCATION_MODEL);
+		BlockRenderDispatcher blockrendererdispatcher = Minecraft.getInstance().getBlockRenderer();
+		ModelManager modelmanager = blockrendererdispatcher.getBlockModelShaper().getModelManager();
+		BakedModel model = modelmanager.getModel(LOCATION_MODEL);
 		for(Direction d : Direction.values())
 			renderFlare(te, blockrendererdispatcher, model, matrix, buffer, pticks, light, overlay, d);
 		
-		matrix.pop();
+		matrix.popPose();
 	}
 	
-	private void renderFlare(PipeTileEntity te, BlockRendererDispatcher disp, IBakedModel model, MatrixStack matrix, IRenderTypeBuffer buffer, float partial, int light, int overlay, Direction dir) {
-		ConnectionType type = PipeTileEntity.getConnectionTo(te.getWorld(), te.getPos(), dir);
+	private void renderFlare(PipeTileEntity te, BlockRenderDispatcher disp, BakedModel model, PoseStack matrix, MultiBufferSource buffer, float partial, int light, int overlay, Direction dir) {
+		ConnectionType type = PipeTileEntity.getConnectionTo(te.getLevel(), te.getBlockPos(), dir);
 		if(type.isFlared) {
-			matrix.push();
+			matrix.pushPose();
 			switch(dir.getAxis()) {
 			case X:
-				matrix.rotate(Vector3f.YP.rotationDegrees(-dir.getHorizontalAngle()));
+				matrix.mulPose(Vector3f.YP.rotationDegrees(-dir.toYRot()));
 				break;
 			case Z:
-				matrix.rotate(Vector3f.YP.rotationDegrees(dir.getHorizontalAngle()));
+				matrix.mulPose(Vector3f.YP.rotationDegrees(dir.toYRot()));
 				break;
 			case Y:
-				matrix.rotate(Vector3f.XP.rotationDegrees(90F));
+				matrix.mulPose(Vector3f.XP.rotationDegrees(90F));
 				if(dir == Direction.UP)
-					matrix.rotate(Vector3f.YP.rotationDegrees(180F));
+					matrix.mulPose(Vector3f.YP.rotationDegrees(180F));
 				
 				break;
 			}
 			
 			matrix.translate(-0.5, -0.5, type.flareShift);
-			disp.getBlockModelRenderer().renderModelBrightnessColor(matrix.getLast(), buffer.getBuffer(Atlases.getCutoutBlockType()), null, model, 1.0F, 1.0F, 1.0F, light, OverlayTexture.NO_OVERLAY);
-			matrix.pop();
+			disp.getModelRenderer().renderModel(matrix.last(), buffer.getBuffer(Sheets.cutoutBlockSheet()), null, model, 1.0F, 1.0F, 1.0F, light, OverlayTexture.NO_OVERLAY);
+			matrix.popPose();
 		}
 	}
 	
-	private void renderItem(PipeItem item, ItemRenderer render, MatrixStack matrix, IRenderTypeBuffer buffer, float partial, int light, int overlay) {
-		matrix.push();
+	private void renderItem(PipeItem item, ItemRenderer render, PoseStack matrix, MultiBufferSource buffer, float partial, int light, int overlay) {
+		matrix.pushPose();
 
 		float scale = 0.4F;
 		float fract = item.getTimeFract(partial);
@@ -91,22 +91,22 @@ public class PipeTileEntityRenderer extends TileEntityRenderer<PipeTileEntity> {
 		if(fract < 0.5)
 			face = item.incomingFace.getOpposite();
 
-		float offX = (face.getXOffset() * 1F);
-		float offY = (face.getYOffset() * 1F);
-		float offZ = (face.getZOffset() * 1F);
+		float offX = (face.getStepX() * 1F);
+		float offY = (face.getStepY() * 1F);
+		float offZ = (face.getStepZ() * 1F);
 		matrix.translate(offX * shiftFract, offY * shiftFract, offZ * shiftFract);
 
 		matrix.scale(scale, scale, scale);
 
 		float speed = 4F;
-		matrix.rotate(Vector3f.YP.rotationDegrees((item.timeInWorld + partial) * speed));
+		matrix.mulPose(Vector3f.YP.rotationDegrees((item.timeInWorld + partial) * speed));
 
-        int seed = item.stack.isEmpty() ? 187 : Item.getIdFromItem(item.stack.getItem());
+        int seed = item.stack.isEmpty() ? 187 : Item.getId(item.stack.getItem());
         random.setSeed(seed);
 		
 		int count = getModelCount(item.stack);
 		for(int i = 0; i < count; i++) {
-			matrix.push();
+			matrix.pushPose();
 			if(i > 0) {
 				float spread = 0.15F;
                 float x = (this.random.nextFloat() * 2.0F - 1.0F) * spread;
@@ -115,10 +115,10 @@ public class PipeTileEntityRenderer extends TileEntityRenderer<PipeTileEntity> {
                 matrix.translate(x, y, z);
 			}
 			
-			render.renderItem(item.stack, ItemCameraTransforms.TransformType.FIXED, light, overlay, matrix, buffer);
-			matrix.pop();
+			render.renderStatic(item.stack, ItemTransforms.TransformType.FIXED, light, overlay, matrix, buffer);
+			matrix.popPose();
 		}
-		matrix.pop();
+		matrix.popPose();
 	}
 
 	// RenderEntityItem copy

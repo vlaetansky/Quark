@@ -5,12 +5,12 @@ import java.util.Map;
 
 import com.google.common.base.Functions;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FlowerPotBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.color.IBlockColor;
+import net.minecraft.client.color.block.BlockColor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.base.handler.VariantHandler;
@@ -40,7 +40,7 @@ public class MorePottedPlantsModule extends QuarkModule {
 		add(Blocks.POTATOES, "potato");
 		add(Blocks.PUMPKIN_STEM, "pumpkin");
 		add(Blocks.ROSE_BUSH, "rose");
-		VariantHandler.addFlowerPot(Blocks.SEA_PICKLE, "sea_pickle", p -> p.setLightLevel(b -> 3));
+		VariantHandler.addFlowerPot(Blocks.SEA_PICKLE, "sea_pickle", p -> p.lightLevel(b -> 3));
 		Block sugarCane = add(Blocks.SUGAR_CANE, "sugar_cane");
 		add(Blocks.SUNFLOWER, "sunflower");
 		Block tallGrass = add(Blocks.TALL_GRASS, "tall_grass");
@@ -64,8 +64,8 @@ public class MorePottedPlantsModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
 		for(Block b : tintedBlocks.keySet()) {
-			BlockState tState = tintedBlocks.get(b).getDefaultState();
-			IBlockColor color = (state, worldIn, pos, tintIndex) -> Minecraft.getInstance().getBlockColors().getColor(tState, worldIn, pos, tintIndex);
+			BlockState tState = tintedBlocks.get(b).defaultBlockState();
+			BlockColor color = (state, worldIn, pos, tintIndex) -> Minecraft.getInstance().getBlockColors().getColor(tState, worldIn, pos, tintIndex);
 			Minecraft.getInstance().getBlockColors().register(color, b);
 		}
 	}

@@ -4,12 +4,12 @@ import java.util.function.BooleanSupplier;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraftforge.common.extensions.IForgeBlock;
 import vazkii.quark.base.module.QuarkModule;
 
@@ -32,8 +32,8 @@ public interface IQuarkBlock extends IForgeBlock {
     }
 
     @Override
-    default int getFlammability(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
-        if (state.getValues().containsKey(BlockStateProperties.WATERLOGGED) && state.get(BlockStateProperties.WATERLOGGED))
+    default int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
+        if (state.getValues().containsKey(BlockStateProperties.WATERLOGGED) && state.getValue(BlockStateProperties.WATERLOGGED))
             return 0;
 
         Material material = state.getMaterial();
@@ -43,8 +43,8 @@ public interface IQuarkBlock extends IForgeBlock {
     }
 
     @Override
-    default int getFireSpreadSpeed(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
-        if (state.getValues().containsKey(BlockStateProperties.WATERLOGGED) && state.get(BlockStateProperties.WATERLOGGED))
+    default int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
+        if (state.getValues().containsKey(BlockStateProperties.WATERLOGGED) && state.getValue(BlockStateProperties.WATERLOGGED))
             return 0;
 
         Material material = state.getMaterial();

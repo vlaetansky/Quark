@@ -3,13 +3,13 @@ package vazkii.quark.content.automation.tile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -21,17 +21,17 @@ import vazkii.quark.content.automation.module.ChuteModule;
  * @author WireSegal
  * Created at 10:18 AM on 9/29/19.
  */
-public class ChuteTileEntity extends TileEntity {
+public class ChuteTileEntity extends BlockEntity {
     public ChuteTileEntity() {
         super(ChuteModule.tileEntityType);
     }
 
     private boolean canDropItem() {
-        if(world != null && world.getBlockState(pos).get(ChuteBlock.ENABLED)) {
-            BlockPos below = pos.down();
-            BlockState state = world.getBlockState(below);
+        if(level != null && level.getBlockState(worldPosition).getValue(ChuteBlock.ENABLED)) {
+            BlockPos below = worldPosition.below();
+            BlockState state = level.getBlockState(below);
             Block block = state.getBlock();
-            return block.isAir(state, world, below) || state.getCollisionShape(world, below).isEmpty();
+            return block.isAir(state, level, below) || state.getCollisionShape(level, below).isEmpty();
         }
 
         return false;
@@ -55,10 +55,10 @@ public class ChuteTileEntity extends TileEntity {
             if (!canDropItem())
                 return stack;
 
-            if(!simulate && world != null && !stack.isEmpty()) {
-                ItemEntity entity = new ItemEntity(world, pos.getX() + 0.5, pos.getY() - 0.5, pos.getZ() + 0.5, stack.copy());
-                entity.setMotion(0, 0, 0);
-                world.addEntity(entity);
+            if(!simulate && level != null && !stack.isEmpty()) {
+                ItemEntity entity = new ItemEntity(level, worldPosition.getX() + 0.5, worldPosition.getY() - 0.5, worldPosition.getZ() + 0.5, stack.copy());
+                entity.setDeltaMovement(0, 0, 0);
+                level.addFreshEntity(entity);
             }
 
             return ItemStack.EMPTY;

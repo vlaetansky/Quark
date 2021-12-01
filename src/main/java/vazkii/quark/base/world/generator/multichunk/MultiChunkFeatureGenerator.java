@@ -4,9 +4,9 @@ import java.util.Random;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.WorldGenRegion;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.server.level.WorldGenRegion;
 import vazkii.quark.base.module.config.type.DimensionConfig;
 import vazkii.quark.base.world.generator.Generator;
 
@@ -65,11 +65,11 @@ public abstract class MultiChunkFeatureGenerator extends Generator {
 		minY = Math.max(1, minY);
 		maxY = Math.min(255, maxY);
 
-		BlockPos.Mutable mutable = new BlockPos.Mutable(chunkCorner.getX(), chunkCorner.getY(), chunkCorner.getZ());
+		BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos(chunkCorner.getX(), chunkCorner.getY(), chunkCorner.getZ());
 		for(int x = 0; x < 16; x++)
 			for(int y = minY; y < maxY; y++)
 				for(int z = 0; z < 16; z++) {
-					mutable.setPos(chunkCorner.getX() + x, chunkCorner.getY() + y, chunkCorner.getZ() + z);
+					mutable.set(chunkCorner.getX() + x, chunkCorner.getY() + y, chunkCorner.getZ() + z);
 					func.accept(mutable);
 				}
 	}

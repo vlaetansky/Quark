@@ -4,24 +4,24 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MoverType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.tileentity.PistonTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.NetworkHooks;
 import vazkii.quark.content.building.block.StoolBlock;
 
 public class StoolEntity extends Entity {
 
-	public StoolEntity(EntityType<?> entityTypeIn, World worldIn) {
+	public StoolEntity(EntityType<?> entityTypeIn, Level worldIn) {
 		super(entityTypeIn, worldIn);
 	}
 	
@@ -32,30 +32,30 @@ public class StoolEntity extends Entity {
 		List<Entity> passengers = getPassengers();
 		boolean dead = passengers.isEmpty();
 		
-		BlockPos pos = getPosition();
-		BlockState state = world.getBlockState(pos);
+		BlockPos pos = blockPosition();
+		BlockState state = level.getBlockState(pos);
 		
 		if(!dead) {
 			if(!(state.getBlock() instanceof StoolBlock)) {
-				PistonTileEntity piston = null;
+				PistonMovingBlockEntity piston = null;
 				boolean didOffset = false;
 				
-				TileEntity tile = world.getTileEntity(pos);
-				if(tile instanceof PistonTileEntity && ((PistonTileEntity) tile).getPistonState().getBlock() instanceof StoolBlock)
-					piston = (PistonTileEntity) tile;
+				BlockEntity tile = level.getBlockEntity(pos);
+				if(tile instanceof PistonMovingBlockEntity && ((PistonMovingBlockEntity) tile).getMovedState().getBlock() instanceof StoolBlock)
+					piston = (PistonMovingBlockEntity) tile;
 				else for(Direction d : Direction.values()) {
-					BlockPos offPos = pos.offset(d);
-					tile = world.getTileEntity(offPos);
+					BlockPos offPos = pos.relative(d);
+					tile = level.getBlockEntity(offPos);
 					
-					if(tile instanceof PistonTileEntity && ((PistonTileEntity) tile).getPistonState().getBlock() instanceof StoolBlock) {
-						piston = (PistonTileEntity) tile;
+					if(tile instanceof PistonMovingBlockEntity && ((PistonMovingBlockEntity) tile).getMovedState().getBlock() instanceof StoolBlock) {
+						piston = (PistonMovingBlockEntity) tile;
 						break;
 					}
 				}
 				
 				if(piston != null) {
-					Direction dir = piston.getMotionDirection();
-					move(MoverType.PISTON, new Vector3d((float) dir.getXOffset() * 0.33, (float) dir.getYOffset() * 0.33, (float) dir.getZOffset() * 0.33));
+					Direction dir = piston.getMovementDirection();
+					move(MoverType.PISTON, new Vec3((float) dir.getStepX() * 0.33, (float) dir.getStepY() * 0.33, (float) dir.getStepZ() * 0.33));
 					
 					didOffset = true;
 				}
@@ -64,37 +64,37 @@ public class StoolEntity extends Entity {
 			}
 		}
 		
-		if(dead && !world.isRemote) {
-			setDead();
+		if(dead && !level.isClientSide) {
+			removeAfterChangingDimensions();
 
 			if(state.getBlock() instanceof StoolBlock)
-				world.setBlockState(pos, state.with(StoolBlock.SAT_IN, false));
+				level.setBlockAndUpdate(pos, state.setValue(StoolBlock.SAT_IN, false));
 		}
 	}
 
 	@Override
-	public double getMountedYOffset() {
+	public double getPassengersRidingOffset() {
 		return -0.3;
 	}
 	
 	@Override
-	protected void registerData() {
+	protected void defineSynchedData() {
 		// NO-OP
 	}
 
 	@Override
-	protected void readAdditional(CompoundNBT compound) {
+	protected void readAdditionalSaveData(CompoundTag compound) {
 		// NO-OP
 	}
 
 	@Override
-	protected void writeAdditional(CompoundNBT compound) {
+	protected void addAdditionalSaveData(CompoundTag compound) {
 		// NO-OP
 	}
 
 	@Nonnull
 	@Override
-	public IPacket<?> createSpawnPacket() {
+	public Packet<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 

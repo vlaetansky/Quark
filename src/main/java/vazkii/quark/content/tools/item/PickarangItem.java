@@ -10,32 +10,34 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.tools.entity.PickarangEntity;
 import vazkii.quark.content.tools.module.PickarangModule;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class PickarangItem extends QuarkItem {
 
@@ -47,26 +49,26 @@ public class PickarangItem extends QuarkItem {
 	}
 
 	@Override
-	public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-		stack.damageItem(2, attacker, (player) -> player.sendBreakAnimation(Hand.MAIN_HAND));
+	public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+		stack.hurtAndBreak(2, attacker, (player) -> player.broadcastBreakEvent(InteractionHand.MAIN_HAND));
 		return true;
 	}
 
 	@Override
-	public boolean canHarvestBlock(BlockState blockIn) {
+	public boolean isCorrectToolForDrops(BlockState blockIn) {
 		switch (isNetherite ? PickarangModule.netheriteHarvestLevel : PickarangModule.harvestLevel) {
 			case 0:
-				return Items.WOODEN_PICKAXE.canHarvestBlock(blockIn) ||
-						Items.WOODEN_AXE.canHarvestBlock(blockIn) ||
-						Items.WOODEN_SHOVEL.canHarvestBlock(blockIn);
+				return Items.WOODEN_PICKAXE.isCorrectToolForDrops(blockIn) ||
+						Items.WOODEN_AXE.isCorrectToolForDrops(blockIn) ||
+						Items.WOODEN_SHOVEL.isCorrectToolForDrops(blockIn);
 			case 1:
-				return Items.STONE_PICKAXE.canHarvestBlock(blockIn) ||
-						Items.STONE_AXE.canHarvestBlock(blockIn) ||
-						Items.STONE_SHOVEL.canHarvestBlock(blockIn);
+				return Items.STONE_PICKAXE.isCorrectToolForDrops(blockIn) ||
+						Items.STONE_AXE.isCorrectToolForDrops(blockIn) ||
+						Items.STONE_SHOVEL.isCorrectToolForDrops(blockIn);
 			case 2:
-				return Items.IRON_PICKAXE.canHarvestBlock(blockIn) ||
-						Items.IRON_AXE.canHarvestBlock(blockIn) ||
-						Items.IRON_SHOVEL.canHarvestBlock(blockIn);
+				return Items.IRON_PICKAXE.isCorrectToolForDrops(blockIn) ||
+						Items.IRON_AXE.isCorrectToolForDrops(blockIn) ||
+						Items.IRON_SHOVEL.isCorrectToolForDrops(blockIn);
 			default:
 				return true;
 		}
@@ -78,52 +80,52 @@ public class PickarangItem extends QuarkItem {
 	}
 
 	@Override
-	public int getHarvestLevel(ItemStack stack, @Nonnull ToolType type, @Nullable PlayerEntity player, @Nullable BlockState state) {
+	public int getHarvestLevel(ItemStack stack, @Nonnull ToolType type, @Nullable Player player, @Nullable BlockState state) {
 		return isNetherite ? PickarangModule.netheriteHarvestLevel : PickarangModule.harvestLevel;
 	}
 
 	@Override
-	public boolean onBlockDestroyed(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
-		if (state.getBlockHardness(worldIn, pos) != 0)
-			stack.damageItem(1, entityLiving, (player) -> player.sendBreakAnimation(Hand.MAIN_HAND));
+	public boolean mineBlock(ItemStack stack, Level worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
+		if (state.getDestroySpeed(worldIn, pos) != 0)
+			stack.hurtAndBreak(1, entityLiving, (player) -> player.broadcastBreakEvent(InteractionHand.MAIN_HAND));
 		return true;
 	}
 
 	@Nonnull
 	@Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, @Nonnull Hand handIn) {
-        ItemStack itemstack = playerIn.getHeldItem(handIn);
-        playerIn.setHeldItem(handIn, ItemStack.EMPTY);
-		int eff = EnchantmentHelper.getEnchantmentLevel(Enchantments.EFFICIENCY, itemstack);
-		Vector3d pos = playerIn.getPositionVec();
-        worldIn.playSound(null, pos.x, pos.y, pos.z, QuarkSounds.ENTITY_PICKARANG_THROW, SoundCategory.NEUTRAL, 0.5F + eff * 0.14F, 0.4F / (worldIn.rand.nextFloat() * 0.4F + 0.8F));
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, @Nonnull InteractionHand handIn) {
+        ItemStack itemstack = playerIn.getItemInHand(handIn);
+        playerIn.setItemInHand(handIn, ItemStack.EMPTY);
+		int eff = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_EFFICIENCY, itemstack);
+		Vec3 pos = playerIn.position();
+        worldIn.playSound(null, pos.x, pos.y, pos.z, QuarkSounds.ENTITY_PICKARANG_THROW, SoundSource.NEUTRAL, 0.5F + eff * 0.14F, 0.4F / (worldIn.random.nextFloat() * 0.4F + 0.8F));
 
-        if(!worldIn.isRemote)  {
-        	int slot = handIn == Hand.OFF_HAND ? playerIn.inventory.getSizeInventory() - 1 : playerIn.inventory.currentItem;
+        if(!worldIn.isClientSide)  {
+        	int slot = handIn == InteractionHand.OFF_HAND ? playerIn.inventory.getContainerSize() - 1 : playerIn.inventory.selected;
         	PickarangEntity entity = new PickarangEntity(worldIn, playerIn);
         	entity.setThrowData(slot, itemstack, isNetherite);
-        	entity.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F + eff * 0.325F, 0F);
-            worldIn.addEntity(entity);
+        	entity.shoot(playerIn, playerIn.xRot, playerIn.yRot, 0.0F, 1.5F + eff * 0.325F, 0F);
+            worldIn.addFreshEntity(entity);
         }
 
-        if(!playerIn.abilities.isCreativeMode && !PickarangModule.noCooldown) {
+        if(!playerIn.abilities.instabuild && !PickarangModule.noCooldown) {
         	int cooldown = 10 - eff;
         	if (cooldown > 0)
-				playerIn.getCooldownTracker().setCooldown(this, cooldown);
+				playerIn.getCooldowns().addCooldown(this, cooldown);
 		}
         
-        playerIn.addStat(Stats.ITEM_USED.get(this));
-        return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
+        playerIn.awardStat(Stats.ITEM_USED.get(this));
+        return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
     }
 
 	@Nonnull
 	@Override
-	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(@Nonnull EquipmentSlotType slot, ItemStack stack) {
+	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(@Nonnull EquipmentSlot slot, ItemStack stack) {
 		Multimap<Attribute, AttributeModifier> multimap = Multimaps.newSetMultimap(new HashMap<>(), HashSet::new);
 
-		if (slot == EquipmentSlotType.MAINHAND) {
-			multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 2, AttributeModifier.Operation.ADDITION)); 
-			multimap.put(Attributes.ATTACK_SPEED, new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2.8, AttributeModifier.Operation.ADDITION)); 
+		if (slot == EquipmentSlot.MAINHAND) {
+			multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 2, AttributeModifier.Operation.ADDITION)); 
+			multimap.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -2.8, AttributeModifier.Operation.ADDITION)); 
 		}
 
 		return multimap;
@@ -140,17 +142,17 @@ public class PickarangItem extends QuarkItem {
 	}
 	
 	@Override
-	public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
+	public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
 		return repair.getItem() == (isNetherite ? Items.NETHERITE_INGOT : Items.DIAMOND);
 	}
 	
 	@Override
-	public int getItemEnchantability() {
-		return isNetherite ? Items.NETHERITE_PICKAXE.getItemEnchantability() : Items.DIAMOND_PICKAXE.getItemEnchantability();
+	public int getEnchantmentValue() {
+		return isNetherite ? Items.NETHERITE_PICKAXE.getEnchantmentValue() : Items.DIAMOND_PICKAXE.getEnchantmentValue();
 	}
 
 	@Override
 	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-		return super.canApplyAtEnchantingTable(stack, enchantment) || ImmutableSet.of(Enchantments.FORTUNE, Enchantments.SILK_TOUCH, Enchantments.EFFICIENCY).contains(enchantment);
+		return super.canApplyAtEnchantingTable(stack, enchantment) || ImmutableSet.of(Enchantments.BLOCK_FORTUNE, Enchantments.SILK_TOUCH, Enchantments.BLOCK_EFFICIENCY).contains(enchantment);
 	}
 }

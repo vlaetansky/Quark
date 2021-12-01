@@ -5,10 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.ConfigFlagManager;
@@ -50,7 +50,7 @@ public class BiomeTypeConfig extends AbstractConfigType implements IBiomeConfig 
 		if(resource == null)
 			return false;
 		
-		RegistryKey<Biome> key = RegistryKey.getOrCreateKey(Registry.BIOME_KEY, resource);
+		ResourceKey<Biome> key = ResourceKey.create(Registry.BIOME_REGISTRY, resource);
 		Set<BiomeDictionary.Type> biomeTypes = BiomeDictionary.getTypes(key);
 
 		synchronized (mutex) {

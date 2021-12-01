@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.block.Block;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -23,8 +23,8 @@ import vazkii.quark.base.module.config.Config;
 @LoadModule(category = ModuleCategory.ODDITIES)
 public class MagnetsModule extends QuarkModule {
 	
-    public static TileEntityType<MagnetTileEntity> magnetType;
-    public static TileEntityType<MagnetizedBlockTileEntity> magnetizedBlockType;
+    public static BlockEntityType<MagnetTileEntity> magnetType;
+    public static BlockEntityType<MagnetizedBlockTileEntity> magnetizedBlockType;
     
     @Config(description = "Any items you place in this list will be derived so that any block made of it will become magnetizable") 
     public static List<String> magneticDerivationList = Lists.newArrayList("minecraft:iron_ingot");
@@ -40,10 +40,10 @@ public class MagnetsModule extends QuarkModule {
 		magnet = new MagnetBlock(this);
 		magnetized_block = new MovingMagnetizedBlock(this);
 		
-		magnetType = TileEntityType.Builder.create(MagnetTileEntity::new, magnet).build(null);
+		magnetType = BlockEntityType.Builder.of(MagnetTileEntity::new, magnet).build(null);
 		RegistryHelper.register(magnetType, "magnet");
 
-		magnetizedBlockType = TileEntityType.Builder.create(MagnetizedBlockTileEntity::new, magnetized_block).build(null);
+		magnetizedBlockType = BlockEntityType.Builder.of(MagnetizedBlockTileEntity::new, magnetized_block).build(null);
 		RegistryHelper.register(magnetizedBlockType, "magnetized_block");
 	}
 	

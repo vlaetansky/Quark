@@ -5,11 +5,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.world.entity.LivingEntity;
 import vazkii.quark.content.tweaks.client.emote.EmoteHandler;
 
-@Mixin(BipedModel.class)
+@Mixin(HumanoidModel.class)
 public class BipedModelMixin<T extends LivingEntity> {
 
 	@Inject(method = "setRotationAngles", at = @At("RETURN"))

@@ -5,28 +5,28 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.addons.oddities.magnetsystem.MagnetSystem;
@@ -36,106 +36,108 @@ import vazkii.quark.addons.oddities.tile.MagnetizedBlockTileEntity;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.module.QuarkModule;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class MagnetBlock extends QuarkBlock {
 
 	public static final DirectionProperty FACING = BlockStateProperties.FACING;
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
 	public MagnetBlock(QuarkModule module) {
-		super("magnet", module, ItemGroup.REDSTONE, Properties.from(Blocks.IRON_BLOCK));
-		setDefaultState(getDefaultState().with(FACING, Direction.DOWN).with(POWERED, false));
+		super("magnet", module, CreativeModeTab.TAB_REDSTONE, Properties.copy(Blocks.IRON_BLOCK));
+		registerDefaultState(defaultBlockState().setValue(FACING, Direction.DOWN).setValue(POWERED, false));
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(@Nonnull ItemStack stack, @Nullable IBlockReader worldIn, @Nonnull List<ITextComponent> tooltip, @Nonnull ITooltipFlag flagIn) {
-		if (stack.getDisplayName().getUnformattedComponentText().equals("Q"))
-			tooltip.add(new StringTextComponent("haha yes"));
+	public void appendHoverText(@Nonnull ItemStack stack, @Nullable BlockGetter worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
+		if (stack.getHoverName().getContents().equals("Q"))
+			tooltip.add(new TextComponent("haha yes"));
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		builder.add(FACING, POWERED);
 	}
 
 	@Override
-	public void neighborChanged(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull Block blockIn, @Nonnull BlockPos fromPos, boolean isMoving) {
+	public void neighborChanged(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Block blockIn, @Nonnull BlockPos fromPos, boolean isMoving) {
 		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
 		
-		boolean wasPowered = state.get(POWERED);
-		boolean isPowered = isPowered(worldIn, pos, state.get(FACING));
+		boolean wasPowered = state.getValue(POWERED);
+		boolean isPowered = isPowered(worldIn, pos, state.getValue(FACING));
 		if(isPowered != wasPowered)
-			worldIn.setBlockState(pos, state.with(POWERED, isPowered));
+			worldIn.setBlockAndUpdate(pos, state.setValue(POWERED, isPowered));
 	}
 
 	@Override
-	public boolean eventReceived(BlockState state, World world, BlockPos pos, int action, int data) {
+	public boolean triggerEvent(BlockState state, Level world, BlockPos pos, int action, int data) {
 		boolean push = action == 0;
-		Direction moveDir = state.get(FACING);
+		Direction moveDir = state.getValue(FACING);
 		Direction dir = push ? moveDir : moveDir.getOpposite();
 
-		BlockPos targetPos = pos.offset(dir, data);
+		BlockPos targetPos = pos.relative(dir, data);
 		BlockState targetState = world.getBlockState(targetPos);
 
-		TileEntity tile = world.getTileEntity(pos);
+		BlockEntity tile = world.getBlockEntity(pos);
 		if (!(tile instanceof MagnetTileEntity))
 			return false;
 
-		BlockPos endPos = targetPos.offset(moveDir);
+		BlockPos endPos = targetPos.relative(moveDir);
 		PushReaction reaction = MagnetSystem.getPushAction((MagnetTileEntity) tile, targetPos, targetState, moveDir);
 		if (reaction != PushReaction.IGNORE && reaction != PushReaction.DESTROY)
 			return false;
 
-		TileEntity tilePresent = world.getTileEntity(targetPos);
-		CompoundNBT tileData = new CompoundNBT();
+		BlockEntity tilePresent = world.getBlockEntity(targetPos);
+		CompoundTag tileData = new CompoundTag();
 		if (tilePresent != null && !(tilePresent instanceof MagnetizedBlockTileEntity))
-			tilePresent.write(tileData);
+			tilePresent.save(tileData);
 
 		MagnetizedBlockTileEntity movingTile = new MagnetizedBlockTileEntity(targetState, tileData, moveDir);
 
-		if (!world.isRemote && reaction == PushReaction.DESTROY) {
+		if (!world.isClientSide && reaction == PushReaction.DESTROY) {
 			BlockState blockstate = world.getBlockState(endPos);
-			Block.spawnDrops(blockstate, world, endPos, tilePresent);
+			Block.dropResources(blockstate, world, endPos, tilePresent);
 		}
 
 		if (tilePresent != null)
-			tilePresent.remove();
+			tilePresent.setRemoved();
 
-		world.setBlockState(endPos, MagnetsModule.magnetized_block.getDefaultState()
-				.with(MovingMagnetizedBlock.FACING, moveDir), 68);
-		world.setTileEntity(endPos, movingTile);
+		world.setBlock(endPos, MagnetsModule.magnetized_block.defaultBlockState()
+				.setValue(MovingMagnetizedBlock.FACING, moveDir), 68);
+		world.setBlockEntity(endPos, movingTile);
 
-		world.setBlockState(targetPos, Blocks.AIR.getDefaultState(), 66);
+		world.setBlock(targetPos, Blocks.AIR.defaultBlockState(), 66);
 
 		return true;
 	}
 
-	private boolean isPowered(World worldIn, BlockPos pos, Direction facing) {
+	private boolean isPowered(Level worldIn, BlockPos pos, Direction facing) {
 		Direction opp = facing.getOpposite();
 		for(Direction direction : Direction.values())
-			if(direction != facing && direction != opp && worldIn.isSidePowered(pos.offset(direction), direction))
+			if(direction != facing && direction != opp && worldIn.hasSignal(pos.relative(direction), direction))
 				return true;
 
 		return false;
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		Direction facing = context.getNearestLookingDirection().getOpposite();
-		return getDefaultState().with(FACING, facing)
-				.with(POWERED, isPowered(context.getWorld(), context.getPos(), facing));
+		return defaultBlockState().setValue(FACING, facing)
+				.setValue(POWERED, isPowered(context.getLevel(), context.getClickedPos(), facing));
 	}
 
 	@Nonnull
 	@Override
 	public BlockState rotate(@Nonnull BlockState state, Rotation rot) {
-		return state.with(FACING, rot.rotate(state.get(FACING)));
+		return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
 	}
 
 	@Nonnull
 	@Override
 	public BlockState mirror(@Nonnull BlockState state, Mirror mirrorIn) {
-		return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+		return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
 	}
 
 	@Override
@@ -144,7 +146,7 @@ public class MagnetBlock extends QuarkBlock {
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return new MagnetTileEntity();
 	}
 

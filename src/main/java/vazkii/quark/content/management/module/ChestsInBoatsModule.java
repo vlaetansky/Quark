@@ -3,21 +3,21 @@ package vazkii.quark.content.management.module;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.InventoryScreen;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.item.BoatEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tags.ITag;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.tags.Tag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiOpenEvent;
@@ -40,13 +40,13 @@ public class ChestsInBoatsModule extends QuarkModule {
 
 	public static EntityType<ChestPassengerEntity> chestPassengerEntityType;
 
-	private static ITag<Item> boatableChestsTag;
+	private static Tag<Item> boatableChestsTag;
 	
 	@Override
 	public void construct() {
-		chestPassengerEntityType = EntityType.Builder.<ChestPassengerEntity>create(ChestPassengerEntity::new, EntityClassification.MISC)
-				.size(0.8F, 0.8F)
-				.func_233608_b_(128) // update interval
+		chestPassengerEntityType = EntityType.Builder.<ChestPassengerEntity>of(ChestPassengerEntity::new, MobCategory.MISC)
+				.sized(0.8F, 0.8F)
+				.updateInterval(128) // update interval
 				.setCustomClientFactory((spawnEntity, world) -> new ChestPassengerEntity(chestPassengerEntityType, world))
 				.build("chest_passenger");
 		RegistryHelper.register(chestPassengerEntityType, "chest_passenger");
@@ -66,35 +66,35 @@ public class ChestsInBoatsModule extends QuarkModule {
 	@SubscribeEvent
 	public void onEntityInteract(PlayerInteractEvent.EntityInteractSpecific event) {
 		Entity target = event.getTarget();
-		PlayerEntity player = event.getPlayer();
+		Player player = event.getPlayer();
 
-		if(target instanceof BoatEntity && target.getPassengers().isEmpty()) {
-			Hand hand = Hand.MAIN_HAND;
-			ItemStack stack = player.getHeldItemMainhand();
+		if(target instanceof Boat && target.getPassengers().isEmpty()) {
+			InteractionHand hand = InteractionHand.MAIN_HAND;
+			ItemStack stack = player.getMainHandItem();
 			if(!isChest(stack)) {
-				stack = player.getHeldItemOffhand();
-				hand = Hand.OFF_HAND;
+				stack = player.getOffhandItem();
+				hand = InteractionHand.OFF_HAND;
 			}
 
 			if(isChest(stack)) {
-				World world = event.getWorld();
+				Level world = event.getWorld();
 				
-				if(!event.getWorld().isRemote) {
+				if(!event.getWorld().isClientSide) {
 					ItemStack chestStack = stack.copy();
 					chestStack.setCount(1);
 					if (!player.isCreative())
 						stack.shrink(1);
 
 					ChestPassengerEntity passenger = new ChestPassengerEntity(world, chestStack);
-					Vector3d pos = target.getPositionVec();
-					passenger.setPosition(pos.x, pos.y, pos.z);
-					passenger.rotationYaw = target.rotationYaw;
+					Vec3 pos = target.position();
+					passenger.setPos(pos.x, pos.y, pos.z);
+					passenger.yRot = target.yRot;
 					passenger.startRiding(target, true);
-					world.addEntity(passenger);
+					world.addFreshEntity(passenger);
 				}
 				
-				player.swingArm(hand);
-				event.setCancellationResult(ActionResultType.SUCCESS);
+				player.swing(hand);
+				event.setCancellationResult(InteractionResult.SUCCESS);
 				event.setCanceled(true);
 			}
 		}
@@ -103,10 +103,10 @@ public class ChestsInBoatsModule extends QuarkModule {
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	@OnlyIn(Dist.CLIENT)
 	public void onOpenGUI(GuiOpenEvent event) {
-		PlayerEntity player = Minecraft.getInstance().player;
+		Player player = Minecraft.getInstance().player;
 		if(player != null && event.getGui() instanceof InventoryScreen && player.isPassenger()) {
-			Entity riding = player.getRidingEntity();
-			if(riding instanceof BoatEntity) {
+			Entity riding = player.getVehicle();
+			if(riding instanceof Boat) {
 				List<Entity> passengers = riding.getPassengers();
 				for(Entity passenger : passengers)
 					if(passenger instanceof ChestPassengerEntity) {
@@ -119,6 +119,6 @@ public class ChestsInBoatsModule extends QuarkModule {
 	}
 	
 	private boolean isChest(ItemStack stack) {
-		return !stack.isEmpty() && stack.getItem().isIn(boatableChestsTag);
+		return !stack.isEmpty() && stack.getItem().is(boatableChestsTag);
 	}
 }

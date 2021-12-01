@@ -2,16 +2,16 @@ package vazkii.quark.content.world.block;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.LevelReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
@@ -23,16 +23,16 @@ import vazkii.quark.base.module.QuarkModule;
 public class MyaliteCrystalBlock extends QuarkGlassBlock implements IMyaliteColorProvider {
 
 	public MyaliteCrystalBlock(QuarkModule module) {
-		super("myalite_crystal", module, ItemGroup.DECORATIONS,
-				Block.Properties.create(Material.GLASS, MaterialColor.PURPLE)
-				.hardnessAndResistance(0.5F, 1200F)
+		super("myalite_crystal", module, CreativeModeTab.TAB_DECORATIONS,
+				Block.Properties.of(Material.GLASS, MaterialColor.COLOR_PURPLE)
+				.strength(0.5F, 1200F)
 				.sound(SoundType.GLASS)
-				.setLightLevel(b -> 14)
+				.lightLevel(b -> 14)
 				.harvestTool(ToolType.PICKAXE)
-				.setRequiresTool()
+				.requiresCorrectToolForDrops()
 				.harvestLevel(3)
-				.tickRandomly()
-				.notSolid());
+				.randomTicks()
+				.noOcclusion());
 
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.TRANSLUCENT);
 	}
@@ -46,15 +46,15 @@ public class MyaliteCrystalBlock extends QuarkGlassBlock implements IMyaliteColo
     
 	@Nullable
 	@Override
-	public float[] getBeaconColorMultiplier(BlockState state, IWorldReader world, BlockPos pos, BlockPos beaconPos) {
+	public float[] getBeaconColorMultiplier(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
 		return decompColor(IMyaliteColorProvider.getColor(pos, myaliteS(), myaliteB()));
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public Vector3d getFogColor(BlockState state, IWorldReader world, BlockPos pos, Entity entity, Vector3d originalColor, float partialTicks) {
+	public Vec3 getFogColor(BlockState state, LevelReader world, BlockPos pos, Entity entity, Vec3 originalColor, float partialTicks) {
 		float[] color = decompColor(IMyaliteColorProvider.getColor(pos, myaliteS(), myaliteB()));
-		return new Vector3d(color[0], color[1], color[2]);
+		return new Vec3(color[0], color[1], color[2]);
 	}
 	
 }

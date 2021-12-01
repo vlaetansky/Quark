@@ -4,12 +4,14 @@ import java.util.function.BooleanSupplier;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.FenceGateBlock;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.NonNullList;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.module.QuarkModule;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 /**
  * @author WireSegal
@@ -20,7 +22,7 @@ public class QuarkFenceGateBlock extends FenceGateBlock implements IQuarkBlock {
     private final QuarkModule module;
     private BooleanSupplier enabledSupplier = () -> true;
 
-    public QuarkFenceGateBlock(String regname, QuarkModule module, ItemGroup creativeTab, Properties properties) {
+    public QuarkFenceGateBlock(String regname, QuarkModule module, CreativeModeTab creativeTab, Properties properties) {
         super(properties);
         this.module = module;
 
@@ -30,9 +32,9 @@ public class QuarkFenceGateBlock extends FenceGateBlock implements IQuarkBlock {
     }
 
     @Override
-    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        if(isEnabled() || group == ItemGroup.SEARCH)
-            super.fillItemGroup(group, items);
+    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+        if(isEnabled() || group == CreativeModeTab.TAB_SEARCH)
+            super.fillItemCategory(group, items);
     }
 
     @Override

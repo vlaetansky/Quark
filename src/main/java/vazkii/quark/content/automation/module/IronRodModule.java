@@ -1,6 +1,6 @@
 package vazkii.quark.content.automation.module;
 
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;

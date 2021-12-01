@@ -1,22 +1,22 @@
 package vazkii.quark.content.tweaks.module;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.item.Items;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.handler.MiscUtil;
@@ -33,56 +33,56 @@ public class ReplaceScaffoldingModule extends QuarkModule {
 
 	@SubscribeEvent
 	public void onInteract(PlayerInteractEvent.RightClickBlock event) {
-		World world = event.getWorld();
+		Level world = event.getWorld();
 		BlockPos pos = event.getPos();
 		BlockState state = world.getBlockState(pos);
-		PlayerEntity player = event.getPlayer();
+		Player player = event.getPlayer();
 		if(state.getBlock() == Blocks.SCAFFOLDING && !player.isDiscrete()) {
 			Direction dir = event.getFace();
 			ItemStack stack = event.getItemStack();
-			Hand hand = event.getHand();
+			InteractionHand hand = event.getHand();
 			
 			if(stack.getItem() instanceof BlockItem) {
 				BlockItem bitem = (BlockItem) stack.getItem();
 				Block block = bitem.getBlock();
 				
-				if(block != Blocks.SCAFFOLDING && !block.hasTileEntity(block.getDefaultState())) {
+				if(block != Blocks.SCAFFOLDING && !block.hasTileEntity(block.defaultBlockState())) {
 					BlockPos last = getLastInLine(world, pos, dir);
 					
-					ItemUseContext context = new ItemUseContext(player, hand, new BlockRayTraceResult(new Vector3d(0.5F, 1F, 0.5F), dir, last, false));
-					BlockItemUseContext bcontext = new BlockItemUseContext(context);
+					UseOnContext context = new UseOnContext(player, hand, new BlockHitResult(new Vec3(0.5F, 1F, 0.5F), dir, last, false));
+					BlockPlaceContext bcontext = new BlockPlaceContext(context);
 					
 					BlockState stateToPlace = block.getStateForPlacement(bcontext);
-					if(stateToPlace != null && stateToPlace.isValidPosition(world, last)) {
+					if(stateToPlace != null && stateToPlace.canSurvive(world, last)) {
 						BlockState currState = world.getBlockState(last);
-						world.setBlockState(last, stateToPlace);
+						world.setBlockAndUpdate(last, stateToPlace);
 						
-						BlockPos testUp = last.up();
+						BlockPos testUp = last.above();
 						BlockState testUpState = world.getBlockState(testUp);
-						if(testUpState.getBlock() == Blocks.SCAFFOLDING && !stateToPlace.isSolidSide(world, last, Direction.UP)) {
-							world.setBlockState(last, currState);
+						if(testUpState.getBlock() == Blocks.SCAFFOLDING && !stateToPlace.isFaceSturdy(world, last, Direction.UP)) {
+							world.setBlockAndUpdate(last, currState);
 							return;
 						}
 						
-						world.playSound(player, last, stateToPlace.getSoundType().getPlaceSound(), SoundCategory.BLOCKS, 1F, 1F);
+						world.playSound(player, last, stateToPlace.getSoundType().getPlaceSound(), SoundSource.BLOCKS, 1F, 1F);
 						
 						if(!player.isCreative()) {
 							stack.shrink(1);
 							
 							ItemStack giveStack = new ItemStack(Items.SCAFFOLDING);
-							if(!player.addItemStackToInventory(giveStack))
-								player.dropItem(giveStack, false);
+							if(!player.addItem(giveStack))
+								player.drop(giveStack, false);
 						}
 						
 						event.setCanceled(true);
-						event.setCancellationResult(ActionResultType.SUCCESS);
+						event.setCancellationResult(InteractionResult.SUCCESS);
 					}
 				}
 			}
 		}
 	}
 	
-	private BlockPos getLastInLine(World world, BlockPos start, Direction clickDir) {
+	private BlockPos getLastInLine(Level world, BlockPos start, Direction clickDir) {
 		BlockPos result = getLastInLineOrNull(world, start, clickDir);
 		if(result != null)
 			return result;
@@ -109,7 +109,7 @@ public class ReplaceScaffoldingModule extends QuarkModule {
 		return start;
 	}
 	
-	private BlockPos getLastInLineOrNull(World world, BlockPos start, Direction dir) {
+	private BlockPos getLastInLineOrNull(Level world, BlockPos start, Direction dir) {
 		BlockPos last = getLastInLineRecursive(world, start, dir, maxBounces);
 		if(last.equals(start))
 			return null;
@@ -117,14 +117,14 @@ public class ReplaceScaffoldingModule extends QuarkModule {
 		return last;
 	}
 	
-	private BlockPos getLastInLineRecursive(World world, BlockPos start, Direction dir, int bouncesAllowed) {
+	private BlockPos getLastInLineRecursive(Level world, BlockPos start, Direction dir, int bouncesAllowed) {
 		BlockPos curr = start;
 		BlockState currState = world.getBlockState(start);
 		Block currBlock = currState.getBlock();
 		
 		while(true) {
-			BlockPos test = curr.offset(dir);
-			if(!world.isBlockPresent(test))
+			BlockPos test = curr.relative(dir);
+			if(!world.isLoaded(test))
 				break;
 			
 			BlockState testState = world.getBlockState(test);
@@ -139,10 +139,10 @@ public class ReplaceScaffoldingModule extends QuarkModule {
 			
 			for(Direction dir2 : Direction.values())
 				if(dir.getAxis() != dir2.getAxis()) {
-					BlockPos bounceStart = curr.offset(dir2);
+					BlockPos bounceStart = curr.relative(dir2);
 					if(world.getBlockState(bounceStart).getBlock() == currBlock) {
 						BlockPos testDist = getLastInLineRecursive(world, bounceStart, dir2, bouncesAllowed - 1);
-						double testDistVal = testDist.manhattanDistance(curr);
+						double testDistVal = testDist.distManhattan(curr);
 						if(testDistVal > maxDistVal)
 							maxDist = testDist;
 					}

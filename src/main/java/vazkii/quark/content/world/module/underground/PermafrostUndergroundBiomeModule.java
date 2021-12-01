@@ -1,10 +1,10 @@
 package vazkii.quark.content.world.module.underground;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkBlock;
@@ -21,15 +21,15 @@ public class PermafrostUndergroundBiomeModule extends UndergroundBiomeModule {
 	
 	@Override
 	public void construct() {
-		permafrost = new QuarkBlock("permafrost", this, ItemGroup.BUILDING_BLOCKS, 
-				Block.Properties.create(Material.ROCK, MaterialColor.LIGHT_BLUE)
-				.setRequiresTool()
+		permafrost = new QuarkBlock("permafrost", this, CreativeModeTab.TAB_BUILDING_BLOCKS, 
+				Block.Properties.of(Material.STONE, MaterialColor.COLOR_LIGHT_BLUE)
+				.requiresCorrectToolForDrops()
         		.harvestTool(ToolType.PICKAXE)
-				.hardnessAndResistance(1.5F, 10F)
+				.strength(1.5F, 10F)
 				.sound(SoundType.STONE));
 		
 		VariantHandler.addSlabStairsWall(permafrost);
-		VariantHandler.addSlabStairsWall(new QuarkBlock("permafrost_bricks", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(permafrost)));
+		VariantHandler.addSlabStairsWall(new QuarkBlock("permafrost_bricks", this, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.copy(permafrost)));
 		
 		super.construct();
 	}

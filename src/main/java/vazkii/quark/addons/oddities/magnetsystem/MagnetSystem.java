@@ -12,23 +12,23 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.PistonBlock;
-import net.minecraft.block.material.PushReaction;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.piston.PistonBaseBlock;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.RecipeManager;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
@@ -62,7 +62,7 @@ public class MagnetSystem {
 		return BLOCK_MOVE_ACTIONS.get(block);
 	}
 
-    public static LazyOptional<IMagnetTracker> getCapability(World world) {
+    public static LazyOptional<IMagnetTracker> getCapability(Level world) {
         return world.getCapability(QuarkCapabilities.MAGNET_TRACKER_CAPABILITY);
     }
 	
@@ -90,25 +90,25 @@ public class MagnetSystem {
 		if(!ModuleLoader.INSTANCE.isModuleEnabled(MagnetsModule.class))
 			return;
 		
-		if (Minecraft.getInstance().world == null) {
+		if (Minecraft.getInstance().level == null) {
 			magnetizableBlocks.clear();
 		}
 	}
 
 
-	public static void applyForce(World world, BlockPos pos, int magnitude, boolean pushing, Direction dir, int distance, BlockPos origin) {
+	public static void applyForce(Level world, BlockPos pos, int magnitude, boolean pushing, Direction dir, int distance, BlockPos origin) {
 		getCapability(world).ifPresent(magnetTracker ->
 				magnetTracker.applyForce(pos, magnitude, pushing, dir, distance, origin));
 	}
 	
 	public static PushReaction getPushAction(MagnetTileEntity magnet, BlockPos pos, BlockState state, Direction moveDir) {
-		World world = magnet.getWorld();
+		Level world = magnet.getLevel();
 		if(world != null && isBlockMagnetic(state)) {
-			BlockPos targetLocation = pos.offset(moveDir);
+			BlockPos targetLocation = pos.relative(moveDir);
 			BlockState stateAtTarget = world.getBlockState(targetLocation);
 			if (stateAtTarget.isAir(world, targetLocation))
 				return PushReaction.IGNORE;
-			else if (stateAtTarget.getPushReaction() == PushReaction.DESTROY)
+			else if (stateAtTarget.getPistonPushReaction() == PushReaction.DESTROY)
 				return PushReaction.DESTROY;
 		}
 
@@ -119,29 +119,29 @@ public class MagnetSystem {
 		Block block = state.getBlock();
 
 		if (block == Blocks.PISTON || block == Blocks.STICKY_PISTON) {
-			if (state.get(PistonBlock.EXTENDED))
+			if (state.getValue(PistonBaseBlock.EXTENDED))
 				return false;
 		}
 		
 		return block != MagnetsModule.magnet && (magnetizableBlocks.contains(block) || BLOCK_MOVE_ACTIONS.containsKey(block) || block instanceof IMagnetMoveAction);
 	}
 	
-	private static void loadMagnetizableBlocks(World world) {
+	private static void loadMagnetizableBlocks(Level world) {
 		RecipeManager manager = world.getRecipeManager();
 		if(!manager.getRecipes().isEmpty()) {
-			Collection<IRecipe<?>> recipes = manager.getRecipes();
+			Collection<Recipe<?>> recipes = manager.getRecipes();
 
 			Multimap<Item, Item> recipeDigestion = HashMultimap.create();
 
-			for(IRecipe<?> recipe : recipes) {
-				if(recipe == null || recipe.getRecipeOutput() == null)
+			for(Recipe<?> recipe : recipes) {
+				if(recipe == null || recipe.getResultItem() == null)
 					continue;
 				
-				Item out = recipe.getRecipeOutput().getItem();
+				Item out = recipe.getResultItem().getItem();
 
 				NonNullList<Ingredient> ingredients = recipe.getIngredients();
 				for(Ingredient ingredient : ingredients) {
-					for (ItemStack inStack : ingredient.getMatchingStacks())
+					for (ItemStack inStack : ingredient.getItems())
 						recipeDigestion.put(inStack.getItem(), out);
 				}
 			}

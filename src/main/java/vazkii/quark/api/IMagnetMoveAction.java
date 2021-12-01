@@ -1,13 +1,13 @@
 package vazkii.quark.api;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public interface IMagnetMoveAction {
 
-	void onMagnetMoved(World world, BlockPos pos, Direction direction, BlockState state, TileEntity tile);
+	void onMagnetMoved(Level world, BlockPos pos, Direction direction, BlockState state, BlockEntity tile);
 	
 }

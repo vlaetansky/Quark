@@ -1,8 +1,8 @@
 package vazkii.quark.content.building.module;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.CreativeModeTab;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.LoadModule;
@@ -24,12 +24,12 @@ public class CobblestoneBricksModule extends QuarkModule {
 	
 	@Override
 	public void construct() {
-		VariantHandler.addSlabStairsWall(new QuarkBlock("cobblestone_bricks", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.COBBLESTONE)));
-		VariantHandler.addSlabStairsWall(new QuarkBlock("mossy_cobblestone_bricks", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.MOSSY_COBBLESTONE)));
+		VariantHandler.addSlabStairsWall(new QuarkBlock("cobblestone_bricks", this, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.copy(Blocks.COBBLESTONE)));
+		VariantHandler.addSlabStairsWall(new QuarkBlock("mossy_cobblestone_bricks", this, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.copy(Blocks.MOSSY_COBBLESTONE)));
 		
-		VariantHandler.addSlabStairsWall(new QuarkBlock("blackstone_bricks", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.BLACKSTONE)).setCondition(() -> enableBlackstoneBricks));
-		VariantHandler.addSlabStairsWall(new QuarkBlock("dirt_bricks", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.DIRT)).setCondition(() -> enableDirtBricks));
-		VariantHandler.addSlabStairsWall(new QuarkBlock("netherrack_bricks", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.NETHERRACK)).setCondition(() -> enableNetherrackBricks));
+		VariantHandler.addSlabStairsWall(new QuarkBlock("blackstone_bricks", this, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.copy(Blocks.BLACKSTONE)).setCondition(() -> enableBlackstoneBricks));
+		VariantHandler.addSlabStairsWall(new QuarkBlock("dirt_bricks", this, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.copy(Blocks.DIRT)).setCondition(() -> enableDirtBricks));
+		VariantHandler.addSlabStairsWall(new QuarkBlock("netherrack_bricks", this, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.copy(Blocks.NETHERRACK)).setCondition(() -> enableNetherrackBricks));
 	}
 	
 }

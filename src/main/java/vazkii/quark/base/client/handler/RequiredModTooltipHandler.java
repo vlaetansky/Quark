@@ -3,10 +3,10 @@ package vazkii.quark.base.client.handler;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.Item;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -32,7 +32,7 @@ public class RequiredModTooltipHandler {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void onTooltip(ItemTooltipEvent event) {
-		if(!BLOCKS.isEmpty() && event.getPlayer() != null && event.getPlayer().world != null) {
+		if(!BLOCKS.isEmpty() && event.getPlayer() != null && event.getPlayer().level != null) {
 			for(Block b : BLOCKS.keySet())
 				ITEMS.put(b.asItem(), BLOCKS.get(b));
 			BLOCKS.clear();
@@ -42,7 +42,7 @@ public class RequiredModTooltipHandler {
 		if(ITEMS.containsKey(item)) {
 			String mod = ITEMS.get(item);
 			if(!ModList.get().isLoaded(mod))
-				event.getToolTip().add(new TranslationTextComponent("quark.misc.mod_disabled", mod).mergeStyle(TextFormatting.GRAY));
+				event.getToolTip().add(new TranslatableComponent("quark.misc.mod_disabled", mod).withStyle(ChatFormatting.GRAY));
 		}
 	}
 	

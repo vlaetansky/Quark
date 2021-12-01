@@ -2,26 +2,26 @@ package vazkii.quark.content.tools.module;
 
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import net.minecraft.client.MainWindow;
+import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemModelsProperties;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import com.mojang.math.Matrix4f;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.DrawHighlightEvent;
@@ -46,7 +46,7 @@ public class AbacusModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		enqueue(() -> ItemModelsProperties.registerProperty(abacus, new ResourceLocation("count"), AbacusItem::count));
+		enqueue(() -> ItemProperties.register(abacus, new ResourceLocation("count"), AbacusItem::count));
 	}
 
 	@SubscribeEvent
@@ -54,23 +54,23 @@ public class AbacusModule extends QuarkModule {
 	public void onHUDRender(RenderGameOverlayEvent event) {
 		if(event.getType() == ElementType.ALL) {
 			Minecraft mc = Minecraft.getInstance();
-			PlayerEntity player = mc.player;
+			Player player = mc.player;
 			if(player != null) {
-				ItemStack stack = player.getHeldItemMainhand();
+				ItemStack stack = player.getMainHandItem();
 				if(!(stack.getItem() instanceof AbacusItem))
-					stack = player.getHeldItemOffhand();
+					stack = player.getOffhandItem();
 
 				if(stack.getItem() instanceof AbacusItem) {
 					int distance = AbacusItem.getCount(stack, player);
 					if(distance > -1) {
-						MainWindow window = event.getWindow();
-						int x = window.getScaledWidth() / 2 + 10;
-						int y = window.getScaledHeight() / 2 - 7;
+						Window window = event.getWindow();
+						int x = window.getGuiScaledWidth() / 2 + 10;
+						int y = window.getGuiScaledHeight() / 2 - 7;
 
-						mc.getItemRenderer().renderItemAndEffectIntoGUI(stack, x, y);
+						mc.getItemRenderer().renderAndDecorateItem(stack, x, y);
 						
 						String distStr = distance < AbacusItem.MAX_COUNT ? Integer.toString(distance) : (AbacusItem.MAX_COUNT + "+");
-						mc.fontRenderer.drawStringWithShadow(event.getMatrixStack(), distStr, x + 17, y + 5, 0xFFFFFF);
+						mc.font.drawShadow(event.getMatrixStack(), distStr, x + 17, y + 5, 0xFFFFFF);
 					}
 				}
 			}
@@ -79,44 +79,44 @@ public class AbacusModule extends QuarkModule {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public void onHighlightBlock(DrawHighlightEvent.HighlightBlock event) {
-		IVertexBuilder bufferIn = event.getBuffers().getBuffer(RenderType.getLines());
+		VertexConsumer bufferIn = event.getBuffers().getBuffer(RenderType.lines());
 
 		Minecraft mc = Minecraft.getInstance();
-		PlayerEntity player = mc.player;
+		Player player = mc.player;
 		if(player != null) {
-			ItemStack stack = player.getHeldItemMainhand();
+			ItemStack stack = player.getMainHandItem();
 			if(!(stack.getItem() instanceof AbacusItem))
-				stack = player.getHeldItemOffhand();
+				stack = player.getOffhandItem();
 
 			if(stack.getItem() instanceof AbacusItem) {
 				int distance = AbacusItem.getCount(stack, player);
 				if(distance > -1 && distance <= AbacusItem.MAX_COUNT) {
 					BlockPos target = AbacusItem.getBlockPos(stack);
 
-					ActiveRenderInfo info = event.getInfo();
-					Vector3d view = info.getProjectedView();
+					Camera info = event.getInfo();
+					Vec3 view = info.getPosition();
 
-					VoxelShape shape = VoxelShapes.create(new AxisAlignedBB(target));
+					VoxelShape shape = Shapes.create(new AABB(target));
 
-					RayTraceResult result = mc.objectMouseOver;
-					if(result instanceof BlockRayTraceResult) {
-						BlockPos source = ((BlockRayTraceResult) result).getPos();
+					HitResult result = mc.hitResult;
+					if(result instanceof BlockHitResult) {
+						BlockPos source = ((BlockHitResult) result).getBlockPos();
 						
 						int diffX = source.getX() - target.getX();
 						int diffY = source.getY() - target.getY();
 						int diffZ = source.getZ() - target.getZ();
 						
 						if(diffX != 0)
-							shape = VoxelShapes.or(shape, VoxelShapes.create(new AxisAlignedBB(target).expand(diffX, 0, 0)));
+							shape = Shapes.or(shape, Shapes.create(new AABB(target).expandTowards(diffX, 0, 0)));
 						if(diffY != 0)
-							shape = VoxelShapes.or(shape, VoxelShapes.create(new AxisAlignedBB(target.add(diffX, 0, 0)).expand(0, diffY, 0)));
+							shape = Shapes.or(shape, Shapes.create(new AABB(target.offset(diffX, 0, 0)).expandTowards(0, diffY, 0)));
 						if(diffZ != 0)
-							shape = VoxelShapes.or(shape, VoxelShapes.create(new AxisAlignedBB(target.add(diffX, diffY, 0)).expand(0, 0, diffZ)));
+							shape = Shapes.or(shape, Shapes.create(new AABB(target.offset(diffX, diffY, 0)).expandTowards(0, 0, diffZ)));
 					}
 
 					if(shape != null) {
-						List<AxisAlignedBB> list = shape.toBoundingBoxList();
-						MatrixStack matrixStackIn = event.getMatrix();
+						List<AABB> list = shape.toAabbs();
+						PoseStack matrixStackIn = event.getMatrix();
 						
 						// everything from here is a vanilla copy pasta but tweaked to have the same colors
 						
@@ -130,13 +130,13 @@ public class AbacusModule extends QuarkModule {
 							float b = 0F;
 							float a = 0.4F;
 							
-							AxisAlignedBB axisalignedbb = list.get(j);
+							AABB axisalignedbb = list.get(j);
 
-							VoxelShape individual = VoxelShapes.create(axisalignedbb.offset(0.0D, 0.0D, 0.0D));
-							Matrix4f matrix4f = matrixStackIn.getLast().getMatrix();
-							individual.forEachEdge((minX, minY, minZ, maxX, maxY, maxZ) -> {
-								bufferIn.pos(matrix4f, (float)(minX + xIn), (float)(minY + yIn), (float)(minZ + zIn)).color(r, g, b, a).endVertex();
-								bufferIn.pos(matrix4f, (float)(maxX + xIn), (float)(maxY + yIn), (float)(maxZ + zIn)).color(r, g, b, a).endVertex();
+							VoxelShape individual = Shapes.create(axisalignedbb.move(0.0D, 0.0D, 0.0D));
+							Matrix4f matrix4f = matrixStackIn.last().pose();
+							individual.forAllEdges((minX, minY, minZ, maxX, maxY, maxZ) -> {
+								bufferIn.vertex(matrix4f, (float)(minX + xIn), (float)(minY + yIn), (float)(minZ + zIn)).color(r, g, b, a).endVertex();
+								bufferIn.vertex(matrix4f, (float)(maxX + xIn), (float)(maxY + yIn), (float)(maxZ + zIn)).color(r, g, b, a).endVertex();
 							});
 						}
 						

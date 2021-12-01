@@ -1,24 +1,24 @@
 package vazkii.quark.content.building.client.render;
 
-import net.minecraft.client.renderer.culling.ClippingHelper;
+import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.resources.ResourceLocation;
 import vazkii.quark.content.building.entity.StoolEntity;
 
 public class StoolEntityRenderer extends EntityRenderer<StoolEntity> {
 
-	public StoolEntityRenderer(EntityRendererManager renderManager) {
+	public StoolEntityRenderer(EntityRenderDispatcher renderManager) {
 		super(renderManager);
 	}
 
 	@Override
-	public ResourceLocation getEntityTexture(StoolEntity entity) {
+	public ResourceLocation getTextureLocation(StoolEntity entity) {
 		return null;
 	}
 	
 	@Override
-	public boolean shouldRender(StoolEntity livingEntityIn, ClippingHelper camera, double camX, double camY, double camZ) {
+	public boolean shouldRender(StoolEntity livingEntityIn, Frustum camera, double camX, double camY, double camZ) {
 		return false;
 	}
 	

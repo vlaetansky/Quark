@@ -6,16 +6,16 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 
-import net.minecraft.loot.ILootSerializer;
-import net.minecraft.loot.LootConditionType;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.conditions.ILootCondition;
+import net.minecraft.world.level.storage.loot.Serializer;
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 /**
  * @author WireSegal
  * Created at 1:23 PM on 8/24/19.
  */
-public class FlagLootCondition implements ILootCondition {
+public class FlagLootCondition implements LootItemCondition {
 
     private final ConfigFlagManager manager;
     private final String flag;
@@ -33,12 +33,12 @@ public class FlagLootCondition implements ILootCondition {
 
 	@Nonnull
     @Override
-	public LootConditionType func_230419_b_() {
+	public LootItemConditionType getType() {
 		return ConfigFlagManager.flagConditionType;
 	}
 
     
-    public static class Serializer implements ILootSerializer<FlagLootCondition> {
+    public static class Serializer implements Serializer<FlagLootCondition> {
         private final ConfigFlagManager manager;
 
         public Serializer(ConfigFlagManager manager) {

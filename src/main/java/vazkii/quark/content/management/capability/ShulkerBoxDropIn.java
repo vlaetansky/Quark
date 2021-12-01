@@ -1,13 +1,13 @@
 package vazkii.quark.content.management.capability;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -20,34 +20,34 @@ import vazkii.quark.base.handler.SimilarBlockTypeHandler;
 public class ShulkerBoxDropIn extends AbstractDropIn {
 
 	@Override
-	public boolean canDropItemIn(PlayerEntity player, ItemStack stack, ItemStack incoming, Slot slot) {
+	public boolean canDropItemIn(Player player, ItemStack stack, ItemStack incoming, Slot slot) {
 		return tryAddToShulkerBox(player, stack, incoming, slot, true) != null;
 	}
 
 	@Override
-	public ItemStack dropItemIn(PlayerEntity player, ItemStack stack, ItemStack incoming, Slot slot) {
+	public ItemStack dropItemIn(Player player, ItemStack stack, ItemStack incoming, Slot slot) {
 		ItemStack ret = tryAddToShulkerBox(player, stack, incoming, slot, false); 
 		return ret == null ? stack : ret;
 	}
 
-	private ItemStack tryAddToShulkerBox(PlayerEntity player, ItemStack shulkerBox, ItemStack stack, Slot slot, boolean simulate) {
-		if (!SimilarBlockTypeHandler.isShulkerBox(shulkerBox) || !slot.canTakeStack(player))
+	private ItemStack tryAddToShulkerBox(Player player, ItemStack shulkerBox, ItemStack stack, Slot slot, boolean simulate) {
+		if (!SimilarBlockTypeHandler.isShulkerBox(shulkerBox) || !slot.mayPickup(player))
 			return null;
 
-		CompoundNBT cmp = ItemNBTHelper.getCompound(shulkerBox, "BlockEntityTag", false);
+		CompoundTag cmp = ItemNBTHelper.getCompound(shulkerBox, "BlockEntityTag", false);
 		if(cmp.contains("LootTable"))
 			return null;
 		
 		if (cmp != null) {
-			TileEntity te = null;
+			BlockEntity te = null;
 			cmp = cmp.copy();	
 			cmp.putString("id", "minecraft:shulker_box");				
 			if (shulkerBox.getItem() instanceof BlockItem) {
-				Block shulkerBoxBlock = Block.getBlockFromItem(shulkerBox.getItem());
-				BlockState defaultState = shulkerBoxBlock.getDefaultState();
+				Block shulkerBoxBlock = Block.byItem(shulkerBox.getItem());
+				BlockState defaultState = shulkerBoxBlock.defaultBlockState();
 				if (shulkerBoxBlock.hasTileEntity(defaultState)) {
 					te = shulkerBoxBlock.createTileEntity(defaultState, null);
-					te.read(defaultState, cmp);
+					te.load(defaultState, cmp);
 				}
 			}
 
@@ -64,10 +64,10 @@ public class ShulkerBoxDropIn extends AbstractDropIn {
 						if(!simulate)
 							stack.setCount(result.getCount());
 						
-						te.write(cmp);
+						te.save(cmp);
 						ItemNBTHelper.setCompound(copy, "BlockEntityTag", cmp);
 						
-						if(slot.isItemValid(copy))
+						if(slot.mayPlace(copy))
 							return copy;
 					}
 				}

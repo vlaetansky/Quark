@@ -2,16 +2,16 @@ package vazkii.quark.api;
 
 import java.util.List;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 
 public interface IModifiableEnchantmentInfluencer extends IEnchantmentInfluencer {
-    List<Enchantment> getModifiedEnchantments(IBlockReader world, BlockPos pos, BlockState state, ItemStack stack, List<Enchantment> influencedEnchants);
+    List<Enchantment> getModifiedEnchantments(BlockGetter world, BlockPos pos, BlockState state, ItemStack stack, List<Enchantment> influencedEnchants);
 
-    default float[] getModifiedColorComponents(IBlockReader world, BlockPos pos, BlockState state, float[] colorComponents) {
+    default float[] getModifiedColorComponents(BlockGetter world, BlockPos pos, BlockState state, float[] colorComponents) {
         return colorComponents;
     }
 }

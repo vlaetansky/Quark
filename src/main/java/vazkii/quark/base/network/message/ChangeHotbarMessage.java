@@ -1,8 +1,8 @@
 package vazkii.quark.base.network.message;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import vazkii.arl.network.IMessage;
 
@@ -21,7 +21,7 @@ public class ChangeHotbarMessage implements IMessage {
 	@Override
 	public boolean receive(Context context) {
 		context.enqueueWork(() -> {
-			PlayerEntity player = context.getSender();
+			Player player = context.getSender();
 
 			if(bar > 0 && bar <= 3)
 				for(int i = 0; i < 9; i++)
@@ -31,11 +31,11 @@ public class ChangeHotbarMessage implements IMessage {
 		return true;
 	}
 	
-	public void swap(IInventory inv, int slot1, int slot2) {
-		ItemStack stack1 = inv.getStackInSlot(slot1);
-		ItemStack stack2 = inv.getStackInSlot(slot2);
-		inv.setInventorySlotContents(slot2, stack1);
-		inv.setInventorySlotContents(slot1, stack2);
+	public void swap(Container inv, int slot1, int slot2) {
+		ItemStack stack1 = inv.getItem(slot1);
+		ItemStack stack2 = inv.getItem(slot2);
+		inv.setItem(slot2, stack1);
+		inv.setItem(slot1, stack2);
 	}
 	
 }

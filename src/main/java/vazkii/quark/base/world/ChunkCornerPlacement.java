@@ -5,19 +5,19 @@ import java.util.stream.Stream;
 
 import com.google.common.collect.ImmutableSet;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.gen.feature.WorldDecoratingHelper;
-import net.minecraft.world.gen.placement.NoPlacementConfig;
-import net.minecraft.world.gen.placement.Placement;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.levelgen.placement.DecorationContext;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneDecoratorConfiguration;
+import net.minecraft.world.level.levelgen.placement.FeatureDecorator;
 
-public class ChunkCornerPlacement extends Placement<NoPlacementConfig> {
+public class ChunkCornerPlacement extends FeatureDecorator<NoneDecoratorConfiguration> {
 
 	public ChunkCornerPlacement() {
-		super(NoPlacementConfig.field_236555_a_);
+		super(NoneDecoratorConfiguration.CODEC);
 	}
 
 	@Override // getPositions
-	public Stream<BlockPos> func_241857_a(WorldDecoratingHelper wdc, Random random, NoPlacementConfig config, BlockPos pos) {
+	public Stream<BlockPos> getPositions(DecorationContext wdc, Random random, NoneDecoratorConfiguration config, BlockPos pos) {
 		return ImmutableSet.of(pos).stream();
 	}
 

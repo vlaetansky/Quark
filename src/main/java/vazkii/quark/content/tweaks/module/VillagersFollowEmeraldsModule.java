@@ -1,9 +1,9 @@
 package vazkii.quark.content.tweaks.module;
 
-import net.minecraft.entity.ai.goal.TemptGoal;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.world.entity.ai.goal.TemptGoal;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.module.LoadModule;
@@ -19,13 +19,13 @@ public class VillagersFollowEmeraldsModule extends QuarkModule {
 
     @SubscribeEvent
     public void onVillagerAppear(EntityJoinWorldEvent event) {
-        if(event.getEntity() instanceof VillagerEntity) {
-            VillagerEntity villager = (VillagerEntity) event.getEntity();
-            boolean alreadySetUp = villager.goalSelector.goals.stream().anyMatch((goal) -> goal.getGoal() instanceof TemptGoal);
+        if(event.getEntity() instanceof Villager) {
+            Villager villager = (Villager) event.getEntity();
+            boolean alreadySetUp = villager.goalSelector.availableGoals.stream().anyMatch((goal) -> goal.getGoal() instanceof TemptGoal);
 
             if (!alreadySetUp)
             	try {
-            		villager.goalSelector.addGoal(2, new TemptGoal(villager, 0.6, Ingredient.fromItems(Items.EMERALD_BLOCK), false));
+            		villager.goalSelector.addGoal(2, new TemptGoal(villager, 0.6, Ingredient.of(Items.EMERALD_BLOCK), false));
             	} catch(IllegalArgumentException e) {
             		// This appears to be a weird bug that happens when a villager is riding something and its chunk unloads
             	}
