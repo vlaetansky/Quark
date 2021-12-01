@@ -88,7 +88,7 @@ public abstract class ItemRendererMixin {
 				float r = (i >> 16 & 255) / 255.0F;
 				float g = (i >> 8 & 255) / 255.0F;
 				float b = (i & 255) / 255.0F;
-				builder.addVertexData(entry, bakedquad, r, g, b, ItemSharingModule.alphaValue, lightmap, overlay, true);
+				builder.putBulkData(entry, bakedquad, r, g, b, ItemSharingModule.alphaValue, lightmap, overlay, true);
 			}
 			ci.cancel();
 		}

@@ -15,6 +15,7 @@ import com.google.common.collect.Multimaps;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -73,7 +74,7 @@ public class VariantAnimalTexturesModule extends QuarkModule {
 		registerShiny(VariantTextureType.DOLPHIN);
 
 		if(enableCow)
-			RenderingRegistry.registerEntityRenderingHandler(EntityType.COW, VariantCowRenderer::new);
+			EntityRenderers.register(EntityType.COW, VariantCowRenderer::new);
 		if(enablePig)
 			RenderingRegistry.registerEntityRenderingHandler(EntityType.PIG, VariantPigRenderer::new);
 		if(enableChicken)
