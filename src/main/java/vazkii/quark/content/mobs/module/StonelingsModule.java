@@ -3,7 +3,6 @@ package vazkii.quark.content.mobs.module;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.world.gen.Heightmap.Type;
@@ -12,6 +11,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
+import vazkii.quark.base.handler.EntityAttributeHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
@@ -57,11 +57,8 @@ public class StonelingsModule extends QuarkModule {
 
 		EntitySpawnHandler.registerSpawn(this, stonelingType, EntityClassification.MONSTER, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, StonelingEntity::spawnPredicate, spawnConfig);
 		EntitySpawnHandler.addEgg(stonelingType, 0xA1A1A1, 0x505050, spawnConfig);
-	}
-	
-	@Override
-	public void setup() {
-		GlobalEntityTypeAttributes.put(stonelingType, StonelingEntity.prepareAttributes().create());
+		
+		EntityAttributeHandler.put(stonelingType, StonelingEntity::prepareAttributes);
 	}
 
 	@Override

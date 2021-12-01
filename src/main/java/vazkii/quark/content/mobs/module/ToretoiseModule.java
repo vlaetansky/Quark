@@ -7,13 +7,13 @@ import com.google.common.collect.Lists;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.world.gen.Heightmap.Type;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
+import vazkii.quark.base.handler.EntityAttributeHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
@@ -61,11 +61,8 @@ public class ToretoiseModule extends QuarkModule {
 		
 		EntitySpawnHandler.registerSpawn(this, toretoiseType, EntityClassification.MONSTER, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, ToretoiseEntity::spawnPredicate, spawnConfig);
 		EntitySpawnHandler.addEgg(toretoiseType, 0x55413b, 0x383237, spawnConfig);
-	}
-	
-	@Override
-	public void setup() {
-		GlobalEntityTypeAttributes.put(toretoiseType, ToretoiseEntity.prepareAttributes().create());
+		
+		EntityAttributeHandler.put(toretoiseType, ToretoiseEntity::prepareAttributes);
 	}
 	
 	@Override

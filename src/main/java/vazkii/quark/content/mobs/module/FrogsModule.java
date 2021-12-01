@@ -3,7 +3,6 @@ package vazkii.quark.content.mobs.module;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
@@ -15,6 +14,7 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.BrewingHandler;
+import vazkii.quark.base.handler.EntityAttributeHandler;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -80,11 +80,8 @@ public class FrogsModule extends QuarkModule {
 		
 		EntitySpawnHandler.registerSpawn(this, frogType, EntityClassification.CREATURE, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::canAnimalSpawn, spawnConfig);
 		EntitySpawnHandler.addEgg(frogType, 0xbc9869, 0xffe6ad, spawnConfig);
-	}
-	
-	@Override
-	public void setup() {
-		GlobalEntityTypeAttributes.put(frogType, FrogEntity.prepareAttributes().create());
+		
+		EntityAttributeHandler.put(frogType, FrogEntity::prepareAttributes);
 	}
 	
 	@Override

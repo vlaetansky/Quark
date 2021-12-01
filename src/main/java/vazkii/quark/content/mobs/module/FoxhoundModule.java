@@ -4,7 +4,6 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.tags.BlockTags;
@@ -18,6 +17,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.handler.EntityAttributeHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
@@ -63,12 +63,12 @@ public class FoxhoundModule extends QuarkModule {
 		EntitySpawnHandler.track(this, foxhoundType, EntityClassification.MONSTER, lesserSpawnConfig, true);
 		
 		EntitySpawnHandler.addEgg(foxhoundType, 0x890d0d, 0xf2af4b, spawnConfig);
+		
+		EntityAttributeHandler.put(foxhoundType, WolfEntity::func_234233_eS_);
 	}
 
 	@Override
-	public void setup() {
-		GlobalEntityTypeAttributes.put(foxhoundType, WolfEntity.func_234233_eS_().create());
-		
+	public void setup() {		
 		foxhoundSpawnableTag = BlockTags.createOptional(new ResourceLocation(Quark.MOD_ID, "foxhound_spawnable"));
 	}
 	

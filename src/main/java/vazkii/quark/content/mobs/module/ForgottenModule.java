@@ -4,7 +4,6 @@ import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
@@ -15,6 +14,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
+import vazkii.quark.base.handler.EntityAttributeHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
@@ -48,13 +48,8 @@ public class ForgottenModule extends QuarkModule {
 
 		RegistryHelper.register(forgottenType, "forgotten");
 		EntitySpawnHandler.addEgg(forgottenType, 0x969487, 0x3a3330, this, () -> true);
-	}
-
-	@Override
-	public void setup() {
-		super.setup();
-
-		GlobalEntityTypeAttributes.put(forgottenType, ForgottenEntity.registerAttributes().create());
+		
+		EntityAttributeHandler.put(forgottenType, ForgottenEntity::registerAttributes);
 	}
 
 	@Override

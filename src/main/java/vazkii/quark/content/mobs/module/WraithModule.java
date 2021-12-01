@@ -9,7 +9,6 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
@@ -20,6 +19,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.handler.EntityAttributeHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
@@ -94,12 +94,12 @@ public class WraithModule extends QuarkModule {
 
 		EntitySpawnHandler.registerSpawn(this, wraithType, EntityClassification.MONSTER, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::canMonsterSpawnInLight, spawnConfig);
 		EntitySpawnHandler.addEgg(wraithType, 0xececec, 0xbdbdbd, spawnConfig);
+		
+		EntityAttributeHandler.put(wraithType, WraithEntity::registerAttributes);
 	}
 	
 	@Override
 	public void setup() {
-		GlobalEntityTypeAttributes.put(wraithType, WraithEntity.registerAttributes().create());
-		
 		wraithSpawnableTag = BlockTags.createOptional(new ResourceLocation(Quark.MOD_ID, "wraith_spawnable"));
 	}
 
