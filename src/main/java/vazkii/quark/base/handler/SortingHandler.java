@@ -48,34 +48,34 @@ import vazkii.quark.content.management.module.InventorySortingModule;
 
 public final class SortingHandler {
 
-	private static final Comparator<ItemStack> FALLBACK_COMPARATOR = jointComparator(
+	private static final Comparator<ItemStack> FALLBACK_COMPARATOR = jointComparator(Arrays.asList(
 			Comparator.comparingInt((ItemStack s) -> Item.getIdFromItem(s.getItem())),
 			SortingHandler::damageCompare,
 			(ItemStack s1, ItemStack s2) -> s2.getCount() - s1.getCount(),
-			(ItemStack s1, ItemStack s2) -> s2.hashCode() - s1.hashCode());
+			(ItemStack s1, ItemStack s2) -> s2.hashCode() - s1.hashCode()));
 
-	private static final Comparator<ItemStack> FOOD_COMPARATOR = jointComparator(
+	private static final Comparator<ItemStack> FOOD_COMPARATOR = jointComparator(Arrays.asList(
 			SortingHandler::foodHealCompare,
-			SortingHandler::foodSaturationCompare);
+			SortingHandler::foodSaturationCompare));
 
-	private static final Comparator<ItemStack> TOOL_COMPARATOR = jointComparator(
+	private static final Comparator<ItemStack> TOOL_COMPARATOR = jointComparator(Arrays.asList(
 			SortingHandler::toolPowerCompare,
 			SortingHandler::enchantmentCompare,
-			SortingHandler::damageCompare);
+			SortingHandler::damageCompare));
 
-	private static final Comparator<ItemStack> SWORD_COMPARATOR = jointComparator(
+	private static final Comparator<ItemStack> SWORD_COMPARATOR = jointComparator(Arrays.asList(
 			SortingHandler::swordPowerCompare,
 			SortingHandler::enchantmentCompare,
-			SortingHandler::damageCompare);
+			SortingHandler::damageCompare));
 
-	private static final Comparator<ItemStack> ARMOR_COMPARATOR = jointComparator(
+	private static final Comparator<ItemStack> ARMOR_COMPARATOR = jointComparator(Arrays.asList(
 			SortingHandler::armorSlotAndToughnessCompare,
 			SortingHandler::enchantmentCompare,
-			SortingHandler::damageCompare);
+			SortingHandler::damageCompare));
 
-	private static final Comparator<ItemStack> BOW_COMPARATOR = jointComparator(
+	private static final Comparator<ItemStack> BOW_COMPARATOR = jointComparator(Arrays.asList(
 			SortingHandler::enchantmentCompare,
-			SortingHandler::damageCompare);
+			SortingHandler::damageCompare));
 
 	public static void sortInventory(PlayerEntity player, boolean forcePlayer) {
 		if (!ModuleLoader.INSTANCE.isModuleEnabled(InventorySortingModule.class))
@@ -243,17 +243,16 @@ public final class SortingHandler {
 		return (ItemStack s) -> !s.isEmpty() && list.contains(s.getItem());
 	}
 
-	public static Comparator<ItemStack> jointComparator(Comparator<ItemStack> finalComparator, Comparator<ItemStack>[] otherComparators) {
+	public static Comparator<ItemStack> jointComparator(Comparator<ItemStack> finalComparator, List<Comparator<ItemStack>> otherComparators) {
 		if (otherComparators == null)
-			return jointComparator(finalComparator);
+			return jointComparator(Arrays.asList(finalComparator));
 
-		Comparator<ItemStack>[] resizedArray = Arrays.copyOf(otherComparators, otherComparators.length + 1);
-		resizedArray[otherComparators.length] = finalComparator;
-		return jointComparator(resizedArray);
+		List<Comparator<ItemStack>> newList = new ArrayList<>(otherComparators);
+		newList.add(finalComparator);
+		return jointComparator(newList);
 	}
 
-	@SafeVarargs
-	public static Comparator<ItemStack> jointComparator(Comparator<ItemStack>... comparators) {
+	public static Comparator<ItemStack> jointComparator(List<Comparator<ItemStack>> comparators) {
 		return jointComparatorFallback((ItemStack s1, ItemStack s2) -> {
 			for (Comparator<ItemStack> comparator : comparators) {
 				if (comparator == null)
@@ -401,9 +400,8 @@ public final class SortingHandler {
 		private final Predicate<ItemStack> predicate;
 		private final Comparator<ItemStack> comparator;
 
-		@SafeVarargs
-		ItemType(List<Item> list, Comparator<ItemStack>... comparators) {
-			this(itemPredicate(list), jointComparator(listOrderComparator(list), comparators));
+		ItemType(List<Item> list) {
+			this(itemPredicate(list), jointComparator(listOrderComparator(list), new ArrayList<>()));
 		}
 
 		ItemType(Predicate<ItemStack> predicate) {
