@@ -1,8 +1,0 @@
-{
-    "parent": "block/outer_stairs",
-    "textures": {
-        "bottom": "quark:block/backport/smooth_basalt",
-        "top": "quark:block/backport/smooth_basalt",
-        "side": "quark:block/backport/smooth_basalt"
-    }
-}

@@ -28,7 +28,6 @@ public enum EnumStonelingVariant implements ILivingEntityData {
 	DIORITE("diorite", Blocks.DIORITE, Blocks.POLISHED_DIORITE),
 	GRANITE("granite", Blocks.GRANITE, Blocks.POLISHED_GRANITE),
 	LIMESTONE("limestone", limestoneBlock, polishedBlocks.get(limestoneBlock)),
-	BASALT("basalt", basaltBlock, polishedBlocks.get(basaltBlock)),
 	MARBLE("marble", marbleBlock, polishedBlocks.get(marbleBlock)),
 	SLATE("slate", slateBlock, polishedBlocks.get(slateBlock)),
 	JASPER("jasper", jasperBlock, polishedBlocks.get(jasperBlock));

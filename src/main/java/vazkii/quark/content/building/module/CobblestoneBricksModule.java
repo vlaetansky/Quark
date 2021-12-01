@@ -22,9 +22,6 @@ public class CobblestoneBricksModule extends QuarkModule {
 	@Config(flag = "netherrack_bricks")
 	private static boolean enableNetherrackBricks = true;
 	
-	@Config(flag = "basalt_bricks")
-	private static boolean enableBasaltBricks = true;
-	
 	@Override
 	public void construct() {
 		VariantHandler.addSlabStairsWall(new QuarkBlock("cobblestone_bricks", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.COBBLESTONE)));
@@ -33,7 +30,6 @@ public class CobblestoneBricksModule extends QuarkModule {
 		VariantHandler.addSlabStairsWall(new QuarkBlock("blackstone_bricks", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.BLACKSTONE)).setCondition(() -> enableBlackstoneBricks));
 		VariantHandler.addSlabStairsWall(new QuarkBlock("dirt_bricks", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.DIRT)).setCondition(() -> enableDirtBricks));
 		VariantHandler.addSlabStairsWall(new QuarkBlock("netherrack_bricks", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.NETHERRACK)).setCondition(() -> enableNetherrackBricks));
-		VariantHandler.addSlabStairsWall(new QuarkBlock("vanilla_basalt_bricks", this, ItemGroup.BUILDING_BLOCKS, Block.Properties.from(Blocks.BASALT)).setCondition(() -> enableBasaltBricks));
 	}
 	
 }

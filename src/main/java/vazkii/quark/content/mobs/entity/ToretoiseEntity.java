@@ -54,10 +54,8 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.handler.QuarkSounds;
-import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.automation.module.IronRodModule;
 import vazkii.quark.content.mobs.module.ToretoiseModule;
-import vazkii.quark.content.world.module.CaveRootsModule;
 
 public class ToretoiseEntity extends AnimalEntity {
 

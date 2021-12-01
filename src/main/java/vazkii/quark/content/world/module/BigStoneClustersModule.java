@@ -41,9 +41,6 @@ public class BigStoneClustersModule extends QuarkModule {
 	@Config public static BigStoneClusterConfig jasper = new BigStoneClusterConfig(BiomeDictionary.Type.MESA, BiomeDictionary.Type.SANDY);
 	@Config public static BigStoneClusterConfig slate = new BigStoneClusterConfig(BiomeDictionary.Type.SNOWY);
 	
-	@Config public static BigStoneClusterConfig voidstone = new BigStoneClusterConfig(DimensionConfig.end(false), 19, 6, 20, 0, 40, 
-			CompoundBiomeConfig.fromBiomeReslocs(false, "minecraft:end_highlands", "minecraft:end_midlands", "minecraft:end_barrens"));
-	
 	@Config public static BigStoneClusterConfig myalite = new AirStoneClusterConfig(DimensionConfig.end(false), 20, 6, 100, 58, 62, 
 			CompoundBiomeConfig.fromBiomeReslocs(false, "minecraft:end_highlands"))
 			.setVertical(40, 10);
@@ -53,7 +50,7 @@ public class BigStoneClustersModule extends QuarkModule {
 	public static List<String> blocksToReplace = Lists.newArrayList(
 			"minecraft:stone", "minecraft:andesite", "minecraft:diorite", "minecraft:granite",
 			"minecraft:netherrack|minecraft:the_nether", "minecraft:end_stone|minecraft:the_end",
-			"quark:marble", "quark:limestone", "quark:jasper", "quark:slate", "quark:basalt");
+			"quark:marble", "quark:limestone", "quark:jasper", "quark:slate");
 	
 	public static BiPredicate<World, Block> blockReplacePredicate = (w, b) -> false;
 	
@@ -68,7 +65,6 @@ public class BigStoneClustersModule extends QuarkModule {
 		add(limestone, NewStoneTypesModule.limestoneBlock, () -> NewStoneTypesModule.enabledWithLimestone);
 		add(jasper, NewStoneTypesModule.jasperBlock, () -> NewStoneTypesModule.enabledWithJasper);
 		add(slate, NewStoneTypesModule.slateBlock, () -> NewStoneTypesModule.enabledWithSlate);
-		add(voidstone, NewStoneTypesModule.basaltBlock, () -> NewStoneTypesModule.enabledWithVoidstone);
 		add(myalite, NewStoneTypesModule.myaliteBlock, () -> NewStoneTypesModule.enabledWithMyalite);
 
 		conditionalize(Blocks.GRANITE, () -> (!enabled || !granite.enabled));

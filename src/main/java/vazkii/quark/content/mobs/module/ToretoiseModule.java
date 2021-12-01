@@ -36,7 +36,7 @@ public class ToretoiseModule extends QuarkModule {
 	public static int cooldownTicks = 20 * 60;
 	
 	@Config(description="The items that can be fed to toretoises to make them regrow ores.")
-	public static List<String> foods = Lists.newArrayList("quark:root_item", "minecraft:cactus");
+	public static List<String> foods = Lists.newArrayList("minecraft:cactus"); // TODO 1.18: change to glow berries
 	
 	@Config(description="Feeding a toretoise after cooldown will regrow them with a one-in-this-number chance. "
 			+ "Set to 1 to always regrow, or 0 to disable.")

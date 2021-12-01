@@ -38,7 +38,6 @@ public class MoreStoneVariantsModule extends QuarkModule {
 		add("limestone", MaterialColor.STONE, () -> NewStoneTypesModule.enabledWithLimestone);
 		add("jasper", MaterialColor.RED_TERRACOTTA, () -> NewStoneTypesModule.enabledWithJasper);
 		add("slate", MaterialColor.ICE, () -> NewStoneTypesModule.enabledWithSlate);
-		add("basalt", MaterialColor.BLACK, () -> NewStoneTypesModule.enabledWithVoidstone);
 		
 		add("myalite", MaterialColor.PURPLE, () -> NewStoneTypesModule.enabledWithMyalite, MyaliteBlock::new, MyalitePillarBlock::new);
 	}

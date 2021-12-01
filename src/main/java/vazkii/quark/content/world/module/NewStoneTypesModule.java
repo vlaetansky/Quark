@@ -35,19 +35,17 @@ public class NewStoneTypesModule extends QuarkModule {
 	@Config(flag = "limestone") private static boolean enableLimestone = true;
 	@Config(flag = "jasper") private static boolean enableJasper = true;
 	@Config(flag = "slate") private static boolean enableSlate = true;
-	@Config(flag = "basalt") private static boolean enableVoidstone = true;
 	@Config(flag = "myalite") private static boolean enableMyalite = true;
 
-	public static boolean enabledWithMarble, enabledWithLimestone, enabledWithJasper, enabledWithSlate, enabledWithVoidstone, enabledWithMyalite;
+	public static boolean enabledWithMarble, enabledWithLimestone, enabledWithJasper, enabledWithSlate, enabledWithMyalite;
 	
 	@Config public static StoneTypeConfig marble = new StoneTypeConfig();
 	@Config public static StoneTypeConfig limestone = new StoneTypeConfig();
 	@Config public static StoneTypeConfig jasper = new StoneTypeConfig();
 	@Config public static StoneTypeConfig slate = new StoneTypeConfig();
-	@Config public static StoneTypeConfig voidstone = new StoneTypeConfig(DimensionConfig.end(false));
 	@Config public static StoneTypeConfig myalite = new StoneTypeConfig(DimensionConfig.end(false));
 
-	public static Block marbleBlock, limestoneBlock, jasperBlock, slateBlock, basaltBlock, myaliteBlock;
+	public static Block marbleBlock, limestoneBlock, jasperBlock, slateBlock, myaliteBlock;
 
 	public static Map<Block, Block> polishedBlocks = Maps.newHashMap();
 	
@@ -59,7 +57,6 @@ public class NewStoneTypesModule extends QuarkModule {
 		limestoneBlock = makeStone("limestone", limestone, BigStoneClustersModule.limestone, () -> enableLimestone, MaterialColor.STONE);
 		jasperBlock = makeStone("jasper", jasper, BigStoneClustersModule.jasper, () -> enableJasper, MaterialColor.RED_TERRACOTTA);
 		slateBlock = makeStone("slate", slate, BigStoneClustersModule.slate, () -> enableSlate, MaterialColor.ICE);
-		basaltBlock = makeStone("basalt", voidstone, BigStoneClustersModule.voidstone, () -> enableVoidstone, MaterialColor.BLACK);
 		myaliteBlock = makeStone("myalite", myalite, BigStoneClustersModule.myalite, () -> enableMyalite, MaterialColor.PURPLE, MyaliteBlock::new);
 	}
 	
@@ -95,7 +92,6 @@ public class NewStoneTypesModule extends QuarkModule {
 		enabledWithLimestone = enableLimestone && this.enabled;
 		enabledWithJasper = enableJasper && this.enabled;
 		enabledWithSlate = enableSlate && this.enabled;
-		enabledWithVoidstone = enableVoidstone && this.enabled;
 		enabledWithMyalite = enableMyalite && this.enabled;
 	}
 	

@@ -51,8 +51,6 @@ public class EnhancedLaddersModule extends QuarkModule {
 	
 	@SuppressWarnings("deprecation")
 	private static boolean canAttachTo(BlockState state, Block ladder, IWorldReader world, BlockPos pos, Direction facing) {
-		if(ladder == VariantLaddersModule.iron_ladder)
-			return VariantLaddersModule.iron_ladder.isValidPosition(state, world, pos);
 		if (ladder instanceof LadderBlock) {
 			BlockPos offset = pos.offset(facing);
 			BlockState blockstate = world.getBlockState(offset);

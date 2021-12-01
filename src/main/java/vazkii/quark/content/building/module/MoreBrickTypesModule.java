@@ -10,20 +10,13 @@ import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.ModuleLoader;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.content.building.block.MagmaBrickBlock;
 
 @LoadModule(category = ModuleCategory.BUILDING)
 public class MoreBrickTypesModule extends QuarkModule {
-
-	@Config(flag = "sandy_bricks") public boolean enableSandyBricks = true;
-	@Config(flag = "snow_bricks") public boolean enableSnowBricks = true;
-	@Config(flag = "magma_bricks") public boolean enableMagmaBricks = true;
-	@Config(flag = "charred_nether_bricks") public boolean enableCharredNetherBricks = true;
-	@Config(flag = "blackstone_variant_bricks") public boolean enableBlackstoneVariantBricks = true;
 
 	@Config(flag = "blue_nether_bricks",
 			description = "This also comes with a utility recipe for Red Nether Bricks") 
@@ -35,17 +28,10 @@ public class MoreBrickTypesModule extends QuarkModule {
 	
 	@Override
 	public void construct() {
-		add("sandy", Blocks.SANDSTONE, () -> enableSandyBricks);
-		add("snow", Blocks.SNOW_BLOCK, () -> enableSnowBricks);
-		add("charred_nether", Blocks.NETHER_BRICKS, () -> enableCharredNetherBricks);
 		add("blue_nether", Blocks.NETHER_BRICKS, () -> enableBlueNetherBricks);
 		add("sandstone", Blocks.SANDSTONE, () -> enableSandstoneBricks);
 		add("red_sandstone", Blocks.RED_SANDSTONE, () -> enableSandstoneBricks);
 		add("soul_sandstone", Blocks.SANDSTONE, () -> enableSandstoneBricks && ModuleLoader.INSTANCE.isModuleEnabled(SoulSandstoneModule.class));
-		add("twisted_blackstone", Blocks.POLISHED_BLACKSTONE_BRICKS, () -> enableBlackstoneVariantBricks);
-		add("weeping_blackstone", Blocks.POLISHED_BLACKSTONE_BRICKS, () -> enableBlackstoneVariantBricks);
-		
-		VariantHandler.addSlabStairsWall(new MagmaBrickBlock(this).setCondition(() -> enableMagmaBricks));
 	}
 	
 	private void add(String name, Block parent, BooleanSupplier cond) {

@@ -1,8 +1,0 @@
-{
-    "parent": "block/slab_top",
-    "textures": {
-        "bottom": "quark:block/backport/deepslate_tiles",
-        "top": "quark:block/backport/deepslate_tiles",
-        "side": "quark:block/backport/deepslate_tiles"
-    }
-}

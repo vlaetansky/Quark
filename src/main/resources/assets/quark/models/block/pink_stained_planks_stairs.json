@@ -1,8 +1,0 @@
-{
-    "parent": "block/stairs",
-    "textures": {
-        "bottom": "quark:block/pink_stained_planks",
-        "top": "quark:block/pink_stained_planks",
-        "side": "quark:block/pink_stained_planks"
-    }
-}

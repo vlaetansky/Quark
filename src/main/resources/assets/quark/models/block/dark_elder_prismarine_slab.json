@@ -1,8 +1,0 @@
-{
-    "parent": "block/slab",
-    "textures": {
-        "bottom": "quark:block/dark_elder_prismarine",
-        "top": "quark:block/dark_elder_prismarine",
-        "side": "quark:block/dark_elder_prismarine"
-    }
-}
