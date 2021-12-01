@@ -21,7 +21,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.vector.Vector3f;
 import vazkii.quark.addons.oddities.tile.PipeTileEntity;
 import vazkii.quark.addons.oddities.tile.PipeTileEntity.ConnectionType;
@@ -57,7 +56,6 @@ public class PipeTileEntityRenderer extends TileEntityRenderer<PipeTileEntity> {
 		matrix.pop();
 	}
 	
-	@SuppressWarnings("deprecation")
 	private void renderFlare(PipeTileEntity te, BlockRendererDispatcher disp, IBakedModel model, MatrixStack matrix, IRenderTypeBuffer buffer, float partial, int light, int overlay, Direction dir) {
 		ConnectionType type = PipeTileEntity.getConnectionTo(te.getWorld(), te.getPos(), dir);
 		if(type.isFlared) {

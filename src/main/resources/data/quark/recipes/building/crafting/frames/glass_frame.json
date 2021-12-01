@@ -20,7 +20,7 @@
   "conditions": [
     {
       "type": "quark:flag",
-      "flag": "item_frames"
+      "flag": "glass_item_frame"
     }
   ]
 }

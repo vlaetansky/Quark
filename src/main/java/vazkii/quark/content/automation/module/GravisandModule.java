@@ -11,10 +11,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.module.LoadModule;
+import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.automation.block.GravisandBlock;
 import vazkii.quark.content.automation.entity.GravisandEntity;
-import vazkii.quark.base.module.ModuleCategory;
 
 @LoadModule(category = ModuleCategory.AUTOMATION)
 public class GravisandModule extends QuarkModule {

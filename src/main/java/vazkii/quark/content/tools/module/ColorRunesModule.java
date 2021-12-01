@@ -172,7 +172,6 @@ public class ColorRunesModule extends QuarkModule {
 		return stack.isEnchanted() || (stack.getItem() == Items.COMPASS && CompassItem.func_234670_d_(stack)); // func_234670_d_ = is lodestone compass
 	}
 
-	@SuppressWarnings("ConstantConditions")
 	private static LazyOptional<IRuneColorProvider> get(ICapabilityProvider provider) {
 		return provider.getCapability(QuarkCapabilities.RUNE_COLOR);
 	}

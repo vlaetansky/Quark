@@ -1,5 +1,7 @@
 package vazkii.quark.content.client.module;
 
+import java.util.List;
+
 import com.google.common.collect.Lists;
 
 import net.minecraft.item.ItemStack;
@@ -9,12 +11,14 @@ import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.content.client.tooltip.*;
-
-import java.util.List;
+import vazkii.quark.content.client.tooltip.AttributeTooltips;
+import vazkii.quark.content.client.tooltip.EnchantedBookTooltips;
+import vazkii.quark.content.client.tooltip.FoodTooltips;
+import vazkii.quark.content.client.tooltip.MapTooltips;
+import vazkii.quark.content.client.tooltip.ShulkerBoxTooltips;
 
 /**
  * @author WireSegal

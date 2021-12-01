@@ -1,9 +1,9 @@
 package vazkii.quark.base.module.config;
 
-import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
-
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+
+import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 
 public interface IConfigCallback {
 	

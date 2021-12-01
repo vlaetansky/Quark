@@ -5,7 +5,6 @@ import java.util.function.BooleanSupplier;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.WallBlock;
 import net.minecraft.client.renderer.color.IBlockColor;

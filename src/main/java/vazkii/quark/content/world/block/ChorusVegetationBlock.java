@@ -9,7 +9,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.command.impl.SetBlockCommand;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -18,7 +17,6 @@ import net.minecraft.entity.monster.EndermiteEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.util.Direction;
@@ -162,7 +160,6 @@ public class ChorusVegetationBlock extends QuarkBlock implements IGrowable, IFor
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
 		return !stateIn.isValidPosition(worldIn, currentPos) ? Blocks.AIR.getDefaultState() : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
 	}
@@ -173,7 +170,6 @@ public class ChorusVegetationBlock extends QuarkBlock implements IGrowable, IFor
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
 		return (type == PathType.AIR && !this.canCollide) || super.allowsMovement(state, worldIn, pos, type);
 	}

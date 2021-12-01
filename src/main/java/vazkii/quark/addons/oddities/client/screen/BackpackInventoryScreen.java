@@ -1,9 +1,11 @@
 package vazkii.quark.addons.oddities.client.screen;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -19,9 +21,6 @@ import vazkii.quark.addons.oddities.module.BackpackModule;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.HandleBackpackMessage;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class BackpackInventoryScreen extends InventoryScreen {
 	

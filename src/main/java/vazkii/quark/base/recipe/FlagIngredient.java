@@ -1,6 +1,12 @@
 package vazkii.quark.base.recipe;
 
+import java.util.stream.Stream;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.google.gson.JsonObject;
+
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.ints.IntLists;
 import net.minecraft.item.ItemStack;
@@ -8,10 +14,6 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
 import vazkii.quark.base.module.config.ConfigFlagManager;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.stream.Stream;
 
 /**
  * @author WireSegal

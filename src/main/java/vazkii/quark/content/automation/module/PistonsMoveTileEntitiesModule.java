@@ -132,7 +132,6 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	public static boolean setPistonBlock(World world, BlockPos pos, BlockState state, int flags) {
 		if (!ModuleLoader.INSTANCE.isModuleEnabled(PistonsMoveTileEntitiesModule.class)) {
 			world.setBlockState(pos, state, flags);
@@ -233,12 +232,10 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 		delayedUpdates.get(world).add(Pair.of(pos, tile.serializeNBT()));
 	}
 
-	@SuppressWarnings("ConstantConditions")
 	private static boolean hasCallback(TileEntity tile) {
 		return tile.getCapability(QuarkCapabilities.PISTON_CALLBACK).isPresent();
 	}
 
-	@SuppressWarnings("ConstantConditions")
 	private static IPistonCallback getCallback(TileEntity tile) {
 		return tile.getCapability(QuarkCapabilities.PISTON_CALLBACK).orElse(() -> {});
 	}

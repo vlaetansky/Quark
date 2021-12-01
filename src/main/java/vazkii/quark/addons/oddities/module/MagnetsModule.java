@@ -15,11 +15,9 @@ import vazkii.quark.addons.oddities.block.MovingMagnetizedBlock;
 import vazkii.quark.addons.oddities.client.render.MagnetizedBlockTileEntityRenderer;
 import vazkii.quark.addons.oddities.tile.MagnetTileEntity;
 import vazkii.quark.addons.oddities.tile.MagnetizedBlockTileEntity;
-import vazkii.quark.base.Quark;
-import vazkii.quark.base.client.handler.RequiredModTooltipHandler;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 
 @LoadModule(category = ModuleCategory.ODDITIES)

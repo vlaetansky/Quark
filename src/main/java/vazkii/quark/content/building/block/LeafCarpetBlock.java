@@ -57,7 +57,6 @@ public class LeafCarpetBlock extends QuarkBlock implements IBlockColorProvider {
 
 	@Nonnull
 	@Override
-	@SuppressWarnings("deprecation")
 	public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull IBlockReader world, @Nonnull BlockPos pos, ISelectionContext p_220071_4_) {
 		return VoxelShapes.empty();
 	}

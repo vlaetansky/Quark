@@ -19,8 +19,6 @@ import net.minecraft.util.ResourceLocation;
 import vazkii.quark.base.Quark;
 import vazkii.quark.content.experimental.shiba.client.model.ShibaModel;
 import vazkii.quark.content.experimental.shiba.entity.ShibaEntity;
-import vazkii.quark.content.mobs.client.model.FoxhoundModel;
-import vazkii.quark.content.mobs.entity.FoxhoundEntity;
 
 public class ShibaCollarLayer extends LayerRenderer<ShibaEntity, ShibaModel> {
 

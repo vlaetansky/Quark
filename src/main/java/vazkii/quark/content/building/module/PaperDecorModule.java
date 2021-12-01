@@ -12,10 +12,10 @@ package vazkii.quark.content.building.module;
 
 import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.module.LoadModule;
+import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.building.block.PaperLanternBlock;
 import vazkii.quark.content.building.block.PaperWallBlock;
-import vazkii.quark.base.module.ModuleCategory;
 
 @LoadModule(category = ModuleCategory.BUILDING)
 public class PaperDecorModule extends QuarkModule {

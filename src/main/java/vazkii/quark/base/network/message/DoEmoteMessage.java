@@ -1,5 +1,7 @@
 package vazkii.quark.base.network.message;
 
+import java.util.UUID;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
@@ -8,8 +10,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import vazkii.arl.network.IMessage;
 import vazkii.quark.content.tweaks.client.emote.EmoteHandler;
-
-import java.util.UUID;
 
 public class DoEmoteMessage implements IMessage {
 

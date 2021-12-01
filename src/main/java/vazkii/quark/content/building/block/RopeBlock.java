@@ -72,7 +72,6 @@ public class RopeBlock extends QuarkBlock implements IBlockItemProvider {
 	}
 	
 	@Override
-	@SuppressWarnings("deprecation")
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
 		if(hand == Hand.MAIN_HAND) {
 			ItemStack stack = player.getHeldItem(hand);
@@ -245,7 +244,6 @@ public class RopeBlock extends QuarkBlock implements IBlockItemProvider {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
 		if(!state.isValidPosition(worldIn, pos)) {
 			worldIn.playEvent(2001, pos, Block.getStateId(worldIn.getBlockState(pos)));
@@ -261,7 +259,6 @@ public class RopeBlock extends QuarkBlock implements IBlockItemProvider {
 
 	@Nonnull
 	@Override
-	@SuppressWarnings("deprecation")
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return SHAPE;
 	}

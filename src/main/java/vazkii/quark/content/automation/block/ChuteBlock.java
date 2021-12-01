@@ -51,7 +51,6 @@ public class ChuteBlock extends QuarkBlock {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
 		boolean flag = !worldIn.isBlockPowered(pos);
 
@@ -72,7 +71,6 @@ public class ChuteBlock extends QuarkBlock {
 
 	@Nonnull
 	@Override
-	@SuppressWarnings("deprecation")
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return DOWN_SHAPE;
 	}
@@ -83,7 +81,6 @@ public class ChuteBlock extends QuarkBlock {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public boolean allowsMovement(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, PathType type) {
 		return false;
 	}

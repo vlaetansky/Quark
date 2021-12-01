@@ -33,14 +33,12 @@ public class QuarkGlassBlock extends QuarkBlock {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	@SuppressWarnings("deprecation")
 	public boolean isSideInvisible(@Nonnull BlockState state, BlockState adjacentBlockState, @Nonnull Direction side) {
 		return adjacentBlockState.isIn(this) || super.isSideInvisible(state, adjacentBlockState, side);
 	}
 
 	@Override
 	@Nonnull
-	@SuppressWarnings("deprecation")
 	public VoxelShape getRayTraceShape(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, @Nonnull ISelectionContext context) {
 		return VoxelShapes.empty();
 	}

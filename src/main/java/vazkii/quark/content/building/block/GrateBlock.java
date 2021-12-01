@@ -63,7 +63,6 @@ public class GrateBlock extends QuarkBlock implements IWaterLoggable {
 
 	@Nonnull
 	@Override
-	@SuppressWarnings("deprecation")
 	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
 		return TRUE_SHAPE;
 	}
@@ -74,7 +73,6 @@ public class GrateBlock extends QuarkBlock implements IWaterLoggable {
 
 	@Nonnull
 	@Override
-	@SuppressWarnings("deprecation")
 	public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull IBlockReader world, @Nonnull BlockPos pos, ISelectionContext context) {
 		Entity entity = context.getEntity();
 
@@ -106,7 +104,6 @@ public class GrateBlock extends QuarkBlock implements IWaterLoggable {
 
 	@Nonnull
 	@Override
-	@SuppressWarnings("deprecation")
 	public FluidState getFluidState(BlockState state) {
 		return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
 	}
@@ -117,7 +114,6 @@ public class GrateBlock extends QuarkBlock implements IWaterLoggable {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public boolean allowsMovement(@Nonnull BlockState state, @Nonnull IBlockReader world, @Nonnull BlockPos pos, PathType path) {
 		return false;
 	}

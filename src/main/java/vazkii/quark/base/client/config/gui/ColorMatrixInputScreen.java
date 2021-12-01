@@ -9,13 +9,10 @@ import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.client.gui.widget.Slider;
-import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.module.config.type.ColorMatrixConfig;
 

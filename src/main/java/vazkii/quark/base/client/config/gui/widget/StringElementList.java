@@ -1,7 +1,5 @@
 package vazkii.quark.base.client.config.gui.widget;
 
-import java.util.List;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.Minecraft;

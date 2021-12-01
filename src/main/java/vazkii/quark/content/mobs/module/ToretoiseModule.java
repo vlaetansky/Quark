@@ -1,5 +1,7 @@
 package vazkii.quark.content.mobs.module;
 
+import java.util.List;
+
 import com.google.common.collect.Lists;
 
 import net.minecraft.entity.EntityClassification;
@@ -22,8 +24,6 @@ import vazkii.quark.base.module.config.type.EntitySpawnConfig;
 import vazkii.quark.base.world.EntitySpawnHandler;
 import vazkii.quark.content.mobs.client.render.ToretoiseRenderer;
 import vazkii.quark.content.mobs.entity.ToretoiseEntity;
-
-import java.util.List;
 
 @LoadModule(category = ModuleCategory.MOBS, hasSubscriptions = true)
 public class ToretoiseModule extends QuarkModule {

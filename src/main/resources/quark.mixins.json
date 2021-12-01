@@ -5,7 +5,6 @@
   "refmap": "quark.mixins.refmap.json",
   "package": "vazkii.quark.mixin",
   "mixins": [
-    "AbstractMinecartEntityMixin",
     "BeaconTileEntityMixin",
     "BlockItemMixin",
     "BoatEntityMixin",
@@ -36,7 +35,6 @@
     "client.BipedModelMixin",
     "client.ContainerScreenMixin",
     "client.ElytraLayerMixin",
-    "client.EntityRendererManagerMixin",
     "client.ItemRendererMixin",
     "client.JukeboxTileEntityMixin",
     "client.LoomScreenMixin",

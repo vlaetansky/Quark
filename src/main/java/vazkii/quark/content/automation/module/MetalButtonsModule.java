@@ -1,8 +1,8 @@
 package vazkii.quark.content.automation.module;
 
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.content.automation.block.MetalButtonBlock;
 

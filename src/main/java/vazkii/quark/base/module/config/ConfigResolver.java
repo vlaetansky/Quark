@@ -12,8 +12,8 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.GeneralConfig;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 
 public class ConfigResolver {
 
@@ -57,7 +57,6 @@ public class ConfigResolver {
 		return null;
 	}
 	
-	@SuppressWarnings("deprecation")
 	private void buildCategoryList(IConfigBuilder builder) { 
 		for(ModuleCategory category : ModuleCategory.values()) {
 			ForgeConfigSpec.ConfigValue<Boolean> value = builder.defineBool(WordUtils.capitalizeFully(category.name), () -> category.enabled, true);

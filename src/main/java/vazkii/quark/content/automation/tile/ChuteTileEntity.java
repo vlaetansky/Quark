@@ -1,5 +1,8 @@
 package vazkii.quark.content.automation.tile;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
@@ -13,9 +16,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import vazkii.quark.content.automation.block.ChuteBlock;
 import vazkii.quark.content.automation.module.ChuteModule;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author WireSegal

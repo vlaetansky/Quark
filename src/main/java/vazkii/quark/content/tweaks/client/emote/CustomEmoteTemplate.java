@@ -1,13 +1,13 @@
 package vazkii.quark.content.tweaks.client.emote;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import vazkii.quark.content.tweaks.module.EmotesModule;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import vazkii.quark.content.tweaks.module.EmotesModule;
 
 @OnlyIn(Dist.CLIENT)
 public class CustomEmoteTemplate extends EmoteTemplate {

@@ -135,7 +135,6 @@ public class MiscUtil {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public static List<LootPool> getPools(LootTable table) {
 		try {
 			return (List<LootPool>) LOOT_TABLE_POOLS.invokeExact(table);
@@ -145,7 +144,6 @@ public class MiscUtil {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public static List<LootEntry> getEntries(LootPool pool) {
 		try {
 			return (List<LootEntry>) LOOT_POOL_ENTRIES.invokeExact(pool);

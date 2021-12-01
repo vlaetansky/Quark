@@ -6,7 +6,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.state.Property;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.gen.feature.structure.FortressPieces;
 import vazkii.quark.base.block.QuarkPaneBlock;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.handler.StructureBlockReplacementHandler;

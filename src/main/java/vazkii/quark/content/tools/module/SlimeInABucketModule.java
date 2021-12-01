@@ -10,17 +10,15 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.base.module.LoadModule;
+import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.tools.item.SlimeInABucketItem;
-import vazkii.quark.base.module.ModuleCategory;
 
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true)
 public class SlimeInABucketModule extends QuarkModule {

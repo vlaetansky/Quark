@@ -1,13 +1,13 @@
 package vazkii.quark.content.mobs.client.render;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
 import vazkii.quark.content.mobs.client.model.CrabModel;
 import vazkii.quark.content.mobs.entity.CrabEntity;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class CrabRenderer extends MobRenderer<CrabEntity, CrabModel> {
 

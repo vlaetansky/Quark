@@ -1,14 +1,15 @@
 package vazkii.quark.base.block;
 
+import java.util.function.BooleanSupplier;
+
+import javax.annotation.Nullable;
+
 import net.minecraft.block.FenceGateBlock;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.module.QuarkModule;
-
-import javax.annotation.Nullable;
-import java.util.function.BooleanSupplier;
 
 /**
  * @author WireSegal

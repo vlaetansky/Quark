@@ -29,10 +29,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.ModList;
 import vazkii.arl.interf.IBlockItemProvider;
 import vazkii.arl.util.RegistryHelper;
-import vazkii.quark.base.Quark;
 import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.module.QuarkModule;
-import vazkii.quark.content.building.block.VariantChestBlock.Compat;
 import vazkii.quark.content.building.module.VariantChestsModule.IChestTextureProvider;
 import vazkii.quark.content.building.tile.VariantTrappedChestTileEntity;
 

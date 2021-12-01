@@ -1,12 +1,24 @@
 package vazkii.quark.base.recipe;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import javax.annotation.Nonnull;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.*;
+import net.minecraft.item.crafting.ICraftingRecipe;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
@@ -14,14 +26,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraftforge.common.crafting.IShapedRecipe;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
-
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 /**
  * @author WireSegal
@@ -121,7 +126,8 @@ public class ExclusionRecipe implements ICraftingRecipe {
     private static class ShapedExclusionRecipe extends ExclusionRecipe implements IShapedRecipe<CraftingInventory> {
         private final IShapedRecipe<CraftingInventory> parent;
 
-        public ShapedExclusionRecipe(ICraftingRecipe parent, List<ResourceLocation> excluded) {
+        @SuppressWarnings("unchecked")
+		public ShapedExclusionRecipe(ICraftingRecipe parent, List<ResourceLocation> excluded) {
             super(parent, excluded);
             this.parent = (IShapedRecipe<CraftingInventory>) parent;
         }

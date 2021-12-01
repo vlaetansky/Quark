@@ -1,6 +1,5 @@
 package vazkii.quark.content.tools.item;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -92,7 +91,6 @@ public class PickarangItem extends QuarkItem {
 
 	@Nonnull
 	@Override
-	@SuppressWarnings("ConstantConditions")
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, @Nonnull Hand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
         playerIn.setHeldItem(handIn, ItemStack.EMPTY);

@@ -38,13 +38,11 @@ public class EnderWatcherBlock extends QuarkBlock {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public boolean canProvidePower(BlockState state) {
 		return true;
 	}
 	
 	@Override
-	@SuppressWarnings("deprecation")
 	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
 		return blockState.get(POWER);
 	}

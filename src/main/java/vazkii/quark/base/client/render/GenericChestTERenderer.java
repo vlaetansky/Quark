@@ -85,7 +85,7 @@ public abstract class GenericChestTERenderer<T extends TileEntity & IChestLid> e
 		ChestType chesttype = blockstate.getValues().containsKey(ChestBlock.TYPE) ? blockstate.get(ChestBlock.TYPE) : ChestType.SINGLE;
 		Block block = blockstate.getBlock();
 		if (block instanceof AbstractChestBlock) {
-			AbstractChestBlock<?> abstractchestblock = (AbstractChestBlock) block;
+			AbstractChestBlock<?> abstractchestblock = (AbstractChestBlock<?>) block;
 			boolean flag1 = chesttype != ChestType.SINGLE;
 			p_225616_3_.push();
 			float f = blockstate.get(ChestBlock.FACING).getHorizontalAngle();

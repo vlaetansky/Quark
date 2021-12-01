@@ -6,8 +6,8 @@ import net.minecraft.item.ItemGroup;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 
 @LoadModule(category = ModuleCategory.BUILDING)
 public class DuskboundBlocksModule extends QuarkModule {

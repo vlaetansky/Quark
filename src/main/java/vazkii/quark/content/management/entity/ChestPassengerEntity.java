@@ -1,5 +1,7 @@
 package vazkii.quark.content.management.entity;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
@@ -19,8 +21,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 import vazkii.quark.content.management.module.ChestsInBoatsModule;
-
-import javax.annotation.Nonnull;
 
 public class ChestPassengerEntity extends Entity implements IInventory {
 

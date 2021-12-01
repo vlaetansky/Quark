@@ -1,8 +1,8 @@
 package vazkii.quark.content.automation.base;
 
-import net.minecraft.util.IStringSerializable;
-
 import java.util.Locale;
+
+import net.minecraft.util.IStringSerializable;
 
 /**
  * @author WireSegal

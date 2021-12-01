@@ -37,7 +37,6 @@ public class DefaultMoveActions {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	private static void hopperMoved(World world, BlockPos pos, Direction direction, BlockState state, TileEntity tile) {
 		if(!world.isRemote && tile instanceof HopperTileEntity) {
 			HopperTileEntity hopper = (HopperTileEntity) tile;

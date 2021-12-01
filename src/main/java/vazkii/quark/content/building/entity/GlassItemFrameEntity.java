@@ -40,7 +40,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.CapabilityItemHandler;
 import vazkii.quark.base.util.MovableFakePlayer;
-import vazkii.quark.content.building.module.ItemFramesModule;
+import vazkii.quark.content.building.module.GlassItemFrameModule;
 
 public class GlassItemFrameEntity extends ItemFrameEntity implements IEntityAdditionalSpawnData {
 
@@ -56,7 +56,7 @@ public class GlassItemFrameEntity extends ItemFrameEntity implements IEntityAddi
 	}
 
 	public GlassItemFrameEntity(World worldIn, BlockPos blockPos, Direction face) {
-		super(ItemFramesModule.glassFrameEntity, worldIn);
+		super(GlassItemFrameModule.glassFrameEntity, worldIn);
 		hangingPosition = blockPos;
 		this.updateFacingWithBoundingBox(face);
 	}
@@ -84,7 +84,7 @@ public class GlassItemFrameEntity extends ItemFrameEntity implements IEntityAddi
 	public void tick() {
 		super.tick();
 		
-		if(ItemFramesModule.glassItemFramesUpdateMaps) {
+		if(GlassItemFrameModule.glassItemFramesUpdateMaps) {
 			ItemStack stack = getDisplayedItem();
 			if(stack.getItem() instanceof FilledMapItem && world instanceof ServerWorld) {
 				ServerWorld sworld = (ServerWorld) world;
@@ -150,7 +150,7 @@ public class GlassItemFrameEntity extends ItemFrameEntity implements IEntityAddi
 	}
 	
 	private Item getItem() {
-		return dataManager.get(IS_SHINY) ? ItemFramesModule.glowingGlassFrame : ItemFramesModule.glassFrame;
+		return dataManager.get(IS_SHINY) ? GlassItemFrameModule.glowingGlassFrame : GlassItemFrameModule.glassFrame;
 	}
 	
 	@Override

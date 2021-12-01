@@ -1,13 +1,14 @@
 package vazkii.quark.base.util;
 
-import com.google.common.collect.Lists;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.google.common.collect.Lists;
 
 /**
  * @author WireSegal

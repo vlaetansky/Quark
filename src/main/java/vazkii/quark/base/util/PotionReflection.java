@@ -1,11 +1,5 @@
 package vazkii.quark.base.util;
 
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionBrewing;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.registries.ForgeRegistryEntry;
-
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
@@ -13,11 +7,16 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionBrewing;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.registries.ForgeRegistryEntry;
+
 /**
  * @author WireSegal
  * Created at 4:12 PM on 10/20/19.
  */
-@SuppressWarnings("unchecked")
 public class PotionReflection {
     private static final MethodHandle CREATE_MIX_PREDICATE, GET_POTION_TYPE_CONVERSIONS;
     
@@ -45,11 +44,10 @@ public class PotionReflection {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public static void addBrewingRecipe(Potion input, Ingredient reagent, Potion output) {
         try {
-            Object mixPredicate = CREATE_MIX_PREDICATE.invokeExact((ForgeRegistryEntry) input, reagent, (ForgeRegistryEntry) output);
-            List<Object> typeConversions = (List) GET_POTION_TYPE_CONVERSIONS.invokeExact();
+            Object mixPredicate = CREATE_MIX_PREDICATE.invokeExact((ForgeRegistryEntry<?>) input, reagent, (ForgeRegistryEntry<?>) output);
+            List<Object> typeConversions = (List<Object>) GET_POTION_TYPE_CONVERSIONS.invokeExact();
             typeConversions.add(mixPredicate);
         } catch (Throwable throwable) {
             throw new RuntimeException(throwable);

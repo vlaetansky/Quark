@@ -23,13 +23,11 @@ public class GravisandBlock extends QuarkBlock {
 	}
 	
 	@Override
-	@SuppressWarnings("deprecation")
 	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
 		checkRedstone(world, pos);
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
 		checkRedstone(worldIn, pos);
 	}
@@ -42,19 +40,16 @@ public class GravisandBlock extends QuarkBlock {
 	}
 	
 	@Override
-	@SuppressWarnings("deprecation")
 	public boolean hasComparatorInputOverride(BlockState state) {
 		return true;
 	}
 	
 	@Override
-	@SuppressWarnings("deprecation")
 	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
 		return 15;
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
 		if(!worldIn.isRemote) {
 			if(checkFallable(worldIn, pos))

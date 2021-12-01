@@ -10,10 +10,10 @@
  */
 package vazkii.quark.content.mobs.ai;
 
+import java.util.EnumSet;
+
 import net.minecraft.entity.ai.goal.Goal;
 import vazkii.quark.content.mobs.entity.CrabEntity;
-
-import java.util.EnumSet;
 
 public class RaveGoal extends Goal {
 	private final CrabEntity crab;

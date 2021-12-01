@@ -10,11 +10,11 @@
  */
 package vazkii.quark.content.mobs.ai;
 
+import java.util.EnumSet;
+
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import vazkii.quark.content.mobs.entity.FoxhoundEntity;
-
-import java.util.EnumSet;
 
 public class SleepGoal extends Goal {
 

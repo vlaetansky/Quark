@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -31,10 +30,10 @@ import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.handler.ModKeybindHandler;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
-import vazkii.quark.content.experimental.module.OverlayShaderModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.ModuleLoader;
+import vazkii.quark.base.module.QuarkModule;
+import vazkii.quark.content.experimental.module.OverlayShaderModule;
 
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class CameraModule extends QuarkModule {

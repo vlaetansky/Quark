@@ -10,10 +10,10 @@
  */
 package vazkii.quark.base.capability.dummy;
 
+import java.util.Comparator;
+
 import net.minecraft.item.ItemStack;
 import vazkii.quark.api.ICustomSorting;
-
-import java.util.Comparator;
 
 public class DummySorting implements ICustomSorting {
 	@Override

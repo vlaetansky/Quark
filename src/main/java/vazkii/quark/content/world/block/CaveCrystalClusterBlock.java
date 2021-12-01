@@ -76,7 +76,6 @@ public class CaveCrystalClusterBlock extends QuarkBlock implements IWaterLoggabl
 	
 	@Nonnull
 	@Override
-	@SuppressWarnings("deprecation")
 	public FluidState getFluidState(BlockState state) {
 		return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
 	}

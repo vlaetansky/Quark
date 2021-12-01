@@ -6,7 +6,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemGroup;
 import net.minecraftforge.common.ToolType;
-import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.block.QuarkInheritedPaneBlock;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;

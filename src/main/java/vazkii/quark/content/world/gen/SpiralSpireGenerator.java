@@ -1,7 +1,6 @@
 package vazkii.quark.content.world.gen;
 
 import java.util.Random;
-import java.util.function.Supplier;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -12,7 +11,6 @@ import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.WorldGenRegion;
 import vazkii.quark.base.module.config.type.DimensionConfig;
 import vazkii.quark.base.world.generator.multichunk.MultiChunkFeatureGenerator;
-import vazkii.quark.content.building.module.MoreStoneVariantsModule;
 import vazkii.quark.content.world.module.NewStoneTypesModule;
 import vazkii.quark.content.world.module.SpiralSpiresModule;
 

@@ -10,10 +10,10 @@
  */
 package vazkii.quark.content.mobs.ai;
 
+import java.util.EnumSet;
+
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.Goal;
-
-import java.util.EnumSet;
 
 public class PassivePassengerGoal extends Goal {
 	private final MobEntity entity;

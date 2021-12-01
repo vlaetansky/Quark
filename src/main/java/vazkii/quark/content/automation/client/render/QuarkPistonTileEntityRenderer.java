@@ -17,7 +17,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import vazkii.quark.base.Quark;
-import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 
 public class QuarkPistonTileEntityRenderer {

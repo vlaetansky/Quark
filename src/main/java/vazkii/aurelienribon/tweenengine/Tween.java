@@ -1,9 +1,9 @@
 package vazkii.aurelienribon.tweenengine;
 
-import vazkii.aurelienribon.tweenengine.equations.Quad;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import vazkii.aurelienribon.tweenengine.equations.Quad;
 
 /**
  * Core class of the Tween Engine. A Tween is basically an interpolation

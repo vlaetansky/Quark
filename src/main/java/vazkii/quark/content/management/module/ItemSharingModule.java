@@ -11,7 +11,6 @@
 package vazkii.quark.content.management.module;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 

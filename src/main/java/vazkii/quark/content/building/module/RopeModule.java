@@ -1,5 +1,7 @@
 package vazkii.quark.content.building.module;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DispenserBlock;
@@ -15,12 +17,10 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.content.building.block.RopeBlock;
-
-import javax.annotation.Nonnull;
 
 @LoadModule(category = ModuleCategory.BUILDING)
 public class RopeModule extends QuarkModule {

@@ -1,6 +1,9 @@
 package vazkii.quark.addons.oddities.render;
 
+import javax.annotation.Nonnull;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -21,8 +24,6 @@ import vazkii.arl.util.ClientTicker;
 import vazkii.quark.addons.oddities.entity.TotemOfHoldingEntity;
 import vazkii.quark.addons.oddities.module.TotemOfHoldingModule;
 
-import javax.annotation.Nonnull;
-
 /**
  * @author WireSegal
  * Created at 2:01 PM on 3/30/20.
@@ -34,7 +35,6 @@ public class TotemOfHoldingRenderer extends EntityRenderer<TotemOfHoldingEntity>
         super(manager);
     }
 
-    @SuppressWarnings("deprecation")
 	@Override
     public void render(TotemOfHoldingEntity entity, float entityYaw, float partialTicks, @Nonnull MatrixStack matrixStackIn, @Nonnull IRenderTypeBuffer bufferIn, int packedLightIn) {
         int deathTicks = entity.getDeathTicks();

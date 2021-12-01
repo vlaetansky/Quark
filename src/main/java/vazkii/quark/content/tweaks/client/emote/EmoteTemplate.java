@@ -1,21 +1,32 @@
 package vazkii.quark.content.tweaks.client.emote;
 
-import com.google.common.collect.Lists;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import vazkii.aurelienribon.tweenengine.*;
-import vazkii.quark.base.Quark;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Stack;
+
+import com.google.common.collect.Lists;
+
+import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import vazkii.aurelienribon.tweenengine.BaseTween;
+import vazkii.aurelienribon.tweenengine.Timeline;
+import vazkii.aurelienribon.tweenengine.Tween;
+import vazkii.aurelienribon.tweenengine.TweenCallback;
+import vazkii.aurelienribon.tweenengine.TweenEquation;
+import vazkii.aurelienribon.tweenengine.TweenEquations;
+import vazkii.quark.base.Quark;
 
 @OnlyIn(Dist.CLIENT)
 public class EmoteTemplate {

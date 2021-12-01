@@ -9,7 +9,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.list.ExtendedList;
-import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.client.config.gui.AbstractScrollingWidgetScreen;
 import vazkii.quark.base.client.config.gui.WidgetWrapper;
 

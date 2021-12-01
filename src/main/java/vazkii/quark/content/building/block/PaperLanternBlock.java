@@ -1,5 +1,7 @@
 package vazkii.quark.content.building.block;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -15,8 +17,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.module.QuarkModule;
-
-import javax.annotation.Nonnull;
 
 public class PaperLanternBlock extends QuarkBlock {
 
@@ -36,7 +36,6 @@ public class PaperLanternBlock extends QuarkBlock {
 
 	@Nonnull
 	@Override
-	@SuppressWarnings("deprecation")
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return SHAPE;
 	}

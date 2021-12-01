@@ -1,5 +1,9 @@
 package vazkii.quark.content.automation.block;
 
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
@@ -13,9 +17,6 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import vazkii.quark.base.block.QuarkPressurePlateBlock;
 import vazkii.quark.base.module.QuarkModule;
-
-import javax.annotation.Nonnull;
-import java.util.List;
 
 /**
  * @author WireSegal

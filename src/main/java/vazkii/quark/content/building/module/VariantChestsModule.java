@@ -175,7 +175,6 @@ public class VariantChestsModule extends QuarkModule {
 			 "repurposed_structures:pyramid_giant_tree_taiga=quark:spruce_chest",
 			 "repurposed_structures:pyramid_icy=quark:spruce_chest",
 			 "repurposed_structures:pyramid_jungle=quark:jungle_chest",
-			 "repurposed_structures:pyramid_mushroom=quark:mushroom_chest",
 			 "repurposed_structures:pyramid_nether=quark:nether_brick_trapped_chest",
 			 "repurposed_structures:pyramid_ocean=quark:prismarine_chest",
 			 "repurposed_structures:pyramid_snowy=quark:spruce_chest",
@@ -226,7 +225,6 @@ public class VariantChestsModule extends QuarkModule {
 		addChest("nether_brick", Blocks.NETHER_BRICKS);
 		addChest("purpur", Blocks.PURPUR_BLOCK);
 		addChest("prismarine", Blocks.PRISMARINE);
-		addChest("mushroom", Blocks.RED_MUSHROOM_BLOCK);
 
 		chestTEType = registerChests(VariantChestTileEntity::new, chestTypes);
 		trappedChestTEType = registerChests(VariantTrappedChestTileEntity::new, trappedChestTypes);

@@ -10,6 +10,8 @@
  */
 package vazkii.quark.content.tweaks.ai;
 
+import java.util.EnumSet;
+
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.passive.TameableEntity;
@@ -18,8 +20,6 @@ import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.SoundEvent;
-
-import java.util.EnumSet;
 
 public class NuzzleGoal extends Goal {
 

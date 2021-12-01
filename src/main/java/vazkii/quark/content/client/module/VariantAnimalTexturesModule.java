@@ -22,10 +22,16 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.content.client.render.variant.*;
+import vazkii.quark.content.client.render.variant.VariantBeeRenderer;
+import vazkii.quark.content.client.render.variant.VariantChickenRenderer;
+import vazkii.quark.content.client.render.variant.VariantCowRenderer;
+import vazkii.quark.content.client.render.variant.VariantDolphinRenderer;
+import vazkii.quark.content.client.render.variant.VariantLlamaRenderer;
+import vazkii.quark.content.client.render.variant.VariantPigRenderer;
+import vazkii.quark.content.client.render.variant.VariantRabbitRenderer;
 import vazkii.quark.mixin.RenderingRegistryAccessor;
 
 @LoadModule(category = ModuleCategory.CLIENT, hasSubscriptions = true, subscribeOn = Dist.CLIENT)

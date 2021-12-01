@@ -1,7 +1,21 @@
 package vazkii.quark.content.tweaks.client.emote;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
+
+import javax.annotation.Nonnull;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+
 import net.minecraft.resources.ResourcePack;
 import net.minecraft.resources.ResourcePackType;
 import net.minecraft.util.ResourceLocation;
@@ -10,11 +24,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.base.Quark;
 import vazkii.quark.content.tweaks.module.EmotesModule;
-
-import javax.annotation.Nonnull;
-import java.io.*;
-import java.util.*;
-import java.util.function.Predicate;
 
 @OnlyIn(Dist.CLIENT)
 public class CustomEmoteIconResourcePack extends ResourcePack {

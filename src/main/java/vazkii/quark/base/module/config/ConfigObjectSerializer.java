@@ -17,7 +17,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.type.IConfigType;
 
-@SuppressWarnings("deprecation")
 public final class ConfigObjectSerializer {
 	
 	public static void serialize(IConfigBuilder builder, ConfigFlagManager flagManager, List<Runnable> callbacks, Object object) throws ReflectiveOperationException {

@@ -1,10 +1,10 @@
 package vazkii.quark.base.handler;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 
 public class ItemOverrideHandler {
 

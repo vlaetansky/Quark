@@ -10,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import vazkii.arl.block.BasicBlock;
 import vazkii.arl.util.RegistryHelper;
-import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.handler.RequiredModTooltipHandler;
 import vazkii.quark.base.module.QuarkModule;
 

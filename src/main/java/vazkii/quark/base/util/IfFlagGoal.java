@@ -1,10 +1,11 @@
 package vazkii.quark.base.util;
 
-import net.minecraft.entity.ai.goal.Goal;
-
-import javax.annotation.Nonnull;
 import java.util.EnumSet;
 import java.util.function.BooleanSupplier;
+
+import javax.annotation.Nonnull;
+
+import net.minecraft.entity.ai.goal.Goal;
 
 /**
  * @author WireSegal

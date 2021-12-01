@@ -90,7 +90,6 @@ public class WoodPostBlock extends QuarkBlock implements IWaterLoggable {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public FluidState getFluidState(BlockState state) {
 		return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
 	}
@@ -101,7 +100,6 @@ public class WoodPostBlock extends QuarkBlock implements IWaterLoggable {
 	}
 	
 	@Override
-	@SuppressWarnings("deprecation")
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
 		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
 		

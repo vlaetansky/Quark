@@ -23,8 +23,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.GameData;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -66,7 +64,7 @@ public final class OverrideRegistryHandler {
 		for (Field declared : registryType.getDeclaredFields()) {
 			if (Modifier.isStatic(declared.getModifiers()) && obj.getClass().isAssignableFrom(declared.getType())) {
 				try {
-					IForgeRegistryEntry<?> fieldVal = (IForgeRegistryEntry) declared.get(null);
+					IForgeRegistryEntry<?> fieldVal = (IForgeRegistryEntry<?>) declared.get(null);
 					if (regName.equals(fieldVal.getRegistryName())) {
 						if (obj instanceof Block && fieldVal instanceof Block) {
 							Map<Block, Item> itemMap = GameData.getBlockItemMap();

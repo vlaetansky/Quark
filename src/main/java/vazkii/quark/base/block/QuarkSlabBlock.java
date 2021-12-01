@@ -5,7 +5,6 @@ import java.util.function.BooleanSupplier;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.client.renderer.color.IBlockColor;
@@ -22,7 +21,6 @@ import vazkii.arl.interf.IItemColorProvider;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.VariantHandler;
-import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
 
 public class QuarkSlabBlock extends SlabBlock implements IQuarkBlock, IBlockColorProvider {

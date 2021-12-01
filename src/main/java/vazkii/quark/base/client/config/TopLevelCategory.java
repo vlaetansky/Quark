@@ -26,7 +26,6 @@ public class TopLevelCategory extends ConfigCategory {
 			moduleOptions.put(obj.getName(), (IConfigObject<Boolean>) obj);
 	}
 	
-	@SuppressWarnings("deprecation")
 	public IConfigObject<Boolean> getModuleOption(ModuleCategory category) {
 		return moduleOptions.get(WordUtils.capitalizeFully(category.name));
 	}

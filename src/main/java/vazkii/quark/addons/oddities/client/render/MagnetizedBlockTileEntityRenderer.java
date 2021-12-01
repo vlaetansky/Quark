@@ -35,7 +35,6 @@ public class MagnetizedBlockTileEntityRenderer extends TileEntityRenderer<Magnet
 		super(d);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void render(MagnetizedBlockTileEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
 		World world = tileEntityIn.getWorld();
@@ -65,7 +64,6 @@ public class MagnetizedBlockTileEntityRenderer extends TileEntityRenderer<Magnet
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private void renderStateModel(BlockPos p_228876_1_, BlockState p_228876_2_, MatrixStack p_228876_3_, IRenderTypeBuffer p_228876_4_, World p_228876_5_, boolean p_228876_6_, int p_228876_7_) {
 		RenderType.getBlockRenderTypes().stream().filter(t -> RenderTypeLookup.canRenderInLayer(p_228876_2_, t)).forEach(rendertype -> {
 			ForgeHooksClient.setRenderLayer(rendertype);

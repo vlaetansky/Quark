@@ -1,5 +1,8 @@
 package vazkii.quark.base.module.config;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.loot.LootConditionType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
@@ -8,9 +11,6 @@ import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.recipe.FlagIngredient;
 import vazkii.quark.base.recipe.PotionIngredient;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public final class ConfigFlagManager {
 

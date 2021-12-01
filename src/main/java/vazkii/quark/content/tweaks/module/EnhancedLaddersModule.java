@@ -30,10 +30,9 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.content.building.module.VariantLaddersModule;
 
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
 public class EnhancedLaddersModule extends QuarkModule {
@@ -49,7 +48,6 @@ public class EnhancedLaddersModule extends QuarkModule {
 		laddersTag = ItemTags.createOptional(new ResourceLocation(Quark.MOD_ID, "ladders"));
 	}
 	
-	@SuppressWarnings("deprecation")
 	private static boolean canAttachTo(BlockState state, Block ladder, IWorldReader world, BlockPos pos, Direction facing) {
 		if (ladder instanceof LadderBlock) {
 			BlockPos offset = pos.offset(facing);

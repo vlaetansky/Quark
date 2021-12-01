@@ -10,17 +10,22 @@
  */
 package vazkii.quark.content.mobs.entity;
 
+import static vazkii.quark.content.world.module.NewStoneTypesModule.jasperBlock;
+import static vazkii.quark.content.world.module.NewStoneTypesModule.limestoneBlock;
+import static vazkii.quark.content.world.module.NewStoneTypesModule.marbleBlock;
+import static vazkii.quark.content.world.module.NewStoneTypesModule.polishedBlocks;
+import static vazkii.quark.content.world.module.NewStoneTypesModule.slateBlock;
+
+import java.util.List;
+
 import com.google.common.collect.Lists;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import vazkii.quark.base.Quark;
-
-import static vazkii.quark.content.world.module.NewStoneTypesModule.*;
-
-import java.util.List;
 
 public enum EnumStonelingVariant implements ILivingEntityData {
 	STONE("stone", Blocks.COBBLESTONE, Blocks.STONE),

@@ -1,15 +1,16 @@
 package vazkii.quark.base.handler;
 
-import com.google.common.collect.ImmutableSet;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.Block;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.registries.IForgeRegistryEntry;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import com.google.common.collect.ImmutableSet;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
 /**
  * @author WireSegal

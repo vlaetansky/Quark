@@ -3,7 +3,6 @@ package vazkii.quark.addons.oddities.container;
 import javax.annotation.Nonnull;
 
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;

@@ -1,5 +1,7 @@
 package vazkii.quark.mixin.client;
 
+import java.util.List;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,10 +20,8 @@ import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
-import vazkii.quark.content.tools.module.ColorRunesModule;
 import vazkii.quark.content.management.module.ItemSharingModule;
-
-import java.util.List;
+import vazkii.quark.content.tools.module.ColorRunesModule;
 
 @Mixin(ItemRenderer.class)
 public abstract class ItemRendererMixin {

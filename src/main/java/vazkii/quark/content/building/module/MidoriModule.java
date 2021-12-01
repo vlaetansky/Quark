@@ -11,8 +11,8 @@ import vazkii.quark.base.block.QuarkPillarBlock;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 
 @LoadModule(category = ModuleCategory.BUILDING)
 public class MidoriModule extends QuarkModule {

@@ -56,21 +56,18 @@ public class FeedingTroughBlock extends QuarkBlock {
 
     @Nonnull
     @Override
-    @SuppressWarnings("deprecation")
     public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull IBlockReader world, @Nonnull BlockPos pos, ISelectionContext context) {
         return EMPTY_SHAPE;
     }
 
     @Nonnull
     @Override
-    @SuppressWarnings("deprecation")
     public VoxelShape getRaytraceShape(BlockState state, IBlockReader world, BlockPos pos) {
         return CUBOID_SHAPE;
     }
 
     @Nonnull
     @Override
-    @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
         return state.get(FULL) ? FULL_SHAPE : EMPTY_SHAPE;
     }
@@ -96,7 +93,6 @@ public class FeedingTroughBlock extends QuarkBlock {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void onReplaced(BlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
             TileEntity tile = world.getTileEntity(pos);
@@ -120,20 +116,17 @@ public class FeedingTroughBlock extends QuarkBlock {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public boolean hasComparatorInputOverride(BlockState state) {
         return true;
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public int getComparatorInputOverride(BlockState state, World world, BlockPos pos) {
         return Container.calcRedstone(world.getTileEntity(pos));
     }
 
     
     @Override
-    @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         if (world.isRemote)
             return ActionResultType.SUCCESS;
@@ -147,7 +140,6 @@ public class FeedingTroughBlock extends QuarkBlock {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public boolean eventReceived(BlockState state, World world, BlockPos pos, int id, int param) {
         super.eventReceived(state, world, pos, id, param);
         TileEntity tile = world.getTileEntity(pos);
@@ -156,7 +148,6 @@ public class FeedingTroughBlock extends QuarkBlock {
 
     @Override
     @Nullable
-    @SuppressWarnings("deprecation")
     public INamedContainerProvider getContainer(BlockState state, World world, BlockPos pos) {
         TileEntity tile = world.getTileEntity(pos);
         return tile instanceof INamedContainerProvider ? (INamedContainerProvider)tile : null;

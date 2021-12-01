@@ -5,7 +5,6 @@ import org.apache.commons.lang3.text.WordUtils;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
@@ -40,7 +39,6 @@ public class CategoryScreen extends AbstractScrollingWidgetScreen {
 	}
 	
 	@Override
-	@SuppressWarnings("deprecation")
 	public void render(MatrixStack mstack, int mouseX, int mouseY, float pticks) {
 		super.render(mstack, mouseX, mouseY, pticks);
 		

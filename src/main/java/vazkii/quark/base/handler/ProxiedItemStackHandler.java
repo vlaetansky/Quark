@@ -161,7 +161,6 @@ public class ProxiedItemStackHandler implements IItemHandler, IItemHandlerModifi
 			throw new RuntimeException("Slot " + slot + " not in valid range - [0," + size + ")");
 	}
 
-	@SuppressWarnings({"unused", "EmptyMethod"})
 	protected void onContentsChanged(int slot) {
 		// NO-OP
 	}

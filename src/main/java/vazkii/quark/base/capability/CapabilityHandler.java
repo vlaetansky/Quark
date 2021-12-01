@@ -1,5 +1,10 @@
 package vazkii.quark.base.capability;
 
+import java.util.concurrent.Callable;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -17,16 +22,17 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import vazkii.quark.addons.oddities.capability.MagnetTracker;
-import vazkii.quark.api.*;
+import vazkii.quark.api.ICustomSorting;
+import vazkii.quark.api.IMagnetTracker;
+import vazkii.quark.api.IPistonCallback;
+import vazkii.quark.api.IRuneColorProvider;
+import vazkii.quark.api.ITransferManager;
+import vazkii.quark.api.QuarkCapabilities;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.capability.dummy.DummyMagnetTracker;
 import vazkii.quark.base.capability.dummy.DummyPistonCallback;
 import vazkii.quark.base.capability.dummy.DummyRuneColor;
 import vazkii.quark.base.capability.dummy.DummySorting;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.concurrent.Callable;
 
 @Mod.EventBusSubscriber(modid = Quark.MOD_ID)
 public class CapabilityHandler {
@@ -96,7 +102,6 @@ public class CapabilityHandler {
         event.addCapability(MAGNET_TRACKER, new ICapabilityProvider() {
             @Nonnull
             @Override
-            @SuppressWarnings("ConstantConditions")
             public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
                 return QuarkCapabilities.MAGNET_TRACKER_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> tracker));
             }

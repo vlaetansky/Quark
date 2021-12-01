@@ -19,7 +19,6 @@ import net.minecraftforge.forgespi.language.ModFileScanData;
 import net.minecraftforge.forgespi.language.ModFileScanData.AnnotationData;
 import vazkii.quark.base.Quark;
 
-@SuppressWarnings("deprecation")
 public final class ModuleFinder {
 	
     private static final Type LOAD_MODULE_TYPE = Type.getType(LoadModule.class);

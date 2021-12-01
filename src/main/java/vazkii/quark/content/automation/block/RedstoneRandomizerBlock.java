@@ -59,7 +59,6 @@ public class RedstoneRandomizerBlock extends QuarkBlock {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void tick(BlockState state, ServerWorld world, BlockPos pos, Random rand) {
         boolean isPowered = isPowered(state);
         boolean willBePowered = shouldBePowered(world, pos, state);
@@ -91,13 +90,11 @@ public class RedstoneRandomizerBlock extends QuarkBlock {
 
     @Nonnull
     @Override
-    @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
         return SHAPE;
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos pos) {
         return hasSolidSideOnTop(world, pos.down());
     }
@@ -107,13 +104,11 @@ public class RedstoneRandomizerBlock extends QuarkBlock {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
         return blockState.getWeakPower(blockAccess, pos, side);
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
         RandomizerPowerState powerState = blockState.get(POWERED);
         switch (powerState) {
@@ -127,7 +122,6 @@ public class RedstoneRandomizerBlock extends QuarkBlock {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         if (state.isValidPosition(world, pos))
             this.updateState(world, pos, state);
@@ -160,7 +154,6 @@ public class RedstoneRandomizerBlock extends QuarkBlock {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public boolean canProvidePower(BlockState state) {
         return true;
     }
@@ -178,13 +171,11 @@ public class RedstoneRandomizerBlock extends QuarkBlock {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
         notifyNeighbors(this, world, pos, state);
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void onReplaced(BlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
         if (!isMoving && state.getBlock() != newState.getBlock()) {
             super.onReplaced(state, world, pos, newState, false);

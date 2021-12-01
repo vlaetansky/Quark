@@ -14,8 +14,8 @@ import net.minecraftforge.event.world.NoteBlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
 public class NoteBlockMobSoundsModule extends QuarkModule {

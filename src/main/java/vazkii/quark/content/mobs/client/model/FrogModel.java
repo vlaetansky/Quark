@@ -1,13 +1,14 @@
 package vazkii.quark.content.mobs.client.model;
 
+import javax.annotation.Nonnull;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.util.math.MathHelper;
 import vazkii.quark.content.mobs.entity.FrogEntity;
-
-import javax.annotation.Nonnull;
 
 public class FrogModel extends EntityModel<FrogEntity> {
 

@@ -20,8 +20,8 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -83,7 +83,6 @@ public class StoolBlock extends QuarkBlock implements IWaterLoggable {
 	}
 	
 	@Override
-	@SuppressWarnings("deprecation")
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		if(state.get(SAT_IN) || !worldIn.getBlockState(pos.up()).isAir() || player.getRidingEntity() != null)
 			return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
@@ -133,7 +132,6 @@ public class StoolBlock extends QuarkBlock implements IWaterLoggable {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public FluidState getFluidState(BlockState state) {
 		return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
 	}

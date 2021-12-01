@@ -8,8 +8,8 @@ import net.minecraft.item.ItemGroup;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkFenceGateBlock;
 import vazkii.quark.base.module.LoadModule;
-import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.QuarkModule;
 
 /**
  * @author WireSegal

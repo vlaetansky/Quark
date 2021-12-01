@@ -5,11 +5,8 @@ import java.util.function.BooleanSupplier;
 
 import javax.annotation.Nullable;
 
-import com.google.common.base.Predicates;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;

@@ -60,7 +60,6 @@ public class ConfigCategory extends AbstractConfigElement implements IConfigCate
 	}
 	
 	@Override
-	@SuppressWarnings("deprecation")
 	public String getGuiDisplayName() {
 		return WordUtils.capitalize(getName().replaceAll("_", " "));
 	}

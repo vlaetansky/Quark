@@ -7,10 +7,10 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.tileentity.TileEntityType;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.module.LoadModule;
+import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.automation.block.ChuteBlock;
 import vazkii.quark.content.automation.tile.ChuteTileEntity;
-import vazkii.quark.base.module.ModuleCategory;
 
 /**
  * @author WireSegal

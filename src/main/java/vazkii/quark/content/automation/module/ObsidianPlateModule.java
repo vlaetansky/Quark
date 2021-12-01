@@ -6,9 +6,9 @@ import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.ItemGroup;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.module.LoadModule;
+import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.automation.block.ObsidianPressurePlateBlock;
-import vazkii.quark.base.module.ModuleCategory;
 
 /**
  * @author WireSegal

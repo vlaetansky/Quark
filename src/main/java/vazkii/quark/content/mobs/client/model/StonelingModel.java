@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.client.renderer.model.ModelRenderer.ModelBox;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import vazkii.quark.content.mobs.entity.StonelingEntity;

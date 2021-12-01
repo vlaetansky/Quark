@@ -1,7 +1,6 @@
 package vazkii.quark.addons.oddities.item;
 
 import java.util.Map;
-import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;

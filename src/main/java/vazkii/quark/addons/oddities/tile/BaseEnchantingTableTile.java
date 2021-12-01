@@ -1,5 +1,9 @@
 package vazkii.quark.addons.oddities.tile;
 
+import java.util.Random;
+
+import javax.annotation.Nonnull;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
@@ -13,9 +17,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import vazkii.arl.block.tile.TileSimpleInventory;
 import vazkii.quark.base.handler.MiscUtil;
-
-import javax.annotation.Nonnull;
-import java.util.Random;
 
 public abstract class BaseEnchantingTableTile extends TileSimpleInventory implements ITickableTileEntity, INameable {
 

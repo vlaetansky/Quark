@@ -140,7 +140,6 @@ public class VerticalSlabBlock extends QuarkBlock implements IWaterLoggable, IBl
 
 	@Nonnull
 	@Override
-	@SuppressWarnings("deprecation")
 	public FluidState getFluidState(BlockState state) {
 		return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
 	}
@@ -157,7 +156,6 @@ public class VerticalSlabBlock extends QuarkBlock implements IWaterLoggable, IBl
 
 	@Nonnull
 	@Override
-	@SuppressWarnings("deprecation")
 	public BlockState updatePostPlacement(@Nonnull BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
 		if(stateIn.get(WATERLOGGED))
 			worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));

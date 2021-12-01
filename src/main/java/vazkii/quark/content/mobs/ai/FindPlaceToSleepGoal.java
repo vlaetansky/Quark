@@ -10,6 +10,8 @@
  */
 package vazkii.quark.content.mobs.ai;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.tileentity.FurnaceTileEntity;
@@ -18,8 +20,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorldReader;
 import vazkii.quark.content.mobs.entity.FoxhoundEntity;
-
-import javax.annotation.Nonnull;
 
 public class FindPlaceToSleepGoal extends MoveToBlockGoal {
 	private final FoxhoundEntity foxhound;

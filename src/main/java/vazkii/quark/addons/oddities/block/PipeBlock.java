@@ -30,7 +30,6 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.addons.oddities.tile.PipeTileEntity;
@@ -58,7 +57,6 @@ public class PipeBlock extends QuarkBlock implements IWaterLoggable {
 	public static final BooleanProperty EAST = BooleanProperty.create("east");
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-	@SuppressWarnings("unchecked")
 	private static final BooleanProperty[] CONNECTIONS = new BooleanProperty[] {
 			DOWN, UP, NORTH, SOUTH, WEST, EAST
 	};
@@ -134,7 +132,6 @@ public class PipeBlock extends QuarkBlock implements IWaterLoggable {
 	
 	@Nonnull
 	@Override
-	@SuppressWarnings("deprecation")
 	public FluidState getFluidState(BlockState state) {
 		return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
 	}

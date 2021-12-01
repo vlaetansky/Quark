@@ -60,12 +60,10 @@ import net.minecraftforge.common.extensions.IForgeWorldServer;
 import net.minecraftforge.fml.network.NetworkHooks;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.handler.QuarkSounds;
-import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.util.IfFlagGoal;
 import vazkii.quark.content.mobs.ai.ActWaryGoal;
 import vazkii.quark.content.mobs.ai.FavorBlockGoal;
 import vazkii.quark.content.mobs.ai.RunAndPoofGoal;
-import vazkii.quark.content.mobs.module.FrogsModule;
 import vazkii.quark.content.mobs.module.StonelingsModule;
 
 public class StonelingEntity extends CreatureEntity {

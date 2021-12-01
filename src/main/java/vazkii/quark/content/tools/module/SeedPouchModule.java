@@ -184,7 +184,6 @@ public class SeedPouchModule extends QuarkModule {
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	@SuppressWarnings("deprecation")
 	public void renderTooltip(RenderTooltipEvent.PostText event) {
 		ItemStack stack = event.getStack();
 		if(stack.getItem() == seed_pouch) {

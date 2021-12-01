@@ -2,9 +2,8 @@ package vazkii.quark.content.world.config;
 
 import net.minecraftforge.common.BiomeDictionary;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.base.module.config.type.CompoundBiomeConfig;
-import vazkii.quark.base.module.config.type.BiomeTypeConfig;
 import vazkii.quark.base.module.config.type.ClusterSizeConfig;
+import vazkii.quark.base.module.config.type.CompoundBiomeConfig;
 import vazkii.quark.base.module.config.type.DimensionConfig;
 import vazkii.quark.base.module.config.type.IBiomeConfig;
 

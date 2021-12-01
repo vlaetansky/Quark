@@ -271,7 +271,6 @@ public class MagnetizedBlockTileEntity extends TileEntity implements ITickableTi
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void tick() {
         if (this.world == null)
             return;
