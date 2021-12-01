@@ -2,8 +2,8 @@ package vazkii.quark.content.client.tooltip;
 
 import java.util.List;
 
-import net.minecraft.network.chat.FormattedText;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.FormattedText;
 
 /**
  * @author WireSegal

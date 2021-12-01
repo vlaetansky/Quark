@@ -7,9 +7,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.world.item.RecordItem;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.item.RecordItem;
 import vazkii.quark.base.item.QuarkMusicDiscItem;
 
 @Mixin(LevelRenderer.class)

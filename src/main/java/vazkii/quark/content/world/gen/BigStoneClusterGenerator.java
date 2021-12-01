@@ -3,17 +3,15 @@ package vazkii.quark.content.world.gen;
 import java.util.Random;
 import java.util.function.BooleanSupplier;
 
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import vazkii.quark.base.world.generator.multichunk.ClusterBasedGenerator;
 import vazkii.quark.content.world.config.AirStoneClusterConfig;
 import vazkii.quark.content.world.config.BigStoneClusterConfig;
 import vazkii.quark.content.world.module.BigStoneClustersModule;
-
-import vazkii.quark.base.world.generator.multichunk.ClusterBasedGenerator.IGenerationContext;
 
 public class BigStoneClusterGenerator extends ClusterBasedGenerator {
 

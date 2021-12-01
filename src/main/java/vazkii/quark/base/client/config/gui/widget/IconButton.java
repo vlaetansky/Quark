@@ -7,11 +7,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 import vazkii.quark.base.client.handler.TopLayerTooltipHandler;
-
-import net.minecraft.client.gui.components.Button.OnPress;
 
 public class IconButton extends Button {
 

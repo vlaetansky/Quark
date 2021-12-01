@@ -2,19 +2,18 @@ package vazkii.quark.content.building.block;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraftforge.common.ToolType;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.module.QuarkModule;
 
@@ -28,8 +27,8 @@ public class PaperLanternBlock extends QuarkBlock {
 		super(regname, module, CreativeModeTab.TAB_DECORATIONS,
 				Block.Properties.of(Material.WOOD, MaterialColor.SNOW)
 						.sound(SoundType.WOOD)
-						.harvestTool(ToolType.AXE)
-						.harvestLevel(0)
+//						.harvestTool(ToolType.AXE) TODO tag
+//						.harvestLevel(0)
 						.lightLevel(b -> 15)
 						.strength(1.5F));
 	}

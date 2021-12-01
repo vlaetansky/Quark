@@ -2,21 +2,19 @@ package vazkii.quark.content.automation.block;
 
 import java.util.Random;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.Level;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.automation.entity.GravisandEntity;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class GravisandBlock extends QuarkBlock {
 
@@ -38,7 +36,7 @@ public class GravisandBlock extends QuarkBlock {
         boolean powered = worldIn.hasNeighborSignal(pos);
 
         if(powered)
-        	worldIn.getBlockTicks().scheduleTick(pos, this, 2);
+        	worldIn.scheduleTick(pos, this, 2);
 	}
 	
 	@Override
@@ -60,7 +58,7 @@ public class GravisandBlock extends QuarkBlock {
 					BlockState offState = worldIn.getBlockState(offPos);
 					
 					if(offState.getBlock() == this)
-			        	worldIn.getBlockTicks().scheduleTick(offPos, this, 2);
+			        	worldIn.scheduleTick(offPos, this, 2);
 				}
 		}
 	}
@@ -89,7 +87,7 @@ public class GravisandBlock extends QuarkBlock {
     public static boolean canFallThrough(LevelReader world, BlockPos pos, BlockState state) {
 		Block block = state.getBlock();
 		Material material = state.getMaterial();
-		return state.isAir(world, pos) || block == Blocks.FIRE || material.isLiquid() || material.isReplaceable();
+		return state.isAir() || block == Blocks.FIRE || material.isLiquid() || material.isReplaceable();
     }
 
 }

@@ -12,15 +12,12 @@ import java.util.function.Supplier;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
 
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.registry.IRenderFactory;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -33,7 +30,6 @@ import vazkii.quark.content.client.render.variant.VariantDolphinRenderer;
 import vazkii.quark.content.client.render.variant.VariantLlamaRenderer;
 import vazkii.quark.content.client.render.variant.VariantPigRenderer;
 import vazkii.quark.content.client.render.variant.VariantRabbitRenderer;
-import vazkii.quark.mixin.RenderingRegistryAccessor;
 
 @LoadModule(category = ModuleCategory.CLIENT, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class VariantAnimalTexturesModule extends QuarkModule {
@@ -76,24 +72,24 @@ public class VariantAnimalTexturesModule extends QuarkModule {
 		if(enableCow)
 			EntityRenderers.register(EntityType.COW, VariantCowRenderer::new);
 		if(enablePig)
-			RenderingRegistry.registerEntityRenderingHandler(EntityType.PIG, VariantPigRenderer::new);
+			EntityRenderers.register(EntityType.PIG, VariantPigRenderer::new);
 		if(enableChicken)
-			RenderingRegistry.registerEntityRenderingHandler(EntityType.CHICKEN, VariantChickenRenderer::new);
+			EntityRenderers.register(EntityType.CHICKEN, VariantChickenRenderer::new);
 		if(enableShinyRabbit)
-			RenderingRegistry.registerEntityRenderingHandler(EntityType.RABBIT, VariantRabbitRenderer::new);
+			EntityRenderers.register(EntityType.RABBIT, VariantRabbitRenderer::new);
 		if(enableShinyLlama)
-			RenderingRegistry.registerEntityRenderingHandler(EntityType.LLAMA, VariantLlamaRenderer::new);
+			EntityRenderers.register(EntityType.LLAMA, VariantLlamaRenderer::new);
 		if(enableLGBTBees)
 			registerAndStackBeeRenderers();
 		if(enableShinyDolphin)
-			RenderingRegistry.registerEntityRenderingHandler(EntityType.DOLPHIN, VariantDolphinRenderer::new);
+			EntityRenderers.register(EntityType.DOLPHIN, VariantDolphinRenderer::new);
 
 	}
 
 	@SuppressWarnings("unchecked")
 	private void registerAndStackBeeRenderers() {
-		VariantBeeRenderer.OLD_BEE_RENDER_FACTORY = (IRenderFactory<Bee>) ((RenderingRegistryAccessor) RenderingRegistryAccessor.getINSTANCE()).getEntityRenderers().get(EntityType.BEE);
-		RenderingRegistry.registerEntityRenderingHandler(EntityType.BEE, VariantBeeRenderer::new);
+		VariantBeeRenderer.OLD_BEE_RENDER_FACTORY = EntityRenderers.PROVIDERS.get(EntityType.BEE); // TODO AT
+		EntityRenderers.register(EntityType.BEE, VariantBeeRenderer::new);
 	}
 
 	@OnlyIn(Dist.CLIENT)

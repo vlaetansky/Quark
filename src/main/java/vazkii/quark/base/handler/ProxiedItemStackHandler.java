@@ -3,13 +3,14 @@ package vazkii.quark.base.handler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.world.item.ItemStack;
+import com.mojang.math.Constants;
+
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -46,7 +47,7 @@ public class ProxiedItemStackHandler implements IItemHandler, IItemHandlerModifi
 	}
 
 	private ListTag getStackList() {
-		ListTag list = ItemNBTHelper.getList(stack, key, Constants.NBT.TAG_COMPOUND, true);
+		ListTag list = ItemNBTHelper.getList(stack, key, 10, true);
 		if (list == null)
 			ItemNBTHelper.setList(stack, key, list = new ListTag());
 

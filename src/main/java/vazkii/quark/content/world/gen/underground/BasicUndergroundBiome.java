@@ -1,7 +1,7 @@
 package vazkii.quark.content.world.gen.underground;
 
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 import vazkii.quark.content.world.gen.UndergroundBiomeGenerator.Context;
 
 public class BasicUndergroundBiome extends UndergroundBiome {

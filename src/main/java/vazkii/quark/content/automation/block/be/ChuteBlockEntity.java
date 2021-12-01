@@ -1,19 +1,19 @@
-package vazkii.quark.content.automation.tile;
+package vazkii.quark.content.automation.block.be;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import vazkii.arl.block.be.ARLBlockEntity;
 import vazkii.quark.content.automation.block.ChuteBlock;
 import vazkii.quark.content.automation.module.ChuteModule;
 
@@ -21,17 +21,17 @@ import vazkii.quark.content.automation.module.ChuteModule;
  * @author WireSegal
  * Created at 10:18 AM on 9/29/19.
  */
-public class ChuteTileEntity extends BlockEntity {
-    public ChuteTileEntity() {
-        super(ChuteModule.tileEntityType);
+public class ChuteBlockEntity extends ARLBlockEntity {
+	
+    public ChuteBlockEntity(BlockPos pos, BlockState state) {
+        super(ChuteModule.blockEntityType, pos, state);
     }
 
     private boolean canDropItem() {
         if(level != null && level.getBlockState(worldPosition).getValue(ChuteBlock.ENABLED)) {
             BlockPos below = worldPosition.below();
             BlockState state = level.getBlockState(below);
-            Block block = state.getBlock();
-            return block.isAir(state, level, below) || state.getCollisionShape(level, below).isEmpty();
+            return state.isAir() || state.getCollisionShape(level, below).isEmpty();
         }
 
         return false;

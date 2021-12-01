@@ -4,21 +4,11 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.content.client.tooltip.AttributeTooltips;
-import vazkii.quark.content.client.tooltip.EnchantedBookTooltips;
-import vazkii.quark.content.client.tooltip.FoodTooltips;
-import vazkii.quark.content.client.tooltip.MapTooltips;
-import vazkii.quark.content.client.tooltip.ShulkerBoxTooltips;
 
 /**
  * @author WireSegal
@@ -67,49 +57,50 @@ public class ImprovedTooltipsModule extends QuarkModule {
     public static List<String> enchantingAdditionalStacks = Lists.newArrayList();
 
     private static final String IGNORE_TAG = "quark:no_tooltip";
-    
-    @Override
-    public void configChanged() {
-        EnchantedBookTooltips.reloaded();
-    }
-
-    private static boolean ignore(ItemStack stack) {
-    	return stack.hasTag() && stack.getTag().getBoolean(IGNORE_TAG);
-    }
-    
-    @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
-    public void makeTooltip(ItemTooltipEvent event) {
-    	if(ignore(event.getItemStack()))
-    		return;
-    	
-        if (attributeTooltips)
-            AttributeTooltips.makeTooltip(event);
-        if (foodTooltips || showSaturation)
-            FoodTooltips.makeTooltip(event, foodTooltips, showSaturation);
-        if (shulkerTooltips)
-            ShulkerBoxTooltips.makeTooltip(event);
-        if (mapTooltips)
-            MapTooltips.makeTooltip(event);
-        if (enchantingTooltips)
-            EnchantedBookTooltips.makeTooltip(event);
-    }
-
-    @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
-    public void renderTooltip(RenderTooltipEvent.PostText event) {
-    	if(ignore(event.getStack()))
-    		return;
-    	
-        if (attributeTooltips)
-            AttributeTooltips.renderTooltip(event);
-        if (foodTooltips)
-            FoodTooltips.renderTooltip(event);
-        if (shulkerTooltips)
-            ShulkerBoxTooltips.renderTooltip(event);
-        if (mapTooltips)
-            MapTooltips.renderTooltip(event);
-        if (enchantingTooltips)
-            EnchantedBookTooltips.renderTooltip(event);
-    }
+  
+// TODO remake this module entirely
+//    @Override
+//    public void configChanged() {
+//        EnchantedBookTooltips.reloaded();
+//    }
+//
+//    private static boolean ignore(ItemStack stack) {
+//    	return stack.hasTag() && stack.getTag().getBoolean(IGNORE_TAG);
+//    }
+//    
+//    @SubscribeEvent
+//    @OnlyIn(Dist.CLIENT)
+//    public void makeTooltip(ItemTooltipEvent event) {
+//    	if(ignore(event.getItemStack()))
+//    		return;
+//    	
+//        if (attributeTooltips)
+//            AttributeTooltips.makeTooltip(event);
+//        if (foodTooltips || showSaturation)
+//            FoodTooltips.makeTooltip(event, foodTooltips, showSaturation);
+//        if (shulkerTooltips)
+//            ShulkerBoxTooltips.makeTooltip(event);
+//        if (mapTooltips)
+//            MapTooltips.makeTooltip(event);
+//        if (enchantingTooltips)
+//            EnchantedBookTooltips.makeTooltip(event);
+//    }
+//
+//    @SubscribeEvent
+//    @OnlyIn(Dist.CLIENT)
+//    public void renderTooltip(RenderTooltipEvent event) {
+//    	if(ignore(event.getStack()))
+//    		return;
+//    	
+//        if (attributeTooltips)
+//            AttributeTooltips.renderTooltip(event);
+//        if (foodTooltips)
+//            FoodTooltips.renderTooltip(event);
+//        if (shulkerTooltips)
+//            ShulkerBoxTooltips.renderTooltip(event);
+//        if (mapTooltips)
+//            MapTooltips.renderTooltip(event);
+//        if (enchantingTooltips)
+//            EnchantedBookTooltips.renderTooltip(event);
+//    }
 }

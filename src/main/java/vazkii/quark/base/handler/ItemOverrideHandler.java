@@ -3,8 +3,8 @@ package vazkii.quark.base.handler;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 
 public class ItemOverrideHandler {
 

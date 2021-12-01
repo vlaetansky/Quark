@@ -2,14 +2,14 @@ package vazkii.quark.content.world.gen.underground;
 
 import java.util.function.Predicate;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockState;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.content.world.gen.UndergroundBiomeGenerator.Context;
@@ -22,11 +22,10 @@ public abstract class UndergroundBiome {
 		if(state == null)
 			return false;
 		
-		Block block = state.getBlock();
 		if(fillerTag == null)
 			fillerTag = BlockTags.bind(Quark.MOD_ID + ":underground_biome_replaceable");
 		
-		return block.is(fillerTag);
+		return state.is(fillerTag);
 	};
 	
 	public double dungeonChance;

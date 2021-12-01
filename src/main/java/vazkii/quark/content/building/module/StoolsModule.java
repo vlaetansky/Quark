@@ -1,16 +1,16 @@
 package vazkii.quark.content.building.module;
 
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.MobCategory;
+import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -51,7 +51,7 @@ public class StoolsModule extends QuarkModule {
     @Override
     @OnlyIn(Dist.CLIENT)
     public void clientSetup() {
-        RenderingRegistry.registerEntityRenderingHandler(stoolEntity, StoolEntityRenderer::new);
+    	EntityRenderers.register(stoolEntity, StoolEntityRenderer::new);
     }
 
 }

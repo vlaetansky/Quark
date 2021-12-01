@@ -1,9 +1,9 @@
 package vazkii.quark.base.network.message;
 
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraftforge.network.NetworkEvent;
 import vazkii.arl.network.IMessage;
 import vazkii.quark.content.tweaks.module.DoubleDoorOpeningModule;
 
@@ -24,7 +24,7 @@ public class DoubleDoorMessage implements IMessage {
 	}
 
 	@Override
-	public boolean receive(Context context) {
+	public boolean receive(NetworkEvent.Context context) {
 		context.enqueueWork(() -> DoubleDoorOpeningModule.openDoor(extractWorld(context.getSender()), context.getSender(), pos));
 		return true;
 	}

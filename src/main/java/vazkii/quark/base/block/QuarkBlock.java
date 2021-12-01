@@ -4,29 +4,30 @@ import java.util.function.BooleanSupplier;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.world.level.block.Block;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.NonNullList;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import vazkii.arl.block.BasicBlock;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.client.handler.RequiredModTooltipHandler;
 import vazkii.quark.base.module.QuarkModule;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
 public class QuarkBlock extends BasicBlock implements IQuarkBlock {
-	
+
 	private final QuarkModule module;
 	private BooleanSupplier enabledSupplier = () -> true;
 
 	public QuarkBlock(String regname, QuarkModule module, CreativeModeTab creativeTab, Properties properties) {
 		super(regname, properties);
 		this.module = module;
-		
+
 		if(creativeTab != null)
 			RegistryHelper.setCreativeTab(this, creativeTab);
-		
+
 		if(module.category.isAddon())
 			RequiredModTooltipHandler.map(this, module.category.requiredMod);
 	}
@@ -54,10 +55,16 @@ public class QuarkBlock extends BasicBlock implements IQuarkBlock {
 		return module;
 	}
 
-	public static interface Constructor<T extends Block> {
-		
-		public T make(String regname, QuarkModule module, CreativeModeTab creativeTab, Properties properties);
-		
+	@Nullable
+	@SuppressWarnings("unchecked")
+	protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> p_152133_, BlockEntityType<E> p_152134_, BlockEntityTicker<? super E> p_152135_) {
+		return p_152134_ == p_152133_ ? (BlockEntityTicker<A>) p_152135_ : null;
 	}
-	
+
+	public static interface Constructor<T extends Block> {
+
+		public T make(String regname, QuarkModule module, CreativeModeTab creativeTab, Properties properties);
+
+	}
+
 }

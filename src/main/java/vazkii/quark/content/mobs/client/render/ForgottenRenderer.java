@@ -4,8 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.SkeletonRenderer;
-import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.monster.AbstractSkeleton;
 import vazkii.quark.base.Quark;
 import vazkii.quark.content.mobs.client.layer.forgotten.ForgottenClothingLayer;
 import vazkii.quark.content.mobs.client.layer.forgotten.ForgottenEyesLayer;

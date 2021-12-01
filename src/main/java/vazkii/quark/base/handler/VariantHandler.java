@@ -4,12 +4,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
-import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
-import net.minecraft.resources.ResourceLocation;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.block.QuarkSlabBlock;
@@ -54,9 +54,9 @@ public class VariantHandler {
 		Block.Properties props = Block.Properties.of(Material.DECORATION).strength(0F);
 		props = propertiesFunc.apply(props);
 		
-		FlowerPotBlock potted = new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, block::getBlock, props);
+		FlowerPotBlock potted = new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> block, props);
 		RenderLayerHandler.setRenderType(potted, RenderTypeSkeleton.CUTOUT);
-		ResourceLocation resLoc = block.getBlock().getRegistryName();
+		ResourceLocation resLoc = block.getRegistryName();
 		if (resLoc == null)
 			resLoc = new ResourceLocation("missingno");
 		

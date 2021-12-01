@@ -28,18 +28,18 @@ public final class ModuleFinder {
 	public void findModules() {
 		ModFileScanData scanData = ModList.get().getModFileById(Quark.MOD_ID).getFile().getScanResult();
         scanData.getAnnotations().stream()
-                .filter(annotationData -> LOAD_MODULE_TYPE.equals(annotationData.getAnnotationType()))
-                .sorted((d1, d2) -> d1.getClassType().getClassName().compareTo(d2.getClassType().getClassName()))
+                .filter(annotationData -> LOAD_MODULE_TYPE.equals(annotationData.annotationType()))
+                .sorted((d1, d2) -> d1.getClass().getName().compareTo(d2.getClass().getName()))
                 .forEach(this::loadModule);
 	}
 	
 	@SuppressWarnings("unchecked")
 	private void loadModule(AnnotationData target) {
 		try {
-			Class<?> clazz = Class.forName(target.getClassType().getClassName());
+			Class<?> clazz = target.getClass();
 			QuarkModule moduleObj = (QuarkModule) clazz.newInstance();
 			
-			Map<String, Object> vals = target.getAnnotationData();
+			Map<String, Object> vals = target.annotationData();
 			ModuleCategory category = getOrMakeCategory((ModAnnotation.EnumHolder) vals.get("category"));
 			
 			if(category.isAddon()) {

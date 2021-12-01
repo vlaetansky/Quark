@@ -1,13 +1,14 @@
 package vazkii.quark.base.world.generator.multichunk;
 
 import java.util.Random;
-import java.util.stream.IntStream;
 
-import net.minecraft.world.level.levelgen.WorldgenRandom;
+import com.google.common.collect.ImmutableList;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.minecraft.world.level.levelgen.synth.PerlinSimplexNoise;
+import net.minecraft.world.phys.Vec3;
 import vazkii.quark.base.handler.GeneralConfig;
 import vazkii.quark.base.module.config.type.ClusterSizeConfig;
 import vazkii.quark.base.module.config.type.IBiomeConfig;
@@ -80,7 +81,8 @@ public class ClusterShape {
 		
 		public Provider(ClusterSizeConfig config, long seed) {
 			this.config = config;
-			noiseGenerator = new PerlinSimplexNoise(new WorldgenRandom(seed), IntStream.rangeClosed(-4, 4));
+			noiseGenerator = new PerlinSimplexNoise(new LegacyRandomSource(seed), 
+					ImmutableList.of(-4, -3, -2, -1, 0, 1, 2, 3, 4)); // TODO test
 		}
 		
 		public ClusterShape around(BlockPos src) {

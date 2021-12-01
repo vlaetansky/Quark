@@ -3,8 +3,9 @@ package vazkii.quark.base.proxy;
 import java.time.LocalDateTime;
 import java.time.Month;
 
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.config.ModConfig.ModConfigEvent;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -48,12 +49,12 @@ public class CommonProxy {
 		bus.addListener(this::setup);
 		bus.addListener(this::loadComplete);
 		bus.addListener(this::configChanged);
+		bus.addListener(this::registerCapabilities);
 	}
 	
 	public void setup(FMLCommonSetupEvent event) {
 		QuarkNetwork.setup();
 		BrewingHandler.setup();
-		CapabilityHandler.setup();
 		JigsawRegistryHelper.setup();
 		ModuleLoader.INSTANCE.setup(event);
 		initContributorRewards();
@@ -70,6 +71,10 @@ public class CommonProxy {
 			lastConfigChange = ClientTicker.ticksInGame;
 			handleQuarkConfigChange();
 		}
+	}
+	
+	public void registerCapabilities(RegisterCapabilitiesEvent event) {
+		CapabilityHandler.registerCapabilities(event);
 	}
 	
 	public void handleQuarkConfigChange() {

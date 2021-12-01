@@ -4,17 +4,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.SpawnPlacements.SpawnPredicate;
 import net.minecraft.world.entity.SpawnPlacements.Type;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraftforge.common.world.MobSpawnInfoBuilder;
+import net.minecraftforge.common.world.MobSpawnSettingsBuilder;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -40,11 +40,11 @@ public class EntitySpawnHandler {
 		trackedSpawnConfigs.add(new TrackedSpawnConfig(entityType, classification, config, secondary));
 	}
 
-	public static void addEgg(EntityType<?> entityType, int color1, int color2, EntitySpawnConfig config) {
+	public static void addEgg(EntityType<? extends Mob> entityType, int color1, int color2, EntitySpawnConfig config) {
 		addEgg(entityType, color1, color2, config.module, config::isEnabled);
 	}
 
-	public static void addEgg(EntityType<?> entityType, int color1, int color2, QuarkModule module, BooleanSupplier enabledSupplier) {
+	public static void addEgg(EntityType<? extends Mob> entityType, int color1, int color2, QuarkModule module, BooleanSupplier enabledSupplier) {
 		new QuarkSpawnEggItem(entityType, color1,  color2, entityType.getRegistryName().getPath() + "_spawn_egg", module, 
 				new Item.Properties().tab(CreativeModeTab.TAB_MISC))
 		.setCondition(enabledSupplier);
@@ -52,7 +52,7 @@ public class EntitySpawnHandler {
 
 	@SubscribeEvent
 	public static void onBiomeLoaded(BiomeLoadingEvent ev) {
-		MobSpawnInfoBuilder builder = ev.getSpawns();
+		MobSpawnSettingsBuilder builder = ev.getSpawns();
 
 		for(TrackedSpawnConfig c : trackedSpawnConfigs) {
 			List<MobSpawnSettings.SpawnerData> l = builder.getSpawner(c.classification);

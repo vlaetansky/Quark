@@ -1,16 +1,16 @@
 package vazkii.quark.content.automation.module;
 
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.material.Material;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.automation.block.ChuteBlock;
-import vazkii.quark.content.automation.tile.ChuteTileEntity;
+import vazkii.quark.content.automation.block.be.ChuteBlockEntity;
 
 /**
  * @author WireSegal
@@ -19,7 +19,7 @@ import vazkii.quark.content.automation.tile.ChuteTileEntity;
 @LoadModule(category = ModuleCategory.AUTOMATION)
 public class ChuteModule extends QuarkModule {
 
-    public static BlockEntityType<ChuteTileEntity> tileEntityType;
+    public static BlockEntityType<ChuteBlockEntity> blockEntityType;
 
     @Override
     public void construct() {
@@ -28,7 +28,7 @@ public class ChuteModule extends QuarkModule {
                         .strength(2.5F)
                         .sound(SoundType.WOOD));
 
-        tileEntityType = BlockEntityType.Builder.of(ChuteTileEntity::new, chute).build(null);
-        RegistryHelper.register(tileEntityType, "chute");
+        blockEntityType = BlockEntityType.Builder.of(ChuteBlockEntity::new, chute).build(null);
+        RegistryHelper.register(blockEntityType, "chute");
     }
 }

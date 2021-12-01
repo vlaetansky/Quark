@@ -7,11 +7,12 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.TextComponent;
 import vazkii.arl.util.ClientTicker;
@@ -109,7 +110,10 @@ public class QButton extends Button {
 		}
 		
 		if(iconIndex > 0) {
-			RenderSystem.color3f(1F, 1F, 1F);
+			RenderSystem.setShader(GameRenderer::getPositionTexShader);
+			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+			RenderSystem.setShaderTexture(0, MiscUtil.GENERAL_ICONS);
+			
 			int rx = x - 2;
 			int ry = y - 2;
 			
@@ -132,7 +136,6 @@ public class QButton extends Button {
 			
 			int u = 256 - iconIndex * w;
 			
-			Minecraft.getInstance().textureManager.bind(MiscUtil.GENERAL_ICONS);
 			blit(mstack, rx, ry, u, v, w, h);
 		}
 	}

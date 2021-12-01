@@ -4,14 +4,14 @@ import org.apache.commons.lang3.text.WordUtils;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.ModList;
 import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.base.Quark;
@@ -50,8 +50,8 @@ public class QuarkConfigHomeScreen extends AbstractQScreen {
 			Button icon = new IconButton(x, y, bWidth - 20, 20, comp, new ItemStack(category.item), categoryLink(configCategory));
 			Button checkbox = new CheckboxButton(x + bWidth - 20, y, IngameConfigHandler.INSTANCE.getCategoryEnabledObject(category)); 
 
-			addButton(icon);
-			addButton(checkbox);
+			addRenderableWidget(icon);
+			addRenderableWidget(checkbox);
 			
 			if(category.requiredMod != null && !ModList.get().isLoaded(category.requiredMod)) {
 				icon.active = false;
@@ -72,25 +72,25 @@ public class QuarkConfigHomeScreen extends AbstractQScreen {
 		vStart = height - 30;
 
 		IConfigCategory cat = IngameConfigHandler.INSTANCE.getConfigCategory(null);
-		addButton(new Button(left + (bWidth + pad) * pads, vStart, bWidth, 20, componentFor(cat), categoryLink(cat)));
+		addRenderableWidget(new Button(left + (bWidth + pad) * pads, vStart, bWidth, 20, componentFor(cat), categoryLink(cat)));
 		pads++;
 		
 		if(addExternal) {
 			cat = ExternalConfigHandler.instance.mockCategory;
-			addButton(new Button(left + (bWidth + pad) * pads, vStart, bWidth, 20, componentFor(cat), categoryLink(cat)));
+			addRenderableWidget(new Button(left + (bWidth + pad) * pads, vStart, bWidth, 20, componentFor(cat), categoryLink(cat)));
 			pads++;
 		}
 		
-		addButton(new Button(left + (bWidth + pad) * pads, vStart, bWidth, 20, new TranslatableComponent("quark.gui.config.save"), this::commit));
+		addRenderableWidget(new Button(left + (bWidth + pad) * pads, vStart, bWidth, 20, new TranslatableComponent("quark.gui.config.save"), this::commit));
 
 		bWidth = 71;
 		left = (width - (bWidth + pad) * 5) / 2;
 
-		addButton(new ColorTextButton(left, vStart - vpad, bWidth, 20, new TranslatableComponent("quark.gui.config.social.website"), 0x48ddbc, webLink("https://quark.vazkii.net")));
-		addButton(new ColorTextButton(left + bWidth + pad, vStart - vpad, bWidth, 20, new TranslatableComponent("quark.gui.config.social.discord"), 0x7289da, webLink("https://vazkii.net/discord")));
-		addButton(new ColorTextButton(left + (bWidth + pad) * 2, vStart - vpad, bWidth, 20, new TranslatableComponent("quark.gui.config.social.patreon"), 0xf96854, webLink("https://patreon.com/vazkii")));
-		addButton(new ColorTextButton(left + (bWidth + pad) * 3, vStart - vpad, bWidth, 20, new TranslatableComponent("quark.gui.config.social.reddit"), 0xff4400, webLink("https://reddit.com/r/quarkmod")));
-		addButton(new ColorTextButton(left + (bWidth + pad) * 4, vStart - vpad, bWidth, 20, new TranslatableComponent("quark.gui.config.social.twitter"), 0x1da1f2, webLink("https://twitter.com/VazkiiMods")));
+		addRenderableWidget(new ColorTextButton(left, vStart - vpad, bWidth, 20, new TranslatableComponent("quark.gui.config.social.website"), 0x48ddbc, webLink("https://quark.vazkii.net")));
+		addRenderableWidget(new ColorTextButton(left + bWidth + pad, vStart - vpad, bWidth, 20, new TranslatableComponent("quark.gui.config.social.discord"), 0x7289da, webLink("https://vazkii.net/discord")));
+		addRenderableWidget(new ColorTextButton(left + (bWidth + pad) * 2, vStart - vpad, bWidth, 20, new TranslatableComponent("quark.gui.config.social.patreon"), 0xf96854, webLink("https://patreon.com/vazkii")));
+		addRenderableWidget(new ColorTextButton(left + (bWidth + pad) * 3, vStart - vpad, bWidth, 20, new TranslatableComponent("quark.gui.config.social.reddit"), 0xff4400, webLink("https://reddit.com/r/quarkmod")));
+		addRenderableWidget(new ColorTextButton(left + (bWidth + pad) * 4, vStart - vpad, bWidth, 20, new TranslatableComponent("quark.gui.config.social.twitter"), 0x1da1f2, webLink("https://twitter.com/VazkiiMods")));
 	}
 	
 	private static Component componentFor(IConfigCategory c) {

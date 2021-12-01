@@ -6,10 +6,10 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 
-import net.minecraft.world.level.storage.loot.Serializer;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.Serializer;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 
 /**
  * @author WireSegal
@@ -38,10 +38,11 @@ public class FlagLootCondition implements LootItemCondition {
 	}
 
     
-    public static class Serializer implements Serializer<FlagLootCondition> {
+    public static class FlagSerializer implements Serializer<FlagLootCondition> {
+    	
         private final ConfigFlagManager manager;
 
-        public Serializer(ConfigFlagManager manager) {
+        public FlagSerializer(ConfigFlagManager manager) {
             this.manager = manager;
         }
 

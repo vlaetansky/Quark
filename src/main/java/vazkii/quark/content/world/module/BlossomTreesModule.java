@@ -6,8 +6,8 @@ import java.util.Map;
 import com.google.common.base.Functions;
 
 import net.minecraft.world.level.block.ComposterBlock;
-import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.common.BiomeDictionary;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.LoadModule;

@@ -3,9 +3,9 @@ package vazkii.quark.base.module.config;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.QuarkModule;
@@ -20,7 +20,7 @@ public final class ConfigFlagManager {
 	
 	public ConfigFlagManager() {
 		CraftingHelper.register(new FlagRecipeCondition.Serializer(this, new ResourceLocation(Quark.MOD_ID, "flag")));
-		flagConditionType = new LootItemConditionType(new FlagLootCondition.Serializer(this));
+		flagConditionType = new LootItemConditionType(new FlagLootCondition.FlagSerializer(this));
 		Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation(Quark.MOD_ID, "flag"), flagConditionType);
 
 		CraftingHelper.register(new ResourceLocation(Quark.MOD_ID, "potion"), PotionIngredient.Serializer.INSTANCE);

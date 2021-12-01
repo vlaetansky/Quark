@@ -2,17 +2,17 @@ package vazkii.quark.content.building.item;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.QuarkModule;
@@ -62,6 +62,6 @@ public class QuarkItemFrameItem extends QuarkItem {
     }
 
     protected boolean canPlace(Player player, Direction facing, ItemStack stack, BlockPos pos) {
-        return !Level.isOutsideBuildHeight(pos) && player.mayUseItemAt(pos, facing, stack);
+        return !player.level.isOutsideBuildHeight(pos) && player.mayUseItemAt(pos, facing, stack);
     }
 }

@@ -2,16 +2,14 @@ package vazkii.quark.content.tweaks.block;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.state.BlockState;
 import vazkii.quark.base.block.QuarkGlassBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 /**
  * @author WireSegal

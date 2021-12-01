@@ -1,7 +1,7 @@
 package vazkii.quark.base.network.message;
 
 import net.minecraft.core.BlockPos;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraftforge.network.NetworkEvent;
 import vazkii.arl.network.IMessage;
 import vazkii.quark.content.tweaks.module.SimpleHarvestModule;
 
@@ -18,7 +18,7 @@ public class HarvestMessage implements IMessage {
 	}
 
 	@Override
-	public boolean receive(Context context) {
+	public boolean receive(NetworkEvent.Context context) {
 		context.enqueueWork(() -> SimpleHarvestModule.click(context.getSender(), pos));
 		return true;
 	}

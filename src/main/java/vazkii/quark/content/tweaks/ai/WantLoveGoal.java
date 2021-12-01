@@ -2,14 +2,12 @@ package vazkii.quark.content.tweaks.ai;
 
 import java.util.EnumSet;
 
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
 import vazkii.quark.content.tweaks.module.PatTheDogsModule;
-
-import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 /**
  * @author WireSegal

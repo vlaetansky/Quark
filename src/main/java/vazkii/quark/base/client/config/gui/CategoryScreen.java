@@ -4,10 +4,10 @@ import org.apache.commons.lang3.text.WordUtils;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.language.I18n;
 import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.config.ConfigObject;

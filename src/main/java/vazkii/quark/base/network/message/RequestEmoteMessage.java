@@ -1,7 +1,7 @@
 package vazkii.quark.base.network.message;
 
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraftforge.network.NetworkEvent;
 import vazkii.arl.network.IMessage;
 import vazkii.quark.base.handler.ContributorRewardHandler;
 import vazkii.quark.base.network.QuarkNetwork;
@@ -19,7 +19,7 @@ public class RequestEmoteMessage implements IMessage {
 	}
 	
 	@Override
-	public boolean receive(Context context) {
+	public boolean receive(NetworkEvent.Context context) {
 		ServerPlayer player = context.getSender();
 		if (player != null && player.server != null)
 			context.enqueueWork(() -> QuarkNetwork.sendToAllPlayers(

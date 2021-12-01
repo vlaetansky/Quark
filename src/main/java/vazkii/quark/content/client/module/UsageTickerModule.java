@@ -5,19 +5,21 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import com.mojang.blaze3d.platform.Window;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlot.Type;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -77,7 +79,7 @@ public class UsageTickerModule extends QuarkModule {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public void renderHUD(RenderGameOverlayEvent.Post event) {
-		if(event.getType() == ElementType.HOTBAR) {
+		if(event.getType() == ElementType.ALL) {
 			Window window = event.getWindow();
 			Player player = Minecraft.getInstance().player;
 			float partial = event.getPartialTicks();
@@ -231,8 +233,9 @@ public class UsageTickerModule extends QuarkModule {
 				predicate = (stackAt) -> stackAt.getItem() instanceof ArrowItem;
 			
 			int total = 0;
-			for(int i = 0; i < player.inventory.getContainerSize(); i++) {
-				ItemStack stackAt = player.inventory.getItem(i);
+			Inventory inventory = player.getInventory();
+			for(int i = 0; i < inventory.getContainerSize(); i++) {
+				ItemStack stackAt = inventory.getItem(i);
 				if(predicate.test(stackAt))
 					total += stackAt.getCount();
 				

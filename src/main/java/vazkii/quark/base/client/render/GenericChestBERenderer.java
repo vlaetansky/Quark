@@ -4,32 +4,39 @@ import java.util.Calendar;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 
-import net.minecraft.world.level.block.AbstractChestBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ChestBlock;
-import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.renderer.blockentity.BrightnessCombiner;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.world.level.block.state.properties.ChestType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.BrightnessCombiner;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.AbstractChestBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.DoubleBlockCombiner;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.entity.LidBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.DoubleBlockCombiner;
-import net.minecraft.core.Direction;
-import com.mojang.math.Vector3f;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.ChestType;
 
 // A copy of ChestTileEntityRenderer from vanilla but less private
-public abstract class GenericChestTERenderer<T extends BlockEntity & LidBlockEntity> extends BlockEntityRenderer<T> {
-	
+public abstract class GenericChestBERenderer<T extends BlockEntity & LidBlockEntity> implements BlockEntityRenderer<T> {
+
 	public final ModelPart lid;
 	public final ModelPart bottom;
 	public final ModelPart lock;
@@ -41,40 +48,51 @@ public abstract class GenericChestTERenderer<T extends BlockEntity & LidBlockEnt
 	public final ModelPart doubleRightLock;
 	public boolean isChristmas;
 
-	public GenericChestTERenderer(BlockEntityRenderDispatcher p_i226008_1_) {
-		super(p_i226008_1_);
+	public GenericChestBERenderer(BlockEntityRendererProvider.Context context) {
 		Calendar calendar = Calendar.getInstance();
 		if (calendar.get(2) + 1 == 12 && calendar.get(5) >= 24 && calendar.get(5) <= 26) {
 			this.isChristmas = true;
 		}
 
-		this.bottom = new ModelPart(64, 64, 0, 19);
-		this.bottom.addBox(1.0F, 0.0F, 1.0F, 14.0F, 10.0F, 14.0F, 0.0F);
-		this.lid = new ModelPart(64, 64, 0, 0);
-		this.lid.addBox(1.0F, 0.0F, 0.0F, 14.0F, 5.0F, 14.0F, 0.0F);
-		this.lid.y = 9.0F;
-		this.lid.z = 1.0F;
-		this.lock = new ModelPart(64, 64, 0, 0);
-		this.lock.addBox(7.0F, -1.0F, 15.0F, 2.0F, 4.0F, 1.0F, 0.0F);
-		this.lock.y = 8.0F;
-		this.doubleLeftBottom = new ModelPart(64, 64, 0, 19);
-		this.doubleLeftBottom.addBox(1.0F, 0.0F, 1.0F, 15.0F, 10.0F, 14.0F, 0.0F);
-		this.doubleLeftLid = new ModelPart(64, 64, 0, 0);
-		this.doubleLeftLid.addBox(1.0F, 0.0F, 0.0F, 15.0F, 5.0F, 14.0F, 0.0F);
-		this.doubleLeftLid.y = 9.0F;
-		this.doubleLeftLid.z = 1.0F;
-		this.doubleLeftLock = new ModelPart(64, 64, 0, 0);
-		this.doubleLeftLock.addBox(15.0F, -1.0F, 15.0F, 1.0F, 4.0F, 1.0F, 0.0F);
-		this.doubleLeftLock.y = 8.0F;
-		this.doubleRightBottom = new ModelPart(64, 64, 0, 19);
-		this.doubleRightBottom.addBox(0.0F, 0.0F, 1.0F, 15.0F, 10.0F, 14.0F, 0.0F);
-		this.doubleRightLid = new ModelPart(64, 64, 0, 0);
-		this.doubleRightLid.addBox(0.0F, 0.0F, 0.0F, 15.0F, 5.0F, 14.0F, 0.0F);
-		this.doubleRightLid.y = 9.0F;
-		this.doubleRightLid.z = 1.0F;
-		this.doubleRightLock = new ModelPart(64, 64, 0, 0);
-		this.doubleRightLock.addBox(0.0F, -1.0F, 15.0F, 1.0F, 4.0F, 1.0F, 0.0F);
-		this.doubleRightLock.y = 8.0F;
+		ModelPart modelpart = context.bakeLayer(ModelLayers.CHEST);
+		this.bottom = modelpart.getChild("bottom");
+		this.lid = modelpart.getChild("lid");
+		this.lock = modelpart.getChild("lock");
+		ModelPart modelpart1 = context.bakeLayer(ModelLayers.DOUBLE_CHEST_LEFT);
+		this.doubleLeftBottom = modelpart1.getChild("bottom");
+		this.doubleLeftLid = modelpart1.getChild("lid");
+		this.doubleLeftLock = modelpart1.getChild("lock");
+		ModelPart modelpart2 = context.bakeLayer(ModelLayers.DOUBLE_CHEST_RIGHT);
+		this.doubleRightBottom = modelpart2.getChild("bottom");
+		this.doubleRightLid = modelpart2.getChild("lid");
+		this.doubleRightLock = modelpart2.getChild("lock");
+	}
+
+	public static LayerDefinition createSingleBodyLayer() {
+		MeshDefinition meshdefinition = new MeshDefinition();
+		PartDefinition partdefinition = meshdefinition.getRoot();
+		partdefinition.addOrReplaceChild("bottom", CubeListBuilder.create().texOffs(0, 19).addBox(1.0F, 0.0F, 1.0F, 14.0F, 10.0F, 14.0F), PartPose.ZERO);
+		partdefinition.addOrReplaceChild("lid", CubeListBuilder.create().texOffs(0, 0).addBox(1.0F, 0.0F, 0.0F, 14.0F, 5.0F, 14.0F), PartPose.offset(0.0F, 9.0F, 1.0F));
+		partdefinition.addOrReplaceChild("lock", CubeListBuilder.create().texOffs(0, 0).addBox(7.0F, -1.0F, 15.0F, 2.0F, 4.0F, 1.0F), PartPose.offset(0.0F, 8.0F, 0.0F));
+		return LayerDefinition.create(meshdefinition, 64, 64);
+	}
+
+	public static LayerDefinition createDoubleBodyRightLayer() {
+		MeshDefinition meshdefinition = new MeshDefinition();
+		PartDefinition partdefinition = meshdefinition.getRoot();
+		partdefinition.addOrReplaceChild("bottom", CubeListBuilder.create().texOffs(0, 19).addBox(1.0F, 0.0F, 1.0F, 15.0F, 10.0F, 14.0F), PartPose.ZERO);
+		partdefinition.addOrReplaceChild("lid", CubeListBuilder.create().texOffs(0, 0).addBox(1.0F, 0.0F, 0.0F, 15.0F, 5.0F, 14.0F), PartPose.offset(0.0F, 9.0F, 1.0F));
+		partdefinition.addOrReplaceChild("lock", CubeListBuilder.create().texOffs(0, 0).addBox(15.0F, -1.0F, 15.0F, 1.0F, 4.0F, 1.0F), PartPose.offset(0.0F, 8.0F, 0.0F));
+		return LayerDefinition.create(meshdefinition, 64, 64);
+	}
+
+	public static LayerDefinition createDoubleBodyLeftLayer() {
+		MeshDefinition meshdefinition = new MeshDefinition();
+		PartDefinition partdefinition = meshdefinition.getRoot();
+		partdefinition.addOrReplaceChild("bottom", CubeListBuilder.create().texOffs(0, 19).addBox(0.0F, 0.0F, 1.0F, 15.0F, 10.0F, 14.0F), PartPose.ZERO);
+		partdefinition.addOrReplaceChild("lid", CubeListBuilder.create().texOffs(0, 0).addBox(0.0F, 0.0F, 0.0F, 15.0F, 5.0F, 14.0F), PartPose.offset(0.0F, 9.0F, 1.0F));
+		partdefinition.addOrReplaceChild("lock", CubeListBuilder.create().texOffs(0, 0).addBox(0.0F, -1.0F, 15.0F, 1.0F, 4.0F, 1.0F), PartPose.offset(0.0F, 8.0F, 0.0F));
+		return LayerDefinition.create(meshdefinition, 64, 64);
 	}
 
 	@Override
@@ -98,7 +116,7 @@ public abstract class GenericChestTERenderer<T extends BlockEntity & LidBlockEnt
 			} else {
 				icallbackwrapper = DoubleBlockCombiner.Combiner::acceptNone; // getFallback
 			}
-			
+
 			// getAnimationProgressRetreiver
 			float f1 = icallbackwrapper.apply(ChestBlock.opennessCombiner((LidBlockEntity)p_225616_1_)).get(p_225616_2_);
 			f1 = 1.0F - f1;
@@ -121,14 +139,14 @@ public abstract class GenericChestTERenderer<T extends BlockEntity & LidBlockEnt
 			p_225616_3_.popPose();
 		}
 	}
-	
+
 	public final Material getMaterialFinal(T t, ChestType type) {
 		if(isChristmas)
 			return Sheets.chooseMaterial(t, type, this.isChristmas);
 
 		return getMaterial(t, type);
 	}
-	
+
 	public abstract Material getMaterial(T t, ChestType type);
 
 	public void render(PoseStack p_228871_1_, VertexConsumer p_228871_2_, ModelPart p_228871_3_, ModelPart p_228871_4_, ModelPart p_228871_5_, float p_228871_6_, int p_228871_7_, int p_228871_8_) {

@@ -4,11 +4,11 @@ import java.util.Random;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
-import com.mojang.math.Vector3f;
+import net.minecraft.client.renderer.RenderType;
 import vazkii.quark.content.mobs.entity.WraithEntity;
 
 public class WraithModel extends EntityModel<WraithEntity> {

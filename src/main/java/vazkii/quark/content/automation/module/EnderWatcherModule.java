@@ -7,18 +7,18 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.automation.block.EnderWatcherBlock;
-import vazkii.quark.content.automation.tile.EnderWatcherTileEntity;
+import vazkii.quark.content.automation.block.be.EnderWatcherBlockEntity;
 
 @LoadModule(category = ModuleCategory.AUTOMATION)
 public class EnderWatcherModule extends QuarkModule {
 
-	public static BlockEntityType<EnderWatcherTileEntity> enderWatcherTEType;
+	public static BlockEntityType<EnderWatcherBlockEntity> blockEntityType;
 
 	@Override
 	public void construct() {
 		Block ender_watcher = new EnderWatcherBlock(this);
-		enderWatcherTEType = BlockEntityType.Builder.of(EnderWatcherTileEntity::new, ender_watcher).build(null);
-		RegistryHelper.register(enderWatcherTEType, "ender_watcher");
+		blockEntityType = BlockEntityType.Builder.of(EnderWatcherBlockEntity::new, ender_watcher).build(null);
+		RegistryHelper.register(blockEntityType, "ender_watcher");
 	}
 	
 }

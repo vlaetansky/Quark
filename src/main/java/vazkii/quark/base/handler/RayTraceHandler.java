@@ -2,16 +2,16 @@ package vazkii.quark.base.handler;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.util.Mth;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.ClipContext.Block;
 import net.minecraft.world.level.ClipContext.Fluid;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeMod;
 
 public class RayTraceHandler {
@@ -42,8 +42,8 @@ public class RayTraceHandler {
 	
 	public static Pair<Vec3, Vec3> getEntityParams(Entity player) {
 		float scale = 1.0F;
-		float pitch = player.xRotO + (player.xRot - player.xRotO) * scale;
-		float yaw = player.yRotO + (player.yRot - player.yRotO) * scale;
+		float pitch = player.xRotO + (player.getXRot() - player.xRotO) * scale;
+		float yaw = player.yRotO + (player.getYRot() - player.yRotO) * scale;
 		Vec3 pos = player.position();
 		double posX = player.xo + (pos.x - player.xo) * scale;
 		double posY = player.yo + (pos.y - player.yo) * scale;

@@ -9,27 +9,27 @@ import com.google.common.collect.ImmutableList;
 
 import net.minecraft.client.renderer.entity.BeeRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.client.registry.IRenderFactory;
+import net.minecraft.world.entity.animal.Bee;
 import vazkii.quark.base.Quark;
 import vazkii.quark.content.client.module.VariantAnimalTexturesModule;
 
 public class VariantBeeRenderer extends BeeRenderer {
 
-	public static IRenderFactory<Bee> OLD_BEE_RENDER_FACTORY = null;
+	public static EntityRendererProvider<Bee> OLD_BEE_RENDER_FACTORY = null;
 	private EntityRenderer<? super Bee> OLD_BEE_RENDER = null;
+	
 	private static final List<String> VARIANTS = ImmutableList.of(
 			"acebee", "agenbee", "arobee", "beefluid", "beesexual", 
 			"beequeer", "enbee", "gaybee", "interbee", "lesbeean", 
 			"panbee", "polysexbee", "transbee", "helen");
 	
-	public VariantBeeRenderer(EntityRenderDispatcher renderManagerIn) {
-		super(renderManagerIn);
-		if(OLD_BEE_RENDER_FACTORY != null) {
-			OLD_BEE_RENDER = OLD_BEE_RENDER_FACTORY.createRenderFor(renderManagerIn);
-		}
+	public VariantBeeRenderer(EntityRendererProvider.Context context) {
+		super(context);
+		
+		if(OLD_BEE_RENDER_FACTORY != null)
+			OLD_BEE_RENDER = OLD_BEE_RENDER_FACTORY.create(context);
 	}
 	
 	@Override

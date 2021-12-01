@@ -5,12 +5,12 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import com.mojang.blaze3d.platform.Window;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TranslatableComponent;
 import vazkii.quark.base.client.config.gui.widget.ScrollableWidgetList;
 
@@ -33,7 +33,7 @@ public abstract class AbstractScrollingWidgetScreen extends AbstractQScreen {
 		super.init();
 
 		elementList = createWidgetList();
-		children.add(elementList);
+		addRenderableWidget(elementList);
 		refresh();
 		needsScrollUpdate = true;
 		
@@ -42,9 +42,9 @@ public abstract class AbstractScrollingWidgetScreen extends AbstractQScreen {
 		int left = (width - (bWidth + pad) * 3) / 2;
 		int vStart = height - 30;
 		
-		addButton(new Button(left, vStart, bWidth, 20, new TranslatableComponent("quark.gui.config.default"), this::onClickDefault));
-		addButton(resetButton = new Button(left + bWidth + pad, vStart, bWidth, 20, new TranslatableComponent("quark.gui.config.discard"), this::onClickDiscard));
-		addButton(new Button(left + (bWidth + pad) * 2, vStart, bWidth, 20, new TranslatableComponent("gui.done"), this::onClickDone));
+		addRenderableWidget(new Button(left, vStart, bWidth, 20, new TranslatableComponent("quark.gui.config.default"), this::onClickDefault));
+		addRenderableWidget(resetButton = new Button(left + bWidth + pad, vStart, bWidth, 20, new TranslatableComponent("quark.gui.config.discard"), this::onClickDiscard));
+		addRenderableWidget(new Button(left + (bWidth + pad) * 2, vStart, bWidth, 20, new TranslatableComponent("gui.done"), this::onClickDone));
 	}
 	
 	@Override

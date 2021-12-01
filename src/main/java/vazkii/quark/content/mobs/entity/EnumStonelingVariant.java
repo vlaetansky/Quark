@@ -20,11 +20,11 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import vazkii.quark.base.Quark;
 
 public enum EnumStonelingVariant implements SpawnGroupData {

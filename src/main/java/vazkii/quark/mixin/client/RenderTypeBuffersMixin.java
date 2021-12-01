@@ -5,10 +5,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import net.minecraft.client.renderer.RenderType;
+
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.minecraft.client.renderer.RenderBuffers;
+import net.minecraft.client.renderer.RenderType;
 import vazkii.quark.content.tools.client.GlintRenderType;
 
 @Mixin(RenderBuffers.class)

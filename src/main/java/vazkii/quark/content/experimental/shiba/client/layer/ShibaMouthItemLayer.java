@@ -1,16 +1,16 @@
 package vazkii.quark.content.experimental.shiba.client.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.TridentItem;
-import com.mojang.math.Vector3f;
 import vazkii.quark.content.experimental.shiba.client.model.ShibaModel;
 import vazkii.quark.content.experimental.shiba.entity.ShibaEntity;
 

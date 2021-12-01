@@ -13,23 +13,25 @@ import java.util.stream.Collectors;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableSet;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.animal.horse.AbstractChestedHorse;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.Registry;
-import net.minecraft.world.level.levelgen.feature.structures.StructurePoolElement;
+import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.structures.LegacySinglePoolElement;
+import net.minecraft.world.level.levelgen.feature.structures.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraftforge.api.distmarker.Dist;
@@ -40,7 +42,6 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.MiscUtil;
@@ -52,10 +53,10 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.content.building.block.VariantChestBlock;
 import vazkii.quark.content.building.block.VariantTrappedChestBlock;
+import vazkii.quark.content.building.block.be.VariantChestBlockEntity;
+import vazkii.quark.content.building.block.be.VariantTrappedChestBlockEntity;
 import vazkii.quark.content.building.client.render.VariantChestTileEntityRenderer;
 import vazkii.quark.content.building.recipe.MixedChestRecipe;
-import vazkii.quark.content.building.tile.VariantChestTileEntity;
-import vazkii.quark.content.building.tile.VariantTrappedChestTileEntity;
 
 @LoadModule(category = ModuleCategory.BUILDING, hasSubscriptions = true)
 public class VariantChestsModule extends QuarkModule {
@@ -69,8 +70,8 @@ public class VariantChestsModule extends QuarkModule {
 	
 	private static final ImmutableSet<String> MOD_WOODS = ImmutableSet.of();
 
-	public static BlockEntityType<VariantChestTileEntity> chestTEType;
-	public static BlockEntityType<VariantTrappedChestTileEntity> trappedChestTEType;
+	public static BlockEntityType<VariantChestBlockEntity> chestTEType;
+	public static BlockEntityType<VariantTrappedChestBlockEntity> trappedChestTEType;
 
 	private static List<Supplier<Block>> chestTypes = new LinkedList<>();
 	private static List<Supplier<Block>> trappedChestTypes = new LinkedList<>();
@@ -226,8 +227,8 @@ public class VariantChestsModule extends QuarkModule {
 		addChest("purpur", Blocks.PURPUR_BLOCK);
 		addChest("prismarine", Blocks.PRISMARINE);
 
-		chestTEType = registerChests(VariantChestTileEntity::new, chestTypes);
-		trappedChestTEType = registerChests(VariantTrappedChestTileEntity::new, trappedChestTypes);
+		chestTEType = registerChests(VariantChestBlockEntity::new, chestTypes);
+		trappedChestTEType = registerChests(VariantTrappedChestBlockEntity::new, trappedChestTypes);
 
 		RegistryHelper.register(chestTEType, "variant_chest");
 		RegistryHelper.register(trappedChestTEType, "variant_trapped_chest");
@@ -238,8 +239,8 @@ public class VariantChestsModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		ClientRegistry.bindTileEntityRenderer(chestTEType, VariantChestTileEntityRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(trappedChestTEType, VariantChestTileEntityRenderer::new);
+		BlockEntityRenderers.register(chestTEType, VariantChestTileEntityRenderer::new);
+		BlockEntityRenderers.register(trappedChestTEType, VariantChestTileEntityRenderer::new);
 	}
 	
 	@Override
@@ -332,7 +333,7 @@ public class VariantChestsModule extends QuarkModule {
 		trappedChestTypes.add(() -> new VariantTrappedChestBlock.Compat(name, mod, this, () -> trappedChestTEType, props));
 	}
 
-	public static <T extends BlockEntity> BlockEntityType<T> registerChests(Supplier<? extends T> factory, List<Supplier<Block>> list) {
+	public static <T extends BlockEntity> BlockEntityType<T> registerChests(BlockEntitySupplier<? extends T> factory, List<Supplier<Block>> list) {
 		List<Block> blockTypes = list.stream().map(Supplier::get).collect(Collectors.toList());
 		allChests.addAll(blockTypes);
 		return BlockEntityType.Builder.<T>of(factory, blockTypes.toArray(new Block[blockTypes.size()])).build(null);
@@ -340,7 +341,7 @@ public class VariantChestsModule extends QuarkModule {
 	
 	@Override
 	public void textureStitch(TextureStitchEvent.Pre event) {
-		if(event.getMap().location().toString().equals("minecraft:textures/atlas/chest.png")) {
+		if(event.getAtlas().location().toString().equals("minecraft:textures/atlas/chest.png")) {
 			for(Block b : allChests)
 				VariantChestTileEntityRenderer.accept(event, b);
 		}
@@ -356,7 +357,7 @@ public class VariantChestsModule extends QuarkModule {
 			AbstractChestedHorse horse = (AbstractChestedHorse) target;
 
 			if (!horse.hasChest() && held.getItem() != Items.CHEST) {
-				if (held.getItem().is(Tags.Items.CHESTS_WOODEN)) {
+				if (held.is(Tags.Items.CHESTS_WOODEN)) {
 					event.setCanceled(true);
 					event.setCancellationResult(InteractionResult.SUCCESS);
 

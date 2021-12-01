@@ -7,8 +7,6 @@ import javax.annotation.Nonnull;
 
 import net.minecraft.world.entity.ai.goal.Goal;
 
-import net.minecraft.world.entity.ai.goal.Goal.Flag;
-
 /**
  * @author WireSegal
  * Created at 12:32 PM on 9/8/19.

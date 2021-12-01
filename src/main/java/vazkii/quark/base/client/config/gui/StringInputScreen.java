@@ -2,11 +2,11 @@ package vazkii.quark.base.client.config.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
 import vazkii.quark.base.client.config.obj.AbstractStringInputObject;
 
 public class StringInputScreen<T> extends AbstractInputScreen<T> {
@@ -37,7 +37,7 @@ public class StringInputScreen<T> extends AbstractInputScreen<T> {
 		input.setMaxLength(object.getMaxStringLength());
 		input.setResponder(this::update);
 		setInitialFocus(input);
-		children.add(input);
+		addWidget(input);
 	}
 	
 	@Override

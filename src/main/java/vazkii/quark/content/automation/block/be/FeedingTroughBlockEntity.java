@@ -1,4 +1,4 @@
-package vazkii.quark.content.automation.tile;
+package vazkii.quark.content.automation.block.be;
 
 import java.util.List;
 import java.util.Random;
@@ -8,28 +8,28 @@ import javax.annotation.Nonnull;
 
 import com.mojang.authlib.GameProfile;
 
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.DispenserMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.particles.ItemParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.NonNullList;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.util.FakePlayer;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.util.MovableFakePlayer;
@@ -40,7 +40,7 @@ import vazkii.quark.content.automation.module.FeedingTroughModule;
  * @author WireSegal
  * Created at 9:39 AM on 9/20/19.
  */
-public class FeedingTroughTileEntity extends RandomizableContainerBlockEntity implements TickableBlockEntity {
+public class FeedingTroughBlockEntity extends RandomizableContainerBlockEntity {
 
     private static final GameProfile DUMMY_PROFILE = new GameProfile(UUID.randomUUID(), "[FeedingTrough]");
 
@@ -51,13 +51,9 @@ public class FeedingTroughTileEntity extends RandomizableContainerBlockEntity im
     private int cooldown = 0;
     private long internalRng = 0;
 
-    protected FeedingTroughTileEntity(BlockEntityType<? extends FeedingTroughTileEntity> type) {
-        super(type);
+    public FeedingTroughBlockEntity(BlockPos pos, BlockState state) {
+        super(FeedingTroughModule.blockEntityType, pos, state);
         this.stacks = NonNullList.withSize(9, ItemStack.EMPTY);
-    }
-
-    public FeedingTroughTileEntity() {
-        this(FeedingTroughModule.tileEntityType);
     }
 
     public FakePlayer getFoodHolder(TemptGoal goal) {
@@ -69,8 +65,9 @@ public class FeedingTroughTileEntity extends RandomizableContainerBlockEntity im
         if (foodHolder != null) {
             for (int i = 0; i < getContainerSize(); i++) {
                 ItemStack stack = getItem(i);
-                if (goal.shouldFollowItem(stack) && entity.isFood(stack)) {
-                    foodHolder.inventory.items.set(foodHolder.inventory.selected, stack);
+                if (goal.items.test(stack) && entity.isFood(stack)) { // TODO AT
+                	Inventory inventory = foodHolder.getInventory();
+                    inventory.items.set(inventory.selected, stack);
                     Vec3 position = new Vec3(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ()).add(0.5, -1, 0.5);
                     Vec3 direction = goal.mob.position().subtract(position).normalize();
                     Vec2 angles = MiscUtil.getMinecraftAngles(direction);
@@ -91,31 +88,30 @@ public class FeedingTroughTileEntity extends RandomizableContainerBlockEntity im
         return null;
     }
 
-    @Override
-    public void tick() {
+    public static void tick(Level level, BlockPos pos, BlockState state, FeedingTroughBlockEntity be) {
         if (level != null && !level.isClientSide) {
-            if (cooldown > 0)
-                cooldown--;
+            if (be.cooldown > 0)
+            	be.cooldown--;
             else {
-            	cooldown = FeedingTroughModule.cooldown; // minimize aabb calls
-            	List<Animal> animals = level.getEntitiesOfClass(Animal.class, new AABB(worldPosition).inflate(1.5, 0, 1.5).contract(0, 0.75, 0));
+            	be.cooldown = FeedingTroughModule.cooldown; // minimize aabb calls
+            	List<Animal> animals = level.getEntitiesOfClass(Animal.class, new AABB(be.worldPosition).inflate(1.5, 0, 1.5).contract(0, 0.75, 0));
             	
                 for (Animal creature : animals) {
                     if (creature.canFallInLove() && creature.getAge() == 0) {
-                        for (int i = 0; i < getContainerSize(); i++) {
-                            ItemStack stack = getItem(i);
+                        for (int i = 0; i < be.getContainerSize(); i++) {
+                            ItemStack stack = be.getItem(i);
                             if (creature.isFood(stack)) {
                                 creature.playSound(creature.getEatingSound(stack), 0.5F + 0.5F * level.random.nextInt(2), (level.random.nextFloat() - level.random.nextFloat()) * 0.2F + 1.0F);
-                                addItemParticles(creature, stack, 16);
+                                be.addItemParticles(creature, stack, 16);
                                 
-                                if(getSpecialRand().nextDouble() < FeedingTroughModule.loveChance) {
-                                	List<Animal> animalsAround = level.getEntitiesOfClass(Animal.class, new AABB(worldPosition).inflate(FeedingTroughModule.range));
+                                if(be.getSpecialRand().nextDouble() < FeedingTroughModule.loveChance) {
+                                	List<Animal> animalsAround = level.getEntitiesOfClass(Animal.class, new AABB(be.worldPosition).inflate(FeedingTroughModule.range));
                                 	if(animalsAround.size() <= FeedingTroughModule.maxAnimals)
                                 		creature.setInLove(null);
                                 }
 
                                 stack.shrink(1);
-                                setChanged();
+                                be.setChanged();
                                 
                                 return;
                             }
@@ -142,13 +138,13 @@ public class FeedingTroughTileEntity extends RandomizableContainerBlockEntity im
     private void addItemParticles(Entity entity, ItemStack stack, int count) {
         for(int i = 0; i < count; ++i) {
             Vec3 direction = new Vec3((entity.level.random.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
-            direction = direction.xRot(-entity.xRot * ((float)Math.PI / 180F));
-            direction = direction.yRot(-entity.yRot * ((float)Math.PI / 180F));
+            direction = direction.xRot(-entity.getXRot() * ((float)Math.PI / 180F));
+            direction = direction.yRot(-entity.getYRot() * ((float)Math.PI / 180F));
             double yVelocity = (-entity.level.random.nextFloat()) * 0.6D - 0.3D;
             Vec3 position = new Vec3((entity.level.random.nextFloat() - 0.5D) * 0.3D, yVelocity, 0.6D);
             Vec3 entityPos = entity.position();
-            position = position.xRot(-entity.xRot * ((float)Math.PI / 180F));
-            position = position.yRot(-entity.yRot * ((float)Math.PI / 180F));
+            position = position.xRot(-entity.getXRot() * ((float)Math.PI / 180F));
+            position = position.yRot(-entity.getYRot() * ((float)Math.PI / 180F));
             position = position.add(entityPos.x, entityPos.y + entity.getEyeHeight(), entityPos.z);
             if (this.level instanceof ServerLevel)
                 ((ServerLevel)this.level).sendParticles(new ItemParticleOption(ParticleTypes.ITEM, stack), position.x, position.y, position.z, 1, direction.x, direction.y + 0.05D, direction.z, 0.0D);
@@ -186,8 +182,8 @@ public class FeedingTroughTileEntity extends RandomizableContainerBlockEntity im
     }
 
     @Override
-    public void load(BlockState state, CompoundTag nbt) {
-    	super.load(state, nbt);
+    public void load(CompoundTag nbt) {
+    	super.load(nbt);
     	
         this.cooldown = nbt.getInt("Cooldown");
         this.internalRng = nbt.getLong("rng");

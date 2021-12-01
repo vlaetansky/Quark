@@ -2,12 +2,12 @@ package vazkii.quark.content.building.module;
 
 import com.google.common.collect.ImmutableList;
 
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.Lantern;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LanternBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.ModuleLoader;
@@ -30,7 +30,10 @@ public class WoodenPostsModule extends QuarkModule {
 	}
 	
 	public static boolean canLanternConnect(BlockState state, LevelReader worldIn, BlockPos pos, boolean prev) {
-		return prev || (ModuleLoader.INSTANCE.isModuleEnabled(WoodenPostsModule.class) && state.getValue(Lantern.HANGING) && worldIn.getBlockState(pos.above()).getBlock() instanceof WoodPostBlock);
+		return prev || 
+				(ModuleLoader.INSTANCE.isModuleEnabled(WoodenPostsModule.class) 
+						&& state.getValue(LanternBlock.HANGING) 
+						&& worldIn.getBlockState(pos.above()).getBlock() instanceof WoodPostBlock);
 	}
 	
 }

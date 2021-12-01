@@ -5,9 +5,11 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import vazkii.quark.api.config.IConfigElement;
 import vazkii.quark.api.config.IConfigObject;
 import vazkii.quark.base.client.config.ConfigCategory;
@@ -109,6 +111,11 @@ public class ConfigElementList<T extends IConfigElement & IWidgetProvider> exten
 				String s = I18n.get("quark.gui.config.subcategories");
 				mc.font.drawShadow(mstack, s, rowLeft + (rowWidth - mc.font.width(s)) / 2, rowTop + 7, 0x6666FF);
 			}
+		}
+
+		@Override
+		public Component getNarration() {
+			return new TextComponent(element.getGuiDisplayName()); 
 		}
 
 	}

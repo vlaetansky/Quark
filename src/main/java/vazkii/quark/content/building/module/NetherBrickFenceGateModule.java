@@ -1,11 +1,10 @@
 package vazkii.quark.content.building.module;
 
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkFenceGateBlock;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -22,7 +21,7 @@ public class NetherBrickFenceGateModule extends QuarkModule {
         new QuarkFenceGateBlock("nether_brick_fence_gate", this, CreativeModeTab.TAB_REDSTONE,
                 Block.Properties.of(Material.STONE, MaterialColor.NETHER)
                 .requiresCorrectToolForDrops()
-        		.harvestTool(ToolType.PICKAXE)
+//        		.harvestTool(ToolType.PICKAXE) TODO tag
                 .sound(SoundType.NETHER_BRICKS)
                 .strength(2.0F, 6.0F));
     }

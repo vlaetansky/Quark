@@ -8,9 +8,9 @@ import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -81,7 +81,7 @@ public class InventoryTransferHandler {
 		if (hasProvider(container))
 			return getProvider(container).acceptsTransfer(player);
 
-		return container.slots.size() - player.inventory.items.size() >= 27;
+		return container.slots.size() - player.getInventory().items.size() >= 27;
 	}
 
 	public static class Transfer {
@@ -145,7 +145,7 @@ public class InventoryTransferHandler {
 			AbstractContainerMenu c = player.containerMenu;
 			for(Slot s : c.slots) {
 				Container inv = s.container;
-				if(inv != player.inventory) {
+				if(inv != player.getInventory()) {
 					itemHandlers.add(Pair.of(ContainerWrapper.provideWrapper(s, c), 0.0));
 					break;
 				}
@@ -172,7 +172,7 @@ public class InventoryTransferHandler {
 		//		}
 
 		public void transfer(TransferPredicate predicate) {
-			Inventory inv = player.inventory;
+			Inventory inv = player.getInventory();
 
 			for(int i = Inventory.getSelectionSize(); i < inv.items.size(); i++) {
 				ItemStack stackAt = inv.getItem(i);
@@ -222,7 +222,7 @@ public class InventoryTransferHandler {
 		@Override
 		public void transfer(TransferPredicate predicate) {
 			IItemHandler inv = itemHandlers.get(0).getLeft();
-			IItemHandler playerInv = new PlayerInvWrapper(player.inventory);
+			IItemHandler playerInv = new PlayerInvWrapper(player.getInventory());
 
 			for(int i = inv.getSlots() - 1; i >= 0; i--) {
 				ItemStack stackAt = inv.getStackInSlot(i);

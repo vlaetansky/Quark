@@ -2,18 +2,18 @@ package vazkii.quark.content.building.recipe;
 
 import com.google.gson.JsonObject;
 
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.Tag;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.tags.Tag;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.core.NonNullList;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.registries.ForgeRegistryEntry;
@@ -73,7 +73,7 @@ public class MixedChestRecipe implements CraftingRecipe, IShapedRecipe<CraftingC
 			for(int i = 0; i < 9; i++)
 				if(i != 4) { // ignore center
 					ItemStack stack = inv.getItem(i);
-					if(!stack.isEmpty() && stack.getItem().is(tag)) {
+					if(!stack.isEmpty() && stack.is(tag)) {
 						if(first == null)
 							first = stack;
 						else if(!ItemStack.isSame(first, stack))

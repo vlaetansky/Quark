@@ -9,15 +9,15 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Lists;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
 import vazkii.quark.api.ICollateralMover;
 import vazkii.quark.api.ICollateralMover.MoveResult;
 import vazkii.quark.api.IConditionalSticky;
@@ -84,7 +84,7 @@ public class QuarkPistonStructureHelper extends PistonStructureResolver {
 		BlockPos target = origin;
 		BlockState iblockstate = world.getBlockState(target);
 
-		if(iblockstate.getBlock().isAir(iblockstate, world, origin) 
+		if(iblockstate.isAir() 
 				|| !PistonBaseBlock.isPushable(iblockstate, world, origin, moveDirection, false, face)
 				|| origin.equals(pistonPos)
 				|| toMove.contains(origin))
@@ -115,7 +115,7 @@ public class QuarkPistonStructureHelper extends PistonStructureResolver {
 					target = origin.relative(moveDirection.getOpposite(), lineLen);
 					iblockstate = world.getBlockState(target);
 					
-					if(iblockstate.getBlock().isAir(iblockstate, world, target) || !PistonBaseBlock.isPushable(iblockstate, world, target, moveDirection, false, moveDirection.getOpposite()) || target.equals(pistonPos))
+					if(iblockstate.isAir() || !PistonBaseBlock.isPushable(iblockstate, world, target, moveDirection, false, moveDirection.getOpposite()) || target.equals(pistonPos))
 						break;
 					
 					if(getStickCompatibility(world, iblockstate, oldState, target, oldPos, moveDirection) != MoveResult.MOVE)
@@ -170,7 +170,7 @@ public class QuarkPistonStructureHelper extends PistonStructureResolver {
 					if(res == MoveResult.MOVE) {
 						iblockstate = world.getBlockState(blockpos1);
 
-						if(iblockstate.getBlock().isAir(iblockstate, world, blockpos1))
+						if(iblockstate.isAir())
 							return true;
 
 						if(!PistonBaseBlock.isPushable(iblockstate, world, blockpos1, moveDirection, true, moveDirection) || blockpos1.equals(pistonPos))

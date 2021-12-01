@@ -6,17 +6,15 @@ import java.util.function.BooleanSupplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
-public class ConditionalConfiguredFeature<FC extends FeatureConfiguration, F extends Feature<FC>> extends ConfiguredFeature<FC, F> {
+public class ConditionalPlacedFeature extends PlacedFeature {
 
-	public final ConfiguredFeature<FC, F> parent;
+	public final PlacedFeature parent;
 	public final BooleanSupplier condition;
 
-	public ConditionalConfiguredFeature(ConfiguredFeature<FC, F> parent, BooleanSupplier condition) {
-		super(parent.feature, parent.config);
+	public ConditionalPlacedFeature(PlacedFeature parent, BooleanSupplier condition) {
+		super(/*parent.feature*/ null, parent.getPlacement()); // TODO AT
 		this.parent = parent;
 		this.condition = condition;
 	}

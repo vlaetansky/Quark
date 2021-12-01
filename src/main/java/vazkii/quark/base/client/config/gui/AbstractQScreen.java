@@ -2,10 +2,10 @@ package vazkii.quark.base.client.config.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.Util;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Button.OnPress;
-import net.minecraft.Util;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
 import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.base.client.config.obj.AbstractStringInputObject;

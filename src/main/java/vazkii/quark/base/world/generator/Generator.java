@@ -3,14 +3,14 @@ package vazkii.quark.base.world.generator;
 import java.util.Random;
 import java.util.function.BooleanSupplier;
 
-import net.minecraft.world.level.levelgen.WorldgenRandom;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.GenerationStep;
-import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.world.level.levelgen.WorldgenRandom;
 import vazkii.quark.base.module.config.type.DimensionConfig;
 
 public abstract class Generator implements IGenerator {

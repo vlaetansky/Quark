@@ -1,8 +1,8 @@
 package vazkii.quark.content.tweaks.module;
 
-import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraftforge.event.TickEvent.WorldTickEvent;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

@@ -4,14 +4,12 @@ import java.util.function.BooleanSupplier;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.NonNullList;
+import net.minecraft.world.level.block.RotatedPillarBlock;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.module.QuarkModule;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class QuarkPillarBlock extends RotatedPillarBlock implements IQuarkBlock {
 

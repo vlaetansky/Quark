@@ -12,13 +12,13 @@ package vazkii.quark.content.mobs.ai;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
-import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import vazkii.quark.content.mobs.entity.FoxhoundEntity;
 
 public class FindPlaceToSleepGoal extends MoveToBlockGoal {

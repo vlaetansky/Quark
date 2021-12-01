@@ -11,19 +11,20 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Lists;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.JukeboxBlock;
-import net.minecraft.world.level.block.piston.PistonStructureResolver;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.piston.PistonStructureResolver;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.WorldTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -76,12 +77,12 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 		for (Pair<BlockPos, CompoundTag> delay : delays) {
 			BlockPos pos = delay.getLeft();
 			BlockState state = event.world.getBlockState(pos);
-			BlockEntity tile = BlockEntity.loadStatic(state, delay.getRight());
+			BlockEntity tile = BlockEntity.loadStatic(pos, state, delay.getRight());
 			
-			event.world.setBlockEntity(pos, tile);
+			event.world.setBlockEntity(tile);
 			event.world.updateNeighbourForOutputSignal(pos, state.getBlock());
-			if (tile != null)
-				tile.clearCache();
+//			if (tile != null) TODO is this problematic?
+//				tile.clearCache();
 		}
 
 		delays.clear();
@@ -118,7 +119,7 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 
 		for (BlockPos pos : moveList) {
 			BlockState state = world.getBlockState(pos);
-			if (state.getBlock().hasTileEntity(state)) {
+			if (state.getBlock() instanceof EntityBlock) {
 				BlockEntity tile = world.getBlockEntity(pos);
 				if (tile != null) {
 					if (hasCallback(tile))
@@ -152,7 +153,7 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 			world.removeBlock(pos, false);
 			if (!block.canSurvive(state, world, pos)) {
 				world.setBlock(pos, state, flags);
-				world.setBlockEntity(pos, tile);
+				world.setBlockEntity(tile);
 				Block.dropResources(state, world, pos, tile);
 				world.removeBlock(pos, false);
 				destroyed = true;
@@ -160,7 +161,7 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 
 			if (!destroyed) {
 				world.setBlockAndUpdate(pos, currState);
-				world.setBlockEntity(pos, currTile);
+				world.setBlockEntity(currTile);
 			}
 		}
 
@@ -173,9 +174,9 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 				if (delayedUpdateList.contains(block.getRegistryName().toString()))
 					registerDelayedUpdate(world, pos, tile);
 				else {
-					world.setBlockEntity(pos, tile);
-					world.getChunk(pos).setBlockEntity(pos, tile);
-					tile.clearCache();
+					world.setBlockEntity(tile);
+					world.getChunk(pos).setBlockEntity(tile);
+//					tile.clearCache(); TODO 
 
 				}
 			}
@@ -208,7 +209,7 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 		if (remove)
 			worldMovements.remove(pos);
 
-		return BlockEntity.loadStatic(world.getBlockState(pos), ret);
+		return BlockEntity.loadStatic(pos, world.getBlockState(pos), ret);
 	}
 
 	private static BlockEntity getAndClearMovement(Level world, BlockPos pos) {
@@ -218,7 +219,7 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 			if (hasCallback(tile))
 				getCallback(tile).onPistonMovementFinished();
 
-			tile.setLevelAndPosition(world, pos);
+			tile.setLevel(world);
 			tile.clearRemoved();
 		}
 

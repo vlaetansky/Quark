@@ -5,11 +5,11 @@ import java.util.Set;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
-import com.mojang.math.Vector3f;
 import vazkii.quark.content.mobs.entity.CrabEntity;
 
 public class CrabModel extends EntityModel<CrabEntity> {

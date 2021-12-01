@@ -2,11 +2,10 @@ package vazkii.quark.content.building.module;
 
 import java.util.function.BooleanSupplier;
 
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.block.QuarkPillarBlock;
 import vazkii.quark.base.handler.VariantHandler;
@@ -56,7 +55,7 @@ public class MoreStoneVariantsModule extends QuarkModule {
 	private void add(String name, MaterialColor color, BooleanSupplier cond, QuarkBlock.Constructor<QuarkBlock> constr, QuarkBlock.Constructor<QuarkPillarBlock> pillarConstr) {
 		Block.Properties props = Block.Properties.of(Material.STONE, color)
 				.requiresCorrectToolForDrops()
-        		.harvestTool(ToolType.PICKAXE)
+//        		.harvestTool(ToolType.PICKAXE) TODO tag
         		.strength(1.5F, 6.0F);
 		
 		QuarkBlock bricks = constr.make(name + "_bricks", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props).setCondition(() -> cond.getAsBoolean() && enableBricks);

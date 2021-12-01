@@ -1,16 +1,14 @@
 package vazkii.quark.content.tweaks.client.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.content.tweaks.client.emote.EmoteDescriptor;
 import vazkii.quark.content.tweaks.module.EmotesModule;
-
-import net.minecraft.client.gui.components.Button.OnPress;
 
 public class EmoteButton extends TranslucentButton {
 

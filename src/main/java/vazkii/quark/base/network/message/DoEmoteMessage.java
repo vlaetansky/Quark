@@ -7,7 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraftforge.network.NetworkEvent;
 import vazkii.arl.network.IMessage;
 import vazkii.quark.content.tweaks.client.emote.EmoteHandler;
 
@@ -29,7 +29,7 @@ public class DoEmoteMessage implements IMessage {
 	
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public boolean receive(Context context) {
+	public boolean receive(NetworkEvent.Context context) {
 		context.enqueueWork(() -> {
 			Level world = Minecraft.getInstance().level;
 			Player player = world.getPlayerByUUID(playerUUID);

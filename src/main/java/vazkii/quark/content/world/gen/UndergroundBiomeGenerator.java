@@ -6,16 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.server.level.WorldGenRegion;
 import vazkii.quark.base.world.generator.multichunk.ClusterBasedGenerator;
 import vazkii.quark.content.world.config.UndergroundBiomeConfig;
-
-import vazkii.quark.base.world.generator.multichunk.ClusterBasedGenerator.IFinishableContext;
-import vazkii.quark.base.world.generator.multichunk.ClusterBasedGenerator.IGenerationContext;
 
 public class UndergroundBiomeGenerator extends ClusterBasedGenerator {
 

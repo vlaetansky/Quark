@@ -3,8 +3,8 @@ package vazkii.quark.base.capability.dummy;
 import java.util.Collection;
 import java.util.Collections;
 
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import vazkii.quark.api.IMagnetTracker;
 

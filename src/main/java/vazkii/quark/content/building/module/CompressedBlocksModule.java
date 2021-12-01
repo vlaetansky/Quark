@@ -5,14 +5,13 @@ import java.util.function.BooleanSupplier;
 
 import com.google.common.collect.Lists;
 
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.block.QuarkFlammableBlock;
 import vazkii.quark.base.block.QuarkFlammablePillarBlock;
@@ -76,7 +75,7 @@ public class CompressedBlocksModule extends QuarkModule {
 		charcoal_block = new BurnForeverBlock("charcoal_block", this, CreativeModeTab.TAB_BUILDING_BLOCKS,
 				Block.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK)
 						.requiresCorrectToolForDrops()
-		        		.harvestTool(ToolType.PICKAXE)
+//		        		.harvestTool(ToolType.PICKAXE) TODO tag
 						.strength(5F, 10F)
 						.sound(SoundType.STONE), true)
 				.setCondition(() -> enableCharcoalBlock);

@@ -4,11 +4,11 @@ import java.util.function.BiConsumer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.ModelPart.Cube;
-import com.mojang.math.Vector3f;
 import vazkii.arl.util.ClientTicker;
 import vazkii.quark.content.mobs.entity.ToretoiseEntity;
 

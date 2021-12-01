@@ -4,7 +4,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraftforge.network.NetworkEvent;
 import vazkii.arl.network.IMessage;
 import vazkii.quark.content.tools.item.SeedPouchItem;
 import vazkii.quark.content.tools.module.SeedPouchModule;
@@ -22,7 +22,7 @@ public class WithdrawSeedsMessage implements IMessage {
 	}
 	
 	@Override
-	public boolean receive(Context context) {
+	public boolean receive(NetworkEvent.Context context) {
 		context.enqueueWork(() -> {
 			Player player = context.getSender();
 			ItemStack pouch = player.containerMenu.getSlot(slot).getItem();

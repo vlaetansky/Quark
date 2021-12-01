@@ -1,6 +1,6 @@
 package vazkii.quark.base.network.message;
 
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraftforge.network.NetworkEvent;
 import vazkii.arl.network.IMessage;
 import vazkii.quark.content.management.module.RightClickArmorModule;
 
@@ -17,7 +17,7 @@ public class SwapArmorMessage implements IMessage {
 	}
 		
 	@Override
-	public boolean receive(Context context) {
+	public boolean receive(NetworkEvent.Context context) {
 		context.enqueueWork(() -> {
 			RightClickArmorModule.swap(context.getSender(), slot);
 		});

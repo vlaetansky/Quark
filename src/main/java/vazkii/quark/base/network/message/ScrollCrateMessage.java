@@ -2,7 +2,7 @@ package vazkii.quark.base.network.message;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraftforge.network.NetworkEvent;
 import vazkii.arl.network.IMessage;
 import vazkii.quark.addons.oddities.container.CrateContainer;
 
@@ -19,7 +19,7 @@ public class ScrollCrateMessage implements IMessage {
 	}
 	
 	@Override
-	public boolean receive(Context context) {
+	public boolean receive(NetworkEvent.Context context) {
 		context.enqueueWork(() -> {
 			ServerPlayer player = context.getSender();
 			AbstractContainerMenu container = player.containerMenu;

@@ -4,11 +4,11 @@ import java.lang.reflect.Method;
 import java.util.EnumSet;
 
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.AbstractArrow.Pickup;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import vazkii.quark.content.experimental.shiba.entity.ShibaEntity;
 
 public class FetchArrowGoal extends Goal {
@@ -50,7 +50,7 @@ public class FetchArrowGoal extends Goal {
 			} catch (ReflectiveOperationException e) {
 				e.printStackTrace();
 			}
-			fetching.remove();
+			fetching.discard();
 		}
 
 		timeTilNextJump--;

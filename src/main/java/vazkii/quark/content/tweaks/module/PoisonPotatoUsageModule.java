@@ -1,13 +1,13 @@
 package vazkii.quark.content.tweaks.module;
 
-import net.minecraft.world.entity.AgableMob;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.item.Items;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
@@ -27,8 +27,8 @@ public class PoisonPotatoUsageModule extends QuarkModule {
 	
 	@SubscribeEvent
 	public void onInteract(EntityInteract event) {
-		if(event.getTarget() instanceof AgableMob && event.getItemStack().getItem() == Items.POISONOUS_POTATO) {
-			AgableMob ageable = (AgableMob) event.getTarget();
+		if(event.getTarget() instanceof AgeableMob && event.getItemStack().getItem() == Items.POISONOUS_POTATO) {
+			AgeableMob ageable = (AgeableMob) event.getTarget();
 			if(ageable.isBaby() && !isEntityPoisoned(ageable)) {
 				if(!event.getWorld().isClientSide) {
 					Vec3 pos = ageable.position();

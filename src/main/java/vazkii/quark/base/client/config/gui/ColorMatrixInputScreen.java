@@ -4,15 +4,15 @@ import java.util.Arrays;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
-import net.minecraftforge.fml.client.gui.widget.Slider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraftforge.client.gui.widget.Slider;
 import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.module.config.type.ColorMatrixConfig;
 
@@ -41,11 +41,11 @@ public class ColorMatrixInputScreen extends AbstractInputScreen<ColorMatrixConfi
 		Component suffix = new TextComponent("");
 		
 		for(int i = 0; i < 9; i++)
-			addButton(new Slider(x + w * (i % 3), y + 25 * (i / 3), w - p, 20, prefix, suffix, 0f, 2f, color.colorMatrix[i], false, false, this::onSlide));
+			addRenderableWidget(new Slider(x + w * (i % 3), y + 25 * (i / 3), w - p, 20, prefix, suffix, 0f, 2f, color.colorMatrix[i], false, false, this::onSlide));
 		
-		addButton(new Button(x + w * 0, y + 115, w - p, 20, new TextComponent("Identity"), this::onSlide));
-		addButton(new Button(x + w * 1, y + 115, w - p, 20, new TextComponent("Dreary"), this::onSlide));
-		addButton(new Button(x + w * 2, y + 115, w - p, 20, new TextComponent("Vibrant"), this::onSlide));
+		addRenderableWidget(new Button(x + w * 0, y + 115, w - p, 20, new TextComponent("Identity"), this::onSlide));
+		addRenderableWidget(new Button(x + w * 1, y + 115, w - p, 20, new TextComponent("Dreary"), this::onSlide));
+		addRenderableWidget(new Button(x + w * 2, y + 115, w - p, 20, new TextComponent("Vibrant"), this::onSlide));
 	}
 	
 	@Override
@@ -62,7 +62,7 @@ public class ColorMatrixInputScreen extends AbstractInputScreen<ColorMatrixConfi
 
 		int sliders = 0;
 		boolean needsUpdate = false;
-		for(AbstractWidget w : buttons)
+		for(Widget w : renderables)
 			if(w instanceof Slider) {
 				Slider s = (Slider) w;
 				if(mouseX < s.x || mouseY < s.y || mouseX >= s.x + s.getWidth() || mouseY >= s.y + s.getHeight())
@@ -185,7 +185,7 @@ public class ColorMatrixInputScreen extends AbstractInputScreen<ColorMatrixConfi
 		int sliders = 0;
 		mutable.colorMatrix = Arrays.copyOf(matrices[idx], matrices[idx].length);
 		
-		for(AbstractWidget w : buttons)
+		for(Widget w : renderables)
 			if(w instanceof Slider) {
 				Slider s = (Slider) w;
 				s.setValue(matrices[idx][sliders]);

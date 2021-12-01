@@ -2,11 +2,12 @@ package vazkii.quark.base.client.config.gui.widget;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import vazkii.quark.base.client.config.gui.ListInputScreen;
 import vazkii.quark.base.client.config.gui.WidgetWrapper;
 
@@ -57,6 +58,11 @@ public class StringElementList extends ScrollableWidgetList<ListInputScreen, Str
 			
 			if(initialString != null)
 				drawBackground(mstack, index, rowTop, rowLeft, rowWidth, rowHeight, mouseX, mouseY, hovered);
+		}
+
+		@Override
+		public Component getNarration() {
+			return new TextComponent(string);
 		}
 		
 	}

@@ -12,16 +12,14 @@ package vazkii.quark.content.tweaks.ai;
 
 import java.util.EnumSet;
 
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
-import net.minecraft.sounds.SoundEvent;
-
-import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 public class NuzzleGoal extends Goal {
 

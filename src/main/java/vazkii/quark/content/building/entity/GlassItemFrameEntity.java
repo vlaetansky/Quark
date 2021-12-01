@@ -7,38 +7,38 @@ import javax.annotation.Nullable;
 
 import com.mojang.authlib.GameProfile;
 
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.decoration.ItemFrame;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BannerItem;
-import net.minecraft.world.item.MapItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BannerItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.MapItem;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.network.NetworkHooks;
 import vazkii.quark.base.util.MovableFakePlayer;
 import vazkii.quark.content.building.module.GlassItemFrameModule;
 
@@ -90,7 +90,7 @@ public class GlassItemFrameEntity extends ItemFrame implements IEntityAdditional
 				ServerLevel sworld = (ServerLevel) level;
 				ItemStack clone = stack.copy();
 
-				MapItemSavedData data = MapItem.getOrCreateSavedData(clone, level);
+				MapItemSavedData data = MapItem.getSavedData(clone, level);
 				if(data != null && !data.locked) {
 					if(fakePlayer == null)
 						fakePlayer = new MovableFakePlayer(sworld, new GameProfile(UUID.randomUUID(), "ItemFrame"));
@@ -99,7 +99,7 @@ public class GlassItemFrameEntity extends ItemFrame implements IEntityAdditional
 					
 					clone.setEntityRepresentation(null);
 					fakePlayer.setPos(getX(), getY(), getZ());
-					fakePlayer.inventory.setItem(0, clone);
+					fakePlayer.getInventory().setItem(0, clone);
 					
 					item.update(level, fakePlayer, data);
 				}
@@ -125,7 +125,7 @@ public class GlassItemFrameEntity extends ItemFrame implements IEntityAdditional
 	
 	public boolean isOnSign() {
 		BlockState blockstate = level.getBlockState(getBehindPos());
-		return blockstate.getBlock().is(BlockTags.STANDING_SIGNS);
+		return blockstate.is(BlockTags.STANDING_SIGNS);
 	}
 
 	@Nullable

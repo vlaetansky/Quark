@@ -1,16 +1,15 @@
 package vazkii.quark.content.building.block;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.LadderBlock;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraftforge.common.ToolType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LadderBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
@@ -35,8 +34,8 @@ public class VariantLadderBlock extends LadderBlock {
 	
 	public VariantLadderBlock(String type, QuarkModule module, boolean flammable) {
 		this(type, module, 
-				Block.Properties.copy(Blocks.LADDER)
-				.harvestTool(ToolType.AXE), 
+				Block.Properties.copy(Blocks.LADDER),
+//				.harvestTool(ToolType.AXE), TODO tag
 			flammable);
 	}
 	

@@ -1,10 +1,10 @@
 package vazkii.quark.content.world.module.underground;
 
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkBlock;

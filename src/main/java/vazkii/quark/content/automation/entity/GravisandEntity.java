@@ -2,30 +2,31 @@ package vazkii.quark.content.automation.entity;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ConcretePowderBlock;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.entity.item.FallingBlockEntity;
-import net.minecraft.world.item.context.DirectionalPlaceContext;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.DirectionalPlaceContext;
 import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ConcretePowderBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.NetworkHooks;
 import vazkii.quark.content.automation.module.GravisandModule;
 
 public class GravisandEntity extends FallingBlockEntity {
@@ -64,8 +65,8 @@ public class GravisandEntity extends FallingBlockEntity {
 	@Override
 	public void tick() {
 		Vec3 pos = position();
-		if (this.fallTile.isAir(level, new BlockPos(position())) || pos.y > 300 || pos.y < -50) {
-			this.remove();
+		if (this.fallTile.isAir() || pos.y > 300 || pos.y < -50) { // TODO coords shouldn't be hardcoded any more
+			this.discard();
 		} else {
 			this.xo = pos.x;
 			this.yo = pos.y;
@@ -76,7 +77,7 @@ public class GravisandEntity extends FallingBlockEntity {
 				if (this.level.getBlockState(blockpos).getBlock() == block) {
 					this.level.removeBlock(blockpos, false);
 				} else if (!this.level.isClientSide) {
-					this.remove();
+					this.discard();
 					return;
 				}
 			}
@@ -105,13 +106,13 @@ public class GravisandEntity extends FallingBlockEntity {
 							this.spawnAtLocation(block);
 						}
 
-						this.remove();
+						this.discard();
 					}
 				} else {
 					BlockState blockstate = this.level.getBlockState(fallTarget);
 					this.setDeltaMovement(this.getDeltaMovement().multiply(0.7D, -0.5D, 0.7D));
 					if (blockstate.getBlock() != Blocks.MOVING_PISTON) {
-						this.remove();
+						this.discard();
 						Direction facing = getFallDirection() < 0 ? Direction.DOWN : Direction.UP;
 						boolean flag2 = blockstate.canBeReplaced(new DirectionalPlaceContext(this.level, fallTarget, facing, ItemStack.EMPTY, facing.getOpposite()));
 						boolean flag3 = this.fallTile.canSurvive(this.level, fallTarget);
@@ -131,7 +132,7 @@ public class GravisandEntity extends FallingBlockEntity {
 	}
 
 	@Override
-	public boolean causeFallDamage(float distance, float damageMultiplier) {
+	public boolean causeFallDamage(float distance, float damageMultiplier, DamageSource source) {
 		return false;
 	}
 

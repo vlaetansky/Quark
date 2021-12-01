@@ -4,14 +4,12 @@ import java.util.function.BooleanSupplier;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.NonNullList;
 import vazkii.arl.item.BasicItem;
 import vazkii.quark.base.client.handler.RequiredModTooltipHandler;
 import vazkii.quark.base.module.QuarkModule;
-
-import net.minecraft.world.item.Item.Properties;
 
 public class QuarkItem extends BasicItem implements IQuarkItem {
 

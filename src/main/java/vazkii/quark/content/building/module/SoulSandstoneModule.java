@@ -1,10 +1,9 @@
 package vazkii.quark.content.building.module;
 
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.LoadModule;
@@ -18,7 +17,7 @@ public class SoulSandstoneModule extends QuarkModule {
 	public void construct() {
 		Block.Properties props = Block.Properties.of(Material.STONE, MaterialColor.COLOR_BROWN)
 				.requiresCorrectToolForDrops()
-        		.harvestTool(ToolType.PICKAXE)
+//        		.harvestTool(ToolType.PICKAXE) TODO tag
         		.strength(0.8F);
 		
 		VariantHandler.addSlabStairsWall(new QuarkBlock("soul_sandstone", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props));

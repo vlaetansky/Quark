@@ -2,20 +2,17 @@ package vazkii.quark.base.client.render;
 
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class BaseArmorModel extends HumanoidModel<LivingEntity> {
 	
-	protected final EquipmentSlot slot;
-
-	public BaseArmorModel(EquipmentSlot slot) {
-		super(1);
-		this.slot = slot;
+	public BaseArmorModel(ModelPart part) {
+		super(part, RenderType::entityTranslucent);
 	}
 
 	// [VanillaCopy] ArmorStandArmorModel.setRotationAngles because armor stands are dumb

@@ -1,6 +1,6 @@
 package vazkii.quark.base.network.message;
 
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 import vazkii.arl.network.IMessage;
 import vazkii.quark.content.tweaks.module.ImprovedSleepingModule;
 

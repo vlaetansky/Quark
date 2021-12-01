@@ -1,12 +1,13 @@
 package vazkii.quark.content.client.module;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.Input;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.InputUpdateEvent;
+import net.minecraftforge.client.event.MovementInputUpdateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.client.handler.ModKeybindHandler;
 import vazkii.quark.base.module.LoadModule;
@@ -63,12 +64,12 @@ public class AutoWalkKeybindModule extends QuarkModule {
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public void onInput(InputUpdateEvent event) {
+	public void onInput(MovementInputUpdateEvent event) {
 		Minecraft mc = Minecraft.getInstance();
 		if(mc.player != null && autorunning) {
-			event.getMovementInput().up = true;
-			// [VanillaCopy] magic numbers copied from net.minecraft.util.MovementInputFromOptions
-			event.getMovementInput().forwardImpulse = ((LocalPlayer) event.getPlayer()).isMovingSlowly() ? 0.3F : 1F;
+			Input input = event.getInput();
+			input.up = true;
+			input.forwardImpulse = ((LocalPlayer) event.getPlayer()).isMovingSlowly() ? 0.3F : 1F;
 		}
 	}
 

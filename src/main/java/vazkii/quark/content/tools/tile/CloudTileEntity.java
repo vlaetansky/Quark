@@ -1,7 +1,7 @@
 package vazkii.quark.content.tools.tile;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import vazkii.arl.block.tile.TileMod;
 import vazkii.quark.content.tools.module.BottledCloudModule;

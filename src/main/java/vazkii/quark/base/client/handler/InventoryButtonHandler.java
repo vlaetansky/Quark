@@ -14,16 +14,16 @@ import javax.annotation.Nonnull;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -43,21 +43,22 @@ public final class InventoryButtonHandler {
 	private static final Multimap<ButtonTargetType, Button> currentButtons = Multimaps.newSetMultimap(new HashMap<>(), LinkedHashSet::new);
 	
 	@SubscribeEvent
-	public static void initGui(GuiScreenEvent.InitGuiEvent.Post event) {
+	public static void initGui(ScreenEvent.InitScreenEvent.Post event) {
+		Screen screen = event.getScreen();
 		if(GeneralConfig.printScreenClassnames)
-			Quark.LOG.info("Opened screen {}", event.getGui().getClass().getName());
+			Quark.LOG.info("Opened screen {}", screen.getClass().getName());
 		currentButtons.clear();
 		
-		if(event.getGui() instanceof AbstractContainerScreen && !(event.getGui() instanceof IQuarkButtonIgnored) && !GeneralConfig.isScreenIgnored(event.getGui())) {
+		if(screen instanceof AbstractContainerScreen && !(screen instanceof IQuarkButtonIgnored) && !GeneralConfig.isScreenIgnored(screen)) {
 			Minecraft mc = Minecraft.getInstance();
-			AbstractContainerScreen<?> screen = (AbstractContainerScreen<?>) event.getGui();
+			AbstractContainerScreen<?> containerScreen = (AbstractContainerScreen<?>) screen;
 
-			if(screen instanceof InventoryScreen || screen.getClass().getName().contains("CuriosScreen"))
-				applyProviders(event, ButtonTargetType.PLAYER_INVENTORY, screen, s -> s.container == mc.player.inventory && s.getSlotIndex() == 17);
+			if(containerScreen instanceof InventoryScreen || containerScreen.getClass().getName().contains("CuriosScreen"))
+				applyProviders(event, ButtonTargetType.PLAYER_INVENTORY, containerScreen, s -> s.container == mc.player.getInventory() && s.getSlotIndex() == 17);
 			else {
-				if(InventoryTransferHandler.accepts(screen.getMenu(), mc.player)) { 
-					applyProviders(event, ButtonTargetType.CONTAINER_INVENTORY, screen, s -> s.container != mc.player.inventory && s.getSlotIndex() == 8);
-					applyProviders(event, ButtonTargetType.CONTAINER_PLAYER_INVENTORY, screen, s -> s.container == mc.player.inventory && s.getSlotIndex() == 17);
+				if(InventoryTransferHandler.accepts(containerScreen.getMenu(), mc.player)) { 
+					applyProviders(event, ButtonTargetType.CONTAINER_INVENTORY, containerScreen, s -> s.container != mc.player.getInventory() && s.getSlotIndex() == 8);
+					applyProviders(event, ButtonTargetType.CONTAINER_PLAYER_INVENTORY, containerScreen, s -> s.container == mc.player.getInventory() && s.getSlotIndex() == 17);
 				}
 			}
 		}
@@ -83,8 +84,8 @@ public final class InventoryButtonHandler {
 	}
 
 	@SubscribeEvent
-	public static void mouseInputEvent(GuiScreenEvent.MouseClickedEvent.Pre pressed) {
-		Screen gui = pressed.getGui();
+	public static void mouseInputEvent(ScreenEvent.MouseClickedEvent.Pre pressed) {
+		Screen gui = pressed.getScreen();
 		if (gui instanceof AbstractContainerScreen) {
 			AbstractContainerScreen<?> screen = (AbstractContainerScreen<?>) gui;
 			if(GeneralConfig.isScreenIgnored(screen))
@@ -104,8 +105,8 @@ public final class InventoryButtonHandler {
 	}
 
 	@SubscribeEvent
-	public static void keyboardInputEvent(GuiScreenEvent.KeyboardKeyPressedEvent.Post pressed) {
-		Screen gui = pressed.getGui();
+	public static void keyboardInputEvent(ScreenEvent.KeyboardKeyPressedEvent.Post pressed) {
+		Screen gui = pressed.getScreen();
 		if (gui instanceof AbstractContainerScreen) {
 			AbstractContainerScreen<?> screen = (AbstractContainerScreen<?>) gui;
 			if(GeneralConfig.isScreenIgnored(screen))
@@ -125,7 +126,7 @@ public final class InventoryButtonHandler {
 
 	}
 
-	private static void applyProviders(GuiScreenEvent.InitGuiEvent.Post event, ButtonTargetType type, AbstractContainerScreen<?> screen, Predicate<Slot> slotPred) {
+	private static void applyProviders(ScreenEvent.InitScreenEvent.Post event, ButtonTargetType type, AbstractContainerScreen<?> screen, Predicate<Slot> slotPred) {
 		Collection<ButtonProviderHolder> holders = providers.get(type);
 		if(!holders.isEmpty()) {
 			for(Slot slot : screen.getMenu().slots)
@@ -139,7 +140,7 @@ public final class InventoryButtonHandler {
 					for(ButtonProviderHolder holder : holders) {
 						Button button = holder.getButton(screen, x, y);
 						if(button != null) {
-							event.addWidget(button);
+							event.addListener(button);
 							currentButtons.put(type, button);
 							x -= 12;
 						}

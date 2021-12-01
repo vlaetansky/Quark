@@ -8,35 +8,37 @@ import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.regex.Pattern;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Constants;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.event.GuiScreenEvent.KeyboardCharTypedEvent;
-import net.minecraftforge.client.event.GuiScreenEvent.KeyboardKeyPressedEvent;
-import net.minecraftforge.client.event.GuiScreenEvent.MouseClickedEvent;
-import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.client.event.ScreenEvent.KeyboardCharTypedEvent;
+import net.minecraftforge.client.event.ScreenEvent.KeyboardKeyPressedEvent;
+import net.minecraftforge.client.event.ScreenEvent.MouseClickedEvent;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModContainer;
@@ -80,9 +82,9 @@ public class ChestSearchingModule extends QuarkModule {
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public void initGui(GuiScreenEvent.InitGuiEvent.Post event) {
-		Screen gui = event.getGui();
-		if(gui instanceof AbstractContainerScreen && !(event.getGui() instanceof IQuarkButtonIgnored) && !GeneralConfig.isScreenIgnored(event.getGui())) {
+	public void initGui(ScreenEvent.InitScreenEvent.Post event) {
+		Screen gui = event.getScreen();
+		if(gui instanceof AbstractContainerScreen && !(gui instanceof IQuarkButtonIgnored) && !GeneralConfig.isScreenIgnored(gui)) {
 			Minecraft mc = gui.getMinecraft();
 			AbstractContainerScreen<?> chest = (AbstractContainerScreen<?>) gui;
 			if(InventoryTransferHandler.accepts(chest.getMenu(), mc.player)) {
@@ -145,13 +147,13 @@ public class ChestSearchingModule extends QuarkModule {
 	}
 
 	@SubscribeEvent
-	public void onRender(GuiScreenEvent.DrawScreenEvent.Post event) {
+	public void onRender(ScreenEvent.DrawScreenEvent.Post event) {
 		if(searchBar != null && searchEnabled)
-			renderElements(event.getMatrixStack(), event.getGui());
+			renderElements(event.getPoseStack(), event.getScreen());
 	}
 
 	private void renderElements(PoseStack matrix, Screen gui) {
-		RenderSystem.pushMatrix();
+		matrix.pushPose();
 		drawBackground(matrix, gui, searchBar.x - 11, searchBar.y - 3);
 
 		if(!text.isEmpty()) {
@@ -180,16 +182,18 @@ public class ChestSearchingModule extends QuarkModule {
 		else searchBar.setTextColor(0xFFFFFF);
 
 		searchBar.render(matrix, 0, 0, 0);
-		RenderSystem.popMatrix();
+		matrix.popPose();
 	}
 
 	private void drawBackground(PoseStack matrix, Screen gui, int x, int y) {
 		if(gui == null)
 			return;
 
-		RenderSystem.color4f(1F, 1F, 1F, 1F);
-		RenderSystem.disableLighting();
-		Minecraft.getInstance().getTextureManager().bind(MiscUtil.GENERAL_ICONS);
+		// TODO is lighting okay?
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.setShaderTexture(0, MiscUtil.GENERAL_ICONS);
+		
 		Screen.blit(matrix, x, y, 0, 0, 126, 13, 256, 256);
 	}
 
@@ -210,11 +214,12 @@ public class ChestSearchingModule extends QuarkModule {
 		if(SimilarBlockTypeHandler.isShulkerBox(res)) {
 			CompoundTag cmp = ItemNBTHelper.getCompound(stack, "BlockEntityTag", true);
 			if (cmp != null) {
-				if (!cmp.contains("id", Constants.NBT.TAG_STRING)) {
+				if (!cmp.contains("id")) {
 					cmp = cmp.copy();
 					cmp.putString("id", "minecraft:shulker_box");
 				}
-				BlockEntity te = BlockEntity.loadStatic(((BlockItem) item).getBlock().defaultBlockState(), cmp); 
+				
+				BlockEntity te = BlockEntity.loadStatic(BlockPos.ZERO, ((BlockItem) item).getBlock().defaultBlockState(), cmp); 
 				if (te != null) {
 					LazyOptional<IItemHandler> handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 					if (handler.isPresent()) {

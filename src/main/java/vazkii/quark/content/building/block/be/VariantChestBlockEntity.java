@@ -1,18 +1,20 @@
-package vazkii.quark.content.building.tile;
+package vazkii.quark.content.building.block.be;
 
-import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import vazkii.quark.content.building.module.VariantChestsModule;
 
-public class VariantChestTileEntity extends ChestBlockEntity {
+public class VariantChestBlockEntity extends ChestBlockEntity {
 
-	protected VariantChestTileEntity(BlockEntityType<?> typeIn) {
-		super(typeIn);
+	protected VariantChestBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
+		super(typeIn, pos, state);
 	}
 
-	public VariantChestTileEntity() {
-		super(VariantChestsModule.chestTEType);
+	public VariantChestBlockEntity(BlockPos pos, BlockState state) {
+		super(VariantChestsModule.chestTEType, pos, state);
 	}
 
 	@Override

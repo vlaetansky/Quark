@@ -6,16 +6,15 @@ import java.util.function.BooleanSupplier;
 
 import com.google.common.collect.Lists;
 
+import net.minecraft.core.Registry;
+import net.minecraft.data.worldgen.placement.OrePlacements;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.Registry;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.BiomeDictionary;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -66,26 +65,27 @@ public class BigStoneClustersModule extends QuarkModule {
 		add(slate, NewStoneTypesModule.slateBlock, () -> NewStoneTypesModule.enabledWithSlate);
 		add(myalite, NewStoneTypesModule.myaliteBlock, () -> NewStoneTypesModule.enabledWithMyalite);
 
-		conditionalize(Blocks.GRANITE, () -> (!enabled || !granite.enabled));
-		conditionalize(Blocks.DIORITE, () -> (!enabled || !diorite.enabled));
-		conditionalize(Blocks.ANDESITE, () -> (!enabled || !andesite.enabled));
+		BooleanSupplier graniteSupplier = () -> (!enabled || !granite.enabled);
+		BooleanSupplier dioriteSupplier = () -> (!enabled || !diorite.enabled);
+		BooleanSupplier andesiteSupplier = () -> (!enabled || !andesite.enabled);
+		
+		conditionalize(OrePlacements.ORE_GRANITE_UPPER, graniteSupplier);
+		conditionalize(OrePlacements.ORE_GRANITE_LOWER, graniteSupplier);
+	
+		conditionalize(OrePlacements.ORE_DIORITE_UPPER, dioriteSupplier);
+		conditionalize(OrePlacements.ORE_DIORITE_LOWER, dioriteSupplier);
+		
+		conditionalize(OrePlacements.ORE_ANDESITE_UPPER, andesiteSupplier);
+		conditionalize(OrePlacements.ORE_ANDESITE_LOWER, andesiteSupplier);
+		
 	}
 	
 	private void add(BigStoneClusterConfig config, Block block, BooleanSupplier condition) {
 		WorldGenHandler.addGenerator(this, new BigStoneClusterGenerator(config, block.defaultBlockState(), condition), Decoration.UNDERGROUND_DECORATION, WorldGenWeights.BIG_STONE_CLUSTERS);
 	}
 	
-	private void conditionalize(Block block, BooleanSupplier condition) {
-		BiPredicate<Feature<? extends FeatureConfiguration>, FeatureConfiguration> pred = (feature, config) -> {
-			if(config instanceof OreConfiguration) {
-				OreConfiguration oconfig = (OreConfiguration) config;
-				return oconfig.state.getBlock() == block;
-			}
-			
-			return false;
-		};
-		
-		WorldGenHandler.conditionalizeFeatures(GenerationStep.Decoration.UNDERGROUND_ORES, pred, condition);
+	private void conditionalize(PlacedFeature feature, BooleanSupplier condition) {
+		WorldGenHandler.conditionalizeFeatures(GenerationStep.Decoration.UNDERGROUND_ORES, feature, condition);
 	}
 	
 	@Override

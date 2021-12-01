@@ -1,15 +1,14 @@
 package vazkii.quark.base.client.config.gui.widget;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.TextComponent;
 import vazkii.quark.base.handler.ContributorRewardHandler;
 import vazkii.quark.base.handler.MiscUtil;
-
-import net.minecraft.client.gui.components.Button.OnPress;
 
 public class PencilButton extends Button {
 
@@ -22,11 +21,13 @@ public class PencilButton extends Button {
 		super.renderButton(mstack, p_renderButton_1_, p_renderButton_2_, p_renderButton_3_);
 		
 		if(ContributorRewardHandler.localPatronTier > 0) {
-			RenderSystem.color3f(1F, 1F, 1F);
+			RenderSystem.setShader(GameRenderer::getPositionTexShader);
+			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+			RenderSystem.setShaderTexture(0, MiscUtil.GENERAL_ICONS);
+			
 			int u = 32;
 			int v = 93;
 			
-			Minecraft.getInstance().textureManager.bind(MiscUtil.GENERAL_ICONS);
 			blit(mstack, x + 2, y + 1, u, v, 16, 16);
 		}
 	}

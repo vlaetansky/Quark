@@ -2,16 +2,16 @@ package vazkii.quark.content.world.gen;
 
 import java.util.Random;
 
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biome.BiomeCategory;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.common.Tags;
 import vazkii.quark.base.module.config.type.DimensionConfig;
 import vazkii.quark.base.world.generator.Generator;
@@ -75,13 +75,13 @@ public class FairyRingGenerator extends Generator {
 		BlockPos orePos = pos.below(rand.nextInt(10) + 25);
 		BlockState stoneState = world.getBlockState(orePos);
 		int down = 0;
-		while(!stoneState.getBlock().is(Tags.Blocks.STONE) && down < 10) {
+		while(!stoneState.is(Tags.Blocks.STONE) && down < 10) {
 			orePos = orePos.below();	
 			stoneState = world.getBlockState(orePos);	
 			down++;
 		}
 		
-		if(stoneState.getBlock().is(Tags.Blocks.STONE)) {
+		if(stoneState.is(Tags.Blocks.STONE)) {
 			BlockState ore = FairyRingsModule.ores.get(rand.nextInt(FairyRingsModule.ores.size()));
 			world.setBlock(orePos, ore, 2);
 			for(Direction face : Direction.values())

@@ -1,7 +1,7 @@
 package vazkii.quark.content.tweaks.client.emote;
 
-import net.minecraft.server.packs.PackType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.content.tweaks.module.EmotesModule;

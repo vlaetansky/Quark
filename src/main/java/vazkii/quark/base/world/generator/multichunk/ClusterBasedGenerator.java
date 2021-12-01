@@ -4,8 +4,8 @@ import java.util.Random;
 import java.util.function.BooleanSupplier;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import vazkii.quark.base.module.config.type.ClusterSizeConfig;
 import vazkii.quark.base.module.config.type.DimensionConfig;
 import vazkii.quark.base.world.generator.Generator;

@@ -5,18 +5,15 @@ import java.util.concurrent.Callable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -36,40 +33,24 @@ import vazkii.quark.base.capability.dummy.DummySorting;
 
 @Mod.EventBusSubscriber(modid = Quark.MOD_ID)
 public class CapabilityHandler {
+	
+	// TODO this doesnt seem safe
+	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+		registerLambda(event, ITransferManager.class, (player) -> false);
 
-	public static void setup() {
-		registerLambda(ITransferManager.class, (player) -> false);
-
-		register(ICustomSorting.class, DummySorting::new);
-		register(IPistonCallback.class, DummyPistonCallback::new);
-		register(IMagnetTracker.class, DummyMagnetTracker::new);
-		register(IRuneColorProvider.class, DummyRuneColor::new);
+		register(event, ICustomSorting.class, DummySorting::new);
+		register(event, IPistonCallback.class, DummyPistonCallback::new);
+		register(event, IMagnetTracker.class, DummyMagnetTracker::new);
+		register(event, IRuneColorProvider.class, DummyRuneColor::new);
+    }
+    
+	private static <T> void registerLambda(RegisterCapabilitiesEvent event, Class<T> clazz, T provider) {
+		register(event, clazz, () -> provider);
 	}
 
-	private static <T> void registerLambda(Class<T> clazz, T provider) {
-		register(clazz, () -> provider);
-	}
-
-	private static <T> void register(Class<T> clazz, Callable<T> provider) {
-		CapabilityManager.INSTANCE.register(clazz, new CapabilityFactory<>(), provider);
-	}
-
-	private static class CapabilityFactory<T> implements Capability.IStorage<T> {
-
-		@Override
-		public Tag writeNBT(Capability<T> capability, T instance, Direction side) {
-			if (instance instanceof INBTSerializable)
-				return ((INBTSerializable<?>) instance).serializeNBT();
-			return null;
-		}
-
-		@Override
-		@SuppressWarnings("unchecked")
-		public void readNBT(Capability<T> capability, T instance, Direction side, Tag nbt) {
-			if (nbt instanceof CompoundTag)
-				((INBTSerializable<Tag>) instance).deserializeNBT(nbt);
-		}
-
+	private static <T> void register(RegisterCapabilitiesEvent event, Class<T> clazz, Callable<T> provider) {
+		event.register(clazz);
+//		CapabilityManager.INSTANCE.register(clazz, new CapabilityFactory<>(), provider);
 	}
 
 	private static final ResourceLocation DROPOFF_MANAGER = new ResourceLocation(Quark.MOD_ID, "dropoff");

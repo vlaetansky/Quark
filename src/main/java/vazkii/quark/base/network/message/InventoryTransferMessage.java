@@ -1,6 +1,6 @@
 package vazkii.quark.base.network.message;
 
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraftforge.network.NetworkEvent;
 import vazkii.arl.network.IMessage;
 import vazkii.quark.base.handler.InventoryTransferHandler;
 
@@ -18,7 +18,7 @@ public class InventoryTransferMessage implements IMessage {
 	}
 	
 	@Override
-	public boolean receive(Context context) {
+	public boolean receive(NetworkEvent.Context context) {
 		context.enqueueWork(() -> InventoryTransferHandler.transfer(context.getSender(), restock, smart));
 		return true;
 	}

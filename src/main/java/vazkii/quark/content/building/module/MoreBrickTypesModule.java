@@ -2,11 +2,9 @@ package vazkii.quark.content.building.module;
 
 import java.util.function.BooleanSupplier;
 
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.LoadModule;
@@ -38,8 +36,8 @@ public class MoreBrickTypesModule extends QuarkModule {
 		VariantHandler.addSlabStairsWall(new QuarkBlock(name + "_bricks", this, CreativeModeTab.TAB_BUILDING_BLOCKS, 
 				Block.Properties.copy(parent)
 				.strength(2F, 6F)
-				.requiresCorrectToolForDrops()
-				.harvestTool(parent.material == Material.SNOW ? ToolType.SHOVEL : ToolType.PICKAXE))
+				.requiresCorrectToolForDrops())
+//				.harvestTool(ToolType.PICKAXE)) TODO tag
 				.setCondition(cond));
 	}
 	

@@ -1,19 +1,19 @@
-package vazkii.quark.content.world.tile;
+package vazkii.quark.content.world.block.te;
 
 import java.util.List;
 
-import net.minecraft.world.level.block.Block;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.CaveSpider;
 import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.TickableBlockEntity;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.Difficulty;
 import vazkii.arl.block.tile.TileMod;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.content.world.module.MonsterBoxModule;

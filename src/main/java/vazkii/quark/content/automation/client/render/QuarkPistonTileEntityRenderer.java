@@ -4,18 +4,18 @@ import java.util.Objects;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import vazkii.quark.base.Quark;
 import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 
@@ -43,9 +43,11 @@ public class QuarkPistonTileEntityRenderer {
 				break render;
 			
 			matrix.pushPose();
-			BlockEntityRenderer<BlockEntity> tileentityrenderer = BlockEntityRenderDispatcher.instance.getRenderer(tile);
+			Minecraft mc = Minecraft.getInstance();
+			BlockEntityRenderer<BlockEntity> tileentityrenderer = mc.getBlockEntityRenderDispatcher().getRenderer(tile);
 			if(tileentityrenderer != null) {
-				tile.setLevelAndPosition(sourceTE.getLevel(), sourceTE.getBlockPos());
+//				tile.setLevelAndPosition(sourceTE.getLevel(), sourceTE.getBlockPos());
+				tile.setLevel(sourceTE.getLevel()); // TODO is this safe?
 				tile.clearRemoved();
 
 				matrix.translate(offset.x, offset.y, offset.z);
