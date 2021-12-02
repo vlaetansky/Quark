@@ -23,27 +23,27 @@ public class MonsterBoxGenerator extends Generator {
 	public void generateChunk(WorldGenRegion world, ChunkGenerator generator, Random rand, BlockPos chunkCorner) {
 		if(generator instanceof FlatLevelSource)
 			return;
-		
+
 		double chance =  MonsterBoxModule.chancePerChunk;
-		
+
 		while(rand.nextDouble() <= chance) {
-				BlockPos pos = chunkCorner.offset(rand.nextInt(16), MonsterBoxModule.minY + rand.nextInt(MonsterBoxModule.maxY - MonsterBoxModule.minY + 1), rand.nextInt(16));
+			BlockPos pos = chunkCorner.offset(rand.nextInt(16), MonsterBoxModule.minY + rand.nextInt(MonsterBoxModule.maxY - MonsterBoxModule.minY + 1), rand.nextInt(16));
 			if(world.isEmptyBlock(pos)) {
 				BlockPos testPos = pos;
 				BlockState testState;
 				int moves = 0;
-				
+
 				do {
 					testPos = testPos.below();
 					testState = world.getBlockState(testPos);
 					moves++;
 				} while(moves < MonsterBoxModule.searchRange && testState.getMaterial() != Material.STONE && testPos.getY() >= MonsterBoxModule.minY);
-				
-				BlockPos placePos = testPos.above();
-				if(testPos.getY() >= MonsterBoxModule.minY && world.isEmptyBlock(placePos) && world.getBlockState(placePos.below()).isFaceSturdy(world, placePos.below(), Direction.UP))
-					world.setBlock(placePos, MonsterBoxModule.monster_box.defaultBlockState(), 0);
+
+				if(testPos.getY() >= MonsterBoxModule.minY && world.isEmptyBlock(testPos.above()) && world.getBlockState(testPos).isFaceSturdy(world, testPos, Direction.UP)) {
+					world.setBlock(testPos.above(), MonsterBoxModule.monster_box.defaultBlockState(), 0);
+				}
 			}
-			
+
 			chance -=MonsterBoxModule.chancePerChunk;
 		}
 	}
