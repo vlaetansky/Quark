@@ -171,7 +171,7 @@ public class ImprovedSleepingModule extends QuarkModule {
 
 			worldPlayers.stream().filter(LivingEntity::isSleeping).forEach(Player::stopSleeping);
 			if (world.getGameRules().getBoolean(GameRules.RULE_WEATHER_CYCLE) && world.isRaining()) {
-				((ServerLevel) world).resetWeatherCycle(); // TODO AT
+				((ServerLevel) world).resetWeatherCycle();
 			}
 
 			if (world instanceof ServerLevel)

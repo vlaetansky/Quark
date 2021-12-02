@@ -55,7 +55,7 @@ public abstract class AbstractScrollingWidgetScreen extends AbstractQScreen {
 	}
 	
 	public void refresh() {
-		children.removeIf(scrollingWidgets::contains); // TODO AT
+		children.removeIf(scrollingWidgets::contains);
 		narratables.removeIf(scrollingWidgets::contains);
 		renderables.removeIf(scrollingWidgets::contains); 
 		scrollingWidgets.clear();

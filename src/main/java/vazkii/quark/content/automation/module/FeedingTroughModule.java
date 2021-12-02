@@ -66,7 +66,7 @@ public class FeedingTroughModule extends QuarkModule {
         if (event.side == LogicalSide.SERVER) {
             if (event.phase == TickEvent.Phase.START) {
                 breedingOccurred.remove();
-                for (TickingBlockEntity ticking : event.world.blockEntityTickers) { // TODO AT
+                for (TickingBlockEntity ticking : event.world.blockEntityTickers) { 
                 	BlockEntity tile = event.world.getBlockEntity(ticking.getPos());
                     if (tile instanceof FeedingTroughBlockEntity)
                         troughs.add((FeedingTroughBlockEntity) tile);
@@ -95,7 +95,7 @@ public class FeedingTroughModule extends QuarkModule {
 
     public static Player temptWithTroughs(TemptGoal goal, Player found) {
         if (!ModuleLoader.INSTANCE.isModuleEnabled(FeedingTroughModule.class) ||
-                (found != null && (goal.items.test(found.getMainHandItem()) || goal.items.test(found.getOffhandItem())))) // TODO AT
+                (found != null && (goal.items.test(found.getMainHandItem()) || goal.items.test(found.getOffhandItem()))))
             return found;
 
         if (!(goal.mob instanceof Animal) ||

@@ -12,10 +12,12 @@ import java.util.function.Supplier;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
 
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Bee;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.base.Quark;
@@ -88,7 +90,7 @@ public class VariantAnimalTexturesModule extends QuarkModule {
 
 	@SuppressWarnings("unchecked")
 	private void registerAndStackBeeRenderers() {
-		VariantBeeRenderer.OLD_BEE_RENDER_FACTORY = EntityRenderers.PROVIDERS.get(EntityType.BEE); // TODO AT
+		VariantBeeRenderer.OLD_BEE_RENDER_FACTORY = (EntityRendererProvider<Bee>) EntityRenderers.PROVIDERS.get(EntityType.BEE);
 		EntityRenderers.register(EntityType.BEE, VariantBeeRenderer::new);
 	}
 

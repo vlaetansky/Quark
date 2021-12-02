@@ -65,7 +65,7 @@ public class FeedingTroughBlockEntity extends RandomizableContainerBlockEntity {
         if (foodHolder != null) {
             for (int i = 0; i < getContainerSize(); i++) {
                 ItemStack stack = getItem(i);
-                if (goal.items.test(stack) && entity.isFood(stack)) { // TODO AT
+                if (goal.items.test(stack) && entity.isFood(stack)) {
                 	Inventory inventory = foodHolder.getInventory();
                     inventory.items.set(inventory.selected, stack);
                     Vec3 position = new Vec3(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ()).add(0.5, -1, 0.5);
