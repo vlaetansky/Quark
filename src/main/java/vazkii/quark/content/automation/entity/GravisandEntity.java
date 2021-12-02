@@ -65,7 +65,7 @@ public class GravisandEntity extends FallingBlockEntity {
 	@Override
 	public void tick() {
 		Vec3 pos = position();
-		if (this.fallTile.isAir() || pos.y > 300 || pos.y < -50) { // TODO FIX coords shouldn't be hardcoded any more
+		if (this.fallTile.isAir() || pos.y > 400 || pos.y < -200) {
 			this.discard();
 		} else {
 			this.xo = pos.x;

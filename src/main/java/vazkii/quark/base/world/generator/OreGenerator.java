@@ -24,7 +24,7 @@ public class OreGenerator extends Generator {
 			return false;
 		
 		Block block = state.getBlock();
-		return block == Blocks.STONE;
+		return block == Blocks.STONE || block == Blocks.DEEPSLATE;
 	};
 	
 	public static final Predicate<BlockState> NETHERRACK_MATCHER = (state) -> {

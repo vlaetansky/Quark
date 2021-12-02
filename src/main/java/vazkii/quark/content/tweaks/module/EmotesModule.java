@@ -267,7 +267,7 @@ public class EmotesModule extends QuarkModule {
 				else if(emote.timeDone > emote.totalTime - tween)
 					transparency = (emote.totalTime - emote.timeDone) / tween;
 
-				stack.popPose();
+				stack.pushPose();
 				RenderSystem.setShader(GameRenderer::getPositionTexShader);
 				RenderSystem.enableBlend(); // TODO CHECK
 				RenderSystem.defaultBlendFunc();
