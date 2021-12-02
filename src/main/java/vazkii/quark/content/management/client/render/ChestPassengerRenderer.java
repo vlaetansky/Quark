@@ -8,8 +8,8 @@ import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -24,8 +24,8 @@ import vazkii.quark.content.management.entity.ChestPassengerEntity;
  */
 public class ChestPassengerRenderer extends EntityRenderer<ChestPassengerEntity> {
 
-    public ChestPassengerRenderer(EntityRenderDispatcher renderManager) {
-        super(renderManager);
+    public ChestPassengerRenderer(EntityRendererProvider.Context context) {
+        super(context);
     }
     
     @Override
@@ -72,7 +72,7 @@ public class ChestPassengerRenderer extends EntityRenderer<ChestPassengerEntity>
 
         matrix.scale(1.75F, 1.75F, 1.75F);
 
-        Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.FIXED, light, OverlayTexture.NO_OVERLAY, matrix, buffer);
+        Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.FIXED, light, OverlayTexture.NO_OVERLAY, matrix, buffer, 0); // TODO 0 okay?
         matrix.popPose();
     }
 

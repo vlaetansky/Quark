@@ -13,7 +13,6 @@ package vazkii.quark.content.management.module;
 import java.util.List;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.GuiMessage;
 import net.minecraft.client.Minecraft;
@@ -43,8 +42,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ClientChatEvent;
-import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -64,12 +63,13 @@ public class ItemSharingModule extends QuarkModule {
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public void keyboardEvent(GuiScreenEvent.KeyboardKeyPressedEvent.Pre event) {
+	public void keyboardEvent(ScreenEvent.KeyboardKeyPressedEvent.Pre event) {
 		Minecraft mc = Minecraft.getInstance();
 		Options settings = mc.options;
+		Screen screen = event.getScreen();
 		if(InputConstants.isKeyDown(mc.getWindow().getWindow(), settings.keyChat.getKey().getValue()) &&
-				event.getGui() instanceof AbstractContainerScreen && Screen.hasShiftDown()) {
-			AbstractContainerScreen<?> gui = (AbstractContainerScreen<?>) event.getGui();
+				screen instanceof AbstractContainerScreen && Screen.hasShiftDown()) {
+			AbstractContainerScreen<?> gui = (AbstractContainerScreen<?>) screen;
 			
 			List<? extends GuiEventListener> children = gui.children();
 			for(GuiEventListener c : children)
@@ -208,11 +208,11 @@ public class ItemSharingModule extends QuarkModule {
 				if (alpha > 0) {
 					alphaValue = alpha;
 
-					RenderSystem.pushMatrix();
-					RenderSystem.translatef(x - 2, y - 2, -2);
-					RenderSystem.scalef(0.65f, 0.65f, 0.65f);
-					mc.getItemRenderer().renderGuiItem(stack, 0, 0);
-					RenderSystem.popMatrix();
+//					RenderSystem.pushMatrix(); TODO alwinfy what the fuck
+//					RenderSystem.translatef(x - 2, y - 2, -2);
+//					RenderSystem.scalef(0.65f, 0.65f, 0.65f);
+//					mc.getItemRenderer().renderGuiItem(stack, 0, 0);
+//					RenderSystem.popMatrix();
 
 					alphaValue = 1F;
 				}

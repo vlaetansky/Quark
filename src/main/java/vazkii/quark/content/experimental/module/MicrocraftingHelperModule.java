@@ -1,7 +1,6 @@
 package vazkii.quark.content.experimental.module;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -10,6 +9,7 @@ import java.util.function.BooleanSupplier;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
@@ -22,8 +22,9 @@ import net.minecraft.client.gui.screens.recipebook.GhostRecipe.GhostIngredient;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -105,12 +106,15 @@ public class MicrocraftingHelperModule extends QuarkModule {
 			Screen screen = mc.screen;
 			if(screen instanceof CraftingScreen) { // TODO more inclusive checking
 				CraftingScreen cscreen = (CraftingScreen) screen;
-				PoseStack mstack = event.getMatrixStack();
+				PoseStack mstack = event.getPoseStack();
 				ItemRenderer render = mc.getItemRenderer();
 				int left = cscreen.getGuiLeft() + 95;
 				int top = cscreen.getGuiTop() + 6;
 
-				mc.textureManager.bind(MiscUtil.GENERAL_ICONS);
+				// TODO works?
+				RenderSystem.setShader(GameRenderer::getPositionTexShader);
+				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+				RenderSystem.setShaderTexture(0, MiscUtil.GENERAL_ICONS);
 				Screen.blit(mstack, left, top, 0, 0, 108, 80, 20, 256, 256);
 
 				int start = Math.max(0, recipes.size() - 3);
@@ -132,8 +136,8 @@ public class MicrocraftingHelperModule extends QuarkModule {
 				if(pair != null) {
 					GhostIngredient ingr = pair.getRight();
 					if(ingr != null) {
-						List<FormattedText> tooltip = Arrays.asList(new TranslatableComponent("Right Click to Craft")); // TODO localize
-						cscreen.renderWrappedToolTip(mstack, tooltip, event.getMouseX(), event.getMouseY() - 15, mc.font);
+						Component tooltip = new TranslatableComponent("Right Click to Craft"); // TODO localize
+						cscreen.renderTooltip(mstack, tooltip, event.getMouseX(), event.getMouseY() - 15);
 					}
 				}
 			}
@@ -230,7 +234,7 @@ public class MicrocraftingHelperModule extends QuarkModule {
 		Minecraft mc = Minecraft.getInstance();
 		return () -> {
 			int missing = compoundCount;
-			for(ItemStack invStack : mc.player.inventory.items) {
+			for(ItemStack invStack : mc.player.getInventory().items) {
 				if(ingr.test(invStack)) {
 					missing -= invStack.getCount();
 

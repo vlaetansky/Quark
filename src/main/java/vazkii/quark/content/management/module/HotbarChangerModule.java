@@ -9,8 +9,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -76,7 +78,7 @@ public class HotbarChangerModule extends QuarkModule {
 					if(mc.options.keyHotbarSlots[i].isDown()) {
 						QuarkNetwork.sendToServer(new ChangeHotbarMessage(i + 1));
 						hotbarChangeOpen = false;
-						currentHeldItem = mc.player.inventory.selected;
+						currentHeldItem = mc.player.getInventory().selected;
 						return;
 					}
 
@@ -86,15 +88,15 @@ public class HotbarChangerModule extends QuarkModule {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public void hudPre(RenderGameOverlayEvent.Pre event) {
-		float shift = -getRealHeight(event.getPartialTicks()) + 22;
-		if(shift < 0)
-			if(event.getType() == ElementType.HEALTH) {
-				event.getMatrixStack().translate(0, shift, 0);
-				shifting = true;
-			} else if(shifting && (event.getType() == ElementType.DEBUG || event.getType() == ElementType.POTION_ICONS)) {
-				event.getMatrixStack().translate(0, -shift, 0);
-				shifting = false;
-			}
+//		float shift = -getRealHeight(event.getPartialTicks()) + 22; TODO fix translations
+//		if(shift < 0)
+//			if(event.getType() == ElementType.HEALTH) {
+//				event.getMatrixStack().translate(0, shift, 0);
+//				shifting = true;
+//			} else if(shifting && (event.getType() == ElementType.DEBUG || event.getType() == ElementType.POTION_ICONS)) {
+//				event.getMatrixStack().translate(0, -shift, 0);
+//				shifting = false;
+//			}
 	}
 
 	@SubscribeEvent
@@ -107,7 +109,7 @@ public class HotbarChangerModule extends QuarkModule {
 		Player player = mc.player;
 		PoseStack matrix = event.getMatrixStack();
 
-		if(event.getType() == ElementType.HOTBAR) {
+		if(event.getType() == ElementType.ALL) {
 			Window res = event.getWindow();
 			float realHeight = getRealHeight(event.getPartialTicks());
 			float xStart = res.getGuiScaledWidth() / 2f - 91;
@@ -118,20 +120,23 @@ public class HotbarChangerModule extends QuarkModule {
 			RenderSystem.enableBlend();
 			RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-			mc.textureManager.bind(WIDGETS);
+			RenderSystem.setShader(GameRenderer::getPositionTexShader);
+			RenderSystem.setShaderTexture(0, WIDGETS);
 			for(int i = 0; i < 3; i++) {
 				matrix.pushPose();
-				RenderSystem.color4f(1F, 1F, 1F, 0.75F);
+				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.75F);
 				matrix.translate(xStart, yStart + i * 21, 0);
 				mc.gui.blit(matrix, 0, 0, 0, 0, 182, 22);
 				matrix.popPose();
 			}
 
+			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
 			for(int i = 0; i < 3; i++)
 				mc.font.drawShadow(matrix, ChatFormatting.BOLD + Integer.toString(i + 1), xStart - 9, yStart + i * 21 + 7, 0xFFFFFF);
 
 			for(int i = 0; i < 27; i++) {
-				ItemStack invStack = player.inventory.getItem(i + 9);
+				ItemStack invStack = player.getInventory().getItem(i + 9);
 				int x = (int) (xStart + (i % 9) * 20 + 3);
 				int y = (int) (yStart + (i / 9) * 21 + 3);
 
@@ -146,8 +151,9 @@ public class HotbarChangerModule extends QuarkModule {
 	public void onTick(ClientTickEvent event) {
 		if(event.phase == Phase.END) {
 			Player player = Minecraft.getInstance().player;
-			if(player != null && currentHeldItem != -1 && player.inventory.selected != currentHeldItem) {
-				player.inventory.selected = currentHeldItem;
+			Inventory inventory = player.getInventory();
+			if(player != null && currentHeldItem != -1 && inventory.selected != currentHeldItem) {
+				inventory.selected = currentHeldItem;
 				currentHeldItem = -1;	
 			}
 		} 

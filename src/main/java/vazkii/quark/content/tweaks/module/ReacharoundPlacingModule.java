@@ -77,7 +77,7 @@ public class ReacharoundPlacingModule extends QuarkModule {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public void onRender(RenderGameOverlayEvent.Pre event) {
-		if(event.getType() != RenderGameOverlayEvent.ElementType.CROSSHAIRS)
+		if(event.getType() != RenderGameOverlayEvent.ElementType.ALL)
 			return;
 
 		Minecraft mc = Minecraft.getInstance();
@@ -192,7 +192,7 @@ public class ReacharoundPlacingModule extends QuarkModule {
 	}
 
 	private ReacharoundTarget getPlayerVerticalReacharoundTarget(Player player, InteractionHand hand, Level world, Vec3 rayPos, Vec3 ray) {
-		if(player.xRot < 0)
+		if(player.getXRot() < 0)
 			return null;
 
 		rayPos = rayPos.add(0, leniency, 0);
@@ -210,7 +210,7 @@ public class ReacharoundPlacingModule extends QuarkModule {
 	}
 
 	private ReacharoundTarget getPlayerHorizontalReacharoundTarget(Player player, InteractionHand hand, Level world, Vec3 rayPos, Vec3 ray) {
-		Direction dir = Direction.fromYRot(player.yRot);
+		Direction dir = Direction.fromYRot(player.getYRot());
 		rayPos = rayPos.subtract(leniency * dir.getStepX(), 0, leniency * dir.getStepZ());
 		HitResult take2Res = RayTraceHandler.rayTrace(player, world, rayPos, ray, Block.OUTLINE, Fluid.NONE);
 
@@ -227,7 +227,7 @@ public class ReacharoundPlacingModule extends QuarkModule {
 
 	private boolean validateReacharoundStack(ItemStack stack) {
 		Item item = stack.getItem();
-		return item instanceof BlockItem || item.is(reacharoundTag) || whitelist.contains(Objects.toString(item.getRegistryName()));
+		return item instanceof BlockItem || stack.is(reacharoundTag) || whitelist.contains(Objects.toString(item.getRegistryName()));
 	}
 	
 	private static class ReacharoundTarget {

@@ -9,7 +9,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.ai.util.RandomPos;
+import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
@@ -42,7 +42,7 @@ public class RunAwayFromPikesGoal extends Goal {
 		if(avoidTarget == null)
 			return false;
 		
-		Vec3 posToMove = RandomPos.getPosAvoid(entity, 16, 7, avoidTarget.position());
+		Vec3 posToMove = DefaultRandomPos.getPosAway(entity, 16, 7, avoidTarget.position());
 		if(posToMove == null)
 			return false;
 		
@@ -56,7 +56,7 @@ public class RunAwayFromPikesGoal extends Goal {
 
 	@Nullable
 	private SkullPikeEntity getClosestEntity(Level world, LivingEntity p_225318_3_, double p_225318_4_, double p_225318_6_, double p_225318_8_, AABB p_225318_10_) {
-		return getClosestEntity(world.getLoadedEntitiesOfClass(SkullPikeEntity.class, p_225318_10_, null), p_225318_3_, p_225318_4_, p_225318_6_, p_225318_8_);
+		return getClosestEntity(world.getEntitiesOfClass(SkullPikeEntity.class, p_225318_10_, null), p_225318_3_, p_225318_4_, p_225318_6_, p_225318_8_);
 	}
 
 	@Nullable

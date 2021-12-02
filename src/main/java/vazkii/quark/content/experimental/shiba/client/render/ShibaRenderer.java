@@ -1,6 +1,6 @@
 package vazkii.quark.content.experimental.shiba.client.render;
 
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import vazkii.quark.base.Quark;
@@ -19,8 +19,8 @@ public class ShibaRenderer extends MobRenderer<ShibaEntity, ShibaModel> {
 	
 	private static final ResourceLocation SHIBA_RARE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/shiba/shiba_rare.png");
 	
-	public ShibaRenderer(EntityRenderDispatcher render) {
-		super(render, new ShibaModel(), 0.5F);
+	public ShibaRenderer(EntityRendererProvider.Context context) {
+		super(context, new ShibaModel());
 		addLayer(new ShibaCollarLayer(this));
 		addLayer(new ShibaMouthItemLayer(this));
 	}

@@ -55,11 +55,11 @@ public class ChestPassengerEntity extends Entity implements Container {
 			return;
 		
 		if(!isPassenger() && !level.isClientSide)
-			remove();
+			discard();
 
 		Entity riding = getVehicle();
 		if (riding != null) {
-			yRot = riding.yRotO;
+			setYRot(riding.yRotO);
 		}
 	}
 	
@@ -180,13 +180,13 @@ public class ChestPassengerEntity extends Entity implements Container {
 	}
 
 	@Override
-	public void remove() {
+	public void remove(RemovalReason reason) {
 		if(!level.isClientSide) {
 			Containers.dropContents(level, this, this);
 			spawnAtLocation(getChestType());
 		}
 		
-		super.remove();
+		super.remove(reason);
 	}
 	
 	public ItemStack getChestType() {

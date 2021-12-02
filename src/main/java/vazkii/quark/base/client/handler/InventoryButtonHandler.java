@@ -134,8 +134,8 @@ public final class InventoryButtonHandler {
 					int x = slot.x + 6;
 					int y = slot.y - 13;
 					
-					if(screen instanceof BackpackInventoryScreen)
-						y -= 60;
+//					if(screen instanceof BackpackInventoryScreen) TODO: oddities
+//						y -= 60;
 					
 					for(ButtonProviderHolder holder : holders) {
 						Button button = holder.getButton(screen, x, y);

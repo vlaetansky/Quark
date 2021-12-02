@@ -243,7 +243,7 @@ public class ShibaEntity extends TamableAnimal {
 					}
 
 					if (this.isFood(itemstack) && this.getHealth() < this.getMaxHealth()) {
-						if (!player.abilities.instabuild) {
+						if (!player.getAbilities().instabuild) {
 							itemstack.shrink(1);
 						}
 
@@ -276,14 +276,14 @@ public class ShibaEntity extends TamableAnimal {
 					DyeColor dyecolor = ((DyeItem)item).getDyeColor();
 					if (dyecolor != this.getCollarColor()) {
 						this.setCollarColor(dyecolor);
-						if (!player.abilities.instabuild) {
+						if (!player.getAbilities().instabuild) {
 							itemstack.shrink(1);
 						}
 
 						return InteractionResult.SUCCESS;
 					}
 				} else if (item == Items.BONE) {
-					if (!player.abilities.instabuild) {
+					if (!player.getAbilities().instabuild) {
 						itemstack.shrink(1);
 					}
 

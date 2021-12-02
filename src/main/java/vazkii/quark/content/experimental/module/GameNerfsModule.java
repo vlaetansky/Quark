@@ -85,7 +85,7 @@ public class GameNerfsModule extends QuarkModule {
 		if(orb.value > 0)
 			player.giveExperiencePoints(orb.value);
 
-		orb.remove();
+		orb.discard();
 		event.setCanceled(true);
 	}
 
@@ -175,7 +175,7 @@ public class GameNerfsModule extends QuarkModule {
 			event.getDrops().removeIf(e -> e.getItem().getItem() == Items.IRON_INGOT);
 		
 		if(disableWoolDrops && event.getEntity().getType() == EntityType.SHEEP)
-			event.getDrops().removeIf(e -> e.getItem().getItem().is(ItemTags.WOOL));
+			event.getDrops().removeIf(e -> e.getItem().is(ItemTags.WOOL));
 	}
 	
 }

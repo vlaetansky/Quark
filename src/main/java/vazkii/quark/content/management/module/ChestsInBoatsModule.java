@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
@@ -20,11 +21,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.ScreenOpenEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
@@ -60,7 +60,7 @@ public class ChestsInBoatsModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		RenderingRegistry.registerEntityRenderingHandler(chestPassengerEntityType, ChestPassengerRenderer::new);
+		EntityRenderers.register(chestPassengerEntityType, ChestPassengerRenderer::new);
 	}
 
 	@SubscribeEvent
@@ -88,7 +88,7 @@ public class ChestsInBoatsModule extends QuarkModule {
 					ChestPassengerEntity passenger = new ChestPassengerEntity(world, chestStack);
 					Vec3 pos = target.position();
 					passenger.setPos(pos.x, pos.y, pos.z);
-					passenger.yRot = target.yRot;
+					passenger.setYRot(target.getYRot());
 					passenger.startRiding(target, true);
 					world.addFreshEntity(passenger);
 				}
@@ -102,9 +102,9 @@ public class ChestsInBoatsModule extends QuarkModule {
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	@OnlyIn(Dist.CLIENT)
-	public void onOpenGUI(GuiOpenEvent event) {
+	public void onOpenGUI(ScreenOpenEvent event) {
 		Player player = Minecraft.getInstance().player;
-		if(player != null && event.getGui() instanceof InventoryScreen && player.isPassenger()) {
+		if(player != null && event.getScreen() instanceof InventoryScreen && player.isPassenger()) {
 			Entity riding = player.getVehicle();
 			if(riding instanceof Boat) {
 				List<Entity> passengers = riding.getPassengers();
@@ -119,6 +119,6 @@ public class ChestsInBoatsModule extends QuarkModule {
 	}
 	
 	private boolean isChest(ItemStack stack) {
-		return !stack.isEmpty() && stack.getItem().is(boatableChestsTag);
+		return !stack.isEmpty() && stack.is(boatableChestsTag);
 	}
 }

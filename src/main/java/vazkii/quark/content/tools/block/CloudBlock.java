@@ -41,7 +41,7 @@ public class CloudBlock extends QuarkBlock {
 		ItemStack stack = player.getItemInHand(hand);
 		
 		if(stack.getItem() == Items.GLASS_BOTTLE) {
-			fillBottle(player, player.inventory.selected);
+			fillBottle(player, player.getInventory().selected);
 			world.removeBlock(pos, false);
 			return InteractionResult.SUCCESS;
 		}
@@ -70,13 +70,13 @@ public class CloudBlock extends QuarkBlock {
 		return InteractionResult.PASS;
 	}
 	
-	@Override
-	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-		return ItemStack.EMPTY;
-	}
+//	@Override TODO pick block
+//	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+//		return ItemStack.EMPTY;
+//	}
 	
 	private void fillBottle(Player player, int startIndex) {
-		Inventory inv = player.inventory;
+		Inventory inv = player.getInventory();
 		for(int i = startIndex ; i < inv.getContainerSize(); i++) {
 			ItemStack stackInSlot = inv.getItem(i);
 			if(stackInSlot.getItem() == Items.GLASS_BOTTLE) {

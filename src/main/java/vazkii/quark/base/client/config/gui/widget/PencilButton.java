@@ -20,16 +20,14 @@ public class PencilButton extends Button {
 	public void renderButton(PoseStack mstack, int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
 		super.renderButton(mstack, p_renderButton_1_, p_renderButton_2_, p_renderButton_3_);
 		
-		if(ContributorRewardHandler.localPatronTier > 0) {
-			RenderSystem.setShader(GameRenderer::getPositionTexShader);
-			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-			RenderSystem.setShaderTexture(0, MiscUtil.GENERAL_ICONS);
-			
-			int u = 32;
-			int v = 93;
-			
-			blit(mstack, x + 2, y + 1, u, v, 16, 16);
-		}
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.setShaderTexture(0, MiscUtil.GENERAL_ICONS);
+		
+		int u = 32;
+		int v = 93;
+		
+		blit(mstack, x + 2, y + 1, u, v, 16, 16);
 	}
 	
 }
