@@ -32,6 +32,10 @@ public class QuarkModule {
 	public boolean configEnabled = false;
 	public boolean ignoreAntiOverlap = false;
 
+	public QuarkModule() {
+		// yep
+	}
+	
 	public void construct() {
 		// NO-OP
 	}

@@ -1,6 +1,5 @@
 package vazkii.quark.content.mobs.module;
 
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -18,7 +17,6 @@ import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
-import vazkii.quark.base.client.handler.ModelHandler;
 import vazkii.quark.base.handler.EntityAttributeHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -28,7 +26,6 @@ import vazkii.quark.base.module.config.type.CompoundBiomeConfig;
 import vazkii.quark.base.module.config.type.CostSensitiveEntitySpawnConfig;
 import vazkii.quark.base.module.config.type.EntitySpawnConfig;
 import vazkii.quark.base.world.EntitySpawnHandler;
-import vazkii.quark.content.mobs.client.model.FoxhoundModel;
 import vazkii.quark.content.mobs.client.render.FoxhoundRenderer;
 import vazkii.quark.content.mobs.entity.FoxhoundEntity;
 
@@ -51,9 +48,6 @@ public class FoxhoundModule extends QuarkModule {
 	public static EntitySpawnConfig lesserSpawnConfig = new CostSensitiveEntitySpawnConfig(2, 1, 1, 0.7, 0.15, CompoundBiomeConfig.fromBiomeReslocs(false, "minecraft:soul_sand_valley"));
 	
 	public static Tag<Block> foxhoundSpawnableTag;
-
-	@OnlyIn(Dist.CLIENT)
-	public static ModelLayerLocation layer;
 	
 	@Override
 	public void construct() {
@@ -81,7 +75,6 @@ public class FoxhoundModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		layer = ModelHandler.addModel("foxhound", FoxhoundModel::createBodyLayer, FoxhoundModel::new);
 		EntityRenderers.register(foxhoundType, FoxhoundRenderer::new);
 	}
 

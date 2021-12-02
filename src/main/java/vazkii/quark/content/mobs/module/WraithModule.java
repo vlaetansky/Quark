@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -20,7 +19,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
-import vazkii.quark.base.client.handler.ModelHandler;
 import vazkii.quark.base.handler.EntityAttributeHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -30,7 +28,6 @@ import vazkii.quark.base.module.config.type.CompoundBiomeConfig;
 import vazkii.quark.base.module.config.type.CostSensitiveEntitySpawnConfig;
 import vazkii.quark.base.module.config.type.EntitySpawnConfig;
 import vazkii.quark.base.world.EntitySpawnHandler;
-import vazkii.quark.content.mobs.client.model.WraithModel;
 import vazkii.quark.content.mobs.client.render.SoulBeadRenderer;
 import vazkii.quark.content.mobs.client.render.WraithRenderer;
 import vazkii.quark.content.mobs.entity.SoulBeadEntity;
@@ -74,9 +71,6 @@ public class WraithModule extends QuarkModule {
 	
 	public static List<String> validWraithSounds;
 	
-	@OnlyIn(Dist.CLIENT)
-	public static ModelLayerLocation layer;
-
 	@Override
 	public void construct() {
 		new SoulBeadItem(this);
@@ -112,7 +106,6 @@ public class WraithModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		layer = ModelHandler.addModel("wraith", WraithModel::createBodyLayer, WraithModel::new);
 		EntityRenderers.register(wraithType, WraithRenderer::new);
 		EntityRenderers.register(soulBeadType, SoulBeadRenderer::new);
 	}

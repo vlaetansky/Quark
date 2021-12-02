@@ -1,6 +1,5 @@
 package vazkii.quark.content.mobs.module;
 
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -12,11 +11,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.BiomeDictionary;
 import vazkii.arl.util.RegistryHelper;
-import vazkii.quark.base.client.handler.ModelHandler;
 import vazkii.quark.base.handler.BrewingHandler;
 import vazkii.quark.base.handler.EntityAttributeHandler;
 import vazkii.quark.base.item.QuarkItem;
@@ -28,7 +24,6 @@ import vazkii.quark.base.module.config.type.CompoundBiomeConfig;
 import vazkii.quark.base.module.config.type.EntitySpawnConfig;
 import vazkii.quark.base.recipe.FlagIngredient;
 import vazkii.quark.base.world.EntitySpawnHandler;
-import vazkii.quark.content.mobs.client.model.FrogModel;
 import vazkii.quark.content.mobs.client.render.FrogRenderer;
 import vazkii.quark.content.mobs.entity.FrogEntity;
 
@@ -44,9 +39,6 @@ public class FrogsModule extends QuarkModule {
 	public static boolean enableBrewing = true;
 	
 	@Config public static boolean enableBigFunny = false;
-
-	@OnlyIn(Dist.CLIENT)
-	public static ModelLayerLocation layer;
 	
 	@Override
 	public void construct() {
@@ -94,7 +86,6 @@ public class FrogsModule extends QuarkModule {
 	
 	@Override
 	public void clientSetup() {
-		layer = ModelHandler.addModel("frog", FrogModel::createBodyLayer, FrogModel::new);
 		EntityRenderers.register(frogType, FrogRenderer::new);
 	}
 

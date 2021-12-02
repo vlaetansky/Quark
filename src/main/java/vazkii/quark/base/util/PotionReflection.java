@@ -29,7 +29,7 @@ public class PotionReflection {
     
     static {
         try {
-            Class<?> mixPredicate = Class.forName("net.minecraft.potion.PotionBrewing$MixPredicate");
+            Class<?> mixPredicate = Class.forName("net.minecraft.world.item.alchemy.PotionBrewing$Mix");
             MethodType ctorType = MethodType.methodType(Void.TYPE, ForgeRegistryEntry.class, Ingredient.class, ForgeRegistryEntry.class);
             Constructor<?> ctor = mixPredicate.getConstructor(ctorType.parameterArray());
             ctor.setAccessible(true);

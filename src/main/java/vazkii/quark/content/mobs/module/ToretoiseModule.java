@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -14,7 +13,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.BiomeDictionary;
 import vazkii.arl.util.RegistryHelper;
-import vazkii.quark.base.client.handler.ModelHandler;
 import vazkii.quark.base.handler.EntityAttributeHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -24,7 +22,6 @@ import vazkii.quark.base.module.config.type.CompoundBiomeConfig;
 import vazkii.quark.base.module.config.type.DimensionConfig;
 import vazkii.quark.base.module.config.type.EntitySpawnConfig;
 import vazkii.quark.base.world.EntitySpawnHandler;
-import vazkii.quark.content.mobs.client.model.ToretoiseModel;
 import vazkii.quark.content.mobs.client.render.ToretoiseRenderer;
 import vazkii.quark.content.mobs.entity.ToretoiseEntity;
 
@@ -51,9 +48,6 @@ public class ToretoiseModule extends QuarkModule {
 	@Config 
 	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(100, 1, 1, CompoundBiomeConfig.fromBiomeTypes(true, BiomeDictionary.Type.VOID, BiomeDictionary.Type.NETHER, BiomeDictionary.Type.END));
 	
-	@OnlyIn(Dist.CLIENT)
-	public static ModelLayerLocation layer;
-	
 	@Override
 	public void construct() {
 		toretoiseType = EntityType.Builder.<ToretoiseEntity>of(ToretoiseEntity::new, MobCategory.CREATURE)
@@ -74,7 +68,6 @@ public class ToretoiseModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		layer = ModelHandler.addModel("toretoise", ToretoiseModel::createBodyLayer, ToretoiseModel::new);
 		EntityRenderers.register(toretoiseType, ToretoiseRenderer::new);
 	}
 	

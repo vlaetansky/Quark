@@ -12,7 +12,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.BiomeDictionary;
 import vazkii.arl.util.RegistryHelper;
-import vazkii.quark.base.client.handler.ModelHandler;
 import vazkii.quark.base.handler.EntityAttributeHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -21,7 +20,6 @@ import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.type.CompoundBiomeConfig;
 import vazkii.quark.base.module.config.type.EntitySpawnConfig;
 import vazkii.quark.base.world.EntitySpawnHandler;
-import vazkii.quark.content.experimental.shiba.client.model.ShibaModel;
 import vazkii.quark.content.experimental.shiba.client.render.ShibaRenderer;
 import vazkii.quark.content.experimental.shiba.entity.ShibaEntity;
 
@@ -33,9 +31,6 @@ public class ShibaModule extends QuarkModule {
 	@Config
 	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(40, 1, 3, CompoundBiomeConfig.fromBiomeTypes(false, BiomeDictionary.Type.MOUNTAIN));
 
-	@OnlyIn(Dist.CLIENT)
-	public static ModelLayerLocation layer;
-	
 	@Override
 	public void construct() {
 		shibaType = EntityType.Builder.of(ShibaEntity::new, MobCategory.CREATURE)
@@ -50,12 +45,10 @@ public class ShibaModule extends QuarkModule {
 		
 		EntityAttributeHandler.put(shibaType, Wolf::createAttributes);
 	}
-	
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		layer = ModelHandler.addModel("shiba", ShibaModel::createBodyLayer, ShibaModel::new);
 		EntityRenderers.register(shibaType, ShibaRenderer::new);
 	}
 	

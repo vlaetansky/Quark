@@ -1,6 +1,5 @@
 package vazkii.quark.content.mobs.module;
 
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -12,7 +11,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.BiomeDictionary;
 import vazkii.arl.util.RegistryHelper;
-import vazkii.quark.base.client.handler.ModelHandler;
 import vazkii.quark.base.handler.EntityAttributeHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -22,7 +20,6 @@ import vazkii.quark.base.module.config.type.CompoundBiomeConfig;
 import vazkii.quark.base.module.config.type.DimensionConfig;
 import vazkii.quark.base.module.config.type.EntitySpawnConfig;
 import vazkii.quark.base.world.EntitySpawnHandler;
-import vazkii.quark.content.mobs.client.model.StonelingModel;
 import vazkii.quark.content.mobs.client.render.StonelingRenderer;
 import vazkii.quark.content.mobs.entity.StonelingEntity;
 import vazkii.quark.content.mobs.item.DiamondHeartItem;
@@ -47,9 +44,6 @@ public class StonelingsModule extends QuarkModule {
 
 	public static Item diamondHeart;
 
-	@OnlyIn(Dist.CLIENT)
-	public static ModelLayerLocation layer;
-	
 	@Override
 	public void construct() {
 		diamondHeart = new DiamondHeartItem("diamond_heart", this, new Item.Properties().tab(CreativeModeTab.TAB_MISC));
@@ -70,7 +64,6 @@ public class StonelingsModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		layer = ModelHandler.addModel("stoneling", StonelingModel::createBodyLayer, StonelingModel::new);
 		EntityRenderers.register(stonelingType, StonelingRenderer::new);
 	}
 

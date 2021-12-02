@@ -84,19 +84,19 @@ public class HotbarChangerModule extends QuarkModule {
 
 		}
 	}
-	
+
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public void hudPre(RenderGameOverlayEvent.Pre event) {
-//		float shift = -getRealHeight(event.getPartialTicks()) + 22; TODO FIX fix translations
-//		if(shift < 0)
-//			if(event.getType() == ElementType.HEALTH) {
-//				event.getMatrixStack().translate(0, shift, 0);
-//				shifting = true;
-//			} else if(shifting && (event.getType() == ElementType.DEBUG || event.getType() == ElementType.POTION_ICONS)) {
-//				event.getMatrixStack().translate(0, -shift, 0);
-//				shifting = false;
-//			}
+		//		float shift = -getRealHeight(event.getPartialTicks()) + 22; TODO FIX fix translations
+		//		if(shift < 0)
+		//			if(event.getType() == ElementType.HEALTH) {
+		//				event.getMatrixStack().translate(0, shift, 0);
+		//				shifting = true;
+		//			} else if(shifting && (event.getType() == ElementType.DEBUG || event.getType() == ElementType.POTION_ICONS)) {
+		//				event.getMatrixStack().translate(0, -shift, 0);
+		//				shifting = false;
+		//			}
 	}
 
 	@SubscribeEvent
@@ -151,10 +151,14 @@ public class HotbarChangerModule extends QuarkModule {
 	public void onTick(ClientTickEvent event) {
 		if(event.phase == Phase.END) {
 			Player player = Minecraft.getInstance().player;
-			Inventory inventory = player.getInventory();
-			if(player != null && currentHeldItem != -1 && inventory.selected != currentHeldItem) {
-				inventory.selected = currentHeldItem;
-				currentHeldItem = -1;	
+			
+			if(player != null) {
+				Inventory inventory = player.getInventory();
+
+				if(currentHeldItem != -1 && inventory.selected != currentHeldItem) {
+					inventory.selected = currentHeldItem;
+					currentHeldItem = -1;	
+				}
 			}
 		} 
 

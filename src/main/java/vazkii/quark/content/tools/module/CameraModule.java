@@ -72,7 +72,7 @@ public class CameraModule extends QuarkModule {
 			new ResourceLocation(Quark.MOD_ID, "shaders/post/watercolor.json"),
 			new ResourceLocation(Quark.MOD_ID, "shaders/post/monochrome.json"),
 			new ResourceLocation("shaders/post/sobel.json"),
-			
+
 			new ResourceLocation(Quark.MOD_ID, "shaders/post/colorblind/deuteranopia.json"),
 			new ResourceLocation(Quark.MOD_ID, "shaders/post/colorblind/protanopia.json"),
 			new ResourceLocation(Quark.MOD_ID, "shaders/post/colorblind/tritanopia.json"),
@@ -81,7 +81,7 @@ public class CameraModule extends QuarkModule {
 
 	@OnlyIn(Dist.CLIENT)
 	private static KeyMapping cameraModeKey;
-	
+
 	private static int currentHeldItem = -1;
 	private static int currShader = 0;
 	private static int currRulers = 0;
@@ -97,7 +97,7 @@ public class CameraModule extends QuarkModule {
 	public void clientSetup() {
 		cameraModeKey = ModKeybindHandler.init("camera_mode", "f12", ModKeybindHandler.MISC_GROUP);
 	}
-	
+
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public void screenshotTaken(ScreenshotEvent event) {
@@ -117,7 +117,7 @@ public class CameraModule extends QuarkModule {
 
 			if(cameraMode && mc.screen == null) {
 				int key = event.getKey();
-				
+
 				boolean affected = false;
 				boolean sneak = mc.player.isDiscrete();
 				switch(key) {
@@ -167,12 +167,14 @@ public class CameraModule extends QuarkModule {
 		Minecraft mc = Minecraft.getInstance();
 
 		Player player = mc.player;
-		Inventory inventory = player.getInventory();
-		if(player != null && currentHeldItem != -1 && inventory.selected != currentHeldItem) {
-			inventory.selected = currentHeldItem;
-			currentHeldItem = -1;	
+		if(player != null) {
+			Inventory inventory = player.getInventory();
+			if(currentHeldItem != -1 && inventory.selected != currentHeldItem) {
+				inventory.selected = currentHeldItem;
+				currentHeldItem = -1;
+			}
 		}
-		
+
 		if(mc.level == null) {
 			cameraMode = false;
 			queuedRefresh = true;
@@ -276,7 +278,7 @@ public class CameraModule extends QuarkModule {
 				worldName = mc.getSingleplayerServer().name();
 			else if(mc.getCurrentServer() != null)
 				worldName = mc.getCurrentServer().name;
-			
+
 			overlayText = I18n.get("quark.camera.greetings", worldName);
 			overlayX = paddingHoriz + 20;
 			overlayY = paddingVert + 20;
@@ -360,13 +362,13 @@ public class CameraModule extends QuarkModule {
 
 			text = ChatFormatting.BOLD + "[5] " + ChatFormatting.RESET + I18n.get("quark.camera.reset");
 			mc.font.drawShadow(matrix, text, left, top + 48, 0xFFFFFF);
-			
+
 			text = ChatFormatting.AQUA + I18n.get("quark.camera.header");
 			mc.font.drawShadow(matrix, text, twidth / 2 - mc.font.width(text) / 2, 6, 0xFFFFFF);
-			
+
 			text = I18n.get("quark.camera.info", new KeybindComponent("quark.keybind.camera_mode").getString());
 			mc.font.drawShadow(matrix, text, twidth / 2 - mc.font.width(text) / 2, 16, 0xFFFFFF);
-			
+
 			ResourceLocation CAMERA_TEXTURE = new ResourceLocation(Quark.MOD_ID, "textures/misc/camera.png");
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -399,7 +401,7 @@ public class CameraModule extends QuarkModule {
 				}
 			}
 		} 
-		
+
 		render.checkEntityPostEffect(null);
 	}
 

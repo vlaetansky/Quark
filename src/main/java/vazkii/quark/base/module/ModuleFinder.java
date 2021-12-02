@@ -36,8 +36,9 @@ public final class ModuleFinder {
 	@SuppressWarnings("unchecked")
 	private void loadModule(AnnotationData target) {
 		try {
-			Class<?> clazz = target.getClass();
-			QuarkModule moduleObj = (QuarkModule) clazz.newInstance();
+			Type type = target.clazz();
+			Class<?> clazz = Class.forName(type.getClassName(), false, Quark.class.getClassLoader());
+			QuarkModule moduleObj = (QuarkModule) clazz.getDeclaredConstructor().newInstance(); 
 			
 			Map<String, Object> vals = target.annotationData();
 			ModuleCategory category = getOrMakeCategory((ModAnnotation.EnumHolder) vals.get("category"));

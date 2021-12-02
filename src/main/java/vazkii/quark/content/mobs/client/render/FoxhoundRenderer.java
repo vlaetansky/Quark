@@ -23,7 +23,6 @@ import vazkii.quark.base.client.handler.ModelHandler;
 import vazkii.quark.content.mobs.client.layer.FoxhoundCollarLayer;
 import vazkii.quark.content.mobs.client.model.FoxhoundModel;
 import vazkii.quark.content.mobs.entity.FoxhoundEntity;
-import vazkii.quark.content.mobs.module.FoxhoundModule;
 
 public class FoxhoundRenderer extends MobRenderer<FoxhoundEntity, FoxhoundModel> {
 	
@@ -42,7 +41,7 @@ public class FoxhoundRenderer extends MobRenderer<FoxhoundEntity, FoxhoundModel>
 	private static final int SHINY_CHANCE = 256;
 	
 	public FoxhoundRenderer(EntityRendererProvider.Context context) {
-		super(context, ModelHandler.model(FoxhoundModule.layer), 0.5F);
+		super(context, ModelHandler.model(ModelHandler.foxhound), 0.5F);
 		addLayer(new FoxhoundCollarLayer(this));
 	}
 

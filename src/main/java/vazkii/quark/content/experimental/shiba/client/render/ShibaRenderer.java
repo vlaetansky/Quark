@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.handler.ModelHandler;
-import vazkii.quark.content.experimental.module.ShibaModule;
 import vazkii.quark.content.experimental.shiba.client.layer.ShibaCollarLayer;
 import vazkii.quark.content.experimental.shiba.client.layer.ShibaMouthItemLayer;
 import vazkii.quark.content.experimental.shiba.client.model.ShibaModel;
@@ -22,7 +21,7 @@ public class ShibaRenderer extends MobRenderer<ShibaEntity, ShibaModel> {
 	private static final ResourceLocation SHIBA_RARE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/shiba/shiba_rare.png");
 	
 	public ShibaRenderer(EntityRendererProvider.Context context) {
-		super(context, ModelHandler.model(ShibaModule.layer), 0.5F);
+		super(context, ModelHandler.model(ModelHandler.shiba), 0.5F);
 		addLayer(new ShibaCollarLayer(this));
 		addLayer(new ShibaMouthItemLayer(this));
 	}

@@ -20,12 +20,44 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import vazkii.quark.base.Quark;
+import vazkii.quark.content.experimental.shiba.client.model.ShibaModel;
+import vazkii.quark.content.mobs.client.model.CrabModel;
+import vazkii.quark.content.mobs.client.model.FoxhoundModel;
+import vazkii.quark.content.mobs.client.model.FrogModel;
+import vazkii.quark.content.mobs.client.model.StonelingModel;
+import vazkii.quark.content.mobs.client.model.ToretoiseModel;
+import vazkii.quark.content.mobs.client.model.WraithModel;
 
 @EventBusSubscriber(modid = Quark.MOD_ID, bus = Bus.MOD, value = Dist.CLIENT)
 @OnlyIn(Dist.CLIENT)
 public class ModelHandler {
 
 	private static Map<ModelLayerLocation, Layer> layers = new HashMap<>();
+	
+	public static ModelLayerLocation shiba;
+	public static ModelLayerLocation foxhound;
+	public static ModelLayerLocation stoneling;
+	public static ModelLayerLocation crab;
+	public static ModelLayerLocation frog;
+	public static ModelLayerLocation toretoise;
+	public static ModelLayerLocation wraith;
+	
+	private static boolean modelsInitted = false;
+	
+	private static void initModels() {
+		if(modelsInitted)
+			return;
+		
+		shiba = addModel("shiba", ShibaModel::createBodyLayer, ShibaModel::new);
+		foxhound = addModel("foxhound", FoxhoundModel::createBodyLayer, FoxhoundModel::new);
+		stoneling = addModel("stoneling", StonelingModel::createBodyLayer, StonelingModel::new);
+		crab = addModel("crab", CrabModel::createBodyLayer, CrabModel::new);
+		frog = addModel("frog", FrogModel::createBodyLayer, FrogModel::new);
+		toretoise = addModel("toretoise", ToretoiseModel::createBodyLayer, ToretoiseModel::new);
+		wraith = addModel("wraith", WraithModel::createBodyLayer, WraithModel::new);
+		
+		modelsInitted = true;
+	}
 
 	public static ModelLayerLocation addModel(String name, Supplier<LayerDefinition> supplier, Function<ModelPart, EntityModel<?>> modelConstructor) {
 		ModelLayerLocation loc = new ModelLayerLocation(new ResourceLocation(Quark.MOD_ID, name), "main");
@@ -35,12 +67,18 @@ public class ModelHandler {
 
 	@SubscribeEvent
 	public static void registerLayer(EntityRenderersEvent.RegisterLayerDefinitions event) {
-		for(ModelLayerLocation location : layers.keySet())
+		initModels();
+
+		for(ModelLayerLocation location : layers.keySet()) {
+			Quark.LOG.info("Registering model layer " + location);
 			event.registerLayerDefinition(location, layers.get(location).definition);
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
 	public static <T extends Mob, M extends EntityModel<T>> M model(ModelLayerLocation location) {
+		initModels();
+		
 		Layer layer = layers.get(location);
 		Minecraft mc = Minecraft.getInstance();
 		

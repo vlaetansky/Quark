@@ -9,7 +9,6 @@ import net.minecraft.resources.ResourceLocation;
 import vazkii.quark.base.client.handler.ModelHandler;
 import vazkii.quark.content.mobs.client.model.CrabModel;
 import vazkii.quark.content.mobs.entity.CrabEntity;
-import vazkii.quark.content.mobs.module.CrabsModule;
 
 public class CrabRenderer extends MobRenderer<CrabEntity, CrabModel> {
 
@@ -20,7 +19,7 @@ public class CrabRenderer extends MobRenderer<CrabEntity, CrabModel> {
 	};
 
 	public CrabRenderer(EntityRendererProvider.Context context) {
-		super(context, ModelHandler.model(CrabsModule.layer), 0.4F);
+		super(context, ModelHandler.model(ModelHandler.crab), 0.4F);
 	}
 
 	@Nullable

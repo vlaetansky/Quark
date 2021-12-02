@@ -11,13 +11,12 @@ import vazkii.quark.base.client.handler.ModelHandler;
 import vazkii.quark.content.mobs.client.layer.StonelingItemLayer;
 import vazkii.quark.content.mobs.client.model.StonelingModel;
 import vazkii.quark.content.mobs.entity.StonelingEntity;
-import vazkii.quark.content.mobs.module.StonelingsModule;
 
 @OnlyIn(Dist.CLIENT)
 public class StonelingRenderer extends MobRenderer<StonelingEntity, StonelingModel> {
 
 	public StonelingRenderer(EntityRendererProvider.Context context) {
-		super(context, ModelHandler.model(StonelingsModule.layer), 0.3F);
+		super(context, ModelHandler.model(ModelHandler.stoneling), 0.3F);
 		addLayer(new StonelingItemLayer(this));
 	}
 	

@@ -1,6 +1,5 @@
 package vazkii.quark.content.mobs.module;
 
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -55,9 +54,6 @@ public class CrabsModule extends QuarkModule {
 	@Config(flag = "crab_brewing")
 	public static boolean enableBrewing = true;
 	
-	@OnlyIn(Dist.CLIENT)
-	public static ModelLayerLocation layer;
-
 	@Override
 	public void construct() {
 		new QuarkItem("crab_leg", this, new Item.Properties()

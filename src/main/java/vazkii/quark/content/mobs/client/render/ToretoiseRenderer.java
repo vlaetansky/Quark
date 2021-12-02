@@ -8,14 +8,13 @@ import vazkii.quark.base.client.handler.ModelHandler;
 import vazkii.quark.content.mobs.client.layer.ToretoiseOreLayer;
 import vazkii.quark.content.mobs.client.model.ToretoiseModel;
 import vazkii.quark.content.mobs.entity.ToretoiseEntity;
-import vazkii.quark.content.mobs.module.ToretoiseModule;
 
 public class ToretoiseRenderer extends MobRenderer<ToretoiseEntity, ToretoiseModel>{
 
 	private static final ResourceLocation BASE_TEXTURE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/toretoise/base.png");
 	
 	public ToretoiseRenderer(EntityRendererProvider.Context context) {
-		super(context, ModelHandler.model(ToretoiseModule.layer), 1F);
+		super(context, ModelHandler.model(ModelHandler.toretoise), 1F);
 		addLayer(new ToretoiseOreLayer(this));
 	}
 

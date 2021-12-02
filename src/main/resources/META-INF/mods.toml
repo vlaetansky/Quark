@@ -6,22 +6,20 @@ license="https://github.com/Vazkii/Quark/blob/master/LICENSE.md"
 [[mods]]
 modId="quark"
 displayName="Quark"
-version="${version}"
-authors="Vazkii, Wiiv, WireSegal, MCVinnyq"
-description='''
-Small things.
-'''
+version="${file.jarVersion}"
+authors="Vazkii, WireSegal, MCVinnyq, Sully"
+description='''Small things, improving Minecraft bit by bit.'''
 
 [[dependencies.quark]]
     modId="autoreglib"
     mandatory=true
-    versionRange="[1.6-48,)"
+    versionRange="[1.7-50,)"
     ordering="AFTER"
     side="BOTH"
 
 [[dependencies.quark]]
     modId="forge"
     mandatory=true
-    versionRange="[35.1.28,)"
+    versionRange="[38.0.0,)"
     ordering="AFTER"
     side="BOTH"
