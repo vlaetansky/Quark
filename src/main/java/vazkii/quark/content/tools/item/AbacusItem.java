@@ -1,7 +1,5 @@
 package vazkii.quark.content.tools.item;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;

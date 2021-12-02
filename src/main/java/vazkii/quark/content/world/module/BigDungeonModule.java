@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableSet;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.StructureSettings;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
@@ -38,11 +37,10 @@ public class BigDungeonModule extends QuarkModule {
 	public static CompoundBiomeConfig biomeConfig = CompoundBiomeConfig.fromBiomeTypes(true, BiomeDictionary.Type.OCEAN, BiomeDictionary.Type.BEACH, BiomeDictionary.Type.NETHER, BiomeDictionary.Type.END);
 
 	public static final BigDungeonStructure STRUCTURE = new BigDungeonStructure(JigsawConfiguration.CODEC);
-	private static ConfiguredStructureFeature<?, ?> feature;
+//	private static ConfiguredStructureFeature<?, ?> feature;
 
 	@Override
 	public void construct() {
-		//		new FloodFillItem(this);
 		RegistryHelper.register(STRUCTURE);
 
 		StructureFeature.STRUCTURES_REGISTRY.put(Quark.MOD_ID + ":big_dungeon", STRUCTURE);
@@ -62,7 +60,7 @@ public class BigDungeonModule extends QuarkModule {
 		.map(StructureSettings::structureConfig) // get map
 		.forEach(m -> m.put(STRUCTURE, settings));
 
-		feature = STRUCTURE.configured(new JigsawConfiguration(() -> BigDungeonStructure.startPattern, maxRooms));
+//		feature = STRUCTURE.configured(new JigsawConfiguration(() -> BigDungeonStructure.startPattern, maxRooms));
 	}
 
 //	@SubscribeEvent TODO CHECK this is probably needed

@@ -5,6 +5,11 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import vazkii.quark.content.mobs.entity.FoxhoundEntity;
 
@@ -25,52 +30,94 @@ public class FoxhoundModel extends EntityModel<FoxhoundEntity> {
 	public final ModelPart leftEar;
 	public final ModelPart tail;
 	public final ModelPart fluff;
-	
+
 	private FoxhoundEntity entity;
 
-	public FoxhoundModel() {
-		this.texWidth = 64;
-		this.texHeight = 64;
-		this.leftBackLeg = new ModelPart(this, 36, 32);
-		this.leftBackLeg.setPos(3.0F, 12.0F, 9.5F);
-		this.leftBackLeg.addBox(-1.5F, 0.0F, -1.5F, 3, 12, 3, 0.0F);
-		this.rightFrontLeg = new ModelPart(this, 0, 32);
-		this.rightFrontLeg.setPos(-2.0F, 12.0F, 2.0F);
-		this.rightFrontLeg.addBox(-1.5F, 0.0F, -1.5F, 3, 12, 3, 0.0F);
-		this.rightEar = new ModelPart(this, 0, 47);
-		this.rightEar.setPos(0.0F, 0.0F, 0.0F);
-		this.rightEar.addBox(-4.0F, -5.0F, -5.0F, 2, 2, 3, 0.0F);
-		this.tail = new ModelPart(this, 36, 16);
-		this.tail.setPos(0.0F, 0.0F, 1.5F);
-		this.tail.addBox(-2.0F, -4.0F, 0.0F, 4, 5, 10, 0.0F);
-		this.setRotateAngle(tail, -1.3089969389957472F, 0.0F, 0.0F);
-		this.body = new ModelPart(this, 0, 2);
-		this.body.setPos(0.0F, 17.0F, 12.0F);
-		this.body.addBox(-4.0F, -12.0F, 0.0F, 8, 12, 6, 0.0F);
-		this.setRotateAngle(body, 1.5707963267948966F, 0.0F, 0.0F);
-		this.fluff = new ModelPart(this, 28, 0);
-		this.fluff.setPos(0.0F, -13.0F, 3.0F);
-		this.fluff.addBox(-5.0F, 0.0F, -4.0F, 10, 8, 8, 0.05F);
-		this.leftFrontLeg = new ModelPart(this, 12, 32);
-		this.leftFrontLeg.setPos(2.0F, 12.0F, 2.0F);
-		this.leftFrontLeg.addBox(-1.5F, 0.0F, -1.5F, 3, 12, 3, 0.0F);
-		this.rightBackLeg = new ModelPart(this, 24, 32);
-		this.rightBackLeg.setPos(-3.0F, 12.0F, 9.5F);
-		this.rightBackLeg.addBox(-1.5F, 0.0F, -1.5F, 3, 12, 3, 0.0F);
-		this.leftEar = new ModelPart(this, 10, 47);
-		this.leftEar.setPos(0.0F, 0.0F, 0.0F);
-		this.leftEar.addBox(2.0F, -5.0F, -5.0F, 2, 2, 3, 0.0F);
-		this.head = new ModelPart(this, 0, 20);
-		this.head.setPos(0.0F, 14.5F, 0.0F);
-		this.head.addBox(-4.0F, -3.0F, -6.0F, 8, 6, 6, 0.0F);
-		this.snout = new ModelPart(this, 29, 18);
-		this.snout.setPos(0.0F, 0.0F, 0.0F);
-		this.snout.addBox(-2.0F, 1.0F, -10.0F, 4, 2, 4, 0.0F);
-		this.head.addChild(this.rightEar);
-		this.body.addChild(this.tail);
-		this.body.addChild(this.fluff);
-		this.head.addChild(this.leftEar);
-		this.head.addChild(this.snout);
+	public FoxhoundModel(ModelPart root) {
+		head = root.getChild("head");
+		rightFrontLeg = root.getChild("rightFrontLeg");
+		leftFrontLeg = root.getChild("leftFrontLeg");
+		rightBackLeg = root.getChild("rightBackLeg");
+		leftBackLeg = root.getChild("leftBackLeg");
+		body = root.getChild("body");
+		snout = head.getChild("snout");
+		rightEar = head.getChild("rightEar");
+		leftEar = head.getChild("leftEar");
+		tail = body.getChild("tail");
+		fluff = body.getChild("fluff");	
+	}
+
+	public static LayerDefinition createBodyLayer() {
+		MeshDefinition mesh = new MeshDefinition();
+		PartDefinition root = mesh.getRoot();
+
+		PartDefinition head = root.addOrReplaceChild("head",
+				CubeListBuilder.create()
+				.texOffs(0, 20)
+				.addBox(-4.0F, -3.0F, -6.0F, 8, 6, 6),
+				PartPose.offsetAndRotation(0.0F, 14.5F, 0.0F, 0.0F, 0.0F, 0.0F));
+		
+		PartDefinition body = root.addOrReplaceChild("body",
+				CubeListBuilder.create()
+				.texOffs(0, 2)
+				.addBox(-4.0F, -12.0F, 0.0F, 8, 12, 6),
+				PartPose.offsetAndRotation(0.0F, 17.0F, 12.0F, 1.5707963267948966F, 0.0F, 0.0F));
+
+		root.addOrReplaceChild("leftBackLeg",
+				CubeListBuilder.create()
+				.texOffs(36, 32)
+				.addBox(-1.5F, 0.0F, -1.5F, 3, 12, 3),
+				PartPose.offsetAndRotation(3.0F, 12.0F, 9.5F, 0.0F, 0.0F, 0.0F));
+
+		root.addOrReplaceChild("rightFrontLeg",
+				CubeListBuilder.create()
+				.texOffs(0, 32)
+				.addBox(-1.5F, 0.0F, -1.5F, 3, 12, 3),
+				PartPose.offsetAndRotation(-2.0F, 12.0F, 2.0F, 0.0F, 0.0F, 0.0F));
+
+		head.addOrReplaceChild("rightEar",
+				CubeListBuilder.create()
+				.texOffs(0, 47)
+				.addBox(-4.0F, -5.0F, -5.0F, 2, 2, 3),
+				PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+
+		body.addOrReplaceChild("tail",
+				CubeListBuilder.create()
+				.texOffs(36, 16)
+				.addBox(-2.0F, -4.0F, 0.0F, 4, 5, 10),
+				PartPose.offsetAndRotation(0.0F, 0.0F, 1.5F, -1.3089969389957472F, 0.0F, 0.0F));
+
+		body.addOrReplaceChild("fluff",
+				CubeListBuilder.create()
+				.texOffs(28, 0)
+				.addBox(-5.0F, 0.0F, -4.0F, 10, 8, 8),
+				PartPose.offsetAndRotation(0.0F, -13.0F, 3.0F, 0.0F, 0.0F, 0.0F));
+
+		root.addOrReplaceChild("leftFrontLeg",
+				CubeListBuilder.create()
+				.texOffs(12, 32)
+				.addBox(-1.5F, 0.0F, -1.5F, 3, 12, 3),
+				PartPose.offsetAndRotation(2.0F, 12.0F, 2.0F, 0.0F, 0.0F, 0.0F));
+
+		root.addOrReplaceChild("rightBackLeg",
+				CubeListBuilder.create()
+				.texOffs(24, 32)
+				.addBox(-1.5F, 0.0F, -1.5F, 3, 12, 3),
+				PartPose.offsetAndRotation(-3.0F, 12.0F, 9.5F, 0.0F, 0.0F, 0.0F));
+
+		head.addOrReplaceChild("leftEar",
+				CubeListBuilder.create()
+				.texOffs(10, 47)
+				.addBox(2.0F, -5.0F, -5.0F, 2, 2, 3),
+				PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+
+		head.addOrReplaceChild("snout",
+				CubeListBuilder.create()
+				.texOffs(29, 18)
+				.addBox(-2.0F, 1.0F, -10.0F, 4, 2, 4),
+				PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+
+		return LayerDefinition.create(mesh, 64, 64);
 	}
 
 	@Override
@@ -149,20 +196,20 @@ public class FoxhoundModel extends EntityModel<FoxhoundEntity> {
 		matrix.translate(0, 0, entity.isOrderedToSit() ? -0.25F : -0.35F);
 
 		matrix.pushPose();
-		
+
 		if (young)
 			matrix.translate(0.0F, 5.0F / 16F, 0F);
 
 		head.render(matrix, vb, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
-		
+
 		matrix.popPose();
-		
+
 		matrix.pushPose();
 		if (young) {
 			matrix.translate(0.0F, 12.0F / 16F, 0F);
 			matrix.scale(0.5F, 0.5F, 0.5F);
 		}
-		
+
 		leftBackLeg.render(matrix, vb, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
 		rightFrontLeg.render(matrix, vb, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
 		body.render(matrix, vb, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);

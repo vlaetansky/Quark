@@ -200,7 +200,6 @@ public class LockRotationModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void onHUDRender(RenderGameOverlayEvent.Post event) {
 		if(event.getType() == ElementType.ALL && clientProfile != null) {
-			Minecraft mc = Minecraft.getInstance();
 			PoseStack matrix = event.getMatrixStack();
 			
 			RenderSystem.enableBlend();

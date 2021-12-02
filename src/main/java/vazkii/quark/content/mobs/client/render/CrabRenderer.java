@@ -3,12 +3,13 @@ package vazkii.quark.content.mobs.client.render;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
+import vazkii.quark.base.client.handler.ModelHandler;
 import vazkii.quark.content.mobs.client.model.CrabModel;
 import vazkii.quark.content.mobs.entity.CrabEntity;
+import vazkii.quark.content.mobs.module.CrabsModule;
 
 public class CrabRenderer extends MobRenderer<CrabEntity, CrabModel> {
 
@@ -18,8 +19,8 @@ public class CrabRenderer extends MobRenderer<CrabEntity, CrabModel> {
 			new ResourceLocation("quark", "textures/model/entity/crab/green.png")
 	};
 
-	public CrabRenderer(EntityRendererProvider.Context p_174409_) {
-		super(render, new CrabModel(), 0.4F);
+	public CrabRenderer(EntityRendererProvider.Context context) {
+		super(context, ModelHandler.model(CrabsModule.layer), 0.4F);
 	}
 
 	@Nullable

@@ -1,6 +1,5 @@
 package vazkii.quark.content.client.render.variant;
 
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.PigRenderer;
 import net.minecraft.resources.ResourceLocation;

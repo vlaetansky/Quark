@@ -10,7 +10,6 @@ import java.util.regex.Pattern;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Constants;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;

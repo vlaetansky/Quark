@@ -10,8 +10,6 @@
  */
 package vazkii.quark.content.tweaks.client.emote;
 
-import static vazkii.quark.content.tweaks.client.emote.EmoteBase.PI_F;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 

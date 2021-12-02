@@ -1,7 +1,6 @@
 package vazkii.quark.content.client.render.variant;
 
 import net.minecraft.client.renderer.entity.DolphinRenderer;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.Dolphin;

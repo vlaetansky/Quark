@@ -3,8 +3,6 @@ package vazkii.quark.base.handler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.mojang.math.Constants;
-
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

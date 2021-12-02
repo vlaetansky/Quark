@@ -9,11 +9,9 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Multimap;
 
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -31,7 +29,6 @@ import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.item.IQuarkItem;
 import vazkii.quark.base.module.QuarkModule;
-import vazkii.quark.content.mobs.client.model.ForgottenHatModel;
 
 public class ForgottenHatItem extends ArmorItem implements IQuarkItem {
 
@@ -104,18 +101,18 @@ public class ForgottenHatItem extends ArmorItem implements IQuarkItem {
 	@OnlyIn(Dist.CLIENT)
 	private static class RenderProperties implements IItemRenderProperties {
 
-		@OnlyIn(Dist.CLIENT)
-		@SuppressWarnings("rawtypes")
-		private HumanoidModel model;
-		
-		@Override
-		@SuppressWarnings("unchecked")
-		public <A extends HumanoidModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, A _default) {
-			if(model == null)
-				model = new ForgottenHatModel();
-
-			return (A) model;
-		}
+//		@OnlyIn(Dist.CLIENT) TODO FIX add model
+//		@SuppressWarnings("rawtypes")
+//		private HumanoidModel model;
+//		
+//		@Override
+//		@SuppressWarnings("unchecked")
+//		public <A extends HumanoidModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, A _default) {
+//			if(model == null)
+//				model = new ForgottenHatModel();
+//
+//			return (A) model;
+//		}
 		
 	}
 

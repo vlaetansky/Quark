@@ -7,6 +7,11 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import vazkii.quark.content.mobs.entity.FrogEntity;
 
@@ -22,34 +27,66 @@ public class FrogModel extends EntityModel<FrogEntity> {
 	public final ModelPart rightEye;
 	public final ModelPart leftEye;
 
-	public FrogModel() {
-		texWidth = 64;
-		texHeight = 32;
-		rightArm = new ModelPart(this, 33, 7);
-		rightArm.mirror = true;
-		rightArm.setPos(6.5F, 22.0F, 1.0F);
-		rightArm.addBox(-1.0F, -1.0F, -5.0F, 3, 3, 6, 0.0F);
-		leftArm = new ModelPart(this, 33, 7);
-		leftArm.setPos(-6.5F, 22.0F, 1.0F);
-		leftArm.addBox(-2.0F, -1.0F, -5.0F, 3, 3, 6, 0.0F);
-		body = new ModelPart(this, 0, 7);
-		body.setPos(0.0F, 20.0F, 0.0F);
-		body.addBox(-5.5F, -3.0F, 0.0F, 11, 7, 11, 0.0F);
-		headTop = new ModelPart(this, 0, 0);
-		headTop.setPos(0.0F, 18.0F, 0.0F);
-		headTop.addBox(-5.5F, -1.0F, -5.0F, 11, 2, 5, 0.0F);
-		headBottom = new ModelPart(this, 32, 0);
-		headBottom.setPos(0.0F, 18.0F, 0.0F);
-		headBottom.addBox(-5.5F, 1.0F, -5.0F, 11, 2, 5, 0.0F);
-		rightEye = new ModelPart(this, 0, 0);
-		rightEye.mirror = true;
-		rightEye.setPos(0.0F, 18.0F, 0.0F);
-		rightEye.addBox(1.5F, -1.5F, -4.0F, 1, 1, 1, 0.0F);
-		leftEye = new ModelPart(this, 0, 0);
-		leftEye.setPos(0.0F, 18.0F, 0.0F);
-		leftEye.addBox(-2.5F, -1.5F, -4.0F, 1, 1, 1, 0.0F);
+	public FrogModel(ModelPart root) {
+		headTop = root.getChild("headTop");
+		headBottom = root.getChild("headBottom");
+		body = root.getChild("body");
+		rightArm = root.getChild("rightArm");
+		leftArm = root.getChild("leftArm");
+		rightEye = root.getChild("rightEye");
+		leftEye = root.getChild("leftEye");
 	}
 
+	public static LayerDefinition createBodyLayer() {
+		MeshDefinition mesh = new MeshDefinition();
+		PartDefinition root = mesh.getRoot();
+		
+		root.addOrReplaceChild("rightArm",
+			CubeListBuilder.create()
+			.mirror()
+			.texOffs(33, 7)
+			.addBox(-1.0F, -1.0F, -5.0F, 3, 3, 6),
+		PartPose.offset(6.5F, 22.0F, 1.0F));
+		
+		root.addOrReplaceChild("leftArm",
+			CubeListBuilder.create()
+			.texOffs(33, 7)
+			.addBox(-2.0F, -1.0F, -5.0F, 3, 3, 6),
+		PartPose.offset(-6.5F, 22.0F, 1.0F));
+		
+		root.addOrReplaceChild("body",
+			CubeListBuilder.create()
+			.texOffs(0, 7)
+			.addBox(-5.5F, -3.0F, 0.0F, 11, 7, 11),
+		PartPose.offset(0.0F, 20.0F, 0.0F));
+		
+		root.addOrReplaceChild("headTop",
+			CubeListBuilder.create()
+			.texOffs(0, 0)
+			.addBox(-5.5F, -1.0F, -5.0F, 11, 2, 5),
+		PartPose.offset(0.0F, 18.0F, 0.0F));
+		
+		root.addOrReplaceChild("headBottom",
+			CubeListBuilder.create()
+			.texOffs(32, 0)
+			.addBox(-5.5F, 1.0F, -5.0F, 11, 2, 5),
+		PartPose.offset(0.0F, 18.0F, 0.0F));
+		
+		root.addOrReplaceChild("rightEye",
+			CubeListBuilder.create()
+			.mirror()
+			.texOffs(0, 0)
+			.addBox(1.5F, -1.5F, -4.0F, 1, 1, 1),
+		PartPose.offset(0.0F, 18.0F, 0.0F));
+		
+		root.addOrReplaceChild("leftEye",
+			CubeListBuilder.create()
+			.texOffs(0, 0)
+			.addBox(-2.5F, -1.5F, -4.0F, 1, 1, 1),
+		PartPose.offset(0.0F, 18.0F, 0.0F));
+		
+		return LayerDefinition.create(mesh, 64, 32);
+	}
 
 	@Override
 	public void prepareMobModel(FrogEntity frog, float limbSwing, float limbSwingAmount, float partialTickTime) {

@@ -204,7 +204,7 @@ public class ItemSharingModule extends QuarkModule {
 				int y = chatY - mc.font.lineHeight * lineHeight;
 
 				if (alpha > 0) {
-					alphaValue = alpha;
+					alphaValue = alpha + x + y;
 
 //					RenderSystem.pushMatrix(); TODO FIX alwinfy what the fuck
 //					RenderSystem.translatef(x - 2, y - 2, -2);

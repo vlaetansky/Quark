@@ -56,7 +56,7 @@ public class ImprovedTooltipsModule extends QuarkModule {
             + "minecraft:mending=minecraft:carrot_on_a_stick")
     public static List<String> enchantingAdditionalStacks = Lists.newArrayList();
 
-    private static final String IGNORE_TAG = "quark:no_tooltip";
+//    private static final String IGNORE_TAG = "quark:no_tooltip";
   
 // TODO REWRITE
 //    @Override

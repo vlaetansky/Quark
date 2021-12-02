@@ -5,12 +5,13 @@ import javax.annotation.Nonnull;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
+import vazkii.quark.base.client.handler.ModelHandler;
 import vazkii.quark.content.mobs.client.model.FrogModel;
 import vazkii.quark.content.mobs.entity.FrogEntity;
+import vazkii.quark.content.mobs.module.FrogsModule;
 
 public class FrogRenderer extends MobRenderer<FrogEntity, FrogModel> {
 
@@ -25,8 +26,8 @@ public class FrogRenderer extends MobRenderer<FrogEntity, FrogModel> {
 	private static final ResourceLocation TEXTURE_VOID = new ResourceLocation("quark", "textures/model/entity/events/void_frog.png");
 	private static final ResourceLocation TEXTURE_SWEATER_VOID = new ResourceLocation("quark", "textures/model/entity/events/sweater_void_frog.png");
 
-	public FrogRenderer(EntityRendererProvider.Context p_174409_) {
-		super(manager, new FrogModel(), 0.2F);
+	public FrogRenderer(EntityRendererProvider.Context context) {
+		super(context, ModelHandler.model(FrogsModule.layer), 0.2F);
 	}
 
 	@Override
