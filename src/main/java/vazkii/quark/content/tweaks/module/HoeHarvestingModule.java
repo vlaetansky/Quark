@@ -47,7 +47,7 @@ public class HoeHarvestingModule extends QuarkModule {
 
 		if(hoe.isEmpty() || !(hoe.getItem() instanceof HoeItem))
 			return 1;
-		else if (hoe.getItem().is(bigHarvestingHoesTag))
+		else if (hoe.is(bigHarvestingHoesTag))
 			return 3;
 		else
 			return 2;

@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.InputUpdateEvent;
+import net.minecraftforge.client.event.MovementInputUpdateEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -64,7 +64,7 @@ public class EnhancedLaddersModule extends QuarkModule {
 		InteractionHand hand = event.getHand();
 		ItemStack stack = player.getItemInHand(hand);
 
-		if(!stack.isEmpty() && stack.getItem().is(laddersTag)) {
+		if(!stack.isEmpty() && stack.is(laddersTag)) {
 			Block block = Block.byItem(stack.getItem());
 			Level world = event.getWorld();
 			BlockPos pos = event.getPos();
@@ -72,7 +72,7 @@ public class EnhancedLaddersModule extends QuarkModule {
 				event.setCanceled(true);
 				BlockPos posDown = pos.below();
 
-				if(Level.isOutsideBuildHeight(posDown))
+				if(world.isOutsideBuildHeight(posDown))
 					break;
 
 				BlockState stateDown = world.getBlockState(posDown);
@@ -81,7 +81,7 @@ public class EnhancedLaddersModule extends QuarkModule {
 					pos = posDown;
 				else {
 					boolean water = stateDown.getBlock() == Blocks.WATER;
-					if(water || stateDown.getBlock().isAir(stateDown, world, posDown)) {
+					if(water || stateDown.isAir()) {
 						BlockState copyState = world.getBlockState(pos);
 
 						Direction facing = copyState.getValue(LadderBlock.FACING);
@@ -119,9 +119,9 @@ public class EnhancedLaddersModule extends QuarkModule {
 						player.zza == 0 &&
 						player.yya <= 0 &&
 						player.xxa == 0 &&
-						player.xRot > 70 &&
+						player.getXRot() > 70 &&
 						!player.jumping &&
-						!player.abilities.flying &&
+						!player.getAbilities().flying &&
 						player.level.getBlockState(downPos).isLadder(player.level, downPos, player)) {
 					Vec3 move = new Vec3(0, fallSpeed, 0);
 					player.setBoundingBox(player.getBoundingBox().move(move));						
@@ -133,11 +133,11 @@ public class EnhancedLaddersModule extends QuarkModule {
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public void onInput(InputUpdateEvent event) {
+	public void onInput(MovementInputUpdateEvent event) {
 		Player player = event.getPlayer();
 		if(player.onClimbable() && player.level.getBlockState(player.blockPosition()).getBlock() != Blocks.SCAFFOLDING
-				&& Minecraft.getInstance().screen != null && !(player.zza == 0 && player.xRot > 70)) {
-			Input input = event.getMovementInput();
+				&& Minecraft.getInstance().screen != null && !(player.zza == 0 && player.getXRot() > 70)) {
+			Input input = event.getInput();
 			if(input != null)
 				input.shiftKeyDown = true; // sneaking
 		}

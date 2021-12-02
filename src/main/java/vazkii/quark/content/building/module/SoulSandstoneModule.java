@@ -17,7 +17,7 @@ public class SoulSandstoneModule extends QuarkModule {
 	public void construct() {
 		Block.Properties props = Block.Properties.of(Material.STONE, MaterialColor.COLOR_BROWN)
 				.requiresCorrectToolForDrops()
-//        		.harvestTool(ToolType.PICKAXE) TODO tag
+//        		.harvestTool(ToolType.PICKAXE) TODO TAG
         		.strength(0.8F);
 		
 		VariantHandler.addSlabStairsWall(new QuarkBlock("soul_sandstone", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props));

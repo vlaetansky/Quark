@@ -166,8 +166,6 @@ public class ItemSharingModule extends QuarkModule {
 				FormattedCharSequence lineProperties = line.getMessage();
 
 				int captureIndex = idx;
-				// TODO: This patch gets stuff working,
-				// but we probably want to find a better way to detect the position.
 				lineProperties.accept((counter_, style, character) -> {
 					String sofar = before.toString();
 					if (sofar.endsWith("    ")) {
@@ -208,7 +206,7 @@ public class ItemSharingModule extends QuarkModule {
 				if (alpha > 0) {
 					alphaValue = alpha;
 
-//					RenderSystem.pushMatrix(); TODO alwinfy what the fuck
+//					RenderSystem.pushMatrix(); TODO FIX alwinfy what the fuck
 //					RenderSystem.translatef(x - 2, y - 2, -2);
 //					RenderSystem.scalef(0.65f, 0.65f, 0.65f);
 //					mc.getItemRenderer().renderGuiItem(stack, 0, 0);

@@ -1,6 +1,7 @@
 package vazkii.quark.content.mobs.client.render;
 
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import vazkii.quark.base.Quark;
@@ -12,7 +13,7 @@ public class ToretoiseRenderer extends MobRenderer<ToretoiseEntity, ToretoiseMod
 
 	private static final ResourceLocation BASE_TEXTURE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/toretoise/base.png");
 	
-	public ToretoiseRenderer(EntityRenderDispatcher m) {
+	public ToretoiseRenderer(EntityRendererProvider.Context p_174409_) {
 		super(m, new ToretoiseModel(), 1F);
 		addLayer(new ToretoiseOreLayer(this));
 	}

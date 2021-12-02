@@ -80,7 +80,7 @@ public final class SortingHandler {
 			return;
 
 		AbstractContainerMenu c = player.containerMenu;
-		boolean backpack = false; //c instanceof BackpackContainer; TODO bring back when oddities
+		boolean backpack = false; //c instanceof BackpackContainer; TODO ODDITIES
 		if ((!backpack && forcePlayer) || c == null)
 			c = player.inventoryMenu;
 

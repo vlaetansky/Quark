@@ -23,7 +23,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.ai.util.RandomPos;
+import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.Path;
@@ -49,7 +49,7 @@ public class RunAndPoofGoal<T extends Entity> extends Goal {
 	}
 
 	public RunAndPoofGoal(StonelingEntity entity, Class<T> classToAvoid, Predicate<T> avoidTargetSelector, float avoidDistance, double farSpeed, double nearSpeed) {
-		this.canBeSeenSelector = target -> target != null && target.isAlive() && entity.getSensing().canSee(target) && !entity.isAlliedTo(target);
+		this.canBeSeenSelector = target -> target != null && target.isAlive() && entity.getSensing().hasLineOfSight(target) && !entity.isAlliedTo(target);
 		this.entity = entity;
 		this.classToAvoid = classToAvoid;
 		this.avoidTargetSelector = avoidTargetSelector;
@@ -72,7 +72,7 @@ public class RunAndPoofGoal<T extends Entity> extends Goal {
 			return false;
 		else {
 			this.closestLivingEntity = entities.get(0);
-			Vec3 target = RandomPos.getPosAvoid(this.entity, 16, 7, this.closestLivingEntity.position());
+			Vec3 target = DefaultRandomPos.getPosAway(this.entity, 16, 7, this.closestLivingEntity.position());
 
 			if (target != null && this.closestLivingEntity.distanceToSqr(target.x, target.y, target.z) < this.closestLivingEntity.distanceToSqr(this.entity))
 				return false;
@@ -134,8 +134,8 @@ public class RunAndPoofGoal<T extends Entity> extends Goal {
 		}
 		for (Entity passenger : entity.getIndirectPassengers())
 			if (!(passenger instanceof Player))
-				passenger.remove();
-		entity.remove();
+				passenger.discard();
+		entity.discard();
 	}
 
 	@Override

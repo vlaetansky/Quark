@@ -4,6 +4,8 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import com.mojang.math.Vector3f;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -29,9 +31,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ToolType;
+import net.minecraftforge.common.ToolAction;
+import net.minecraftforge.common.ToolActions;
 import vazkii.quark.base.block.QuarkGlassBlock;
-import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.ModuleLoader;
@@ -46,7 +48,6 @@ import vazkii.quark.content.world.module.underground.CaveCrystalUndergroundBiome
 public class CaveCrystalBlock extends QuarkGlassBlock {
 
 	public final float[] colorComponents;
-	public final Vec3 colorVector;
 	final boolean waxed;
 
 	public CaveCrystalClusterBlock cluster;
@@ -58,9 +59,9 @@ public class CaveCrystalBlock extends QuarkGlassBlock {
 				.strength(0.3F, 0F)
 				.sound(SoundType.GLASS)
 				.lightLevel(b -> 11)
-				.harvestTool(ToolType.PICKAXE)
 				.requiresCorrectToolForDrops()
-				.harvestLevel(0)
+//				.harvestTool(ToolType.PICKAXE) TODO TAG
+//				.harvestLevel(0)
 				.randomTicks()
 				.noOcclusion());
 
@@ -68,7 +69,6 @@ public class CaveCrystalBlock extends QuarkGlassBlock {
 		float g = ((color >> 8) & 0xff) / 255f;
 		float b = (color & 0xff) / 255f;
 		colorComponents = new float[]{r, g, b};
-		colorVector = new Vec3(r, g, b);
 		this.waxed = waxed;
 
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.TRANSLUCENT);
@@ -85,20 +85,17 @@ public class CaveCrystalBlock extends QuarkGlassBlock {
 	}
 
 	@Override
+	public BlockState getToolModifiedState(BlockState state, Level world, BlockPos pos, Player player, ItemStack stack, ToolAction toolAction) {
+		if(waxed && toolAction.equals(ToolActions.AXE_WAX_OFF))
+			return alternate.defaultBlockState();
+		
+		return super.getToolModifiedState(state, world, pos, player, stack, toolAction);
+	}
+	
+	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
 		ItemStack stack = player.getItemInHand(hand);
-		if(waxed) {
-			if(stack.getItem().getToolTypes(stack).contains(ToolType.AXE)) {
-				if(!world.isClientSide) {
-					world.setBlockAndUpdate(pos, alternate.defaultBlockState());
-					world.levelEvent(2001, pos, Block.getId(state));
-				}
-				if(!player.isCreative())
-					MiscUtil.damageStack(player, hand, stack, 1);
-				
-				return InteractionResult.SUCCESS;
-			}
-		} else {
+		if(!waxed) {
 			if(stack.getItem() == Items.HONEYCOMB) {
 				if(!world.isClientSide) {
 					world.setBlockAndUpdate(pos, alternate.defaultBlockState());
@@ -163,7 +160,7 @@ public class CaveCrystalBlock extends QuarkGlassBlock {
 					worldIn.addParticle(ParticleTypes.END_ROD, x, y, z, ox / ol, oy / ol, oz / ol);
 				}
 
-				worldIn.addParticle(new DustParticleOptions(colorComponents[0], colorComponents[1], colorComponents[2], size), x, y, z, 0, 0, 0);
+				worldIn.addParticle(new DustParticleOptions(new Vector3f(colorComponents[0], colorComponents[1], colorComponents[2]), size), x, y, z, 0, 0, 0);
 			}
 	}
 
@@ -171,12 +168,6 @@ public class CaveCrystalBlock extends QuarkGlassBlock {
 	@Override
 	public float[] getBeaconColorMultiplier(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
 		return colorComponents;
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public Vec3 getFogColor(BlockState state, LevelReader world, BlockPos pos, Entity entity, Vec3 originalColor, float partialTicks) {
-		return colorVector;
 	}
 
 }

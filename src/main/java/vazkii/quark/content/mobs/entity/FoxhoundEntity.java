@@ -147,7 +147,7 @@ public class FoxhoundEntity extends Wolf implements Enemy {
 		super.tick();
 
 		if (!level.isClientSide && level.getDifficulty() == Difficulty.PEACEFUL && !isTame()) {
-			remove();
+			discard();
 			return;
 		}
 
@@ -403,7 +403,7 @@ public class FoxhoundEntity extends Wolf implements Enemy {
 
 	@Override
 	public float getWalkTargetValue(BlockPos pos, LevelReader worldIn) {
-		return worldIn.getBlockState(pos.below()).getBlock().is(FoxhoundModule.foxhoundSpawnableTag) ? 10.0F : worldIn.getBrightness(pos) - 0.5F;
+		return worldIn.getBlockState(pos.below()).is(FoxhoundModule.foxhoundSpawnableTag) ? 10.0F : worldIn.getBrightness(pos) - 0.5F;
 	}
 	
 	public static boolean spawnPredicate(EntityType<? extends FoxhoundEntity> type, ServerLevelAccessor world, MobSpawnType reason, BlockPos pos, Random rand) {

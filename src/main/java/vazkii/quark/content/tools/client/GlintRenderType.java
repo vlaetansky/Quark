@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.common.base.Function;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.minecraft.client.renderer.RenderStateShard;
@@ -57,7 +58,8 @@ public class GlintRenderType {
     private static RenderType buildGlintRenderType(String name) {
         final ResourceLocation res = new ResourceLocation(Quark.MOD_ID, "textures/glint/enchanted_item_glint_" + name + ".png");
 
-        return RenderType.create("glint_" + name, DefaultVertexFormat.POSITION_TEX, 7, 256, RenderType.CompositeState.builder()
+        return RenderType.create("glint_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, RenderType.CompositeState.builder()
+        	.setShaderState(RenderStateShard.RENDERTYPE_GLINT_SHADER) // TODO AT
             .setTextureState(new RenderStateShard.TextureStateShard(res, true, false))
             .setWriteMaskState(RenderStateShard.COLOR_WRITE)
             .setCullState(RenderStateShard.NO_CULL)
@@ -71,7 +73,8 @@ public class GlintRenderType {
     private static RenderType buildEntityGlintRenderType(String name) {
         final ResourceLocation res = new ResourceLocation(Quark.MOD_ID, "textures/glint/enchanted_item_glint_" + name + ".png");
 
-        return RenderType.create("entity_glint_" + name, DefaultVertexFormat.POSITION_TEX, 7, 256, RenderType.CompositeState.builder()
+        return RenderType.create("entity_glint_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, RenderType.CompositeState.builder()
+        	.setShaderState(RenderStateShard.RENDERTYPE_ENTITY_GLINT_SHADER) // TODO AT
             .setTextureState(new RenderStateShard.TextureStateShard(res, true, false))
             .setWriteMaskState(RenderStateShard.COLOR_WRITE)
             .setCullState(RenderStateShard.NO_CULL)
@@ -86,7 +89,8 @@ public class GlintRenderType {
     private static RenderType buildGlintDirectRenderType(String name) {
         final ResourceLocation res = new ResourceLocation(Quark.MOD_ID, "textures/glint/enchanted_item_glint_" + name + ".png");
 
-        return RenderType.create("glint_direct_" + name, DefaultVertexFormat.POSITION_TEX, 7, 256, RenderType.CompositeState.builder()
+        return RenderType.create("glint_direct_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, RenderType.CompositeState.builder()
+            .setShaderState(RenderStateShard.RENDERTYPE_GLINT_DIRECT_SHADER) // TODO AT
             .setTextureState(new RenderStateShard.TextureStateShard(res, true, false))
             .setWriteMaskState(RenderStateShard.COLOR_WRITE)
             .setCullState(RenderStateShard.NO_CULL)
@@ -100,7 +104,8 @@ public class GlintRenderType {
     private static RenderType buildEntityGlintDriectRenderType(String name) {
         final ResourceLocation res = new ResourceLocation(Quark.MOD_ID, "textures/glint/enchanted_item_glint_" + name + ".png");
 
-        return RenderType.create("entity_glint_direct_" + name, DefaultVertexFormat.POSITION_TEX, 7, 256, RenderType.CompositeState.builder()
+        return RenderType.create("entity_glint_direct_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, RenderType.CompositeState.builder()
+            .setShaderState(RenderStateShard.RENDERTYPE_ENTITY_GLINT_DIRECT_SHADER) // TODO AT
             .setTextureState(new RenderStateShard.TextureStateShard(res, true, false))
             .setWriteMaskState(RenderStateShard.COLOR_WRITE)
             .setCullState(RenderStateShard.NO_CULL)
@@ -113,7 +118,8 @@ public class GlintRenderType {
     private static RenderType buildArmorGlintRenderType(String name) {
         final ResourceLocation res = new ResourceLocation(Quark.MOD_ID, "textures/glint/enchanted_item_glint_" + name + ".png");
         
-        return RenderType.create("entity_glint_direct_" + name, DefaultVertexFormat.POSITION_TEX, 7, 256, RenderType.CompositeState.builder()
+        return RenderType.create("armor_glint_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, RenderType.CompositeState.builder()
+            .setShaderState(RenderStateShard.RENDERTYPE_ARMOR_GLINT_SHADER) // TODO AT
             .setTextureState(new RenderStateShard.TextureStateShard(res, true, false))
             .setWriteMaskState(RenderStateShard.COLOR_WRITE)
             .setCullState(RenderStateShard.NO_CULL)
@@ -127,7 +133,8 @@ public class GlintRenderType {
     private static RenderType buildArmorEntityGlintRenderType(String name) {
         final ResourceLocation res = new ResourceLocation(Quark.MOD_ID, "textures/glint/enchanted_item_glint_" + name + ".png");
 
-        return RenderType.create("entity_glint_direct_" + name, DefaultVertexFormat.POSITION_TEX, 7, 256, RenderType.CompositeState.builder()
+        return RenderType.create("armor_entity_glint_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false,RenderType.CompositeState.builder()
+            .setShaderState(RenderStateShard.RENDERTYPE_ARMOR_ENTITY_GLINT_SHADER) // TODO AT
             .setTextureState(new RenderStateShard.TextureStateShard(res, true, false))
             .setWriteMaskState(RenderStateShard.COLOR_WRITE)
             .setCullState(RenderStateShard.NO_CULL)

@@ -2,6 +2,7 @@ package vazkii.quark.content.tweaks.module;
 
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
@@ -39,8 +40,9 @@ public class CompassesWorkEverywhereModule extends QuarkModule {
 	@SubscribeEvent
 	public void onUpdate(PlayerTickEvent event) {
 		if(event.phase == Phase.START) {
-			for(int i = 0; i < event.player.inventory.getContainerSize(); i++) {
-				ItemStack stack = event.player.inventory.getItem(i);
+			Inventory inventory = event.player.getInventory();
+			for(int i = 0; i < inventory.getContainerSize(); i++) {
+				ItemStack stack = inventory.getItem(i);
 				if(stack.getItem() == Items.COMPASS)
 					CompassAngleGetter.tickCompass(event.player, stack);
 				else if(stack.getItem() == Items.CLOCK)

@@ -25,7 +25,7 @@ import vazkii.quark.base.capability.dummy.DummySorting;
 @Mod.EventBusSubscriber(modid = Quark.MOD_ID)
 public class CapabilityHandler {
 	
-	// TODO this doesnt seem safe
+	// TODO CHECK this doesnt seem safe
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		registerLambda(event, ITransferManager.class, (player) -> false);
 
@@ -66,7 +66,7 @@ public class CapabilityHandler {
 			SelfProvider.attach(DROPOFF_MANAGER, QuarkCapabilities.TRANSFER, event);
 	}
 	
-//    @SubscribeEvent TODO oddities
+//    @SubscribeEvent TODO ODDITIES
 //    public static void attachWorldCapabilities(AttachCapabilitiesEvent<Level> event) {
 //        Level world = event.getObject();
 //        MagnetTracker tracker = new MagnetTracker(world);

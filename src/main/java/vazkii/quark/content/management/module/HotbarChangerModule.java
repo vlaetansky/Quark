@@ -88,7 +88,7 @@ public class HotbarChangerModule extends QuarkModule {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public void hudPre(RenderGameOverlayEvent.Pre event) {
-//		float shift = -getRealHeight(event.getPartialTicks()) + 22; TODO fix translations
+//		float shift = -getRealHeight(event.getPartialTicks()) + 22; TODO FIX fix translations
 //		if(shift < 0)
 //			if(event.getType() == ElementType.HEALTH) {
 //				event.getMatrixStack().translate(0, shift, 0);

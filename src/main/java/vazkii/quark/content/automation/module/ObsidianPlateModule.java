@@ -20,7 +20,7 @@ public class ObsidianPlateModule extends QuarkModule {
         new ObsidianPressurePlateBlock("obsidian_pressure_plate", this, CreativeModeTab.TAB_REDSTONE,
                 Block.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK)
                 		.requiresCorrectToolForDrops()
-//                		.harvestTool(ToolType.PICKAXE) TODO tag
+//                		.harvestTool(ToolType.PICKAXE) TODO TAG
                         .noCollission()
                         .strength(2F, 1200.0F));
     }

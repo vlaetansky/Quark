@@ -138,7 +138,7 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrameEntity>
 		if (!stack.isEmpty()) {
 			matrix.pushPose();
 			MapItemSavedData mapdata = MapItem.getSavedData(stack, itemFrame.level);
-			int mapID = 0; // TODO how do we get this?
+			int mapID = 0; // TODO FIX how do we get this?
 
 			sign: if(itemFrame.isOnSign()) {
 				BlockPos back = itemFrame.getBehindPos();
@@ -194,7 +194,7 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrameEntity>
 							matrix.scale(s, s, s);
 						}
 						matrix.scale(0.5F, 0.5F, 0.5F);
-						this.itemRenderer.renderStatic(stack, ItemTransforms.TransformType.FIXED, p_225623_6_, OverlayTexture.NO_OVERLAY, matrix, buff, 0); // TODO is 0 okay?
+						this.itemRenderer.renderStatic(stack, ItemTransforms.TransformType.FIXED, p_225623_6_, OverlayTexture.NO_OVERLAY, matrix, buff, 0); // TODO CHECK is 0 okay?
 					}
 				}
 			}

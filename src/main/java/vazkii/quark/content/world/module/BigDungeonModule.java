@@ -10,8 +10,6 @@ import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
@@ -67,10 +65,10 @@ public class BigDungeonModule extends QuarkModule {
 		feature = STRUCTURE.configured(new JigsawConfiguration(() -> BigDungeonStructure.startPattern, maxRooms));
 	}
 
-	@SubscribeEvent
-	public void onBiomeLoad(BiomeLoadingEvent event) {
-		if(biomeConfig.canSpawn(event))
-			event.getGeneration().getStructures().add(() -> feature);
-	}
+//	@SubscribeEvent TODO CHECK this is probably needed
+//	public void onBiomeLoad(BiomeLoadingEvent event) {
+//		if(biomeConfig.canSpawn(event))
+//			event.getGeneration().getStructures().add(() -> feature);
+//	}
 
 }

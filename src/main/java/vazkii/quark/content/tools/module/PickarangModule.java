@@ -1,5 +1,6 @@
 package vazkii.quark.content.tools.module;
 
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.IndirectEntityDamageSource;
 import net.minecraft.world.entity.Entity;
@@ -10,8 +11,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ToolType;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -69,10 +68,7 @@ public class PickarangModule extends QuarkModule {
 	private static Item.Properties propertiesFor(int level, int durability, boolean netherite) {
 		Item.Properties properties = new Item.Properties()
 				.stacksTo(1)
-				.tab(CreativeModeTab.TAB_TOOLS)
-				.addToolType(ToolType.PICKAXE, harvestLevel)
-				.addToolType(ToolType.AXE, harvestLevel)
-				.addToolType(ToolType.SHOVEL, harvestLevel);
+				.tab(CreativeModeTab.TAB_TOOLS);
 
 		if (durability > 0)
 			properties.durability(durability);
@@ -86,7 +82,7 @@ public class PickarangModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		RenderingRegistry.registerEntityRenderingHandler(pickarangType, PickarangRenderer::new);
+		EntityRenderers.register(pickarangType, PickarangRenderer::new);
 	}
 	
 	@Override

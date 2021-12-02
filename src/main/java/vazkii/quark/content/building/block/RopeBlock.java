@@ -227,7 +227,7 @@ public class RopeBlock extends QuarkBlock implements IBlockItemProvider {
 			if (target != null) {
 				world.setBlockEntity(target);
 
-//				target.clearCache(); TODO relevant?
+//				target.clearCache(); TODO CHECK is this relevant
 			}
 		}
 

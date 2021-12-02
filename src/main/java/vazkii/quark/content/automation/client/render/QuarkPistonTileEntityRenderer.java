@@ -22,7 +22,7 @@ import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 public class QuarkPistonTileEntityRenderer {
 
 	public static boolean renderPistonBlock(PistonMovingBlockEntity piston, float pTicks, PoseStack matrix, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
-		if (!PistonsMoveTileEntitiesModule.staticEnabled || piston.getProgress(pTicks) > 1.0F) // TODO move this to a static get
+		if (!PistonsMoveTileEntitiesModule.staticEnabled || piston.getProgress(pTicks) > 1.0F)
 			return false;
 
 		BlockState state = piston.getMovedState();
@@ -47,7 +47,7 @@ public class QuarkPistonTileEntityRenderer {
 			BlockEntityRenderer<BlockEntity> tileentityrenderer = mc.getBlockEntityRenderDispatcher().getRenderer(tile);
 			if(tileentityrenderer != null) {
 //				tile.setLevelAndPosition(sourceTE.getLevel(), sourceTE.getBlockPos());
-				tile.setLevel(sourceTE.getLevel()); // TODO is this safe?
+				tile.setLevel(sourceTE.getLevel()); // TODO CHECK safe?
 				tile.clearRemoved();
 
 				matrix.translate(offset.x, offset.y, offset.z);

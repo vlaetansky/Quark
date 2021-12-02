@@ -21,7 +21,7 @@ public class NetherBrickFenceGateModule extends QuarkModule {
         new QuarkFenceGateBlock("nether_brick_fence_gate", this, CreativeModeTab.TAB_REDSTONE,
                 Block.Properties.of(Material.STONE, MaterialColor.NETHER)
                 .requiresCorrectToolForDrops()
-//        		.harvestTool(ToolType.PICKAXE) TODO tag
+//        		.harvestTool(ToolType.PICKAXE) TODO TAG
                 .sound(SoundType.NETHER_BRICKS)
                 .strength(2.0F, 6.0F));
     }

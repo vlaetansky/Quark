@@ -61,7 +61,7 @@ public class SignEditingModule extends QuarkModule {
 				&& !event.getEntity().isDiscrete()) {
 
 			SignBlockEntity sign = (SignBlockEntity) tile;
-			sign.setAllowedPlayerEditor(player);
+			sign.setAllowedPlayerEditor(player.getUUID());
 			sign.isEditable = true;
 
 			QuarkNetwork.sendToPlayer(new EditSignMessage(event.getPos()), (ServerPlayer) player);

@@ -1,13 +1,14 @@
 package vazkii.quark.content.world.block;
 
 import java.awt.Color;
-import java.util.stream.IntStream;
+
+import com.google.common.collect.ImmutableList;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.levelgen.WorldgenRandom;
+import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.minecraft.world.level.levelgen.synth.PerlinSimplexNoise;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -17,7 +18,8 @@ import vazkii.arl.interf.IBlockColorProvider;
 
 public interface IMyaliteColorProvider extends IBlockColorProvider {
 	
-	static final PerlinSimplexNoise NOISE = new PerlinSimplexNoise(new WorldgenRandom(4543543), IntStream.rangeClosed(-4, 4));
+	static final PerlinSimplexNoise NOISE = new PerlinSimplexNoise(new LegacyRandomSource(4543543), 
+			ImmutableList.of(-4, -3, -2, -1, 0, 1, 2, 3, 4)); // TODO CHECK
 	
 	@Override
     @OnlyIn(Dist.CLIENT)

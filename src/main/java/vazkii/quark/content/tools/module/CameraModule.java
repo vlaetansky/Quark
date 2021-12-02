@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.ChatFormatting;
@@ -18,6 +19,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.KeybindComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -28,6 +30,7 @@ import net.minecraftforge.event.TickEvent.RenderTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.handler.ModKeybindHandler;
+import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -153,7 +156,7 @@ public class CameraModule extends QuarkModule {
 
 				if(affected) {
 					queuedRefresh = true;
-					currentHeldItem = mc.player.inventory.selected;
+					currentHeldItem = mc.player.getInventory().selected;
 				}
 			}
 		}
@@ -165,8 +168,9 @@ public class CameraModule extends QuarkModule {
 		Minecraft mc = Minecraft.getInstance();
 
 		Player player = mc.player;
-		if(player != null && currentHeldItem != -1 && player.inventory.selected != currentHeldItem) {
-			player.inventory.selected = currentHeldItem;
+		Inventory inventory = player.getInventory();
+		if(player != null && currentHeldItem != -1 && inventory.selected != currentHeldItem) {
+			inventory.selected = currentHeldItem;
 			currentHeldItem = -1;	
 		}
 		
@@ -185,7 +189,7 @@ public class CameraModule extends QuarkModule {
 
 			if(queueScreenshot) {
 				queueScreenshot = false;
-				Screenshot.grab(mc.gameDirectory, mc.getWindow().getWidth(), mc.getWindow().getHeight(), mc.getMainRenderTarget(), (msg) -> {
+				Screenshot.grab(mc.gameDirectory, mc.getMainRenderTarget(), (msg) -> { // TODO CHECK does this work?
 					mc.execute(() -> {
 						mc.gui.getChat().addMessage(msg);
 					});
@@ -365,7 +369,9 @@ public class CameraModule extends QuarkModule {
 			mc.font.drawShadow(matrix, text, twidth / 2 - mc.font.width(text) / 2, 16, 0xFFFFFF);
 			
 			ResourceLocation CAMERA_TEXTURE = new ResourceLocation(Quark.MOD_ID, "textures/misc/camera.png");
-			mc.textureManager.bind(CAMERA_TEXTURE);
+			RenderSystem.setShader(GameRenderer::getPositionTexShader);
+			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+			RenderSystem.setShaderTexture(0, CAMERA_TEXTURE);
 			Screen.blit(matrix, left - 22, top + 18, 0, 0, 0, 16, 16, 16, 16);
 		}
 	}

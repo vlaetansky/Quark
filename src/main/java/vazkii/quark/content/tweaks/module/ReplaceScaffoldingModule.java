@@ -14,6 +14,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -46,7 +47,7 @@ public class ReplaceScaffoldingModule extends QuarkModule {
 				BlockItem bitem = (BlockItem) stack.getItem();
 				Block block = bitem.getBlock();
 				
-				if(block != Blocks.SCAFFOLDING && !block.hasTileEntity(block.defaultBlockState())) {
+				if(block != Blocks.SCAFFOLDING && !(block instanceof EntityBlock)) {
 					BlockPos last = getLastInLine(world, pos, dir);
 					
 					UseOnContext context = new UseOnContext(player, hand, new BlockHitResult(new Vec3(0.5F, 1F, 0.5F), dir, last, false));

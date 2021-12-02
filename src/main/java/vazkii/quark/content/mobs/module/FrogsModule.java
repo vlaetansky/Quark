@@ -1,5 +1,6 @@
 package vazkii.quark.content.mobs.module;
 
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacements.Type;
@@ -11,7 +12,6 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.BrewingHandler;
 import vazkii.quark.base.handler.EntityAttributeHandler;
@@ -86,7 +86,7 @@ public class FrogsModule extends QuarkModule {
 	
 	@Override
 	public void clientSetup() {
-		RenderingRegistry.registerEntityRenderingHandler(frogType, FrogRenderer::new);
+		EntityRenderers.register(frogType, FrogRenderer::new);
 	}
 
 }

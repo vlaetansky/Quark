@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import vazkii.quark.content.mobs.client.model.FrogModel;
@@ -24,7 +25,7 @@ public class FrogRenderer extends MobRenderer<FrogEntity, FrogModel> {
 	private static final ResourceLocation TEXTURE_VOID = new ResourceLocation("quark", "textures/model/entity/events/void_frog.png");
 	private static final ResourceLocation TEXTURE_SWEATER_VOID = new ResourceLocation("quark", "textures/model/entity/events/sweater_void_frog.png");
 
-	public FrogRenderer(EntityRenderDispatcher manager) {
+	public FrogRenderer(EntityRendererProvider.Context p_174409_) {
 		super(manager, new FrogModel(), 0.2F);
 	}
 

@@ -16,7 +16,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
-import net.minecraftforge.common.ToolType;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
@@ -34,7 +33,7 @@ public class BlossomLeavesBlock extends LeavesBlock implements IQuarkBlock {
 				.strength(0.2F)
 				.randomTicks()
 				.sound(SoundType.GRASS)
-				.harvestTool(ToolType.HOE)
+//				.harvestTool(ToolType.HOE) TODO TAG
 				.noOcclusion()
 				.isValidSpawn((s, r, p, t) -> false)
 				.isSuffocating((s, r, p) -> false)

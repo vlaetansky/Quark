@@ -45,7 +45,7 @@ public class TrowelItem extends QuarkItem implements IUsageTickerOverride {
 		
 		List<ItemStack> targets = new ArrayList<>();
 		for(int i = 0; i < Inventory.getSelectionSize(); i++) {
-			ItemStack stack = player.inventory.getItem(i);
+			ItemStack stack = player.getInventory().getItem(i);
 			if(isValidTarget(stack))
 				targets.add(stack);
 		}

@@ -16,7 +16,7 @@
 // * Created at 10:10 AM on 9/3/19.
 // */
 //@LoadModule(category = ModuleCategory.MANAGEMENT, hasSubscriptions = true)
-//public class ShulkerBoxRightClickModule extends QuarkModule { TODO rewrite
+//public class ShulkerBoxRightClickModule extends QuarkModule { TODO REWRITE
 //
 //    private static final ResourceLocation SHULKER_BOX_CAP = new ResourceLocation(Quark.MOD_ID, "shulker_box_drop_in");
 //

@@ -1,5 +1,6 @@
 package vazkii.quark.content.mobs.module;
 
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
@@ -14,7 +15,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.EntityAttributeHandler;
@@ -75,7 +75,7 @@ public class FoxhoundModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		RenderingRegistry.registerEntityRenderingHandler(foxhoundType, FoxhoundRenderer::new);
+		EntityRenderers.register(foxhoundType, FoxhoundRenderer::new);
 	}
 
 	@SubscribeEvent

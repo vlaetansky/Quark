@@ -24,7 +24,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.DrawHighlightEvent;
+import net.minecraftforge.client.event.DrawSelectionEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -78,8 +78,8 @@ public class AbacusModule extends QuarkModule {
 	}
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public void onHighlightBlock(DrawHighlightEvent.HighlightBlock event) {
-		VertexConsumer bufferIn = event.getBuffers().getBuffer(RenderType.lines());
+	public void onHighlightBlock(DrawSelectionEvent.HighlightBlock event) {
+		VertexConsumer bufferIn = event.getMultiBufferSource().getBuffer(RenderType.lines());
 
 		Minecraft mc = Minecraft.getInstance();
 		Player player = mc.player;
@@ -93,7 +93,7 @@ public class AbacusModule extends QuarkModule {
 				if(distance > -1 && distance <= AbacusItem.MAX_COUNT) {
 					BlockPos target = AbacusItem.getBlockPos(stack);
 
-					Camera info = event.getInfo();
+					Camera info = event.getCamera();
 					Vec3 view = info.getPosition();
 
 					VoxelShape shape = Shapes.create(new AABB(target));
@@ -116,7 +116,7 @@ public class AbacusModule extends QuarkModule {
 
 					if(shape != null) {
 						List<AABB> list = shape.toAabbs();
-						PoseStack matrixStackIn = event.getMatrix();
+						PoseStack matrixStackIn = event.getPoseStack();
 						
 						// everything from here is a vanilla copy pasta but tweaked to have the same colors
 						

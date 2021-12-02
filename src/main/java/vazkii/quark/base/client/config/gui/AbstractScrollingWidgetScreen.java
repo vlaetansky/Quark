@@ -55,15 +55,16 @@ public abstract class AbstractScrollingWidgetScreen extends AbstractQScreen {
 	}
 	
 	public void refresh() {
-		children.removeIf(scrollingWidgets::contains);
-		buttons.removeIf(scrollingWidgets::contains);
+		children.removeIf(scrollingWidgets::contains); // TODO AT
+		narratables.removeIf(scrollingWidgets::contains);
+		renderables.removeIf(scrollingWidgets::contains); 
 		scrollingWidgets.clear();
 		
 		elementList.populate(w -> {
-			children.add(w);
 			scrollingWidgets.add(w);
 			if(w instanceof Button)
-				addButton(w);
+				addRenderableWidget(w);
+			else addWidget(w);
 		});
 	}
 	

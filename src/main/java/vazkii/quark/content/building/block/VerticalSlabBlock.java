@@ -54,7 +54,7 @@ public class VerticalSlabBlock extends QuarkBlock implements SimpleWaterloggedBl
 		super(parent.getRegistryName().getPath().replace("_slab", "_vertical_slab"), module, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.copy(parent));
 		this.parent = parent;
 		
-		// TODO gotta tag all the child blocks 
+		// TODO TAG gotta tag all the child blocks 
 		
 		if(!(parent instanceof SlabBlock))
 			throw new IllegalArgumentException("Can't rotate a non-slab block into a vertical slab.");

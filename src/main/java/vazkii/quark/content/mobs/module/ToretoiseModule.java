@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacements.Type;
@@ -11,7 +12,6 @@ import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.EntityAttributeHandler;
 import vazkii.quark.base.module.LoadModule;
@@ -36,7 +36,7 @@ public class ToretoiseModule extends QuarkModule {
 	public static int cooldownTicks = 20 * 60;
 	
 	@Config(description="The items that can be fed to toretoises to make them regrow ores.")
-	public static List<String> foods = Lists.newArrayList("minecraft:cactus"); // TODO 1.18: change to glow berries
+	public static List<String> foods = Lists.newArrayList("minecraft:glow_berries"); 
 	
 	@Config(description="Feeding a toretoise after cooldown will regrow them with a one-in-this-number chance. "
 			+ "Set to 1 to always regrow, or 0 to disable.")
@@ -68,7 +68,7 @@ public class ToretoiseModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		RenderingRegistry.registerEntityRenderingHandler(toretoiseType, ToretoiseRenderer::new);
+		EntityRenderers.register(toretoiseType, ToretoiseRenderer::new);
 	}
 	
 }

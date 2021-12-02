@@ -34,7 +34,7 @@ public class SlimeInABucketModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
 		enqueue(() -> ItemProperties.register(slime_in_a_bucket, new ResourceLocation("excited"), 
-				(stack, world, e) -> ItemNBTHelper.getBoolean(stack, SlimeInABucketItem.TAG_EXCITED, false) ? 1 : 0));
+				(stack, world, e, id) -> ItemNBTHelper.getBoolean(stack, SlimeInABucketItem.TAG_EXCITED, false) ? 1 : 0));
 	}
 
 	@SubscribeEvent
@@ -61,11 +61,11 @@ public class SlimeInABucketModule extends QuarkModule {
 							stack.shrink(1);
 							if(stack.getCount() == 0)
 								player.setItemInHand(hand, outStack);
-							else if(!player.inventory.add(outStack))
+							else if(!player.getInventory().add(outStack))
 								player.drop(outStack, false);
 						}
 
-						event.getTarget().remove();
+						event.getTarget().discard();
 					}
 					else player.swing(hand);
 				}

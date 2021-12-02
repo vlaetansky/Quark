@@ -16,6 +16,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import vazkii.quark.base.Quark;
@@ -39,7 +40,7 @@ public class FoxhoundRenderer extends MobRenderer<FoxhoundEntity, FoxhoundModel>
 	
 	private static final int SHINY_CHANCE = 256;
 	
-	public FoxhoundRenderer(EntityRenderDispatcher render) {
+	public FoxhoundRenderer(EntityRendererProvider.Context p_174409_) {
 		super(render, new FoxhoundModel(), 0.5F);
 		addLayer(new FoxhoundCollarLayer(this));
 	}

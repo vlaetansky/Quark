@@ -40,7 +40,7 @@ public class CampfiresBoostElytraModule extends QuarkModule {
 				
 				BlockState state = world.getBlockState(pos);
 				Block block = state.getBlock();
-				boolean isCampfire = block.is(BlockTags.CAMPFIRES);
+				boolean isCampfire = state.is(BlockTags.CAMPFIRES);
 				if(isCampfire && block instanceof CampfireBlock && state.getValue(CampfireBlock.LIT) && state.getValue(CampfireBlock.SIGNAL_FIRE)) {
 					double force = boostStrength;
 					if(moves > 16)

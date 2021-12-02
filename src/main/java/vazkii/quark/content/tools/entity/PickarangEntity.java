@@ -36,6 +36,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier.Builder;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -114,13 +115,13 @@ public class PickarangEntity extends Projectile {
 
 	@Override
 	public void shoot(double x, double y, double z, float velocity, float inaccuracy) {
-		Vec3 Vector3d = (new Vec3(x, y, z)).normalize().add(this.random.nextGaussian() * 0.0075F * inaccuracy, this.random.nextGaussian() * 0.0075F * inaccuracy, this.random.nextGaussian() * 0.0075F * inaccuracy).scale(velocity);
-		this.setDeltaMovement(Vector3d);
-		float f = Mth.sqrt(getHorizontalDistanceSqr(Vector3d));
-		this.yRot = (float)(Mth.atan2(Vector3d.x, Vector3d.z) * (180F / (float)Math.PI));
-		this.xRot = (float)(Mth.atan2(Vector3d.y, f) * (180F / (float)Math.PI));
-		this.yRotO = this.yRot;
-		this.xRotO = this.xRot;
+		Vec3 vec = (new Vec3(x, y, z)).normalize().add(this.random.nextGaussian() * 0.0075F * inaccuracy, this.random.nextGaussian() * 0.0075F * inaccuracy, this.random.nextGaussian() * 0.0075F * inaccuracy).scale(velocity);
+		this.setDeltaMovement(vec);
+		float f = (float) vec.horizontalDistance();
+		setYRot((float)(Mth.atan2(vec.x, vec.z) * (180F / (float)Math.PI)));
+		setXRot((float)(Mth.atan2(vec.y, f) * (180F / (float)Math.PI)));
+		this.yRotO = this.getYRot();
+		this.xRotO = this.getXRot();
 	}
 
 	@Override
@@ -128,11 +129,11 @@ public class PickarangEntity extends Projectile {
 	public void lerpMotion(double x, double y, double z) {
 		this.setDeltaMovement(x, y, z);
 		if (this.xRotO == 0.0F && this.yRotO == 0.0F) {
-			float f = Mth.sqrt(x * x + z * z);
-			this.yRot = (float)(Mth.atan2(x, z) * (180F / (float)Math.PI));
-			this.xRot = (float)(Mth.atan2(y, f) * (180F / (float)Math.PI));
-			this.yRotO = this.yRot;
-			this.xRotO = this.xRot;
+			float f = (float) Math.sqrt(x * x + z * z);
+			setYRot((float)(Mth.atan2(x, z) * (180F / (float)Math.PI)));
+			setXRot((float)(Mth.atan2(y, f) * (180F / (float)Math.PI)));
+			this.yRotO = this.getYRot();
+			this.xRotO = this.getXRot();
 		}
 
 	}
@@ -347,20 +348,20 @@ public class PickarangEntity extends Projectile {
 		Vec3 ourMotion = this.getDeltaMovement();
 		setPos(pos.x + ourMotion.x, pos.y + ourMotion.y, pos.z + ourMotion.z);
 
-		float f = Mth.sqrt(getHorizontalDistanceSqr(ourMotion));
-		this.yRot = (float)(Mth.atan2(ourMotion.x, ourMotion.z) * (180F / (float)Math.PI));
+		float f = (float) ourMotion.horizontalDistance();
+		setYRot((float)(Mth.atan2(ourMotion.x, ourMotion.z) * (180F / (float)Math.PI)));
 
-		this.xRot = (float)(Mth.atan2(ourMotion.y, f) * (180F / (float)Math.PI));
-		while (this.xRot - this.xRotO < -180.0F) this.xRotO -= 360.0F;
+		setXRot((float)(Mth.atan2(ourMotion.y, f) * (180F / (float)Math.PI)));
+		while (this.getXRot() - this.xRotO < -180.0F) this.xRotO -= 360.0F;
 
-		while(this.xRot - this.xRotO >= 180.0F) this.xRotO += 360.0F;
+		while(this.getXRot() - this.xRotO >= 180.0F) this.xRotO += 360.0F;
 
-		while(this.yRot - this.yRotO < -180.0F) this.yRotO -= 360.0F;
+		while(this.getYRot() - this.yRotO < -180.0F) this.yRotO -= 360.0F;
 
-		while(this.yRot - this.yRotO >= 180.0F) this.yRotO += 360.0F;
+		while(this.getYRot() - this.yRotO >= 180.0F) this.yRotO += 360.0F;
 
-		this.xRot = Mth.lerp(0.2F, this.xRotO, this.xRot);
-		this.yRot = Mth.lerp(0.2F, this.yRotO, this.yRot);
+		setXRot(Mth.lerp(0.2F, this.xRotO, this.getXRot()));
+		setYRot(Mth.lerp(0.2F, this.yRotO, this.getYRot()));
 		float drag;
 		if (this.isInWater()) {
 			for(int i = 0; i < 4; ++i) {
@@ -402,7 +403,7 @@ public class PickarangEntity extends Projectile {
 					setPos(getX(), getY() + 1, getZ());
 					
 				spawnAtLocation(stack, 0);
-				remove();
+				discard();
 			}
 
 			return;
@@ -435,7 +436,7 @@ public class PickarangEntity extends Projectile {
 					continue;
 				xpOrb.startRiding(this);
 
-				xpOrb.throwTime = 2;
+//				xpOrb.throwTime = 2; TODO CHECK what does this even do
 			}
 
 			Vec3 ownerPos = owner.position().add(0, 1, 0);
@@ -444,14 +445,15 @@ public class PickarangEntity extends Projectile {
 
 			if(motion.lengthSqr() < motionMag) {
 				Player player = (Player) owner;
-				ItemStack stackInSlot = player.inventory.getItem(slot);
+				Inventory inventory = player.getInventory();
+				ItemStack stackInSlot = inventory.getItem(slot);
 
 				if(!level.isClientSide) {
 					playSound(QuarkSounds.ENTITY_PICKARANG_PICKUP, 1, 1);
 
 					if(!stack.isEmpty()) if (player.isAlive() && stackInSlot.isEmpty())
-						player.inventory.setItem(slot, stack);
-					else if (!player.isAlive() || !player.inventory.add(stack))
+						inventory.setItem(slot, stack);
+					else if (!player.isAlive() || !inventory.add(stack))
 						player.drop(stack, false);
 
 					if (player.isAlive()) {
@@ -474,7 +476,7 @@ public class PickarangEntity extends Projectile {
 						}
 					}
 
-					remove();
+					discard();
 				}
 			} else
 				setDeltaMovement(motion.normalize().scale(0.7 + eff * 0.325F));
@@ -489,7 +491,7 @@ public class PickarangEntity extends Projectile {
 			// Player could not pick up everything
 			ItemStack drop = itemEntity.getItem();
 			player.drop(drop, false);
-			itemEntity.remove();
+			itemEntity.discard();
 		}
 	}
 

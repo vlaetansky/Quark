@@ -85,7 +85,7 @@ public class BigStoneClustersModule extends QuarkModule {
 	}
 	
 	private void conditionalize(PlacedFeature feature, BooleanSupplier condition) {
-		WorldGenHandler.conditionalizeFeatures(GenerationStep.Decoration.UNDERGROUND_ORES, feature, condition);
+		WorldGenHandler.conditionalizeFeature(GenerationStep.Decoration.UNDERGROUND_ORES, feature, condition);
 	}
 	
 	@Override

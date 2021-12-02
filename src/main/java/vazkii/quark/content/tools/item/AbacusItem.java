@@ -1,5 +1,7 @@
 package vazkii.quark.content.tools.item;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -89,7 +91,7 @@ public class AbacusItem extends QuarkItem {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public static float count(ItemStack stack, ClientLevel world, LivingEntity entityIn) {
+	public static float count(ItemStack stack, ClientLevel world, LivingEntity entityIn, int id) {
 		int count = getCount(stack, entityIn);
 		if(count == -1)
 			return 9999;

@@ -55,7 +55,7 @@ public class MoreStoneVariantsModule extends QuarkModule {
 	private void add(String name, MaterialColor color, BooleanSupplier cond, QuarkBlock.Constructor<QuarkBlock> constr, QuarkBlock.Constructor<QuarkPillarBlock> pillarConstr) {
 		Block.Properties props = Block.Properties.of(Material.STONE, color)
 				.requiresCorrectToolForDrops()
-//        		.harvestTool(ToolType.PICKAXE) TODO tag
+//        		.harvestTool(ToolType.PICKAXE) TODO TAG
         		.strength(1.5F, 6.0F);
 		
 		QuarkBlock bricks = constr.make(name + "_bricks", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props).setCondition(() -> cond.getAsBoolean() && enableBricks);

@@ -12,7 +12,8 @@ package vazkii.quark.content.tweaks.client.emote;
 
 import static vazkii.quark.content.tweaks.client.emote.EmoteBase.PI_F;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.player.Player;
@@ -52,7 +53,7 @@ public class EmoteState {
 		}
 	}
 
-	public void rotateAndOffset(Player player) {
+	public void rotateAndOffset(PoseStack stack, Player player) {
 		if(states.length == 0)
 			return;
 
@@ -62,16 +63,16 @@ public class EmoteState {
 
 		float height = player.getBbHeight();
 
-		RenderSystem.translatef(0, height / 2, 0);
+		stack.translate(0, height / 2, 0);
 
 		if (rotY != 0)
-			RenderSystem.rotatef(rotY * 180 / PI_F, 0, 1, 0);
+			stack.mulPose(Vector3f.YP.rotation(rotY));
 		if (rotX != 0)
-			RenderSystem.rotatef(rotX * 180 / PI_F, 1, 0, 0);
+			stack.mulPose(Vector3f.XP.rotation(rotX));
 		if (rotZ != 0)
-			RenderSystem.rotatef(rotZ * 180 / PI_F, 0, 0, 1);
+			stack.mulPose(Vector3f.ZP.rotation(rotZ));
 
-		RenderSystem.translatef(0, -height / 2, 0);
+		stack.translate(0, -height / 2, 0);
 	}
 }
 

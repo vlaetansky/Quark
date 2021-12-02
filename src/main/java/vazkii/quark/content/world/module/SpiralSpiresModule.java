@@ -9,15 +9,14 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
-import net.minecraftforge.common.ToolType;
-import net.minecraftforge.event.entity.living.EnderTeleportEvent;
+import net.minecraftforge.event.entity.EntityTeleportEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.module.LoadModule;
@@ -55,7 +54,7 @@ public class SpiralSpiresModule extends QuarkModule {
 	public void construct() {
 		Block.Properties props = Block.Properties.of(Material.STONE, MaterialColor.TERRACOTTA_PURPLE)
 				.requiresCorrectToolForDrops()
-        		.harvestTool(ToolType.PICKAXE)
+//        		.harvestTool(ToolType.PICKAXE) TODO TAG
         		.strength(1.5F, 6.0F);
 		dusky_myalite = new QuarkBlock("dusky_myalite", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props);
 				
@@ -68,11 +67,11 @@ public class SpiralSpiresModule extends QuarkModule {
 	}
 	
 	@SubscribeEvent
-	public void onTeleport(EnderTeleportEvent event) {
+	public void onTeleport(EntityTeleportEvent event) {
 		if(myaliteConduitDistance <= 0)
 			return;
 		
-		LivingEntity entity = event.getEntityLiving();
+		Entity entity = event.getEntity();
 		Level world = entity.level;
 		BlockPos pos = new BlockPos(event.getTargetX(), event.getTargetY(), event.getTargetZ());
 		

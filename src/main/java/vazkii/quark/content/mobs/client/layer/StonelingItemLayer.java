@@ -48,7 +48,7 @@ public class StonelingItemLayer extends RenderLayer<StonelingEntity, StonelingMo
 			
 			matrix.scale(0.725F, 0.725F, 0.725F);
 			Minecraft mc = Minecraft.getInstance();
-			mc.getItemRenderer().renderStatic(stack, TransformType.FIXED, light, OverlayTexture.NO_OVERLAY, matrix, buffer);
+			mc.getItemRenderer().renderStatic(stack, TransformType.FIXED, light, OverlayTexture.NO_OVERLAY, matrix, buffer, 0); // TODO CHECK 0
 			matrix.popPose();
 		}
 	}

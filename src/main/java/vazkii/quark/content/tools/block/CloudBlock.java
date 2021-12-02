@@ -14,8 +14,11 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
@@ -23,10 +26,10 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.module.QuarkModule;
+import vazkii.quark.content.tools.block.be.CloudBlockEntity;
 import vazkii.quark.content.tools.module.BottledCloudModule;
-import vazkii.quark.content.tools.tile.CloudTileEntity;
 
-public class CloudBlock extends QuarkBlock {
+public class CloudBlock extends QuarkBlock implements EntityBlock {
 
 	public CloudBlock(QuarkModule module) {
 		super("cloud", module, null, 
@@ -70,10 +73,10 @@ public class CloudBlock extends QuarkBlock {
 		return InteractionResult.PASS;
 	}
 	
-//	@Override TODO pick block
-//	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-//		return ItemStack.EMPTY;
-//	}
+	@Override
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+		return ItemStack.EMPTY;
+	}
 	
 	private void fillBottle(Player player, int startIndex) {
 		Inventory inv = player.getInventory();
@@ -89,15 +92,15 @@ public class CloudBlock extends QuarkBlock {
 			}
 		}
 	}
-	
+
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return new CloudBlockEntity(pos, state);
 	}
 	
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return new CloudTileEntity();
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+		return createTickerHelper(type, BottledCloudModule.blockEntityType, CloudBlockEntity::tick);
 	}
 
 }

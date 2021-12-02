@@ -1,4 +1,4 @@
-package vazkii.quark.content.world.block.te;
+package vazkii.quark.content.world.block.be;
 
 import java.util.List;
 
@@ -12,35 +12,32 @@ import net.minecraft.world.entity.monster.CaveSpider;
 import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
-import vazkii.arl.block.tile.TileMod;
+import net.minecraft.world.level.block.state.BlockState;
+import vazkii.arl.block.be.ARLBlockEntity;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.content.world.module.MonsterBoxModule;
 
-public class MonsterBoxTileEntity extends TileMod implements TickableBlockEntity {
+public class MonsterBoxBlockEntity extends ARLBlockEntity {
 
 	private int breakProgress;
 	
-	public MonsterBoxTileEntity() {
-		super(MonsterBoxModule.tileEntityType);
+	public MonsterBoxBlockEntity(BlockPos pos, BlockState state) {
+		super(MonsterBoxModule.blockEntityType, pos, state);
 	}
 	
-	@Override
-	public void tick() {
+	public static void tick(Level level, BlockPos pos, BlockState state, MonsterBoxBlockEntity be) {
 		if(level.getDifficulty() == Difficulty.PEACEFUL)
 			return;
-		
-		BlockPos pos = getBlockPos();
-		
 		int x = pos.getX();
 		int y = pos.getY();
 		int z = pos.getZ();
 		
 		if(level.isClientSide)
-			level.addParticle(breakProgress == 0 ? ParticleTypes.FLAME : ParticleTypes.LARGE_SMOKE, x + Math.random(), y + Math.random(), z + Math.random(), 0, 0, 0);
+			level.addParticle(be.breakProgress == 0 ? ParticleTypes.FLAME : ParticleTypes.LARGE_SMOKE, x + Math.random(), y + Math.random(), z + Math.random(), 0, 0, 0);
 		
-		boolean doBreak = breakProgress > 0;
+		boolean doBreak = be.breakProgress > 0;
 		if(!doBreak) {
 			List<? extends Player> players = level.players();
 			for(Player p : players)
@@ -51,14 +48,14 @@ public class MonsterBoxTileEntity extends TileMod implements TickableBlockEntity
 		}
 		
 		if(doBreak) {
-			if(breakProgress == 0) 
+			if(be.breakProgress == 0) 
 				level.playSound(null, pos, QuarkSounds.BLOCK_MONSTER_BOX_GROWL, SoundSource.BLOCKS, 0.5F, 1F);
 			
-			breakProgress++;
-			if(breakProgress > 40) {
+			be.breakProgress++;
+			if(be.breakProgress > 40) {
 				level.levelEvent(2001, pos, Block.getId(level.getBlockState(pos)));
 				level.removeBlock(pos, false);
-				spawnMobs();
+				be.spawnMobs();
 			}
 		}
 	}

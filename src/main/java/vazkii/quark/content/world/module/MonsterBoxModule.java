@@ -23,7 +23,7 @@ import vazkii.quark.base.module.config.type.DimensionConfig;
 import vazkii.quark.base.world.WorldGenHandler;
 import vazkii.quark.base.world.WorldGenWeights;
 import vazkii.quark.content.world.block.MonsterBoxBlock;
-import vazkii.quark.content.world.block.te.MonsterBoxTileEntity;
+import vazkii.quark.content.world.block.be.MonsterBoxBlockEntity;
 import vazkii.quark.content.world.gen.MonsterBoxGenerator;
 	
 @LoadModule(category = ModuleCategory.WORLD, hasSubscriptions = true)
@@ -32,7 +32,7 @@ public class MonsterBoxModule extends QuarkModule {
 	public static final String TAG_MONSTER_BOX_SPAWNED = "quark:monster_box_spawned";
 	public static final ResourceLocation MONSTER_BOX_LOOT_TABLE = new ResourceLocation(Quark.MOD_ID, "misc/monster_box");
 	
-	public static BlockEntityType<MonsterBoxTileEntity> tileEntityType;
+	public static BlockEntityType<MonsterBoxBlockEntity> blockEntityType;
 	
 	@Config(description = "The chance for the monster box generator to try and place one in a chunk, 1 is 100%\nThis can be higher than 100% if you want multiple per chunk, , 0 is 0%") 
 	public static double chancePerChunk = 0.8;
@@ -53,8 +53,8 @@ public class MonsterBoxModule extends QuarkModule {
 	public void construct() {
 		monster_box = new MonsterBoxBlock(this);
 		
-        tileEntityType = BlockEntityType.Builder.of(MonsterBoxTileEntity::new, monster_box).build(null);
-        RegistryHelper.register(tileEntityType, "monster_box");
+        blockEntityType = BlockEntityType.Builder.of(MonsterBoxBlockEntity::new, monster_box).build(null);
+        RegistryHelper.register(blockEntityType, "monster_box");
 	}
 	
 	@Override

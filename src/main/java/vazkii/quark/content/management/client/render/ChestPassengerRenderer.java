@@ -72,7 +72,7 @@ public class ChestPassengerRenderer extends EntityRenderer<ChestPassengerEntity>
 
         matrix.scale(1.75F, 1.75F, 1.75F);
 
-        Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.FIXED, light, OverlayTexture.NO_OVERLAY, matrix, buffer, 0); // TODO 0 okay?
+        Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.FIXED, light, OverlayTexture.NO_OVERLAY, matrix, buffer, 0); // TODO CHECK 0 okay?
         matrix.popPose();
     }
 

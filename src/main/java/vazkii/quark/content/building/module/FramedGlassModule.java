@@ -19,7 +19,7 @@ public class FramedGlassModule extends QuarkModule {
 		Block.Properties props = Block.Properties.of(Material.GLASS)
 				.strength(3F, 10F)
 				.sound(SoundType.GLASS);
-//				.harvestLevel(1) TODO tag
+//				.harvestLevel(1) TODO TAG
 //				.harvestTool(ToolType.PICKAXE);
 		
 		new QuarkInheritedPaneBlock(new FramedGlassBlock("framed_glass", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props, false));

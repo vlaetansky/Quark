@@ -1,5 +1,6 @@
 package vazkii.quark.content.mobs.module;
 
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -12,7 +13,6 @@ import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.EntityAttributeHandler;
 import vazkii.quark.base.module.LoadModule;
@@ -55,7 +55,7 @@ public class ForgottenModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		RenderingRegistry.registerEntityRenderingHandler(forgottenType, ForgottenRenderer::new);
+		EntityRenderers.register(forgottenType, ForgottenRenderer::new);
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
@@ -69,8 +69,8 @@ public class ForgottenModule extends QuarkModule {
 			if(result == Result.ALLOW || (mob.checkSpawnRules(entity.level, event.getSpawnReason()) && mob.checkSpawnObstruction(entity.level))) {
 				ForgottenEntity forgotten = new ForgottenEntity(forgottenType, entity.level);
 				Vec3 epos = entity.position();
-
-				forgotten.absMoveTo(epos.x, epos.y, epos.z, entity.yRot, entity.xRot);
+	
+				forgotten.absMoveTo(epos.x, epos.y, epos.z, entity.getYRot(), entity.getXRot());
 				forgotten.prepareEquipment();
 				entity.level.addFreshEntity(forgotten);
 				event.setResult(Result.DENY);

@@ -37,7 +37,7 @@ public class MoreBrickTypesModule extends QuarkModule {
 				Block.Properties.copy(parent)
 				.strength(2F, 6F)
 				.requiresCorrectToolForDrops())
-//				.harvestTool(ToolType.PICKAXE)) TODO tag
+//				.harvestTool(ToolType.PICKAXE)) TODO TAG
 				.setCondition(cond));
 	}
 	

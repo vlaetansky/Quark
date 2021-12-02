@@ -1,5 +1,6 @@
 package vazkii.quark.content.tools.module;
 
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -18,7 +19,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
@@ -58,14 +58,14 @@ public class SkullPikesModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		RenderingRegistry.registerEntityRenderingHandler(skullPikeType, SkullPikeRenderer::new);
+		EntityRenderers.register(skullPikeType, SkullPikeRenderer::new);
 	}
 
 	@SubscribeEvent
 	public void onPlaceBlock(BlockEvent.EntityPlaceEvent event) {
 		BlockState state = event.getPlacedBlock();
 		
-		if(state.getBlock().is(pikeTrophiesTag)) {
+		if(state.is(pikeTrophiesTag)) {
 			LevelAccessor iworld = event.getWorld();
 			
 			if(iworld instanceof Level) {
@@ -74,7 +74,7 @@ public class SkullPikesModule extends QuarkModule {
 				BlockPos down = pos.below();
 				BlockState downState = world.getBlockState(down);
 				
-				if(downState.getBlock().is(BlockTags.FENCES)) {
+				if(downState.is(BlockTags.FENCES)) {
 					SkullPikeEntity pike = new SkullPikeEntity(skullPikeType, world);
 					pike.setPos(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
 					world.addFreshEntity(pike);

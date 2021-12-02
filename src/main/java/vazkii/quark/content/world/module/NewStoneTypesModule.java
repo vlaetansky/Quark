@@ -12,7 +12,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
-import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.LoadModule;
@@ -39,6 +38,7 @@ public class NewStoneTypesModule extends QuarkModule {
 
 	public static boolean enabledWithMarble, enabledWithLimestone, enabledWithJasper, enabledWithSlate, enabledWithMyalite;
 	
+	// TODO CONTENT remove marble for calcite
 	@Config public static StoneTypeConfig marble = new StoneTypeConfig();
 	@Config public static StoneTypeConfig limestone = new StoneTypeConfig();
 	@Config public static StoneTypeConfig jasper = new StoneTypeConfig();
@@ -69,7 +69,7 @@ public class NewStoneTypesModule extends QuarkModule {
 		
 		Block.Properties props = Block.Properties.of(Material.STONE, color)
 				.requiresCorrectToolForDrops() // needs tool
-				.harvestTool(ToolType.PICKAXE)
+//				.harvestTool(ToolType.PICKAXE) TODO TAG
 				.strength(1.5F, 6.0F); 
 		
 		QuarkBlock normal = constr.make(name, this, CreativeModeTab.TAB_BUILDING_BLOCKS, props).setCondition(enabledCond);

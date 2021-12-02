@@ -5,7 +5,7 @@ import java.util.Random;
 import java.util.function.BooleanSupplier;
 
 import net.minecraft.core.NonNullList;
-import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -13,13 +13,12 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.grower.AbstractTreeGrower;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FancyFoliagePlacer;
-import net.minecraft.world.level.levelgen.feature.stateproviders.SimpleStateProvider;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.FancyTrunkPlacer;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.block.IQuarkBlock;
@@ -73,13 +72,12 @@ public class BlossomSaplingBlock extends SaplingBlock implements IQuarkBlock {
 
 		public BlossomTree(Block leafBlock) {
 			config = (new TreeConfiguration.TreeConfigurationBuilder(
-					new SimpleStateProvider(Blocks.SPRUCE_LOG.defaultBlockState()),
-					new SimpleStateProvider(leafBlock.defaultBlockState()), 
-					new FancyFoliagePlacer(UniformInt.fixed(2), UniformInt.fixed(4), 4), // <- Copy of what Features.FANCY_OAK uses
+					BlockStateProvider.simple(Blocks.SPRUCE_LOG),
 					new FancyTrunkPlacer(3, 11, 0), 
+					BlockStateProvider.simple(leafBlock), 
+					new FancyFoliagePlacer(ConstantInt.of(2), ConstantInt.of(4), 4), // <- Copy of what Features.FANCY_OAK uses
 					new TwoLayersFeatureSize(0, 0, 0, OptionalInt.of(4))))
 					.ignoreVines()
-					.heightmap(Heightmap.Types.MOTION_BLOCKING)
 					.build();
 			
 			leaf = leafBlock.defaultBlockState();

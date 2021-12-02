@@ -58,6 +58,6 @@ public class GlassItemFrameModule extends QuarkModule {
     @Override
     @OnlyIn(Dist.CLIENT)
     public void modelRegistry() {
-//        ModelLoader.addSpecialModel(new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, "glass_frame"), "inventory")); TODO figure this one out
+//        ModelLoader.addSpecialModel(new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, "glass_frame"), "inventory")); TODO FIX figure this one out
     }
 }

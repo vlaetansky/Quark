@@ -40,7 +40,7 @@ import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -80,7 +80,7 @@ public class SimpleHarvestModule extends QuarkModule {
 		crops.clear();
 
 		if (doHarvestingSearch) {
-			GameRegistry.findRegistry(Block.class).getValues().stream()
+			ForgeRegistries.BLOCKS.getValues().stream()
 					.filter(b -> !isVanilla(b) && b instanceof CropBlock)
 					.map(b -> (CropBlock) b)
 					.forEach(b -> crops.put(b.defaultBlockState().setValue(b.getAgeProperty(), last(b.getAgeProperty().getPossibleValues())), b.defaultBlockState()));

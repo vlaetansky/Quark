@@ -8,8 +8,8 @@ import java.util.Queue;
 import com.google.common.collect.Lists;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.components.toasts.RecipeToast;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
@@ -23,7 +23,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.GameRules;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
+import net.minecraftforge.client.event.ScreenEvent.InitScreenEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -74,15 +74,15 @@ public class AutomaticRecipeUnlockModule extends QuarkModule {
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public void onInitGui(InitGuiEvent.Post event) {
-		Screen gui = event.getGui();
+	public void onInitGui(InitScreenEvent.Post event) {
+		Screen gui = event.getScreen();
 		if(disableRecipeBook && gui instanceof RecipeUpdateListener) {
 			Minecraft.getInstance().player.getRecipeBook().getBookSettings().setOpen(RecipeBookType.CRAFTING, false); 
 
-			List<AbstractWidget> widgets = event.getWidgetList();
-			for(AbstractWidget w : widgets)
+			List<GuiEventListener> widgets = event.getListenersList();
+			for(GuiEventListener w : widgets)
 				if(w instanceof ImageButton) {
-					event.removeWidget(w);
+					event.removeListener(w);
 					return;
 				}
 		}

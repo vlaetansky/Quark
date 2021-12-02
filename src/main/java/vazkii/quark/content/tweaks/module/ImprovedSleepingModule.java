@@ -21,8 +21,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -170,8 +170,8 @@ public class ImprovedSleepingModule extends QuarkModule {
 			}
 
 			worldPlayers.stream().filter(LivingEntity::isSleeping).forEach(Player::stopSleeping);
-			if (world.getGameRules().getBoolean(GameRules.RULE_WEATHER_CYCLE)) {
-				((ServerLevel) world).stopWeather();
+			if (world.getGameRules().getBoolean(GameRules.RULE_WEATHER_CYCLE) && world.isRaining()) {
+				((ServerLevel) world).resetWeatherCycle(); // TODO AT
 			}
 
 			if (world instanceof ServerLevel)
@@ -279,7 +279,7 @@ public class ImprovedSleepingModule extends QuarkModule {
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public void onKeystroke(GuiScreenEvent.KeyboardKeyEvent event) {
+	public void onKeystroke(ScreenEvent.KeyboardKeyEvent event) {
 		registerPress();
 	}
 
@@ -291,7 +291,7 @@ public class ImprovedSleepingModule extends QuarkModule {
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public void onMousePress(GuiScreenEvent.MouseInputEvent event) {
+	public void onMousePress(ScreenEvent.MouseInputEvent event) {
 		registerPress();
 	}
 

@@ -1,5 +1,6 @@
 package vazkii.quark.content.tools.module;
 
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -7,7 +8,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.arl.util.RegistryHelper;
@@ -16,18 +16,18 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.content.tools.block.CloudBlock;
+import vazkii.quark.content.tools.block.be.CloudBlockEntity;
 import vazkii.quark.content.tools.client.render.CloudTileEntityRenderer;
 import vazkii.quark.content.tools.item.BottledCloudItem;
-import vazkii.quark.content.tools.tile.CloudTileEntity;
 
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true)
 public class BottledCloudModule extends QuarkModule {
 
-    public static BlockEntityType<CloudTileEntity> tileEntityType;
+    public static BlockEntityType<CloudBlockEntity> blockEntityType;
     public static Block cloud;
     public static Item bottled_cloud;
     
-    @Config 
+    @Config // TODO CONTENT change these numbers
     public static int cloudLevelBottom = 127;
     
     @Config 
@@ -38,13 +38,13 @@ public class BottledCloudModule extends QuarkModule {
 		cloud = new CloudBlock(this);
 		bottled_cloud = new BottledCloudItem(this);
 		
-    	tileEntityType = BlockEntityType.Builder.of(CloudTileEntity::new, cloud).build(null);
-		RegistryHelper.register(tileEntityType, "cloud");
+    	blockEntityType = BlockEntityType.Builder.of(CloudBlockEntity::new, cloud).build(null);
+		RegistryHelper.register(blockEntityType, "cloud");
 	} 
 	
 	@Override
 	public void clientSetup() {
-		ClientRegistry.bindTileEntityRenderer(tileEntityType, CloudTileEntityRenderer::new);
+		BlockEntityRenderers.register(blockEntityType, CloudTileEntityRenderer::new);
 	}
 	
 	@SubscribeEvent

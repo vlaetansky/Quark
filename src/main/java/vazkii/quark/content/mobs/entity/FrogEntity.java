@@ -44,6 +44,7 @@ import net.minecraft.world.entity.ai.goal.FollowParentGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -66,7 +67,6 @@ import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.base.proxy.CommonProxy;
 import vazkii.quark.content.mobs.ai.FavorBlockGoal;
 import vazkii.quark.content.mobs.ai.PassivePassengerGoal;
-import vazkii.quark.content.mobs.ai.TemptGoalButNice;
 import vazkii.quark.content.mobs.module.FrogsModule;
 
 public class FrogEntity extends Animal implements IEntityAdditionalSpawnData, IForgeShearable {
@@ -117,7 +117,7 @@ public class FrogEntity extends Animal implements IEntityAdditionalSpawnData, IF
 		goalSelector.addGoal(1, new FloatGoal(this));
 		goalSelector.addGoal(2, new FrogPanicGoal(1.25));
 		goalSelector.addGoal(3, new BreedGoal(this, 1.0));
-		goalSelector.addGoal(4, new TemptGoalButNice(this, 1.2, false, getTemptationItems(false), getTemptationItems(true)));
+		goalSelector.addGoal(4, new TemptGoal(this, 1.2, getTemptationItems(false), false));
 		goalSelector.addGoal(5, new FollowParentGoal(this, 1.1));
 		goalSelector.addGoal(6, new FavorBlockGoal(this, 1, Blocks.LILY_PAD));
 		goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1, 0.5F));
@@ -145,7 +145,7 @@ public class FrogEntity extends Animal implements IEntityAdditionalSpawnData, IF
 	}
 
 	@Override
-	public boolean causeFallDamage(float distance, float damageMultiplier) {
+	public boolean causeFallDamage(float distance, float damageMultiplier, DamageSource source) {
 		return false;
 	}
 
@@ -221,7 +221,7 @@ public class FrogEntity extends Animal implements IEntityAdditionalSpawnData, IF
 			outOfWorld();
 
 		this.yRotO = this.yHeadRotO;
-		this.yRot = this.yHeadRot;
+		this.setYRot(this.yHeadRot);
 	}
 
 	@Override
@@ -291,7 +291,7 @@ public class FrogEntity extends Animal implements IEntityAdditionalSpawnData, IF
 			return InteractionResult.SUCCESS;
 		}
 		
-		if(stack.getItem().is(ItemTags.WOOL) && !hasSweater()) {
+		if(stack.is(ItemTags.WOOL) && !hasSweater()) {
 			if(!level.isClientSide) {
 				setSweater(true);
 				Vec3 pos = position();
@@ -491,7 +491,7 @@ public class FrogEntity extends Animal implements IEntityAdditionalSpawnData, IF
 
 	private void calculateRotationYaw(double x, double z) {
 		Vec3 pos = position();
-		this.yRot = (float) (Mth.atan2(z - pos.z, x - pos.x) * (180D / Math.PI)) - 90.0F;
+		setYRot((float) (Mth.atan2(z - pos.z, x - pos.x) * (180D / Math.PI)) - 90.0F);
 	}
 
 	private void enableJumpControl() {

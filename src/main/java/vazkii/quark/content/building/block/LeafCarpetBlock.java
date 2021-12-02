@@ -35,7 +35,7 @@ public class LeafCarpetBlock extends QuarkBlock implements IBlockColorProvider {
 				Block.Properties.of(Material.CLOTH_DECORATION)
 				.strength(0F)
 				.sound(SoundType.GRASS)
-//				.harvestTool(ToolType.HOE) TODO: tag
+//				.harvestTool(ToolType.HOE) TODO TAG
 				.noOcclusion());
 		
 		baseState = base.defaultBlockState();

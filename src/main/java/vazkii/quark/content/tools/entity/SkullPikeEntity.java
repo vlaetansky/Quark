@@ -33,11 +33,11 @@ public class SkullPikeEntity extends Entity {
 			BlockPos pos = blockPosition();
 			BlockState state = level.getBlockState(pos);
 
-			if(state.getBlock().is(SkullPikesModule.pikeTrophiesTag)) {
+			if(state.is(SkullPikesModule.pikeTrophiesTag)) {
 				BlockPos down = pos.below();
 				BlockState downState = level.getBlockState(down);
 
-				if(downState.getBlock().is(BlockTags.FENCES))
+				if(downState.is(BlockTags.FENCES))
 					good = true;
 			}
 

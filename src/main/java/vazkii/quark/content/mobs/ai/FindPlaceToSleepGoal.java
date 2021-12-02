@@ -91,7 +91,7 @@ public class FindPlaceToSleepGoal extends MoveToBlockGoal {
 			if(furnaceOnly)
 				return tileentity instanceof FurnaceBlockEntity;
 
-			return state.getLightValue(world, pos) > 2;
+			return state.getLightEmission(world, pos) > 2;
 		}
 	}
 }

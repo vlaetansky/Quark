@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import vazkii.quark.base.handler.MiscUtil;
@@ -25,13 +26,14 @@ public class EmoteButton extends TranslucentButton {
 
 		if(visible) {
 			Minecraft mc = Minecraft.getInstance();
-			mc.getTextureManager().bind(desc.texture);
-			RenderSystem.color3f(1F, 1F, 1F);
+			RenderSystem.setShader(GameRenderer::getPositionTexShader);
+			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+			RenderSystem.setShaderTexture(0, desc.texture);
 			blit(matrix, x + 4, y + 4, 0, 0, 16, 16, 16, 16);
 
 			ResourceLocation tierTexture = desc.getTierTexture();
 			if(tierTexture != null) {
-				mc.getTextureManager().bind(tierTexture);
+				RenderSystem.setShaderTexture(0, tierTexture);
 				blit(matrix, x + 4, y + 4, 0, 0, 16, 16, 16, 16);
 			}
 			
@@ -39,20 +41,18 @@ public class EmoteButton extends TranslucentButton {
 			if(hovered) {
 				String name = desc.getLocalizedName();
 				
-				mc.getTextureManager().bind(MiscUtil.GENERAL_ICONS);
+				RenderSystem.setShaderTexture(0, MiscUtil.GENERAL_ICONS);
 				int w = mc.font.width(name);
 				int left = x - w;
 				int top = y - 8;
 				
-				RenderSystem.pushMatrix();
-				RenderSystem.color3f(1F, 1F, 1F);
+				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 				blit(matrix, left, top, 242, 9, 5, 17, 256, 256);
 				for(int i = 0; i < w; i++)
 					blit(matrix, left + i + 5, top, 248, 9, 1, 17, 256, 256);
 				blit(matrix, left + w + 5, top, 250, 9, 6, 17, 256, 256);
 
 				mc.font.draw(matrix, name, left + 5, top + 3, 0);
-				RenderSystem.popMatrix();
 			}
 		}
 	}

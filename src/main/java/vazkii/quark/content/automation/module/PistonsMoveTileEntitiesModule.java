@@ -81,7 +81,7 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 			
 			event.world.setBlockEntity(tile);
 			event.world.updateNeighbourForOutputSignal(pos, state.getBlock());
-//			if (tile != null) TODO is this problematic?
+//			if (tile != null) TODO CHECK
 //				tile.clearCache();
 		}
 
@@ -176,7 +176,7 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 				else {
 					world.setBlockEntity(tile);
 					world.getChunk(pos).setBlockEntity(tile);
-//					tile.clearCache(); TODO 
+//					tile.clearCache(); TODO CHECK is this safe
 
 				}
 			}

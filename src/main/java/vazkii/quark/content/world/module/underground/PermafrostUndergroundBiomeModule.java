@@ -6,7 +6,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.ToolType;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.LoadModule;
@@ -24,7 +23,7 @@ public class PermafrostUndergroundBiomeModule extends UndergroundBiomeModule {
 		permafrost = new QuarkBlock("permafrost", this, CreativeModeTab.TAB_BUILDING_BLOCKS, 
 				Block.Properties.of(Material.STONE, MaterialColor.COLOR_LIGHT_BLUE)
 				.requiresCorrectToolForDrops()
-        		.harvestTool(ToolType.PICKAXE)
+//        		.harvestTool(ToolType.PICKAXE) TODO TAG
 				.strength(1.5F, 10F)
 				.sound(SoundType.STONE));
 		

@@ -2,6 +2,8 @@ package vazkii.quark.content.mobs.entity;
 
 import javax.annotation.Nonnull;
 
+import com.mojang.math.Vector3f;
+
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -71,7 +73,7 @@ public class SoulBeadEntity extends Entity {
 			double px = bpx + (Math.random() - 0.5) * posSpread;
 			double py = bpy + (Math.random() - 0.5) * posSpread;
 			double pz = bpz + (Math.random() - 0.5) * posSpread;
-			level.addParticle(new DustParticleOptions(0.2F, 0.12F, 0.1F, 1F), px, py, pz, 0, 0, 0);
+			level.addParticle(new DustParticleOptions(new Vector3f(0.2F, 0.12F, 0.1F), 1F), px, py, pz, 0, 0, 0);
 			if(Math.random() < 0.05)
 				level.addParticle(new BlockParticleOption(ParticleTypes.FALLING_DUST, Blocks.SOUL_SAND.defaultBlockState()), px, py, pz, 0, 0, 0);
 		}

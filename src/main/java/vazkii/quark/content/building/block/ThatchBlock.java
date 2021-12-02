@@ -19,7 +19,7 @@ public class ThatchBlock extends QuarkFlammableBlock {
 	public ThatchBlock(QuarkModule module) {
 		super("thatch", module, CreativeModeTab.TAB_BUILDING_BLOCKS, 300,
 				Block.Properties.of(Material.GRASS, MaterialColor.COLOR_YELLOW)
-//				.harvestTool(ToolType.HOE) TODO tag
+//				.harvestTool(ToolType.HOE) TODO TAG
 				.strength(0.5F)
 				.sound(SoundType.GRASS));
 	}

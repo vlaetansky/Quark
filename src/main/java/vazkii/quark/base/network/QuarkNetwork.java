@@ -11,20 +11,15 @@ import vazkii.quark.base.network.message.ChangeHotbarMessage;
 import vazkii.quark.base.network.message.DoEmoteMessage;
 import vazkii.quark.base.network.message.DoubleDoorMessage;
 import vazkii.quark.base.network.message.EditSignMessage;
-import vazkii.quark.base.network.message.HandleBackpackMessage;
 import vazkii.quark.base.network.message.HarvestMessage;
 import vazkii.quark.base.network.message.InventoryTransferMessage;
 import vazkii.quark.base.network.message.LinkItemMessage;
-import vazkii.quark.base.network.message.MatrixEnchanterOperationMessage;
 import vazkii.quark.base.network.message.OpenBoatChestMessage;
 import vazkii.quark.base.network.message.RequestEmoteMessage;
-import vazkii.quark.base.network.message.ScrollCrateMessage;
 import vazkii.quark.base.network.message.SetLockProfileMessage;
 import vazkii.quark.base.network.message.SortInventoryMessage;
 import vazkii.quark.base.network.message.SpamlessChatMessage;
-import vazkii.quark.base.network.message.SwapArmorMessage;
 import vazkii.quark.base.network.message.UpdateAfkMessage;
-import vazkii.quark.base.network.message.WithdrawSeedsMessage;
 
 public final class QuarkNetwork {
 
@@ -45,11 +40,11 @@ public final class QuarkNetwork {
 		network.register(OpenBoatChestMessage.class, NetworkDirection.PLAY_TO_SERVER);
 		network.register(ChangeHotbarMessage.class, NetworkDirection.PLAY_TO_SERVER);
 		network.register(SetLockProfileMessage.class, NetworkDirection.PLAY_TO_SERVER);
-		network.register(HandleBackpackMessage.class, NetworkDirection.PLAY_TO_SERVER);
-		network.register(MatrixEnchanterOperationMessage.class, NetworkDirection.PLAY_TO_SERVER);
-		network.register(WithdrawSeedsMessage.class, NetworkDirection.PLAY_TO_SERVER);
-		network.register(SwapArmorMessage.class, NetworkDirection.PLAY_TO_SERVER);
-		network.register(ScrollCrateMessage.class, NetworkDirection.PLAY_TO_SERVER);
+		
+//		network.register(HandleBackpackMessage.class, NetworkDirection.PLAY_TO_SERVER); TODO ODDITIES
+//		network.register(MatrixEnchanterOperationMessage.class, NetworkDirection.PLAY_TO_SERVER);
+//		network.register(SwapArmorMessage.class, NetworkDirection.PLAY_TO_SERVER);
+//		network.register(ScrollCrateMessage.class, NetworkDirection.PLAY_TO_SERVER);
 
 		network.register(DoEmoteMessage.class, NetworkDirection.PLAY_TO_CLIENT);
 		network.register(SpamlessChatMessage.class, NetworkDirection.PLAY_TO_CLIENT);

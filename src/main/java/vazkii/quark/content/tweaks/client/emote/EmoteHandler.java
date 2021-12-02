@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -23,6 +24,7 @@ import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
@@ -111,18 +113,18 @@ public final class EmoteHandler {
 		}
 	}
 
-	public static void preRender(Player player) {
+	public static void preRender(PoseStack stack, Player player) {
 		EmoteBase emote = getPlayerEmote(player);
 		if (emote != null) {
-			RenderSystem.pushMatrix();
-			emote.rotateAndOffset();
+			stack.pushPose();
+			emote.rotateAndOffset(stack);
 		}
 	}
 
-	public static void postRender(Player player) {
+	public static void postRender(PoseStack stack, Player player) {
 		EmoteBase emote = getPlayerEmote(player);
 		if (emote != null) {
-			RenderSystem.popMatrix();
+			stack.popPose();
 		}
 	}
 
@@ -159,7 +161,11 @@ public final class EmoteHandler {
 	private static PlayerRenderer getRenderPlayer(AbstractClientPlayer player) {
 		Minecraft mc = Minecraft.getInstance();
 		EntityRenderDispatcher manager = mc.getEntityRenderDispatcher();
-		return manager.getSkinMap().get(player.getModelName());
+		
+		EntityRenderer<? extends Player> render = manager.getSkinMap().get(player.getModelName()); 
+		if(render instanceof PlayerRenderer)
+			return (PlayerRenderer) render;
+		return null;
 	}
 
 	private static HumanoidModel<?> getPlayerModel(AbstractClientPlayer player) {

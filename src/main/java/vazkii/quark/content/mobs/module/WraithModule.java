@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
 
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
@@ -16,7 +17,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.EntityAttributeHandler;
@@ -106,8 +106,8 @@ public class WraithModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		RenderingRegistry.registerEntityRenderingHandler(wraithType, WraithRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(soulBeadType, SoulBeadRenderer::new);
+		EntityRenderers.register(wraithType, WraithRenderer::new);
+		EntityRenderers.register(soulBeadType, SoulBeadRenderer::new);
 	}
 	
 	@Override

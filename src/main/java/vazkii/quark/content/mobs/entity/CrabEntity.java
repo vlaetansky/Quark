@@ -100,7 +100,7 @@ public class CrabEntity extends Animal implements IEntityAdditionalSpawnData {
 	}
 
 	public static boolean spawnPredicate(EntityType<? extends Animal> type, LevelAccessor world, MobSpawnType reason, BlockPos pos, Random random) {
-		return world.getBlockState(pos.below()).getBlock().is(CrabsModule.crabSpawnableTag) && world.getMaxLocalRawBrightness(pos) > 8;
+		return world.getBlockState(pos.below()).is(CrabsModule.crabSpawnableTag) && world.getMaxLocalRawBrightness(pos) > 8;
 	}
 
 	public static void rave(LevelAccessor world, BlockPos pos, boolean raving) {
@@ -110,7 +110,7 @@ public class CrabEntity extends Animal implements IEntityAdditionalSpawnData {
 
 	@Override
 	public float getWalkTargetValue(BlockPos pos, LevelReader world) {
-		return world.getBlockState(pos.below()).getBlock().is(CrabsModule.crabSpawnableTag) ? 10.0F : world.getBrightness(pos) - 0.5F;
+		return world.getBlockState(pos.below()).is(CrabsModule.crabSpawnableTag) ? 10.0F : world.getBrightness(pos) - 0.5F;
 	}
 
 	@Override
@@ -164,7 +164,7 @@ public class CrabEntity extends Animal implements IEntityAdditionalSpawnData {
 		this.goalSelector.addGoal(1, new PanicGoal(this, 1.25D));
 		this.goalSelector.addGoal(2, new RaveGoal(this));
 		this.goalSelector.addGoal(3, new BreedGoal(this, 1.0D));
-		this.goalSelector.addGoal(4, new TemptGoal(this, 1.2D, false, getTemptationItems()));
+		this.goalSelector.addGoal(4, new TemptGoal(this, 1.2D, getTemptationItems(), false));
 		this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.1D));
 		this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0D));
 		this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));

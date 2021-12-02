@@ -37,7 +37,7 @@ public class ClockTimeGetter {
 		
 		@Override
 		@OnlyIn(Dist.CLIENT)
-		public float call(@Nonnull ItemStack stack, @Nullable ClientLevel worldIn, @Nullable LivingEntity entityIn) {
+		public float call(@Nonnull ItemStack stack, @Nullable ClientLevel worldIn, @Nullable LivingEntity entityIn, int id) {
 			if(!isCalculated(stack))
 				return 0F;
 			

@@ -2,7 +2,6 @@ package vazkii.quark.content.tweaks.ai;
 
 import java.util.EnumSet;
 
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -81,7 +80,7 @@ public class WantLoveGoal extends Goal {
     	
         double dX = leapPos.x - creaturePos.x;
         double dZ = leapPos.z - creaturePos.z;
-        float leapMagnitude = Mth.sqrt(dX * dX + dZ * dZ);
+        float leapMagnitude = (float) Math.sqrt(dX * dX + dZ * dZ);
 
         Vec3 motion = this.creature.getDeltaMovement();
 

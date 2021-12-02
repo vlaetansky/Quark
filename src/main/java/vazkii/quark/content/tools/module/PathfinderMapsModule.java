@@ -71,13 +71,13 @@ public class PathfinderMapsModule extends QuarkModule {
 
 	@Override
 	public void construct() {
-		loadTradeInfo(Biomes.SNOWY_TUNDRA, true, 4, 8, 14, 0x7FE4FF);
-		loadTradeInfo(Biomes.MOUNTAINS, true, 4, 8, 14, 0x8A8A8A);
+		loadTradeInfo(Biomes.SNOWY_PLAINS, true, 4, 8, 14, 0x7FE4FF);
+		loadTradeInfo(Biomes.WINDSWEPT_HILLS, true, 4, 8, 14, 0x8A8A8A);
 		loadTradeInfo(Biomes.DARK_FOREST, true, 4, 8, 14, 0x00590A);
 		loadTradeInfo(Biomes.DESERT, true, 4, 8, 14, 0xCCB94E);
 		loadTradeInfo(Biomes.SAVANNA, true, 4, 8, 14, 0x9BA562);
 		loadTradeInfo(Biomes.SWAMP, true, 4, 12, 18, 0x22370F);
-		loadTradeInfo(Biomes.GIANT_TREE_TAIGA, true, 4, 12, 18, 0x5B421F);
+		loadTradeInfo(Biomes.OLD_GROWTH_PINE_TAIGA, true, 4, 12, 18, 0x5B421F);
 		
 		loadTradeInfo(Biomes.FLOWER_FOREST, true, 5, 12, 18, 0xDC7BEA);
 		loadTradeInfo(Biomes.JUNGLE, true, 5, 16, 22, 0x22B600);

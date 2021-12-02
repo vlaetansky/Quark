@@ -88,7 +88,7 @@ public class WraithEntity extends Zombie {
 	}
 
 	@Override
-	protected float getVoicePitch() {
+	public float getVoicePitch() {
 		return random.nextFloat() * 0.1F + 0.75F;
 	}
 
@@ -138,7 +138,7 @@ public class WraithEntity extends Zombie {
 	}
 	
 	@Override
-	public boolean causeFallDamage(float distance, float damageMultiplier) {
+	public boolean causeFallDamage(float distance, float damageMultiplier, DamageSource source) {
 		return false;
 	}
 	
@@ -178,8 +178,7 @@ public class WraithEntity extends Zombie {
 	@Override
 	public float getWalkTargetValue(BlockPos pos, LevelReader worldIn) {
 		BlockState state = worldIn.getBlockState(pos);
-		Block block = state.getBlock();
-		return block.is(WraithModule.wraithSpawnableTag) ? 1F : 0F;
+		return state.is(WraithModule.wraithSpawnableTag) ? 1F : 0F;
 	}
 
 	@Override

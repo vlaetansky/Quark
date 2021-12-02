@@ -25,7 +25,7 @@
 //import vazkii.quark.base.network.message.SwapArmorMessage;
 //
 //@LoadModule(category = ModuleCategory.MANAGEMENT, hasSubscriptions = true)
-//public class RightClickArmorModule extends QuarkModule { TODO rewrite
+//public class RightClickArmorModule extends QuarkModule { TODO REWRITE
 //
 //	private static boolean shouldCancelNextRelease = false;
 //	

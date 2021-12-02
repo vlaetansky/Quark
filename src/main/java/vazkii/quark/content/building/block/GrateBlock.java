@@ -124,7 +124,7 @@ public class GrateBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 		return !state.getValue(WATERLOGGED);
 	}
 
-//	@Override TODO alternative?
+//	@Override TODO CHECK alternative?
 //	public boolean canCreatureSpawn(BlockState state, BlockGetter world, BlockPos pos, Type type, EntityType<?> entityType) {
 //		return false;
 //	}

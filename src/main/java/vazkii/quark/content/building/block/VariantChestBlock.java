@@ -85,7 +85,7 @@ public class VariantChestBlock extends ChestBlock implements IBlockItemProvider,
 	
 	@OnlyIn(Dist.CLIENT)
 	public static void setISTER(Item.Properties props, Block block) {
-//		props.setISTER(() -> () -> new BlockEntityWithoutLevelRenderer() { TODO not this shit again
+//		props.setISTER(() -> () -> new BlockEntityWithoutLevelRenderer() { TODO FIX Make new item and add render properties like armor
 //			private final BlockEntity tile = new VariantChestBlockEntity();
 //			//render
 //			@Override

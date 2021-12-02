@@ -51,7 +51,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.ToolType;
+import net.minecraftforge.common.ToolActions;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.content.automation.module.IronRodModule;
@@ -237,7 +237,7 @@ public class ToretoiseEntity extends Animal {
 			LivingEntity living = (LivingEntity) e;
 			ItemStack held = living.getMainHandItem();
 
-			if(ore != 0 && held.getItem().getToolTypes(held).contains(ToolType.PICKAXE)) {
+			if(ore != 0 && held.getItem().canPerformAction(held, ToolActions.PICKAXE_DIG)) {
 				if(!level.isClientSide) {
 					if(held.isDamageableItem() && e instanceof Player)
 						MiscUtil.damageStack((Player) e, InteractionHand.MAIN_HAND, held, 1);
@@ -362,7 +362,7 @@ public class ToretoiseEntity extends Animal {
 	}
 
 	@Override
-	public boolean causeFallDamage(float distance, float damageMultiplier) {
+	public boolean causeFallDamage(float distance, float damageMultiplier, DamageSource source) {
 		return false;
 	}
 
@@ -377,7 +377,7 @@ public class ToretoiseEntity extends Animal {
 	}
 
 	@Override
-	protected float getVoicePitch() {
+	public float getVoicePitch() {
 		return (random.nextFloat() - random.nextFloat()) * 0.2F + 0.6F;
 	}
 

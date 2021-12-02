@@ -55,7 +55,7 @@ public class MicrocraftingHelperModule extends QuarkModule {
 		Minecraft mc = Minecraft.getInstance();
 		Screen screen = mc.screen;
 
-		if(screen instanceof CraftingScreen && event.getButton() == 1) { // TODO more inclusive checking
+		if(screen instanceof CraftingScreen && event.getButton() == 1) { // TODO LOW PRIO more inclusive checking
 			CraftingScreen cscreen = (CraftingScreen) screen;
 			RecipeBookComponent recipeBook = cscreen.getRecipeBookComponent();
 
@@ -77,7 +77,7 @@ public class MicrocraftingHelperModule extends QuarkModule {
 						GhostIngredient testGhostIngr = ghost.get(j);
 						Ingredient testIngr = testGhostIngr.ingredient;
 
-						if(testIngr.test(testStack)) // TODO NBT sensitivity?
+						if(testIngr.test(testStack)) // TODO LOW PRIO NBT sensitivity?
 							ourCount++;
 					}
 
@@ -104,14 +104,14 @@ public class MicrocraftingHelperModule extends QuarkModule {
 			Minecraft mc = Minecraft.getInstance();
 
 			Screen screen = mc.screen;
-			if(screen instanceof CraftingScreen) { // TODO more inclusive checking
+			if(screen instanceof CraftingScreen) { // TODO LOW PRIO more inclusive checking
 				CraftingScreen cscreen = (CraftingScreen) screen;
 				PoseStack mstack = event.getPoseStack();
 				ItemRenderer render = mc.getItemRenderer();
 				int left = cscreen.getGuiLeft() + 95;
 				int top = cscreen.getGuiTop() + 6;
 
-				// TODO works?
+				// TODO CHECK
 				RenderSystem.setShader(GameRenderer::getPositionTexShader);
 				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 				RenderSystem.setShaderTexture(0, MiscUtil.GENERAL_ICONS);
@@ -136,7 +136,7 @@ public class MicrocraftingHelperModule extends QuarkModule {
 				if(pair != null) {
 					GhostIngredient ingr = pair.getRight();
 					if(ingr != null) {
-						Component tooltip = new TranslatableComponent("Right Click to Craft"); // TODO localize
+						Component tooltip = new TranslatableComponent("Right Click to Craft"); // TODO LOW PRIO localize
 						cscreen.renderTooltip(mstack, tooltip, event.getMouseX(), event.getMouseY() - 15);
 					}
 				}
@@ -151,7 +151,7 @@ public class MicrocraftingHelperModule extends QuarkModule {
 		Screen prevScreen = currentScreen;
 		currentScreen = mc.screen;
 
-		// TODO changing recipe does not clear the stack as it should
+		// TODO LOW PRIO changing recipe does not clear the stack as it should
 		if(prevScreen != currentScreen)
 			recipes.clear();
 

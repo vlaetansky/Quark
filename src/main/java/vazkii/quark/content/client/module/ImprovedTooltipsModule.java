@@ -58,7 +58,7 @@ public class ImprovedTooltipsModule extends QuarkModule {
 
     private static final String IGNORE_TAG = "quark:no_tooltip";
   
-// TODO remake this module entirely
+// TODO REWRITE
 //    @Override
 //    public void configChanged() {
 //        EnchantedBookTooltips.reloaded();

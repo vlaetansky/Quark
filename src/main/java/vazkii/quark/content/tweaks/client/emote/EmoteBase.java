@@ -10,6 +10,8 @@
  */
 package vazkii.quark.content.tweaks.client.emote;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
@@ -60,8 +62,8 @@ public abstract class EmoteBase {
 
 	public abstract boolean usesBodyPart(int part);
 
-	public void rotateAndOffset() {
-		state.rotateAndOffset(player);
+	public void rotateAndOffset(PoseStack stack) {
+		state.rotateAndOffset(stack, player);
 	}
 
 	public void update() {

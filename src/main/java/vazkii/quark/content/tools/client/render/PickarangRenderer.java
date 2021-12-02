@@ -8,16 +8,16 @@ import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import vazkii.quark.content.tools.entity.PickarangEntity;
 
 public class PickarangRenderer extends EntityRenderer<PickarangEntity> {
 
-	public PickarangRenderer(EntityRenderDispatcher renderManager) {
-		super(renderManager);
+	public PickarangRenderer(EntityRendererProvider.Context context) {
+		super(context);
 	}
 	
 	@Override
@@ -30,7 +30,7 @@ public class PickarangRenderer extends EntityRenderer<PickarangEntity> {
 		float time = entity.tickCount + (mc.isPaused() ? 0 : partialTicks);
 		matrix.mulPose(Vector3f.ZP.rotationDegrees(time * 20F));
 
-		mc.getItemRenderer().renderStatic(entity.getStack(), TransformType.FIXED, light, OverlayTexture.NO_OVERLAY, matrix, buffer);
+		mc.getItemRenderer().renderStatic(entity.getStack(), TransformType.FIXED, light, OverlayTexture.NO_OVERLAY, matrix, buffer, 0); // TODO CHECK 0
 		
 		matrix.popPose();
 	}

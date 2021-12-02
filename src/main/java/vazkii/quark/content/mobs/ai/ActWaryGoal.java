@@ -95,7 +95,7 @@ public class ActWaryGoal extends WaterAvoidingRandomStrollGoal {
 			return false;
 
 		List<Player> playersAround = stoneling.level.getEntitiesOfClass(Player.class, stoneling.getBoundingBox().inflate(range),
-				(player) -> player != null && !player.abilities.instabuild && player.distanceToSqr(stoneling) < range * range);
+				(player) -> player != null && !player.getAbilities().instabuild && player.distanceToSqr(stoneling) < range * range);
 
 		if (playersAround.isEmpty())
 			return false;

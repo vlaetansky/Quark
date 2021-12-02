@@ -72,7 +72,7 @@ public class CompassAngleGetter {
 		
 		@Override
 		@OnlyIn(Dist.CLIENT)
-		public float call(@Nonnull ItemStack stack, @Nullable ClientLevel worldIn, @Nullable LivingEntity entityIn) {
+		public float call(@Nonnull ItemStack stack, @Nullable ClientLevel worldIn, @Nullable LivingEntity entityIn, int id) {
 			if(entityIn == null && !stack.isFramed())
 				return 0F;
 
@@ -116,7 +116,7 @@ public class CompassAngleGetter {
 
 			long gameTime = worldIn.getGameTime();
 			if(calculate && target != null) {
-				double d1 = carried ? entity.yRot : getFrameRotation((ItemFrame)entity);
+				double d1 = carried ? entity.getYRot() : getFrameRotation((ItemFrame)entity);
 				d1 = Mth.positiveModulo(d1 / 360.0D, 1.0D);
 				double d2 = getAngleToPosition(entity, target) / (Math.PI * 2D);
 

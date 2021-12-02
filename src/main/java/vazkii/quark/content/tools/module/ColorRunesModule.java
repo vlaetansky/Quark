@@ -158,7 +158,7 @@ public class ColorRunesModule extends QuarkModule {
 		ItemStack right = event.getRight();
 		ItemStack output = event.getOutput();
 
-		if(!left.isEmpty() && !right.isEmpty() && canHaveRune(left) && right.getItem().is(runesTag)) {
+		if(!left.isEmpty() && !right.isEmpty() && canHaveRune(left) && right.is(runesTag)) {
 			ItemStack out = (output.isEmpty() ? left : output).copy();
 			ItemNBTHelper.setBoolean(out, TAG_RUNE_ATTACHED, true);
 			ItemNBTHelper.setCompound(out, TAG_RUNE_COLOR, right.serializeNBT());

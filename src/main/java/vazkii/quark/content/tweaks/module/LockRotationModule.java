@@ -16,6 +16,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -77,7 +78,7 @@ public class LockRotationModule extends QuarkModule {
 	
 	@Override
 	public void setup() {
-		MessageSerializer.mapHandler(LockProfile.class, LockProfile::readProfile, LockProfile::writeProfile);
+		MessageSerializer.mapHandlers(LockProfile.class, LockProfile::readProfile, LockProfile::writeProfile);
 	}
 
 	@Override
@@ -203,11 +204,10 @@ public class LockRotationModule extends QuarkModule {
 			PoseStack matrix = event.getMatrixStack();
 			
 			RenderSystem.enableBlend();
-			RenderSystem.enableAlphaTest();
 			RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			RenderSystem.color4f(1F, 1F, 1F, 0.5F);
-
-			mc.textureManager.bind(MiscUtil.GENERAL_ICONS);
+			RenderSystem.setShader(GameRenderer::getPositionTexShader);
+			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5F);
+			RenderSystem.setShaderTexture(0, MiscUtil.GENERAL_ICONS);
 
 			Window window = event.getWindow();
 			int x = window.getGuiScaledWidth() / 2 + 20;

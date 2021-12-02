@@ -26,7 +26,7 @@ public class BetterElytraRocketModule extends QuarkModule {
 			if(itemstack.getItem() instanceof FireworkRocketItem) {
 				if(!world.isClientSide) {
 					world.addFreshEntity(new FireworkRocketEntity(world, itemstack, player));
-					if(!player.abilities.instabuild)
+					if(!player.getAbilities().instabuild)
 						itemstack.shrink(1);
 				}
 				

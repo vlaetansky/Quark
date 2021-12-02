@@ -82,7 +82,7 @@ public class ClusterShape {
 		public Provider(ClusterSizeConfig config, long seed) {
 			this.config = config;
 			noiseGenerator = new PerlinSimplexNoise(new LegacyRandomSource(seed), 
-					ImmutableList.of(-4, -3, -2, -1, 0, 1, 2, 3, 4)); // TODO test
+					ImmutableList.of(-4, -3, -2, -1, 0, 1, 2, 3, 4)); // TODO CHECK
 		}
 		
 		public ClusterShape around(BlockPos src) {

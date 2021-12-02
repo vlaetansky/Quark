@@ -37,7 +37,7 @@ public class VariantLaddersModule extends QuarkModule {
 	}
 	
 	/**
-	 * TODO 1.18: merge Iron Ladder with other ladders
+	 * TODO CONTENT 1.18: merge Iron Ladder with other ladders
 	 * 
 	 * 	@Override
 		public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {

@@ -1,6 +1,7 @@
 package vazkii.quark.content.mobs.item;
 
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 
@@ -24,6 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.common.ForgeMod;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
@@ -37,10 +39,6 @@ public class ForgottenHatItem extends ArmorItem implements IQuarkItem {
 
 	private final QuarkModule module;
 	private Multimap<Attribute, AttributeModifier> attributes;
-
-	@OnlyIn(Dist.CLIENT)
-	@SuppressWarnings("rawtypes")
-	private HumanoidModel model;
 
 	public ForgottenHatItem(QuarkModule module) {
 		super(ArmorMaterials.LEATHER, EquipmentSlot.HEAD, 
@@ -66,14 +64,10 @@ public class ForgottenHatItem extends ArmorItem implements IQuarkItem {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	@SuppressWarnings("unchecked")
-	public <A extends HumanoidModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, A _default) {
-		if(model == null)
-			model = new ForgottenHatModel();
-
-		return (A) model;
+	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+		consumer.accept(new RenderProperties());	
 	}
-
+	
 	@Override
 	public boolean isEnchantable(@Nonnull ItemStack stack) {
 		return false;
@@ -105,6 +99,24 @@ public class ForgottenHatItem extends ArmorItem implements IQuarkItem {
 	@Override
 	public boolean isEnabled() {
 		return module != null && module.enabled;
+	}
+	
+	@OnlyIn(Dist.CLIENT)
+	private static class RenderProperties implements IItemRenderProperties {
+
+		@OnlyIn(Dist.CLIENT)
+		@SuppressWarnings("rawtypes")
+		private HumanoidModel model;
+		
+		@Override
+		@SuppressWarnings("unchecked")
+		public <A extends HumanoidModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, A _default) {
+			if(model == null)
+				model = new ForgottenHatModel();
+
+			return (A) model;
+		}
+		
 	}
 
 

@@ -21,6 +21,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -29,11 +30,11 @@ import net.minecraft.server.packs.repository.RepositorySource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.event.TickEvent.RenderTickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -152,8 +153,8 @@ public class EmotesModule extends QuarkModule {
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public void initGui(GuiScreenEvent.InitGuiEvent.Post event) {
-		Screen gui = event.getGui();
+	public void initGui(ScreenEvent.InitScreenEvent.Post event) {
+		Screen gui = event.getScreen();
 		if(gui instanceof ChatScreen) {
 			Map<Integer, List<EmoteDescriptor>> descriptorSorting = new TreeMap<>();
 
@@ -204,7 +205,7 @@ public class EmotesModule extends QuarkModule {
 						
 						button.visible = emotesVisible;
 						button.active = emotesVisible;
-						event.addWidget(button);
+						event.addListener(button);
 
 						if (++rowPos == EMOTES_PER_ROW) {
 							tierRow++;
@@ -217,7 +218,7 @@ public class EmotesModule extends QuarkModule {
 					row++;
 			}
 			
-			event.addWidget(new TranslucentButton(gui.width - 1 - EMOTE_BUTTON_WIDTH * EMOTES_PER_ROW, buttonY, EMOTE_BUTTON_WIDTH * EMOTES_PER_ROW, 20, 
+			event.addListener(new TranslucentButton(gui.width - 1 - EMOTE_BUTTON_WIDTH * EMOTES_PER_ROW, buttonY, EMOTE_BUTTON_WIDTH * EMOTES_PER_ROW, 20, 
 					new TranslatableComponent("quark.gui.button.emotes"),
 					(b) -> {
 						for(Button bt : emoteButtons)
@@ -252,7 +253,7 @@ public class EmotesModule extends QuarkModule {
 		if(event.getType() == ElementType.ALL) {
 			Minecraft mc = Minecraft.getInstance();
 			Window res = event.getWindow();
-			PoseStack matrix = event.getMatrixStack();
+			PoseStack stack = event.getMatrixStack();
 			EmoteBase emote = EmoteHandler.getPlayerEmote(mc.player);
 			if(emote != null && emote.timeDone < emote.totalTime) {
 				ResourceLocation resource = emote.desc.texture;
@@ -266,19 +267,19 @@ public class EmotesModule extends QuarkModule {
 				else if(emote.timeDone > emote.totalTime - tween)
 					transparency = (emote.totalTime - emote.timeDone) / tween;
 
-				RenderSystem.pushMatrix();
-				RenderSystem.disableLighting();
-				RenderSystem.enableBlend();
-				RenderSystem.disableAlphaTest();
+				stack.popPose();
+				RenderSystem.setShader(GameRenderer::getPositionTexShader);
+				RenderSystem.enableBlend(); // TODO CHECK
+				RenderSystem.defaultBlendFunc();
+				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, transparency);
+				RenderSystem.setShaderTexture(0, resource);
 
-				RenderSystem.color4f(1F, 1F, 1F, transparency);
-				mc.getTextureManager().bind(resource);
-				Screen.blit(matrix, x, y, 0, 0, 32, 32, 32, 32);
+				Screen.blit(stack, x, y, 0, 0, 32, 32, 32, 32);
 				RenderSystem.enableBlend();
 
 				String name = I18n.get(emote.desc.getTranslationKey());
-				mc.font.drawShadow(matrix, name, res.getGuiScaledWidth() / 2f - mc.font.width(name) / 2f, y + 34, 0xFFFFFF + (((int) (transparency * 255F)) << 24));
-				RenderSystem.popMatrix();
+				mc.font.drawShadow(stack, name, res.getGuiScaledWidth() / 2f - mc.font.width(name) / 2f, y + 34, 0xFFFFFF + (((int) (transparency * 255F)) << 24));
+				stack.popPose();
 			}
 		}
 	}	
@@ -294,14 +295,14 @@ public class EmotesModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void preRenderLiving(RenderLivingEvent.Pre<Player, ?> event) {
 		if(event.getEntity() instanceof Player)
-			EmoteHandler.preRender((Player) event.getEntity());
+			EmoteHandler.preRender(event.getPoseStack(), (Player) event.getEntity());
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	@OnlyIn(Dist.CLIENT)
 	public void postRenderLiving(RenderLivingEvent.Post<Player, ?> event) {
 		if(event.getEntity() instanceof Player)
-			EmoteHandler.postRender((Player) event.getEntity());
+			EmoteHandler.postRender(event.getPoseStack(), (Player) event.getEntity());
 	}
 
 

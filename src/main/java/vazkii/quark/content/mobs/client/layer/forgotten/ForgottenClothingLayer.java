@@ -4,6 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.SkeletonModel;
+import net.minecraft.client.model.geom.EntityModelSet;
+import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
@@ -18,10 +20,11 @@ import vazkii.quark.base.Quark;
 public class ForgottenClothingLayer<T extends Mob & RangedAttackMob, M extends EntityModel<T>> extends RenderLayer<T, M> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/forgotten/overlay.png");
-	private final SkeletonModel<T> layerModel = new SkeletonModel<>(0.25F, true);
+	private final SkeletonModel<T> layerModel;
 
-	public ForgottenClothingLayer(RenderLayerParent<T, M> p_i50919_1_) {
+	public ForgottenClothingLayer(RenderLayerParent<T, M> p_i50919_1_, EntityModelSet p_174545_) {
 		super(p_i50919_1_);
+		layerModel = new SkeletonModel<>(p_174545_.bakeLayer(ModelLayers.STRAY_OUTER_LAYER));
 	}
 
 	@Override

@@ -56,7 +56,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.extensions.IForgeWorldServer;
 import net.minecraftforge.network.NetworkHooks;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.handler.QuarkSounds;
@@ -101,7 +100,7 @@ public class StonelingEntity extends PathfinderMob {
 	@Override
 	protected void registerGoals() {
 		goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.2, 0.98F));
-		goalSelector.addGoal(4, new FavorBlockGoal(this, 0.2, s -> s.getBlock().is(Tags.Blocks.ORES_DIAMOND)));
+		goalSelector.addGoal(4, new FavorBlockGoal(this, 0.2, s -> s.is(Tags.Blocks.ORES_DIAMOND)));
 		goalSelector.addGoal(3, new IfFlagGoal(new TemptGoal(this, 0.6, Ingredient.of(Tags.Items.GEMS_DIAMOND), false), () -> StonelingsModule.enableDiamondHeart && !StonelingsModule.tamableStonelings));
 		goalSelector.addGoal(2, new RunAndPoofGoal<>(this, Player.class, 4, 0.5, 0.5));
 		goalSelector.addGoal(1, waryGoal = new ActWaryGoal(this, 0.1, 6, () -> StonelingsModule.cautiousStonelings));
@@ -125,14 +124,14 @@ public class StonelingEntity extends PathfinderMob {
 			maxUpStep = 0.6F;
 
 		if (!level.isClientSide && level.getDifficulty() == Difficulty.PEACEFUL && !isTame) {
-			remove();
+			discard();
 			for (Entity passenger : getIndirectPassengers())
 				if (!(passenger instanceof Player))
-					passenger.remove();
+					passenger.discard();
 		}
 
 		this.yBodyRotO = this.yRotO;
-		this.yBodyRot = this.yRot;
+		this.yBodyRot = this.getYRot();
 	}
 
 	@Override
@@ -154,7 +153,7 @@ public class StonelingEntity extends PathfinderMob {
 		if (!isAlive() && wasAlive)
 			for (Entity passenger : getIndirectPassengers())
 				if (!(passenger instanceof Player))
-					passenger.remove();
+					passenger.discard();
 	}
 
 	@Override // processInteract
@@ -207,7 +206,7 @@ public class StonelingEntity extends PathfinderMob {
 
 							heal(1);
 
-							if (!player.abilities.instabuild)
+							if (!player.getAbilities().instabuild)
 								playerItem.shrink(1);
 
 							return InteractionResult.SUCCESS;
@@ -226,14 +225,14 @@ public class StonelingEntity extends PathfinderMob {
 							playSound(QuarkSounds.ENTITY_STONELING_GIVE, 1F, 1F);
 						else playSound(QuarkSounds.ENTITY_STONELING_TAKE, 1F, 1F);
 					}
-				} else if (StonelingsModule.tamableStonelings && playerItem.getItem().is(Tags.Items.GEMS_DIAMOND)) {
+				} else if (StonelingsModule.tamableStonelings && playerItem.is(Tags.Items.GEMS_DIAMOND)) {
 					heal(8);
 
 					setPlayerMade(true);
 
 					playSound(QuarkSounds.ENTITY_STONELING_PURR, 1F, 1F + level.random.nextFloat() * 1F);
 
-					if (!player.abilities.instabuild)
+					if (!player.getAbilities().instabuild)
 						playerItem.shrink(1);
 
 					if (level instanceof ServerLevel)
@@ -259,8 +258,8 @@ public class StonelingEntity extends PathfinderMob {
 		entityData.set(VARIANT, variant);
 		entityData.set(HOLD_ANGLE, world.getRandom().nextFloat() * 90 - 45);
 
-		if(!isTame && !world.isClientSide() && world instanceof IForgeWorldServer) {
-			List<ItemStack> items = ((IForgeWorldServer) world).getWorldServer().getServer().getLootTables()
+		if(!isTame && !world.isClientSide()) {
+			List<ItemStack> items = world.getServer().getLootTables()
 					.get(CARRY_LOOT_TABLE).getRandomItems(new LootContext.Builder((ServerLevel) world).create(LootContextParamSets.EMPTY));
 			if (!items.isEmpty())
 				entityData.set(CARRYING_ITEM, items.get(0));
@@ -302,7 +301,7 @@ public class StonelingEntity extends PathfinderMob {
 	}
 
 	@Override
-	public boolean causeFallDamage(float distance, float damageMultiplier) {
+	public boolean causeFallDamage(float distance, float damageMultiplier, DamageSource source) {
 		return false;
 	}
 
@@ -316,7 +315,7 @@ public class StonelingEntity extends PathfinderMob {
 					getBoundingBox().inflate(16))) {
 				if (entity instanceof StonelingEntity) {
 					StonelingEntity stoneling = (StonelingEntity) entity;
-					if (!stoneling.isPlayerMade() && stoneling.getSensing().canSee(this)) {
+					if (!stoneling.isPlayerMade() && stoneling.getSensing().hasLineOfSight(this)) {
 						startle();
 					}
 				}
@@ -382,7 +381,7 @@ public class StonelingEntity extends PathfinderMob {
 	}
 
 	@Override
-	public boolean canSee(Entity entityIn) {
+	public boolean hasLineOfSight(Entity entityIn) {
 		Vec3 pos = position();
 		Vec3 epos = entityIn.position();
 		
