@@ -125,7 +125,7 @@ public class CaveCrystalUndergroundBiomeModule extends UndergroundBiomeModule {
 	@Override
 	protected UndergroundBiomeConfig getBiomeConfig() {
 		return new UndergroundBiomeConfig(new CaveCrystalUndergroundBiome(), 400, true, BiomeDictionary.Type.OCEAN)
-				.setDefaultSize(42, 18, 22, 8);
+				.setDefaultSize(72, 20, 22, 4);
 	}
 
 	// The value that comes out of this is fed onto a constant for the FOR loop that
