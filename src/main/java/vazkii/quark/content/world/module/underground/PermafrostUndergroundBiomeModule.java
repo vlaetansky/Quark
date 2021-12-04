@@ -13,7 +13,7 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.content.world.config.UndergroundBiomeConfig;
 import vazkii.quark.content.world.gen.underground.PermafrostUndergroundBiome;
 
-// TODO CONTENT move to mountains
+// TODO NOW move to mountains
 @LoadModule(category = ModuleCategory.WORLD)
 public class PermafrostUndergroundBiomeModule extends UndergroundBiomeModule {
 

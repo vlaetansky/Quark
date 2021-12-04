@@ -30,7 +30,7 @@ public class HedgesModule extends QuarkModule {
 
 	@Override
 	public void modulesStarted() {
-		for (BlossomTree tree : BlossomTreesModule.trees.keySet()) // TODO FIX blossom hedges should have a oak post
+		for (BlossomTree tree : BlossomTreesModule.trees.keySet())
 			new HedgeBlock(this, Blocks.OAK_FENCE, tree.leaf.getBlock());
 	}
 	
