@@ -9,10 +9,13 @@ import com.google.common.collect.Maps;
 
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
+import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.block.QuarkBlock;
+import vazkii.quark.base.block.QuarkBlockWrapper;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -37,7 +40,6 @@ public class NewStoneTypesModule extends QuarkModule {
 
 	public static boolean enabledWithLimestone, enabledWithJasper, enabledWithSlate, enabledWithMyalite;
 	
-	// TODO CONTENT remove marble for calcite
 	@Config public static StoneTypeConfig limestone = new StoneTypeConfig();
 	@Config public static StoneTypeConfig jasper = new StoneTypeConfig();
 	@Config public static StoneTypeConfig slate = new StoneTypeConfig();
@@ -51,34 +53,51 @@ public class NewStoneTypesModule extends QuarkModule {
 	
 	@Override
 	public void construct() {
+		expandVanillaStone(Blocks.CALCITE, BigStoneClustersModule.calcite);
+		
 		limestoneBlock = makeStone("limestone", limestone, BigStoneClustersModule.limestone, () -> enableLimestone, MaterialColor.STONE);
 		jasperBlock = makeStone("jasper", jasper, BigStoneClustersModule.jasper, () -> enableJasper, MaterialColor.TERRACOTTA_RED);
 		slateBlock = makeStone("slate", slate, BigStoneClustersModule.slate, () -> enableSlate, MaterialColor.ICE);
-		myaliteBlock = makeStone("myalite", myalite, BigStoneClustersModule.myalite, () -> enableMyalite, MaterialColor.COLOR_PURPLE, MyaliteBlock::new);
+		myaliteBlock = makeStone(null, "myalite", myalite, BigStoneClustersModule.myalite, () -> enableMyalite, MaterialColor.COLOR_PURPLE, MyaliteBlock::new);
+	}
+	
+	private void expandVanillaStone(Block raw, BigStoneClusterConfig bigConfig) {
+		makeStone(raw, raw.getRegistryName().getPath(), null, bigConfig, () -> true, null, QuarkBlock::new);
 	}
 	
 	private Block makeStone(String name, StoneTypeConfig config, BigStoneClusterConfig bigConfig, BooleanSupplier enabledCond, MaterialColor color) {
-		return makeStone(name, config, bigConfig, enabledCond, color, QuarkBlock::new);
+		return makeStone(null, name, config, bigConfig, enabledCond, color, QuarkBlock::new);
 	}
 	
-	private Block makeStone(String name, StoneTypeConfig config, BigStoneClusterConfig bigConfig, BooleanSupplier enabledCond, MaterialColor color, QuarkBlock.Constructor<QuarkBlock> constr) {
+	private Block makeStone(final Block raw, String name, StoneTypeConfig config, BigStoneClusterConfig bigConfig, BooleanSupplier enabledCond, MaterialColor color, QuarkBlock.Constructor<QuarkBlock> constr) {
 		BooleanSupplier trueEnabledCond = () -> (!ModuleLoader.INSTANCE.isModuleEnabled(BigStoneClustersModule.class) || !bigConfig.enabled) && enabledCond.getAsBoolean();
 		
-		Block.Properties props = Block.Properties.of(Material.STONE, color)
-				.requiresCorrectToolForDrops() // needs tool
+		Block.Properties props;
+		if(raw != null)
+			props = Block.Properties.copy(raw);
+		else 
+			props = Block.Properties.of(Material.STONE, color)
+				.requiresCorrectToolForDrops()
 //				.harvestTool(ToolType.PICKAXE) TODO TAG
 				.strength(1.5F, 6.0F); 
 		
-		QuarkBlock normal = constr.make(name, this, CreativeModeTab.TAB_BUILDING_BLOCKS, props).setCondition(enabledCond);
+		Block normal;
+		if(raw != null)
+			normal = raw;
+		else 
+			normal = constr.make(name, this, CreativeModeTab.TAB_BUILDING_BLOCKS, props).setCondition(enabledCond);
+		
 		QuarkBlock polished = constr.make("polished_" + name, this, CreativeModeTab.TAB_BUILDING_BLOCKS, props).setCondition(enabledCond);
 		polishedBlocks.put(normal, polished);
 
-		VariantHandler.addSlabStairsWall(normal);
+		VariantHandler.addSlabStairsWall(normal instanceof IQuarkBlock ? (IQuarkBlock) normal : new QuarkBlockWrapper(normal, this));
 		VariantHandler.addSlabAndStairs(polished);
 		
-		defers.add(() ->
-			WorldGenHandler.addGenerator(this, new OreGenerator(config.dimensions, config.oregen, normal.defaultBlockState(), OreGenerator.ALL_DIMS_STONE_MATCHER, trueEnabledCond), Decoration.UNDERGROUND_ORES, WorldGenWeights.NEW_STONES)
-		);
+		if(raw == null) {
+			defers.add(() ->
+				WorldGenHandler.addGenerator(this, new OreGenerator(config.dimensions, config.oregen, normal.defaultBlockState(), OreGenerator.ALL_DIMS_STONE_MATCHER, trueEnabledCond), Decoration.UNDERGROUND_ORES, WorldGenWeights.NEW_STONES)
+			);
+		}
 		
 		return normal;
 	}
