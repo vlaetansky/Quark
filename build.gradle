@@ -100,6 +100,8 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${config.mc_version}-${config.forge_version}"
 
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
     compileOnly fg.deobf("vazkii.autoreglib:AutoRegLib:${config.arl_version}")
     runtimeOnly fg.deobf("vazkii.autoreglib:AutoRegLib:${config.arl_version}")
 
