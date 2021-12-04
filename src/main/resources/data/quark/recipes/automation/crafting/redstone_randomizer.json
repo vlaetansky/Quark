@@ -13,7 +13,7 @@
       "item": "minecraft:stone"
     },
     "B": {
-      "item": "quark:biotite"
+      "item": "minecraft:prismarine_crystals"
     }
   },
   "result": {
@@ -21,17 +21,8 @@
   },
   "conditions": [
     {
-      "type": "forge:and",
-      "values": [
-        {
-          "type": "quark:flag",
-          "flag": "redstone_randomizer"
-        },
-        {
-          "type": "quark:flag",
-          "flag": "biotite"
-        }
-      ]
+      "type": "quark:flag",
+      "flag": "redstone_randomizer"
     }
   ]
 }

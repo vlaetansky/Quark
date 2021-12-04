@@ -145,7 +145,7 @@ public class ChestSearchingModule extends QuarkModule {
 		}
 	}
 
-	@SubscribeEvent
+	@SubscribeEvent // TODO LOW PRIO stuff renders above tooltip
 	public void onRender(ScreenEvent.DrawScreenEvent.Post event) {
 		if(searchBar != null && searchEnabled)
 			renderElements(event.getPoseStack(), event.getScreen());
