@@ -9,13 +9,13 @@ import vazkii.quark.base.module.config.Config;
 public class OrePocketConfig extends AbstractConfigType {
 
 	@Config
-	@Config.Min(0)
-	@Config.Max(255)
+	@Config.Min(-64)
+	@Config.Max(320)
 	private int minHeight;
 
 	@Config
-	@Config.Min(0)
-	@Config.Max(255)
+	@Config.Min(-64)
+	@Config.Max(320)
 	private int maxHeight;
 
 	@Config

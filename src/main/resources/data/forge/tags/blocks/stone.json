@@ -4,12 +4,12 @@
     "quark:jasper",
     "quark:limestone",
     "quark:permafrost",
-    "quark:slate",
+    "quark:shale",
     "quark:myalite",
     "quark:polished_jasper",
     "quark:polished_limestone",
     "quark:polished_calcite",
-    "quark:polished_slate",
+    "quark:polished_shale",
     "quark:polished_myalite"
   ]
 }

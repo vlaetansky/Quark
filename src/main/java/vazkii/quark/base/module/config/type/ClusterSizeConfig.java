@@ -16,13 +16,13 @@ public class ClusterSizeConfig extends AbstractConfigType {
 	public int rarity;
 
 	@Config
-	@Config.Min(0)
-	@Config.Max(255)
+	@Config.Min(-64)
+	@Config.Max(320)
 	public int minYLevel = 0;
 
 	@Config
-	@Config.Min(0)
-	@Config.Max(255)
+	@Config.Min(-64)
+	@Config.Max(320)
 	public int maxYLevel = 64;
 
 	@Config

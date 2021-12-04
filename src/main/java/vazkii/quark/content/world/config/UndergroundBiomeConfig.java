@@ -2,6 +2,7 @@ package vazkii.quark.content.world.config;
 
 import net.minecraftforge.common.BiomeDictionary;
 import vazkii.quark.base.module.config.type.ClusterSizeConfig;
+import vazkii.quark.base.module.config.type.IBiomeConfig;
 import vazkii.quark.content.world.gen.underground.UndergroundBiome;
 
 public class UndergroundBiomeConfig extends ClusterSizeConfig {
@@ -15,6 +16,11 @@ public class UndergroundBiomeConfig extends ClusterSizeConfig {
 
 	public UndergroundBiomeConfig(UndergroundBiome biomeObj, int rarity, BiomeDictionary.Type... categories) {
 		this(biomeObj, rarity, false, categories);
+	}
+	
+	public UndergroundBiomeConfig(UndergroundBiome biomeObj, int rarity, int horizontal, int vertical, int horizontalVariation, int verticalVariation, IBiomeConfig config) {
+		super(rarity, horizontal, vertical, horizontalVariation, verticalVariation, config);
+		this.biomeObj = biomeObj;
 	}
 	
 	public UndergroundBiomeConfig setDefaultSize(int horizontal, int vertical, int horizontalVariation, int verticalVariation) {
