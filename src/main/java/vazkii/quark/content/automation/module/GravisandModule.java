@@ -14,12 +14,12 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.automation.block.GravisandBlock;
-import vazkii.quark.content.automation.entity.GravisandEntity;
+import vazkii.quark.content.automation.entity.Gravisand;
 
 @LoadModule(category = ModuleCategory.AUTOMATION)
 public class GravisandModule extends QuarkModule {
 
-	public static EntityType<GravisandEntity> gravisandType;
+	public static EntityType<Gravisand> gravisandType;
 
 	public static Block gravisand;
 
@@ -27,11 +27,11 @@ public class GravisandModule extends QuarkModule {
 	public void construct() {
 		gravisand = new GravisandBlock("gravisand", this, CreativeModeTab.TAB_REDSTONE, Block.Properties.copy(Blocks.SAND));
 
-		gravisandType = EntityType.Builder.<GravisandEntity>of(GravisandEntity::new, MobCategory.MISC)
+		gravisandType = EntityType.Builder.<Gravisand>of(Gravisand::new, MobCategory.MISC)
 				.sized(0.98F, 0.98F)
 				.clientTrackingRange(10)
 				.updateInterval(20) // update interval
-				.setCustomClientFactory((spawnEntity, world) -> new GravisandEntity(gravisandType, world))
+				.setCustomClientFactory((spawnEntity, world) -> new Gravisand(gravisandType, world))
 				.build("gravisand");
 		RegistryHelper.register(gravisandType, "gravisand");
 	}

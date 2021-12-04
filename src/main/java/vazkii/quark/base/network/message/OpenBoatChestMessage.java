@@ -15,7 +15,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraftforge.network.NetworkEvent;
 import vazkii.arl.network.IMessage;
-import vazkii.quark.content.management.entity.ChestPassengerEntity;
+import vazkii.quark.content.management.entity.ChestPassenger;
 
 public class OpenBoatChestMessage implements IMessage {
 
@@ -31,7 +31,7 @@ public class OpenBoatChestMessage implements IMessage {
 				if(riding instanceof Boat) {
 					List<Entity> passengers = riding.getPassengers();
 					for(Entity passenger : passengers) {
-						if (passenger instanceof ChestPassengerEntity) {
+						if (passenger instanceof ChestPassenger) {
 							player.openMenu(new MenuProvider() {
 								@Nonnull
 								@Override
@@ -42,7 +42,7 @@ public class OpenBoatChestMessage implements IMessage {
 								@Nonnull
 								@Override
 								public AbstractContainerMenu createMenu(int id, @Nonnull Inventory inventory, @Nonnull Player player) {
-									return ChestMenu.threeRows(id, inventory, (ChestPassengerEntity) passenger);
+									return ChestMenu.threeRows(id, inventory, (ChestPassenger) passenger);
 								}
 							});
 

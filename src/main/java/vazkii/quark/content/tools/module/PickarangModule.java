@@ -16,14 +16,14 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.content.tools.client.render.PickarangRenderer;
-import vazkii.quark.content.tools.entity.PickarangEntity;
+import vazkii.quark.content.tools.client.render.entity.PickarangRenderer;
+import vazkii.quark.content.tools.entity.Pickarang;
 import vazkii.quark.content.tools.item.PickarangItem;
 
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true)
 public class PickarangModule extends QuarkModule {
 	
-	public static EntityType<PickarangEntity> pickarangType;
+	public static EntityType<Pickarang> pickarangType;
 
 	@Config(description = "How long it takes before the pickarang starts returning to the player if it doesn't hit anything.")
 	public static int timeout = 20;
@@ -53,11 +53,11 @@ public class PickarangModule extends QuarkModule {
 
 	@Override
 	public void construct() {
-		pickarangType = EntityType.Builder.<PickarangEntity>of(PickarangEntity::new, MobCategory.MISC)
+		pickarangType = EntityType.Builder.<Pickarang>of(Pickarang::new, MobCategory.MISC)
 				.sized(0.4F, 0.4F)
 				.clientTrackingRange(4)
 				.updateInterval(10) // update interval
-				.setCustomClientFactory((spawnEntity, world) -> new PickarangEntity(pickarangType, world))
+				.setCustomClientFactory((spawnEntity, world) -> new Pickarang(pickarangType, world))
 				.build("pickarang");
 		RegistryHelper.register(pickarangType, "pickarang");
 
@@ -91,14 +91,14 @@ public class PickarangModule extends QuarkModule {
 		isEnabled = this.enabled;
 	}
 	
-    private static final ThreadLocal<PickarangEntity> ACTIVE_PICKARANG = new ThreadLocal<>();
+    private static final ThreadLocal<Pickarang> ACTIVE_PICKARANG = new ThreadLocal<>();
 
-	public static void setActivePickarang(PickarangEntity pickarang) {
+	public static void setActivePickarang(Pickarang pickarang) {
 		ACTIVE_PICKARANG.set(pickarang);
 	}
 
 	public static DamageSource createDamageSource(Player player) {
-		PickarangEntity pickarang = ACTIVE_PICKARANG.get();
+		Pickarang pickarang = ACTIVE_PICKARANG.get();
 
 		if (pickarang == null)
 			return null;
@@ -111,8 +111,8 @@ public class PickarangModule extends QuarkModule {
 			return vanillaVal;
 		
 		Entity riding = entity.getVehicle();
-		if(riding instanceof PickarangEntity)
-			return ((PickarangEntity) riding).netherite;
+		if(riding instanceof Pickarang)
+			return ((Pickarang) riding).netherite;
 		
 		return false;
 	}

@@ -22,15 +22,15 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.type.CompoundBiomeConfig;
 import vazkii.quark.base.module.config.type.EntitySpawnConfig;
-import vazkii.quark.base.recipe.FlagIngredient;
+import vazkii.quark.base.recipe.ingredient.FlagIngredient;
 import vazkii.quark.base.world.EntitySpawnHandler;
-import vazkii.quark.content.mobs.client.render.FrogRenderer;
-import vazkii.quark.content.mobs.entity.FrogEntity;
+import vazkii.quark.content.mobs.client.render.entity.FrogRenderer;
+import vazkii.quark.content.mobs.entity.Frog;
 
 @LoadModule(category = ModuleCategory.MOBS, hasSubscriptions = true)
 public class FrogsModule extends QuarkModule {
 
-	public static EntityType<FrogEntity> frogType;
+	public static EntityType<Frog> frogType;
 
 	@Config
 	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(40, 1, 3, CompoundBiomeConfig.fromBiomeTypes(false, BiomeDictionary.Type.SWAMP));
@@ -71,17 +71,17 @@ public class FrogsModule extends QuarkModule {
 				() -> new FlagIngredient(Ingredient.of(goldenLeg), "frogs"),
 				Potions.LEAPING, Potions.LONG_LEAPING, Potions.STRONG_LEAPING);
 		
-		frogType = EntityType.Builder.<FrogEntity>of(FrogEntity::new, MobCategory.CREATURE)
+		frogType = EntityType.Builder.<Frog>of(Frog::new, MobCategory.CREATURE)
 				.sized(0.65F, 0.5F)
 				.clientTrackingRange(8)
-				.setCustomClientFactory((spawnEntity, world) -> new FrogEntity(frogType, world))
+				.setCustomClientFactory((spawnEntity, world) -> new Frog(frogType, world))
 				.build("frog");
 		RegistryHelper.register(frogType, "frog");
 		
 		EntitySpawnHandler.registerSpawn(this, frogType, MobCategory.CREATURE, Type.ON_GROUND, Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules, spawnConfig);
 		EntitySpawnHandler.addEgg(frogType, 0xbc9869, 0xffe6ad, spawnConfig);
 		
-		EntityAttributeHandler.put(frogType, FrogEntity::prepareAttributes);
+		EntityAttributeHandler.put(frogType, Frog::prepareAttributes);
 	}
 	
 	@Override

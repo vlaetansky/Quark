@@ -12,16 +12,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.TridentItem;
 import vazkii.quark.content.mobs.client.model.ShibaModel;
-import vazkii.quark.content.mobs.entity.ShibaEntity;
+import vazkii.quark.content.mobs.entity.Shiba;
 
-public class ShibaMouthItemLayer extends RenderLayer<ShibaEntity, ShibaModel> {
+public class ShibaMouthItemLayer extends RenderLayer<Shiba, ShibaModel> {
 
-	public ShibaMouthItemLayer(RenderLayerParent<ShibaEntity, ShibaModel> p_i50919_1_) {
+	public ShibaMouthItemLayer(RenderLayerParent<Shiba, ShibaModel> p_i50919_1_) {
 		super(p_i50919_1_);
 	}
 
 	@Override
-	public void render(PoseStack matrix, MultiBufferSource bufferIn, int packedLightIn, ShibaEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void render(PoseStack matrix, MultiBufferSource bufferIn, int packedLightIn, Shiba entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 		ItemStack item = entitylivingbaseIn.getMouthItem();
 		if(item.isEmpty())
 			return;

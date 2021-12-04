@@ -26,8 +26,8 @@ import vazkii.quark.base.module.config.type.CompoundBiomeConfig;
 import vazkii.quark.base.module.config.type.CostSensitiveEntitySpawnConfig;
 import vazkii.quark.base.module.config.type.EntitySpawnConfig;
 import vazkii.quark.base.world.EntitySpawnHandler;
-import vazkii.quark.content.mobs.client.render.FoxhoundRenderer;
-import vazkii.quark.content.mobs.entity.FoxhoundEntity;
+import vazkii.quark.content.mobs.client.render.entity.FoxhoundRenderer;
+import vazkii.quark.content.mobs.entity.Foxhound;
 
 /**
  * @author WireSegal
@@ -36,7 +36,7 @@ import vazkii.quark.content.mobs.entity.FoxhoundEntity;
 @LoadModule(category = ModuleCategory.MOBS, hasSubscriptions = true)
 public class FoxhoundModule extends QuarkModule {
 
-	public static EntityType<FoxhoundEntity> foxhoundType;
+	public static EntityType<Foxhound> foxhoundType;
 
 	@Config(description = "The chance coal will tame a foxhound")
 	public static double tameChance = 0.05;
@@ -51,15 +51,15 @@ public class FoxhoundModule extends QuarkModule {
 	
 	@Override
 	public void construct() {
-		foxhoundType = EntityType.Builder.of(FoxhoundEntity::new, MobCategory.CREATURE)
+		foxhoundType = EntityType.Builder.of(Foxhound::new, MobCategory.CREATURE)
 				.sized(0.8F, 0.8F)
 				.clientTrackingRange(8)
 				.fireImmune()
-				.setCustomClientFactory((spawnEntity, world) -> new FoxhoundEntity(foxhoundType, world))
+				.setCustomClientFactory((spawnEntity, world) -> new Foxhound(foxhoundType, world))
 				.build("foxhound");
 		RegistryHelper.register(foxhoundType, "foxhound");
 
-		EntitySpawnHandler.registerSpawn(this, foxhoundType, MobCategory.MONSTER, Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FoxhoundEntity::spawnPredicate, spawnConfig);
+		EntitySpawnHandler.registerSpawn(this, foxhoundType, MobCategory.MONSTER, Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Foxhound::spawnPredicate, spawnConfig);
 		EntitySpawnHandler.track(this, foxhoundType, MobCategory.MONSTER, lesserSpawnConfig, true);
 		
 		EntitySpawnHandler.addEgg(foxhoundType, 0x890d0d, 0xf2af4b, spawnConfig);
@@ -83,7 +83,7 @@ public class FoxhoundModule extends QuarkModule {
 		if(event.getTarget() != null 
 				&& event.getEntityLiving().getType() == EntityType.IRON_GOLEM 
 				&& event.getTarget().getType() == foxhoundType 
-				&& ((FoxhoundEntity) event.getTarget()).isTame())
+				&& ((Foxhound) event.getTarget()).isTame())
 			((IronGolem) event.getEntityLiving()).setTarget(null);
 	}
 }

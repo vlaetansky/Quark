@@ -60,7 +60,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import vazkii.quark.base.Quark;
-import vazkii.quark.base.client.config.gui.AbstractQScreen;
+import vazkii.quark.base.client.config.screen.AbstractQScreen;
 
 @EventBusSubscriber(modid = Quark.MOD_ID)
 public class MiscUtil {

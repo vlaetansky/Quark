@@ -9,9 +9,9 @@ import javax.annotation.Nullable;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.client.config.ConfigObject;
-import vazkii.quark.base.client.config.gui.CategoryScreen;
-import vazkii.quark.base.client.config.gui.WidgetWrapper;
-import vazkii.quark.base.client.config.gui.widget.PencilButton;
+import vazkii.quark.base.client.config.screen.CategoryScreen;
+import vazkii.quark.base.client.config.screen.WidgetWrapper;
+import vazkii.quark.base.client.config.screen.widgets.PencilButton;
 
 public abstract class AbstractStringInputObject<T> extends ConfigObject<T> {
 

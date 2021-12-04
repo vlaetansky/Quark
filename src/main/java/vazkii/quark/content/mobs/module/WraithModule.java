@@ -28,17 +28,17 @@ import vazkii.quark.base.module.config.type.CompoundBiomeConfig;
 import vazkii.quark.base.module.config.type.CostSensitiveEntitySpawnConfig;
 import vazkii.quark.base.module.config.type.EntitySpawnConfig;
 import vazkii.quark.base.world.EntitySpawnHandler;
-import vazkii.quark.content.mobs.client.render.SoulBeadRenderer;
-import vazkii.quark.content.mobs.client.render.WraithRenderer;
-import vazkii.quark.content.mobs.entity.SoulBeadEntity;
-import vazkii.quark.content.mobs.entity.WraithEntity;
+import vazkii.quark.content.mobs.client.render.entity.SoulBeadRenderer;
+import vazkii.quark.content.mobs.client.render.entity.WraithRenderer;
+import vazkii.quark.content.mobs.entity.SoulBead;
+import vazkii.quark.content.mobs.entity.Wraith;
 import vazkii.quark.content.mobs.item.SoulBeadItem;
 
 @LoadModule(category = ModuleCategory.MOBS)
 public class WraithModule extends QuarkModule {
 	
-	public static EntityType<WraithEntity> wraithType;
-	public static EntityType<SoulBeadEntity> soulBeadType;
+	public static EntityType<Wraith> wraithType;
+	public static EntityType<SoulBead> soulBeadType;
 
 	@Config(description = "List of sound sets to use with wraiths.\nThree sounds must be provided per entry, separated by | (in the format idle|hurt|death). Leave blank for no sound (i.e. if a mob has no ambient noise)")
 	private static List<String> wraithSounds  = Lists.newArrayList(
@@ -75,27 +75,27 @@ public class WraithModule extends QuarkModule {
 	public void construct() {
 		new SoulBeadItem(this);
 		
-		wraithType = EntityType.Builder.of(WraithEntity::new, MobCategory.MONSTER)
+		wraithType = EntityType.Builder.of(Wraith::new, MobCategory.MONSTER)
 				.sized(0.6F, 1.95F)
 				.clientTrackingRange(8)
 				.fireImmune()
-				.setCustomClientFactory((spawnEntity, world) -> new WraithEntity(wraithType, world))
+				.setCustomClientFactory((spawnEntity, world) -> new Wraith(wraithType, world))
 				.build("wraith");
 		RegistryHelper.register(wraithType, "wraith");
 		
-		soulBeadType = EntityType.Builder.of(SoulBeadEntity::new, MobCategory.MISC)
+		soulBeadType = EntityType.Builder.of(SoulBead::new, MobCategory.MISC)
 				.sized(0F, 0F)
 				.clientTrackingRange(4)
 				.updateInterval(10) // update frequency
 				.fireImmune()
-				.setCustomClientFactory((spawnEntity, world) -> new SoulBeadEntity(soulBeadType, world))
+				.setCustomClientFactory((spawnEntity, world) -> new SoulBead(soulBeadType, world))
 				.build("soul_bead");
 		RegistryHelper.register(soulBeadType, "soul_bead");
 
 		EntitySpawnHandler.registerSpawn(this, wraithType, MobCategory.MONSTER, Type.ON_GROUND, Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules, spawnConfig);
 		EntitySpawnHandler.addEgg(wraithType, 0xececec, 0xbdbdbd, spawnConfig);
 		
-		EntityAttributeHandler.put(wraithType, WraithEntity::registerAttributes);
+		EntityAttributeHandler.put(wraithType, Wraith::registerAttributes);
 	}
 	
 	@Override

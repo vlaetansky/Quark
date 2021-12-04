@@ -24,17 +24,17 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.content.mobs.client.model.StonelingModel;
-import vazkii.quark.content.mobs.entity.StonelingEntity;
+import vazkii.quark.content.mobs.entity.Stoneling;
 
 @OnlyIn(Dist.CLIENT)
-public class StonelingItemLayer extends RenderLayer<StonelingEntity, StonelingModel> {
+public class StonelingItemLayer extends RenderLayer<Stoneling, StonelingModel> {
 
-	public StonelingItemLayer(RenderLayerParent<StonelingEntity, StonelingModel> renderer) {
+	public StonelingItemLayer(RenderLayerParent<Stoneling, StonelingModel> renderer) {
 		super(renderer);
 	}
 	
 	@Override
-	public void render(PoseStack matrix, MultiBufferSource buffer, int light, StonelingEntity stoneling,  float limbAngle, float limbDistance, float tickDelta, float customAngle, float headYaw, float headPitch) {
+	public void render(PoseStack matrix, MultiBufferSource buffer, int light, Stoneling stoneling,  float limbAngle, float limbDistance, float tickDelta, float customAngle, float headYaw, float headPitch) {
 		ItemStack stack = stoneling.getCarryingItem();
 		if (!stack.isEmpty()) {
 			boolean isBlock = stack.getItem() instanceof BlockItem;

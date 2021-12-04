@@ -33,7 +33,7 @@ import net.minecraft.world.phys.Vec3;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.QuarkModule;
-import vazkii.quark.content.tools.entity.PickarangEntity;
+import vazkii.quark.content.tools.entity.Pickarang;
 import vazkii.quark.content.tools.module.PickarangModule;
 
 public class PickarangItem extends QuarkItem {
@@ -97,7 +97,7 @@ public class PickarangItem extends QuarkItem {
 		if(!worldIn.isClientSide)  {
 			Inventory inventory = playerIn.getInventory();
 			int slot = handIn == InteractionHand.OFF_HAND ? inventory.getContainerSize() - 1 : inventory.selected;
-			PickarangEntity entity = new PickarangEntity(worldIn, playerIn);
+			Pickarang entity = new Pickarang(worldIn, playerIn);
 			entity.setThrowData(slot, itemstack, isNetherite);
 			entity.shoot(playerIn, playerIn.getXRot(), playerIn.getYRot(), 0.0F, 1.5F + eff * 0.325F, 0F);
 			worldIn.addFreshEntity(entity);

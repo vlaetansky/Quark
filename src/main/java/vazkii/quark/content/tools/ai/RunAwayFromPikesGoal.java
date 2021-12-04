@@ -14,7 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import vazkii.quark.content.tools.entity.SkullPikeEntity;
+import vazkii.quark.content.tools.entity.SkullPike;
 
 // Mostly a copy of AvoidEntityGoal cleaned up to work with pikes
 public class RunAwayFromPikesGoal extends Goal {
@@ -22,7 +22,7 @@ public class RunAwayFromPikesGoal extends Goal {
 	protected final PathfinderMob entity;
 	private final double farSpeed;
 	private final double nearSpeed;
-	protected SkullPikeEntity avoidTarget;
+	protected SkullPike avoidTarget;
 	protected final float avoidDistance;
 	protected Path path;
 	protected final PathNavigation navigation;
@@ -55,16 +55,16 @@ public class RunAwayFromPikesGoal extends Goal {
 	}
 
 	@Nullable
-	private SkullPikeEntity getClosestEntity(Level world, LivingEntity p_225318_3_, double p_225318_4_, double p_225318_6_, double p_225318_8_, AABB p_225318_10_) {
-		return getClosestEntity(world.getEntitiesOfClass(SkullPikeEntity.class, p_225318_10_, null), p_225318_3_, p_225318_4_, p_225318_6_, p_225318_8_);
+	private SkullPike getClosestEntity(Level world, LivingEntity p_225318_3_, double p_225318_4_, double p_225318_6_, double p_225318_8_, AABB p_225318_10_) {
+		return getClosestEntity(world.getEntitiesOfClass(SkullPike.class, p_225318_10_, null), p_225318_3_, p_225318_4_, p_225318_6_, p_225318_8_);
 	}
 
 	@Nullable
-	private SkullPikeEntity getClosestEntity(List<SkullPikeEntity> entities, LivingEntity target, double x, double y, double z) {
+	private SkullPike getClosestEntity(List<SkullPike> entities, LivingEntity target, double x, double y, double z) {
 		double d0 = -1.0D;
-		SkullPikeEntity t = null;
+		SkullPike t = null;
 
-		for(SkullPikeEntity t1 : entities) {
+		for(SkullPike t1 : entities) {
 			if(!t1.isVisible(target))
 				continue;
 			

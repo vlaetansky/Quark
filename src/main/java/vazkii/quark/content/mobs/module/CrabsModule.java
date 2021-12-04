@@ -31,11 +31,11 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.type.CompoundBiomeConfig;
 import vazkii.quark.base.module.config.type.EntitySpawnConfig;
-import vazkii.quark.base.recipe.FlagIngredient;
+import vazkii.quark.base.recipe.ingredient.FlagIngredient;
 import vazkii.quark.base.util.QuarkEffect;
 import vazkii.quark.base.world.EntitySpawnHandler;
-import vazkii.quark.content.mobs.client.render.CrabRenderer;
-import vazkii.quark.content.mobs.entity.CrabEntity;
+import vazkii.quark.content.mobs.client.render.entity.CrabRenderer;
+import vazkii.quark.content.mobs.entity.Crab;
 
 /**
  * @author WireSegal
@@ -44,7 +44,7 @@ import vazkii.quark.content.mobs.entity.CrabEntity;
 @LoadModule(category = ModuleCategory.MOBS, hasSubscriptions = true)
 public class CrabsModule extends QuarkModule {
 
-	public static EntityType<CrabEntity> crabType;
+	public static EntityType<Crab> crabType;
 
 	@Config
 	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(5, 1, 3, CompoundBiomeConfig.fromBiomeTypes(false, BiomeDictionary.Type.BEACH));
@@ -81,17 +81,17 @@ public class CrabsModule extends QuarkModule {
 		BrewingHandler.addPotionMix("crab_brewing",
 				() -> new FlagIngredient(Ingredient.of(shell), "crabs"), resilience);
 
-		crabType = EntityType.Builder.<CrabEntity>of(CrabEntity::new, MobCategory.CREATURE)
+		crabType = EntityType.Builder.<Crab>of(Crab::new, MobCategory.CREATURE)
 				.sized(0.9F, 0.5F)
 				.clientTrackingRange(8)
-				.setCustomClientFactory((spawnEntity, world) -> new CrabEntity(crabType, world))
+				.setCustomClientFactory((spawnEntity, world) -> new Crab(crabType, world))
 				.build("crab");
 		RegistryHelper.register(crabType, "crab");
 
-		EntitySpawnHandler.registerSpawn(this, crabType, MobCategory.CREATURE, Type.ON_GROUND, Types.MOTION_BLOCKING_NO_LEAVES, CrabEntity::spawnPredicate, spawnConfig);
+		EntitySpawnHandler.registerSpawn(this, crabType, MobCategory.CREATURE, Type.ON_GROUND, Types.MOTION_BLOCKING_NO_LEAVES, Crab::spawnPredicate, spawnConfig);
 		EntitySpawnHandler.addEgg(crabType, 0x893c22, 0x916548, spawnConfig);
 		
-		EntityAttributeHandler.put(crabType, CrabEntity::prepareAttributes);
+		EntityAttributeHandler.put(crabType, Crab::prepareAttributes);
 	}
 
 	@Override

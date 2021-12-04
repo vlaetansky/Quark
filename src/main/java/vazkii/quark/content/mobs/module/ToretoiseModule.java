@@ -22,13 +22,13 @@ import vazkii.quark.base.module.config.type.CompoundBiomeConfig;
 import vazkii.quark.base.module.config.type.DimensionConfig;
 import vazkii.quark.base.module.config.type.EntitySpawnConfig;
 import vazkii.quark.base.world.EntitySpawnHandler;
-import vazkii.quark.content.mobs.client.render.ToretoiseRenderer;
-import vazkii.quark.content.mobs.entity.ToretoiseEntity;
+import vazkii.quark.content.mobs.client.render.entity.ToretoiseRenderer;
+import vazkii.quark.content.mobs.entity.Toretoise;
 
 @LoadModule(category = ModuleCategory.MOBS, hasSubscriptions = true)
 public class ToretoiseModule extends QuarkModule {
 
-	public static EntityType<ToretoiseEntity> toretoiseType;
+	public static EntityType<Toretoise> toretoiseType;
 	
 	@Config public static int maxYLevel = 32;
 	
@@ -50,19 +50,19 @@ public class ToretoiseModule extends QuarkModule {
 	
 	@Override
 	public void construct() {
-		toretoiseType = EntityType.Builder.<ToretoiseEntity>of(ToretoiseEntity::new, MobCategory.CREATURE)
+		toretoiseType = EntityType.Builder.<Toretoise>of(Toretoise::new, MobCategory.CREATURE)
 				.sized(2F, 1F)
 				.clientTrackingRange(8)
 				.fireImmune()
-				.setCustomClientFactory((spawnEntity, world) -> new ToretoiseEntity(toretoiseType, world))
+				.setCustomClientFactory((spawnEntity, world) -> new Toretoise(toretoiseType, world))
 				.build("toretoise");
 
 		RegistryHelper.register(toretoiseType, "toretoise");
 		
-		EntitySpawnHandler.registerSpawn(this, toretoiseType, MobCategory.MONSTER, Type.ON_GROUND, Types.MOTION_BLOCKING_NO_LEAVES, ToretoiseEntity::spawnPredicate, spawnConfig);
+		EntitySpawnHandler.registerSpawn(this, toretoiseType, MobCategory.MONSTER, Type.ON_GROUND, Types.MOTION_BLOCKING_NO_LEAVES, Toretoise::spawnPredicate, spawnConfig);
 		EntitySpawnHandler.addEgg(toretoiseType, 0x55413b, 0x383237, spawnConfig);
 		
-		EntityAttributeHandler.put(toretoiseType, ToretoiseEntity::prepareAttributes);
+		EntityAttributeHandler.put(toretoiseType, Toretoise::prepareAttributes);
 	}
 	
 	@Override

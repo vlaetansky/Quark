@@ -52,8 +52,8 @@ import vazkii.quark.content.tweaks.client.emote.EmoteBase;
 import vazkii.quark.content.tweaks.client.emote.EmoteDescriptor;
 import vazkii.quark.content.tweaks.client.emote.EmoteHandler;
 import vazkii.quark.content.tweaks.client.emote.ModelAccessor;
-import vazkii.quark.content.tweaks.client.gui.EmoteButton;
-import vazkii.quark.content.tweaks.client.gui.TranslucentButton;
+import vazkii.quark.content.tweaks.client.screen.widgets.EmoteButton;
+import vazkii.quark.content.tweaks.client.screen.widgets.TranslucentButton;
 
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class EmotesModule extends QuarkModule {

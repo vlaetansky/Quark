@@ -22,8 +22,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.QuarkModule;
-import vazkii.quark.content.mobs.entity.EnumStonelingVariant;
-import vazkii.quark.content.mobs.entity.StonelingEntity;
+import vazkii.quark.content.mobs.entity.Stoneling;
+import vazkii.quark.content.mobs.entity.Stoneling.StonelingVariant;
 import vazkii.quark.content.mobs.module.StonelingsModule;
 
 public class DiamondHeartItem extends QuarkItem {
@@ -47,8 +47,8 @@ public class DiamondHeartItem extends QuarkItem {
 
 			if (player.mayUseItemAt(pos, facing, stack) && stateAt.getDestroySpeed(world, pos) != -1) {
 
-				EnumStonelingVariant variant = null;
-				for (EnumStonelingVariant possibleVariant : EnumStonelingVariant.values()) {
+				StonelingVariant variant = null;
+				for (StonelingVariant possibleVariant : StonelingVariant.values()) {
 					if (possibleVariant.getBlocks().contains(stateAt.getBlock()))
 						variant = possibleVariant;
 				}
@@ -58,7 +58,7 @@ public class DiamondHeartItem extends QuarkItem {
 						world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 						world.levelEvent(2001, pos, Block.getId(stateAt));
 
-						StonelingEntity stoneling = new StonelingEntity(StonelingsModule.stonelingType, world);
+						Stoneling stoneling = new Stoneling(StonelingsModule.stonelingType, world);
 						stoneling.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 						stoneling.setPlayerMade(true);
 						stoneling.setYRot(player.getYRot() + 180F);

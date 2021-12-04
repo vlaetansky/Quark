@@ -29,12 +29,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
 import vazkii.quark.base.handler.QuarkSounds;
-import vazkii.quark.content.mobs.entity.StonelingEntity;
+import vazkii.quark.content.mobs.entity.Stoneling;
 
 public class RunAndPoofGoal<T extends Entity> extends Goal {
 
 	private final Predicate<Entity> canBeSeenSelector;
-	protected StonelingEntity entity;
+	protected Stoneling entity;
 	private final double farSpeed;
 	private final double nearSpeed;
 	protected T closestLivingEntity;
@@ -44,11 +44,11 @@ public class RunAndPoofGoal<T extends Entity> extends Goal {
 	private final Class<T> classToAvoid;
 	private final Predicate<T> avoidTargetSelector;
 
-	public RunAndPoofGoal(StonelingEntity entity, Class<T> classToAvoid, float avoidDistance, double farSpeed, double nearSpeed) {
+	public RunAndPoofGoal(Stoneling entity, Class<T> classToAvoid, float avoidDistance, double farSpeed, double nearSpeed) {
 		this(entity, classToAvoid, t -> true, avoidDistance, farSpeed, nearSpeed);
 	}
 
-	public RunAndPoofGoal(StonelingEntity entity, Class<T> classToAvoid, Predicate<T> avoidTargetSelector, float avoidDistance, double farSpeed, double nearSpeed) {
+	public RunAndPoofGoal(Stoneling entity, Class<T> classToAvoid, Predicate<T> avoidTargetSelector, float avoidDistance, double farSpeed, double nearSpeed) {
 		this.canBeSeenSelector = target -> target != null && target.isAlive() && entity.getSensing().hasLineOfSight(target) && !entity.isAlliedTo(target);
 		this.entity = entity;
 		this.classToAvoid = classToAvoid;

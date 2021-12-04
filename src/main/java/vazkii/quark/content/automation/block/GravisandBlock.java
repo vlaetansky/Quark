@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.module.QuarkModule;
-import vazkii.quark.content.automation.entity.GravisandEntity;
+import vazkii.quark.content.automation.entity.Gravisand;
 
 public class GravisandBlock extends QuarkBlock {
 
@@ -76,7 +76,7 @@ public class GravisandBlock extends QuarkBlock {
 	private boolean tryFall(Level worldIn, BlockPos pos, Direction facing) {
 		BlockPos target = pos.relative(facing);
 		if((worldIn.isEmptyBlock(target) || canFallThrough(worldIn, pos, worldIn.getBlockState(target))) && pos.getY() >= 0) {
-			GravisandEntity entity = new GravisandEntity(worldIn, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, facing.getStepY());
+			Gravisand entity = new Gravisand(worldIn, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, facing.getStepY());
 			worldIn.addFreshEntity(entity);
 			return true;
 		}

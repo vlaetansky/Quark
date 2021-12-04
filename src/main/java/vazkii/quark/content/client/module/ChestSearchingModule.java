@@ -56,7 +56,7 @@ import vazkii.quark.base.handler.SimilarBlockTypeHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
-import vazkii.quark.content.management.client.gui.MiniInventoryButton;
+import vazkii.quark.content.management.client.screen.widgets.MiniInventoryButton;
 
 @LoadModule(category = ModuleCategory.CLIENT, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class ChestSearchingModule extends QuarkModule {

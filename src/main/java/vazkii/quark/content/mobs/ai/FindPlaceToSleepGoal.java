@@ -19,16 +19,16 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import vazkii.quark.content.mobs.entity.FoxhoundEntity;
+import vazkii.quark.content.mobs.entity.Foxhound;
 
 public class FindPlaceToSleepGoal extends MoveToBlockGoal {
-	private final FoxhoundEntity foxhound;
+	private final Foxhound foxhound;
 
 	private final boolean furnaceOnly;
 
 	private boolean hadSlept = false;
 
-	public FindPlaceToSleepGoal(FoxhoundEntity foxhound, double speed, boolean furnaceOnly) {
+	public FindPlaceToSleepGoal(Foxhound foxhound, double speed, boolean furnaceOnly) {
 		super(foxhound, speed, 8);
 		this.foxhound = foxhound;
 		this.furnaceOnly = furnaceOnly;

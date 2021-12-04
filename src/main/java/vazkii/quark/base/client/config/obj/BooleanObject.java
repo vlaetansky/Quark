@@ -7,9 +7,9 @@ import java.util.function.Supplier;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.client.config.ConfigObject;
-import vazkii.quark.base.client.config.gui.CategoryScreen;
-import vazkii.quark.base.client.config.gui.WidgetWrapper;
-import vazkii.quark.base.client.config.gui.widget.CheckboxButton;
+import vazkii.quark.base.client.config.screen.CategoryScreen;
+import vazkii.quark.base.client.config.screen.WidgetWrapper;
+import vazkii.quark.base.client.config.screen.widgets.CheckboxButton;
 
 public class BooleanObject extends ConfigObject<Boolean> {
 

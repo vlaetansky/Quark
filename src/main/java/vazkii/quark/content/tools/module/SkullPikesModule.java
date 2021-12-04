@@ -26,13 +26,13 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.content.tools.ai.RunAwayFromPikesGoal;
-import vazkii.quark.content.tools.client.render.SkullPikeRenderer;
-import vazkii.quark.content.tools.entity.SkullPikeEntity;
+import vazkii.quark.content.tools.client.render.entity.SkullPikeRenderer;
+import vazkii.quark.content.tools.entity.SkullPike;
 
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
 public class SkullPikesModule extends QuarkModule {
 
-	public static EntityType<SkullPikeEntity> skullPikeType;
+	public static EntityType<SkullPike> skullPikeType;
 
     public static Tag<Block> pikeTrophiesTag;
     
@@ -40,12 +40,12 @@ public class SkullPikesModule extends QuarkModule {
 	
 	@Override
 	public void construct() {
-		skullPikeType = EntityType.Builder.<SkullPikeEntity>of(SkullPikeEntity::new, MobCategory.MISC)
+		skullPikeType = EntityType.Builder.<SkullPike>of(SkullPike::new, MobCategory.MISC)
 				.sized(0.5F, 0.5F)
 				.clientTrackingRange(3)
 				.updateInterval(Integer.MAX_VALUE) // update interval
 				.setShouldReceiveVelocityUpdates(false)
-				.setCustomClientFactory((spawnEntity, world) -> new SkullPikeEntity(skullPikeType, world))
+				.setCustomClientFactory((spawnEntity, world) -> new SkullPike(skullPikeType, world))
 				.build("skull_pike");
 		RegistryHelper.register(skullPikeType, "skull_pike");
 	}
@@ -75,7 +75,7 @@ public class SkullPikesModule extends QuarkModule {
 				BlockState downState = world.getBlockState(down);
 				
 				if(downState.is(BlockTags.FENCES)) {
-					SkullPikeEntity pike = new SkullPikeEntity(skullPikeType, world);
+					SkullPike pike = new SkullPike(skullPikeType, world);
 					pike.setPos(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
 					world.addFreshEntity(pike);
 				}

@@ -13,9 +13,9 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
-import vazkii.quark.content.mobs.entity.FrogEntity;
+import vazkii.quark.content.mobs.entity.Frog;
 
-public class FrogModel extends EntityModel<FrogEntity> {
+public class FrogModel extends EntityModel<Frog> {
 
 	private float frogSize;
 
@@ -89,7 +89,7 @@ public class FrogModel extends EntityModel<FrogEntity> {
 	}
 
 	@Override
-	public void prepareMobModel(FrogEntity frog, float limbSwing, float limbSwingAmount, float partialTickTime) {
+	public void prepareMobModel(Frog frog, float limbSwing, float limbSwingAmount, float partialTickTime) {
 		int rawTalkTime = frog.getTalkTime();
 
 		headBottom.xRot = (float) Math.PI / 120;
@@ -104,7 +104,7 @@ public class FrogModel extends EntityModel<FrogEntity> {
 	}
 
 	@Override
-	public void setupAnim(FrogEntity frog, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Frog frog, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		frogSize = frog.getSizeModifier();
 
 		rightArm.xRot = Mth.cos(limbSwing * 2 / 3) * 1F * limbSwingAmount;

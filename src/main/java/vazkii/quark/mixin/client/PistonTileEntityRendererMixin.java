@@ -10,14 +10,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.PistonHeadRenderer;
 import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
-import vazkii.quark.content.automation.client.render.QuarkPistonTileEntityRenderer;
+import vazkii.quark.content.automation.client.render.QuarkPistonBlockEntityRenderer;
 
 @Mixin(PistonHeadRenderer.class)
 public class PistonTileEntityRendererMixin {
 
 	@Inject(method = "render", at = @At("HEAD"), cancellable = true)
 	private void renderPistonBlock(PistonMovingBlockEntity tileEntityIn, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn, CallbackInfo callbackInfo) {
-		if(QuarkPistonTileEntityRenderer.renderPistonBlock(tileEntityIn, partialTicks, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn))
+		if(QuarkPistonBlockEntityRenderer.renderPistonBlock(tileEntityIn, partialTicks, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn))
 			callbackInfo.cancel();
 	}
 }

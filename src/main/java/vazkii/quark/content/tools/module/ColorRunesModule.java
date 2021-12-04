@@ -32,7 +32,7 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.content.tools.client.GlintRenderType;
+import vazkii.quark.content.tools.client.render.GlintRenderTypes;
 import vazkii.quark.content.tools.item.RuneItem;
 
 /**
@@ -85,37 +85,37 @@ public class ColorRunesModule extends QuarkModule {
 
 	@OnlyIn(Dist.CLIENT)
 	public static RenderType getGlint() {
-		return renderType(GlintRenderType.glint, RenderType::glint);
+		return renderType(GlintRenderTypes.glint, RenderType::glint);
 	}
 	
 	@OnlyIn(Dist.CLIENT)
 	public static RenderType getGlintTranslucent() {
-		return renderType(GlintRenderType.glintTranslucent, RenderType::glintTranslucent);
+		return renderType(GlintRenderTypes.glintTranslucent, RenderType::glintTranslucent);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static RenderType getEntityGlint() {
-		return renderType(GlintRenderType.entityGlint, RenderType::entityGlint);
+		return renderType(GlintRenderTypes.entityGlint, RenderType::entityGlint);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static RenderType getGlintDirect() {
-		return renderType(GlintRenderType.glintDirect, RenderType::glintDirect);
+		return renderType(GlintRenderTypes.glintDirect, RenderType::glintDirect);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static RenderType getEntityGlintDirect() {
-		return renderType(GlintRenderType.entityGlintDirect, RenderType::entityGlintDirect);
+		return renderType(GlintRenderTypes.entityGlintDirect, RenderType::entityGlintDirect);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static RenderType getArmorGlint() {
-		return renderType(GlintRenderType.armorGlint, RenderType::armorGlint);
+		return renderType(GlintRenderTypes.armorGlint, RenderType::armorGlint);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static RenderType getArmorEntityGlint() {
-		return renderType(GlintRenderType.armorEntityGlint, RenderType::armorEntityGlint);
+		return renderType(GlintRenderTypes.armorEntityGlint, RenderType::armorEntityGlint);
 	}
 
 	private static RenderType renderType(List<RenderType> list, Supplier<RenderType> vanilla) {

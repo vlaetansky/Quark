@@ -9,16 +9,16 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.AbstractArrow.Pickup;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
-import vazkii.quark.content.mobs.entity.ShibaEntity;
+import vazkii.quark.content.mobs.entity.Shiba;
 
 public class FetchArrowGoal extends Goal {
 
-	final ShibaEntity shiba;
+	final Shiba shiba;
 	private int timeToRecalcPath;
 	private final PathNavigation navigator;
 	int timeTilNextJump = 20;
 
-	public FetchArrowGoal(ShibaEntity shiba) {
+	public FetchArrowGoal(Shiba shiba) {
 		this.shiba = shiba;
 		this.navigator = shiba.getNavigation();
 

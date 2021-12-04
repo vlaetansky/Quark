@@ -55,7 +55,7 @@ import vazkii.quark.content.building.block.VariantChestBlock;
 import vazkii.quark.content.building.block.VariantTrappedChestBlock;
 import vazkii.quark.content.building.block.be.VariantChestBlockEntity;
 import vazkii.quark.content.building.block.be.VariantTrappedChestBlockEntity;
-import vazkii.quark.content.building.client.render.VariantChestTileEntityRenderer;
+import vazkii.quark.content.building.client.render.be.VariantChestRenderer;
 import vazkii.quark.content.building.recipe.MixedChestRecipe;
 
 @LoadModule(category = ModuleCategory.BUILDING, hasSubscriptions = true)
@@ -239,8 +239,8 @@ public class VariantChestsModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		BlockEntityRenderers.register(chestTEType, VariantChestTileEntityRenderer::new);
-		BlockEntityRenderers.register(trappedChestTEType, VariantChestTileEntityRenderer::new);
+		BlockEntityRenderers.register(chestTEType, VariantChestRenderer::new);
+		BlockEntityRenderers.register(trappedChestTEType, VariantChestRenderer::new);
 	}
 	
 	@Override
@@ -343,7 +343,7 @@ public class VariantChestsModule extends QuarkModule {
 	public void textureStitch(TextureStitchEvent.Pre event) {
 		if(event.getAtlas().location().toString().equals("minecraft:textures/atlas/chest.png")) {
 			for(Block b : allChests)
-				VariantChestTileEntityRenderer.accept(event, b);
+				VariantChestRenderer.accept(event, b);
 		}
 	}
 	

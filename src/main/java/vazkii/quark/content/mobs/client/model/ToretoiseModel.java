@@ -15,11 +15,11 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import vazkii.arl.util.ClientTicker;
-import vazkii.quark.content.mobs.entity.ToretoiseEntity;
+import vazkii.quark.content.mobs.entity.Toretoise;
 
-public class ToretoiseModel extends EntityModel<ToretoiseEntity> {
+public class ToretoiseModel extends EntityModel<Toretoise> {
 
-	private ToretoiseEntity entity;
+	private Toretoise entity;
 	private float animFrames;
 
 	public ModelPart body;
@@ -222,7 +222,7 @@ public class ToretoiseModel extends EntityModel<ToretoiseEntity> {
 	}
 
 	@Override
-	public void setupAnim(ToretoiseEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Toretoise entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.entity = entity;
 		animFrames = limbSwing;
 	}
@@ -231,8 +231,8 @@ public class ToretoiseModel extends EntityModel<ToretoiseEntity> {
 	public void renderToBuffer(PoseStack matrix, VertexConsumer vb, int p_225598_3_, int p_225598_4_, float p_225598_5_, float p_225598_6_, float p_225598_7_, float p_225598_8_) {
 		matrix.pushPose();
 		int bufferTime = 10;
-		if(entity.angeryTicks > 0 && entity.angeryTicks < ToretoiseEntity.ANGERY_TIME - bufferTime) {
-			double angeryTime = (entity.angeryTicks - ClientTicker.partialTicks) / (ToretoiseEntity.ANGERY_TIME - bufferTime) * Math.PI;
+		if(entity.angeryTicks > 0 && entity.angeryTicks < Toretoise.ANGERY_TIME - bufferTime) {
+			double angeryTime = (entity.angeryTicks - ClientTicker.partialTicks) / (Toretoise.ANGERY_TIME - bufferTime) * Math.PI;
 			angeryTime = Math.sin(angeryTime) * -20;
 
 			matrix.translate(0, 1., 1);

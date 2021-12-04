@@ -11,13 +11,13 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
-import vazkii.quark.content.mobs.entity.FoxhoundEntity;
+import vazkii.quark.content.mobs.entity.Foxhound;
 
 /**
  * ModelFoxhound - McVinnyq
  * Created using Tabula 7.0.0
  */
-public class FoxhoundModel extends EntityModel<FoxhoundEntity> {
+public class FoxhoundModel extends EntityModel<Foxhound> {
 
 	public final ModelPart head;
 	public final ModelPart rightFrontLeg;
@@ -31,7 +31,7 @@ public class FoxhoundModel extends EntityModel<FoxhoundEntity> {
 	public final ModelPart tail;
 	public final ModelPart fluff;
 
-	private FoxhoundEntity entity;
+	private Foxhound entity;
 
 	public FoxhoundModel(ModelPart root) {
 		head = root.getChild("head");
@@ -121,7 +121,7 @@ public class FoxhoundModel extends EntityModel<FoxhoundEntity> {
 	}
 
 	@Override
-	public void prepareMobModel(FoxhoundEntity hound, float limbSwing, float limbSwingAmount, float partialTickTime) {
+	public void prepareMobModel(Foxhound hound, float limbSwing, float limbSwingAmount, float partialTickTime) {
 		this.entity = hound;
 		if (hound.isOrderedToSit() || hound.getRemainingPersistentAngerTime() > 0)
 			this.tail.xRot = -0.6544984695F;
@@ -182,7 +182,7 @@ public class FoxhoundModel extends EntityModel<FoxhoundEntity> {
 	}
 
 	@Override
-	public void setupAnim(FoxhoundEntity entity, float p_225597_2_, float p_225597_3_, float p_225597_4_, float yaw, float pitch) {
+	public void setupAnim(Foxhound entity, float p_225597_2_, float p_225597_3_, float p_225597_4_, float yaw, float pitch) {
 		if (!entity.isSleeping()) {
 			head.yRot += yaw * 0.017453292F;
 			head.xRot += pitch * 0.017453292F;

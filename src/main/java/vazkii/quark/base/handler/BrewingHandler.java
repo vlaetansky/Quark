@@ -22,7 +22,7 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
-import vazkii.quark.base.recipe.FlagIngredient;
+import vazkii.quark.base.recipe.ingredient.FlagIngredient;
 import vazkii.quark.base.util.PotionReflection;
 
 /**

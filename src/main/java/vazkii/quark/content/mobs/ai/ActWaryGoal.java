@@ -20,11 +20,11 @@ import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import vazkii.quark.base.util.MutableVectorHolder;
-import vazkii.quark.content.mobs.entity.StonelingEntity;
+import vazkii.quark.content.mobs.entity.Stoneling;
 
 public class ActWaryGoal extends WaterAvoidingRandomStrollGoal {
 
-	private final StonelingEntity stoneling;
+	private final Stoneling stoneling;
 
 	private final BooleanSupplier scaredBySuddenMovement;
 
@@ -35,7 +35,7 @@ public class ActWaryGoal extends WaterAvoidingRandomStrollGoal {
 	private final Map<Player, MutableVectorHolder> lastPositions = new WeakHashMap<>();
 	private final Map<Player, MutableVectorHolder> lastSpeeds = new WeakHashMap<>();
 
-	public ActWaryGoal(StonelingEntity stoneling, double speed, double range, BooleanSupplier scaredBySuddenMovement) {
+	public ActWaryGoal(Stoneling stoneling, double speed, double range, BooleanSupplier scaredBySuddenMovement) {
 		super(stoneling, speed, 1F);
 		this.stoneling = stoneling;
 		this.range = range;

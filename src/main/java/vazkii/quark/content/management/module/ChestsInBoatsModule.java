@@ -32,22 +32,22 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.OpenBoatChestMessage;
-import vazkii.quark.content.management.client.render.ChestPassengerRenderer;
-import vazkii.quark.content.management.entity.ChestPassengerEntity;
+import vazkii.quark.content.management.client.render.entity.ChestPassengerRenderer;
+import vazkii.quark.content.management.entity.ChestPassenger;
 
 @LoadModule(category = ModuleCategory.MANAGEMENT, hasSubscriptions = true)
 public class ChestsInBoatsModule extends QuarkModule {
 
-	public static EntityType<ChestPassengerEntity> chestPassengerEntityType;
+	public static EntityType<ChestPassenger> chestPassengerEntityType;
 
 	private static Tag<Item> boatableChestsTag;
 	
 	@Override
 	public void construct() {
-		chestPassengerEntityType = EntityType.Builder.<ChestPassengerEntity>of(ChestPassengerEntity::new, MobCategory.MISC)
+		chestPassengerEntityType = EntityType.Builder.<ChestPassenger>of(ChestPassenger::new, MobCategory.MISC)
 				.sized(0.8F, 0.8F)
 				.updateInterval(128) // update interval
-				.setCustomClientFactory((spawnEntity, world) -> new ChestPassengerEntity(chestPassengerEntityType, world))
+				.setCustomClientFactory((spawnEntity, world) -> new ChestPassenger(chestPassengerEntityType, world))
 				.build("chest_passenger");
 		RegistryHelper.register(chestPassengerEntityType, "chest_passenger");
 	}
@@ -85,7 +85,7 @@ public class ChestsInBoatsModule extends QuarkModule {
 					if (!player.isCreative())
 						stack.shrink(1);
 
-					ChestPassengerEntity passenger = new ChestPassengerEntity(world, chestStack);
+					ChestPassenger passenger = new ChestPassenger(world, chestStack);
 					Vec3 pos = target.position();
 					passenger.setPos(pos.x, pos.y, pos.z);
 					passenger.setYRot(target.getYRot());
@@ -109,7 +109,7 @@ public class ChestsInBoatsModule extends QuarkModule {
 			if(riding instanceof Boat) {
 				List<Entity> passengers = riding.getPassengers();
 				for(Entity passenger : passengers)
-					if(passenger instanceof ChestPassengerEntity) {
+					if(passenger instanceof ChestPassenger) {
 						QuarkNetwork.sendToServer(new OpenBoatChestMessage());
 						event.setCanceled(true);
 						return;

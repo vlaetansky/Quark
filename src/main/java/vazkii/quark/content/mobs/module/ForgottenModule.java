@@ -20,14 +20,14 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.world.EntitySpawnHandler;
-import vazkii.quark.content.mobs.client.render.ForgottenRenderer;
-import vazkii.quark.content.mobs.entity.ForgottenEntity;
+import vazkii.quark.content.mobs.client.render.entity.ForgottenRenderer;
+import vazkii.quark.content.mobs.entity.Forgotten;
 import vazkii.quark.content.mobs.item.ForgottenHatItem;
 
 @LoadModule(category = ModuleCategory.MOBS, hasSubscriptions = true)
 public class ForgottenModule extends QuarkModule {
 
-	public static EntityType<ForgottenEntity> forgottenType;
+	public static EntityType<Forgotten> forgottenType;
 
 	public static Item forgotten_hat;
 
@@ -40,16 +40,16 @@ public class ForgottenModule extends QuarkModule {
 	public void construct() {
 		forgotten_hat = new ForgottenHatItem(this);
 
-		forgottenType = EntityType.Builder.of(ForgottenEntity::new, MobCategory.MONSTER)
+		forgottenType = EntityType.Builder.of(Forgotten::new, MobCategory.MONSTER)
 				.sized(0.7F, 2.4F)
 				.clientTrackingRange(8)
-				.setCustomClientFactory((spawnEntity, world) -> new ForgottenEntity(forgottenType, world))
+				.setCustomClientFactory((spawnEntity, world) -> new Forgotten(forgottenType, world))
 				.build("forgotten");
 
 		RegistryHelper.register(forgottenType, "forgotten");
 		EntitySpawnHandler.addEgg(forgottenType, 0x969487, 0x3a3330, this, () -> true);
 		
-		EntityAttributeHandler.put(forgottenType, ForgottenEntity::registerAttributes);
+		EntityAttributeHandler.put(forgottenType, Forgotten::registerAttributes);
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class ForgottenModule extends QuarkModule {
 			Mob mob = (Mob) entity;
 
 			if(result == Result.ALLOW || (mob.checkSpawnRules(entity.level, event.getSpawnReason()) && mob.checkSpawnObstruction(entity.level))) {
-				ForgottenEntity forgotten = new ForgottenEntity(forgottenType, entity.level);
+				Forgotten forgotten = new Forgotten(forgottenType, entity.level);
 				Vec3 epos = entity.position();
 	
 				forgotten.absMoveTo(epos.x, epos.y, epos.z, entity.getYRot(), entity.getXRot());

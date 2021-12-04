@@ -13,9 +13,9 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
-import vazkii.quark.content.mobs.entity.ShibaEntity;
+import vazkii.quark.content.mobs.entity.Shiba;
 
-public class ShibaModel extends EntityModel<ShibaEntity> {
+public class ShibaModel extends EntityModel<Shiba> {
 
 	private final ModelPart main;
 	private final ModelPart head;
@@ -29,7 +29,7 @@ public class ShibaModel extends EntityModel<ShibaEntity> {
 	private final ModelPart rBackLeg;
 	private final ModelPart lBackLeg;
 
-	private ShibaEntity entity;
+	private Shiba entity;
 
 	public ShibaModel(ModelPart root) {
 		main = root.getChild("main");
@@ -124,7 +124,7 @@ public class ShibaModel extends EntityModel<ShibaEntity> {
 	}
 
 	@Override
-	public void prepareMobModel(ShibaEntity shiba, float limbSwing, float limbSwingAmount, float partialTickTime) {
+	public void prepareMobModel(Shiba shiba, float limbSwing, float limbSwingAmount, float partialTickTime) {
 		this.entity = shiba;
 
 		setRotationAngle(rFrontLeg, Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount, 0, 0);
@@ -134,7 +134,7 @@ public class ShibaModel extends EntityModel<ShibaEntity> {
 	}
 
 	@Override
-	public void setupAnim(ShibaEntity shiba, float limbSwing, float limbSwingAmount, float ageInTicks, float yaw, float pitch) {
+	public void setupAnim(Shiba shiba, float limbSwing, float limbSwingAmount, float ageInTicks, float yaw, float pitch) {
 		main.setPos(0F, 0F, 0F);
 		lBackLeg.setPos(-3.0F, 15.0F, 4.0F);
 		rBackLeg.setPos(3.0F, 15.0F, 4.0F);

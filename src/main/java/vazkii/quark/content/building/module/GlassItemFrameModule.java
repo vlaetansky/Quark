@@ -15,8 +15,8 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.content.building.client.render.GlassItemFrameRenderer;
-import vazkii.quark.content.building.entity.GlassItemFrameEntity;
+import vazkii.quark.content.building.client.render.entity.GlassItemFrameRenderer;
+import vazkii.quark.content.building.entity.GlassItemFrame;
 import vazkii.quark.content.building.item.QuarkItemFrameItem;
 
 /**
@@ -31,24 +31,24 @@ public class GlassItemFrameModule extends QuarkModule {
     public static Item glassFrame;
     public static Item glowingGlassFrame;
 
-    public static EntityType<GlassItemFrameEntity> glassFrameEntity;
+    public static EntityType<GlassItemFrame> glassFrameEntity;
 
     @Override
     public void construct() {
-        glassFrameEntity = EntityType.Builder.<GlassItemFrameEntity>of(GlassItemFrameEntity::new, MobCategory.MISC)
+        glassFrameEntity = EntityType.Builder.<GlassItemFrame>of(GlassItemFrame::new, MobCategory.MISC)
                 .sized(0.5F, 0.5F)
                 .clientTrackingRange(10)
                 .updateInterval(Integer.MAX_VALUE) // update interval
                 .setShouldReceiveVelocityUpdates(false)
-                .setCustomClientFactory((spawnEntity, world) -> new GlassItemFrameEntity(glassFrameEntity, world))
+                .setCustomClientFactory((spawnEntity, world) -> new GlassItemFrame(glassFrameEntity, world))
                 .build("glass_frame");
         RegistryHelper.register(glassFrameEntity, "glass_frame");
 
-        glassFrame = new QuarkItemFrameItem("glass_item_frame", this, GlassItemFrameEntity::new);
+        glassFrame = new QuarkItemFrameItem("glass_item_frame", this, GlassItemFrame::new);
         glowingGlassFrame = new QuarkItemFrameItem("glowing_glass_item_frame", this, 
         		(w, p, d) -> {
-        			GlassItemFrameEntity e = new GlassItemFrameEntity(w, p, d);
-        			e.getEntityData().set(GlassItemFrameEntity.IS_SHINY, true);
+        			GlassItemFrame e = new GlassItemFrame(w, p, d);
+        			e.getEntityData().set(GlassItemFrame.IS_SHINY, true);
         			return e;
         		});
     }

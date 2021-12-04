@@ -7,11 +7,11 @@ import java.util.stream.Collectors;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import vazkii.quark.base.client.config.gui.CategoryScreen;
-import vazkii.quark.base.client.config.gui.ColorMatrixInputScreen;
-import vazkii.quark.base.client.config.gui.WidgetWrapper;
-import vazkii.quark.base.client.config.gui.widget.IWidgetProvider;
-import vazkii.quark.base.client.config.gui.widget.PencilButton;
+import vazkii.quark.base.client.config.screen.CategoryScreen;
+import vazkii.quark.base.client.config.screen.ColorMatrixInputScreen;
+import vazkii.quark.base.client.config.screen.WidgetWrapper;
+import vazkii.quark.base.client.config.screen.widgets.IWidgetProvider;
+import vazkii.quark.base.client.config.screen.widgets.PencilButton;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.ConfigFlagManager;
 

@@ -22,7 +22,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.config.IngameConfigHandler;
 import vazkii.quark.base.client.config.external.ExternalConfigHandler;
-import vazkii.quark.base.client.config.gui.QuarkConfigHomeScreen;
+import vazkii.quark.base.client.config.screen.QuarkConfigHomeScreen;
 import vazkii.quark.base.handler.ContributorRewardHandler;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.module.ModuleLoader;

@@ -1,14 +1,14 @@
 package vazkii.quark.content.mobs.ai;
 
 import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
-import vazkii.quark.content.mobs.entity.ShibaEntity;
+import vazkii.quark.content.mobs.entity.Shiba;
 
 public class DeliverFetchedItemGoal extends FollowOwnerGoal {
 
-	final ShibaEntity shiba;
+	final Shiba shiba;
 	int timeTilNextJump = 20;
 	
-	public DeliverFetchedItemGoal(ShibaEntity shiba, double speed, float minDist, float maxDist, boolean teleportToLeaves) {
+	public DeliverFetchedItemGoal(Shiba shiba, double speed, float minDist, float maxDist, boolean teleportToLeaves) {
 		super(shiba, speed, minDist, maxDist, teleportToLeaves);
 		this.shiba = shiba;
 	}

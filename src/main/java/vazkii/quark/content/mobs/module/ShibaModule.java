@@ -19,23 +19,23 @@ import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.type.CompoundBiomeConfig;
 import vazkii.quark.base.module.config.type.EntitySpawnConfig;
 import vazkii.quark.base.world.EntitySpawnHandler;
-import vazkii.quark.content.mobs.client.render.ShibaRenderer;
-import vazkii.quark.content.mobs.entity.ShibaEntity;
+import vazkii.quark.content.mobs.client.render.entity.ShibaRenderer;
+import vazkii.quark.content.mobs.entity.Shiba;
 
 @LoadModule(category = ModuleCategory.MOBS)
 public class ShibaModule extends QuarkModule {
 
-	public static EntityType<ShibaEntity> shibaType;
+	public static EntityType<Shiba> shibaType;
 	
 	@Config
 	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(40, 1, 3, CompoundBiomeConfig.fromBiomeTypes(false, BiomeDictionary.Type.MOUNTAIN));
 
 	@Override
 	public void construct() {
-		shibaType = EntityType.Builder.of(ShibaEntity::new, MobCategory.CREATURE)
+		shibaType = EntityType.Builder.of(Shiba::new, MobCategory.CREATURE)
 				.sized(0.8F, 0.8F)
 				.clientTrackingRange(8)
-				.setCustomClientFactory((spawnEntity, world) -> new ShibaEntity(shibaType, world))
+				.setCustomClientFactory((spawnEntity, world) -> new Shiba(shibaType, world))
 				.build("shiba");
 		RegistryHelper.register(shibaType, "shiba");
 		

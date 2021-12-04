@@ -8,12 +8,12 @@ import java.util.function.Supplier;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import vazkii.quark.api.config.IConfigElement;
 import vazkii.quark.api.config.IConfigObject;
-import vazkii.quark.base.client.config.gui.widget.IWidgetProvider;
 import vazkii.quark.base.client.config.obj.BooleanObject;
 import vazkii.quark.base.client.config.obj.DoubleObject;
 import vazkii.quark.base.client.config.obj.IntegerObject;
 import vazkii.quark.base.client.config.obj.ListObject;
 import vazkii.quark.base.client.config.obj.StringObject;
+import vazkii.quark.base.client.config.screen.widgets.IWidgetProvider;
 
 public abstract class ConfigObject<T> extends AbstractConfigElement implements IConfigObject<T>, IWidgetProvider {
 

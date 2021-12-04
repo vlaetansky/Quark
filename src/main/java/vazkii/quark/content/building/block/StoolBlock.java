@@ -34,7 +34,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.module.QuarkModule;
-import vazkii.quark.content.building.entity.StoolEntity;
+import vazkii.quark.content.building.entity.Stool;
 import vazkii.quark.content.building.module.StoolsModule;
 
 public class StoolBlock extends QuarkBlock implements SimpleWaterloggedBlock {
@@ -88,7 +88,7 @@ public class StoolBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 			return super.use(state, worldIn, pos, player, handIn, hit);
 
 		if(!worldIn.isClientSide) {
-			StoolEntity entity = new StoolEntity(StoolsModule.stoolEntity, worldIn);
+			Stool entity = new Stool(StoolsModule.stoolEntity, worldIn);
 			entity.setPos(pos.getX() + 0.5, pos.getY() + 0.6, pos.getZ() + 0.5);
 			
 			worldIn.addFreshEntity(entity);
@@ -158,7 +158,7 @@ public class StoolBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 		return defaultBlockState()
 				.setValue(WATERLOGGED, world.getFluidState(pos).getType() == Fluids.WATER)
 				.setValue(BIG, world.getBlockState(pos.above()).getShape(world, pos.above()).min(Axis.Y) == 0)
-				.setValue(SAT_IN, world.getEntitiesOfClass(StoolEntity.class, new AABB(pos, pos.above()).inflate(0.4), e -> e.blockPosition().equals(pos)).size() > 0);
+				.setValue(SAT_IN, world.getEntitiesOfClass(Stool.class, new AABB(pos, pos.above()).inflate(0.4), e -> e.blockPosition().equals(pos)).size() > 0);
 	}
 	
 	@Override

@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.vehicle.Boat;
 import vazkii.quark.content.experimental.module.GameNerfsModule;
-import vazkii.quark.content.management.entity.ChestPassengerEntity;
+import vazkii.quark.content.management.entity.ChestPassenger;
 
 @Mixin(Boat.class)
 public class BoatMixin {
@@ -24,7 +24,7 @@ public class BoatMixin {
 	}
 	
 	private static Entity ensurePassengerIsNotChest(Entity passenger) {
-		if (passenger instanceof ChestPassengerEntity)
+		if (passenger instanceof ChestPassenger)
 			return null;
 		return passenger;
 	}

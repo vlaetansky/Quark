@@ -10,13 +10,13 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.minecraft.client.renderer.RenderBuffers;
 import net.minecraft.client.renderer.RenderType;
-import vazkii.quark.content.tools.client.GlintRenderType;
+import vazkii.quark.content.tools.client.render.GlintRenderTypes;
 
 @Mixin(RenderBuffers.class)
 public class RenderBuffersMixin {
 
 	@Inject(method = "put", at = @At("HEAD"))
 	private static void addGlintTypes(Object2ObjectLinkedOpenHashMap<RenderType, BufferBuilder> mapBuildersIn, RenderType renderTypeIn, CallbackInfo callbackInfo) {
-		GlintRenderType.addGlintTypes(mapBuildersIn);
+		GlintRenderTypes.addGlintTypes(mapBuildersIn);
 	}
 }

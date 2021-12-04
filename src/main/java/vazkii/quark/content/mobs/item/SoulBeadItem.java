@@ -19,7 +19,7 @@ import net.minecraft.world.phys.Vec3;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.QuarkModule;
-import vazkii.quark.content.mobs.entity.SoulBeadEntity;
+import vazkii.quark.content.mobs.entity.SoulBead;
 import vazkii.quark.content.mobs.module.WraithModule;
 
 public class SoulBeadItem extends QuarkItem {
@@ -39,7 +39,7 @@ public class SoulBeadItem extends QuarkItem {
 
 			if(blockpos != null) {
 				itemstack.shrink(1);
-				SoulBeadEntity entity = new SoulBeadEntity(WraithModule.soulBeadType, worldIn);
+				SoulBead entity = new SoulBead(WraithModule.soulBeadType, worldIn);
 				entity.setTarget(blockpos.getX(), blockpos.getZ());
 				
 				Vec3 look = playerIn.getLookAngle();

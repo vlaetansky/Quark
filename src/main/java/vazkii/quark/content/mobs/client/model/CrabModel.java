@@ -15,9 +15,9 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
-import vazkii.quark.content.mobs.entity.CrabEntity;
+import vazkii.quark.content.mobs.entity.Crab;
 
-public class CrabModel extends EntityModel<CrabEntity> {
+public class CrabModel extends EntityModel<Crab> {
 
 	private float wiggleX = 0;
 	private float wiggleY = 0;
@@ -164,7 +164,7 @@ public class CrabModel extends EntityModel<CrabEntity> {
 	}
 
 	@Override
-	public void setupAnim(CrabEntity crab, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Crab crab, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		rightLeg1.zRot = -0.2618F + (-1 + Mth.cos(limbSwing * 0.6662F)) * 0.7F * limbSwingAmount;
 		rightLeg2.zRot = -0.5236F + (-1 + Mth.cos(limbSwing * 0.6662F + (float) Math.PI)) * 0.7F * limbSwingAmount;
 		rightLeg3.zRot = -0.5236F + (-1 + Mth.cos(limbSwing * 0.6662F)) * 0.7F * limbSwingAmount;

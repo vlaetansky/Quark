@@ -14,15 +14,15 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.RenderType;
-import vazkii.quark.content.mobs.entity.WraithEntity;
+import vazkii.quark.content.mobs.entity.Wraith;
 
-public class WraithModel extends EntityModel<WraithEntity> {
+public class WraithModel extends EntityModel<Wraith> {
 
 	public final ModelPart body;
 	public final ModelPart rightArm;
 	public final ModelPart leftArm;
 
-	WraithEntity wraith;
+	Wraith wraith;
 	double offset;
 	float alphaMult;
 
@@ -61,7 +61,7 @@ public class WraithModel extends EntityModel<WraithEntity> {
 	}
 
 	@Override
-	public void setupAnim(WraithEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Wraith entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		Random rng = new Random(entity.getId());
 		float time = ageInTicks + rng.nextInt(10000000);
 

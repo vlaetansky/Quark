@@ -12,9 +12,9 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import vazkii.quark.content.mobs.entity.StonelingEntity;
+import vazkii.quark.content.mobs.entity.Stoneling;
 
-public class StonelingModel extends EntityModel<StonelingEntity> {
+public class StonelingModel extends EntityModel<Stoneling> {
 
 	private final ModelPart body;
 	private final ModelPart arm_right;
@@ -88,7 +88,7 @@ public class StonelingModel extends EntityModel<StonelingEntity> {
 	}
 
 	@Override
-	public void setupAnim(StonelingEntity stoneling, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Stoneling stoneling, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		leg_right.xRot = Mth.cos(limbSwing * 0.6662F) * limbSwingAmount;
 		leg_left.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * limbSwingAmount;
 

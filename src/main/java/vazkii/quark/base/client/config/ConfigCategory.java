@@ -15,10 +15,10 @@ import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.api.config.IConfigElement;
 import vazkii.quark.api.config.IConfigObject;
 import vazkii.quark.base.client.config.external.ExternalCategory;
-import vazkii.quark.base.client.config.gui.CategoryScreen;
-import vazkii.quark.base.client.config.gui.WidgetWrapper;
-import vazkii.quark.base.client.config.gui.widget.IWidgetProvider;
-import vazkii.quark.base.client.config.gui.widget.PencilButton;
+import vazkii.quark.base.client.config.screen.CategoryScreen;
+import vazkii.quark.base.client.config.screen.WidgetWrapper;
+import vazkii.quark.base.client.config.screen.widgets.IWidgetProvider;
+import vazkii.quark.base.client.config.screen.widgets.PencilButton;
 import vazkii.quark.base.module.config.type.IConfigType;
 
 public class ConfigCategory extends AbstractConfigElement implements IConfigCategory, IWidgetProvider {

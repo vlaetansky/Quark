@@ -14,15 +14,15 @@ import java.util.EnumSet;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
-import vazkii.quark.content.mobs.entity.FoxhoundEntity;
+import vazkii.quark.content.mobs.entity.Foxhound;
 
 public class SleepGoal extends Goal {
 
-	private final FoxhoundEntity foxhound;
+	private final Foxhound foxhound;
 	private boolean isSleeping;
 	private boolean wasSitting;
 
-	public SleepGoal(FoxhoundEntity foxhound) {
+	public SleepGoal(Foxhound foxhound) {
 		this.foxhound = foxhound;
 		this.setFlags(EnumSet.of(Flag.MOVE, Flag.JUMP, Flag.LOOK, Flag.TARGET));
 	}

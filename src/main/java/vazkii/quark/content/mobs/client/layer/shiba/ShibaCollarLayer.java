@@ -18,18 +18,18 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.resources.ResourceLocation;
 import vazkii.quark.base.Quark;
 import vazkii.quark.content.mobs.client.model.ShibaModel;
-import vazkii.quark.content.mobs.entity.ShibaEntity;
+import vazkii.quark.content.mobs.entity.Shiba;
 
-public class ShibaCollarLayer extends RenderLayer<ShibaEntity, ShibaModel> {
+public class ShibaCollarLayer extends RenderLayer<Shiba, ShibaModel> {
 
 	private static final ResourceLocation WOLF_COLLAR = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/shiba/collar.png");
 
-	public ShibaCollarLayer(RenderLayerParent<ShibaEntity, ShibaModel> renderer) {
+	public ShibaCollarLayer(RenderLayerParent<Shiba, ShibaModel> renderer) {
 		super(renderer);
 	}
 
 	@Override
-	public void render(PoseStack matrix, MultiBufferSource buffer, int light, ShibaEntity foxhound,  float limbAngle, float limbDistance, float tickDelta, float customAngle, float headYaw, float headPitch) {
+	public void render(PoseStack matrix, MultiBufferSource buffer, int light, Shiba foxhound,  float limbAngle, float limbDistance, float tickDelta, float customAngle, float headYaw, float headPitch) {
 		if (foxhound.isTame() && !foxhound.isInvisible()) {
 			float[] afloat = foxhound.getCollarColor().getTextureDiffuseColors();
 			renderColoredCutoutModel(getParentModel(), WOLF_COLLAR, matrix, buffer, light, foxhound, afloat[0], afloat[1], afloat[2]);

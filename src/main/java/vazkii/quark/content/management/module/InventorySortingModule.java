@@ -18,7 +18,7 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.SortInventoryMessage;
-import vazkii.quark.content.management.client.gui.MiniInventoryButton;
+import vazkii.quark.content.management.client.screen.widgets.MiniInventoryButton;
 
 @LoadModule(category = ModuleCategory.MANAGEMENT)
 public class InventorySortingModule extends QuarkModule {

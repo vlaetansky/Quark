@@ -17,7 +17,7 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.content.tools.block.CloudBlock;
 import vazkii.quark.content.tools.block.be.CloudBlockEntity;
-import vazkii.quark.content.tools.client.render.CloudTileEntityRenderer;
+import vazkii.quark.content.tools.client.render.be.CloudRenderer;
 import vazkii.quark.content.tools.item.BottledCloudItem;
 
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true)
@@ -44,7 +44,7 @@ public class BottledCloudModule extends QuarkModule {
 	
 	@Override
 	public void clientSetup() {
-		BlockEntityRenderers.register(blockEntityType, CloudTileEntityRenderer::new);
+		BlockEntityRenderers.register(blockEntityType, CloudRenderer::new);
 	}
 	
 	@SubscribeEvent
