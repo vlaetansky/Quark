@@ -16,6 +16,7 @@ import vazkii.quark.content.world.block.CaveCrystalClusterBlock;
 import vazkii.quark.content.world.gen.UndergroundBiomeGenerator.Context;
 import vazkii.quark.content.world.module.underground.CaveCrystalUndergroundBiomeModule;
 
+// TODO CONTENT make bigger and more colorful
 public class CaveCrystalUndergroundBiome extends BasicUndergroundBiome {
 
 	public CaveCrystalUndergroundBiome() {

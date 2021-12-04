@@ -18,8 +18,7 @@ public class MidoriModule extends QuarkModule {
 
 	@Override
 	public void construct() {
-		// TODO CONTENT change to moss paste
-		new QuarkItem("cactus_paste", this, new Item.Properties().tab(CreativeModeTab.TAB_MATERIALS));
+		new QuarkItem("moss_paste", this, new Item.Properties().tab(CreativeModeTab.TAB_MATERIALS));
 		
 		Block.Properties props = Block.Properties.of(Material.STONE, MaterialColor.COLOR_LIGHT_GREEN)
 				.requiresCorrectToolForDrops()
