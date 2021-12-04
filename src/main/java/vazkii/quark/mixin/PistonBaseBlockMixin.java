@@ -19,7 +19,7 @@ import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 @Mixin(PistonBaseBlock.class)
 public class PistonBaseBlockMixin {
 
-	@Redirect(method = "isPushable", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;hasBlockEntity()Z", remap = false /* bc hasTileEntity is a forge method */))
+	@Redirect(method = "isPushable", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;hasBlockEntity()Z"))
 	private static boolean isPushable(BlockState blockStateIn) {
 		return PistonsMoveTileEntitiesModule.shouldMoveTE(blockStateIn.hasBlockEntity(), blockStateIn);
 	}

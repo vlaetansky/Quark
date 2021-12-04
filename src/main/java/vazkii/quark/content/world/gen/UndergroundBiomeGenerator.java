@@ -13,7 +13,6 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import vazkii.quark.base.world.generator.multichunk.ClusterBasedGenerator;
 import vazkii.quark.content.world.config.UndergroundBiomeConfig;
-import vazkii.quark.content.world.gen.underground.CaveCrystalUndergroundBiome;
 
 public class UndergroundBiomeGenerator extends ClusterBasedGenerator {
 
