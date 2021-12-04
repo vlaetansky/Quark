@@ -36,7 +36,7 @@ public class PotionReflection {
             CREATE_MIX_PREDICATE = MethodHandles.lookup().unreflectConstructor(ctor)
                     .asType(ctorType.changeReturnType(Object.class));
 
-            Field typeConversions = ObfuscationReflectionHelper.findField(PotionBrewing.class, "POTION_MIXES"); // POTION_TYPE_CONVERSIONS
+            Field typeConversions = ObfuscationReflectionHelper.findField(PotionBrewing.class, "f_43494_"); // POTION_MIXES
             GET_POTION_TYPE_CONVERSIONS = MethodHandles.lookup().unreflectGetter(typeConversions)
                     .asType(MethodType.methodType(List.class));
         } catch (IllegalAccessException | ClassNotFoundException | NoSuchMethodException e) {
