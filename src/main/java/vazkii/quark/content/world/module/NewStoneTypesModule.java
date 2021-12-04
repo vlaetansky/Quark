@@ -35,17 +35,17 @@ public class NewStoneTypesModule extends QuarkModule {
 
 	@Config(flag = "limestone") private static boolean enableLimestone = true;
 	@Config(flag = "jasper") private static boolean enableJasper = true;
-	@Config(flag = "slate") private static boolean enableSlate = true;
+	@Config(flag = "shale") private static boolean enableShale = true;
 	@Config(flag = "myalite") private static boolean enableMyalite = true;
 
-	public static boolean enabledWithLimestone, enabledWithJasper, enabledWithSlate, enabledWithMyalite;
+	public static boolean enabledWithLimestone, enabledWithJasper, enabledWithShale, enabledWithMyalite;
 	
 	@Config public static StoneTypeConfig limestone = new StoneTypeConfig();
 	@Config public static StoneTypeConfig jasper = new StoneTypeConfig();
-	@Config public static StoneTypeConfig slate = new StoneTypeConfig();
+	@Config public static StoneTypeConfig shale = new StoneTypeConfig();
 	@Config public static StoneTypeConfig myalite = new StoneTypeConfig(DimensionConfig.end(false));
 
-	public static Block limestoneBlock, jasperBlock, slateBlock, myaliteBlock;
+	public static Block limestoneBlock, jasperBlock, shaleBlock, myaliteBlock;
 
 	public static Map<Block, Block> polishedBlocks = Maps.newHashMap();
 	
@@ -57,7 +57,7 @@ public class NewStoneTypesModule extends QuarkModule {
 		
 		limestoneBlock = makeStone("limestone", limestone, BigStoneClustersModule.limestone, () -> enableLimestone, MaterialColor.STONE);
 		jasperBlock = makeStone("jasper", jasper, BigStoneClustersModule.jasper, () -> enableJasper, MaterialColor.TERRACOTTA_RED);
-		slateBlock = makeStone("slate", slate, BigStoneClustersModule.slate, () -> enableSlate, MaterialColor.ICE); // TODO NOW rename to shale
+		shaleBlock = makeStone("shale", shale, BigStoneClustersModule.shale, () -> enableShale, MaterialColor.ICE); 
 		myaliteBlock = makeStone(null, "myalite", myalite, BigStoneClustersModule.myalite, () -> enableMyalite, MaterialColor.COLOR_PURPLE, MyaliteBlock::new);
 	}
 	
@@ -106,7 +106,7 @@ public class NewStoneTypesModule extends QuarkModule {
 	public void configChanged() {
 		enabledWithLimestone = enableLimestone && this.enabled;
 		enabledWithJasper = enableJasper && this.enabled;
-		enabledWithSlate = enableSlate && this.enabled;
+		enabledWithShale = enableShale && this.enabled;
 		enabledWithMyalite = enableMyalite && this.enabled;
 	}
 	

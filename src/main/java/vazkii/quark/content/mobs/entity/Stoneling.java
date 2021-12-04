@@ -2,8 +2,8 @@ package vazkii.quark.content.mobs.entity;
 
 import static vazkii.quark.content.world.module.NewStoneTypesModule.jasperBlock;
 import static vazkii.quark.content.world.module.NewStoneTypesModule.limestoneBlock;
+import static vazkii.quark.content.world.module.NewStoneTypesModule.shaleBlock;
 import static vazkii.quark.content.world.module.NewStoneTypesModule.polishedBlocks;
-import static vazkii.quark.content.world.module.NewStoneTypesModule.slateBlock;
 
 import java.util.List;
 import java.util.Random;
@@ -482,7 +482,7 @@ public class Stoneling extends PathfinderMob {
 		GRANITE("granite", Blocks.GRANITE, Blocks.POLISHED_GRANITE),
 		LIMESTONE("limestone", limestoneBlock, polishedBlocks.get(limestoneBlock)),
 		CALCITE("calcite", Blocks.CALCITE),
-		SLATE("slate", slateBlock, polishedBlocks.get(slateBlock)),
+		SHALE("shale", shaleBlock, polishedBlocks.get(shaleBlock)),
 		JASPER("jasper", jasperBlock, polishedBlocks.get(jasperBlock));
 
 		private final ResourceLocation texture;

@@ -37,7 +37,7 @@ public class BigStoneClustersModule extends QuarkModule {
 	@Config public static BigStoneClusterConfig calcite = new BigStoneClusterConfig(BiomeDictionary.Type.PLAINS);
 	@Config public static BigStoneClusterConfig limestone = new BigStoneClusterConfig(BiomeDictionary.Type.SWAMP, BiomeDictionary.Type.OCEAN);
 	@Config public static BigStoneClusterConfig jasper = new BigStoneClusterConfig(BiomeDictionary.Type.MESA, BiomeDictionary.Type.SANDY);
-	@Config public static BigStoneClusterConfig slate = new BigStoneClusterConfig(BiomeDictionary.Type.SNOWY);
+	@Config public static BigStoneClusterConfig shale = new BigStoneClusterConfig(BiomeDictionary.Type.SNOWY);
 	
 	@Config public static BigStoneClusterConfig myalite = new AirStoneClusterConfig(DimensionConfig.end(false), 20, 6, 100, 58, 62, 
 			CompoundBiomeConfig.fromBiomeReslocs(false, "minecraft:end_highlands"))
@@ -62,7 +62,7 @@ public class BigStoneClustersModule extends QuarkModule {
 		
 		add(limestone, NewStoneTypesModule.limestoneBlock, () -> NewStoneTypesModule.enabledWithLimestone);
 		add(jasper, NewStoneTypesModule.jasperBlock, () -> NewStoneTypesModule.enabledWithJasper);
-		add(slate, NewStoneTypesModule.slateBlock, () -> NewStoneTypesModule.enabledWithSlate);
+		add(shale, NewStoneTypesModule.shaleBlock, () -> NewStoneTypesModule.enabledWithShale);
 		add(myalite, NewStoneTypesModule.myaliteBlock, () -> NewStoneTypesModule.enabledWithMyalite);
 
 		BooleanSupplier graniteSupplier = () -> (!enabled || !granite.enabled);
