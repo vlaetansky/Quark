@@ -43,8 +43,10 @@ public class EnhancedLaddersModule extends QuarkModule {
 	@Config
     public double fallSpeed = -0.2;
 	
-	@Config
-	public static boolean allowFreestanding = true;
+	@Config public static boolean allowFreestanding = true;
+	@Config public static boolean allowDroppingDown = true;
+	@Config public static boolean allowSliding = true;
+	@Config public static boolean allowInventorySneak = true;
 
 	private static boolean staticEnabled;
 	private static Tag<Item> laddersTag;
@@ -91,6 +93,9 @@ public class EnhancedLaddersModule extends QuarkModule {
 
 	@SubscribeEvent
 	public void onInteract(PlayerInteractEvent.RightClickBlock event) {
+		if(!allowDroppingDown)
+			return;
+		
 		Player player = event.getPlayer();
 		InteractionHand hand = event.getHand();
 		ItemStack stack = player.getItemInHand(hand);
@@ -139,6 +144,9 @@ public class EnhancedLaddersModule extends QuarkModule {
 
 	@SubscribeEvent
 	public void onPlayerTick(TickEvent.PlayerTickEvent event) {
+		if(!allowSliding)
+			return;
+		
 		if(event.phase == TickEvent.Phase.START) {
 			Player player = event.player;
 			if(player.onClimbable() && player.level.isClientSide) {
@@ -165,6 +173,9 @@ public class EnhancedLaddersModule extends QuarkModule {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public void onInput(MovementInputUpdateEvent event) {
+		if(!allowInventorySneak)
+			return;
+		
 		Player player = event.getPlayer();
 		if(player.onClimbable() && player.level.getBlockState(player.blockPosition()).getBlock() != Blocks.SCAFFOLDING
 				&& Minecraft.getInstance().screen != null && !(player.zza == 0 && player.getXRot() > 70)) {
