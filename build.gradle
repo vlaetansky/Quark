@@ -266,5 +266,3 @@ tasks.withType(GenerateModuleMetadata) {
 
     enabled = false
 }
-
-defaultTasks 'clean', 'build', 'sortArtifacts', 'incrementBuildNumber'
