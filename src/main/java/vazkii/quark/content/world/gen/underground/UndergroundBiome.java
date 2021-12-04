@@ -3,6 +3,7 @@ package vazkii.quark.content.world.gen.underground;
 import java.util.function.Predicate;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
@@ -33,9 +34,23 @@ public abstract class UndergroundBiome {
 	public final void fill(Context context, BlockPos pos) {
 		LevelAccessor world = context.world;
 		BlockState state = world.getBlockState(pos);
-		if(state.getDestroySpeed(world, pos) == -1 || world.canSeeSkyFromBelowWater(pos))
+		
+		if(state.getDestroySpeed(world, pos) == -1)
 			return;
-
+		
+		boolean shrouded = false;
+		BlockPos testPos = new MutableBlockPos(pos.getX(), pos.getY(), pos.getZ());
+		while(!world.isOutsideBuildHeight(testPos)) {
+			testPos = testPos.above();
+			if(world.getBlockState(testPos).isSolidRender(world, testPos)) {
+				shrouded = true;
+				break;
+			}
+		}
+		
+		if(!shrouded)
+			return;
+		
 		if(isFloor(world, pos, state)) {
 			context.floorList.add(pos);
 			fillFloor(context, pos, state);

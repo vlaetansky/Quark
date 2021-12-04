@@ -16,7 +16,7 @@ public class PermafrostUndergroundBiome extends BasicUndergroundBiome {
 	@Override
 	public void fillFloor(Context context, BlockPos pos, BlockState state) {
 		super.fillFloor(context, pos, state);
-
+		
 		LevelAccessor world = context.world;
 		if(context.random.nextDouble() < 0.015) {
 			int height = 3 + context.random.nextInt(3);

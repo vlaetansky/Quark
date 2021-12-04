@@ -13,6 +13,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import vazkii.quark.base.world.generator.multichunk.ClusterBasedGenerator;
 import vazkii.quark.content.world.config.UndergroundBiomeConfig;
+import vazkii.quark.content.world.gen.underground.CaveCrystalUndergroundBiome;
 
 public class UndergroundBiomeGenerator extends ClusterBasedGenerator {
 
@@ -46,7 +47,8 @@ public class UndergroundBiomeGenerator extends ClusterBasedGenerator {
 
 	@Override
 	public boolean isSourceValid(WorldGenRegion world, ChunkGenerator generator, BlockPos pos) {
-		Biome biome = getBiome(world, pos, true);
+		BlockPos check = new BlockPos(pos.getX(), info.minYLevel, pos.getZ());
+		Biome biome = getBiome(world, check, true);
 		return info.biomes.canSpawn(biome);
 	}
 	

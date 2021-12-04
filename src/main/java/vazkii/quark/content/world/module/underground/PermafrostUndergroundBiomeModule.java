@@ -5,15 +5,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
-import net.minecraftforge.common.BiomeDictionary;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.config.type.CompoundBiomeConfig;
 import vazkii.quark.content.world.config.UndergroundBiomeConfig;
 import vazkii.quark.content.world.gen.underground.PermafrostUndergroundBiome;
 
-// TODO NOW move to mountains
 @LoadModule(category = ModuleCategory.WORLD)
 public class PermafrostUndergroundBiomeModule extends UndergroundBiomeModule {
 
@@ -35,7 +34,10 @@ public class PermafrostUndergroundBiomeModule extends UndergroundBiomeModule {
 	
 	@Override
 	protected UndergroundBiomeConfig getBiomeConfig() {
-		return new UndergroundBiomeConfig(new PermafrostUndergroundBiome(), 80, BiomeDictionary.Type.SNOWY);
+		UndergroundBiomeConfig config = new UndergroundBiomeConfig(new PermafrostUndergroundBiome(), 2, 100, 30, 10, 5, CompoundBiomeConfig.fromBiomeReslocs(false, "minecraft:frozen_peaks"));
+		config.minYLevel = 105;
+		config.maxYLevel = 140;
+		return config;
 	}
 	
 	@Override
