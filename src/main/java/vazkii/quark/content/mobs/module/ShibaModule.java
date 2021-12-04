@@ -1,4 +1,4 @@
-package vazkii.quark.content.experimental.module;
+package vazkii.quark.content.mobs.module;
 
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.entity.EntityType;
@@ -19,10 +19,10 @@ import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.type.CompoundBiomeConfig;
 import vazkii.quark.base.module.config.type.EntitySpawnConfig;
 import vazkii.quark.base.world.EntitySpawnHandler;
-import vazkii.quark.content.experimental.shiba.client.render.ShibaRenderer;
-import vazkii.quark.content.experimental.shiba.entity.ShibaEntity;
+import vazkii.quark.content.mobs.client.render.ShibaRenderer;
+import vazkii.quark.content.mobs.entity.ShibaEntity;
 
-@LoadModule(category = ModuleCategory.EXPERIMENTAL, enabledByDefault = false)
+@LoadModule(category = ModuleCategory.MOBS)
 public class ShibaModule extends QuarkModule {
 
 	public static EntityType<ShibaEntity> shibaType;

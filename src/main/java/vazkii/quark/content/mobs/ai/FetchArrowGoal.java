@@ -1,4 +1,4 @@
-package vazkii.quark.content.experimental.shiba.ai;
+package vazkii.quark.content.mobs.ai;
 
 import java.lang.reflect.Method;
 import java.util.EnumSet;
@@ -9,7 +9,7 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.AbstractArrow.Pickup;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
-import vazkii.quark.content.experimental.shiba.entity.ShibaEntity;
+import vazkii.quark.content.mobs.entity.ShibaEntity;
 
 public class FetchArrowGoal extends Goal {
 

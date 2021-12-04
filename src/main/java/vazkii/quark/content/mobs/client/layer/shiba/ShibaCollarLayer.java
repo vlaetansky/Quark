@@ -8,7 +8,7 @@
  * <p>
  * File Created @ [Jul 13, 2019, 13:31 AM (EST)]
  */
-package vazkii.quark.content.experimental.shiba.client.layer;
+package vazkii.quark.content.mobs.client.layer.shiba;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -17,8 +17,8 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.resources.ResourceLocation;
 import vazkii.quark.base.Quark;
-import vazkii.quark.content.experimental.shiba.client.model.ShibaModel;
-import vazkii.quark.content.experimental.shiba.entity.ShibaEntity;
+import vazkii.quark.content.mobs.client.model.ShibaModel;
+import vazkii.quark.content.mobs.entity.ShibaEntity;
 
 public class ShibaCollarLayer extends RenderLayer<ShibaEntity, ShibaModel> {
 

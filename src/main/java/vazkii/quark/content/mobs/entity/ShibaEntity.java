@@ -1,4 +1,4 @@
-package vazkii.quark.content.experimental.shiba.entity;
+package vazkii.quark.content.mobs.entity;
 
 import java.util.List;
 import java.util.UUID;
@@ -48,9 +48,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
-import vazkii.quark.content.experimental.module.ShibaModule;
-import vazkii.quark.content.experimental.shiba.ai.DeliverFetchedItemGoal;
-import vazkii.quark.content.experimental.shiba.ai.FetchArrowGoal;
+import vazkii.quark.content.mobs.ai.DeliverFetchedItemGoal;
+import vazkii.quark.content.mobs.ai.FetchArrowGoal;
+import vazkii.quark.content.mobs.module.ShibaModule;
 import vazkii.quark.content.tweaks.ai.NuzzleGoal;
 import vazkii.quark.content.tweaks.ai.WantLoveGoal;
 

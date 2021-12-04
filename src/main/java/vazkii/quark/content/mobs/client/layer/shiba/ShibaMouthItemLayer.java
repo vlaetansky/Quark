@@ -1,4 +1,4 @@
-package vazkii.quark.content.experimental.shiba.client.layer;
+package vazkii.quark.content.mobs.client.layer.shiba;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
@@ -11,8 +11,8 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.TridentItem;
-import vazkii.quark.content.experimental.shiba.client.model.ShibaModel;
-import vazkii.quark.content.experimental.shiba.entity.ShibaEntity;
+import vazkii.quark.content.mobs.client.model.ShibaModel;
+import vazkii.quark.content.mobs.entity.ShibaEntity;
 
 public class ShibaMouthItemLayer extends RenderLayer<ShibaEntity, ShibaModel> {
 

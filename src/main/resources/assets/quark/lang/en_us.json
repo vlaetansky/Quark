@@ -938,7 +938,7 @@
 	"item.quark.toretoise_spawn_egg": "Toretoise Spawn Egg",
 	"item.quark.forgotten_spawn_egg": "Forgotten Spawn Egg",
 	"item.quark.wraith_spawn_egg": "Wraith Spawn Egg",
-	"item.quark.shiba_spawn_egg": "Shiba Inu Spawn Egg",
+	"item.quark.shiba_spawn_egg": "Shiba Spawn Egg",
 
 	"effect.quark.resilience": "Resilience",
 
@@ -956,7 +956,7 @@
 	"entity.quark.forgotten": "Forgotten",
 	"entity.quark.wraith": "Wraith",
 	"entity.quark.soul_bead": "Soul Bead",
-	"entity.quark.shiba": "Shiba Inu",
+	"entity.quark.shiba": "Shiba",
 
 	"block.quark.magnetized_block": "Magnetized Block",
 	"block.quark.potted_beetroot": "Potted Beetroots",

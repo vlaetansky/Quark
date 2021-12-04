@@ -1,7 +1,7 @@
-package vazkii.quark.content.experimental.shiba.ai;
+package vazkii.quark.content.mobs.ai;
 
 import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
-import vazkii.quark.content.experimental.shiba.entity.ShibaEntity;
+import vazkii.quark.content.mobs.entity.ShibaEntity;
 
 public class DeliverFetchedItemGoal extends FollowOwnerGoal {
 

@@ -1,14 +1,14 @@
-package vazkii.quark.content.experimental.shiba.client.render;
+package vazkii.quark.content.mobs.client.render;
 
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.handler.ModelHandler;
-import vazkii.quark.content.experimental.shiba.client.layer.ShibaCollarLayer;
-import vazkii.quark.content.experimental.shiba.client.layer.ShibaMouthItemLayer;
-import vazkii.quark.content.experimental.shiba.client.model.ShibaModel;
-import vazkii.quark.content.experimental.shiba.entity.ShibaEntity;
+import vazkii.quark.content.mobs.client.layer.shiba.ShibaCollarLayer;
+import vazkii.quark.content.mobs.client.layer.shiba.ShibaMouthItemLayer;
+import vazkii.quark.content.mobs.client.model.ShibaModel;
+import vazkii.quark.content.mobs.entity.ShibaEntity;
 
 public class ShibaRenderer extends MobRenderer<ShibaEntity, ShibaModel> {
 
