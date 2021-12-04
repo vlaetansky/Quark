@@ -34,7 +34,7 @@ public class BigStoneClustersModule extends QuarkModule {
 	@Config public static BigStoneClusterConfig granite = new BigStoneClusterConfig(BiomeDictionary.Type.MOUNTAIN);
 	@Config public static BigStoneClusterConfig diorite = new BigStoneClusterConfig(BiomeDictionary.Type.SAVANNA, BiomeDictionary.Type.JUNGLE, BiomeDictionary.Type.MUSHROOM);
 	@Config public static BigStoneClusterConfig andesite = new BigStoneClusterConfig(BiomeDictionary.Type.FOREST);
-	@Config public static BigStoneClusterConfig marble = new BigStoneClusterConfig(BiomeDictionary.Type.PLAINS);
+	@Config public static BigStoneClusterConfig calcite = new BigStoneClusterConfig(BiomeDictionary.Type.PLAINS);
 	@Config public static BigStoneClusterConfig limestone = new BigStoneClusterConfig(BiomeDictionary.Type.SWAMP, BiomeDictionary.Type.OCEAN);
 	@Config public static BigStoneClusterConfig jasper = new BigStoneClusterConfig(BiomeDictionary.Type.MESA, BiomeDictionary.Type.SANDY);
 	@Config public static BigStoneClusterConfig slate = new BigStoneClusterConfig(BiomeDictionary.Type.SNOWY);
@@ -58,8 +58,8 @@ public class BigStoneClustersModule extends QuarkModule {
 		add(granite, Blocks.GRANITE, alwaysTrue);
 		add(diorite, Blocks.DIORITE, alwaysTrue);
 		add(andesite, Blocks.ANDESITE, alwaysTrue);
+		add(calcite, Blocks.CALCITE, alwaysTrue);
 		
-		add(marble, NewStoneTypesModule.marbleBlock, () -> NewStoneTypesModule.enabledWithMarble);
 		add(limestone, NewStoneTypesModule.limestoneBlock, () -> NewStoneTypesModule.enabledWithLimestone);
 		add(jasper, NewStoneTypesModule.jasperBlock, () -> NewStoneTypesModule.enabledWithJasper);
 		add(slate, NewStoneTypesModule.slateBlock, () -> NewStoneTypesModule.enabledWithSlate);

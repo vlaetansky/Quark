@@ -30,22 +30,20 @@ import vazkii.quark.content.world.config.StoneTypeConfig;
 @LoadModule(category = ModuleCategory.WORLD, hasSubscriptions = true)
 public class NewStoneTypesModule extends QuarkModule {
 
-	@Config(flag = "marble") private static boolean enableMarble = true;
 	@Config(flag = "limestone") private static boolean enableLimestone = true;
 	@Config(flag = "jasper") private static boolean enableJasper = true;
 	@Config(flag = "slate") private static boolean enableSlate = true;
 	@Config(flag = "myalite") private static boolean enableMyalite = true;
 
-	public static boolean enabledWithMarble, enabledWithLimestone, enabledWithJasper, enabledWithSlate, enabledWithMyalite;
+	public static boolean enabledWithLimestone, enabledWithJasper, enabledWithSlate, enabledWithMyalite;
 	
 	// TODO CONTENT remove marble for calcite
-	@Config public static StoneTypeConfig marble = new StoneTypeConfig();
 	@Config public static StoneTypeConfig limestone = new StoneTypeConfig();
 	@Config public static StoneTypeConfig jasper = new StoneTypeConfig();
 	@Config public static StoneTypeConfig slate = new StoneTypeConfig();
 	@Config public static StoneTypeConfig myalite = new StoneTypeConfig(DimensionConfig.end(false));
 
-	public static Block marbleBlock, limestoneBlock, jasperBlock, slateBlock, myaliteBlock;
+	public static Block limestoneBlock, jasperBlock, slateBlock, myaliteBlock;
 
 	public static Map<Block, Block> polishedBlocks = Maps.newHashMap();
 	
@@ -53,7 +51,6 @@ public class NewStoneTypesModule extends QuarkModule {
 	
 	@Override
 	public void construct() {
-		marbleBlock = makeStone("marble", marble, BigStoneClustersModule.marble, () -> enableMarble, MaterialColor.QUARTZ);
 		limestoneBlock = makeStone("limestone", limestone, BigStoneClustersModule.limestone, () -> enableLimestone, MaterialColor.STONE);
 		jasperBlock = makeStone("jasper", jasper, BigStoneClustersModule.jasper, () -> enableJasper, MaterialColor.TERRACOTTA_RED);
 		slateBlock = makeStone("slate", slate, BigStoneClustersModule.slate, () -> enableSlate, MaterialColor.ICE);
@@ -88,7 +85,6 @@ public class NewStoneTypesModule extends QuarkModule {
 	
 	@Override
 	public void configChanged() {
-		enabledWithMarble = enableMarble && this.enabled;
 		enabledWithLimestone = enableLimestone && this.enabled;
 		enabledWithJasper = enableJasper && this.enabled;
 		enabledWithSlate = enableSlate && this.enabled;

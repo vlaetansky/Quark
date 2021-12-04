@@ -4,6 +4,7 @@ import java.util.function.BooleanSupplier;
 
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import vazkii.quark.base.block.QuarkBlock;
@@ -23,22 +24,21 @@ public class MoreStoneVariantsModule extends QuarkModule {
 
 	@Config(flag = "stone_bricks") public boolean enableBricks = true;
 	@Config(flag = "stone_chiseled") public boolean enableChiseledBricks = true;
-	@Config(flag = "stone_pavement") public boolean enablePavement = true;
 	@Config(flag = "stone_pillar") public boolean enablePillar = true;
 	
 	@Override
 	public void construct() {
 		BooleanSupplier _true = () -> true;
-		add("granite", MaterialColor.DIRT, _true);
-		add("diorite", MaterialColor.QUARTZ, _true);
-		add("andesite", MaterialColor.STONE, _true);
+		add("granite", MaterialColor.DIRT, SoundType.STONE, _true);
+		add("diorite", MaterialColor.QUARTZ, SoundType.STONE, _true);
+		add("andesite", MaterialColor.STONE, SoundType.STONE, _true);
+		add("calcite", MaterialColor.TERRACOTTA_WHITE, SoundType.CALCITE, _true);
 		
-		add("marble", MaterialColor.QUARTZ, () -> NewStoneTypesModule.enabledWithMarble);
-		add("limestone", MaterialColor.STONE, () -> NewStoneTypesModule.enabledWithLimestone);
-		add("jasper", MaterialColor.TERRACOTTA_RED, () -> NewStoneTypesModule.enabledWithJasper);
-		add("slate", MaterialColor.ICE, () -> NewStoneTypesModule.enabledWithSlate);
+		add("limestone", MaterialColor.STONE, SoundType.STONE, () -> NewStoneTypesModule.enabledWithLimestone);
+		add("jasper", MaterialColor.TERRACOTTA_RED, SoundType.STONE, () -> NewStoneTypesModule.enabledWithJasper);
+		add("slate", MaterialColor.ICE, SoundType.STONE, () -> NewStoneTypesModule.enabledWithSlate);
 		
-		add("myalite", MaterialColor.COLOR_PURPLE, () -> NewStoneTypesModule.enabledWithMyalite, MyaliteBlock::new, MyalitePillarBlock::new);
+		add("myalite", MaterialColor.COLOR_PURPLE, SoundType.STONE, () -> NewStoneTypesModule.enabledWithMyalite, MyaliteBlock::new, MyalitePillarBlock::new);
 	}
 	
 	@Override
@@ -46,23 +46,24 @@ public class MoreStoneVariantsModule extends QuarkModule {
 		manager.putFlag(this, "granite", true);
 		manager.putFlag(this, "diorite", true);
 		manager.putFlag(this, "andesite", true);
+		manager.putFlag(this, "calcite", true);
 	}
 	
-	private void add(String name, MaterialColor color, BooleanSupplier cond) {
-		add(name, color, cond, QuarkBlock::new, QuarkPillarBlock::new);
+	private void add(String name, MaterialColor color, SoundType sound, BooleanSupplier cond) {
+		add(name, color, sound, cond, QuarkBlock::new, QuarkPillarBlock::new);
 	}
 	
-	private void add(String name, MaterialColor color, BooleanSupplier cond, QuarkBlock.Constructor<QuarkBlock> constr, QuarkBlock.Constructor<QuarkPillarBlock> pillarConstr) {
+	private void add(String name, MaterialColor color, SoundType sound, BooleanSupplier cond, QuarkBlock.Constructor<QuarkBlock> constr, QuarkBlock.Constructor<QuarkPillarBlock> pillarConstr) {
 		Block.Properties props = Block.Properties.of(Material.STONE, color)
 				.requiresCorrectToolForDrops()
 //        		.harvestTool(ToolType.PICKAXE) TODO TAG
+				.sound(sound)
         		.strength(1.5F, 6.0F);
 		
 		QuarkBlock bricks = constr.make(name + "_bricks", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props).setCondition(() -> cond.getAsBoolean() && enableBricks);
 		VariantHandler.addSlabStairsWall(bricks);
 		
 		constr.make("chiseled_" + name + "_bricks", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props).setCondition(() -> cond.getAsBoolean() && enableBricks && enableChiseledBricks);
-		constr.make(name + "_pavement", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props).setCondition(() -> cond.getAsBoolean() && enablePavement);
 		pillarConstr.make(name + "_pillar", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props).setCondition(() -> cond.getAsBoolean() && enablePillar);
 	}
 	
