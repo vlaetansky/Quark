@@ -94,9 +94,10 @@ public class NewStoneTypesModule extends QuarkModule {
 		VariantHandler.addSlabAndStairs(polished);
 		
 		if(raw == null) {
-			defers.add(() ->
-				WorldGenHandler.addGenerator(this, new OreGenerator(config.dimensions, config.oregen, normal.defaultBlockState(), OreGenerator.ALL_DIMS_STONE_MATCHER, trueEnabledCond), Decoration.UNDERGROUND_ORES, WorldGenWeights.NEW_STONES)
-			);
+			defers.add(() -> {
+				WorldGenHandler.addGenerator(this, new OreGenerator(config.dimensions, config.oregenLower, normal.defaultBlockState(), OreGenerator.ALL_DIMS_STONE_MATCHER, trueEnabledCond), Decoration.UNDERGROUND_ORES, WorldGenWeights.NEW_STONES);
+				WorldGenHandler.addGenerator(this, new OreGenerator(config.dimensions, config.oregenUpper, normal.defaultBlockState(), OreGenerator.ALL_DIMS_STONE_MATCHER, trueEnabledCond), Decoration.UNDERGROUND_ORES, WorldGenWeights.NEW_STONES);
+			});
 		}
 		
 		return normal;

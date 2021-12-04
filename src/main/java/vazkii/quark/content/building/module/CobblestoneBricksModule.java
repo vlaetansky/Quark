@@ -10,7 +10,7 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 
-// TODO merge with the other brick module
+// TODO CONTENT merge with the other brick module
 @LoadModule(category = ModuleCategory.BUILDING)
 public class CobblestoneBricksModule extends QuarkModule {
 

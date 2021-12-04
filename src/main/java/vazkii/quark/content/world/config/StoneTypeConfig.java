@@ -7,10 +7,9 @@ import vazkii.quark.base.module.config.type.OrePocketConfig;
 
 public class StoneTypeConfig extends AbstractConfigType {
 
-	@Config
-	public DimensionConfig dimensions;
-	@Config
-	public OrePocketConfig oregen = new OrePocketConfig(0, 255, 33, 10); // TODO CONTENT change sizes to match 1.18 stone distributions
+	@Config public DimensionConfig dimensions;
+	@Config public OrePocketConfig oregenLower = new OrePocketConfig(0, 60, 64, 2.0);
+	@Config public OrePocketConfig oregenUpper = new OrePocketConfig(64, 128, 64, 0.1666666);
 
 	public StoneTypeConfig(DimensionConfig config) {
 		dimensions = config;
