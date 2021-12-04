@@ -69,7 +69,7 @@ public class GreenerGrassModule extends QuarkModule {
 		BlockColors colors = Minecraft.getInstance().getBlockColors();
 
 		// Can't be AT'd as it's changed by forge
-		Map<IRegistryDelegate<Block>, BlockColor> map = ObfuscationReflectionHelper.getPrivateValue(BlockColors.class, colors, "blockColors");
+		Map<IRegistryDelegate<Block>, BlockColor> map = ObfuscationReflectionHelper.getPrivateValue(BlockColors.class, colors, "f_92571_");
 
 		for(String id : ids) {
 			Registry.BLOCK.getOptional(new ResourceLocation(id)).ifPresent(b -> {

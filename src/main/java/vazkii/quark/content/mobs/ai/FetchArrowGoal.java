@@ -43,7 +43,7 @@ public class FetchArrowGoal extends Goal {
 		if(dist < 3 && fetching.isAlive()) {
 			try {
 				// getArrowStack is non AT-able
-				Method m = ObfuscationReflectionHelper.findMethod(fetching.getClass(), "getPickupItem");
+				Method m = ObfuscationReflectionHelper.findMethod(fetching.getClass(), "m_7941_"); // getPickupItem
 				m.setAccessible(true);
 				ItemStack stack = (ItemStack) m.invoke(fetching);
 				shiba.setMouthItem(stack);
