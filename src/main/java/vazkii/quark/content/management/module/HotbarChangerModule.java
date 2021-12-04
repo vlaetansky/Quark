@@ -20,6 +20,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.IIngameOverlay;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -87,16 +89,18 @@ public class HotbarChangerModule extends QuarkModule {
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public void hudPre(RenderGameOverlayEvent.Pre event) {
-		//		float shift = -getRealHeight(event.getPartialTicks()) + 22; TODO FIX fix translations
-		//		if(shift < 0)
-		//			if(event.getType() == ElementType.HEALTH) {
-		//				event.getMatrixStack().translate(0, shift, 0);
-		//				shifting = true;
-		//			} else if(shifting && (event.getType() == ElementType.DEBUG || event.getType() == ElementType.POTION_ICONS)) {
-		//				event.getMatrixStack().translate(0, -shift, 0);
-		//				shifting = false;
-		//			}
+	public void hudPre(RenderGameOverlayEvent.PreLayer event) {
+		float shift = -getRealHeight(event.getPartialTicks()) + 22;
+		if(shift < 0) {
+			IIngameOverlay overlay = event.getOverlay();
+			if(overlay == ForgeIngameGui.PLAYER_HEALTH_ELEMENT) {
+				event.getMatrixStack().translate(0, shift, 0);
+				shifting = true;
+			} else if(shifting && (event.getType() == ElementType.DEBUG || overlay == ForgeIngameGui.POTION_ICONS_ELEMENT)) {
+				event.getMatrixStack().translate(0, -shift, 0);
+				shifting = false;
+			}
+		}
 	}
 
 	@SubscribeEvent

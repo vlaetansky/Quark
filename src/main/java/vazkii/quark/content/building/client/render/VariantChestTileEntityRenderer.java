@@ -18,17 +18,13 @@ public class VariantChestTileEntityRenderer extends GenericChestBERenderer<Chest
 
 	private static Map<Block, ChestTextureBatch> chestTextures = new HashMap<>();
 	
-	public static Block invBlock = null; 
-
 	public VariantChestTileEntityRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
 	public Material getMaterial(ChestBlockEntity t, ChestType type) {
-		Block block = invBlock;
-		if(block == null)
-			block = t.getBlockState().getBlock();
+		Block block = t.getBlockState().getBlock();
 		
 		ChestTextureBatch batch = chestTextures.get(block);
 		if(batch == null)

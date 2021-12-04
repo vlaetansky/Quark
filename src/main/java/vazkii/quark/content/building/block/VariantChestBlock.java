@@ -1,17 +1,22 @@
 package vazkii.quark.content.building.block;
 
 import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
 import com.google.common.base.Supplier;
+import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
@@ -22,6 +27,7 @@ import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.fml.ModList;
 import vazkii.arl.interf.IBlockItemProvider;
 import vazkii.arl.util.RegistryHelper;
@@ -36,25 +42,25 @@ public class VariantChestBlock extends ChestBlock implements IBlockItemProvider,
 	public final String type;
 	private final QuarkModule module;
 	private BooleanSupplier enabledSupplier = () -> true;
-	
+
 	private String path;
 
 	public VariantChestBlock(String type, QuarkModule module, Supplier<BlockEntityType<? extends ChestBlockEntity>> supplier, Properties props) {
 		super(props, supplier);
 		RegistryHelper.registerBlock(this, type + "_chest");
 		RegistryHelper.setCreativeTab(this, CreativeModeTab.TAB_DECORATIONS);
-		
+
 		this.type = type;
 		this.module = module;
-		
+
 		path = (this instanceof Compat ? "compat/" : "") + type + "/";
 	}
-	
+
 	@Override
 	public boolean isFlammable(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
 		return false;
 	}
-	
+
 	@Override
 	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
 		if(isEnabled() || group == CreativeModeTab.TAB_SEARCH)
@@ -82,37 +88,6 @@ public class VariantChestBlock extends ChestBlock implements IBlockItemProvider,
 	public BlockEntity newBlockEntity(BlockPos p_153064_, BlockState p_153065_) {
 		return new VariantChestBlockEntity(p_153064_, p_153065_);
 	}
-	
-	@OnlyIn(Dist.CLIENT)
-	public static void setISTER(Item.Properties props, Block block) {
-//		props.setISTER(() -> () -> new BlockEntityWithoutLevelRenderer() { TODO FIX Make new item and add render properties like armor
-//			private final BlockEntity tile = new VariantChestBlockEntity();
-//			//render
-//			@Override
-//			public void renderByItem(ItemStack stack, TransformType transformType, PoseStack matrix, MultiBufferSource buffer, int x, int y) {
-//				VariantChestTileEntityRenderer.invBlock = block;
-//				BlockEntityRenderDispatcher.instance.renderItem(tile, matrix, buffer, x, y);
-//				VariantChestTileEntityRenderer.invBlock = null;
-//			}
-//			
-//		});
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public BlockItem provideItemBlock(Block block, Item.Properties props) {
-		setISTER(props, block);
-		return new BlockItem(block, props);
-	}
-	
-	public static class Compat extends VariantChestBlock {
-
-		public Compat(String type, String mod, QuarkModule module, Supplier<BlockEntityType<? extends ChestBlockEntity>> supplier, Properties props) {
-			super(type, module, supplier, props);
-			setCondition(() -> ModList.get().isLoaded(mod));
-		}
-		
-	}
 
 	@Override
 	public String getChestTexturePath() {
@@ -123,5 +98,50 @@ public class VariantChestBlock extends ChestBlock implements IBlockItemProvider,
 	public boolean isTrap() {
 		return false;
 	}
-	
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public BlockItem provideItemBlock(Block block, Item.Properties props) {
+		return new VariantChestBlock.Item(block, props);
+	}
+
+	public static class Item extends BlockItem {
+
+		public Item(Block block, Properties props) {
+			super(block, props);
+		}
+
+		@Override
+		@OnlyIn(Dist.CLIENT)
+		public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+			consumer.accept(new IItemRenderProperties() {
+
+				@Override
+				public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+					Minecraft mc = Minecraft.getInstance();
+
+					return new BlockEntityWithoutLevelRenderer(mc.getBlockEntityRenderDispatcher(), mc.getEntityModels()) {
+						private final BlockEntity tile = new VariantChestBlockEntity(BlockPos.ZERO, getBlock().defaultBlockState());
+
+						@Override
+						public void renderByItem(ItemStack stack, TransformType transformType, PoseStack pose, MultiBufferSource buffer, int x, int y) {
+							mc.getBlockEntityRenderDispatcher().renderItem(tile, pose, buffer, x, y);
+						}
+
+					};
+				}
+
+			});	
+		}
+	}
+
+	public static class Compat extends VariantChestBlock {
+
+		public Compat(String type, String mod, QuarkModule module, Supplier<BlockEntityType<? extends ChestBlockEntity>> supplier, Properties props) {
+			super(type, module, supplier, props);
+			setCondition(() -> ModList.get().isLoaded(mod));
+		}
+
+	}
+
 }

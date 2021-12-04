@@ -9,9 +9,11 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Multimap;
 
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -27,6 +29,7 @@ import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.common.ForgeMod;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.client.handler.ModelHandler;
 import vazkii.quark.base.item.IQuarkItem;
 import vazkii.quark.base.module.QuarkModule;
 
@@ -62,14 +65,21 @@ public class ForgottenHatItem extends ArmorItem implements IQuarkItem {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-		consumer.accept(new RenderProperties());	
+		consumer.accept(new IItemRenderProperties() {
+			
+			@Override
+			@SuppressWarnings("unchecked")
+			public <A extends HumanoidModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, A _default) {
+				return (A) ModelHandler.armorModel(ModelHandler.forgotten_hat, armorSlot);
+			}
+		
+		});	
 	}
 	
 	@Override
 	public boolean isEnchantable(@Nonnull ItemStack stack) {
 		return false;
 	}
-
 
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
@@ -97,24 +107,5 @@ public class ForgottenHatItem extends ArmorItem implements IQuarkItem {
 	public boolean isEnabled() {
 		return module != null && module.enabled;
 	}
-	
-	@OnlyIn(Dist.CLIENT)
-	private static class RenderProperties implements IItemRenderProperties {
-
-//		@OnlyIn(Dist.CLIENT) TODO FIX add model
-//		@SuppressWarnings("rawtypes")
-//		private HumanoidModel model;
-//		
-//		@Override
-//		@SuppressWarnings("unchecked")
-//		public <A extends HumanoidModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, A _default) {
-//			if(model == null)
-//				model = new ForgottenHatModel();
-//
-//			return (A) model;
-//		}
-		
-	}
-
 
 }

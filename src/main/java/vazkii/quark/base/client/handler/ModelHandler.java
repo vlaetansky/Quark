@@ -2,7 +2,10 @@ package vazkii.quark.base.client.handler;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Function;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.base.Supplier;
 
@@ -12,6 +15,7 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -20,8 +24,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.client.render.QuarkArmorModel;
 import vazkii.quark.content.experimental.shiba.client.model.ShibaModel;
 import vazkii.quark.content.mobs.client.model.CrabModel;
+import vazkii.quark.content.mobs.client.model.ForgottenHatModel;
 import vazkii.quark.content.mobs.client.model.FoxhoundModel;
 import vazkii.quark.content.mobs.client.model.FrogModel;
 import vazkii.quark.content.mobs.client.model.StonelingModel;
@@ -33,6 +39,7 @@ import vazkii.quark.content.mobs.client.model.WraithModel;
 public class ModelHandler {
 
 	private static Map<ModelLayerLocation, Layer> layers = new HashMap<>();
+	private static Map<Pair<ModelLayerLocation, EquipmentSlot>, QuarkArmorModel> cachedArmors = new HashMap<>();
 	
 	public static ModelLayerLocation shiba;
 	public static ModelLayerLocation foxhound;
@@ -42,6 +49,8 @@ public class ModelHandler {
 	public static ModelLayerLocation toretoise;
 	public static ModelLayerLocation wraith;
 	
+	public static ModelLayerLocation forgotten_hat;
+
 	private static boolean modelsInitted = false;
 	
 	private static void initModels() {
@@ -56,12 +65,22 @@ public class ModelHandler {
 		toretoise = addModel("toretoise", ToretoiseModel::createBodyLayer, ToretoiseModel::new);
 		wraith = addModel("wraith", WraithModel::createBodyLayer, WraithModel::new);
 		
+		forgotten_hat = addArmorModel("forgotten_hat", ForgottenHatModel::createBodyLayer);
+
 		modelsInitted = true;
 	}
 
-	public static ModelLayerLocation addModel(String name, Supplier<LayerDefinition> supplier, Function<ModelPart, EntityModel<?>> modelConstructor) {
+	private static ModelLayerLocation addModel(String name, Supplier<LayerDefinition> supplier, Function<ModelPart, EntityModel<?>> modelConstructor) {
+		return addLayer(name, new Layer(supplier, modelConstructor));
+	}
+	
+	private static ModelLayerLocation addArmorModel(String name, Supplier<LayerDefinition> supplier) {
+		return addLayer(name, new Layer(supplier, QuarkArmorModel::new));
+	}
+	
+	private static ModelLayerLocation addLayer(String name, Layer layer) {
 		ModelLayerLocation loc = new ModelLayerLocation(new ResourceLocation(Quark.MOD_ID, name), "main");
-		layers.put(loc, new Layer(supplier, modelConstructor));
+		layers.put(loc, layer);
 		return loc;
 	}
 
@@ -84,14 +103,38 @@ public class ModelHandler {
 		
 		return (M) layer.modelConstructor.apply(mc.getEntityModels().bakeLayer(location));
 	}
+	
+	public static QuarkArmorModel armorModel(ModelLayerLocation location, EquipmentSlot slot) {
+		Pair<ModelLayerLocation, EquipmentSlot> key = Pair.of(location, slot);
+		if(cachedArmors.containsKey(key))
+			return cachedArmors.get(key);
+		
+		initModels();
+		
+		Layer layer = layers.get(location);
+		Minecraft mc = Minecraft.getInstance();
+		QuarkArmorModel model = layer.armorModelConstructor.apply(mc.getEntityModels().bakeLayer(location), slot);
+		cachedArmors.put(key, model);
+		
+		return model; 
+	}
 
 	private static class Layer {
+		
 		final Supplier<LayerDefinition> definition;
 		final Function<ModelPart, EntityModel<?>> modelConstructor;
+		final BiFunction<ModelPart, EquipmentSlot, QuarkArmorModel> armorModelConstructor;
 		
 		public Layer(Supplier<LayerDefinition> definition, Function<ModelPart, EntityModel<?>> modelConstructor) {
 			this.definition = definition;
 			this.modelConstructor = modelConstructor;
+			this.armorModelConstructor = null;	
+		}
+
+		public Layer(Supplier<LayerDefinition> definition, BiFunction<ModelPart, EquipmentSlot, QuarkArmorModel> armorModelConstructor) {
+			this.definition = definition;
+			this.modelConstructor = null;
+			this.armorModelConstructor = armorModelConstructor;
 		}
 		
 	}

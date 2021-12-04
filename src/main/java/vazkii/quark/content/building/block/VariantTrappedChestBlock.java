@@ -90,8 +90,7 @@ public class VariantTrappedChestBlock extends ChestBlock implements IBlockItemPr
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public BlockItem provideItemBlock(Block block, Item.Properties props) {
-		VariantChestBlock.setISTER(props, block);
-		return new BlockItem(block, props);
+		return new VariantChestBlock.Item(block, props);
 	}
 
 	public static class Compat extends VariantTrappedChestBlock {
