@@ -56,8 +56,6 @@ public class CaveCrystalBlock extends QuarkGlassBlock {
 				.sound(SoundType.GLASS)
 				.lightLevel(b -> 11)
 				.requiresCorrectToolForDrops()
-//				.harvestTool(ToolType.PICKAXE) TODO TAG
-//				.harvestLevel(0)
 				.randomTicks()
 				.noOcclusion());
 

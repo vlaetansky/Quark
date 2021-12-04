@@ -15,7 +15,6 @@ public class SturdyStoneBlock extends QuarkBlock {
 		super("sturdy_stone", module, CreativeModeTab.TAB_BUILDING_BLOCKS,
 				Block.Properties.of(Material.STONE)
 				.requiresCorrectToolForDrops()
-//        		.harvestTool(ToolType.PICKAXE) TODO TAG
 				.strength(4F, 10F)
 				.sound(SoundType.STONE));
 	}

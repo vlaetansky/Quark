@@ -53,16 +53,16 @@ public class NewStoneTypesModule extends QuarkModule {
 	
 	@Override
 	public void construct() {
-		expandVanillaStone(Blocks.CALCITE, BigStoneClustersModule.calcite);
+		expandVanillaStone(Blocks.CALCITE);
 		
 		limestoneBlock = makeStone("limestone", limestone, BigStoneClustersModule.limestone, () -> enableLimestone, MaterialColor.STONE);
 		jasperBlock = makeStone("jasper", jasper, BigStoneClustersModule.jasper, () -> enableJasper, MaterialColor.TERRACOTTA_RED);
-		slateBlock = makeStone("slate", slate, BigStoneClustersModule.slate, () -> enableSlate, MaterialColor.ICE);
+		slateBlock = makeStone("slate", slate, BigStoneClustersModule.slate, () -> enableSlate, MaterialColor.ICE); // TODO FIX rename to shale
 		myaliteBlock = makeStone(null, "myalite", myalite, BigStoneClustersModule.myalite, () -> enableMyalite, MaterialColor.COLOR_PURPLE, MyaliteBlock::new);
 	}
 	
-	private void expandVanillaStone(Block raw, BigStoneClusterConfig bigConfig) {
-		makeStone(raw, raw.getRegistryName().getPath(), null, bigConfig, () -> true, null, QuarkBlock::new);
+	private void expandVanillaStone(Block raw) {
+		makeStone(raw, raw.getRegistryName().getPath(), null, null, () -> true, null, QuarkBlock::new);
 	}
 	
 	private Block makeStone(String name, StoneTypeConfig config, BigStoneClusterConfig bigConfig, BooleanSupplier enabledCond, MaterialColor color) {
@@ -70,7 +70,7 @@ public class NewStoneTypesModule extends QuarkModule {
 	}
 	
 	private Block makeStone(final Block raw, String name, StoneTypeConfig config, BigStoneClusterConfig bigConfig, BooleanSupplier enabledCond, MaterialColor color, QuarkBlock.Constructor<QuarkBlock> constr) {
-		BooleanSupplier trueEnabledCond = () -> (!ModuleLoader.INSTANCE.isModuleEnabled(BigStoneClustersModule.class) || !bigConfig.enabled) && enabledCond.getAsBoolean();
+		BooleanSupplier trueEnabledCond = () -> (bigConfig == null || !bigConfig.enabled || !ModuleLoader.INSTANCE.isModuleEnabled(BigStoneClustersModule.class)) && enabledCond.getAsBoolean();
 		
 		Block.Properties props;
 		if(raw != null)
@@ -78,7 +78,6 @@ public class NewStoneTypesModule extends QuarkModule {
 		else 
 			props = Block.Properties.of(Material.STONE, color)
 				.requiresCorrectToolForDrops()
-//				.harvestTool(ToolType.PICKAXE) TODO TAG
 				.strength(1.5F, 6.0F); 
 		
 		Block normal;

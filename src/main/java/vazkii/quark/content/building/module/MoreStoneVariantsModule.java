@@ -56,7 +56,6 @@ public class MoreStoneVariantsModule extends QuarkModule {
 	private void add(String name, MaterialColor color, SoundType sound, BooleanSupplier cond, QuarkBlock.Constructor<QuarkBlock> constr, QuarkBlock.Constructor<QuarkPillarBlock> pillarConstr) {
 		Block.Properties props = Block.Properties.of(Material.STONE, color)
 				.requiresCorrectToolForDrops()
-//        		.harvestTool(ToolType.PICKAXE) TODO TAG
 				.sound(sound)
         		.strength(1.5F, 6.0F);
 		

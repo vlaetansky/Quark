@@ -24,7 +24,6 @@ public class PermafrostUndergroundBiomeModule extends UndergroundBiomeModule {
 		permafrost = new QuarkBlock("permafrost", this, CreativeModeTab.TAB_BUILDING_BLOCKS, 
 				Block.Properties.of(Material.STONE, MaterialColor.COLOR_LIGHT_BLUE)
 				.requiresCorrectToolForDrops()
-//        		.harvestTool(ToolType.PICKAXE) TODO TAG
 				.strength(1.5F, 10F)
 				.sound(SoundType.STONE));
 		

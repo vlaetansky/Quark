@@ -33,7 +33,6 @@ public class BlossomLeavesBlock extends LeavesBlock implements IQuarkBlock {
 				.strength(0.2F)
 				.randomTicks()
 				.sound(SoundType.GRASS)
-//				.harvestTool(ToolType.HOE) TODO TAG
 				.noOcclusion()
 				.isValidSpawn((s, r, p, t) -> false)
 				.isSuffocating((s, r, p) -> false)

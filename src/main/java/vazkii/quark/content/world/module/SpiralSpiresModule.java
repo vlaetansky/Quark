@@ -54,7 +54,6 @@ public class SpiralSpiresModule extends QuarkModule {
 	public void construct() {
 		Block.Properties props = Block.Properties.of(Material.STONE, MaterialColor.TERRACOTTA_PURPLE)
 				.requiresCorrectToolForDrops()
-//        		.harvestTool(ToolType.PICKAXE) TODO TAG
         		.strength(1.5F, 6.0F);
 		dusky_myalite = new QuarkBlock("dusky_myalite", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props);
 				

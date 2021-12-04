@@ -23,8 +23,6 @@ public class MyaliteCrystalBlock extends QuarkGlassBlock implements IMyaliteColo
 				.strength(0.5F, 1200F)
 				.sound(SoundType.GLASS)
 				.lightLevel(b -> 14)
-//				.harvestTool(ToolType.PICKAXE) TODO TAG
-//				.harvestLevel(3)
 				.requiresCorrectToolForDrops()
 				.randomTicks()
 				.noOcclusion());

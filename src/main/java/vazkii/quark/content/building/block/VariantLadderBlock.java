@@ -35,7 +35,6 @@ public class VariantLadderBlock extends LadderBlock {
 	public VariantLadderBlock(String type, QuarkModule module, boolean flammable) {
 		this(type, module, 
 				Block.Properties.copy(Blocks.LADDER),
-//				.harvestTool(ToolType.AXE), TODO TAG
 			flammable);
 	}
 	

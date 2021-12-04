@@ -50,7 +50,7 @@ public class HedgeBlock extends FenceBlock implements IQuarkBlock, IBlockColorPr
 
 		if (leaf instanceof BlossomLeavesBlock) {
 			String colorName = leaf.getRegistryName().getPath().replaceAll("_blossom_leaves", "");
-  		RegistryHelper.registerBlock(this, colorName + "_blossom_hedge");
+			RegistryHelper.registerBlock(this, colorName + "_blossom_hedge");
 		} else {
 			RegistryHelper.registerBlock(this, fence.getRegistryName().getPath().replaceAll("_fence", "_hedge"));
 		}

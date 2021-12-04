@@ -75,7 +75,6 @@ public class CompressedBlocksModule extends QuarkModule {
 		charcoal_block = new BurnForeverBlock("charcoal_block", this, CreativeModeTab.TAB_BUILDING_BLOCKS,
 				Block.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK)
 						.requiresCorrectToolForDrops()
-//		        		.harvestTool(ToolType.PICKAXE) TODO TAG
 						.strength(5F, 10F)
 						.sound(SoundType.STONE), true)
 				.setCondition(() -> enableCharcoalBlock);

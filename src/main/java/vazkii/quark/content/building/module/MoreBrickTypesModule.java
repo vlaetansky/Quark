@@ -54,7 +54,6 @@ public class MoreBrickTypesModule extends QuarkModule {
 		VariantHandler.addSlabStairsWall(new QuarkBlock(name + "_bricks", this, CreativeModeTab.TAB_BUILDING_BLOCKS, 
 				Block.Properties.copy(parent)
 				.requiresCorrectToolForDrops())
-//				.harvestTool(ToolType.PICKAXE)) TODO TAG
 				.setCondition(cond));
 	}
 	

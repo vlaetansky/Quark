@@ -1,0 +1,24 @@
+{
+  "replace": false,
+  "values": [
+    "quark:blue_blossom_leaves",
+    "quark:lavender_blossom_leaves",
+    "quark:orange_blossom_leaves",
+    "quark:pink_blossom_leaves",
+    "quark:yellow_blossom_leaves",
+    "quark:red_blossom_leaves",
+    "quark:oak_leaf_carpet",
+    "quark:spruce_leaf_carpet",
+    "quark:birch_leaf_carpet",
+    "quark:jungle_leaf_carpet",
+    "quark:acacia_leaf_carpet",
+    "quark:dark_oak_leaf_carpet",
+    "quark:blue_blossom_leaf_carpet",
+    "quark:lavender_blossom_leaf_carpet",
+    "quark:orange_blossom_leaf_carpet",
+    "quark:pink_blossom_leaf_carpet",
+    "quark:yellow_blossom_leaf_carpet",
+    "quark:red_blossom_leaf_carpet",
+    "quark:thatch"
+  ]
+}
