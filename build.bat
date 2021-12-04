@@ -1,5 +1,2 @@
-gradlew clean 
-gradlew build 
-gradlew sortArtifacts 
-gradlew incrementBuildNumber
+gradlew clean build sortArtifacts incrementBuildNumber
 pause
