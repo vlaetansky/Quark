@@ -27,7 +27,7 @@ public class AutoWalkKeybindModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
 		if(enabled)
-			keybind = ModKeybindHandler.init("autorun", "caps.lock", ModKeybindHandler.ACCESSIBILITY_GROUP);
+			keybind = ModKeybindHandler.init("autorun", null, ModKeybindHandler.MISC_GROUP);
 	}
 
 	@SubscribeEvent
@@ -41,7 +41,7 @@ public class AutoWalkKeybindModule extends QuarkModule {
 	public void onKeyInput(InputEvent.KeyInputEvent event) {
 		acceptInput();
 	}
-
+	
 	private void acceptInput() {
 		Minecraft mc = Minecraft.getInstance();
 

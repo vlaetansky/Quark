@@ -63,6 +63,8 @@ public class ModelAccessor implements TweenAccessor<HumanoidModel<?>> {
 	public static final int MODEL_X = MODEL + ROT_X;
 	public static final int MODEL_Y = MODEL + ROT_Y;
 	public static final int MODEL_Z = MODEL + ROT_Z;
+	
+	// TODO CONTENT check if piece position can be changed again
 
 	private final Map<HumanoidModel<?>, float[]> MODEL_VALUES = new WeakHashMap<>();
 

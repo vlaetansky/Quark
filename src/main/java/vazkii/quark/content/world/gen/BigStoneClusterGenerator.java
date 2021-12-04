@@ -18,8 +18,6 @@ public class BigStoneClusterGenerator extends ClusterBasedGenerator {
 	private final BigStoneClusterConfig config;
 	private final BlockState placeState;
 
-	// TODO FIX these aren't doing anything
-
 	public BigStoneClusterGenerator(BigStoneClusterConfig config, BlockState placeState, BooleanSupplier condition) {
 		super(config.dimensions, () -> config.enabled && condition.getAsBoolean(), config, (long) placeState.getBlock().getRegistryName().toString().hashCode());
 		this.config = config;

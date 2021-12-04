@@ -69,6 +69,8 @@ public class BigStoneClustersModule extends QuarkModule {
 		BooleanSupplier dioriteSupplier = () -> (!enabled || !diorite.enabled);
 		BooleanSupplier andesiteSupplier = () -> (!enabled || !andesite.enabled);
 		
+		// TODO FIX conditionalizing isn't working
+		
 		conditionalize(OrePlacements.ORE_GRANITE_UPPER, graniteSupplier);
 		conditionalize(OrePlacements.ORE_GRANITE_LOWER, graniteSupplier);
 	
