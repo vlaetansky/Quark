@@ -19,10 +19,10 @@ import vazkii.arl.interf.IBlockColorProvider;
 import vazkii.quark.base.block.QuarkVineBlock;
 import vazkii.quark.base.module.QuarkModule;
 
-public class BurntVineBlock extends QuarkVineBlock implements IBlockColorProvider {
+public class CutVineBlock extends QuarkVineBlock implements IBlockColorProvider {
 
-	public BurntVineBlock(QuarkModule module) {
-		super(module, "burnt_vine", false);
+	public CutVineBlock(QuarkModule module) {
+		super(module, "cut_vine", false);
 	}
 	
 	@Override 
