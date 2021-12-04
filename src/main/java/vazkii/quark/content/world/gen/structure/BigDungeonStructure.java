@@ -152,7 +152,7 @@ public class BigDungeonStructure extends JigsawFeature {
 		return getRegistryName().toString();
 	}
 
-//	public static class Start extends JigsawFeature.FeatureStart { TODO FIX figure out how to shift the pieces
+//	public static class Start extends JigsawFeature.FeatureStart { TODO FIX Mega Dungeons are NOT spawning
 //
 //		public Start(JigsawFeature structureIn, int chunkX, int chunkZ, BoundingBox boundsIn, int referenceIn, long seed) {
 //			super(structureIn, chunkX, chunkZ, boundsIn, referenceIn, seed);

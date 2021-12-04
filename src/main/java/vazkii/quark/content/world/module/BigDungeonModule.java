@@ -63,7 +63,7 @@ public class BigDungeonModule extends QuarkModule {
 //		feature = STRUCTURE.configured(new JigsawConfiguration(() -> BigDungeonStructure.startPattern, maxRooms));
 	}
 
-//	@SubscribeEvent TODO CHECK this is probably needed
+//	@SubscribeEvent
 //	public void onBiomeLoad(BiomeLoadingEvent event) {
 //		if(biomeConfig.canSpawn(event))
 //			event.getGeneration().getStructures().add(() -> feature);

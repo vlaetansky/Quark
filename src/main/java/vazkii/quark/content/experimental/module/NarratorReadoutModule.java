@@ -48,8 +48,8 @@ public class NarratorReadoutModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
 		if(enabled) {
-			keybind = ModKeybindHandler.init("narrator_readout", "n", ModKeybindHandler.ACCESSIBILITY_GROUP);
-			keybindFull = ModKeybindHandler.init("narrator_full_readout", "m", ModKeybindHandler.ACCESSIBILITY_GROUP);
+			keybind = ModKeybindHandler.init("narrator_readout", null, ModKeybindHandler.MISC_GROUP);
+			keybindFull = ModKeybindHandler.init("narrator_full_readout", null, ModKeybindHandler.MISC_GROUP);
 		}
 	}
 
