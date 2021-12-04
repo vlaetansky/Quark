@@ -277,6 +277,7 @@
 	"quark.misc.celebration": "Celebrating 10 Years of Vazkii's Mods (2021)",
 	"quark.misc.ancient_tome_tooltip": "+I %s (Max. %s)",
 	"quark.misc.autowalking": "Auto-Walking",
+	"quark.misc.rightclick_to_craft": "Right Click to Craft",
 
 	"quark.misc.reloaded0": "Your quark config has been reloaded.",
 	"quark.misc.reloaded1": "- If you changed anything that would change recipes, please run /reload.",
