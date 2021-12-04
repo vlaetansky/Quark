@@ -13,7 +13,7 @@ public class StructureTemplateMixin {
 	
 	@ModifyVariable(method = "placeInWorld(Lnet/minecraft/world/level/ServerLevelAccessor;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructurePlaceSettings;Ljava/util/Random;I)Z",
 			at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplate$StructureBlockInfo;nbt:Lnet/minecraft/nbt/CompoundTag;", ordinal = 0),
-			index = 21)
+			index = 22)
 	private BlockState captureLocalBlockstate(BlockState state) {
 		return StructureBlockReplacementHandler.getResultingBlockState(state);
 	}

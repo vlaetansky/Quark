@@ -7,11 +7,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 import vazkii.quark.content.tools.module.AmbientDiscsModule;
 
 @Mixin(JukeboxBlockEntity.class)
-public class JukeboxTileEntityMixin {
+public class JukeboxBlockEntityMixin {
 
 	@Inject(method = "load", at = @At("TAIL"))
 	public void load(CompoundTag nbt, CallbackInfo info) {

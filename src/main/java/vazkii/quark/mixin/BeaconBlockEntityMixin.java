@@ -15,7 +15,7 @@ public class BeaconBlockEntityMixin {
 
 	// This captures the for loop inside tick that computes the beacon segments
 	@ModifyConstant(method = "tick", constant = @Constant(intValue = 0))
-	public int tick(int val, Level level, BlockPos pos, BlockState state, BeaconBlockEntity beacon) { // TODO FIX mixin 
+	private static int tick(int val, Level level, BlockPos pos, BlockState state, BeaconBlockEntity beacon) { 
 		return CaveCrystalUndergroundBiomeModule.tickBeacon(beacon);
 	}
 	

@@ -1,7 +1,5 @@
 package vazkii.quark.base.handler;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
@@ -13,7 +11,6 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 import com.google.common.base.Predicates;
-import com.google.common.base.Throwables;
 
 import net.minecraft.Util;
 import net.minecraft.client.resources.language.I18n;
@@ -71,20 +68,6 @@ public class MiscUtil {
 	public static final ResourceLocation GENERAL_ICONS = new ResourceLocation(Quark.MOD_ID, "textures/gui/general_icons.png");
 
 	public static final int BASIC_GUI_TEXT_COLOR = 0x404040;
-	
-	private static final MethodHandle LOOT_TABLE_POOLS, LOOT_POOL_ENTRIES;
-
-	static {
-		MethodHandles.Lookup lookup = MethodHandles.lookup();
-		Field lootTablePools = ObfuscationReflectionHelper.findField(LootTable.class, "pools");
-		Field lootPoolEntries = ObfuscationReflectionHelper.findField(LootPool.class, "entries");
-		try {
-			LOOT_TABLE_POOLS = lookup.unreflectGetter(lootTablePools);
-			LOOT_POOL_ENTRIES = lookup.unreflectGetter(lootPoolEntries);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
-	}
 
 	public static final Direction[] HORIZONTALS = new Direction[] {
 			Direction.NORTH,
@@ -130,27 +113,17 @@ public class MiscUtil {
 	};
 
 	public static void addToLootTable(LootTable table, LootPoolEntryContainer entry) {
-		List<LootPool> pools = getPools(table);
+		List<LootPool> pools = table.pools;
 		if (!pools.isEmpty()) {
-			getEntries(pools.get(0)).add(entry);
-		}
-	}
-
-	public static List<LootPool> getPools(LootTable table) {
-		try {
-			return (List<LootPool>) LOOT_TABLE_POOLS.invokeExact(table);
-		} catch (Throwable throwable) {
-			Throwables.throwIfUnchecked(throwable);
-			throw new RuntimeException(throwable);
-		}
-	}
-
-	public static List<LootPoolEntryContainer> getEntries(LootPool pool) {
-		try {
-			return (List<LootPoolEntryContainer>) LOOT_POOL_ENTRIES.invokeExact(pool);
-		} catch (Throwable throwable) {
-			Throwables.throwIfUnchecked(throwable);
-			throw new RuntimeException(throwable);
+			LootPool firstPool = pools.get(0);
+			LootPoolEntryContainer[] entries = firstPool.entries;
+			
+			LootPoolEntryContainer[] newEntries = new LootPoolEntryContainer[entries.length + 1];
+			for(int i = 0; i < entries.length; i++)
+				newEntries[i] = entries[i];
+			
+			newEntries[entries.length] = entry;
+			firstPool.entries = newEntries;
 		}
 	}
 

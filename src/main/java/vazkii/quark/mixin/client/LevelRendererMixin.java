@@ -15,7 +15,7 @@ import vazkii.quark.base.item.QuarkMusicDiscItem;
 @Mixin(LevelRenderer.class)
 public class LevelRendererMixin {
 
-	@Inject(method = "playStreamingMusic(Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/item/MusicDiscItem;)V",
+	@Inject(method = "playStreamingMusic(Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/item/RecordItem;)V",
 			remap = false,
 			at = @At(value = "JUMP", ordinal = 1),
 			locals = LocalCapture.CAPTURE_FAILSOFT,

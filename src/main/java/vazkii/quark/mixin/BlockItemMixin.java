@@ -19,7 +19,8 @@ public class BlockItemMixin {
 	@Nullable
 	protected native BlockState getPlacementState(BlockPlaceContext context);
 
-	@Redirect(method = "place", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/BlockItem;getPlacementState(Lnet/minecraft/world/item/context/BlockItemUseContext;)Lnet/minecraft/world/level/block/state/BlockState;"))
+	@Redirect(method = "place", at = @At(value = "INVOKE", 
+			target = "Lnet/minecraft/world/item/BlockItem;getPlacementState(Lnet/minecraft/world/item/context/BlockPlaceContext;)Lnet/minecraft/world/level/block/state/BlockState;"))
 	private BlockState alterPlacementState(BlockItem self, BlockPlaceContext context) {
 		return LockRotationModule.fixBlockRotation(getPlacementState(context), context);
 	}

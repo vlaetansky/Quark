@@ -10,9 +10,9 @@ import net.minecraft.world.entity.LivingEntity;
 import vazkii.quark.content.tweaks.client.emote.EmoteHandler;
 
 @Mixin(HumanoidModel.class)
-public class BipedModelMixin<T extends LivingEntity> {
+public class HumanoidModelMixin<T extends LivingEntity> {
 
-	@Inject(method = "setRotationAngles", at = @At("RETURN"))
+	@Inject(method = "setupAnim", at = @At("RETURN"))
 	private void updateEmotes(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo callbackInfo) {
 		EmoteHandler.updateEmotes(entityIn);
 	}

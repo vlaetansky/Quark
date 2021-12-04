@@ -7,6 +7,7 @@ import java.util.function.BiFunction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.minecraft.world.level.levelgen.structure.pieces.PiecesContainer;
 
 public class StructureBlockReplacementHandler {
 
@@ -32,7 +33,7 @@ public class StructureBlockReplacementHandler {
 		return structureHolder.get();
 	}
 
-	public static void setActiveStructure(StructureFeature<?> structure, List<StructurePiece> components) {
+	public static void setActiveStructure(StructureFeature<?> structure, PiecesContainer components) {
 		StructureHolder curr = getCurrentSturctureHolder();
 		if(curr == null) {
 			curr = new StructureHolder();
@@ -40,7 +41,7 @@ public class StructureBlockReplacementHandler {
 		}
 
 		curr.currentStructure = structure;
-		curr.currentComponents = components;
+		curr.currentComponents = components == null ? null : components.pieces();
 	}
 
 	public static interface StructureFunction extends BiFunction<BlockState, StructureHolder, BlockState> {}

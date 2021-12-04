@@ -40,13 +40,6 @@ if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
 
-// TODO: Temporary until forge updates mixin
-configurations.all {
-    resolutionStrategy {
-        force 'org.spongepowered:mixin:0.8.4.1'
-    }
-}
-
 minecraft {
     // The mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   Snapshot are built nightly.
@@ -91,9 +84,6 @@ mixin {
 }
 
 repositories {
-    flatDir { // TODO temporary
-        dirs 'mixin'
-    }
     maven {
         // for AutoRegLib
         name "blamejared"
