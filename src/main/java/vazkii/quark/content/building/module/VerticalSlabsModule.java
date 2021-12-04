@@ -10,6 +10,7 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.building.block.VerticalSlabBlock;
 
+// TODO CONTENT add Moss Variants module
 @LoadModule(category = ModuleCategory.BUILDING)
 public class VerticalSlabsModule extends QuarkModule {
 

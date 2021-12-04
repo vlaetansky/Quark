@@ -70,7 +70,7 @@ public class BlossomSaplingBlock extends SaplingBlock implements IQuarkBlock {
 		public final BlockState leaf;
 		public BlossomSaplingBlock sapling;
 
-		public BlossomTree(Block leafBlock) {
+		public BlossomTree(Block leafBlock) { // TODO CONTENT these can be made a lot more interesting with new parameters
 			config = (new TreeConfiguration.TreeConfigurationBuilder(
 					BlockStateProvider.simple(Blocks.SPRUCE_LOG),
 					new FancyTrunkPlacer(3, 11, 0), 

@@ -24,6 +24,7 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.building.block.BurntVineBlock;
 
+// TODO CONTENT change to shear for parity
 @LoadModule(category = ModuleCategory.BUILDING, hasSubscriptions = true)
 public class BurnVinesModule extends QuarkModule {
 

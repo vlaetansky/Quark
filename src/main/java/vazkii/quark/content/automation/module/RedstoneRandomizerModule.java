@@ -13,6 +13,7 @@ import vazkii.quark.content.automation.block.RedstoneRandomizerBlock;
  * @author WireSegal
  * Created at 10:34 AM on 8/26/19.
  */
+// TODO CONTENT must be changed off to prismarine cuz it just doesn't work right now
 @LoadModule(category = ModuleCategory.AUTOMATION)
 public class RedstoneRandomizerModule extends QuarkModule {
 

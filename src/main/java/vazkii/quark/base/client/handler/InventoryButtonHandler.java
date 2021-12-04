@@ -28,7 +28,7 @@ import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import vazkii.quark.api.IQuarkButtonIgnored;
+import vazkii.quark.api.IQuarkButtonAllowed;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.GeneralConfig;
 import vazkii.quark.base.handler.InventoryTransferHandler;
@@ -48,7 +48,7 @@ public final class InventoryButtonHandler {
 			Quark.LOG.info("Opened screen {}", screen.getClass().getName());
 		currentButtons.clear();
 		
-		if(screen instanceof AbstractContainerScreen && !(screen instanceof IQuarkButtonIgnored) && !GeneralConfig.isScreenIgnored(screen)) {
+		if(screen instanceof AbstractContainerScreen && (screen instanceof IQuarkButtonAllowed || GeneralConfig.isScreenAllowed(screen))) {
 			Minecraft mc = Minecraft.getInstance();
 			AbstractContainerScreen<?> containerScreen = (AbstractContainerScreen<?>) screen;
 
@@ -87,7 +87,7 @@ public final class InventoryButtonHandler {
 		Screen gui = pressed.getScreen();
 		if (gui instanceof AbstractContainerScreen) {
 			AbstractContainerScreen<?> screen = (AbstractContainerScreen<?>) gui;
-			if(GeneralConfig.isScreenIgnored(screen))
+			if(!GeneralConfig.isScreenAllowed(screen))
 				return;
 			
 			Collection<ButtonProviderHolder> holders = forGui(screen);
@@ -108,7 +108,7 @@ public final class InventoryButtonHandler {
 		Screen gui = pressed.getScreen();
 		if (gui instanceof AbstractContainerScreen) {
 			AbstractContainerScreen<?> screen = (AbstractContainerScreen<?>) gui;
-			if(GeneralConfig.isScreenIgnored(screen))
+			if(!GeneralConfig.isScreenAllowed(screen))
 				return;
 
 			Collection<ButtonProviderHolder> holders = forGui(screen);

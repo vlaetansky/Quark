@@ -46,7 +46,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.EmptyHandler;
 import vazkii.arl.util.ItemNBTHelper;
-import vazkii.quark.api.IQuarkButtonIgnored;
+import vazkii.quark.api.IQuarkButtonAllowed;
 import vazkii.quark.base.client.handler.InventoryButtonHandler;
 import vazkii.quark.base.client.handler.InventoryButtonHandler.ButtonTargetType;
 import vazkii.quark.base.handler.GeneralConfig;
@@ -83,7 +83,7 @@ public class ChestSearchingModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void initGui(ScreenEvent.InitScreenEvent.Post event) {
 		Screen gui = event.getScreen();
-		if(gui instanceof AbstractContainerScreen && !(gui instanceof IQuarkButtonIgnored) && !GeneralConfig.isScreenIgnored(gui)) {
+		if(gui instanceof AbstractContainerScreen && (gui instanceof IQuarkButtonAllowed || GeneralConfig.isScreenAllowed(gui))) {
 			Minecraft mc = gui.getMinecraft();
 			AbstractContainerScreen<?> chest = (AbstractContainerScreen<?>) gui;
 			if(InventoryTransferHandler.accepts(chest.getMenu(), mc.player)) {
