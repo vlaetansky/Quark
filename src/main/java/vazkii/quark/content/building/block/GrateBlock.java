@@ -6,8 +6,10 @@ import javax.annotation.Nullable;
 import it.unimi.dsi.fastutil.floats.Float2ObjectArrayMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.SpawnPlacements.Type;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.CreativeModeTab;
@@ -121,11 +123,11 @@ public class GrateBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 	public boolean propagatesSkylightDown(BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos) {
 		return !state.getValue(WATERLOGGED);
 	}
-
-//	@Override TODO CHECK alternative?
-//	public boolean canCreatureSpawn(BlockState state, BlockGetter world, BlockPos pos, Type type, EntityType<?> entityType) {
-//		return false;
-//	}
+	
+	@Override 
+	public boolean isValidSpawn(BlockState state, BlockGetter world, BlockPos pos, Type type, EntityType<?> entityType) {
+		return false;
+	}
 
 	@Override
 	public boolean useShapeForLightOcclusion(BlockState state) {

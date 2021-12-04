@@ -65,7 +65,7 @@ public class GravisandEntity extends FallingBlockEntity {
 	@Override
 	public void tick() {
 		Vec3 pos = position();
-		if (this.fallTile.isAir() || pos.y > 400 || pos.y < -200) {
+		if (this.fallTile.isAir() || pos.y > (level.getMaxBuildHeight() + 100) || pos.y < (level.getMinBuildHeight() - 100)) {
 			this.discard();
 		} else {
 			this.xo = pos.x;

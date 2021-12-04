@@ -12,7 +12,7 @@
 //import vazkii.quark.content.tweaks.capability.LavaBucketDropIn;
 //
 //@LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
-//public class LavaBucketAsTrashModule extends QuarkModule {
+//public class LavaBucketAsTrashModule extends QuarkModule { TODO REWRITE
 //
 //    private static final ResourceLocation LAVA_BUCKET_CAP = new ResourceLocation(Quark.MOD_ID, "lava_bucket_drop_in");
 //

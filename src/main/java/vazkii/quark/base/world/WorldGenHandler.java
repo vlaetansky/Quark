@@ -196,7 +196,8 @@ public class WorldGenHandler {
 			return;
 
 		ChunkGenerator generator = context.chunkGenerator();
-		BlockPos pos = context.origin();
+		BlockPos origin = context.origin();
+		BlockPos pos = new BlockPos(origin.getX(), 0, origin.getZ());
 		WorldGenRegion region = (WorldGenRegion) level;
 		WorldgenRandom random = new WorldgenRandom(new LegacyRandomSource(region.getSeed()));
 		ChunkPos center = region.getCenter();

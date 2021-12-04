@@ -13,6 +13,7 @@ package vazkii.quark.content.management.module;
 import java.util.List;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.GuiMessage;
 import net.minecraft.client.Minecraft;
@@ -169,7 +170,7 @@ public class ItemSharingModule extends QuarkModule {
 				lineProperties.accept((counter_, style, character) -> {
 					String sofar = before.toString();
 					if (sofar.endsWith("    ")) {
-						render(mc, chatGui, updateCounter, sofar.substring(0, sofar.length() - 3), line, captureIndex - shift, style);
+						render(mc, event.getMatrixStack(), chatGui, updateCounter, sofar.substring(0, sofar.length() - 3), line, captureIndex - shift, style);
 						return false;
 					}
 					before.append((char) character);
@@ -182,7 +183,7 @@ public class ItemSharingModule extends QuarkModule {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private static void render(Minecraft mc, ChatComponent chatGui, int updateCounter, String before, GuiMessage<FormattedCharSequence> line, int lineHeight, Style style) {
+	private static void render(Minecraft mc, PoseStack pose, ChatComponent chatGui, int updateCounter, String before, GuiMessage<FormattedCharSequence> line, int lineHeight, Style style) {
 		HoverEvent hoverEvent = style.getHoverEvent();
 		if (hoverEvent != null && hoverEvent.getAction() == HoverEvent.Action.SHOW_ITEM) {
 			HoverEvent.ItemStackInfo contents = hoverEvent.getValue(HoverEvent.Action.SHOW_ITEM);
@@ -206,12 +207,12 @@ public class ItemSharingModule extends QuarkModule {
 				if (alpha > 0) {
 					alphaValue = alpha + x + y;
 
-//					RenderSystem.pushMatrix(); TODO FIX alwinfy what the fuck
-//					RenderSystem.translatef(x - 2, y - 2, -2);
-//					RenderSystem.scalef(0.65f, 0.65f, 0.65f);
-//					mc.getItemRenderer().renderGuiItem(stack, 0, 0);
-//					RenderSystem.popMatrix();
-
+					pose.pushPose();
+					pose.translate(x - 2, y - 2, -2);
+					pose.scale(0.65f, 0.65f, 0.65f);
+					mc.getItemRenderer().renderGuiItem(stack, 0, 0);
+					pose.popPose();
+					
 					alphaValue = 1F;
 				}
 			}

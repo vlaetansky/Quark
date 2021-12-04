@@ -27,11 +27,11 @@ public class BottledCloudModule extends QuarkModule {
     public static Block cloud;
     public static Item bottled_cloud;
     
-    @Config // TODO CONTENT change these numbers
-    public static int cloudLevelBottom = 127;
+    @Config
+    public static int cloudLevelBottom = 191;
     
     @Config 
-    public static int cloudLevelTop = 132;
+    public static int cloudLevelTop = 196;
 
 	@Override
 	public void construct() {

@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import vazkii.quark.base.module.config.type.DimensionConfig;
 import vazkii.quark.base.world.generator.Generator;
@@ -61,15 +62,15 @@ public abstract class MultiChunkFeatureGenerator extends Generator {
 	
 	public abstract BlockPos[] getSourcesInChunk(WorldGenRegion world, Random random, ChunkGenerator generator, BlockPos chunkLeft);
 	
-	public void forEachChunkBlock(BlockPos chunkCorner, int minY, int maxY, Consumer<BlockPos> func) {
-		minY = Math.max(1, minY);
-		maxY = Math.min(255, maxY);
-
-		BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos(chunkCorner.getX(), chunkCorner.getY(), chunkCorner.getZ());
+	public void forEachChunkBlock(LevelReader level, BlockPos chunkCorner, int minY, int maxY, Consumer<BlockPos> func) {
+		minY = Math.max(level.getMinBuildHeight() + 1, minY);
+		maxY = Math.min(level.getMaxBuildHeight() - 1, maxY);
+		
+		BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos(0, 0, 0);
 		for(int x = 0; x < 16; x++)
 			for(int y = minY; y < maxY; y++)
 				for(int z = 0; z < 16; z++) {
-					mutable.set(chunkCorner.getX() + x, chunkCorner.getY() + y, chunkCorner.getZ() + z);
+					mutable.set(chunkCorner.getX() + x, y, chunkCorner.getZ() + z);
 					func.accept(mutable);
 				}
 	}

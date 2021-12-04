@@ -33,7 +33,7 @@ public abstract class ClusterBasedGenerator extends MultiChunkFeatureGenerator {
 		final ClusterShape shape = shapeProvider.around(src);
 		final IGenerationContext context = createContext(src, generator, random, chunkCorner, world);
 		
-		forEachChunkBlock(chunkCorner, shape.getLowerBound(), shape.getUpperBound(), (pos) -> {
+		forEachChunkBlock(world, chunkCorner, shape.getLowerBound(), shape.getUpperBound(), (pos) -> {
 			double noise = shape.noiseDiff(pos);
 			if(noise > 0)
 				context.consume(pos, noise);

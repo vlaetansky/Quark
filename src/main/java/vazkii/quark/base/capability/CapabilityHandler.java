@@ -25,7 +25,7 @@ import vazkii.quark.base.capability.dummy.DummySorting;
 @Mod.EventBusSubscriber(modid = Quark.MOD_ID)
 public class CapabilityHandler {
 	
-	// TODO CHECK this doesnt seem safe
+	// TODO LOW PRIO this doesnt seem safe
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		registerLambda(event, ITransferManager.class, (player) -> false);
 

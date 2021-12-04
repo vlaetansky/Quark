@@ -19,7 +19,7 @@ import vazkii.arl.interf.IBlockColorProvider;
 public interface IMyaliteColorProvider extends IBlockColorProvider {
 	
 	static final PerlinSimplexNoise NOISE = new PerlinSimplexNoise(new LegacyRandomSource(4543543), 
-			ImmutableList.of(-4, -3, -2, -1, 0, 1, 2, 3, 4)); // TODO CHECK
+			ImmutableList.of(-4, -3, -2, -1, 0, 1, 2, 3, 4));
 	
 	@Override
     @OnlyIn(Dist.CLIENT)
