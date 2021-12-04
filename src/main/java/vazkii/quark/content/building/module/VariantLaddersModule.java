@@ -35,18 +35,6 @@ public class VariantLaddersModule extends QuarkModule {
 		for(String type : MiscUtil.NETHER_WOOD_TYPES)
 			variantLadders.add(new VariantLadderBlock(type, this, false));
 	}
-	
-	/**
-	 * TODO CONTENT 1.18: merge Iron Ladder with other ladders
-	 * 
-	 * 	@Override
-		public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-			Direction facing = state.get(FACING);
-			boolean solid = facing.getAxis() != Axis.Y && worldIn.getBlockState(pos.offset(facing.getOpposite())).isSolidSide(worldIn, pos.offset(facing.getOpposite()), facing);
-			BlockState topState = worldIn.getBlockState(pos.up());
-			return solid || (topState.getBlock() == this && (facing.getAxis() == Axis.Y || topState.get(FACING) == facing));
-		}
-	 */
 
 	@Override
 	public void loadComplete() {

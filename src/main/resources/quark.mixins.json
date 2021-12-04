@@ -25,7 +25,8 @@
     "StructureStartMixin",
     "StructureTemplateMixin",
     "TemptGoalMixin",
-    "TrapDoorBlockMixin"
+    "TrapDoorBlockMixin",
+    "LadderBlockMixin"
   ],
   "client": [
     "client.BannerItemMixin",

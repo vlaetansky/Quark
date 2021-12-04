@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -15,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -40,7 +42,11 @@ public class EnhancedLaddersModule extends QuarkModule {
 	@Config.Max(0)
 	@Config
     public double fallSpeed = -0.2;
+	
+	@Config
+	public static boolean allowFreestanding = true;
 
+	private static boolean staticEnabled;
 	private static Tag<Item> laddersTag;
 	
 	@Override
@@ -48,14 +54,39 @@ public class EnhancedLaddersModule extends QuarkModule {
 		laddersTag = ItemTags.createOptional(new ResourceLocation(Quark.MOD_ID, "ladders"));
 	}
 	
+	@Override
+	public void configChanged() {
+		staticEnabled = enabled;
+	}
+	
 	private static boolean canAttachTo(BlockState state, Block ladder, LevelReader world, BlockPos pos, Direction facing) {
 		if (ladder instanceof LadderBlock) {
+			if(allowFreestanding)
+				return canLadderSurvive(state, world, pos);
+			
 			BlockPos offset = pos.relative(facing);
 			BlockState blockstate = world.getBlockState(offset);
 			return !blockstate.isSignalSource() && blockstate.isFaceSturdy(world, offset, facing); 
 		}
 
 		return false;
+	}
+	
+	public static boolean canLadderSurvive(BlockState state, LevelReader world, BlockPos pos) {
+		if(!staticEnabled || !allowFreestanding)
+			return false;
+		
+		Direction facing = state.getValue(LadderBlock.FACING);
+		boolean solid = facing.getAxis() != Axis.Y && world.getBlockState(pos.relative(facing.getOpposite())).isFaceSturdy(world, pos.relative(facing.getOpposite()), facing);
+		BlockState topState = world.getBlockState(pos.above());
+		return solid || (topState.getBlock() instanceof LadderBlock && (facing.getAxis() == Axis.Y || topState.getValue(LadderBlock.FACING) == facing));
+	}
+	
+	public static boolean updateLadder(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
+		if(!staticEnabled || !allowFreestanding)
+			return true;
+		
+		return canLadderSurvive(state, world, currentPos);
 	}
 
 	@SubscribeEvent
