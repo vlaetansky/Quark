@@ -80,10 +80,17 @@ public class ColorRunesModule extends QuarkModule {
 		return color;
 	}
 
+	// TODO clean this code up
 	@OnlyIn(Dist.CLIENT)
 	public static RenderType getGlint() {
 		int color = changeColor();
 		return color >= 0 && color <= RUNE_TYPES ? GlintRenderType.glintColor.get(color) : RenderType.glint();
+	}
+	
+	@OnlyIn(Dist.CLIENT)
+	public static RenderType getGlintTranslucent() {
+		int color = changeColor();
+		return color >= 0 && color <= RUNE_TYPES ? GlintRenderType.glintTranslucentColor.get(color) : RenderType.glint();
 	}
 
 	@OnlyIn(Dist.CLIENT)

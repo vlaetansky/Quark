@@ -22,6 +22,7 @@ import vazkii.quark.content.tools.module.ColorRunesModule;
 public class GlintRenderType {
 	
     public static List<RenderType> glintColor = newRenderList(GlintRenderType::buildGlintRenderType);
+    public static List<RenderType> glintTranslucentColor = newRenderList(GlintRenderType::buildGlintTranslucentRenderType);
     public static List<RenderType> entityGlintColor = newRenderList(GlintRenderType::buildEntityGlintRenderType);
     public static List<RenderType> glintDirectColor = newRenderList(GlintRenderType::buildGlintDirectRenderType);
     public static List<RenderType> entityGlintDirectColor = newRenderList(GlintRenderType::buildEntityGlintDriectRenderType);
@@ -29,8 +30,11 @@ public class GlintRenderType {
     public static List<RenderType> armorGlintColor = newRenderList(GlintRenderType::buildArmorGlintRenderType);
     public static List<RenderType> armorEntityGlintColor = newRenderList(GlintRenderType::buildArmorEntityGlintRenderType);
 
+    private static boolean putTypes = false;
+    
     public static void addGlintTypes(Object2ObjectLinkedOpenHashMap<RenderType, BufferBuilder> map) {
     	addGlintTypes(map, glintColor);
+    	addGlintTypes(map, glintTranslucentColor);
     	addGlintTypes(map, entityGlintColor);
     	addGlintTypes(map, glintDirectColor);
     	addGlintTypes(map, entityGlintDirectColor);
@@ -50,17 +54,33 @@ public class GlintRenderType {
     }
     
     private static void addGlintTypes(Object2ObjectLinkedOpenHashMap<RenderType, BufferBuilder> map, List<RenderType> typeList) {
+    	if(putTypes)
+    		return;
+    		
     	for(RenderType renderType : typeList)
     		if (!map.containsKey(renderType))
     			map.put(renderType, new BufferBuilder(renderType.bufferSize()));
+    	
+    	putTypes = true;
     }
 
     private static RenderType buildGlintRenderType(String name) {
-        final ResourceLocation res = new ResourceLocation(Quark.MOD_ID, "textures/glint/enchanted_item_glint_" + name + ".png");
-
         return RenderType.create("glint_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, RenderType.CompositeState.builder()
         	.setShaderState(RenderStateShard.RENDERTYPE_GLINT_SHADER)
-            .setTextureState(new RenderStateShard.TextureStateShard(res, true, false))
+            .setTextureState(new RenderStateShard.TextureStateShard(texture(name), true, false))
+            .setWriteMaskState(RenderStateShard.COLOR_WRITE)
+            .setCullState(RenderStateShard.NO_CULL)
+            .setDepthTestState(RenderStateShard.EQUAL_DEPTH_TEST)
+            .setTransparencyState(RenderStateShard.GLINT_TRANSPARENCY)
+            .setOutputState(RenderStateShard.ITEM_ENTITY_TARGET)
+            .setTexturingState(RenderStateShard.GLINT_TEXTURING)
+            .createCompositeState(false));
+    }
+    
+    private static RenderType buildGlintTranslucentRenderType(String name) {
+        return RenderType.create("glint_translucent_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, RenderType.CompositeState.builder()
+        	.setShaderState(RenderStateShard.RENDERTYPE_GLINT_TRANSLUCENT_SHADER)
+            .setTextureState(new RenderStateShard.TextureStateShard(texture(name), true, false))
             .setWriteMaskState(RenderStateShard.COLOR_WRITE)
             .setCullState(RenderStateShard.NO_CULL)
             .setDepthTestState(RenderStateShard.EQUAL_DEPTH_TEST)
@@ -71,11 +91,9 @@ public class GlintRenderType {
     }
 
     private static RenderType buildEntityGlintRenderType(String name) {
-        final ResourceLocation res = new ResourceLocation(Quark.MOD_ID, "textures/glint/enchanted_item_glint_" + name + ".png");
-
         return RenderType.create("entity_glint_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, RenderType.CompositeState.builder()
         	.setShaderState(RenderStateShard.RENDERTYPE_ENTITY_GLINT_SHADER)
-            .setTextureState(new RenderStateShard.TextureStateShard(res, true, false))
+            .setTextureState(new RenderStateShard.TextureStateShard(texture(name), true, false))
             .setWriteMaskState(RenderStateShard.COLOR_WRITE)
             .setCullState(RenderStateShard.NO_CULL)
             .setDepthTestState(RenderStateShard.EQUAL_DEPTH_TEST)
@@ -87,11 +105,9 @@ public class GlintRenderType {
 
  
     private static RenderType buildGlintDirectRenderType(String name) {
-        final ResourceLocation res = new ResourceLocation(Quark.MOD_ID, "textures/glint/enchanted_item_glint_" + name + ".png");
-
         return RenderType.create("glint_direct_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, RenderType.CompositeState.builder()
             .setShaderState(RenderStateShard.RENDERTYPE_GLINT_DIRECT_SHADER)
-            .setTextureState(new RenderStateShard.TextureStateShard(res, true, false))
+            .setTextureState(new RenderStateShard.TextureStateShard(texture(name), true, false))
             .setWriteMaskState(RenderStateShard.COLOR_WRITE)
             .setCullState(RenderStateShard.NO_CULL)
             .setDepthTestState(RenderStateShard.EQUAL_DEPTH_TEST)
@@ -102,11 +118,9 @@ public class GlintRenderType {
 
     
     private static RenderType buildEntityGlintDriectRenderType(String name) {
-        final ResourceLocation res = new ResourceLocation(Quark.MOD_ID, "textures/glint/enchanted_item_glint_" + name + ".png");
-
         return RenderType.create("entity_glint_direct_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, RenderType.CompositeState.builder()
             .setShaderState(RenderStateShard.RENDERTYPE_ENTITY_GLINT_DIRECT_SHADER)
-            .setTextureState(new RenderStateShard.TextureStateShard(res, true, false))
+            .setTextureState(new RenderStateShard.TextureStateShard(texture(name), true, false))
             .setWriteMaskState(RenderStateShard.COLOR_WRITE)
             .setCullState(RenderStateShard.NO_CULL)
             .setDepthTestState(RenderStateShard.EQUAL_DEPTH_TEST)
@@ -116,11 +130,9 @@ public class GlintRenderType {
     }
     
     private static RenderType buildArmorGlintRenderType(String name) {
-        final ResourceLocation res = new ResourceLocation(Quark.MOD_ID, "textures/glint/enchanted_item_glint_" + name + ".png");
-        
         return RenderType.create("armor_glint_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, RenderType.CompositeState.builder()
             .setShaderState(RenderStateShard.RENDERTYPE_ARMOR_GLINT_SHADER)
-            .setTextureState(new RenderStateShard.TextureStateShard(res, true, false))
+            .setTextureState(new RenderStateShard.TextureStateShard(texture(name), true, false))
             .setWriteMaskState(RenderStateShard.COLOR_WRITE)
             .setCullState(RenderStateShard.NO_CULL)
             .setDepthTestState(RenderStateShard.EQUAL_DEPTH_TEST)
@@ -131,11 +143,9 @@ public class GlintRenderType {
     }
     
     private static RenderType buildArmorEntityGlintRenderType(String name) {
-        final ResourceLocation res = new ResourceLocation(Quark.MOD_ID, "textures/glint/enchanted_item_glint_" + name + ".png");
-
         return RenderType.create("armor_entity_glint_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false,RenderType.CompositeState.builder()
             .setShaderState(RenderStateShard.RENDERTYPE_ARMOR_ENTITY_GLINT_SHADER)
-            .setTextureState(new RenderStateShard.TextureStateShard(res, true, false))
+            .setTextureState(new RenderStateShard.TextureStateShard(texture(name), true, false))
             .setWriteMaskState(RenderStateShard.COLOR_WRITE)
             .setCullState(RenderStateShard.NO_CULL)
             .setDepthTestState(RenderStateShard.EQUAL_DEPTH_TEST)
@@ -143,5 +153,9 @@ public class GlintRenderType {
             .setTexturingState(RenderStateShard.ENTITY_GLINT_TEXTURING)
             .setLayeringState(RenderStateShard.VIEW_OFFSET_Z_LAYERING)
             .createCompositeState(false));
+    }
+    
+    private static final ResourceLocation texture(String name) {
+    	return new ResourceLocation(Quark.MOD_ID, "textures/glint/enchanted_item_glint_" + name + ".png");
     }
 }

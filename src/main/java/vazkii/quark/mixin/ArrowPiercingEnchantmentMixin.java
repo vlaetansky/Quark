@@ -10,10 +10,10 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 
 @Mixin(ArrowPiercingEnchantment.class)
-public class PiercingEnchantmentMixin {
+public class ArrowPiercingEnchantmentMixin {
 
-	@Inject(method = "canApplyTogether", at = @At("RETURN"), cancellable = true)
-	private void isNotEfficiency(Enchantment enchantment, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
+	@Inject(method = "checkCompatibility", at = @At("RETURN"), cancellable = true)
+	private void checkCompatibility(Enchantment enchantment, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
 		if(callbackInfoReturnable.getReturnValue())
 			callbackInfoReturnable.setReturnValue(enchantment != Enchantments.BLOCK_EFFICIENCY);
 	}

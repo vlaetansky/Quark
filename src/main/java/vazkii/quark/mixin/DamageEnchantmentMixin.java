@@ -12,8 +12,8 @@ import vazkii.quark.content.tools.item.PickarangItem;
 @Mixin(DamageEnchantment.class)
 public class DamageEnchantmentMixin {
 
-	@Inject(method = "canApply", at = @At("RETURN"), cancellable = true)
-	private void canSharpnessApply(ItemStack stack, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
+	@Inject(method = "canEnchant", at = @At("RETURN"), cancellable = true)
+	private void canEnchant(ItemStack stack, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
 		if (!callbackInfoReturnable.getReturnValue()) {
 			callbackInfoReturnable.setReturnValue(stack.getItem() instanceof PickarangItem);
 		}

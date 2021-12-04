@@ -17,10 +17,10 @@ public class BlockItemMixin {
 
 	@Shadow
 	@Nullable
-	protected native BlockState getStateForPlacement(BlockPlaceContext context);
+	protected native BlockState getPlacementState(BlockPlaceContext context);
 
-	@Redirect(method = "tryPlace", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/BlockItem;getStateForPlacement(Lnet/minecraft/item/BlockItemUseContext;)Lnet/minecraft/block/BlockState;"))
+	@Redirect(method = "place", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/BlockItem;getPlacementState(Lnet/minecraft/world/item/context/BlockItemUseContext;)Lnet/minecraft/world/level/block/state/BlockState;"))
 	private BlockState alterPlacementState(BlockItem self, BlockPlaceContext context) {
-		return LockRotationModule.fixBlockRotation(getStateForPlacement(context), context);
+		return LockRotationModule.fixBlockRotation(getPlacementState(context), context);
 	}
 }

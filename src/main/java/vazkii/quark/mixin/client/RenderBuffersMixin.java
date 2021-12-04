@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.RenderType;
 import vazkii.quark.content.tools.client.GlintRenderType;
 
 @Mixin(RenderBuffers.class)
-public class RenderTypeBuffersMixin {
+public class RenderBuffersMixin {
 
 	@Inject(method = "put", at = @At("HEAD"))
 	private static void addGlintTypes(Object2ObjectLinkedOpenHashMap<RenderType, BufferBuilder> mapBuildersIn, RenderType renderTypeIn, CallbackInfo callbackInfo) {

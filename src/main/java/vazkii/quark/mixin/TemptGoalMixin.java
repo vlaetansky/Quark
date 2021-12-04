@@ -14,10 +14,10 @@ import vazkii.quark.content.automation.module.FeedingTroughModule;
 public class TemptGoalMixin {
 
 	@Shadow
-	protected Player closestPlayer;
+	protected Player player;
 
-	@Inject(method = "shouldExecute", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/ai/goal/TemptGoal;closestPlayer:Lnet/minecraft/entity/player/PlayerEntity;", ordinal = 0, shift = At.Shift.AFTER))
+	@Inject(method = "canUse", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/ai/goal/TemptGoal;player:Lnet/minecraft/world/entity/player/Player;", ordinal = 0, shift = At.Shift.AFTER))
 	private void findTroughs(CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
-		closestPlayer = FeedingTroughModule.temptWithTroughs((TemptGoal) (Object) this, closestPlayer);
+		player = FeedingTroughModule.temptWithTroughs((TemptGoal) (Object) this, player);
 	}
 }

@@ -85,11 +85,8 @@ public class ImprovedSleepingModule extends QuarkModule {
 		}
 	}
 
-	public static boolean isEveryoneAsleep(boolean parent) {
-		if(!ModuleLoader.INSTANCE.isModuleEnabled(ImprovedSleepingModule.class))
-			return parent;
-
-		return false;
+	public static boolean shouldCancelVanillaCheck() {
+		return ModuleLoader.INSTANCE.isModuleEnabled(ImprovedSleepingModule.class);
 	}
 
 	public static boolean isEveryoneAsleep(Level world) {

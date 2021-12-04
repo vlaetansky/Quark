@@ -11,7 +11,7 @@ import vazkii.quark.content.tools.module.PickarangModule;
 @Mixin(Entity.class)
 public class EntityMixin {
 
-	@Inject(method = "isImmuneToFire", at = @At("RETURN"), cancellable = true)
+	@Inject(method = "fireImmune", at = @At("RETURN"), cancellable = true)
 	private void isImmuneToFire(CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
 		callbackInfoReturnable.setReturnValue(PickarangModule.getIsFireResistant(callbackInfoReturnable.getReturnValue(), (Entity) (Object) this));
 	}

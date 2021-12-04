@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import vazkii.quark.content.tools.module.ColorRunesModule;
 
 @Mixin(HumanoidArmorLayer.class)
-public class BipedArmorLayerMixin<T extends LivingEntity, M extends HumanoidModel<T>, A extends HumanoidModel<T>> {
+public class HumanoidArmorLayerMixin<T extends LivingEntity, M extends HumanoidModel<T>, A extends HumanoidModel<T>> {
 
 	@Inject(method = "getArmorModelHook", at = @At("HEAD"), remap = false)
 	private void setColorRuneTargetStack(T entity, ItemStack itemStack, EquipmentSlot slot, A model, CallbackInfoReturnable<A> callbackInfoReturnable) {

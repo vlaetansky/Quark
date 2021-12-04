@@ -13,24 +13,24 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import net.minecraft.world.level.block.state.BlockState;
-import vazkii.quark.base.handler.QuarkPistonStructureHelper;
+import vazkii.quark.base.handler.QuarkPistonStructureResolver;
 import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 
 @Mixin(PistonBaseBlock.class)
-public class PistonBlockMixin {
+public class PistonBaseBlockMixin {
 
-	@Redirect(method = "canPush", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;hasTileEntity()Z", remap = false /* bc hasTileEntity is a forge method */))
-	private static boolean hasTileEntity(BlockState blockStateIn) {
+	@Redirect(method = "isPushable", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;hasBlockEntity()Z", remap = false /* bc hasTileEntity is a forge method */))
+	private static boolean isPushable(BlockState blockStateIn) {
 		return PistonsMoveTileEntitiesModule.shouldMoveTE(blockStateIn.hasBlockEntity(), blockStateIn);
 	}
 
-	@Inject(method = "doMove", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/PistonBlockStructureHelper;getBlocksToMove()Ljava/util/List;"), locals = LocalCapture.CAPTURE_FAILHARD)
-	private void postPistonPush(Level worldIn, BlockPos pos, Direction directionIn, boolean extending, CallbackInfoReturnable<Boolean> callbackInfoReturnable, BlockPos _pos, PistonStructureResolver pistonBlockStructureHelper) {
+	@Inject(method = "moveBlocks", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/piston/PistonStructureResolver;getToPush()Ljava/util/List;"), locals = LocalCapture.CAPTURE_FAILHARD)
+	private void moveBlocks(Level worldIn, BlockPos pos, Direction directionIn, boolean extending, CallbackInfoReturnable<Boolean> callbackInfoReturnable, BlockPos _pos, PistonStructureResolver pistonBlockStructureHelper) {
 		PistonsMoveTileEntitiesModule.detachTileEntities(worldIn, pistonBlockStructureHelper, directionIn, extending);
 	}
 
-	@Redirect(method = {"checkForMove", "doMove"}, at = @At(value = "NEW", target = "net/minecraft/block/PistonBlockStructureHelper"))
+	@Redirect(method = {"checkIfExtend", "moveBlocks"}, at = @At(value = "NEW", target = "net/minecraft/world/level/block/piston/PistonStructureResolver"))
 	private PistonStructureResolver transformStructureHelper(Level worldIn, BlockPos posIn, Direction pistonFacing, boolean extending) {
-		return new QuarkPistonStructureHelper(new PistonStructureResolver(worldIn, posIn, pistonFacing, extending), worldIn, posIn, pistonFacing, extending);
+		return new QuarkPistonStructureResolver(new PistonStructureResolver(worldIn, posIn, pistonFacing, extending), worldIn, posIn, pistonFacing, extending);
 	}
 }

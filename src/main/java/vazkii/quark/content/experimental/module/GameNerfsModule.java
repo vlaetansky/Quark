@@ -67,7 +67,7 @@ public class GameNerfsModule extends QuarkModule {
 	
 	// Source for this magic number is the ice-boat-nerf mod 
 	// https://gitlab.com/supersaiyansubtlety/ice_boat_nerf/-/blob/master/src/main/java/net/sssubtlety/ice_boat_nerf/mixin/BoatEntityMixin.java
-	public static float getBoatGlide(float glide) {
+	public static float getBoatFriction(float glide) {
 		return (staticEnabled && disableIceRoads) ? 0.45F : glide;
 	}
 	

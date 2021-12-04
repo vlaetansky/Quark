@@ -14,7 +14,7 @@ import vazkii.quark.content.tweaks.module.HoeHarvestingModule;
 @Mixin(Enchantment.class)
 public class EnchantmentMixin {
 
-	@Inject(method = "canApply", at = @At("RETURN"), cancellable = true)
+	@Inject(method = "canEnchant", at = @At("RETURN"), cancellable = true)
 	private void canApply(ItemStack stack, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
 		if (!callbackInfoReturnable.getReturnValue()) {
 			Enchantment enchantment = (Enchantment) (Object) this;

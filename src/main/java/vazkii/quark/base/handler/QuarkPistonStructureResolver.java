@@ -23,7 +23,7 @@ import vazkii.quark.api.ICollateralMover.MoveResult;
 import vazkii.quark.api.IConditionalSticky;
 import vazkii.quark.api.IIndirectConnector;
 
-public class QuarkPistonStructureHelper extends PistonStructureResolver {
+public class QuarkPistonStructureResolver extends PistonStructureResolver {
 
 	private final PistonStructureResolver parent;
 
@@ -34,7 +34,7 @@ public class QuarkPistonStructureHelper extends PistonStructureResolver {
 	private final List<BlockPos> toMove = Lists.<BlockPos>newArrayList();
 	private final List<BlockPos> toDestroy = Lists.<BlockPos>newArrayList();
 
-	public QuarkPistonStructureHelper(PistonStructureResolver parent, Level worldIn, BlockPos posIn, Direction pistonFacing, boolean extending) {
+	public QuarkPistonStructureResolver(PistonStructureResolver parent, Level worldIn, BlockPos posIn, Direction pistonFacing, boolean extending) {
 		super(worldIn, posIn, pistonFacing, extending);
 		this.parent = parent;
 

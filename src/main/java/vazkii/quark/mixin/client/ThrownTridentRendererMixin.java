@@ -13,9 +13,9 @@ import net.minecraft.world.entity.projectile.ThrownTrident;
 import vazkii.quark.content.tools.module.ColorRunesModule;
 
 @Mixin(ThrownTridentRenderer.class)
-public class TridentRendererMixin {
+public class ThrownTridentRendererMixin {
 
-	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/matrix/MatrixStack;push()V"))
+	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;pushPose()V"))
 	private void setColorRuneTargetStack(ThrownTrident entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, CallbackInfo callbackInfo) {
 		ColorRunesModule.setTargetStack(entityIn.getPickupItem());
 	}

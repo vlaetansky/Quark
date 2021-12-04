@@ -11,16 +11,16 @@ import vazkii.quark.content.experimental.module.GameNerfsModule;
 import vazkii.quark.content.management.entity.ChestPassengerEntity;
 
 @Mixin(Boat.class)
-public class BoatEntityMixin {
+public class BoatMixin {
 
 	@Inject(method = "getControllingPassenger", at = @At("RETURN"), cancellable = true)
 	private void ensurePassengerIsNotChest(CallbackInfoReturnable<Entity> callbackInfoReturnable) {
 		callbackInfoReturnable.setReturnValue(ensurePassengerIsNotChest(callbackInfoReturnable.getReturnValue()));
 	}
 	
-	@Inject(method = "getBoatGlide", at = @At("RETURN"), cancellable = true)
-	private void getBoatGlide(CallbackInfoReturnable<Float> callbackInfoReturnable) {
-		callbackInfoReturnable.setReturnValue(GameNerfsModule.getBoatGlide(callbackInfoReturnable.getReturnValueF()));
+	@Inject(method = "getGroundFriction", at = @At("RETURN"), cancellable = true)
+	private void getGroundFriction(CallbackInfoReturnable<Float> callbackInfoReturnable) {
+		callbackInfoReturnable.setReturnValue(GameNerfsModule.getBoatFriction(callbackInfoReturnable.getReturnValueF()));
 	}
 	
 	private static Entity ensurePassengerIsNotChest(Entity passenger) {

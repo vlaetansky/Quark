@@ -26,55 +26,50 @@ import vazkii.quark.content.tools.module.ColorRunesModule;
 @Mixin(ItemRenderer.class)
 public abstract class ItemRendererMixin {
 
-	@Inject(method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/renderer/model/ItemCameraTransforms$TransformType;ZLcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer;IILnet/minecraft/client/renderer/model/IBakedModel;)V", at = @At("HEAD"))
+	@Inject(method = "render(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/client/renderer/block/model/ItemTransforms$TransformType;ZLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;IILnet/minecraft/client/resources/model/BakedModel;)V", at = @At("HEAD"))
 	private void setColorRuneTargetStack(ItemStack itemStackIn, ItemTransforms.TransformType transformTypeIn, boolean leftHand, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn, BakedModel modelIn, CallbackInfo callbackInfo) {
 		ColorRunesModule.setTargetStack(itemStackIn);
 	}
 
-	@Redirect(method = "getArmorVertexBuilder", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;getArmorGlint()Lnet/minecraft/client/renderer/RenderType;"))
+	@Redirect(method = "getArmorFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;armorGlint()Lnet/minecraft/client/renderer/RenderType;"))
 	private static RenderType getArmorGlint() {
 		return ColorRunesModule.getArmorGlint();
 	}
 
-	@Redirect(method = "getArmorVertexBuilder", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;getArmorEntityGlint()Lnet/minecraft/client/renderer/RenderType;"))
+	@Redirect(method = "getArmorFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;armorEntityGlint()Lnet/minecraft/client/renderer/RenderType;"))
 	private static RenderType getArmorEntityGlint() {
 		return ColorRunesModule.getArmorEntityGlint();
 	}
+	
+	@Redirect(method = "getFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;glintTranslucent()Lnet/minecraft/client/renderer/RenderType;"))
+	private static RenderType getGlintTranslucent() {
+		return ColorRunesModule.getGlintTranslucent();
+	}	
 
-	@Redirect(method = "getBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;getGlint()Lnet/minecraft/client/renderer/RenderType;"))
+	@Redirect(method = "getFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;glint()Lnet/minecraft/client/renderer/RenderType;"))
 	private static RenderType getGlint() {
 		return ColorRunesModule.getGlint();
 	}	
 
-	@Redirect(method = "getBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;getEntityGlint()Lnet/minecraft/client/renderer/RenderType;"))
+	@Redirect(method = "getFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;entityGlint()Lnet/minecraft/client/renderer/RenderType;"))
 	private static RenderType getEntityGlint() {
 		return ColorRunesModule.getEntityGlint();
 	}
-
-	@Redirect(method = "getEntityGlintVertexBuilder", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;getGlintDirect()Lnet/minecraft/client/renderer/RenderType;"))
+	
+	@Redirect(method = "getFoilBufferDirect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;glintDirect()Lnet/minecraft/client/renderer/RenderType;"))
 	private static RenderType getGlintDirect() {
 		return ColorRunesModule.getGlintDirect();
 	}
 
-	@Redirect(method = "getEntityGlintVertexBuilder", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;getEntityGlintDirect()Lnet/minecraft/client/renderer/RenderType;"))
+	@Redirect(method = "getFoilBufferDirect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;entityGlintDirect()Lnet/minecraft/client/renderer/RenderType;"))
 	private static RenderType getEntityGlintDirect() {
 		return ColorRunesModule.getEntityGlintDirect();
 	}
 	
-	@Redirect(method = "getGlintVertexBuilder", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;getGlint()Lnet/minecraft/client/renderer/RenderType;"))
-	private static RenderType getGlintVertexBuilder() {
-		return ColorRunesModule.getGlint();
-	}	
-	
-	@Redirect(method = "getDirectGlintVertexBuilder", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;getGlintDirect()Lnet/minecraft/client/renderer/RenderType;"))
-	private static RenderType getDirectGlintVertexBuilder() {
-		return ColorRunesModule.getGlintDirect();
-	}
-
-	@Accessor
+	@Accessor(value = "itemColors")
 	public abstract ItemColors getItemColors();
 
-	@Inject(method = "renderQuads", at = @At(value = "HEAD"), cancellable = true)
+	@Inject(method = "renderQuadList", at = @At(value = "HEAD"), cancellable = true)
 	// [VanillaCopy] the entire method lmao
 	// Quark: add the alpha value from ItemSharingModule
 	public void renderQuads(PoseStack ms, VertexConsumer builder, List<BakedQuad> quads, ItemStack stack, int lightmap, int overlay, CallbackInfo ci) {

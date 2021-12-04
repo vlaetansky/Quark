@@ -12,8 +12,8 @@ import vazkii.quark.content.tools.module.PickarangModule;
 @Mixin(DamageSource.class)
 public class DamageSourceMixin {
 
-	@Inject(method = "causePlayerDamage", at = @At("HEAD"), cancellable = true)
-	private static void causePlayerDamage(Player player, CallbackInfoReturnable<DamageSource> callbackInfoReturnable) {
+	@Inject(method = "playerAttack", at = @At("HEAD"), cancellable = true)
+	private static void playerAttack(Player player, CallbackInfoReturnable<DamageSource> callbackInfoReturnable) {
 		DamageSource damage = PickarangModule.createDamageSource(player);
 
 		if(damage != null)

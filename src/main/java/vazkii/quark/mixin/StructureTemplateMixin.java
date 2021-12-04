@@ -9,10 +9,10 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import vazkii.quark.base.handler.StructureBlockReplacementHandler;
 
 @Mixin(StructureTemplate.class)
-public class TemplateMixin {
-
-	@ModifyVariable(method = "placeInWorld(Lnet/minecraft/world/IServerWorld;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/gen/feature/template/PlacementSettings;Ljava/util/Random;I)Z",
-			at = @At(value = "FIELD", target = "Lnet/minecraft/world/gen/feature/template/Template$BlockInfo;nbt:Lnet/minecraft/nbt/CompoundNBT;", ordinal = 0),
+public class StructureTemplateMixin {
+	
+	@ModifyVariable(method = "placeInWorld(Lnet/minecraft/world/level/ServerLevelAccessor;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructurePlaceSettings;Ljava/util/Random;I)Z",
+			at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplate$StructureBlockInfo;nbt:Lnet/minecraft/nbt/CompoundTag;", ordinal = 0),
 			index = 21)
 	private BlockState captureLocalBlockstate(BlockState state) {
 		return StructureBlockReplacementHandler.getResultingBlockState(state);

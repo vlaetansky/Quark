@@ -14,8 +14,8 @@ import vazkii.quark.content.building.module.WoodenPostsModule;
 @Mixin(LanternBlock.class)
 public class LanternBlockMixin {
 
-	@Inject(method = "isValidPosition", at = @At("RETURN"), cancellable = true)
-	private void isValidPosition(BlockState state, LevelReader worldIn, BlockPos pos, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
+	@Inject(method = "canSurvive", at = @At("RETURN"), cancellable = true)
+	private void canSurvive(BlockState state, LevelReader worldIn, BlockPos pos, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
 		callbackInfoReturnable.setReturnValue(WoodenPostsModule.canLanternConnect(state, worldIn, pos, callbackInfoReturnable.getReturnValue()));
 	}
 	

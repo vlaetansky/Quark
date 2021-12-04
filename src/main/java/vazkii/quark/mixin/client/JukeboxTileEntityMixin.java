@@ -13,8 +13,8 @@ import vazkii.quark.content.tools.module.AmbientDiscsModule;
 @Mixin(JukeboxBlockEntity.class)
 public class JukeboxTileEntityMixin {
 
-	@Inject(method = "read", at = @At("TAIL"))
-	public void read(BlockState state, CompoundTag nbt, CallbackInfo info) {
+	@Inject(method = "load", at = @At("TAIL"))
+	public void load(CompoundTag nbt, CallbackInfo info) {
 		AmbientDiscsModule.onJukeboxLoad((JukeboxBlockEntity) (Object) this);
 	}
 	

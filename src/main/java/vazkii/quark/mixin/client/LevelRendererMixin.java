@@ -13,14 +13,14 @@ import net.minecraft.world.item.RecordItem;
 import vazkii.quark.base.item.QuarkMusicDiscItem;
 
 @Mixin(LevelRenderer.class)
-public class WorldRendererMixin {
+public class LevelRendererMixin {
 
-	@Inject(method = "playRecord(Lnet/minecraft/util/SoundEvent;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/item/MusicDiscItem;)V",
+	@Inject(method = "playStreamingMusic(Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/item/MusicDiscItem;)V",
 			remap = false,
 			at = @At(value = "JUMP", ordinal = 1),
 			locals = LocalCapture.CAPTURE_FAILSOFT,
 			cancellable = true)
-	public void playRecord(SoundEvent soundIn, BlockPos pos, RecordItem musicDiscItem, CallbackInfo info) {
+	public void playStreamingMusic(SoundEvent soundIn, BlockPos pos, RecordItem musicDiscItem, CallbackInfo info) {
 		if(musicDiscItem instanceof QuarkMusicDiscItem && ((QuarkMusicDiscItem) musicDiscItem).playAmbientSound(pos))
 			info.cancel();
 	}
