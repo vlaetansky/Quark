@@ -46,8 +46,7 @@ public class QuarkPistonTileEntityRenderer {
 			Minecraft mc = Minecraft.getInstance();
 			BlockEntityRenderer<BlockEntity> tileentityrenderer = mc.getBlockEntityRenderDispatcher().getRenderer(tile);
 			if(tileentityrenderer != null) {
-//				tile.setLevelAndPosition(sourceTE.getLevel(), sourceTE.getBlockPos());
-				tile.setLevel(sourceTE.getLevel()); // TODO CHECK safe?
+				tile.setLevel(sourceTE.getLevel());
 				tile.clearRemoved();
 
 				matrix.translate(offset.x, offset.y, offset.z);

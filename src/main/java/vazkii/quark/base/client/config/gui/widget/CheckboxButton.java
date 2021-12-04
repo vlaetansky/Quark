@@ -35,7 +35,7 @@ public class CheckboxButton extends Button {
 		int u = enabled ? 0 : 16;
 		int v = 93;
 
-		blit(mstack, x + 2, y + 1, u, v, 16, 16);
+		blit(mstack, x + 2, y + 1, u, v, 15, 15);
 	}
 
 }

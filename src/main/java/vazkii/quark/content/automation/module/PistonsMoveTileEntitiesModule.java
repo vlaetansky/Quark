@@ -78,11 +78,14 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 			BlockPos pos = delay.getLeft();
 			BlockState state = event.world.getBlockState(pos);
 			BlockEntity tile = BlockEntity.loadStatic(pos, state, delay.getRight());
+
+			if(tile != null) {
+				event.world.setBlockEntity(tile);
+				tile.setBlockState(state);
+				tile.setChanged();
+			}
 			
-			event.world.setBlockEntity(tile);
 			event.world.updateNeighbourForOutputSignal(pos, state.getBlock());
-//			if (tile != null) TODO CHECK
-//				tile.clearCache();
 		}
 
 		delays.clear();
@@ -143,25 +146,26 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 			state = state.setValue(ChestBlock.TYPE, ChestType.SINGLE);
 
 		Block block = state.getBlock();
-		BlockEntity tile = getAndClearMovement(world, pos);
+		BlockEntity entity = getAndClearMovement(world, pos);
 		boolean destroyed = false;
 
-		if (tile != null) {
+		if (entity != null) {
 			BlockState currState = world.getBlockState(pos);
-			BlockEntity currTile = world.getBlockEntity(pos);
+			BlockEntity currEntity = world.getBlockEntity(pos);
 
 			world.removeBlock(pos, false);
 			if (!block.canSurvive(state, world, pos)) {
 				world.setBlock(pos, state, flags);
-				world.setBlockEntity(tile);
-				Block.dropResources(state, world, pos, tile);
+				world.setBlockEntity(entity);
+				Block.dropResources(state, world, pos, entity);
 				world.removeBlock(pos, false);
 				destroyed = true;
 			}
 
 			if (!destroyed) {
 				world.setBlockAndUpdate(pos, currState);
-				world.setBlockEntity(currTile);
+				if(currEntity != null)
+					world.setBlockEntity(currEntity);
 			}
 		}
 
@@ -170,14 +174,14 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 			if (world.getBlockEntity(pos) != null)
 				world.setBlock(pos, state, 0);
 
-			if (tile != null && !world.isClientSide) {
+			if (entity != null && !world.isClientSide) {
 				if (delayedUpdateList.contains(block.getRegistryName().toString()))
-					registerDelayedUpdate(world, pos, tile);
+					registerDelayedUpdate(world, pos, entity);
 				else {
-					world.setBlockEntity(tile);
-					world.getChunk(pos).setBlockEntity(tile);
-//					tile.clearCache(); TODO CHECK is this safe
-
+					world.setBlockEntity(entity);
+					world.getChunk(pos).setBlockEntity(entity);
+					entity.setBlockState(state);
+					entity.setChanged();
 				}
 			}
 			world.updateNeighborsAt(pos, block);
@@ -190,7 +194,7 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 		if (!movements.containsKey(world))
 			movements.put(world, new HashMap<>());
 
-		movements.get(world).put(pos, tile.serializeNBT());
+		movements.get(world).put(pos, tile.saveWithFullMetadata());
 	}
 
 	public static BlockEntity getMovement(Level world, BlockPos pos) {

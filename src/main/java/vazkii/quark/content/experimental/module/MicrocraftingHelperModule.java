@@ -111,7 +111,6 @@ public class MicrocraftingHelperModule extends QuarkModule {
 				int left = cscreen.getGuiLeft() + 95;
 				int top = cscreen.getGuiTop() + 6;
 
-				// TODO CHECK
 				RenderSystem.setShader(GameRenderer::getPositionTexShader);
 				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 				RenderSystem.setShaderTexture(0, MiscUtil.GENERAL_ICONS);

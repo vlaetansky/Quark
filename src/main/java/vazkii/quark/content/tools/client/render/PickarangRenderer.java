@@ -30,7 +30,7 @@ public class PickarangRenderer extends EntityRenderer<PickarangEntity> {
 		float time = entity.tickCount + (mc.isPaused() ? 0 : partialTicks);
 		matrix.mulPose(Vector3f.ZP.rotationDegrees(time * 20F));
 
-		mc.getItemRenderer().renderStatic(entity.getStack(), TransformType.FIXED, light, OverlayTexture.NO_OVERLAY, matrix, buffer, 0); // TODO CHECK 0
+		mc.getItemRenderer().renderStatic(entity.getStack(), TransformType.FIXED, light, OverlayTexture.NO_OVERLAY, matrix, buffer, 0); 
 		
 		matrix.popPose();
 	}

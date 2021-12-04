@@ -190,7 +190,7 @@ public class CameraModule extends QuarkModule {
 
 			if(queueScreenshot) {
 				queueScreenshot = false;
-				Screenshot.grab(mc.gameDirectory, mc.getMainRenderTarget(), (msg) -> { // TODO CHECK does this work?
+				Screenshot.grab(mc.gameDirectory, mc.getMainRenderTarget(), (msg) -> {
 					mc.execute(() -> {
 						mc.gui.getChat().addMessage(msg);
 					});

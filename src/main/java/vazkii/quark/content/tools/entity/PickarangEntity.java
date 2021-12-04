@@ -435,8 +435,6 @@ public class PickarangEntity extends Projectile {
 				if (xpOrb.isPassenger())
 					continue;
 				xpOrb.startRiding(this);
-
-//				xpOrb.throwTime = 2; TODO CHECK what does this even do
 			}
 
 			Vec3 ownerPos = owner.position().add(0, 1, 0);

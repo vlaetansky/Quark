@@ -188,7 +188,6 @@ public class ChestSearchingModule extends QuarkModule {
 		if(gui == null)
 			return;
 
-		// TODO CHECK is lighting okay?
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, MiscUtil.GENERAL_ICONS);

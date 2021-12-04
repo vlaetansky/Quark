@@ -21,25 +21,22 @@ import vazkii.quark.content.tools.module.ColorRunesModule;
 @OnlyIn(Dist.CLIENT)
 public class GlintRenderType {
 	
-    public static List<RenderType> glintColor = newRenderList(GlintRenderType::buildGlintRenderType);
-    public static List<RenderType> glintTranslucentColor = newRenderList(GlintRenderType::buildGlintTranslucentRenderType);
-    public static List<RenderType> entityGlintColor = newRenderList(GlintRenderType::buildEntityGlintRenderType);
-    public static List<RenderType> glintDirectColor = newRenderList(GlintRenderType::buildGlintDirectRenderType);
-    public static List<RenderType> entityGlintDirectColor = newRenderList(GlintRenderType::buildEntityGlintDriectRenderType);
-    
-    public static List<RenderType> armorGlintColor = newRenderList(GlintRenderType::buildArmorGlintRenderType);
-    public static List<RenderType> armorEntityGlintColor = newRenderList(GlintRenderType::buildArmorEntityGlintRenderType);
+    public static List<RenderType> glint = newRenderList(GlintRenderType::buildGlintRenderType);
+    public static List<RenderType> glintTranslucent = newRenderList(GlintRenderType::buildGlintTranslucentRenderType);
+    public static List<RenderType> entityGlint = newRenderList(GlintRenderType::buildEntityGlintRenderType);
+    public static List<RenderType> glintDirect = newRenderList(GlintRenderType::buildGlintDirectRenderType);
+    public static List<RenderType> entityGlintDirect = newRenderList(GlintRenderType::buildEntityGlintDriectRenderType);
+    public static List<RenderType> armorGlint = newRenderList(GlintRenderType::buildArmorGlintRenderType);
+    public static List<RenderType> armorEntityGlint = newRenderList(GlintRenderType::buildArmorEntityGlintRenderType);
 
-    private static boolean putTypes = false;
-    
     public static void addGlintTypes(Object2ObjectLinkedOpenHashMap<RenderType, BufferBuilder> map) {
-    	addGlintTypes(map, glintColor);
-    	addGlintTypes(map, glintTranslucentColor);
-    	addGlintTypes(map, entityGlintColor);
-    	addGlintTypes(map, glintDirectColor);
-    	addGlintTypes(map, entityGlintDirectColor);
-    	addGlintTypes(map, armorGlintColor);
-    	addGlintTypes(map, armorEntityGlintColor);
+    	addGlintTypes(map, glint);
+    	addGlintTypes(map, glintTranslucent);
+    	addGlintTypes(map, entityGlint);
+    	addGlintTypes(map, glintDirect);
+    	addGlintTypes(map, entityGlintDirect);
+    	addGlintTypes(map, armorGlint);
+    	addGlintTypes(map, armorEntityGlint);
     }
     
     private static List<RenderType> newRenderList(Function<String, RenderType> func) {
@@ -54,14 +51,9 @@ public class GlintRenderType {
     }
     
     private static void addGlintTypes(Object2ObjectLinkedOpenHashMap<RenderType, BufferBuilder> map, List<RenderType> typeList) {
-    	if(putTypes)
-    		return;
-    		
     	for(RenderType renderType : typeList)
     		if (!map.containsKey(renderType))
     			map.put(renderType, new BufferBuilder(renderType.bufferSize()));
-    	
-    	putTypes = true;
     }
 
     private static RenderType buildGlintRenderType(String name) {
@@ -143,7 +135,7 @@ public class GlintRenderType {
     }
     
     private static RenderType buildArmorEntityGlintRenderType(String name) {
-        return RenderType.create("armor_entity_glint_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false,RenderType.CompositeState.builder()
+        return RenderType.create("armor_entity_glint_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, RenderType.CompositeState.builder()
             .setShaderState(RenderStateShard.RENDERTYPE_ARMOR_ENTITY_GLINT_SHADER)
             .setTextureState(new RenderStateShard.TextureStateShard(texture(name), true, false))
             .setWriteMaskState(RenderStateShard.COLOR_WRITE)

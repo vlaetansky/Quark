@@ -194,7 +194,7 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrameEntity>
 							matrix.scale(s, s, s);
 						}
 						matrix.scale(0.5F, 0.5F, 0.5F);
-						this.itemRenderer.renderStatic(stack, ItemTransforms.TransformType.FIXED, p_225623_6_, OverlayTexture.NO_OVERLAY, matrix, buff, 0); // TODO CHECK is 0 okay?
+						this.itemRenderer.renderStatic(stack, ItemTransforms.TransformType.FIXED, p_225623_6_, OverlayTexture.NO_OVERLAY, matrix, buff, 0);
 					}
 				}
 			}

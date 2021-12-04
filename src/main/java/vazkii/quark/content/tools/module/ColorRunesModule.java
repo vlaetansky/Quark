@@ -1,5 +1,8 @@
 package vazkii.quark.content.tools.module;
 
+import java.util.List;
+import java.util.function.Supplier;
+
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -80,49 +83,46 @@ public class ColorRunesModule extends QuarkModule {
 		return color;
 	}
 
-	// TODO clean this code up
 	@OnlyIn(Dist.CLIENT)
 	public static RenderType getGlint() {
-		int color = changeColor();
-		return color >= 0 && color <= RUNE_TYPES ? GlintRenderType.glintColor.get(color) : RenderType.glint();
+		return renderType(GlintRenderType.glint, RenderType::glint);
 	}
 	
 	@OnlyIn(Dist.CLIENT)
 	public static RenderType getGlintTranslucent() {
-		int color = changeColor();
-		return color >= 0 && color <= RUNE_TYPES ? GlintRenderType.glintTranslucentColor.get(color) : RenderType.glint();
+		return renderType(GlintRenderType.glintTranslucent, RenderType::glintTranslucent);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static RenderType getEntityGlint() {
-		int color = changeColor();
-		return color >= 0 && color <= RUNE_TYPES ? GlintRenderType.entityGlintColor.get(color) : RenderType.entityGlint();
+		return renderType(GlintRenderType.entityGlint, RenderType::entityGlint);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static RenderType getGlintDirect() {
-		int color = changeColor();
-		return color >= 0 && color <= RUNE_TYPES ? GlintRenderType.glintDirectColor.get(color) : RenderType.glintDirect();
+		return renderType(GlintRenderType.glintDirect, RenderType::glintDirect);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static RenderType getEntityGlintDirect() {
-		int color = changeColor();
-		return color >= 0 && color <= RUNE_TYPES ? GlintRenderType.entityGlintDirectColor.get(color) : RenderType.entityGlintDirect();
+		return renderType(GlintRenderType.entityGlintDirect, RenderType::entityGlintDirect);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static RenderType getArmorGlint() {
-		int color = changeColor();
-		return color >= 0 && color <= RUNE_TYPES ? GlintRenderType.armorGlintColor.get(color) : RenderType.armorGlint();
+		return renderType(GlintRenderType.armorGlint, RenderType::armorGlint);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static RenderType getArmorEntityGlint() {
-		int color = changeColor();
-		return color >= 0 && color <= RUNE_TYPES ? GlintRenderType.armorEntityGlintColor.get(color) : RenderType.armorEntityGlint();
+		return renderType(GlintRenderType.armorEntityGlint, RenderType::armorEntityGlint);
 	}
 
+	private static RenderType renderType(List<RenderType> list, Supplier<RenderType> vanilla) {
+		int color = changeColor();
+		return color >= 0 && color <= RUNE_TYPES ? list.get(color) : vanilla.get();
+	}
+	
 	@Override
 	public void construct() {
 		for(DyeColor color : DyeColor.values())

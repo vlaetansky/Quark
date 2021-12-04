@@ -85,16 +85,16 @@ public class EmotesModule extends QuarkModule {
 
 	@Config(description = "The enabled default emotes. Remove from this list to disable them. You can also re-order them, if you feel like it.")
 	public static List<String> enabledEmotes = Lists.newArrayList(DEFAULT_EMOTE_NAMES);
-	
+
 	@Config(description = "The list of Custom Emotes to be loaded.\nWatch the tutorial on Custom Emotes to learn how to make your own: https://youtu.be/ourHUkan6aQ") 
 	public static List<String> customEmotes = Lists.newArrayList();
-	
+
 	@Config(description = "Enable this to make custom emotes read the file every time they're triggered so you can edit on the fly.\nDO NOT ship enabled this in a modpack, please.")
 	public static boolean customEmoteDebug = false;
-	
+
 	public static boolean emotesVisible = false;
 	public static File emotesDir;
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public static CustomEmoteIconResourcePack resourcePack;
 
@@ -107,20 +107,20 @@ public class EmotesModule extends QuarkModule {
 		emotesDir = new File(mc.gameDirectory, "/config/quark_emotes");
 		if(!emotesDir.exists())
 			emotesDir.mkdirs();
-		
+
 		mc.getResourcePackRepository().addPackFinder(new RepositorySource() {
 
 			@Override
 			public void loadPacks(Consumer<Pack> packConsumer, Pack.PackConstructor packInfoFactory) {
 				resourcePack = new CustomEmoteIconResourcePack();
-				
+
 				String name = "quark:emote_resources";
 				Pack t = Pack.create(name, true, () -> resourcePack, packInfoFactory, Pack.Position.TOP, tx->tx);
 				packConsumer.accept(t);
 			}
 		});
 	}
-	
+
 	@Override
 	public void clientSetup() {
 		Tween.registerAccessor(HumanoidModel.class, ModelAccessor.INSTANCE);
@@ -146,7 +146,7 @@ public class EmotesModule extends QuarkModule {
 
 		for(String s : PATREON_EMOTES)
 			EmoteHandler.addEmote(s);
-		
+
 		for(String s : customEmotes)
 			EmoteHandler.addCustomEmote(s);
 	}
@@ -169,7 +169,7 @@ public class EmotesModule extends QuarkModule {
 			int rows = 0;
 			int row = 0;
 			int tierRow, rowPos;
-			
+
 			Minecraft mc = Minecraft.getInstance();
 			boolean expandDown = mc.options.showSubtitles;
 
@@ -184,7 +184,7 @@ public class EmotesModule extends QuarkModule {
 			}
 
 			int buttonY = (expandDown ? 2 : gui.height - 40);
-			
+
 			List<Button> emoteButtons = new LinkedList<>();
 			for (int tier : keys) {
 				rowPos = 0;
@@ -202,7 +202,7 @@ public class EmotesModule extends QuarkModule {
 							QuarkNetwork.sendToServer(new RequestEmoteMessage(name));
 						});
 						emoteButtons.add(button);
-						
+
 						button.visible = emotesVisible;
 						button.active = emotesVisible;
 						event.addListener(button);
@@ -217,7 +217,7 @@ public class EmotesModule extends QuarkModule {
 				if (rowPos != 0)
 					row++;
 			}
-			
+
 			event.addListener(new TranslucentButton(gui.width - 1 - EMOTE_BUTTON_WIDTH * EMOTES_PER_ROW, buttonY, EMOTE_BUTTON_WIDTH * EMOTES_PER_ROW, 20, 
 					new TranslatableComponent("quark.gui.button.emotes"),
 					(b) -> {
@@ -269,11 +269,12 @@ public class EmotesModule extends QuarkModule {
 
 				stack.pushPose();
 				RenderSystem.setShader(GameRenderer::getPositionTexShader);
-				RenderSystem.enableBlend(); // TODO CHECK
-				RenderSystem.defaultBlendFunc();
 				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, transparency);
 				RenderSystem.setShaderTexture(0, resource);
 
+				RenderSystem.enableBlend(); // TODO LOW PRIO blend doesn't enable
+				RenderSystem.defaultBlendFunc();
+				
 				Screen.blit(stack, x, y, 0, 0, 32, 32, 32, 32);
 				RenderSystem.enableBlend();
 

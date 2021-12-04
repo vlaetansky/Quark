@@ -28,7 +28,7 @@ public class CloudTileEntityRenderer implements BlockEntityRenderer<CloudBlockEn
 		if(scale > 0) {
 			matrix.translate(0.5, 0.5, 0.5);
 			matrix.scale(scale, scale, scale);
-			mc.getItemRenderer().renderStatic(new ItemStack(Blocks.WHITE_CONCRETE), TransformType.NONE, 240, OverlayTexture.NO_OVERLAY, matrix, buffer, 0); // TODO CHECK 0
+			mc.getItemRenderer().renderStatic(new ItemStack(Blocks.WHITE_CONCRETE), TransformType.NONE, 240, OverlayTexture.NO_OVERLAY, matrix, buffer, 0);
 		}
 	}
 
