@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -116,7 +117,7 @@ public class AbacusModule extends QuarkModule {
 
 					if(shape != null) {
 						List<AABB> list = shape.toAabbs();
-						PoseStack matrixStackIn = event.getPoseStack();
+						PoseStack poseStack = event.getPoseStack();
 						
 						// everything from here is a vanilla copy pasta but tweaked to have the same colors
 						
@@ -133,10 +134,19 @@ public class AbacusModule extends QuarkModule {
 							AABB axisalignedbb = list.get(j);
 
 							VoxelShape individual = Shapes.create(axisalignedbb.move(0.0D, 0.0D, 0.0D));
-							Matrix4f matrix4f = matrixStackIn.last().pose();
+							PoseStack.Pose pose = poseStack.last();
+							Matrix4f matrix4f = pose.pose();
 							individual.forAllEdges((minX, minY, minZ, maxX, maxY, maxZ) -> {
-								bufferIn.vertex(matrix4f, (float)(minX + xIn), (float)(minY + yIn), (float)(minZ + zIn)).color(r, g, b, a).endVertex();
-								bufferIn.vertex(matrix4f, (float)(maxX + xIn), (float)(maxY + yIn), (float)(maxZ + zIn)).color(r, g, b, a).endVertex();
+						         float f = (float)(maxX - minX);
+						         float f1 = (float)(maxY - minY);
+						         float f2 = (float)(maxZ - minZ);
+						         float f3 = Mth.sqrt(f * f + f1 * f1 + f2 * f2);
+						         f /= f3;
+						         f1 /= f3;
+						         f2 /= f3;
+								
+								bufferIn.vertex(matrix4f, (float)(minX + xIn), (float)(minY + yIn), (float)(minZ + zIn)).color(r, g, b, a).normal(pose.normal(), f, f1, f2).endVertex();
+								bufferIn.vertex(matrix4f, (float)(maxX + xIn), (float)(maxY + yIn), (float)(maxZ + zIn)).color(r, g, b, a).normal(pose.normal(), f, f1, f2).endVertex();
 							});
 						}
 						
