@@ -13,6 +13,7 @@ package vazkii.quark.content.management.module;
 import java.util.List;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.GuiMessage;
@@ -72,7 +73,7 @@ public class ItemSharingModule extends QuarkModule {
 		if(InputConstants.isKeyDown(mc.getWindow().getWindow(), settings.keyChat.getKey().getValue()) &&
 				screen instanceof AbstractContainerScreen && Screen.hasShiftDown()) {
 			AbstractContainerScreen<?> gui = (AbstractContainerScreen<?>) screen;
-			
+
 			List<? extends GuiEventListener> children = gui.children();
 			for(GuiEventListener c : children)
 				if(c instanceof EditBox) {
@@ -80,7 +81,7 @@ public class ItemSharingModule extends QuarkModule {
 					if(tf.isFocused())
 						return;
 				}
-			
+
 			Slot slot = gui.getSlotUnderMouse();
 			if(slot != null && slot.container != null) {
 				ItemStack stack = slot.getItem();
@@ -125,7 +126,7 @@ public class ItemSharingModule extends QuarkModule {
 	public static MutableComponent createStackComponent(ItemStack stack, MutableComponent component) {
 		if (!ModuleLoader.INSTANCE.isModuleEnabled(ItemSharingModule.class) || !renderItemsInChat)
 			return component;
-		
+
 		Style style = component.getStyle();
 		if (stack.getCount() > 64) {
 			ItemStack copyStack = stack.copy();
@@ -207,14 +208,18 @@ public class ItemSharingModule extends QuarkModule {
 				int y = chatY - mc.font.lineHeight * lineHeight;
 
 				if (alpha > 0) {
-					alphaValue = alpha + x + y;
+					alphaValue = alpha; // TODO LOW PRIO blocks dont fade out properly
 
-					pose.pushPose();
-					pose.translate(x - 2, y - 2, -2);
-					pose.scale(0.65f, 0.65f, 0.65f);
-					mc.getItemRenderer().renderGuiItem(stack, 0, 0);
-					pose.popPose();
+					PoseStack modelviewPose = RenderSystem.getModelViewStack();
 					
+					modelviewPose.pushPose();
+					modelviewPose.translate(x - 2, y - 2, 0);
+					modelviewPose.scale(0.65f, 0.65f, 0.65f);
+					mc.getItemRenderer().renderGuiItem(stack, 0, 0);
+					modelviewPose.popPose();
+					
+					RenderSystem.applyModelViewMatrix();
+
 					alphaValue = 1F;
 				}
 			}
