@@ -125,6 +125,7 @@ public class ItemSharingModule extends QuarkModule {
 	public static MutableComponent createStackComponent(ItemStack stack, MutableComponent component) {
 		if (!ModuleLoader.INSTANCE.isModuleEnabled(ItemSharingModule.class) || !renderItemsInChat)
 			return component;
+		
 		Style style = component.getStyle();
 		if (stack.getCount() > 64) {
 			ItemStack copyStack = stack.copy();

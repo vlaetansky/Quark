@@ -13,7 +13,7 @@ import vazkii.quark.content.management.module.ItemSharingModule;
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
 
-	@Inject(method = "getHoverName", at = @At("RETURN"), cancellable = true)
+	@Inject(method = "getDisplayName", at = @At("RETURN"), cancellable = true)
 	private void getHoverName(CallbackInfoReturnable<Component> callbackInfoReturnable) {
 		callbackInfoReturnable.setReturnValue(ItemSharingModule.createStackComponent((ItemStack) (Object) this, (MutableComponent) callbackInfoReturnable.getReturnValue()));
 	}
