@@ -113,10 +113,9 @@ public abstract class GenericChestBERenderer<T extends BlockEntity & LidBlockEnt
 			if (flag) {
 				icallbackwrapper = abstractchestblock.combine(blockstate, world, p_225616_1_.getBlockPos(), true);
 			} else {
-				icallbackwrapper = DoubleBlockCombiner.Combiner::acceptNone; // getFallback
+				icallbackwrapper = DoubleBlockCombiner.Combiner::acceptNone;
 			}
 
-			// getAnimationProgressRetreiver
 			float f1 = icallbackwrapper.apply(ChestBlock.opennessCombiner((LidBlockEntity)p_225616_1_)).get(p_225616_2_);
 			f1 = 1.0F - f1;
 			f1 = 1.0F - f1 * f1 * f1;
@@ -125,7 +124,7 @@ public abstract class GenericChestBERenderer<T extends BlockEntity & LidBlockEnt
 			if(material != null) {
 				VertexConsumer ivertexbuilder = material.buffer(p_225616_4_, RenderType::entityCutout);
 				if (flag1) {
-					if (chesttype == ChestType.LEFT) {
+					if (chesttype == ChestType.RIGHT) {
 						this.render(p_225616_3_, ivertexbuilder, this.doubleRightLid, this.doubleRightLock, this.doubleRightBottom, f1, i, p_225616_6_);
 					} else {
 						this.render(p_225616_3_, ivertexbuilder, this.doubleLeftLid, this.doubleLeftLock, this.doubleLeftBottom, f1, i, p_225616_6_);
