@@ -147,11 +147,6 @@
     "quark:diorite_bricks_stairs",
     "quark:diorite_bricks_slab",
     "quark:diorite_bricks_vertical_slab",
-    "quark:dirt_bricks",
-    "quark:dirt_bricks_wall",
-    "quark:dirt_bricks_stairs",
-    "quark:dirt_bricks_slab",
-    "quark:dirt_bricks_vertical_slab",
     "quark:granite_bricks",
     "quark:granite_bricks_wall",
     "quark:granite_bricks_stairs",
@@ -391,6 +386,10 @@
     "quark:indigo_crystal_cluster",
     "quark:violet_crystal_cluster",
     "quark:white_crystal_cluster",
-    "quark:black_crystal_cluster"
+    "quark:black_crystal_cluster",
+    "quark:iron_rod",
+    "quark:grate",
+    "quark:blaze_lantern",
+    "quark:ender_watcher"
   ]
 }

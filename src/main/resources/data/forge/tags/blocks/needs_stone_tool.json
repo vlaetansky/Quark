@@ -50,6 +50,8 @@
       "quark:rusty_iron_plate",
       "quark:rusty_iron_plate_slab",
       "quark:rusty_iron_plate_vertical_slab",
-      "quark:rusty_iron_plate_stairs"
+      "quark:rusty_iron_plate_stairs",
+      "quark:iron_rod",
+      "quark:grate"
   ]
 }
