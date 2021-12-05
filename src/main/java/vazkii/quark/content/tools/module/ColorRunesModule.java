@@ -118,6 +118,7 @@ public class ColorRunesModule extends QuarkModule {
 		return renderType(GlintRenderTypes.armorEntityGlint, RenderType::armorEntityGlint);
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	private static RenderType renderType(List<RenderType> list, Supplier<RenderType> vanilla) {
 		int color = changeColor();
 		return color >= 0 && color <= RUNE_TYPES ? list.get(color) : vanilla.get();
