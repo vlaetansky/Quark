@@ -1,7 +1,7 @@
 {
   "type": "minecraft:stonecutting",
   "ingredient": {
-    "item": "quark:tuff"
+    "item": "minecraft:tuff"
   },
   "result": "quark:tuff_pillar",
   "count": 1,

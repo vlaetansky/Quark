@@ -49,29 +49,21 @@ public class NewStoneTypesModule extends QuarkModule {
 
 	public static Map<Block, Block> polishedBlocks = Maps.newHashMap();
 	
-	private Queue<Runnable> defers = new ArrayDeque<>();
+	private static Queue<Runnable> defers = new ArrayDeque<>();
 	
 	@Override
 	public void construct() {
-		expandVanillaStone(Blocks.CALCITE, "calcite");
-		expandVanillaStone(Blocks.DRIPSTONE_BLOCK, "dripstone");
-		expandVanillaStone(Blocks.TUFF, "tuff");
-		
-		limestoneBlock = makeStone("limestone", limestone, BigStoneClustersModule.limestone, () -> enableLimestone, MaterialColor.STONE);
-		jasperBlock = makeStone("jasper", jasper, BigStoneClustersModule.jasper, () -> enableJasper, MaterialColor.TERRACOTTA_RED);
-		shaleBlock = makeStone("shale", shale, BigStoneClustersModule.shale, () -> enableShale, MaterialColor.ICE); 
-		myaliteBlock = makeStone(null, "myalite", myalite, BigStoneClustersModule.myalite, () -> enableMyalite, MaterialColor.COLOR_PURPLE, MyaliteBlock::new);
+		limestoneBlock = makeStone(this, "limestone", limestone, BigStoneClustersModule.limestone, () -> enableLimestone, MaterialColor.STONE);
+		jasperBlock = makeStone(this, "jasper", jasper, BigStoneClustersModule.jasper, () -> enableJasper, MaterialColor.TERRACOTTA_RED);
+		shaleBlock = makeStone(this, "shale", shale, BigStoneClustersModule.shale, () -> enableShale, MaterialColor.ICE); 
+		myaliteBlock = makeStone(this, null, "myalite", myalite, BigStoneClustersModule.myalite, () -> enableMyalite, MaterialColor.COLOR_PURPLE, MyaliteBlock::new);
 	}
 	
-	private void expandVanillaStone(Block raw, String name) {
-		makeStone(raw, name, null, null, () -> true, null, QuarkBlock::new);
+	public static Block makeStone(QuarkModule module, String name, StoneTypeConfig config, BigStoneClusterConfig bigConfig, BooleanSupplier enabledCond, MaterialColor color) {
+		return makeStone(module, null, name, config, bigConfig, enabledCond, color, QuarkBlock::new);
 	}
 	
-	private Block makeStone(String name, StoneTypeConfig config, BigStoneClusterConfig bigConfig, BooleanSupplier enabledCond, MaterialColor color) {
-		return makeStone(null, name, config, bigConfig, enabledCond, color, QuarkBlock::new);
-	}
-	
-	private Block makeStone(final Block raw, String name, StoneTypeConfig config, BigStoneClusterConfig bigConfig, BooleanSupplier enabledCond, MaterialColor color, QuarkBlock.Constructor<QuarkBlock> constr) {
+	public static Block makeStone(QuarkModule module, final Block raw, String name, StoneTypeConfig config, BigStoneClusterConfig bigConfig, BooleanSupplier enabledCond, MaterialColor color, QuarkBlock.Constructor<QuarkBlock> constr) {
 		BooleanSupplier trueEnabledCond = () -> (bigConfig == null || !bigConfig.enabled || !ModuleLoader.INSTANCE.isModuleEnabled(BigStoneClustersModule.class)) && enabledCond.getAsBoolean();
 		
 		Block.Properties props;
@@ -86,18 +78,18 @@ public class NewStoneTypesModule extends QuarkModule {
 		if(raw != null)
 			normal = raw;
 		else 
-			normal = constr.make(name, this, CreativeModeTab.TAB_BUILDING_BLOCKS, props).setCondition(enabledCond);
+			normal = constr.make(name, module, CreativeModeTab.TAB_BUILDING_BLOCKS, props).setCondition(enabledCond);
 		
-		QuarkBlock polished = constr.make("polished_" + name, this, CreativeModeTab.TAB_BUILDING_BLOCKS, props).setCondition(enabledCond);
+		QuarkBlock polished = constr.make("polished_" + name, module, CreativeModeTab.TAB_BUILDING_BLOCKS, props).setCondition(enabledCond);
 		polishedBlocks.put(normal, polished);
 
-		VariantHandler.addSlabStairsWall(normal instanceof IQuarkBlock ? (IQuarkBlock) normal : new QuarkBlockWrapper(normal, this));
+		VariantHandler.addSlabStairsWall(normal instanceof IQuarkBlock ? (IQuarkBlock) normal : new QuarkBlockWrapper(normal, module));
 		VariantHandler.addSlabAndStairs(polished);
 		
 		if(raw == null) {
 			defers.add(() -> {
-				WorldGenHandler.addGenerator(this, new OreGenerator(config.dimensions, config.oregenLower, normal.defaultBlockState(), OreGenerator.ALL_DIMS_STONE_MATCHER, trueEnabledCond), Decoration.UNDERGROUND_ORES, WorldGenWeights.NEW_STONES);
-				WorldGenHandler.addGenerator(this, new OreGenerator(config.dimensions, config.oregenUpper, normal.defaultBlockState(), OreGenerator.ALL_DIMS_STONE_MATCHER, trueEnabledCond), Decoration.UNDERGROUND_ORES, WorldGenWeights.NEW_STONES);
+				WorldGenHandler.addGenerator(module, new OreGenerator(config.dimensions, config.oregenLower, normal.defaultBlockState(), OreGenerator.ALL_DIMS_STONE_MATCHER, trueEnabledCond), Decoration.UNDERGROUND_ORES, WorldGenWeights.NEW_STONES);
+				WorldGenHandler.addGenerator(module, new OreGenerator(config.dimensions, config.oregenUpper, normal.defaultBlockState(), OreGenerator.ALL_DIMS_STONE_MATCHER, trueEnabledCond), Decoration.UNDERGROUND_ORES, WorldGenWeights.NEW_STONES);
 			});
 		}
 		

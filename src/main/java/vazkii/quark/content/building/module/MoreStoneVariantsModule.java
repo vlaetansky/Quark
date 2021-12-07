@@ -4,6 +4,7 @@ import java.util.function.BooleanSupplier;
 
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
@@ -28,6 +29,10 @@ public class MoreStoneVariantsModule extends QuarkModule {
 	
 	@Override
 	public void construct() {
+		expandVanillaStone(this, Blocks.CALCITE, "calcite");
+		expandVanillaStone(this, Blocks.DRIPSTONE_BLOCK, "dripstone");
+		expandVanillaStone(this, Blocks.TUFF, "tuff");
+		
 		BooleanSupplier _true = () -> true;
 		add("granite", MaterialColor.DIRT, SoundType.STONE, _true);
 		add("diorite", MaterialColor.QUARTZ, SoundType.STONE, _true);
@@ -43,12 +48,18 @@ public class MoreStoneVariantsModule extends QuarkModule {
 		add("myalite", MaterialColor.COLOR_PURPLE, SoundType.STONE, () -> NewStoneTypesModule.enabledWithMyalite, MyaliteBlock::new, MyalitePillarBlock::new);
 	}
 	
+	public static void expandVanillaStone(QuarkModule module, Block raw, String name) {
+		NewStoneTypesModule.makeStone(module, raw, name, null, null, () -> true, null, QuarkBlock::new);
+	}
+	
 	@Override
 	public void pushFlags(ConfigFlagManager manager) {
 		manager.putFlag(this, "granite", true);
 		manager.putFlag(this, "diorite", true);
 		manager.putFlag(this, "andesite", true);
 		manager.putFlag(this, "calcite", true);
+		manager.putFlag(this, "dripstone", true);
+		manager.putFlag(this, "tuff", true);
 	}
 	
 	private void add(String name, MaterialColor color, SoundType sound, BooleanSupplier cond) {

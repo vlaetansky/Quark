@@ -1,7 +1,7 @@
 {
   "type": "minecraft:stonecutting",
   "ingredient": {
-    "item": "quark:dripstone"
+    "item": "minecraft:dripstone_block"
   },
   "result": "quark:dripstone_bricks",
   "count": 1,
