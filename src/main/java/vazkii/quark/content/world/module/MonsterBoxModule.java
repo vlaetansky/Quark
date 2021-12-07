@@ -35,9 +35,9 @@ public class MonsterBoxModule extends QuarkModule {
 	public static BlockEntityType<MonsterBoxBlockEntity> blockEntityType;
 	
 	@Config(description = "The chance for the monster box generator to try and place one in a chunk, 1 is 100%\nThis can be higher than 100% if you want multiple per chunk, , 0 is 0%") 
-	public static double chancePerChunk = 0.8;
+	public static double chancePerChunk = 0.2;
 	
-	@Config public static int minY = -100;
+	@Config public static int minY = -50;
 	@Config public static int maxY = 0;
 	@Config public static int minMobCount = 5;
 	@Config public static int maxMobCount = 8;

@@ -178,7 +178,7 @@ public class MiscUtil {
 			return false;
 		} else {
 			int light = world.getLevel().isThundering() ? world.getMaxLocalRawBrightness(pos, 10) : world.getMaxLocalRawBrightness(pos);
-			return light <= rand.nextInt(8);
+			return light == 0;
 		}
 	}
 

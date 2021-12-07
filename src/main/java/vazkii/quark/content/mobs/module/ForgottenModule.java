@@ -34,7 +34,7 @@ public class ForgottenModule extends QuarkModule {
 	@Config(description = "1 in this many Skeletons that spawn under the threshold are replaced with Forgotten.") 
 	public double forgottenSpawnRate = 0.05;
 
-	@Config public int maxHeightForSpawn = 20;
+	@Config public int maxHeightForSpawn = 0;
 
 	@Override
 	public void construct() {

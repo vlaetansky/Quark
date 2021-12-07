@@ -30,7 +30,7 @@ public class StonelingsModule extends QuarkModule {
 	public static EntityType<Stoneling> stonelingType;
 
 	@Config
-	public static int maxYLevel = 24;
+	public static int maxYLevel = 0;
 	@Config
 	public static DimensionConfig dimensions = DimensionConfig.overworld(false);
 	@Config 
