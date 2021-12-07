@@ -17,10 +17,14 @@ import vazkii.quark.base.module.QuarkModule;
 
 public class BambooMatBlock extends QuarkBlock {
 	
-	public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING_HOPPER;
+	private static final EnumProperty<Direction> FACING = BlockStateProperties.FACING_HOPPER;
 	
-	public BambooMatBlock(QuarkModule module) {
-		super("bamboo_mat", module, CreativeModeTab.TAB_BUILDING_BLOCKS,
+	public BambooMatBlock(String name, QuarkModule module) {
+		this(name, module, CreativeModeTab.TAB_BUILDING_BLOCKS);
+	}
+	
+	public BambooMatBlock(String name, QuarkModule module, CreativeModeTab tab) {
+		super(name, module, tab,
 				Block.Properties.of(Material.BAMBOO, MaterialColor.COLOR_YELLOW)
 				.strength(0.5F)
 				.sound(SoundType.BAMBOO));
@@ -55,5 +59,4 @@ public class BambooMatBlock extends QuarkBlock {
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		builder.add(FACING);
 	}
-
 }

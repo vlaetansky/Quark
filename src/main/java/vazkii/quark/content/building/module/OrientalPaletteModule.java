@@ -18,6 +18,7 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.content.building.block.BambooMatBlock;
+import vazkii.quark.content.building.block.BambooMatCarpetBlock;
 import vazkii.quark.content.building.block.PaperLanternBlock;
 import vazkii.quark.content.building.block.PaperWallBlock;
 
@@ -42,7 +43,8 @@ public class OrientalPaletteModule extends QuarkModule {
 		new PaperWallBlock(parent, "paper_wall_big").setCondition(paperBlockCond);
 		new PaperWallBlock(parent, "paper_wall_sakura").setCondition(paperBlockCond);
 		
-		new BambooMatBlock(this).setCondition(bambooMatCond);
+		new BambooMatBlock("bamboo_mat", this).setCondition(bambooMatCond);
+		new BambooMatCarpetBlock("bamboo_mat_carpet", this).setCondition(bambooMatCond);
 	}
 	
 }
