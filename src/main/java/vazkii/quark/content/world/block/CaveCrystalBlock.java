@@ -53,7 +53,7 @@ public class CaveCrystalBlock extends QuarkGlassBlock {
 		super(regname, module, CreativeModeTab.TAB_DECORATIONS,
 				Block.Properties.of(Material.GLASS, materialColor)
 				.strength(0.3F, 0F)
-				.sound(SoundType.GLASS)
+				.sound(SoundType.AMETHYST)
 				.lightLevel(b -> 11)
 				.requiresCorrectToolForDrops()
 				.randomTicks()

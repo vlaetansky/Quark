@@ -12,6 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -35,7 +36,9 @@ public class CaveCrystalClusterBlock extends QuarkBlock implements SimpleWaterlo
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
 	public CaveCrystalClusterBlock(CaveCrystalBlock base) {
-		super(base.getRegistryName().getPath() + "_cluster", base.getModule(), CreativeModeTab.TAB_DECORATIONS, Block.Properties.copy(base));
+		super(base.getRegistryName().getPath() + "_cluster", base.getModule(), CreativeModeTab.TAB_DECORATIONS, 
+				Block.Properties.copy(base)
+				.sound(SoundType.AMETHYST_CLUSTER));
 		
 		this.base = base;
 		base.cluster = this;
