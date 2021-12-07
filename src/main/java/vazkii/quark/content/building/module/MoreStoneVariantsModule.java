@@ -33,6 +33,8 @@ public class MoreStoneVariantsModule extends QuarkModule {
 		add("diorite", MaterialColor.QUARTZ, SoundType.STONE, _true);
 		add("andesite", MaterialColor.STONE, SoundType.STONE, _true);
 		add("calcite", MaterialColor.TERRACOTTA_WHITE, SoundType.CALCITE, _true);
+		add("dripstone", MaterialColor.TERRACOTTA_BROWN, SoundType.DRIPSTONE_BLOCK, _true);
+		add("tuff", MaterialColor.TERRACOTTA_GRAY, SoundType.TUFF, _true);
 		
 		add("limestone", MaterialColor.STONE, SoundType.STONE, () -> NewStoneTypesModule.enabledWithLimestone);
 		add("jasper", MaterialColor.TERRACOTTA_RED, SoundType.STONE, () -> NewStoneTypesModule.enabledWithJasper);

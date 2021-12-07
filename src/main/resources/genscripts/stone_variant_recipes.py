@@ -6,7 +6,6 @@ import re
 copy([
 	('unique/recipe_stone_bricks.json', 'data/{modid}/recipes/building/crafting/stonevariants/{name}_bricks.json'),
 	('unique/recipe_stone_chiseled.json', 'data/{modid}/recipes/building/crafting/stonevariants/chiseled_{name}_bricks.json'),
-	('unique/recipe_stone_pavement.json', 'data/{modid}/recipes/building/crafting/stonevariants/{name}_pavement.json'),
 	('unique/recipe_stone_pillar.json', 'data/{modid}/recipes/building/crafting/stonevariants/{name}_pillar.json'),
 ])
 
