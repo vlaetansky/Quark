@@ -113,7 +113,7 @@ public class MiscUtil {
 	};
 
 	public static void addToLootTable(LootTable table, LootPoolEntryContainer entry) {
-		List<LootPool> pools = table.pools;
+		List<LootPool> pools = ObfuscationReflectionHelper.getPrivateValue(LootTable.class, table, "f_79109_"); // Can't AT
 		if (!pools.isEmpty()) {
 			LootPool firstPool = pools.get(0);
 			LootPoolEntryContainer[] entries = firstPool.entries;
