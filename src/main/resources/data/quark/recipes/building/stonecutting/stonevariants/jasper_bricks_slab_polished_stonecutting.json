@@ -4,7 +4,7 @@
     "item": "quark:polished_jasper"
   },
   "result": "quark:jasper_bricks_slab",
-  "count": 1,
+  "count": 2,
   "conditions": [
     {
       "type": "forge:and",
