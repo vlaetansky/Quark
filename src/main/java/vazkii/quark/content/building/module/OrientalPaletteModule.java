@@ -36,10 +36,10 @@ public class OrientalPaletteModule extends QuarkModule {
 		BooleanSupplier bambooMatCond = () -> enableBambooMats;
 
 		IQuarkBlock parent = new PaperLanternBlock("paper_lantern", this).setCondition(paperBlockCond);
-		new PaperLanternBlock("paper_lantern_sakura", this).setCondition(paperBlockCond);;
+		new PaperLanternBlock("paper_lantern_sakura", this).setCondition(paperBlockCond);
 
-		new PaperWallBlock(parent, "paper_wall").setCondition(paperBlockCond);;
-		new PaperWallBlock(parent, "paper_wall_big").setCondition(paperBlockCond);;
+		new PaperWallBlock(parent, "paper_wall").setCondition(paperBlockCond);
+		new PaperWallBlock(parent, "paper_wall_big").setCondition(paperBlockCond);
 		new PaperWallBlock(parent, "paper_wall_sakura").setCondition(paperBlockCond);
 		
 		new BambooMatBlock(this).setCondition(bambooMatCond);
