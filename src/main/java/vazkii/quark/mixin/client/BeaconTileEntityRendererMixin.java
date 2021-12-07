@@ -10,7 +10,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.world.level.block.entity.BeaconBlockEntity;
-import vazkii.quark.content.world.client.render.QuarkBeaconBlockEntityRenderer;
+import vazkii.quark.content.tools.client.render.QuarkBeaconBlockEntityRenderer;
 
 @Mixin(BeaconRenderer.class)
 public class BeaconTileEntityRendererMixin {

@@ -10,28 +10,28 @@
       "tag": "forge:stone"
     },
     "W": {
-      "item": "quark:white_crystal"
+      "item": "quark:white_corundum"
     },
     "R": {
-      "item": "quark:red_crystal"
+      "item": "quark:red_corundum"
     },
     "O": {
-      "item": "quark:orange_crystal"
+      "item": "quark:orange_corundum"
     },
     "Y": {
-      "item": "quark:yellow_crystal"
+      "item": "quark:yellow_corundum"
     },
     "G": {
-      "item": "quark:green_crystal"
+      "item": "quark:green_corundum"
     },
     "B": {
-      "item": "quark:blue_crystal"
+      "item": "quark:blue_corundum"
     },
     "I": {
-      "item": "quark:indigo_crystal"
+      "item": "quark:indigo_corundum"
     },
     "V": {
-      "item": "quark:violet_crystal"
+      "item": "quark:violet_corundum"
     }
   },
   "result": {
