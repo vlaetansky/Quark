@@ -1,5 +1,7 @@
 package vazkii.quark.content.building.block;
 
+import java.util.function.BooleanSupplier;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -11,14 +13,17 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LadderBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import vazkii.arl.util.RegistryHelper;
+import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
 
-public class VariantLadderBlock extends LadderBlock {
+public class VariantLadderBlock extends LadderBlock implements IQuarkBlock {
 
 	private final QuarkModule module;
 	private final boolean flammable;
+	
+	private BooleanSupplier condition;
 	
 	public VariantLadderBlock(String type, QuarkModule module, Block.Properties props, boolean flammable) {
 		super(props);
@@ -50,7 +55,23 @@ public class VariantLadderBlock extends LadderBlock {
 	}
 	
 	public boolean isEnabled() {
-		return module.enabled;
+		return module.enabled && doesConditionApply();
+	}
+
+	@Override
+	public QuarkModule getModule() {
+		return module;
+	}
+
+	@Override
+	public IQuarkBlock setCondition(BooleanSupplier condition) {
+		this.condition = condition;
+		return this;
+	}
+
+	@Override
+	public boolean doesConditionApply() {
+		return condition != null && condition.getAsBoolean();
 	}
 
 }

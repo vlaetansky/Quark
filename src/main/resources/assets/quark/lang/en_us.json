@@ -963,6 +963,8 @@
 	"block.quark.dripstone_bricks_wall": "Dripstone Brick Wall",
 	"block.quark.tuff_wall": "Tuff Wall",
 	"block.quark.tuff_bricks_wall": "Tuff Brick Wall",
+	"block.quark.iron_pillar": "Iron Pillar",
+	"block.quark.iron_ladder": "Iron Ladder",
 
 	"item.quark.stoneling_spawn_egg": "Stoneling Spawn Egg",
 	"item.quark.frog_spawn_egg": "Frog Spawn Egg",
