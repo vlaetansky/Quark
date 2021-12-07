@@ -53,7 +53,9 @@ public class NewStoneTypesModule extends QuarkModule {
 	
 	@Override
 	public void construct() {
-		expandVanillaStone(Blocks.CALCITE);
+		expandVanillaStone(Blocks.CALCITE, "calcite");
+		expandVanillaStone(Blocks.DRIPSTONE_BLOCK, "dripstone");
+		expandVanillaStone(Blocks.TUFF, "tuff");
 		
 		limestoneBlock = makeStone("limestone", limestone, BigStoneClustersModule.limestone, () -> enableLimestone, MaterialColor.STONE);
 		jasperBlock = makeStone("jasper", jasper, BigStoneClustersModule.jasper, () -> enableJasper, MaterialColor.TERRACOTTA_RED);
@@ -61,8 +63,8 @@ public class NewStoneTypesModule extends QuarkModule {
 		myaliteBlock = makeStone(null, "myalite", myalite, BigStoneClustersModule.myalite, () -> enableMyalite, MaterialColor.COLOR_PURPLE, MyaliteBlock::new);
 	}
 	
-	private void expandVanillaStone(Block raw) {
-		makeStone(raw, raw.getRegistryName().getPath(), null, null, () -> true, null, QuarkBlock::new);
+	private void expandVanillaStone(Block raw, String name) {
+		makeStone(raw, name, null, null, () -> true, null, QuarkBlock::new);
 	}
 	
 	private Block makeStone(String name, StoneTypeConfig config, BigStoneClusterConfig bigConfig, BooleanSupplier enabledCond, MaterialColor color) {
