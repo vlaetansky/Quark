@@ -7,14 +7,11 @@ import java.util.function.BooleanSupplier;
 import com.google.common.collect.Lists;
 
 import net.minecraft.core.Registry;
-import net.minecraft.data.worldgen.placement.OrePlacements;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
-import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.BiomeDictionary;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -31,10 +28,7 @@ import vazkii.quark.content.world.gen.BigStoneClusterGenerator;
 @LoadModule(category = ModuleCategory.WORLD)
 public class BigStoneClustersModule extends QuarkModule {
 
-	@Config public static BigStoneClusterConfig granite = new BigStoneClusterConfig(BiomeDictionary.Type.MOUNTAIN);
-	@Config public static BigStoneClusterConfig diorite = new BigStoneClusterConfig(BiomeDictionary.Type.SAVANNA, BiomeDictionary.Type.JUNGLE, BiomeDictionary.Type.MUSHROOM);
-	@Config public static BigStoneClusterConfig andesite = new BigStoneClusterConfig(BiomeDictionary.Type.FOREST);
-	@Config public static BigStoneClusterConfig calcite = new BigStoneClusterConfig(BiomeDictionary.Type.PLAINS);
+	@Config public static BigStoneClusterConfig calcite = new BigStoneClusterConfig(BiomeDictionary.Type.MOUNTAIN);
 	@Config public static BigStoneClusterConfig limestone = new BigStoneClusterConfig(BiomeDictionary.Type.SWAMP, BiomeDictionary.Type.OCEAN);
 	@Config public static BigStoneClusterConfig jasper = new BigStoneClusterConfig(BiomeDictionary.Type.MESA, BiomeDictionary.Type.SANDY);
 	@Config public static BigStoneClusterConfig shale = new BigStoneClusterConfig(BiomeDictionary.Type.SNOWY);
@@ -55,39 +49,16 @@ public class BigStoneClustersModule extends QuarkModule {
 	@Override
 	public void setup() {
 		BooleanSupplier alwaysTrue = () -> true;
-		add(granite, Blocks.GRANITE, alwaysTrue);
-		add(diorite, Blocks.DIORITE, alwaysTrue);
-		add(andesite, Blocks.ANDESITE, alwaysTrue);
 		add(calcite, Blocks.CALCITE, alwaysTrue);
 		
 		add(limestone, NewStoneTypesModule.limestoneBlock, () -> NewStoneTypesModule.enabledWithLimestone);
 		add(jasper, NewStoneTypesModule.jasperBlock, () -> NewStoneTypesModule.enabledWithJasper);
 		add(shale, NewStoneTypesModule.shaleBlock, () -> NewStoneTypesModule.enabledWithShale);
 		add(myalite, NewStoneTypesModule.myaliteBlock, () -> NewStoneTypesModule.enabledWithMyalite);
-
-		BooleanSupplier graniteSupplier = () -> (!enabled || !granite.enabled);
-		BooleanSupplier dioriteSupplier = () -> (!enabled || !diorite.enabled);
-		BooleanSupplier andesiteSupplier = () -> (!enabled || !andesite.enabled);
-		
-		// TODO FIX conditionalizing isn't working
-		
-		conditionalize(OrePlacements.ORE_GRANITE_UPPER, graniteSupplier);
-		conditionalize(OrePlacements.ORE_GRANITE_LOWER, graniteSupplier);
-	
-		conditionalize(OrePlacements.ORE_DIORITE_UPPER, dioriteSupplier);
-		conditionalize(OrePlacements.ORE_DIORITE_LOWER, dioriteSupplier);
-		
-		conditionalize(OrePlacements.ORE_ANDESITE_UPPER, andesiteSupplier);
-		conditionalize(OrePlacements.ORE_ANDESITE_LOWER, andesiteSupplier);
-		
 	}
 	
 	private void add(BigStoneClusterConfig config, Block block, BooleanSupplier condition) {
 		WorldGenHandler.addGenerator(this, new BigStoneClusterGenerator(config, block.defaultBlockState(), condition), Decoration.UNDERGROUND_DECORATION, WorldGenWeights.BIG_STONE_CLUSTERS);
-	}
-	
-	private void conditionalize(PlacedFeature feature, BooleanSupplier condition) {
-		WorldGenHandler.conditionalizeFeature(GenerationStep.Decoration.UNDERGROUND_ORES, feature, condition);
 	}
 	
 	@Override

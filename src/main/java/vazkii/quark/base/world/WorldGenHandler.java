@@ -50,9 +50,6 @@ public class WorldGenHandler {
 	private static Map<GenerationStep.Decoration, PlacedFeature> defers = new HashMap<>();
 	private static Map<GenerationStep.Decoration, SortedSet<WeightedGenerator>> generators = new HashMap<>();
 
-	private static Map<GenerationStep.Decoration, Map<PlacedFeature, BooleanSupplier>> featureConditionalizers = new HashMap<>();
-	private static Map<PlacedFeature, ConditionalPlacedFeature> featureReplacers = new HashMap<>();
-
 	public static PlacementModifierType<ChunkCornerPlacement> CHUNK_CORNER_PLACEMENT_TYPE = () -> ChunkCornerPlacement.CODEC;
 	public static ChunkCornerPlacement CHUNK_CORNER_PLACEMENT = new ChunkCornerPlacement();
 
@@ -87,60 +84,7 @@ public class WorldGenHandler {
 			}
 			
 			Registry.register(Registry.PLACEMENT_MODIFIERS, new ResourceLocation(Quark.MOD_ID, "chunk_corner"), CHUNK_CORNER_PLACEMENT_TYPE);
-
-			setupConditionalizers();
 		});
-	}
-
-	public static void setupConditionalizers() {
-		// Store CFs we make so we can register after the main loop and prevent a CME error.
-		for(GenerationStep.Decoration step : featureConditionalizers.keySet()) {
-			Map<PlacedFeature, BooleanSupplier> conditions = featureConditionalizers.get(step);
-			
-			for(PlacedFeature feature : conditions.keySet()) {
-				ConditionalPlacedFeature conditioned = new ConditionalPlacedFeature(feature, conditions.get(feature));
-				featureReplacers.put(feature, conditioned);
-			}
-		}
-		
-		
-//		Set<ConfiguredFeature<?, ?>> quarkFeaturesToRegister = new HashSet<>();
-//
-//		for(Map.Entry<ResourceKey<ConfiguredFeature<?,?>>, ConfiguredFeature<?, ?>> cfEntry : BuiltinRegistries.CONFIGURED_FEATURE.entrySet()){
-//			ConfiguredFeature<?,?> configuredFeature = cfEntry.getValue();
-//
-//			Feature<?> feature = configuredFeature.feature;
-//			FeatureConfiguration config = configuredFeature.config;
-//
-//			// Get the base feature of the CF. Will not get nested CFs such as trees in Feature.RANDOM_SELECTOR.
-//			while(config instanceof DecoratedFeatureConfiguration) {
-//				DecoratedFeatureConfiguration dconfig = (DecoratedFeatureConfiguration) config;
-//				feature = dconfig.feature.get().feature;
-//				config = dconfig.feature.get().config;
-//			}
-//
-//			for(Map.Entry<GenerationStep.Decoration, List<Pair<BiPredicate<Feature<? extends FeatureConfiguration>, FeatureConfiguration>, BooleanSupplier>>> conditionalizerEntry : featureConditionalizers.entrySet())
-//				for(Pair<BiPredicate<Feature<? extends FeatureConfiguration>, FeatureConfiguration>, BooleanSupplier> pair : conditionalizerEntry.getValue())
-//					if(pair.getLeft().test(feature, config)) {
-//						ConditionalPlacedFeature<?, ?> conditionalConfiguredFeature = new ConditionalPlacedFeature<>(configuredFeature, pair.getRight());
-//						quarkFeaturesToRegister.add(conditionalConfiguredFeature);
-//
-//						// Turn into JSON so we can know what configuredfeature needs to be replaced in the biome.
-//						// The CF in the biome in biomeLoadEvent is NOT the same object as in the WorldGenRegistries.
-//						// That's why we need to compare using JSON so we know we replaced the right CF.
-//						Optional<JsonElement> tempOptional = ConfiguredFeature.DIRECT_CODEC.encode(configuredFeature, JsonOps.INSTANCE, JsonOps.INSTANCE.empty()).get().left();
-//						String cfJSON = tempOptional.isPresent() ? tempOptional.get().toString() : "";
-//						featureReplacers.put(cfJSON, Pair.of(conditionalizerEntry.getKey(), conditionalConfiguredFeature));
-//					}
-//		}
-//
-//		// Done here to prevent a ConcurrentModificationException if we tried registering within the loop above.
-//		int cfIdOffset = 1;
-//		for(ConfiguredFeature<?,?> cfToRegister : quarkFeaturesToRegister){
-//			// Done with cfIdOffset on the object itself so each newly made cf is unique and doesn't registry replace each other.
-//			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new ResourceLocation(Quark.MOD_ID, "conditional_configured_feature_"+cfIdOffset), cfToRegister);
-//			cfIdOffset++;
-//		}
 	}
 
 	@SubscribeEvent
@@ -150,27 +94,6 @@ public class WorldGenHandler {
 		for(GenerationStep.Decoration stage : GenerationStep.Decoration.values()) {
 			List<Supplier<PlacedFeature>> features = settings.getFeatures(stage);
 			features.add(() -> defers.get(stage));
-
-			// Only check generation stages that we are gonna replace stuff in
-			if(featureConditionalizers.containsKey(stage)) {
-				for(int i = 0; i < features.size(); i++) {
-					PlacedFeature placed = features.get(i).get();
-					if(featureReplacers.containsKey(placed))
-						features.set(i, () -> featureReplacers.get(placed));
-				}
-				
-//				for(int i = 0; i < features.size(); i++) {
-//					// Turn current CF to JSON so we can check if we should replace it
-//					PlacedFeature placedFeature = features.get(i).get();
-//					Optional<JsonElement> tempOptional = ConfiguredFeature.DIRECT_CODEC.encode(placedFeature, JsonOps.INSTANCE, JsonOps.INSTANCE.empty()).get().left();
-//					String cfTargetJSON = tempOptional.isPresent() ? tempOptional.get().toString(): "";
-//
-//					// If the CF does have a replacement entry and the generation stage matches, replace it.
-//					if(featureReplacers.containsKey(cfTargetJSON) && featureReplacers.get(cfTargetJSON).getLeft() == stage) {
-//						features.set(i, () -> featureReplacers.get(cfTargetJSON).getRight());
-//					}
-//				}
-			}
 		}
 	}
 
@@ -180,14 +103,6 @@ public class WorldGenHandler {
 			generators.put(stage, new TreeSet<>());
 
 		generators.get(stage).add(weighted);
-	}
-
-	public static void conditionalizeFeature(GenerationStep.Decoration stage, PlacedFeature feature, BooleanSupplier condition) {
-		if(!featureConditionalizers.containsKey(stage))
-			featureConditionalizers.put(stage, new HashMap<>());
-
-		Map<PlacedFeature, BooleanSupplier> map = featureConditionalizers.get(stage);
-		map.put(feature, condition);
 	}
 
 	public static void generateChunk(FeaturePlaceContext<NoneFeatureConfiguration> context, GenerationStep.Decoration stage) {
