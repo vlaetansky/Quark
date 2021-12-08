@@ -13,11 +13,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 import net.minecraft.world.level.block.entity.BeaconBlockEntity.BeaconBeamSection;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.Heightmap;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.world.block.CorundumClusterBlock;
+import vazkii.quark.content.world.module.CorundumModule;
 
 @LoadModule(category = ModuleCategory.TOOLS)
 public class BeaconRedirectionModule extends QuarkModule {
@@ -61,15 +63,15 @@ public class BeaconRedirectionModule extends QuarkModule {
 			Block block = blockstate.getBlock();
 			float[] targetColor = blockstate.getBeaconColorMultiplier(world, currPos, beaconPos);
 
-			if(block instanceof CorundumClusterBlock) { // TODO allow amethyst too
-				Direction dir = blockstate.getValue(CorundumClusterBlock.FACING);
+			if(isValidBlock(block)) {
+				Direction dir = blockstate.getValue(BlockStateProperties.FACING);
 				if(dir == currSegment.dir)
 					currSegment.increaseHeight();
 				else {
 					check = true;
 					beacon.checkingBeamSections.add(currSegment);
 					
-					targetColor = ((CorundumClusterBlock) block).base.colorComponents;
+					targetColor = getTargetColor(block);
 					if(targetColor[0] == 1F && targetColor[1] == 1F && targetColor[2] == 1F)
 						targetColor = currColor;
 					
@@ -124,6 +126,14 @@ public class BeaconRedirectionModule extends QuarkModule {
 		
 
 		return Integer.MAX_VALUE;
+	}
+	
+	private static boolean isValidBlock(Block block) {
+		return CorundumModule.staticEnabled ? block instanceof CorundumClusterBlock : block == Blocks.AMETHYST_CLUSTER;
+	}
+	
+	private static float[] getTargetColor(Block block) {
+		return block instanceof CorundumClusterBlock ? ((CorundumClusterBlock) block).base.colorComponents : new float[] { 1F, 1F, 1F };
 	}
 
 	public static class ExtendedBeamSegment extends BeaconBeamSection {

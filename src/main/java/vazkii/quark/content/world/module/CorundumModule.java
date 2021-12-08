@@ -58,6 +58,8 @@ public class CorundumModule extends AbstractUndergroundStyleModule {
 
 	@Config public static boolean enableCollateralMovement = true;
 
+	public static boolean staticEnabled;
+	
 	public static List<CorundumBlock> crystals = Lists.newArrayList();
 	public static Tag<Block> corundumTag;
 
@@ -74,6 +76,11 @@ public class CorundumModule extends AbstractUndergroundStyleModule {
 		add("black", 0x000000, MaterialColor.COLOR_BLACK);
 		
 		super.construct();
+	}
+	
+	@Override
+	public void configChanged() {
+		staticEnabled = enabled;
 	}
 
 	private void add(String name, int color, MaterialColor material) {
