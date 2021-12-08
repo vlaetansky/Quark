@@ -61,6 +61,7 @@ public class CompressedBlocksModule extends QuarkModule {
 	@Config(flag = "nether_wart_sack") public static boolean enableNetherWartSack = true;
 	@Config(flag = "gunpowder_sack") public static boolean enableGunpowderSack = true;
 	@Config(flag = "berry_sack") public static boolean enableBerrySack = true;
+	@Config(flag = "glowberry_sack") public static boolean enableGlowBerrySack = true;
 
 	@Config(flag = "blaze_lantern") public static boolean enableBlazeLantern = true;
 	@Config(flag = "bonded_leather") public static boolean enableBondedLeather = true;
@@ -95,6 +96,7 @@ public class CompressedBlocksModule extends QuarkModule {
 		sack("nether_wart", MaterialColor.COLOR_RED, true, () -> enableNetherWartSack);
 		sack("gunpowder", MaterialColor.COLOR_GRAY, false, () -> enableGunpowderSack);
 		sack("berry", MaterialColor.COLOR_RED, true, () -> enableBerrySack);
+		sack("glowberry", MaterialColor.COLOR_YELLOW, 14, true, () -> enableGlowBerrySack);
 
 		blaze_lantern = new BurnForeverBlock("blaze_lantern", this, CreativeModeTab.TAB_BUILDING_BLOCKS,
 				Block.Properties.of(Material.GLASS, DyeColor.YELLOW)
@@ -153,9 +155,14 @@ public class CompressedBlocksModule extends QuarkModule {
 	}
 
 	private Block sack(String name, MaterialColor color, boolean compost, BooleanSupplier cond) {
+		return sack(name, color, 0, compost, cond);
+	}
+	
+	private Block sack(String name, MaterialColor color, int light, boolean compost, BooleanSupplier cond) {
 		Block block = new QuarkFlammableBlock(name + "_sack", this, CreativeModeTab.TAB_DECORATIONS, 150,
 				Block.Properties.of(Material.WOOL, color)
 				.strength(0.5F)
+				.lightLevel(s -> light)
 				.sound(SoundType.WOOL))
 		.setCondition(cond);
 
