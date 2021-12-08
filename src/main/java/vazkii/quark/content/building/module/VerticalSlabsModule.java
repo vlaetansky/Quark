@@ -1,9 +1,16 @@
 package vazkii.quark.content.building.module;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.google.common.collect.ImmutableSet;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.common.ToolActions;
+import vazkii.quark.base.handler.ToolInteractionHandler;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -24,13 +31,25 @@ public class VerticalSlabsModule extends QuarkModule {
 				Blocks.RED_SANDSTONE_SLAB, Blocks.SANDSTONE_SLAB, Blocks.SMOOTH_QUARTZ_SLAB, Blocks.SMOOTH_RED_SANDSTONE_SLAB, Blocks.SMOOTH_SANDSTONE_SLAB, 
 				Blocks.SMOOTH_STONE_SLAB, Blocks.SPRUCE_SLAB, Blocks.STONE_SLAB, Blocks.STONE_BRICK_SLAB, Blocks.BLACKSTONE_SLAB, Blocks.POLISHED_BLACKSTONE_SLAB,
 				Blocks.POLISHED_BLACKSTONE_BRICK_SLAB, Blocks.CRIMSON_SLAB, Blocks.WARPED_SLAB, Blocks.COBBLED_DEEPSLATE_SLAB, Blocks.POLISHED_DEEPSLATE_SLAB,
-				Blocks.DEEPSLATE_BRICK_SLAB, Blocks.DEEPSLATE_TILE_SLAB,  Blocks.WAXED_CUT_COPPER_SLAB, Blocks.WAXED_EXPOSED_CUT_COPPER_SLAB, Blocks.WAXED_WEATHERED_CUT_COPPER_SLAB,
-				Blocks.WAXED_OXIDIZED_CUT_COPPER_SLAB)
+				Blocks.DEEPSLATE_BRICK_SLAB, Blocks.DEEPSLATE_TILE_SLAB)
 		.forEach(b -> new VerticalSlabBlock(b, this));
+
+		List<Block> copperVerticalSlabs = new ArrayList<>();
+		ImmutableSet.of(
+				Pair.of(Blocks.CUT_COPPER_SLAB, Blocks.WAXED_CUT_COPPER_SLAB), 
+				Pair.of(Blocks.EXPOSED_CUT_COPPER_SLAB, Blocks.WAXED_EXPOSED_CUT_COPPER_SLAB),
+				Pair.of(Blocks.WEATHERED_CUT_COPPER_SLAB, Blocks.WAXED_WEATHERED_CUT_COPPER_SLAB),
+				Pair.of(Blocks.OXIDIZED_CUT_COPPER_SLAB, Blocks.WAXED_OXIDIZED_CUT_COPPER_SLAB))
+		.forEach(p -> {
+			Block cleanSlab = new WeatheringCopperVerticalSlabBlock(p.getLeft(), this);
+			Block waxedSlab = new VerticalSlabBlock(p.getRight(), this);
+			
+			copperVerticalSlabs.add(cleanSlab);
+			ToolInteractionHandler.registerWaxedBlock(cleanSlab, waxedSlab);
+		});
 		
-		// TODO FIX allow waxing and unwaxing
-		ImmutableSet.of(Blocks.CUT_COPPER_SLAB, Blocks.EXPOSED_CUT_COPPER_SLAB, Blocks.WEATHERED_CUT_COPPER_SLAB, Blocks.OXIDIZED_CUT_COPPER_SLAB)
-		.forEach(b -> new WeatheringCopperVerticalSlabBlock(b, this));
+		for(int i = 1; i < copperVerticalSlabs.size(); i++)
+			ToolInteractionHandler.registerInteraction(ToolActions.AXE_SCRAPE, copperVerticalSlabs.get(i), copperVerticalSlabs.get(i - 1));
 
 		VariantHandler.SLABS.forEach(b ->  {
 			if(b instanceof IVerticalSlabProvider) 

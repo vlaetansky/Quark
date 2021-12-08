@@ -1,7 +1,5 @@
 package vazkii.quark.base;
 
-import java.lang.management.ManagementFactory;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,8 +13,6 @@ public class Quark {
 
 	public static final String MOD_ID = "quark";
 	public static final String ODDITIES_ID = "quarkoddities";
-
-	public static final boolean DEBUG_MODE = ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
 	
 	public static Quark instance;
 	public static CommonProxy proxy;

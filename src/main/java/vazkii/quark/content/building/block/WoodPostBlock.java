@@ -3,9 +3,7 @@ package vazkii.quark.content.building.block;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -19,13 +17,10 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.ToolAction;
-import net.minecraftforge.common.ToolActions;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
@@ -48,8 +43,6 @@ public class WoodPostBlock extends QuarkBlock implements SimpleWaterloggedBlock 
 			BooleanProperty.create("chain_west"),
 			BooleanProperty.create("chain_east")
 	};
-	
-	public Block strippedBlock = null;
 
 	public WoodPostBlock(QuarkModule module, Block parent, String prefix, boolean nether) {
 		super(prefix + parent.getRegistryName().getPath().replace("_fence", "_post"), module, CreativeModeTab.TAB_BUILDING_BLOCKS, 
@@ -61,19 +54,6 @@ public class WoodPostBlock extends QuarkBlock implements SimpleWaterloggedBlock 
 		registerDefaultState(state);
 		
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
-	}
-	
-	@Override
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public BlockState getToolModifiedState(BlockState state, Level world, BlockPos pos, Player player, ItemStack stack, ToolAction action) {
-		if(strippedBlock == null || action != ToolActions.AXE_STRIP)
-			return super.getToolModifiedState(state, world, pos, player, stack, action);
-		
-		BlockState newState = strippedBlock.defaultBlockState();
-		for(Property p : state.getProperties())
-			newState = newState.setValue(p, state.getValue(p));
-		
-		return newState;
 	}
 
 	@Override

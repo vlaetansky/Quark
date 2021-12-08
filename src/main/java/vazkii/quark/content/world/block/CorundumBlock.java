@@ -11,14 +11,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
@@ -26,9 +19,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.ToolAction;
-import net.minecraftforge.common.ToolActions;
 import vazkii.quark.base.block.QuarkGlassBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
@@ -47,7 +37,6 @@ public class CorundumBlock extends QuarkGlassBlock {
 	final boolean waxed;
 
 	public CorundumClusterBlock cluster;
-	public CorundumBlock alternate;
 
 	public CorundumBlock(String regname, int color, QuarkModule module, MaterialColor materialColor, boolean waxed) {
 		super(regname, module, CreativeModeTab.TAB_DECORATIONS,
@@ -76,34 +65,6 @@ public class CorundumBlock extends QuarkGlassBlock {
 			return i < 4;
 		}
 		return false;
-	}
-
-	@Override
-	public BlockState getToolModifiedState(BlockState state, Level world, BlockPos pos, Player player, ItemStack stack, ToolAction toolAction) {
-		if(waxed && toolAction.equals(ToolActions.AXE_WAX_OFF))
-			return alternate.defaultBlockState();
-		
-		return super.getToolModifiedState(state, world, pos, player, stack, toolAction);
-	}
-	
-	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
-		ItemStack stack = player.getItemInHand(hand);
-		if(!waxed) {
-			if(stack.getItem() == Items.HONEYCOMB) {
-				if(!world.isClientSide) {
-					world.setBlockAndUpdate(pos, alternate.defaultBlockState());
-					world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.HONEY_BLOCK_PLACE, SoundSource.PLAYERS, 1F, 1F);
-				}
-				
-				if(!player.isCreative())
-					stack.setCount(stack.getCount() - 1);
-				
-				return InteractionResult.SUCCESS;
-			}
-		}
-		
-		return InteractionResult.PASS;
 	}
 
 	@Override

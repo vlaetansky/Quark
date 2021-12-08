@@ -8,6 +8,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
+import net.minecraftforge.common.ToolActions;
+import vazkii.quark.base.handler.ToolInteractionHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.ModuleLoader;
@@ -25,7 +27,8 @@ public class WoodenPostsModule extends QuarkModule {
 		.forEach(b -> {
 			boolean nether = b.material == Material.NETHER_WOOD;
 			WoodPostBlock post = new WoodPostBlock(this, b, "",  nether);
-			post.strippedBlock = new WoodPostBlock(this, b, "stripped_", nether);
+			WoodPostBlock stripped = new WoodPostBlock(this, b, "stripped_", nether);
+			ToolInteractionHandler.registerInteraction(ToolActions.AXE_STRIP, post, stripped);
 		});
 	}
 	
