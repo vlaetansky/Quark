@@ -1,22 +1,23 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "MM",
-    "MM"
+    "##",
+    "##",
+    "##"
   ],
   "key": {
-    "M": {
-      "item": "quark:bamboo_mat_carpet"
+    "#": {
+      "item": "quark:iron_plate"
     }
   },
   "result": {
-    "item": "quark:bamboo_mat",
-    "count": 2
+    "item": "quark:iron_pillar",
+    "count": 6
   },
   "conditions": [
     {
       "type": "quark:flag",
-      "flag": "bamboo_mat"
+      "flag": "iron_plates"
     }
   ]
 } 

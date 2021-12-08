@@ -304,6 +304,8 @@
     "quark:rusty_iron_plate_slab",
     "quark:rusty_iron_plate_vertical_slab",
     "quark:rusty_iron_plate_stairs",
+    "quark:iron_pillar",
+    "quark:iron_ladder",
     "quark:shingles",
     "quark:shingles_stairs",
     "quark:shingles_slab",

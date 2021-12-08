@@ -22,6 +22,8 @@
     "quark:thatch",
     "quark:thatch_slab",
     "quark:thatch_vertical_slab",
-    "quark:thatch_stairs"
+    "quark:thatch_stairs",
+    "quark:bamboo_mat",
+    "quark:bamboo_mat_carpet"
   ]
 }
