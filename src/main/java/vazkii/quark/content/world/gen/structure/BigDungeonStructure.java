@@ -103,7 +103,6 @@ public class BigDungeonStructure extends StructureFeature<JigsawConfiguration> {
 				context.registryAccess()
 				);
 
-		// TODO post process
 		Optional<PieceGenerator<JigsawConfiguration>> structurePiecesGenerator = JigsawPlacement.addPieces(newContext, PoolElementStructurePiece::new, blockpos, false, false);
 		
 		return structurePiecesGenerator;
