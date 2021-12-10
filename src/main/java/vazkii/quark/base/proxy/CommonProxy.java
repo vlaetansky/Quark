@@ -22,7 +22,6 @@ import vazkii.quark.base.module.config.IConfigCallback;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.recipe.ExclusionRecipe;
 import vazkii.quark.base.world.EntitySpawnHandler;
-import vazkii.quark.base.world.JigsawRegistryHelper;
 import vazkii.quark.base.world.WorldGenHandler;
 
 public class CommonProxy {
@@ -55,7 +54,6 @@ public class CommonProxy {
 	public void setup(FMLCommonSetupEvent event) {
 		QuarkNetwork.setup();
 		BrewingHandler.setup();
-		JigsawRegistryHelper.setup();
 		ModuleLoader.INSTANCE.setup(event);
 		initContributorRewards();
 	}

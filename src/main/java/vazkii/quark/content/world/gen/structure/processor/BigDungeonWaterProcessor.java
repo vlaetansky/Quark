@@ -8,7 +8,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
-import vazkii.quark.content.world.gen.structure.BigDungeonStructure;
+import vazkii.quark.content.world.module.BigDungeonModule;
 
 public class BigDungeonWaterProcessor extends StructureProcessor {
 	
@@ -26,7 +26,7 @@ public class BigDungeonWaterProcessor extends StructureProcessor {
     
 	@Override
 	protected StructureProcessorType<?> getType() {
-		return BigDungeonStructure.WATER_PROCESSOR_TYPE;
+		return BigDungeonModule.WATER_PROCESSOR_TYPE;
 	}
 
 }
