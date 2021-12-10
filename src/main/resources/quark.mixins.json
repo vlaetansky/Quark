@@ -27,6 +27,7 @@
     "TemptGoalMixin",
     "TrapDoorBlockMixin",
     "LadderBlockMixin",
+    "ItemMixin",
     "ItemsMixin"
   ],
   "client": [
