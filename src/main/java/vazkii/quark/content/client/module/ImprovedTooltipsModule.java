@@ -5,6 +5,8 @@ import java.util.List;
 import com.google.common.base.Functions;
 import com.google.common.collect.Lists;
 
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -16,6 +18,8 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.content.client.tooltip.AttributeTooltips;
+import vazkii.quark.content.client.tooltip.EnchantedBookTooltips;
+import vazkii.quark.content.client.tooltip.FoodTooltips;
 
 /**
  * @author WireSegal
@@ -68,18 +72,24 @@ public class ImprovedTooltipsModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		MinecraftForgeClient.registerTooltipComponentFactory(AttributeTooltips.AttributeComponent.class, Functions.identity());
+		register(AttributeTooltips.AttributeComponent.class);
+		register(FoodTooltips.FoodComponent.class);
+		register(EnchantedBookTooltips.EnchantedBookComponent.class);
 	}
 
 	@Override
 	public void configChanged() {
-		//        EnchantedBookTooltips.reloaded(); TODO 
+		EnchantedBookTooltips.reloaded(); 
 	}
 
 	private static boolean ignore(ItemStack stack) {
 		return stack.hasTag() && stack.getTag().getBoolean(IGNORE_TAG);
 	}
 
+	private static <T extends ClientTooltipComponent & TooltipComponent> void register(Class<T> clazz) {
+		MinecraftForgeClient.registerTooltipComponentFactory(clazz, Functions.identity());
+	}
+	
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public void makeTooltip(RenderTooltipEvent.GatherComponents event) {
@@ -88,13 +98,13 @@ public class ImprovedTooltipsModule extends QuarkModule {
 
 		if (attributeTooltips)
 			AttributeTooltips.makeTooltip(event);
-		//        if (foodTooltips)
-		//            FoodTooltips.renderTooltip(event);
+		if (foodTooltips || showSaturation)
+			FoodTooltips.makeTooltip(event, foodTooltips, showSaturation);
 		//        if (shulkerTooltips)
 		//            ShulkerBoxTooltips.renderTooltip(event);
 		//        if (mapTooltips)
 		//            MapTooltips.renderTooltip(event);
-		//        if (enchantingTooltips)
-		//            EnchantedBookTooltips.renderTooltip(event);
+		if (enchantingTooltips)
+			EnchantedBookTooltips.makeTooltip(event);
 	}
 }
