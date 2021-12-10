@@ -8,16 +8,14 @@ import java.util.Optional;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Either;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.screens.inventory.EnchantmentScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -67,64 +65,15 @@ public class EnchantedBookTooltips {
 						List<ItemStack> items = getItemsForEnchantment(ed.enchantment);
 						int itemCount = items.size();
 						int lines = (int) Math.ceil((double) itemCount / 10.0);
-						
-						int remLines = lines;
+
 						int len = 3 + Math.min(10, itemCount) * 9;
-						while(remLines > 0) {
-							tooltip.add(tooltipIndex + 1, Either.right(new EnchantedBookComponent(stack, len, 10, tooltip)));
-							tooltipIndex++;
-							remLines--;
-						}
+						tooltip.add(tooltipIndex + 1, Either.right(new EnchantedBookComponent(len, lines * 10, ed.enchantment)));
 
 						break;
 					}
 				}
 			}
 		}
-	}
-
-	private static final ThreadLocal<Enchantment> clueHolder = new ThreadLocal<>();
-	private static final ThreadLocal<Integer> clueLevelHolder = ThreadLocal.withInitial(() -> 0);
-
-	@OnlyIn(Dist.CLIENT)
-	public static List<String> captureEnchantingData(List<String> list, EnchantmentScreen screen, Enchantment enchantment, int level) {
-		ItemStack last = screen.last;
-		if (!last.isEmpty() && last.getItem() == Items.BOOK) {
-			clueHolder.set(enchantment);
-			clueLevelHolder.set(level);
-			if(enchantment != null) {
-				Minecraft mc = Minecraft.getInstance();
-				int tooltipIndex = 0;
-
-				String match = ChatFormatting.stripFormatting(I18n.get("container.enchant.clue", enchantment.getFullname(level).getString()));
-
-				for(; tooltipIndex < list.size(); tooltipIndex++) {
-					String line = ChatFormatting.stripFormatting(list.get(tooltipIndex));
-					if (line != null && line.equals(match)) {
-						List<ItemStack> items = getItemsForEnchantment(enchantment);
-						int itemCount = items.size();
-						int lines = (int) Math.ceil((double) itemCount / 10.0);
-						
-						int remLines = lines;
-						int len = 3 + Math.min(10, itemCount) * 9;
-						while(remLines > 0) {
-							String spaces = "";
-							while (mc.font.width(spaces) < len)
-								spaces += " ";
-
-							list.add(tooltipIndex + 1, spaces);
-							tooltipIndex++;
-							remLines--;
-						}
-
-						break;
-					}
-				}
-			}
-		}
-
-
-		return list;
 	}
 
 	public static List<ItemStack> getItemsForEnchantment(Enchantment e) {
@@ -134,7 +83,7 @@ public class EnchantedBookTooltips {
 			Item item = stack.getItem();
 			if(item instanceof QuarkItem && !((QuarkItem) item).isEnabled())
 				continue;
-			
+
 			if(!stack.isEmpty() && e.canEnchant(stack))
 				list.add(stack);
 		}
@@ -201,76 +150,49 @@ public class EnchantedBookTooltips {
 			}
 		}
 	}
-	
+
 	public static class EnchantedBookComponent implements ClientTooltipComponent, TooltipComponent {
 
-		private final ItemStack stack;
 		private final int height, width;
-		private final List<Either<FormattedText, TooltipComponent>> tooltip;
+		private final Enchantment enchantment;
 
-		public EnchantedBookComponent(ItemStack stack, int width, int height, List<Either<FormattedText, TooltipComponent>> tooltip) {
-			this.stack = stack;
+		public EnchantedBookComponent(int width, int height, Enchantment enchantment) {
 			this.height = height;
 			this.width = width;
-			this.tooltip = tooltip;
+			this.enchantment = enchantment;
 		}
-		
+
 		@Override
-		public void renderImage(Font font, int tooltipX, int tooltipY, PoseStack pose, ItemRenderer itemRenderer, int something) {
-			Enchantment enchantment = clueHolder.get();
-			int level = clueLevelHolder.get();
+		public void renderImage(Font font, int tooltipX, int tooltipY, PoseStack basePose, ItemRenderer itemRenderer, int something) {
+			PoseStack modelviewPose = RenderSystem.getModelViewStack();
 
-			pose.pushPose();
-			pose.translate(tooltipX, tooltipY + 12, 500);
-			pose.scale(0.5f, 0.5f, 1.0f);
+			modelviewPose.pushPose();
+			modelviewPose.translate(tooltipX, tooltipY, 0);
+			modelviewPose.scale(0.5f, 0.5f, 1.0f);
 			Minecraft mc = Minecraft.getInstance();
-
-			if (enchantment != null) {
-				clueHolder.remove();
-				clueLevelHolder.remove();
-				String match = ChatFormatting.stripFormatting(I18n.get("container.enchant.clue", enchantment.getFullname(level).getString()));
-				for(int tooltipIndex = 0; tooltipIndex < tooltip.size(); tooltipIndex++) {
-					Either<FormattedText, TooltipComponent> either = tooltip.get(tooltipIndex);
-					String line = either.left().isPresent() ? ChatFormatting.stripFormatting(either.left().get().getString()) : null;
-					
-					if(line != null && line.equals(match)) {
-						int drawn = 0;
-
-						List<ItemStack> items = getItemsForEnchantment(enchantment);
-						for(ItemStack testStack : items) {
-							mc.getItemRenderer().renderGuiItem(testStack, 6 + drawn * 18, tooltipIndex * 20 - 2);
-							drawn++;
-						}
-
-						break;
-					}
-				}
-
-			} else if(stack.getItem() == Items.ENCHANTED_BOOK || stack.getItem() == AncientTomesModule.ancient_tome) {
-				List<EnchantmentInstance> enchants = getEnchantedBookEnchantments(stack);
-
-				for(EnchantmentInstance ed : enchants) {
-					String match = ed.enchantment.getFullname(ed.level).getString();
-					for(int tooltipIndex = 0; tooltipIndex < tooltip.size(); tooltipIndex++) {
-						Either<FormattedText, TooltipComponent> either = tooltip.get(tooltipIndex);
-						String line = either.left().isPresent() ? ChatFormatting.stripFormatting(either.left().get().getString()) : null;
-						
-						if(line != null && line.equals(match)) {
-							int drawn = 0;
-
-							List<ItemStack> items = getItemsForEnchantment(ed.enchantment);
-							for(ItemStack testStack : items) {
-								mc.getItemRenderer().renderGuiItem(testStack, 6 + (drawn % 10) * 18, tooltipIndex * 20 - 2 + (drawn / 10) * 20);
-								drawn++;
-							}
-
-							break;
-						}
-					}
-				}
+			List<ItemStack> items = getItemsForEnchantment(enchantment);
+			int drawn = 0;
+			for(ItemStack testStack : items) {
+				mc.getItemRenderer().renderGuiItem(testStack, 6 + (drawn % 10) * 18, (drawn / 10) * 20);
+				drawn++;
 			}
+//
+//			else if(stack.getItem() == Items.ENCHANTED_BOOK || stack.getItem() == AncientTomesModule.ancient_tome) {
+//				List<EnchantmentInstance> enchants = getEnchantedBookEnchantments(stack);
+//
+//				for(EnchantmentInstance ed : enchants) {
+//					List<ItemStack> items = getItemsForEnchantment(ed.enchantment);
+//					for(ItemStack testStack : items) {
+//						mc.getItemRenderer().renderGuiItem(testStack, 6 + (drawn % 10) * 18, tooltipIndex * 20 - 2 + (drawn / 10) * 20);
+//						drawn++;
+//					}
+//
+//					break;
+//				}
+//			}
 
-			pose.popPose();
+			modelviewPose.popPose();
+			RenderSystem.applyModelViewMatrix();
 		}
 
 		@Override
@@ -282,6 +204,6 @@ public class EnchantedBookTooltips {
 		public int getWidth(Font font) {
 			return width;
 		}
-		
+
 	}
 }

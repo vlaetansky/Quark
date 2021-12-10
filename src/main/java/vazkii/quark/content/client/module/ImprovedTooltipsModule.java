@@ -1,8 +1,8 @@
 package vazkii.quark.content.client.module;
 
 import java.util.List;
+import java.util.function.Function;
 
-import com.google.common.base.Functions;
 import com.google.common.collect.Lists;
 
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -20,6 +20,8 @@ import vazkii.quark.base.module.config.Config;
 import vazkii.quark.content.client.tooltip.AttributeTooltips;
 import vazkii.quark.content.client.tooltip.EnchantedBookTooltips;
 import vazkii.quark.content.client.tooltip.FoodTooltips;
+import vazkii.quark.content.client.tooltip.MapTooltips;
+import vazkii.quark.content.client.tooltip.ShulkerBoxTooltips;
 
 /**
  * @author WireSegal
@@ -74,6 +76,8 @@ public class ImprovedTooltipsModule extends QuarkModule {
 	public void clientSetup() {
 		register(AttributeTooltips.AttributeComponent.class);
 		register(FoodTooltips.FoodComponent.class);
+		register(ShulkerBoxTooltips.ShulkerComponent.class);
+		register(MapTooltips.MapComponent.class);
 		register(EnchantedBookTooltips.EnchantedBookComponent.class);
 	}
 
@@ -87,9 +91,9 @@ public class ImprovedTooltipsModule extends QuarkModule {
 	}
 
 	private static <T extends ClientTooltipComponent & TooltipComponent> void register(Class<T> clazz) {
-		MinecraftForgeClient.registerTooltipComponentFactory(clazz, Functions.identity());
+		MinecraftForgeClient.registerTooltipComponentFactory(clazz, Function.identity());
 	}
-	
+
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public void makeTooltip(RenderTooltipEvent.GatherComponents event) {
@@ -100,10 +104,10 @@ public class ImprovedTooltipsModule extends QuarkModule {
 			AttributeTooltips.makeTooltip(event);
 		if (foodTooltips || showSaturation)
 			FoodTooltips.makeTooltip(event, foodTooltips, showSaturation);
-		//        if (shulkerTooltips)
-		//            ShulkerBoxTooltips.renderTooltip(event);
-		//        if (mapTooltips)
-		//            MapTooltips.renderTooltip(event);
+		if (shulkerTooltips)
+			ShulkerBoxTooltips.makeTooltip(event);
+		if (mapTooltips)
+			MapTooltips.makeTooltip(event);
 		if (enchantingTooltips)
 			EnchantedBookTooltips.makeTooltip(event);
 	}
