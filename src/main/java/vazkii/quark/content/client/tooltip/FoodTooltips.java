@@ -4,28 +4,29 @@
 //
 //import com.mojang.blaze3d.systems.RenderSystem;
 //import com.mojang.blaze3d.vertex.PoseStack;
+//import com.mojang.datafixers.util.Either;
 //import com.mojang.datafixers.util.Pair;
 //
 //import net.minecraft.ChatFormatting;
 //import net.minecraft.client.Minecraft;
 //import net.minecraft.client.gui.GuiComponent;
 //import net.minecraft.network.chat.Component;
-//import net.minecraft.network.chat.TextComponent;
+//import net.minecraft.network.chat.FormattedText;
 //import net.minecraft.network.chat.TranslatableComponent;
 //import net.minecraft.world.effect.MobEffectCategory;
 //import net.minecraft.world.effect.MobEffectInstance;
 //import net.minecraft.world.food.FoodProperties;
+//import net.minecraft.world.inventory.tooltip.TooltipComponent;
 //import net.minecraftforge.api.distmarker.Dist;
 //import net.minecraftforge.api.distmarker.OnlyIn;
 //import net.minecraftforge.client.event.RenderTooltipEvent;
 //import net.minecraftforge.client.gui.ForgeIngameGui;
-//import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 //import vazkii.quark.content.client.module.ImprovedTooltipsModule;
 //
 //public class FoodTooltips {
 //
 //	@OnlyIn(Dist.CLIENT)
-//	public static void makeTooltip(ItemTooltipEvent event, boolean showFood, boolean showSaturation) {
+//	public static void makeTooltip(RenderTooltipEvent.GatherComponents event, boolean showFood, boolean showSaturation) {
 //		if(event.getItemStack().isEdible()) {
 //			FoodProperties food = event.getItemStack().getItem().getFoodProperties();
 //			if (food != null) {
@@ -34,10 +35,6 @@
 //					return;
 //				
 //				int len = (int) Math.ceil((double) pips / ImprovedTooltipsModule.foodDivisor);
-//
-//				StringBuilder s = new StringBuilder(" ");
-//				for (int i = 0; i < len; i++)
-//					s.append("  ");
 //
 //				int saturationSimplified = 0;
 //				float saturation = food.getSaturationModifier();
@@ -51,31 +48,25 @@
 //					else saturationSimplified = 4;
 //				}
 //
-//				Component spaces = new TextComponent(s.toString());
 //				Component saturationText = new TranslatableComponent("quark.misc.saturation" + saturationSimplified).withStyle(ChatFormatting.GRAY);
-//				List<Component> tooltip = event.getToolTip();
+//				List<Either<FormattedText, TooltipComponent>> tooltip = event.getTooltipElements();
 //
 //				if (tooltip.isEmpty()) {
-//					if(showFood)
-//						tooltip.add(spaces);
 //					if(showSaturation)
-//						tooltip.add(saturationText);
+//						tooltip.add(Either.left(saturationText));
 //				}
 //				else {
 //					int i = 1;
-//					if(showFood) {
-//						tooltip.add(i, spaces);
-//						i++;
-//					}
 //					if(showSaturation)
-//						tooltip.add(i, saturationText);
+//						tooltip.add(i, Either.left(saturationText));
 //				}
 //			}
 //		}
 //	}
 //
 //	@OnlyIn(Dist.CLIENT)
-//	public static void renderTooltip(RenderTooltipEvent.PostText event) {
+//	public static void renderTooltip(RenderTooltipEvent.GatherComponents event) {
+//		
 //		if(event.getStack().isEdible()) {
 //			FoodProperties food = event.getStack().getItem().getFoodProperties();
 //			if (food != null) {

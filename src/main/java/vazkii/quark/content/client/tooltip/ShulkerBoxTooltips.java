@@ -71,7 +71,7 @@
 //	}
 //
 //	@OnlyIn(Dist.CLIENT)
-//	public static void renderTooltip(RenderTooltipEvent.PostText event) {
+//	public static void renderTooltip(RenderTooltipEvent.GatherComponents event) {
 //		if(SimilarBlockTypeHandler.isShulkerBox(event.getStack()) && event.getStack().hasTag() && (!ImprovedTooltipsModule.shulkerBoxRequireShift || Screen.hasShiftDown())) {
 //			Minecraft mc = Minecraft.getInstance();
 //			PoseStack matrix = event.getMatrixStack();

@@ -127,7 +127,7 @@
 //	}
 //
 //	@OnlyIn(Dist.CLIENT)
-//	public static void renderTooltip(RenderTooltipEvent.PostText event) {
+//	public static void renderTooltip(RenderTooltipEvent.GatherComponents event) {
 //		ItemStack stack = event.getStack();
 //
 //		Enchantment enchantment = clueHolder.get();

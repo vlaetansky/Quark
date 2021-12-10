@@ -36,7 +36,7 @@
 //	}
 //
 //	@OnlyIn(Dist.CLIENT)
-//	public static void renderTooltip(RenderTooltipEvent.PostText event) {
+//	public static void renderTooltip(RenderTooltipEvent.GatherComponents event) {
 //		if(!event.getStack().isEmpty() && event.getStack().getItem() instanceof MapItem && (!ImprovedTooltipsModule.mapRequireShift || Screen.hasShiftDown())) {
 //			Minecraft mc = Minecraft.getInstance();
 //
