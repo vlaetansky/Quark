@@ -43,11 +43,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
+import vazkii.quark.content.mobs.ai.BarkAtDarknessGoal;
 import vazkii.quark.content.mobs.ai.DeliverFetchedItemGoal;
 import vazkii.quark.content.mobs.ai.FetchArrowGoal;
 import vazkii.quark.content.mobs.module.ShibaModule;
@@ -60,6 +64,8 @@ public class Shiba extends TamableAnimal {
 	private static final EntityDataAccessor<ItemStack> MOUTH_ITEM = SynchedEntityData.defineId(Shiba.class, EntityDataSerializers.ITEM_STACK);
 	private static final EntityDataAccessor<Integer> FETCHING = SynchedEntityData.defineId(Shiba.class, EntityDataSerializers.INT);
 
+	public BlockPos currentHyperfocus = null;
+
 	public Shiba(EntityType<? extends Shiba> type, Level worldIn) {
 		super(type, worldIn);
 		setTame(false);
@@ -69,16 +75,17 @@ public class Shiba extends TamableAnimal {
 	protected void registerGoals() {
 		goalSelector.addGoal(1, new FloatGoal(this));
 		goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
-		goalSelector.addGoal(3, new FetchArrowGoal(this));
-		goalSelector.addGoal(4, new DeliverFetchedItemGoal(this, 1.1D, -1F, 32.0F, false));
-		goalSelector.addGoal(5, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
-		goalSelector.addGoal(6, new TemptGoal(this, 1, Ingredient.of(Items.BONE), false));
-		goalSelector.addGoal(7, new BreedGoal(this, 1.0D));
-		goalSelector.addGoal(8, new NuzzleGoal(this, 0.5F, 16, 2, SoundEvents.WOLF_WHINE));
-		goalSelector.addGoal(9, new WantLoveGoal(this, 0.2F));
-		goalSelector.addGoal(10, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-		goalSelector.addGoal(11, new LookAtPlayerGoal(this, Player.class, 8.0F));
-		goalSelector.addGoal(12, new RandomLookAroundGoal(this));
+		goalSelector.addGoal(3, new BarkAtDarknessGoal(this));
+		goalSelector.addGoal(4, new FetchArrowGoal(this));
+		goalSelector.addGoal(5, new DeliverFetchedItemGoal(this, 1.1D, -1F, 32.0F, false));
+		goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
+		goalSelector.addGoal(7, new TemptGoal(this, 1, Ingredient.of(Items.BONE), false));
+		goalSelector.addGoal(8, new BreedGoal(this, 1.0D));
+		goalSelector.addGoal(9, new NuzzleGoal(this, 0.5F, 16, 2, SoundEvents.WOLF_WHINE));
+		goalSelector.addGoal(10, new WantLoveGoal(this, 0.2F));
+		goalSelector.addGoal(11, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+		goalSelector.addGoal(12, new LookAtPlayerGoal(this, Player.class, 8.0F));
+		goalSelector.addGoal(13, new RandomLookAroundGoal(this));
 	}
 
 	@Override
@@ -88,6 +95,36 @@ public class Shiba extends TamableAnimal {
 		AbstractArrow fetching = getFetching();
 		if(fetching != null && (isSleeping() || fetching.level != level || !fetching.isAlive() || fetching.pickup == Pickup.DISALLOWED))
 			setFetching(null);
+
+		if(!level.isClientSide) {
+			if(fetching != null || isSleeping() || isInSittingPose() || !isTame() || isLeashed())
+				currentHyperfocus = null;
+			else {
+				if(currentHyperfocus != null && level.getBrightness(LightLayer.BLOCK, currentHyperfocus) > 0)
+					currentHyperfocus = null;
+
+				LivingEntity owner = getOwner();
+				
+				if(currentHyperfocus == null && owner != null && owner instanceof Player) {
+					Player player = (Player) owner;
+					
+					if(player.getMainHandItem().is(Items.TORCH) || player.getOffhandItem().is(Items.TORCH)) {
+						BlockPos ourPos = blockPosition();
+						final int searchRange = 10;
+						for(int i = 0; i < 20; i++) {
+							BlockPos test = ourPos.offset(random.nextInt(searchRange * 2 + 1) - searchRange, random.nextInt(searchRange * 2 + 1) - searchRange, random.nextInt(searchRange * 2 + 1) - searchRange);
+							if(hasLineOfSight(ourPos, searchRange) 
+									&& level.getBlockState(test).isAir() 
+									&& level.getBlockState(test.below()).isSolidRender(level, test.below()) 
+									&& level.getBrightness(LightLayer.BLOCK, test) == 0) {
+								
+								currentHyperfocus = test;
+							}
+						}
+					}
+				}
+			}
+		}
 
 		if(!isSleeping() && !level.isClientSide && fetching == null && getMouthItem().isEmpty()) {
 			LivingEntity owner = getOwner();
@@ -101,6 +138,16 @@ public class Shiba extends TamableAnimal {
 					setFetching(arrow);
 				}
 			}
+		}
+	}
+
+	public boolean hasLineOfSight(BlockPos pos, double maxRange) {
+		Vec3 vec3 = new Vec3(this.getX(), this.getEyeY(), this.getZ());
+		Vec3 vec31 = new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+		if(vec31.distanceTo(vec3) > maxRange) {
+			return false;
+		} else {
+			return this.level.clip(new ClipContext(vec3, vec31, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)).getType() == HitResult.Type.MISS;
 		}
 	}
 
