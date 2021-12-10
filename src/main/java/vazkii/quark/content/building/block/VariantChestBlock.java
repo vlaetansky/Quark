@@ -39,7 +39,6 @@ import vazkii.quark.content.building.module.VariantChestsModule.IChestTexturePro
 @OnlyIn(value = Dist.CLIENT, _interface = IBlockItemProvider.class)
 public class VariantChestBlock extends ChestBlock implements IBlockItemProvider, IQuarkBlock, IChestTextureProvider {
 
-	public final String type;
 	private final QuarkModule module;
 	private BooleanSupplier enabledSupplier = () -> true;
 
@@ -50,7 +49,6 @@ public class VariantChestBlock extends ChestBlock implements IBlockItemProvider,
 		RegistryHelper.registerBlock(this, type + "_chest");
 		RegistryHelper.setCreativeTab(this, CreativeModeTab.TAB_DECORATIONS);
 
-		this.type = type;
 		this.module = module;
 
 		path = (this instanceof Compat ? "compat/" : "") + type + "/";
