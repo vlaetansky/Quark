@@ -8,7 +8,6 @@ import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.datafixers.util.Either;
 import com.mojang.math.Matrix4f;
@@ -76,7 +75,7 @@ public class MapTooltips {
 			float scale = 0.5F;
 
 			pose.pushPose();
-			pose.translate(tooltipX, tooltipY - size * scale - 15, 500);
+			pose.translate(tooltipX + 3, tooltipY + 3, 500);
 			pose.scale(scale, scale, 1F);
 			RenderSystem.enableBlend();
 
@@ -99,12 +98,12 @@ public class MapTooltips {
 
 		@Override
 		public int getHeight() {
-			return 0;
+			return 75;
 		}
 
 		@Override
 		public int getWidth(Font font) {
-			return 0;
+			return 72;
 		}
 	}
 
