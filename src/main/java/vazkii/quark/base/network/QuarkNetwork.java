@@ -43,7 +43,6 @@ public final class QuarkNetwork {
 		
 //		network.register(HandleBackpackMessage.class, NetworkDirection.PLAY_TO_SERVER); TODO ODDITIES
 //		network.register(MatrixEnchanterOperationMessage.class, NetworkDirection.PLAY_TO_SERVER);
-//		network.register(SwapArmorMessage.class, NetworkDirection.PLAY_TO_SERVER);
 //		network.register(ScrollCrateMessage.class, NetworkDirection.PLAY_TO_SERVER);
 
 		network.register(DoEmoteMessage.class, NetworkDirection.PLAY_TO_CLIENT);

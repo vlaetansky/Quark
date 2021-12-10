@@ -1,3 +1,4 @@
+package vazkii.quark.base.network.message.oddities;
 //package vazkii.quark.base.network.message;
 //
 //import net.minecraft.server.level.ServerPlayer;
