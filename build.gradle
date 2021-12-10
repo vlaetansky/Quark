@@ -89,11 +89,11 @@ repositories {
         name "blamejared"
         url "https://maven.blamejared.com/"
     }
-    /*maven {
+    maven {
         // for JEI
         name "progwml6"
-        url "http://dvs1.progwml6.com/files/maven"
-    }*/
+        url "https://dvs1.progwml6.com/files/maven"
+    }
 }
 
 
@@ -105,8 +105,8 @@ dependencies {
     compileOnly fg.deobf("vazkii.autoreglib:AutoRegLib:${config.arl_version}")
     runtimeOnly fg.deobf("vazkii.autoreglib:AutoRegLib:${config.arl_version}")
 
-    //compileOnly fg.deobf("mezz.jei:${config.jei_version}:api")
-    //runtimeOnly fg.deobf("mezz.jei:${config.jei_version}")
+    compileOnly fg.deobf("mezz.jei:${config.jei_version}:api")
+    runtimeOnly fg.deobf("mezz.jei:${config.jei_version}")
 }
 
 spotless {
