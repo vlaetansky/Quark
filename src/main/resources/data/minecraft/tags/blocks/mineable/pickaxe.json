@@ -392,6 +392,8 @@
     "quark:iron_rod",
     "quark:grate",
     "quark:blaze_lantern",
-    "quark:ender_watcher"
+    "quark:ender_watcher",
+    "quark:blackstone_furnace",
+    "quark:deepslate_furnace"
   ]
 }

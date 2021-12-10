@@ -56,7 +56,7 @@ import vazkii.quark.content.building.block.VariantTrappedChestBlock;
 import vazkii.quark.content.building.block.be.VariantChestBlockEntity;
 import vazkii.quark.content.building.block.be.VariantTrappedChestBlockEntity;
 import vazkii.quark.content.building.client.render.be.VariantChestRenderer;
-import vazkii.quark.content.building.recipe.MixedChestRecipe;
+import vazkii.quark.content.building.recipe.MixedExclusionRecipe;
 
 @LoadModule(category = ModuleCategory.BUILDING, hasSubscriptions = true)
 public class VariantChestsModule extends QuarkModule {
@@ -217,7 +217,7 @@ public class VariantChestsModule extends QuarkModule {
 	
 	@Override
 	public void construct() {
-		ForgeRegistries.RECIPE_SERIALIZERS.register(MixedChestRecipe.SERIALIZER);
+		ForgeRegistries.RECIPE_SERIALIZERS.register(MixedExclusionRecipe.SERIALIZER);
 		
 		OVERWORLD_WOODS.forEach(s -> addChest(s, Blocks.CHEST));
 		NETHER_WOODS.forEach(s -> addChest(s, Blocks.CHEST));

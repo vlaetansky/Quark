@@ -17,26 +17,41 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import vazkii.quark.base.Quark;
 
-public class MixedChestRecipe implements CraftingRecipe, IShapedRecipe<CraftingContainer> {
+public class MixedExclusionRecipe implements CraftingRecipe, IShapedRecipe<CraftingContainer> {
 	
     public static final Serializer SERIALIZER = new Serializer();
 
 	final ResourceLocation res;
 	NonNullList<Ingredient> ingredients;
 	
-	final boolean log;
+	final String type;
 	final ItemStack output;
 	final Tag.Named<Item> tag;
 	final ItemStack placeholder;
 	
-	public MixedChestRecipe(ResourceLocation res, boolean log) {
+	public MixedExclusionRecipe(ResourceLocation res, String type, ItemStack output, Tag.Named<Item> tag, ItemStack placeholder) {
 		this.res = res;
 		
-		this.log = log;
-		this.output = new ItemStack(Items.CHEST, (log ? 4 : 1));
-		this.tag = (log ? ItemTags.LOGS : ItemTags.PLANKS);
-		this.placeholder = new ItemStack(log ? Items.OAK_LOG : Items.OAK_PLANKS);
+		this.type = type;
+		this.output = output;
+		this.tag = tag;
+		this.placeholder = placeholder;
+	}
+	
+	public static MixedExclusionRecipe forChest(String type, ResourceLocation res, boolean log) {
+		ItemStack output = new ItemStack(Items.CHEST, (log ? 4 : 1));
+		Tag.Named<Item> tag = (log ? ItemTags.LOGS : ItemTags.PLANKS);
+		ItemStack placeholder = new ItemStack(log ? Items.OAK_LOG : Items.OAK_PLANKS);
+		return new MixedExclusionRecipe(res, type, output, tag, placeholder);
+	}
+	
+	public static MixedExclusionRecipe forFurnace(String type, ResourceLocation res) {
+		ItemStack output = new ItemStack(Items.FURNACE);
+		Tag.Named<Item> tag = ItemTags.STONE_CRAFTING_MATERIALS;
+		ItemStack placeholder = new ItemStack(Items.COBBLESTONE);
+		return new MixedExclusionRecipe(res, type, output, tag, placeholder);
 	}
 	
 	@Override
@@ -115,25 +130,35 @@ public class MixedChestRecipe implements CraftingRecipe, IShapedRecipe<CraftingC
 		return true;
 	}
 	
-	private static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<MixedChestRecipe> {
+	private static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<MixedExclusionRecipe> {
 		
         public Serializer() {
-            setRegistryName("quark:mixed_chest");
+            setRegistryName(Quark.MOD_ID + ":mixed_exclusion");
         }
 
 		@Override
-		public MixedChestRecipe fromJson(ResourceLocation arg0, JsonObject arg1) {
-			return new MixedChestRecipe(arg0, arg1.get("log").getAsBoolean());
+		public MixedExclusionRecipe fromJson(ResourceLocation arg0, JsonObject arg1) {
+			String type = arg1.get("subtype").getAsString();
+			return forType(arg0, type);
 		}
 
 		@Override
-		public MixedChestRecipe fromNetwork(ResourceLocation arg0, FriendlyByteBuf arg1) {
-			return new MixedChestRecipe(arg0, arg1.readBoolean());
+		public MixedExclusionRecipe fromNetwork(ResourceLocation arg0, FriendlyByteBuf arg1) {
+			return forType(arg0, arg1.readUtf());
 		}
 
 		@Override
-		public void toNetwork(FriendlyByteBuf arg0, MixedChestRecipe arg1) {
-			arg0.writeBoolean(arg1.log);
+		public void toNetwork(FriendlyByteBuf arg0, MixedExclusionRecipe arg1) {
+			arg0.writeUtf(arg1.type);
+		}
+		
+		private MixedExclusionRecipe forType(ResourceLocation res, String type) {
+			switch(type) {
+			case "chest": return MixedExclusionRecipe.forChest(type, res, false);
+			case "chest4": return MixedExclusionRecipe.forChest(type, res, true);
+			case "furnace": return MixedExclusionRecipe.forFurnace(type, res);
+			}
+			return null;
 		}
 		
 	}

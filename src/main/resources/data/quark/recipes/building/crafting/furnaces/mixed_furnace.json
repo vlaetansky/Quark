@@ -1,6 +1,6 @@
 {
   "type": "quark:mixed_exclusion",
-  "subtype": "chest",
+  "subtype": "furnace",
   "conditions": [
     {
       "type": "quark:flag",
