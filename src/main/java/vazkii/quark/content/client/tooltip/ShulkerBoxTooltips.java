@@ -124,7 +124,7 @@ public class ShulkerBoxTooltips {
 					LazyOptional<IItemHandler> handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 					handler.ifPresent((capability) -> {
 						ItemStack currentBox = stack;
-						int currentX = tooltipX - 2;
+						int currentX = tooltipX;
 						int currentY = tooltipY;
 
 						int size = capability.getSlots();
@@ -234,7 +234,7 @@ public class ShulkerBoxTooltips {
 
 		@Override
 		public int getWidth(Font font) {
-			return 170;
+			return 171;
 		}
 	}
 
