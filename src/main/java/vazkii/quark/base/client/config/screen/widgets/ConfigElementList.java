@@ -115,7 +115,7 @@ public class ConfigElementList<T extends IConfigElement & IWidgetProvider> exten
 
 		@Override
 		public Component getNarration() {
-			return new TextComponent(element.getGuiDisplayName()); 
+			return new TextComponent(element == null ? "" : element.getGuiDisplayName()); 
 		}
 
 	}
