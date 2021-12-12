@@ -1,6 +1,6 @@
 {
   "type": "quark:mixed_exclusion",
-  "type": "chest4",
+  "subtype": "chest4",
   "conditions": [
     {
       "type": "forge:and",
