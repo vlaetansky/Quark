@@ -40,8 +40,7 @@ public class BigDungeonSpawnerProcessor extends StructureProcessor {
     				logic.setEntityId(EntityType.SKELETON);
     			else logic.setEntityId(EntityType.ZOMBIE);
     			
-    			CompoundTag nbt = new CompoundTag();
-    			spawner.save(nbt);
+    			CompoundTag nbt = spawner.saveWithFullMetadata();
     			return new StructureBlockInfo(blockInfo.pos, blockInfo.state, nbt);
     		}
     	}
