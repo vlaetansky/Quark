@@ -203,7 +203,7 @@ public class ShibaModel extends EntityModel<Shiba> {
 		if(young)
 			matrixStack.translate(0.0F, 5.0F / 16F, 0F);
 
-		head.render(matrixStack, buffer, packedLight, packedOverlay);
+		head.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
 		matrixStack.popPose();
 
 		matrixStack.pushPose();
