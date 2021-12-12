@@ -162,9 +162,10 @@ public class EnhancedLaddersModule extends QuarkModule {
 						!player.jumping &&
 						!player.getAbilities().flying &&
 						player.level.getBlockState(downPos).isLadder(player.level, downPos, player)) {
+					
 					Vec3 move = new Vec3(0, fallSpeed, 0);
 					player.setBoundingBox(player.getBoundingBox().move(move));						
-					player.move(MoverType.SELF, Vec3.ZERO);
+					player.move(MoverType.SELF, move);
 				}
 			}
 		}
