@@ -65,6 +65,7 @@ public class Shiba extends TamableAnimal {
 	private static final EntityDataAccessor<Integer> FETCHING = SynchedEntityData.defineId(Shiba.class, EntityDataSerializers.INT);
 
 	public BlockPos currentHyperfocus = null;
+	private int hyperfocusCooldown = 0;
 
 	public Shiba(EntityType<? extends Shiba> type, Level worldIn) {
 		super(type, worldIn);
@@ -97,15 +98,20 @@ public class Shiba extends TamableAnimal {
 			setFetching(null);
 
 		if(!level.isClientSide) {
+			if(hyperfocusCooldown > 0)
+				hyperfocusCooldown--;
+			
 			if(fetching != null || isSleeping() || isInSittingPose() || !isTame() || isLeashed())
 				currentHyperfocus = null;
 			else {
-				if(currentHyperfocus != null && level.getBrightness(LightLayer.BLOCK, currentHyperfocus) > 0)
+				if(currentHyperfocus != null && level.getBrightness(LightLayer.BLOCK, currentHyperfocus) > 0) {
 					currentHyperfocus = null;
+					hyperfocusCooldown = 40;
+				}
 
 				LivingEntity owner = getOwner();
 				
-				if(currentHyperfocus == null && owner != null && owner instanceof Player) {
+				if(currentHyperfocus == null && owner != null && owner instanceof Player && hyperfocusCooldown == 0) {
 					Player player = (Player) owner;
 					
 					if(player.getMainHandItem().is(Items.TORCH) || player.getOffhandItem().is(Items.TORCH)) {
