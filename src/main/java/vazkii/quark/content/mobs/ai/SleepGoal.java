@@ -52,6 +52,7 @@ public class SleepGoal extends Goal {
 	public void stop() {
 		this.foxhound.setOrderedToSit(wasSitting); // setSitting
 		this.foxhound.setInSittingPose(false);
+		foxhound.clearSleepingPos();
 	}
 
 	public void setSleeping(boolean sitting) {

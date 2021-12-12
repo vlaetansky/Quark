@@ -76,6 +76,7 @@ public class FindPlaceToSleepGoal extends MoveToBlockGoal {
 			this.foxhound.setOrderedToSit(true); // setSitting
 			this.foxhound.getSleepGoal().setSleeping(true);
 			this.foxhound.setInSittingPose(true);
+			foxhound.startSleeping(blockPos.above());
 			hadSlept = true;
 		}
 	}

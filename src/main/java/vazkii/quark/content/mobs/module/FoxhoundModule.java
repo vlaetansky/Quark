@@ -1,6 +1,7 @@
 package vazkii.quark.content.mobs.module;
 
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
@@ -9,11 +10,14 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacements.Type;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
+import net.minecraftforge.event.entity.player.SleepingLocationCheckEvent;
+import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
@@ -85,5 +89,17 @@ public class FoxhoundModule extends QuarkModule {
 				&& event.getTarget().getType() == foxhoundType 
 				&& ((Foxhound) event.getTarget()).isTame())
 			((IronGolem) event.getEntityLiving()).setTarget(null);
+	}
+	
+	@SubscribeEvent
+	public void onSleepCheck(SleepingLocationCheckEvent event) {
+		if(event.getEntity() instanceof Foxhound) {
+			BlockPos pos = event.getSleepingLocation();
+			Level world = event.getEntity().level;
+
+			boolean sleep = world.getBlockState(pos.below()).getLightEmission(world, pos.below()) > 2;
+			if(sleep)
+				event.setResult(Result.ALLOW);
+		}
 	}
 }

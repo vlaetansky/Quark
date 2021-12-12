@@ -38,6 +38,7 @@ import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.BegGoal;
@@ -84,7 +85,6 @@ public class Foxhound extends Wolf implements Enemy {
 	public static final ResourceLocation FOXHOUND_LOOT_TABLE = new ResourceLocation("quark", "entities/foxhound");
 
 	private static final EntityDataAccessor<Boolean> TEMPTATION = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> IS_BLUE = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.BOOLEAN);
 
 	private int timeUntilPotatoEmerges = 0;
@@ -102,7 +102,6 @@ public class Foxhound extends Wolf implements Enemy {
 		super.defineSynchedData();
 		setCollarColor(DyeColor.ORANGE);
 		entityData.define(TEMPTATION, false);
-		entityData.define(SLEEPING, false);
 		entityData.define(IS_BLUE, false);
 	}
 
@@ -146,6 +145,13 @@ public class Foxhound extends Wolf implements Enemy {
 	public void tick() {
 		super.tick();
 
+		Pose pose = getPose();
+		if(isSleeping()) {
+			if(pose != Pose.SLEEPING)
+				setPose(Pose.SLEEPING);
+		} else if(pose == Pose.SLEEPING)
+			setPose(Pose.STANDING);
+		
 		if (!level.isClientSide && level.getDifficulty() == Difficulty.PEACEFUL && !isTame()) {
 			discard();
 			return;
@@ -373,19 +379,9 @@ public class Foxhound extends Wolf implements Enemy {
 	protected SoundEvent getDeathSound() {
 		return QuarkSounds.ENTITY_FOXHOUND_DIE;
 	}
-
-	@Override
-	public boolean isSleeping() {
-		return entityData.get(SLEEPING);
-	}
 	
 	public boolean isBlue() {
 		return entityData.get(IS_BLUE);
-	}
-
-	@Override
-	public void setInSittingPose(boolean sleeping) {
-		entityData.set(SLEEPING, sleeping);
 	}
 	
 	public void setBlue(boolean blue) {

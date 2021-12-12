@@ -2,6 +2,7 @@ package vazkii.quark.content.mobs.client.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -11,6 +12,7 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
+import vazkii.arl.util.ClientTicker;
 import vazkii.quark.content.mobs.entity.Foxhound;
 
 /**
@@ -132,7 +134,7 @@ public class FoxhoundModel extends EntityModel<Foxhound> {
 		this.head.xRot = 0;
 		this.body.yRot = hound.getBodyRollAngle(partialTickTime, -0.16F);
 		this.tail.yRot = hound.getBodyRollAngle(partialTickTime, -0.2F);
-
+		
 		if (hound.isSleeping()) {
 			this.head.setPos(1.0F, 20.5F, 0.0F);
 			this.setRotateAngle(head, 0.0F, 0.7853981633974483F, -0.04363323129985824F);
@@ -150,7 +152,7 @@ public class FoxhoundModel extends EntityModel<Foxhound> {
 			this.setRotateAngle(leftFrontLeg, 0.0F, 0.0F, 1.3962634015954636F);
 			this.setRotateAngle(rightBackLeg, -1.0471975511965976F, -0.08726646259971647F, 1.48352986419518F);
 			this.setRotateAngle(leftBackLeg, -0.7853981633974483F, 0.0F, 1.2217304763960306F);
-		} else if (hound.isOrderedToSit()) {
+		} else if (hound.isInSittingPose()) {
 			this.head.setPos(0.0F, 12.0F, 2.0F);
 			this.body.setPos(0.0F, 23.0F, 7.0F);
 			this.setRotateAngle(body, 0.7853981633974483F, this.body.yRot, 0F);
@@ -193,6 +195,11 @@ public class FoxhoundModel extends EntityModel<Foxhound> {
 	@Override
 	public void renderToBuffer(PoseStack matrix, VertexConsumer vb, int p_225598_3_, int p_225598_4_, float p_225598_5_, float p_225598_6_, float p_225598_7_, float p_225598_8_) {
 		matrix.pushPose();
+		if(entity.isSleeping()) {
+			matrix.mulPose(Vector3f.XP.rotationDegrees(90F));
+			matrix.translate(0, -1.5, -1.5);
+		}
+		
 		matrix.translate(0, 0, entity.isOrderedToSit() ? -0.25F : -0.35F);
 
 		matrix.pushPose();

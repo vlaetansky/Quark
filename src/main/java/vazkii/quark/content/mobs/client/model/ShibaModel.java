@@ -191,7 +191,10 @@ public class ShibaModel extends EntityModel<Shiba> {
 	@Override
 	public void renderToBuffer(PoseStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 		matrixStack.pushPose();
-		if(entity.isSleeping())
+		
+		BlockState state = entity.getFeetBlockState();
+		boolean sleep = state.is(BlockTags.BEDS);
+		if(sleep)
 			matrixStack.translate(0, 0.12, 0);
 
 		main.translateAndRotate(matrixStack);
