@@ -45,12 +45,14 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 	public void configChanged() {
 		staticEnabled = configEnabled;
 	}
-	
+
 	public static boolean overrideStackedOnOther(ItemStack stack, Slot slot, ClickAction action, Player player) {
 		if(!staticEnabled || action == ClickAction.PRIMARY)
 			return false;
 
-		// None yet but may be used later idk
+		ItemStack stackAt = slot.getItem();
+		if(enableShulkerBoxInteraction && shulkerOverride(stack, stackAt, slot, action, player, false))
+			return true;
 		
 		return false;
 	}
@@ -58,20 +60,20 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 	public static boolean overrideOtherStackedOnMe(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player, SlotAccess accessor) {
 		if(!staticEnabled || action == ClickAction.PRIMARY)
 			return false;
-		
-		if(enableLavaInteraction && lavaBucketOverride(stack, incoming, slot, action, player, accessor))
+
+		if(enableLavaInteraction && lavaBucketOverride(stack, incoming, slot, action, player))
 			return true;
 
-		if(enableArmorInteraction && armorOverride(stack, incoming, slot, action, player, accessor))
+		if(enableArmorInteraction && armorOverride(stack, incoming, slot, action, player))
 			return true;
-		
-		if(enableShulkerBoxInteraction && shulkerOverride(stack, incoming, slot, action, player, accessor))
+
+		if(enableShulkerBoxInteraction && shulkerOverride(stack, incoming, slot, action, player, true))
 			return true;
 
 		return false;
 	}
 
-	private static boolean armorOverride(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player, SlotAccess accessor) {
+	private static boolean armorOverride(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player) {
 		if(incoming.isEmpty()) {
 			EquipmentSlot equipSlot = null;
 
@@ -101,7 +103,7 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 		return false;
 	}
 
-	public static boolean lavaBucketOverride(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player, SlotAccess accessor) {
+	public static boolean lavaBucketOverride(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player) {
 		if(stack.getItem() == Items.LAVA_BUCKET 
 				&& !incoming.isEmpty() 
 				&& !player.isCreative() 
@@ -120,27 +122,28 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 		return false;
 	}
 
-	private static boolean shulkerOverride(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player, SlotAccess accessor) {
-		if(!incoming.isEmpty() && tryAddToShulkerBox(player, stack, incoming, slot, true) != null) {
-			ItemStack finished = tryAddToShulkerBox(player, stack, incoming, slot, false);
-			
+	private static boolean shulkerOverride(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player, boolean setSlot) {
+		if(!incoming.isEmpty() && tryAddToShulkerBox(player, stack, incoming, slot, true, setSlot) != null) {
+			ItemStack finished = tryAddToShulkerBox(player, stack, incoming, slot, false, setSlot);
+
 			if(finished != null) {
-				slot.set(finished);
+				if(setSlot)
+					slot.set(finished);
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
-	private static ItemStack tryAddToShulkerBox(Player player, ItemStack shulkerBox, ItemStack stack, Slot slot, boolean simulate) {
+	private static ItemStack tryAddToShulkerBox(Player player, ItemStack shulkerBox, ItemStack stack, Slot slot, boolean simulate, boolean useCopy) {
 		if (!SimilarBlockTypeHandler.isShulkerBox(shulkerBox) || !slot.mayPickup(player))
 			return null;
 
 		CompoundTag cmp = ItemNBTHelper.getCompound(shulkerBox, "BlockEntityTag", false);
 		if(cmp.contains("LootTable"))
 			return null;
-		
+
 		if (cmp != null) {
 			BlockEntity te = null;
 			cmp = cmp.copy();	
@@ -162,13 +165,13 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 					boolean did = result.isEmpty() || result.getCount() != stack.getCount();
 
 					if (did) {
-						ItemStack workStack = shulkerBox.copy();
+						ItemStack workStack = useCopy ? shulkerBox.copy() : shulkerBox;
 						if(!simulate)
 							stack.setCount(result.getCount());
-						
+
 						cmp = te.saveWithFullMetadata();
 						ItemNBTHelper.setCompound(workStack, "BlockEntityTag", cmp);
-						
+
 						if(slot.mayPlace(workStack))
 							return workStack;
 					}
@@ -178,5 +181,5 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 
 		return null;
 	}
-	
+
 }
