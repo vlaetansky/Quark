@@ -6,8 +6,6 @@ import java.util.Map;
 import com.google.common.collect.HashBiMap;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -71,10 +69,9 @@ public final class ToolInteractionHandler {
 			if(cleanToWaxMap.containsKey(block)) {
 				Block alternate = cleanToWaxMap.get(block);
 				
-				if(!world.isClientSide) {
+				if(!world.isClientSide)
 					world.setBlockAndUpdate(pos, copyState(state, alternate));
-					world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.HONEY_BLOCK_PLACE, SoundSource.PLAYERS, 1F, 1F);
-				}
+				world.levelEvent(event.getPlayer(), 3003, pos, 0);
 
 				if(!event.getPlayer().getAbilities().instabuild)
 					stack.setCount(stack.getCount() - 1);
