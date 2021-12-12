@@ -153,7 +153,7 @@ public class ShibaModel extends EntityModel<Shiba> {
 		BlockState state = shiba.getFeetBlockState();
 		boolean sleep = state.is(BlockTags.BEDS);
 
-		if(shiba.isSleeping()) {
+		if(shiba.isInSittingPose()) {
 			tongueOut = true;
 
 			if(sleep) {

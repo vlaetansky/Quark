@@ -249,7 +249,7 @@ public class Shiba extends TamableAnimal {
 	@Override
 	public void readAdditionalSaveData(CompoundTag compound) {
 		super.readAdditionalSaveData(compound);
-		if (compound.contains("CollarColor", 99))
+		if (compound.contains("CollarColor"))
 			this.setCollarColor(DyeColor.byId(compound.getInt("CollarColor")));
 
 		if(compound.contains("MouthItem")) {
