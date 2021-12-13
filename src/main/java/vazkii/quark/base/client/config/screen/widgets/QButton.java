@@ -75,7 +75,6 @@ public class QButton extends Button {
 		CELEBRATIONS.add(new Celebration(day, month.getValue(), (end - day), tier, name));
 	}
 
-
 	private final boolean gay;
 	private Celebration celebrating;
 	

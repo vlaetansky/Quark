@@ -18,8 +18,8 @@ public enum ModuleCategory {
 	WORLD("world", Items.GRASS_BLOCK),
 	MOBS("mobs", Items.PIG_SPAWN_EGG),
 	CLIENT("client", Items.ENDER_EYE),
-	ODDITIES("oddities", Items.CHORUS_FRUIT, Quark.ODDITIES_ID),
-	EXPERIMENTAL("experimental", Items.TNT);
+	EXPERIMENTAL("experimental", Items.TNT),
+	ODDITIES("oddities", Items.CHORUS_FRUIT, Quark.ODDITIES_ID);
 	
 	public final String name;
 	public final Item item;
