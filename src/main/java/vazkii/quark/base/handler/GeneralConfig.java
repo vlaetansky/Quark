@@ -20,6 +20,9 @@ public class GeneralConfig {
 
 	@Config(name = "'q' Button on the Right")
 	public static boolean qButtonOnRight = false;
+	
+	@Config
+	public static boolean disableQMenuEffects = false;
 
 	@Config
 	public static boolean useAntiOverlap = true;

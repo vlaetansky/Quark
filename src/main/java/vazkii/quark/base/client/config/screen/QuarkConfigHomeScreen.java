@@ -2,8 +2,6 @@ package vazkii.quark.base.client.config.screen;
 
 import org.apache.commons.lang3.text.WordUtils;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.ChatFormatting;
@@ -11,7 +9,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.CubeMap;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.PanoramaRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -28,6 +25,7 @@ import vazkii.quark.base.client.config.screen.widgets.CheckboxButton;
 import vazkii.quark.base.client.config.screen.widgets.IconButton;
 import vazkii.quark.base.client.config.screen.widgets.SocialButton;
 import vazkii.quark.base.handler.ContributorRewardHandler;
+import vazkii.quark.base.handler.GeneralConfig;
 import vazkii.quark.base.module.ModuleCategory;
 
 public class QuarkConfigHomeScreen extends AbstractQScreen {
@@ -131,24 +129,20 @@ public class QuarkConfigHomeScreen extends AbstractQScreen {
 		Minecraft mc = Minecraft.getInstance();
 		if(mc.level == null) {
 			float spin = pticks * 2;
-			if(time < 20F)
-				spin += (20F - time);
+			float blur = 0.85F;
 			
-			PANORAMA.render(spin, 0.85F);
+			if(time < 20F && !GeneralConfig.disableQMenuEffects) {
+				spin += (20F - time);
+				blur = (time / 20F) * 0.75F + 0.1F;
+			}
+			
+			PANORAMA.render(spin, blur);
 		} else renderBackground(mstack);
 		
 		int boxWidth = 400;
 		fill(mstack, width / 2 - boxWidth / 2, 0, width / 2 + boxWidth / 2, this.height, 0x66000000);
 		fill(mstack, width / 2 - boxWidth / 2 - 1, 0, width / 2 - boxWidth / 2, this.height, 0x66999999); // nice
 		fill(mstack, width / 2 + boxWidth / 2, 0, width / 2 + boxWidth / 2 + 1, this.height, 0x66999999);
-
-		ResourceLocation PANORAMA_OVERLAY = new ResourceLocation("textures/gui/title/background/panorama_overlay.png");
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderTexture(0, PANORAMA_OVERLAY);
-		RenderSystem.enableBlend();
-		RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		blit(mstack, 0, 0, this.width, this.height, 0.0F, 0.0F, 16, 128, 16, 128);
 
 		super.render(mstack, mouseX, mouseY, pticks);
 

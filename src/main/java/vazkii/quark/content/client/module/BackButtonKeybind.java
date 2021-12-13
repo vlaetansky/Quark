@@ -61,7 +61,8 @@ public class BackButtonKeybind extends QuarkModule {
 				I18n.get("gui.done"), 
 				I18n.get("gui.cancel"), 
 				I18n.get("gui.toTitle"),
-				I18n.get("gui.toMenu"));
+				I18n.get("gui.toMenu"),
+				I18n.get("quark.gui.config.save"));
 
 		// Iterate this way to ensure we match the more important back buttons first
 		for(String b : buttons)
