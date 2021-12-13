@@ -13,6 +13,7 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
+import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.registration.IVanillaCategoryExtensionRegistration;
@@ -29,6 +30,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.ModuleLoader;
+import vazkii.quark.content.building.module.VariantFurnacesModule;
 import vazkii.quark.content.tools.item.AncientTomeItem;
 import vazkii.quark.content.tools.module.AncientTomesModule;
 import vazkii.quark.content.tools.module.ColorRunesModule;
@@ -66,6 +68,17 @@ public class QuarkJeiPlugin implements IModPlugin {
 		
 		if (ModuleLoader.INSTANCE.isModuleEnabled(ColorRunesModule.class))
 			registerRuneAnvilRecipes(registration, factory);
+	}
+	
+	@Override
+	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
+		if(ModuleLoader.INSTANCE.isModuleEnabled(VariantFurnacesModule.class)) {
+			ResourceLocation smelting = VanillaRecipeCategoryUid.FURNACE;
+			ResourceLocation fuel = VanillaRecipeCategoryUid.FUEL;
+			
+			registration.addRecipeCatalyst(new ItemStack(VariantFurnacesModule.deepslateFurnace), fuel, smelting);
+			registration.addRecipeCatalyst(new ItemStack(VariantFurnacesModule.blackstoneFurnace), fuel, smelting);
+		}
 	}
 	
 	@Override
@@ -148,3 +161,4 @@ public class QuarkJeiPlugin implements IModPlugin {
 //	
 //	}
 }
+

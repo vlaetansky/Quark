@@ -21,10 +21,12 @@ public class VariantFurnacesModule extends QuarkModule {
 
 	public static BlockEntityType<VariantFurnaceBlockEntity> blockEntityType;
 
+	public static Block deepslateFurnace, blackstoneFurnace;
+	
 	@Override
 	public void construct() {
-		Block deepslateFurnace = new VariantFurnaceBlock("deepslate", this, Properties.copy(Blocks.DEEPSLATE).lightLevel(litBlockEmission(13)));
-		Block blackstoneFurnace = new SoulFurnaceBlock("blackstone", this, Properties.copy(Blocks.BLACKSTONE).lightLevel(litBlockEmission(13)));
+		deepslateFurnace = new VariantFurnaceBlock("deepslate", this, Properties.copy(Blocks.DEEPSLATE).lightLevel(litBlockEmission(13)));
+		blackstoneFurnace = new SoulFurnaceBlock("blackstone", this, Properties.copy(Blocks.BLACKSTONE).lightLevel(litBlockEmission(13)));
 
 		blockEntityType = BlockEntityType.Builder.of(VariantFurnaceBlockEntity::new, deepslateFurnace, blackstoneFurnace).build(null);
 		RegistryHelper.register(blockEntityType, "variant_furnace");
