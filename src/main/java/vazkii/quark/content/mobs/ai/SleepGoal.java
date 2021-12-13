@@ -13,6 +13,7 @@ package vazkii.quark.content.mobs.ai;
 import java.util.EnumSet;
 
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.goal.Goal;
 import vazkii.quark.content.mobs.entity.Foxhound;
 
@@ -39,6 +40,11 @@ public class SleepGoal extends Goal {
 				return (!(this.foxhound.distanceToSqr(living) < 144.0D) || living.getLastHurtByMob() == null) && this.isSleeping;
 		}
 	}
+	
+	@Override
+	public boolean canContinueToUse() {
+		return foxhound.getPose() == Pose.SLEEPING;
+	}
 
 	@Override
 	public void start() {
@@ -57,5 +63,6 @@ public class SleepGoal extends Goal {
 
 	public void setSleeping(boolean sitting) {
 		this.isSleeping = sitting;
+		foxhound.setPose(Pose.STANDING);
 	}
 }

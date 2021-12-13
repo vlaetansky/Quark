@@ -169,6 +169,12 @@ public class Foxhound extends Wolf implements Enemy {
 		//			}
 		//		}
 
+		if(isSleeping()) {
+			AABB aabb = getBoundingBox();
+			if(aabb.getYsize() < 0.21)
+				setBoundingBox(new AABB(aabb.minX - 0.2, aabb.minY, aabb.minZ - 0.2, aabb.maxX + 0.2, aabb.maxY + 0.5, aabb.maxZ + 0.2));
+		}
+		
 		if (WantLoveGoal.needsPets(this)) {
 			Entity owner = getOwner();
 			if (owner != null && owner.distanceToSqr(this) < 1 && !owner.isInWater() && !owner.fireImmune() && (!(owner instanceof Player) || !((Player) owner).isCreative()))
@@ -196,7 +202,7 @@ public class Foxhound extends Wolf implements Enemy {
 					List<Foxhound> foxhounds = level.getEntitiesOfClass(Foxhound.class, new AABB(blockPosition()),
 							(fox) -> fox != null && fox.isTame());
 					if(!foxhounds.isEmpty() && foxhounds.get(0) == this)
-						furnace.cookingProgress = furnace.cookingProgress == 3 ? 5 :Math.min(furnace.cookingTotalTime - 1, cookTime + 1);
+						furnace.cookingProgress = furnace.cookingProgress == 3 ? 5 : Math.min(furnace.cookingTotalTime - 1, cookTime + 1);
 				}
 			}
 		}
@@ -300,19 +306,8 @@ public class Foxhound extends Wolf implements Enemy {
 			}
 		}
 
-		//		if (itemstack.getItem() == Item.getItemFromBlock(TinyPotato.tiny_potato)) {
-		//			this.playSound(SoundEvents.ENTITY_GENERIC_EAT, 1F, 0.5F + (float) Math.random() * 0.5F);
-		//			if (!player.isCreative())
-		//				itemstack.shrink(1);
-		//
-		//			this.timeUntilPotatoEmerges = 1201;
-		//
-		//			return true;
-		//		}
-
-		if (!level.isClientSide) {
+		if (!level.isClientSide)
 			setWoke();
-		}
 
 		return super.mobInteract(player, hand);
 	}
