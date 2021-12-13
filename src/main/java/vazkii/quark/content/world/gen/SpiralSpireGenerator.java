@@ -75,11 +75,11 @@ public class SpiralSpireGenerator extends MultiChunkFeatureGenerator {
 			double r = Math.abs(((Math.PI / 2) - Math.atan((Math.max(0, y) + 0.5) / (height / heightComposition))) * 4);
 			int ri = (int) Math.ceil(r);
 			
-			for(int i = -ri; i < ri; i++)
-				for(int j = -ri; j < ri; j++) 
-					if(i * i + j * j < ri * ri) {
-						boolean edge = i == -ri || i == (ri - 1) || j == -ri || j == (ri - 1);
-						BlockState state = (edge && rand.nextFloat() < 0.3 ? NewStoneTypesModule.myaliteBlock : SpiralSpiresModule.dusky_myalite).defaultBlockState();
+			for(int i = -ri + 1; i < ri; i++)
+				for(int j = -ri + 1; j < ri; j++) 
+					if((i * i + j * j) <= (ri * ri)) {
+						boolean edge = i == (-ri + 1) || i == (ri - 1) || j == (-ri + 1) || j == (ri - 1);
+						BlockState state = (edge && rand.nextFloat() < 0.2 ? NewStoneTypesModule.myaliteBlock : SpiralSpiresModule.dusky_myalite).defaultBlockState();
 						world.setBlock(pos.offset(i, y, j), state, 2);
 					}
 		}
