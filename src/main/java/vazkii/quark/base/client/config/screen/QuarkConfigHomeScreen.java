@@ -33,6 +33,7 @@ public class QuarkConfigHomeScreen extends AbstractQScreen {
 
 	private static final CubeMap CUBE_MAP = new CubeMap(new ResourceLocation(Quark.MOD_ID, "textures/misc/panorama/panorama"));
 	private static final PanoramaRenderer PANORAMA = new PanoramaRenderer(CUBE_MAP);
+	float time;
 
 	public QuarkConfigHomeScreen(Screen parent) {
 		super(parent);
@@ -48,7 +49,7 @@ public class QuarkConfigHomeScreen extends AbstractQScreen {
 		int pad = 10;
 		int vpad = 23;
 		int bWidth = 120;
-		int left = width / 2 - ((bWidth + pad) * perLine / 2);
+		int left = width / 2 - ((bWidth + pad) * perLine / 2) + 4;
 		int vStart = 70; 
 
 		int i = 0;
@@ -124,10 +125,15 @@ public class QuarkConfigHomeScreen extends AbstractQScreen {
 
 	@Override
 	public void render(PoseStack mstack, int mouseX, int mouseY, float pticks) {
-		PANORAMA.render(pticks * 2, 1F);
+		time += pticks;
+		PANORAMA.render(pticks, 0.85F);
+		
+		int boxWidth = 400;
+		fill(mstack, width / 2 - boxWidth / 2, 0, width / 2 + boxWidth / 2, this.height, 0x66000000);
+		fill(mstack, width / 2 - boxWidth / 2 - 1, 0, width / 2 - boxWidth / 2, this.height, 0x66999999); // nice
+		fill(mstack, width / 2 + boxWidth / 2, 0, width / 2 + boxWidth / 2 + 1, this.height, 0x66999999);
 
 		ResourceLocation PANORAMA_OVERLAY = new ResourceLocation("textures/gui/title/background/panorama_overlay.png");
-
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderTexture(0, PANORAMA_OVERLAY);
 		RenderSystem.enableBlend();
