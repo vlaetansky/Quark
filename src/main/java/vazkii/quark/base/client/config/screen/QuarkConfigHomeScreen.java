@@ -7,6 +7,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.CubeMap;
@@ -126,7 +127,15 @@ public class QuarkConfigHomeScreen extends AbstractQScreen {
 	@Override
 	public void render(PoseStack mstack, int mouseX, int mouseY, float pticks) {
 		time += pticks;
-		PANORAMA.render(pticks, 0.85F);
+		
+		Minecraft mc = Minecraft.getInstance();
+		if(mc.level == null) {
+			float spin = pticks * 2;
+			if(time < 20F)
+				spin += (20F - time);
+			
+			PANORAMA.render(spin, 0.85F);
+		} else renderBackground(mstack);
 		
 		int boxWidth = 400;
 		fill(mstack, width / 2 - boxWidth / 2, 0, width / 2 + boxWidth / 2, this.height, 0x66000000);
