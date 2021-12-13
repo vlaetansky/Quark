@@ -10,6 +10,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -56,6 +57,7 @@ public class SignEditingModule extends QuarkModule {
 				&& !doesSignHaveCommand((SignBlockEntity) tile)
 				&& (!requiresEmptyHand || stack.isEmpty()) 
 				&& !(stack.getItem() instanceof DyeItem)
+				&& !(stack.getItem() == Items.GLOW_INK_SAC)
 				&& !tile.getBlockState().getBlock().getRegistryName().getNamespace().equals("signbutton")
 				&& player.mayUseItemAt(event.getPos(), event.getFace(), event.getItemStack()) 
 				&& !event.getEntity().isDiscrete()) {
