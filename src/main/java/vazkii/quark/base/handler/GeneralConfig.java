@@ -24,7 +24,7 @@ public class GeneralConfig {
 	@Config
 	public static boolean disableQMenuEffects = false;
 
-	@Config
+	@Config(description = "Disable this to turn off the quark system that makes features turn off when specified mods with the same content are loaded")
 	public static boolean useAntiOverlap = true;
 
 	@Config(name = "Use Piston Logic Replacement",
@@ -35,7 +35,7 @@ public class GeneralConfig {
 	@Config.Min(value = 0, exclusive = true)
 	public static int pistonPushLimit = 12;
 	
-	@Config
+	@Config(description =  "How many advancements deep you can see in the advancement screen. Vanilla is 2.")
 	@Config.Min(value = 0, exclusive = true)
 	public static int advancementVisibilityDepth = 2;
 
@@ -54,7 +54,7 @@ public class GeneralConfig {
 	@Config(description = "A list of screens that can accept quark's buttons. Use \"Print Screen Classnames\" to find the names of any others you'd want to add.")
 	private static List<String> allowedScreens = Lists.newArrayList();
 
-	@Config(description = "Set to true to make the quark big worldgen features such as stone clusters or underground biomes generate as spheres rather than unique shapes. It's faster, but won't look as cool")
+	@Config(description = "Set to true to make the quark big worldgen features such as stone clusters generate as spheres rather than unique shapes. It's faster, but won't look as cool")
 	public static boolean useFastWorldgen = false;
 	
 	@Config(description = "Enables quark network profiling features. Do not enable this unless requested to.")
