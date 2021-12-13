@@ -3,9 +3,8 @@ package vazkii.quark.base.client.config.screen;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -33,7 +32,7 @@ public abstract class AbstractScrollingWidgetScreen extends AbstractQScreen {
 		super.init();
 
 		elementList = createWidgetList();
-		addRenderableWidget(elementList);
+		addWidget(elementList);
 		refresh();
 		needsScrollUpdate = true;
 		
@@ -94,13 +93,12 @@ public abstract class AbstractScrollingWidgetScreen extends AbstractQScreen {
 		Window main = minecraft.getWindow();
 		int res = (int) main.getGuiScale();
 		
-		GL11.glEnable(GL11.GL_SCISSOR_TEST);
-		GL11.glScissor(0, 40 * res, width * res, (height - 80) * res);
+		RenderSystem.enableScissor(0, 40 * res, width * res, (height - 80) * res);
 		visibleWidgets.forEach(w -> {
 			w.visible = true;
 			w.render(mstack, mouseX, mouseY, pticks);
 		});
-		GL11.glDisable(GL11.GL_SCISSOR_TEST);
+		RenderSystem.disableScissor();
 	}
 	
 	@Override
