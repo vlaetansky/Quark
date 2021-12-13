@@ -223,7 +223,7 @@ public class RopeBlock extends QuarkBlock implements IBlockItemProvider {
 		world.setBlockAndUpdate(dstPos, nextState);
 		
 		if(tile != null) {
-			BlockEntity target = BlockEntity.loadStatic(dstPos, state, tile.save(new CompoundTag()));
+			BlockEntity target = BlockEntity.loadStatic(dstPos, state, tile.saveWithFullMetadata());
 			if (target != null) {
 				world.setBlockEntity(target);
 				target.setBlockState(state);
