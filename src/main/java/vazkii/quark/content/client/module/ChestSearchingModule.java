@@ -76,6 +76,7 @@ public class ChestSearchingModule extends QuarkModule {
 		new MiniInventoryButton(parent, 3, x, y, "quark.gui.button.filter", (b) -> {
 			searchEnabled = !searchEnabled;
 			updateSearchStatus();
+			searchBar.setFocus(true);
 		}).setTextureShift(() -> searchEnabled));
 	}
 
@@ -105,7 +106,9 @@ public class ChestSearchingModule extends QuarkModule {
 		if(searchBar != null) {
 			searchBar.setEditable(searchEnabled);
 			searchBar.setVisible(searchEnabled);
-			searchBar.setFocus(searchEnabled);
+			
+			if(!searchEnabled)
+				searchBar.setFocus(false);
 		}
 	}
 
