@@ -32,7 +32,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import vazkii.quark.addons.oddities.block.be.PipeTileEntity;
+import vazkii.quark.addons.oddities.block.be.PipeBlockEntity;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
@@ -149,7 +149,7 @@ public class PipeBlock extends QuarkBlock implements SimpleWaterloggedBlock, Ent
 		
 		for(Direction facing : Direction.values()) {
 			BooleanProperty prop = CONNECTIONS[facing.ordinal()];
-			PipeTileEntity.ConnectionType type = PipeTileEntity.getConnectionTo(worldIn, pos, facing);
+			PipeBlockEntity.ConnectionType type = PipeBlockEntity.getConnectionTo(worldIn, pos, facing);
 
 			newState = newState.setValue(prop, type.isSolid);
 		}
@@ -201,8 +201,8 @@ public class PipeBlock extends QuarkBlock implements SimpleWaterloggedBlock, Ent
 	@Override
 	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
 		BlockEntity tile = worldIn.getBlockEntity(pos);
-		if(tile instanceof PipeTileEntity)
-			return ((PipeTileEntity) tile).getComparatorOutput();
+		if(tile instanceof PipeBlockEntity)
+			return ((PipeBlockEntity) tile).getComparatorOutput();
 		return 0;
 	}
 	
@@ -210,15 +210,15 @@ public class PipeBlock extends QuarkBlock implements SimpleWaterloggedBlock, Ent
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		BlockEntity tileentity = worldIn.getBlockEntity(pos);
 
-		if(tileentity instanceof PipeTileEntity)
-			((PipeTileEntity) tileentity).dropAllItems();
+		if(tileentity instanceof PipeBlockEntity)
+			((PipeBlockEntity) tileentity).dropAllItems();
 		
 		super.onRemove(state, worldIn, pos, newState, isMoving);
 	}
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return new PipeTileEntity(pos, state);
+		return new PipeBlockEntity(pos, state);
 	}
 	
 }

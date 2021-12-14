@@ -1,4 +1,4 @@
-package vazkii.quark.addons.oddities.container;
+package vazkii.quark.addons.oddities.inventory;
 
 import javax.annotation.Nonnull;
 
@@ -16,14 +16,14 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.Tags;
-import vazkii.quark.addons.oddities.block.be.MatrixEnchantingTableTileEntity;
+import vazkii.quark.addons.oddities.block.be.MatrixEnchantingTableBlockEntity;
 import vazkii.quark.addons.oddities.module.MatrixEnchantingModule;
 
-public class MatrixEnchantingContainer extends AbstractContainerMenu {
+public class MatrixEnchantingMenu extends AbstractContainerMenu {
 
-	public final MatrixEnchantingTableTileEntity enchanter;
+	public final MatrixEnchantingTableBlockEntity enchanter;
 
-	public MatrixEnchantingContainer(int id, Inventory playerInv, MatrixEnchantingTableTileEntity tile) {
+	public MatrixEnchantingMenu(int id, Inventory playerInv, MatrixEnchantingTableBlockEntity tile) {
 		super(MatrixEnchantingModule.containerType, id);
 		enchanter = tile;
 
@@ -66,10 +66,10 @@ public class MatrixEnchantingContainer extends AbstractContainerMenu {
 			addSlot(new Slot(playerInv, k, 8 + k * 18, 142));
 	}
 	
-	public static MatrixEnchantingContainer fromNetwork(int windowId, Inventory playerInventory, FriendlyByteBuf buf) {
+	public static MatrixEnchantingMenu fromNetwork(int windowId, Inventory playerInventory, FriendlyByteBuf buf) {
 		BlockPos pos = buf.readBlockPos();
-		MatrixEnchantingTableTileEntity te = (MatrixEnchantingTableTileEntity) playerInventory.player.level.getBlockEntity(pos);
-		return new MatrixEnchantingContainer(windowId, playerInventory, te);	
+		MatrixEnchantingTableBlockEntity te = (MatrixEnchantingTableBlockEntity) playerInventory.player.level.getBlockEntity(pos);
+		return new MatrixEnchantingMenu(windowId, playerInventory, te);	
 	}
 
 	private boolean isLapis(ItemStack stack) {

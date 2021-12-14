@@ -31,11 +31,11 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import vazkii.quark.addons.oddities.block.CrateBlock;
-import vazkii.quark.addons.oddities.container.CrateContainer;
+import vazkii.quark.addons.oddities.inventory.CrateMenu;
 import vazkii.quark.addons.oddities.module.CrateModule;
 import vazkii.quark.base.handler.SortingHandler;
 
-public class CrateTileEntity extends BaseContainerBlockEntity implements WorldlyContainer {
+public class CrateBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer {
 
 	private int totalItems = 0;
 	private int numPlayersUsing;
@@ -63,7 +63,7 @@ public class CrateTileEntity extends BaseContainerBlockEntity implements Worldly
 		}
 	};
 
-	public CrateTileEntity(BlockPos pos, BlockState state) {
+	public CrateBlockEntity(BlockPos pos, BlockState state) {
 		super(CrateModule.crateType, pos, state);
 	}
 
@@ -206,7 +206,7 @@ public class CrateTileEntity extends BaseContainerBlockEntity implements Worldly
 
 	@Override
 	protected AbstractContainerMenu createMenu(int id, Inventory player) {
-		return new CrateContainer(id, player, this, crateData);
+		return new CrateMenu(id, player, this, crateData);
 	}
 
 	@Override
@@ -278,8 +278,8 @@ public class CrateTileEntity extends BaseContainerBlockEntity implements Worldly
 		int i = 0;
 
 		for(Player playerentity : p_213976_0_.getEntitiesOfClass(Player.class, new AABB((double)((float)p_213976_2_ - 5.0F), (double)((float)p_213976_3_ - 5.0F), (double)((float)p_213976_4_ - 5.0F), (double)((float)(p_213976_2_ + 1) + 5.0F), (double)((float)(p_213976_3_ + 1) + 5.0F), (double)((float)(p_213976_4_ + 1) + 5.0F)))) {
-			if (playerentity.containerMenu instanceof CrateContainer) {
-				Container iinventory = ((CrateContainer)playerentity.containerMenu).crate;
+			if (playerentity.containerMenu instanceof CrateMenu) {
+				Container iinventory = ((CrateMenu)playerentity.containerMenu).crate;
 				if (iinventory == p_213976_1_) {
 					++i;
 				}

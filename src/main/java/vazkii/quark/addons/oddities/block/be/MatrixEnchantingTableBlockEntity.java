@@ -28,14 +28,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import vazkii.arl.util.ItemNBTHelper;
-import vazkii.quark.addons.oddities.container.EnchantmentMatrix;
-import vazkii.quark.addons.oddities.container.EnchantmentMatrix.Piece;
-import vazkii.quark.addons.oddities.container.MatrixEnchantingContainer;
+import vazkii.quark.addons.oddities.inventory.EnchantmentMatrix;
+import vazkii.quark.addons.oddities.inventory.MatrixEnchantingMenu;
+import vazkii.quark.addons.oddities.inventory.EnchantmentMatrix.Piece;
 import vazkii.quark.addons.oddities.module.MatrixEnchantingModule;
 import vazkii.quark.api.IEnchantmentInfluencer;
 import vazkii.quark.api.IModifiableEnchantmentInfluencer;
 
-public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile implements MenuProvider {
+public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlockEntity implements MenuProvider {
 
 	public static final int OPER_ADD = 0;
 	public static final int OPER_PLACE = 1;
@@ -58,7 +58,7 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 	public final Map<Enchantment, Integer> influences = new HashMap<>();
 	public int bookshelfPower, enchantability, charge;
 
-	public MatrixEnchantingTableTileEntity(BlockPos pos, BlockState state) {
+	public MatrixEnchantingTableBlockEntity(BlockPos pos, BlockState state) {
 		super(MatrixEnchantingModule.tileEntityType, pos, state);
 	}
 	
@@ -330,7 +330,7 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 
 	@Override
 	public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
-		return new MatrixEnchantingContainer(id, inv, this);
+		return new MatrixEnchantingMenu(id, inv, this);
 	}
 
 	@Override

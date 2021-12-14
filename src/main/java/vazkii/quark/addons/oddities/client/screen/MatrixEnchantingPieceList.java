@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
-import vazkii.quark.addons.oddities.container.EnchantmentMatrix.Piece;
+import vazkii.quark.addons.oddities.inventory.EnchantmentMatrix.Piece;
 
 public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchantingPieceList.PieceEntry> {
 

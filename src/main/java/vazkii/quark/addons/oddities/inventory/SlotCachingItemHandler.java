@@ -1,4 +1,4 @@
-package vazkii.quark.addons.oddities.container;
+package vazkii.quark.addons.oddities.inventory;
 
 import javax.annotation.Nonnull;
 

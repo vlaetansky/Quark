@@ -38,7 +38,7 @@ import net.minecraftforge.event.TickEvent.WorldTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import vazkii.quark.addons.oddities.block.be.MagnetTileEntity;
+import vazkii.quark.addons.oddities.block.be.MagnetBlockEntity;
 import vazkii.quark.addons.oddities.module.MagnetsModule;
 import vazkii.quark.api.IMagnetMoveAction;
 import vazkii.quark.api.IMagnetTracker;
@@ -101,7 +101,7 @@ public class MagnetSystem {
 				magnetTracker.applyForce(pos, magnitude, pushing, dir, distance, origin));
 	}
 	
-	public static PushReaction getPushAction(MagnetTileEntity magnet, BlockPos pos, BlockState state, Direction moveDir) {
+	public static PushReaction getPushAction(MagnetBlockEntity magnet, BlockPos pos, BlockState state, Direction moveDir) {
 		Level world = magnet.getLevel();
 		if(world != null && isBlockMagnetic(state)) {
 			BlockPos targetLocation = pos.relative(moveDir);

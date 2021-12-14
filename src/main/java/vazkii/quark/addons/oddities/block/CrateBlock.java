@@ -25,7 +25,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
-import vazkii.quark.addons.oddities.block.be.CrateTileEntity;
+import vazkii.quark.addons.oddities.block.be.CrateBlockEntity;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.module.QuarkModule;
 
@@ -44,9 +44,9 @@ public class CrateBlock extends QuarkBlock implements EntityBlock {
 			return InteractionResult.SUCCESS;
 		} else {
 			BlockEntity tileentity = worldIn.getBlockEntity(pos);
-			if(tileentity instanceof CrateTileEntity) {
+			if(tileentity instanceof CrateBlockEntity) {
 				if(player instanceof ServerPlayer)
-					NetworkHooks.openGui((ServerPlayer) player, (CrateTileEntity) worldIn.getBlockEntity(pos), pos);
+					NetworkHooks.openGui((ServerPlayer) player, (CrateBlockEntity) worldIn.getBlockEntity(pos), pos);
 
 				PiglinAi.angerNearbyPiglins(player, true);
 			}
@@ -59,16 +59,16 @@ public class CrateBlock extends QuarkBlock implements EntityBlock {
 	public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
 		if(stack.hasCustomHoverName()) {
 			BlockEntity tileentity = worldIn.getBlockEntity(pos);
-			if(tileentity instanceof CrateTileEntity)
-				((CrateTileEntity) tileentity).setCustomName(stack.getHoverName());
+			if(tileentity instanceof CrateBlockEntity)
+				((CrateBlockEntity) tileentity).setCustomName(stack.getHoverName());
 		}
 	}
 
 	@Override
 	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand) {
 		BlockEntity tileentity = worldIn.getBlockEntity(pos);
-		if(tileentity instanceof CrateTileEntity)
-			((CrateTileEntity)tileentity).crateTick();
+		if(tileentity instanceof CrateBlockEntity)
+			((CrateBlockEntity)tileentity).crateTick();
 	}
 
 	@Override
@@ -76,8 +76,8 @@ public class CrateBlock extends QuarkBlock implements EntityBlock {
 		if(!state.is(newState.getBlock())) {
 			BlockEntity tileentity = worldIn.getBlockEntity(pos);
 
-			if(tileentity instanceof CrateTileEntity) {
-				CrateTileEntity crate = (CrateTileEntity) tileentity;
+			if(tileentity instanceof CrateBlockEntity) {
+				CrateBlockEntity crate = (CrateBlockEntity) tileentity;
 				crate.spillTheTea();
 			}
 		}
@@ -92,7 +92,7 @@ public class CrateBlock extends QuarkBlock implements EntityBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return new CrateTileEntity(pos, state);
+		return new CrateBlockEntity(pos, state);
 	}
 
 }

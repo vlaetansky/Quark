@@ -1,4 +1,4 @@
-package vazkii.quark.addons.oddities.client.render;
+package vazkii.quark.addons.oddities.client.render.be;
 
 import java.util.Iterator;
 import java.util.Random;
@@ -22,23 +22,23 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import vazkii.quark.addons.oddities.block.be.PipeTileEntity;
-import vazkii.quark.addons.oddities.block.be.PipeTileEntity.ConnectionType;
-import vazkii.quark.addons.oddities.block.be.PipeTileEntity.PipeItem;
+import vazkii.quark.addons.oddities.block.be.PipeBlockEntity;
+import vazkii.quark.addons.oddities.block.be.PipeBlockEntity.ConnectionType;
+import vazkii.quark.addons.oddities.block.be.PipeBlockEntity.PipeItem;
 import vazkii.quark.base.Quark;
 
-public class PipeTileEntityRenderer implements BlockEntityRenderer<PipeTileEntity> {
+public class PipeRenderer implements BlockEntityRenderer<PipeBlockEntity> {
 
 	private static final ModelResourceLocation LOCATION_MODEL = new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, "pipe_flare"), "inventory");
 	
 	private Random random = new Random();
 	
-	public PipeTileEntityRenderer(BlockEntityRendererProvider.Context context) {
+	public PipeRenderer(BlockEntityRendererProvider.Context context) {
 
 	}
 
 	@Override
-	public void render(PipeTileEntity te, float pticks, PoseStack matrix, MultiBufferSource buffer, int light, int overlay) {
+	public void render(PipeBlockEntity te, float pticks, PoseStack matrix, MultiBufferSource buffer, int light, int overlay) {
 		matrix.pushPose();
 		matrix.translate(0.5, 0.5, 0.5);
 		ItemRenderer render = Minecraft.getInstance().getItemRenderer();
@@ -56,8 +56,8 @@ public class PipeTileEntityRenderer implements BlockEntityRenderer<PipeTileEntit
 		matrix.popPose();
 	}
 	
-	private void renderFlare(PipeTileEntity te, BlockRenderDispatcher disp, BakedModel model, PoseStack matrix, MultiBufferSource buffer, float partial, int light, int overlay, Direction dir) {
-		ConnectionType type = PipeTileEntity.getConnectionTo(te.getLevel(), te.getBlockPos(), dir);
+	private void renderFlare(PipeBlockEntity te, BlockRenderDispatcher disp, BakedModel model, PoseStack matrix, MultiBufferSource buffer, float partial, int light, int overlay, Direction dir) {
+		ConnectionType type = PipeBlockEntity.getConnectionTo(te.getLevel(), te.getBlockPos(), dir);
 		if(type.isFlared) {
 			matrix.pushPose();
 			switch(dir.getAxis()) {

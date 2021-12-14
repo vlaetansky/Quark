@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import vazkii.arl.block.be.SimpleInventoryBlockEntity;
 import vazkii.quark.base.handler.MiscUtil;
 
-public abstract class BaseEnchantingTableTile extends SimpleInventoryBlockEntity implements Nameable {
+public abstract class AbstractEnchantingTableBlockEntity extends SimpleInventoryBlockEntity implements Nameable {
 
 	public int tickCount;
 	public float pageFlip, pageFlipPrev, flipT, flipA, bookSpread, bookSpreadPrev, bookRotation, bookRotationPrev, tRot;
@@ -26,7 +26,7 @@ public abstract class BaseEnchantingTableTile extends SimpleInventoryBlockEntity
 	private static final Random rand = new Random();
 	private Component customName;
 	
-	public BaseEnchantingTableTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+	public AbstractEnchantingTableBlockEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
 		super(tileEntityTypeIn, pos, state);
 	}
 

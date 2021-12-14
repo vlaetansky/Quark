@@ -44,9 +44,9 @@ import vazkii.quark.base.client.handler.NetworkProfilingHandler;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.handler.QuarkSounds;
 
-public class PipeTileEntity extends SimpleInventoryBlockEntity {
+public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 
-	public PipeTileEntity(BlockPos pos, BlockState state) {
+	public PipeBlockEntity(BlockPos pos, BlockState state) {
 		super(PipesModule.tileEntityType, pos, state);
 	}
 	
@@ -180,8 +180,8 @@ public class PipeTileEntity extends SimpleInventoryBlockEntity {
 		BlockEntity tile = level.getBlockEntity(targetPos);
 		boolean did = false;
 		if(tile != null) {
-			if(tile instanceof PipeTileEntity)
-				did = ((PipeTileEntity) tile).passIn(item.stack, item.outgoingFace.getOpposite(), null, item.rngSeed, item.timeInWorld);
+			if(tile instanceof PipeBlockEntity)
+				did = ((PipeBlockEntity) tile).passIn(item.stack, item.outgoingFace.getOpposite(), null, item.rngSeed, item.timeInWorld);
 			else {
 				ItemStack result = MiscUtil.putIntoInv(item.stack, tile, item.outgoingFace.getOpposite(), false, false);
 				if(result.getCount() != item.stack.getCount()) {
@@ -292,8 +292,8 @@ public class PipeTileEntity extends SimpleInventoryBlockEntity {
 		if(tile == null)
 			return false;
 
-		if(tile instanceof PipeTileEntity)
-			return ((PipeTileEntity) tile).isPipeEnabled();
+		if(tile instanceof PipeBlockEntity)
+			return ((PipeBlockEntity) tile).isPipeEnabled();
 		else
 			return MiscUtil.canPutIntoInv(stack, tile, face, false);
 	}
@@ -343,7 +343,7 @@ public class PipeTileEntity extends SimpleInventoryBlockEntity {
 		BlockEntity tile = world.getBlockEntity(truePos);
 		
 		if(tile != null) {
-			if(tile instanceof PipeTileEntity)
+			if(tile instanceof PipeBlockEntity)
 				return ConnectionType.PIPE;
 			else if(tile instanceof Container || tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, face.getOpposite()).isPresent())
 				return tile instanceof ChestBlockEntity ? ConnectionType.TERMINAL_OFFSET : ConnectionType.TERMINAL;
@@ -393,7 +393,7 @@ public class PipeTileEntity extends SimpleInventoryBlockEntity {
 			this.rngSeed = rngSeed;
 		}
 
-		protected boolean tick(PipeTileEntity pipe) {
+		protected boolean tick(PipeBlockEntity pipe) {
 			ticksInPipe++;
 			timeInWorld++;
 
@@ -410,7 +410,7 @@ public class PipeTileEntity extends SimpleInventoryBlockEntity {
 			return ticksInPipe >= PipesModule.effectivePipeSpeed;
 		}
 
-		protected Direction getTargetFace(PipeTileEntity pipe) {
+		protected Direction getTargetFace(PipeBlockEntity pipe) {
 			BlockPos pipePos = pipe.getBlockPos();
 			if(incomingFace != Direction.DOWN && backloggedFace != Direction.DOWN && pipe.canFit(stack, pipePos.relative(Direction.DOWN), Direction.UP))
 				return Direction.DOWN;

@@ -1,4 +1,4 @@
-package vazkii.quark.addons.oddities.container;
+package vazkii.quark.addons.oddities.inventory;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -11,15 +11,15 @@ import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import vazkii.quark.addons.oddities.block.be.CrateTileEntity;
+import vazkii.quark.addons.oddities.block.be.CrateBlockEntity;
 import vazkii.quark.addons.oddities.module.CrateModule;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.oddities.ScrollCrateMessage;
 
-public class CrateContainer extends AbstractContainerMenu {
+public class CrateMenu extends AbstractContainerMenu {
 
-	public final CrateTileEntity crate;
+	public final CrateBlockEntity crate;
 	public final Inventory playerInv;
 
 	public static final int numRows = 6;
@@ -29,11 +29,11 @@ public class CrateContainer extends AbstractContainerMenu {
 	public int scroll = 0;
 	private final ContainerData crateData;
 
-	public CrateContainer(int id, Inventory inv, CrateTileEntity crate) {
+	public CrateMenu(int id, Inventory inv, CrateBlockEntity crate) {
 		this(id, inv, crate, new SimpleContainerData(2));
 	}
 
-	public CrateContainer(int id, Inventory inv, CrateTileEntity crate, ContainerData data) {
+	public CrateMenu(int id, Inventory inv, CrateBlockEntity crate, ContainerData data) {
 		super(CrateModule.containerType, id);
 		crate.startOpen(inv.player);
 
@@ -106,10 +106,10 @@ public class CrateContainer extends AbstractContainerMenu {
 		return itemstack;
 	}
 
-	public static CrateContainer fromNetwork(int windowId, Inventory playerInventory, FriendlyByteBuf buf) {
+	public static CrateMenu fromNetwork(int windowId, Inventory playerInventory, FriendlyByteBuf buf) {
 		BlockPos pos = buf.readBlockPos();
-		CrateTileEntity te = (CrateTileEntity) playerInventory.player.level.getBlockEntity(pos);
-		return new CrateContainer(windowId, playerInventory, te);
+		CrateBlockEntity te = (CrateBlockEntity) playerInventory.player.level.getBlockEntity(pos);
+		return new CrateMenu(windowId, playerInventory, te);
 	}
 
 	@Override

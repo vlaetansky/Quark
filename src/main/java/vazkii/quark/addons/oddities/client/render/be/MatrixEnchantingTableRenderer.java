@@ -1,4 +1,4 @@
-package vazkii.quark.addons.oddities.client.render;
+package vazkii.quark.addons.oddities.client.render.be;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -17,19 +17,19 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import vazkii.quark.addons.oddities.block.be.MatrixEnchantingTableTileEntity;
+import vazkii.quark.addons.oddities.block.be.MatrixEnchantingTableBlockEntity;
 
-public class MatrixEnchantingTableTileEntityRenderer implements BlockEntityRenderer<MatrixEnchantingTableTileEntity> {
+public class MatrixEnchantingTableRenderer implements BlockEntityRenderer<MatrixEnchantingTableBlockEntity> {
 
 	public static final Material TEXTURE_BOOK = EnchantTableRenderer.BOOK_LOCATION;
 	private BookModel modelBook;
 	
-	public MatrixEnchantingTableTileEntityRenderer(BlockEntityRendererProvider.Context context) {
+	public MatrixEnchantingTableRenderer(BlockEntityRendererProvider.Context context) {
 		modelBook = new BookModel(context.bakeLayer(ModelLayers.BOOK));
 	}
 
 	@Override
-	public void render(MatrixEnchantingTableTileEntity te, float pticks, PoseStack matrix, MultiBufferSource buffer, int light, int overlay) {
+	public void render(MatrixEnchantingTableBlockEntity te, float pticks, PoseStack matrix, MultiBufferSource buffer, int light, int overlay) {
 		float time = te.tickCount + pticks;
 
 		float f1 = te.bookRotation - te.bookRotationPrev;
@@ -70,7 +70,7 @@ public class MatrixEnchantingTableTileEntityRenderer implements BlockEntityRende
 	}
 
 	// Copy of vanilla's book render
-	private void renderBook(MatrixEnchantingTableTileEntity tileEntityIn, float time, float bookRot, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+	private void renderBook(MatrixEnchantingTableBlockEntity tileEntityIn, float time, float bookRot, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 		matrixStackIn.pushPose();
 		matrixStackIn.translate(0.5D, 0.75D, 0.5D);
 		float f = (float) tileEntityIn.tickCount + partialTicks;

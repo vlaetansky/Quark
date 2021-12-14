@@ -17,7 +17,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
-import vazkii.quark.addons.oddities.container.BackpackContainer;
+import vazkii.quark.addons.oddities.inventory.BackpackMenu;
 import vazkii.quark.addons.oddities.module.BackpackModule;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.network.QuarkNetwork;
@@ -67,7 +67,7 @@ public class BackpackInventoryScreen extends InventoryScreen {
 
 		if(!BackpackModule.isEntityWearingBackpack(player)) {
 			ItemStack curr = player.inventoryMenu.getCarried();
-			BackpackContainer.saveCraftingInventory(player);
+			BackpackMenu.saveCraftingInventory(player);
 			closeHack = true;
 			QuarkNetwork.sendToServer(new HandleBackpackMessage(false));
 			minecraft.setScreen(new InventoryScreen(player));

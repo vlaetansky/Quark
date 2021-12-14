@@ -46,7 +46,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import vazkii.arl.interf.IItemColorProvider;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.arl.util.RegistryHelper;
-import vazkii.quark.addons.oddities.container.BackpackContainer;
+import vazkii.quark.addons.oddities.inventory.BackpackMenu;
 import vazkii.quark.addons.oddities.module.BackpackModule;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.handler.ModelHandler;
@@ -253,7 +253,7 @@ public class BackpackItem extends DyeableArmorItem implements IQuarkItem, IItemC
 
 	@Override
 	public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
-		return new BackpackContainer(id, player);
+		return new BackpackMenu(id, player);
 	}
 
 	@Override

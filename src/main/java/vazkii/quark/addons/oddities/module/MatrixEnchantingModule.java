@@ -32,10 +32,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.addons.oddities.block.MatrixEnchantingTableBlock;
-import vazkii.quark.addons.oddities.block.be.MatrixEnchantingTableTileEntity;
-import vazkii.quark.addons.oddities.client.render.MatrixEnchantingTableTileEntityRenderer;
+import vazkii.quark.addons.oddities.block.be.MatrixEnchantingTableBlockEntity;
+import vazkii.quark.addons.oddities.client.render.be.MatrixEnchantingTableRenderer;
 import vazkii.quark.addons.oddities.client.screen.MatrixEnchantingScreen;
-import vazkii.quark.addons.oddities.container.MatrixEnchantingContainer;
+import vazkii.quark.addons.oddities.inventory.MatrixEnchantingMenu;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -45,8 +45,8 @@ import vazkii.quark.base.module.config.Config;
 @LoadModule(category = ModuleCategory.ODDITIES, hasSubscriptions = true)
 public class MatrixEnchantingModule extends QuarkModule {
 
-	public static BlockEntityType<MatrixEnchantingTableTileEntity> tileEntityType;
-	public static MenuType<MatrixEnchantingContainer> containerType;
+	public static BlockEntityType<MatrixEnchantingTableBlockEntity> tileEntityType;
+	public static MenuType<MatrixEnchantingMenu> containerType;
 
 	@Config(description = "The maximum enchanting power the matrix enchanter can accept")
 	public static int maxBookshelves = 15;
@@ -139,10 +139,10 @@ public class MatrixEnchantingModule extends QuarkModule {
 	public void construct() {
 		matrixEnchanter = new MatrixEnchantingTableBlock(this);
 
-		containerType = IForgeMenuType.create(MatrixEnchantingContainer::fromNetwork);
+		containerType = IForgeMenuType.create(MatrixEnchantingMenu::fromNetwork);
 		RegistryHelper.register(containerType, "matrix_enchanting");
 
-		tileEntityType = BlockEntityType.Builder.of(MatrixEnchantingTableTileEntity::new, matrixEnchanter).build(null);
+		tileEntityType = BlockEntityType.Builder.of(MatrixEnchantingTableBlockEntity::new, matrixEnchanter).build(null);
 		RegistryHelper.register(tileEntityType, "matrix_enchanting");
 	}
 
@@ -150,14 +150,14 @@ public class MatrixEnchantingModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
 		MenuScreens.register(containerType, MatrixEnchantingScreen::new);
-		BlockEntityRenderers.register(tileEntityType, MatrixEnchantingTableTileEntityRenderer::new);	
+		BlockEntityRenderers.register(tileEntityType, MatrixEnchantingTableRenderer::new);	
 	}
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public void onTooltip(ItemTooltipEvent event) {
 		ItemStack stack = event.getItemStack();
-		if(showTooltip && ItemNBTHelper.verifyExistence(stack, MatrixEnchantingTableTileEntity.TAG_STACK_MATRIX))
+		if(showTooltip && ItemNBTHelper.verifyExistence(stack, MatrixEnchantingTableBlockEntity.TAG_STACK_MATRIX))
 			event.getToolTip().add(new TranslatableComponent("quark.gui.enchanting.pending").withStyle(ChatFormatting.AQUA));
 	}
 	

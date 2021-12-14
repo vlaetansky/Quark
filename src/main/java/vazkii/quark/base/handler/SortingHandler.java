@@ -39,8 +39,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import vazkii.quark.addons.oddities.container.BackpackContainer;
-import vazkii.quark.addons.oddities.container.SlotCachingItemHandler;
+import vazkii.quark.addons.oddities.inventory.BackpackMenu;
+import vazkii.quark.addons.oddities.inventory.SlotCachingItemHandler;
 import vazkii.quark.api.ICustomSorting;
 import vazkii.quark.api.QuarkCapabilities;
 import vazkii.quark.base.module.ModuleLoader;
@@ -82,7 +82,7 @@ public final class SortingHandler {
 			return;
 
 		AbstractContainerMenu c = player.containerMenu;
-		boolean backpack = c instanceof BackpackContainer; 
+		boolean backpack = c instanceof BackpackMenu; 
 		if ((!backpack && forcePlayer) || c == null)
 			c = player.inventoryMenu;
 

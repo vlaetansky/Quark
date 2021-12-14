@@ -33,7 +33,7 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.addons.oddities.client.screen.BackpackInventoryScreen;
-import vazkii.quark.addons.oddities.container.BackpackContainer;
+import vazkii.quark.addons.oddities.inventory.BackpackMenu;
 import vazkii.quark.addons.oddities.item.BackpackItem;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.item.QuarkItem;
@@ -64,7 +64,7 @@ public class BackpackModule extends QuarkModule {
 	
 	public static Block bonded_ravager_hide;
 	
-    public static MenuType<BackpackContainer> container;
+    public static MenuType<BackpackMenu> container;
     private static ItemStack heldStack = null;
 
 	@OnlyIn(Dist.CLIENT)
@@ -75,7 +75,7 @@ public class BackpackModule extends QuarkModule {
 		backpack = new BackpackItem(this);
 		ravager_hide = new QuarkItem("ravager_hide", this, new Item.Properties().rarity(Rarity.RARE).tab(CreativeModeTab.TAB_MATERIALS)).setCondition(() -> enableRavagerHide);
 		
-		container = IForgeMenuType.create(BackpackContainer::fromNetwork);
+		container = IForgeMenuType.create(BackpackMenu::fromNetwork);
 		RegistryHelper.register(container, "backpack");
 		
 		bonded_ravager_hide = new QuarkBlock("bonded_ravager_hide", this, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.of(Material.WOOL, DyeColor.BLACK)

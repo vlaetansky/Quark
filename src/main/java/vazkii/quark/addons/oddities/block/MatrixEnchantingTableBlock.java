@@ -31,7 +31,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
 import vazkii.arl.util.RegistryHelper;
-import vazkii.quark.addons.oddities.block.be.MatrixEnchantingTableTileEntity;
+import vazkii.quark.addons.oddities.block.be.MatrixEnchantingTableBlockEntity;
 import vazkii.quark.addons.oddities.module.MatrixEnchantingModule;
 import vazkii.quark.api.IEnchantmentInfluencer;
 import vazkii.quark.api.IModifiableEnchantmentInfluencer;
@@ -82,17 +82,17 @@ public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return new MatrixEnchantingTableTileEntity(pos, state);
+		return new MatrixEnchantingTableBlockEntity(pos, state);
 	}
 	
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult raytrace) {
-		if(!(worldIn.getBlockEntity(pos) instanceof MatrixEnchantingTableTileEntity))
+		if(!(worldIn.getBlockEntity(pos) instanceof MatrixEnchantingTableBlockEntity))
 			worldIn.setBlockEntity(newBlockEntity(pos, state));
 
 		if(ModuleLoader.INSTANCE.isModuleEnabled(MatrixEnchantingModule.class)) {
 			if(player instanceof ServerPlayer)
-				NetworkHooks.openGui((ServerPlayer) player, (MatrixEnchantingTableTileEntity) worldIn.getBlockEntity(pos), pos);
+				NetworkHooks.openGui((ServerPlayer) player, (MatrixEnchantingTableBlockEntity) worldIn.getBlockEntity(pos), pos);
 		} else
 			worldIn.setBlockAndUpdate(pos, Blocks.ENCHANTING_TABLE.defaultBlockState());
 
@@ -163,8 +163,8 @@ public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements
 		if(stack.hasCustomHoverName()) {
 			BlockEntity tileentity = worldIn.getBlockEntity(pos);
 
-			if(tileentity instanceof MatrixEnchantingTableTileEntity)
-				((MatrixEnchantingTableTileEntity) tileentity).setCustomName(stack.getHoverName());
+			if(tileentity instanceof MatrixEnchantingTableBlockEntity)
+				((MatrixEnchantingTableBlockEntity) tileentity).setCustomName(stack.getHoverName());
 		}
 	}
 
@@ -172,8 +172,8 @@ public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		BlockEntity tileentity = worldIn.getBlockEntity(pos);
 
-		if(tileentity instanceof MatrixEnchantingTableTileEntity) {
-			MatrixEnchantingTableTileEntity enchanter = (MatrixEnchantingTableTileEntity) tileentity;
+		if(tileentity instanceof MatrixEnchantingTableBlockEntity) {
+			MatrixEnchantingTableBlockEntity enchanter = (MatrixEnchantingTableBlockEntity) tileentity;
 			enchanter.dropItem(0);
 			enchanter.dropItem(1);
 		}

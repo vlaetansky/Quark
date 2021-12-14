@@ -1,4 +1,4 @@
-package vazkii.quark.addons.oddities.container;
+package vazkii.quark.addons.oddities.inventory;
 
 import javax.annotation.Nonnull;
 
@@ -17,10 +17,9 @@ import net.minecraft.world.item.ItemStack;
 import vazkii.arl.util.InventoryIIH;
 import vazkii.quark.addons.oddities.module.BackpackModule;
 
-public class BackpackContainer extends InventoryMenu {
+public class BackpackMenu extends InventoryMenu {
 
-
-	public BackpackContainer(int windowId, Player player) {
+	public BackpackMenu(int windowId, Player player) {
 		super(player.getInventory(), !player.level.isClientSide, player);
 		this.containerId = windowId;
 
@@ -45,8 +44,8 @@ public class BackpackContainer extends InventoryMenu {
 		}
 	}
 
-	public static BackpackContainer fromNetwork(int windowId, Inventory playerInventory, FriendlyByteBuf buf) {
-		return new BackpackContainer(windowId, playerInventory.player);
+	public static BackpackMenu fromNetwork(int windowId, Inventory playerInventory, FriendlyByteBuf buf) {
+		return new BackpackMenu(windowId, playerInventory.player);
 	}
 
 	@Nonnull

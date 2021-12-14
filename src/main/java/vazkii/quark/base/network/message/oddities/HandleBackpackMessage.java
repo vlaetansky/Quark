@@ -7,7 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkHooks;
 import vazkii.arl.network.IMessage;
-import vazkii.quark.addons.oddities.container.BackpackContainer;
+import vazkii.quark.addons.oddities.inventory.BackpackMenu;
 
 public class HandleBackpackMessage implements IMessage {
 
@@ -34,7 +34,7 @@ public class HandleBackpackMessage implements IMessage {
 					player.inventoryMenu.setCarried(holding);
 				}
 			} else {
-				BackpackContainer.saveCraftingInventory(player);
+				BackpackMenu.saveCraftingInventory(player);
 				player.containerMenu = player.inventoryMenu;
 			}
 		});

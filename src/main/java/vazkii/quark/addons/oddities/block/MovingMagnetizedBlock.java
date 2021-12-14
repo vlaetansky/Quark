@@ -33,7 +33,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import vazkii.quark.addons.oddities.block.be.MagnetizedBlockTileEntity;
+import vazkii.quark.addons.oddities.block.be.MagnetizedBlockBlockEntity;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.module.QuarkModule;
 
@@ -58,7 +58,7 @@ public class MovingMagnetizedBlock extends QuarkBlock implements EntityBlock {
 	@Override
 	public void onRemove(BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
 		if (state.getBlock() != newState.getBlock()) {
-			MagnetizedBlockTileEntity tile = getMagnetTileEntity(worldIn, pos);
+			MagnetizedBlockBlockEntity tile = getMagnetTileEntity(worldIn, pos);
 			if (tile != null)
 				tile.clearMagnetTileEntity();
 		}
@@ -81,7 +81,7 @@ public class MovingMagnetizedBlock extends QuarkBlock implements EntityBlock {
 	@Override
 	@Nonnull
 	public List<ItemStack> getDrops(@Nonnull BlockState state, @Nonnull LootContext.Builder builder) {
-		MagnetizedBlockTileEntity tile = this.getMagnetTileEntity(builder.getLevel(), builder.getParameter(LootContextParams.ORIGIN)); // origin
+		MagnetizedBlockBlockEntity tile = this.getMagnetTileEntity(builder.getLevel(), builder.getParameter(LootContextParams.ORIGIN)); // origin
 		return tile == null ? Collections.emptyList() : tile.getMagnetState().getDrops(builder);
 	}
 
@@ -94,20 +94,20 @@ public class MovingMagnetizedBlock extends QuarkBlock implements EntityBlock {
 	@Override
 	@Nonnull
 	public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, CollisionContext context) {
-		MagnetizedBlockTileEntity tile = this.getMagnetTileEntity(worldIn, pos);
+		MagnetizedBlockBlockEntity tile = this.getMagnetTileEntity(worldIn, pos);
 		return tile != null ? tile.getCollisionShape(worldIn, pos) : Shapes.empty();
 	}
 
 	@Nullable
-	private MagnetizedBlockTileEntity getMagnetTileEntity(BlockGetter world, Vec3 origin) {
+	private MagnetizedBlockBlockEntity getMagnetTileEntity(BlockGetter world, Vec3 origin) {
 		BlockPos pos = new BlockPos(origin);
 		return getMagnetTileEntity(world, pos);
 	}
 	
 	@Nullable
-	private MagnetizedBlockTileEntity getMagnetTileEntity(BlockGetter world, BlockPos pos) {
+	private MagnetizedBlockBlockEntity getMagnetTileEntity(BlockGetter world, BlockPos pos) {
 		BlockEntity tile = world.getBlockEntity(pos);
-		return tile instanceof MagnetizedBlockTileEntity ? (MagnetizedBlockTileEntity)tile : null;
+		return tile instanceof MagnetizedBlockBlockEntity ? (MagnetizedBlockBlockEntity)tile : null;
 	}
 
 	@Override

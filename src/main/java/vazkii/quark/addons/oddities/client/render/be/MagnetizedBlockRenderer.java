@@ -1,4 +1,4 @@
-package vazkii.quark.addons.oddities.client.render;
+package vazkii.quark.addons.oddities.client.render.be;
 
 import java.util.Random;
 
@@ -23,20 +23,20 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ForgeHooksClient;
-import vazkii.quark.addons.oddities.block.be.MagnetizedBlockTileEntity;
+import vazkii.quark.addons.oddities.block.be.MagnetizedBlockBlockEntity;
 import vazkii.quark.content.automation.client.render.QuarkPistonBlockEntityRenderer;
 
 @OnlyIn(Dist.CLIENT)
-public class MagnetizedBlockTileEntityRenderer implements BlockEntityRenderer<MagnetizedBlockTileEntity> {
+public class MagnetizedBlockRenderer implements BlockEntityRenderer<MagnetizedBlockBlockEntity> {
 
 	private BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
 
-	public MagnetizedBlockTileEntityRenderer(BlockEntityRendererProvider.Context context) { 
+	public MagnetizedBlockRenderer(BlockEntityRendererProvider.Context context) { 
 		
 	}
 	
 	@Override
-	public void render(MagnetizedBlockTileEntity tileEntityIn, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+	public void render(MagnetizedBlockBlockEntity tileEntityIn, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 		Level world = tileEntityIn.getLevel();
 		if (world != null) {
 			BlockPos truepos = tileEntityIn.getBlockPos();

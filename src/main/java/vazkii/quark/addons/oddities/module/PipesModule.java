@@ -10,8 +10,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ForgeModelBakery;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.addons.oddities.block.PipeBlock;
-import vazkii.quark.addons.oddities.block.be.PipeTileEntity;
-import vazkii.quark.addons.oddities.client.render.PipeTileEntityRenderer;
+import vazkii.quark.addons.oddities.block.be.PipeBlockEntity;
+import vazkii.quark.addons.oddities.client.render.be.PipeRenderer;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -21,7 +21,7 @@ import vazkii.quark.base.module.config.Config;
 @LoadModule(category = ModuleCategory.ODDITIES)
 public class PipesModule extends QuarkModule {
 
-    public static BlockEntityType<PipeTileEntity> tileEntityType;
+    public static BlockEntityType<PipeBlockEntity> tileEntityType;
 
 	@Config(description = "How long it takes for an item to cross a pipe. Bigger = slower.") 
 	private static int pipeSpeed = 5;
@@ -40,7 +40,7 @@ public class PipesModule extends QuarkModule {
     public void construct() {
     	pipe = new PipeBlock(this);
     	
-    	tileEntityType = BlockEntityType.Builder.of(PipeTileEntity::new, pipe).build(null);
+    	tileEntityType = BlockEntityType.Builder.of(PipeBlockEntity::new, pipe).build(null);
 		RegistryHelper.register(tileEntityType, "pipe");
     }
     
@@ -52,7 +52,7 @@ public class PipesModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		BlockEntityRenderers.register(tileEntityType, PipeTileEntityRenderer::new);
+		BlockEntityRenderers.register(tileEntityType, PipeRenderer::new);
 	}
 
     @Override

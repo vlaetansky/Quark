@@ -11,9 +11,9 @@ import vazkii.quark.addons.oddities.block.MagnetBlock;
 import vazkii.quark.addons.oddities.magnetsystem.MagnetSystem;
 import vazkii.quark.addons.oddities.module.MagnetsModule;
 
-public class MagnetTileEntity extends BlockEntity {
+public class MagnetBlockEntity extends BlockEntity {
 
-	public MagnetTileEntity(BlockPos pos, BlockState state) {
+	public MagnetBlockEntity(BlockPos pos, BlockState state) {
 		super(MagnetsModule.magnetType, pos, state);
 	}
 

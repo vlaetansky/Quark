@@ -4,8 +4,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.network.NetworkEvent;
 import vazkii.arl.network.IMessage;
-import vazkii.quark.addons.oddities.block.be.MatrixEnchantingTableTileEntity;
-import vazkii.quark.addons.oddities.container.MatrixEnchantingContainer;
+import vazkii.quark.addons.oddities.block.be.MatrixEnchantingTableBlockEntity;
+import vazkii.quark.addons.oddities.inventory.MatrixEnchantingMenu;
 
 public class MatrixEnchanterOperationMessage implements IMessage {
 
@@ -29,8 +29,8 @@ public class MatrixEnchanterOperationMessage implements IMessage {
 			ServerPlayer player = context.getSender();
 			AbstractContainerMenu container = player.containerMenu;
 			
-			if(container instanceof MatrixEnchantingContainer) {
-				MatrixEnchantingTableTileEntity enchanter = ((MatrixEnchantingContainer) container).enchanter;
+			if(container instanceof MatrixEnchantingMenu) {
+				MatrixEnchantingTableBlockEntity enchanter = ((MatrixEnchantingMenu) container).enchanter;
 				enchanter.onOperation(player, operation, arg0, arg1, arg2);
 			}
 		});

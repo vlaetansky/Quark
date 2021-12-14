@@ -4,7 +4,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.network.NetworkEvent;
 import vazkii.arl.network.IMessage;
-import vazkii.quark.addons.oddities.container.CrateContainer;
+import vazkii.quark.addons.oddities.inventory.CrateMenu;
 
 public class ScrollCrateMessage implements IMessage {
 
@@ -24,8 +24,8 @@ public class ScrollCrateMessage implements IMessage {
 			ServerPlayer player = context.getSender();
 			AbstractContainerMenu container = player.containerMenu;
 			
-			if(container instanceof CrateContainer)
-				((CrateContainer) container).scroll(down, false);
+			if(container instanceof CrateMenu)
+				((CrateMenu) container).scroll(down, false);
 		});
 		
 		return true;

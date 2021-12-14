@@ -20,22 +20,22 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
 import vazkii.arl.util.ClientTicker;
-import vazkii.quark.addons.oddities.block.be.MatrixEnchantingTableTileEntity;
-import vazkii.quark.addons.oddities.container.EnchantmentMatrix;
-import vazkii.quark.addons.oddities.container.EnchantmentMatrix.Piece;
-import vazkii.quark.addons.oddities.container.MatrixEnchantingContainer;
+import vazkii.quark.addons.oddities.block.be.MatrixEnchantingTableBlockEntity;
+import vazkii.quark.addons.oddities.inventory.EnchantmentMatrix;
+import vazkii.quark.addons.oddities.inventory.MatrixEnchantingMenu;
+import vazkii.quark.addons.oddities.inventory.EnchantmentMatrix.Piece;
 import vazkii.quark.addons.oddities.module.MatrixEnchantingModule;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.oddities.MatrixEnchanterOperationMessage;
 
-public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchantingContainer> {
+public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchantingMenu> {
 
 	public static final ResourceLocation BACKGROUND = new ResourceLocation(Quark.MOD_ID, "textures/misc/matrix_enchanting.png");
 
 	protected final Inventory playerInv;
-	protected final MatrixEnchantingTableTileEntity enchanter;
+	protected final MatrixEnchantingTableBlockEntity enchanter;
 
 	protected Button plusButton;
 	protected MatrixEnchantingPieceList pieceList;
@@ -45,7 +45,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 	protected int gridHoverX, gridHoverY;
 	protected List<Integer> listPieces = null;
 
-	public MatrixEnchantingScreen(MatrixEnchantingContainer container, Inventory inventory, Component component) {
+	public MatrixEnchantingScreen(MatrixEnchantingMenu container, Inventory inventory, Component component) {
 		super(container, inventory, component);
 		this.playerInv = inventory;
 		this.enchanter = container.enchanter;
@@ -279,21 +279,21 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 	}
 
 	public void add(Button button) {
-		send(MatrixEnchantingTableTileEntity.OPER_ADD, 0, 0, 0);
+		send(MatrixEnchantingTableBlockEntity.OPER_ADD, 0, 0, 0);
 	}
 
 	public void place(int id, int x, int y) {
-		send(MatrixEnchantingTableTileEntity.OPER_PLACE, id, x, y);
+		send(MatrixEnchantingTableBlockEntity.OPER_PLACE, id, x, y);
 		selectedPiece = -1;
 		click();
 	}
 
 	public void remove(int id) {
-		send(MatrixEnchantingTableTileEntity.OPER_REMOVE, id, 0, 0);
+		send(MatrixEnchantingTableBlockEntity.OPER_REMOVE, id, 0, 0);
 	}
 
 	public void rotate(int id) {
-		send(MatrixEnchantingTableTileEntity.OPER_ROTATE, id, 0, 0);
+		send(MatrixEnchantingTableBlockEntity.OPER_ROTATE, id, 0, 0);
 	}
 
 	public void merge(int id) {
@@ -301,7 +301,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 		Piece p = getPiece(hover);
 		Piece p1 = getPiece(selectedPiece);
 		if(p != null && p1 != null && p.enchant == p1.enchant && p.level < p.enchant.getMaxLevel()) {
-			send(MatrixEnchantingTableTileEntity.OPER_MERGE, hover, id, 0);
+			send(MatrixEnchantingTableBlockEntity.OPER_MERGE, hover, id, 0);
 			selectedPiece = -1;
 			click();
 		}

@@ -30,8 +30,8 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import vazkii.quark.addons.oddities.block.be.MagnetTileEntity;
-import vazkii.quark.addons.oddities.block.be.MagnetizedBlockTileEntity;
+import vazkii.quark.addons.oddities.block.be.MagnetBlockEntity;
+import vazkii.quark.addons.oddities.block.be.MagnetizedBlockBlockEntity;
 import vazkii.quark.addons.oddities.magnetsystem.MagnetSystem;
 import vazkii.quark.addons.oddities.module.MagnetsModule;
 import vazkii.quark.base.block.QuarkBlock;
@@ -79,21 +79,21 @@ public class MagnetBlock extends QuarkBlock implements EntityBlock {
 		BlockState targetState = world.getBlockState(targetPos);
 
 		BlockEntity tile = world.getBlockEntity(pos);
-		if (!(tile instanceof MagnetTileEntity))
+		if (!(tile instanceof MagnetBlockEntity))
 			return false;
 
 		BlockPos endPos = targetPos.relative(moveDir);
-		PushReaction reaction = MagnetSystem.getPushAction((MagnetTileEntity) tile, targetPos, targetState, moveDir);
+		PushReaction reaction = MagnetSystem.getPushAction((MagnetBlockEntity) tile, targetPos, targetState, moveDir);
 		if (reaction != PushReaction.IGNORE && reaction != PushReaction.DESTROY)
 			return false;
 
 		BlockEntity tilePresent = world.getBlockEntity(targetPos);
 		CompoundTag tileData = new CompoundTag();
-		if (tilePresent != null && !(tilePresent instanceof MagnetizedBlockTileEntity))
+		if (tilePresent != null && !(tilePresent instanceof MagnetizedBlockBlockEntity))
 			tilePresent.save(tileData);
 
 		BlockState setState = MagnetsModule.magnetized_block.defaultBlockState().setValue(MovingMagnetizedBlock.FACING, moveDir);
-		MagnetizedBlockTileEntity movingTile = new MagnetizedBlockTileEntity(endPos, setState, targetState, tileData, moveDir);
+		MagnetizedBlockBlockEntity movingTile = new MagnetizedBlockBlockEntity(endPos, setState, targetState, tileData, moveDir);
 
 		if (!world.isClientSide && reaction == PushReaction.DESTROY) {
 			BlockState blockstate = world.getBlockState(endPos);
@@ -141,7 +141,7 @@ public class MagnetBlock extends QuarkBlock implements EntityBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return new MagnetTileEntity(pos, state);
+		return new MagnetBlockEntity(pos, state);
 	}
 	
 }

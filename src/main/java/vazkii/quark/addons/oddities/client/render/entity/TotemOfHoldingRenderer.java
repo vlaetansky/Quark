@@ -1,4 +1,4 @@
-package vazkii.quark.addons.oddities.render;
+package vazkii.quark.addons.oddities.client.render.entity;
 
 import javax.annotation.Nonnull;
 

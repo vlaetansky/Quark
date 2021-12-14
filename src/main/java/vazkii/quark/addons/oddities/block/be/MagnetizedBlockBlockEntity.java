@@ -29,7 +29,7 @@ import vazkii.quark.addons.oddities.magnetsystem.MagnetSystem;
 import vazkii.quark.addons.oddities.module.MagnetsModule;
 import vazkii.quark.api.IMagnetMoveAction;
 
-public class MagnetizedBlockTileEntity extends BlockEntity {
+public class MagnetizedBlockBlockEntity extends BlockEntity {
     private BlockState magnetState;
     private CompoundTag subTile;
     private Direction magnetFacing;
@@ -38,11 +38,11 @@ public class MagnetizedBlockTileEntity extends BlockEntity {
     private float lastProgress;
     private long lastTicked;
 
-    public MagnetizedBlockTileEntity(BlockPos pos, BlockState state) {
+    public MagnetizedBlockBlockEntity(BlockPos pos, BlockState state) {
         super(MagnetsModule.magnetizedBlockType, pos, state);
     }
 
-    public MagnetizedBlockTileEntity(BlockPos pos, BlockState state, BlockState magnetStateIn, CompoundTag subTileIn, Direction magnetFacingIn) {
+    public MagnetizedBlockBlockEntity(BlockPos pos, BlockState state, BlockState magnetStateIn, CompoundTag subTileIn, Direction magnetFacingIn) {
         this(pos, state);
         this.magnetState = magnetStateIn;
         this.subTile = subTileIn;

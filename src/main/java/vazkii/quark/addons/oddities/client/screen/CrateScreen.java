@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import vazkii.quark.addons.oddities.container.CrateContainer;
+import vazkii.quark.addons.oddities.inventory.CrateMenu;
 import vazkii.quark.addons.oddities.module.CrateModule;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.handler.InventoryButtonHandler;
@@ -20,17 +20,17 @@ import vazkii.quark.base.client.handler.InventoryButtonHandler.ButtonTargetType;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.content.client.module.ChestSearchingModule;
 
-public class CrateScreen extends AbstractContainerScreen<CrateContainer> {
+public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Quark.MOD_ID, "textures/gui/crate.png");
 
 	final int inventoryRows;
 	List<Rect2i> extraAreas;
 
-	public CrateScreen(CrateContainer container, Inventory inv, Component component) {
+	public CrateScreen(CrateMenu container, Inventory inv, Component component) {
 		super(container, inv, component);
 		
-		inventoryRows = CrateContainer.numRows;
+		inventoryRows = CrateMenu.numRows;
 		imageHeight = 114 + this.inventoryRows * 18;
 		inventoryLabelY = imageHeight - 94;
 	}
@@ -72,7 +72,7 @@ public class CrateScreen extends AbstractContainerScreen<CrateContainer> {
 		int j = (height - imageHeight) / 2;
 		blit(matrixStack, i, j, 0, 0, imageWidth + 20, imageHeight);
 		
-		int maxScroll = (menu.getStackCount() / CrateContainer.numCols) * CrateContainer.numCols;
+		int maxScroll = (menu.getStackCount() / CrateMenu.numCols) * CrateMenu.numCols;
 		int currScroll = (menu.scroll * 95) / Math.max(1, maxScroll);
 		
 		int u = 232 + (maxScroll == 0 ? 12 : 0);
