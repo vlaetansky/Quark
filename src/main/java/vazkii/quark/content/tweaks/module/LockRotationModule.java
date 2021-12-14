@@ -178,9 +178,11 @@ public class LockRotationModule extends QuarkModule {
 				Vec3 hitVec = bresult.getLocation();
 				Direction face = bresult.getDirection();
 
-				int half = (int) ((hitVec.y - (int) hitVec.y) * 2);
+				int half = Math.abs((int) ((hitVec.y - (int) hitVec.y) * 2));
 				if(face.getAxis() == Axis.Y)
 					half = -1;
+				else if(hitVec.y < 0)
+					half = 1 - half;
 
 				newProfile = new LockProfile(face.getOpposite(), half);
 
