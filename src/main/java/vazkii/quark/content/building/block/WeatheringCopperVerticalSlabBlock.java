@@ -1,5 +1,6 @@
 package vazkii.quark.content.building.block;
 
+import java.util.Optional;
 import java.util.Random;
 
 import net.minecraft.core.BlockPos;
@@ -11,6 +12,7 @@ import vazkii.quark.base.module.QuarkModule;
 
 public class WeatheringCopperVerticalSlabBlock extends VerticalSlabBlock implements WeatheringCopper {
 	private final WeatheringCopper.WeatherState weatherState;
+	public WeatheringCopperVerticalSlabBlock next;
 
 	public WeatheringCopperVerticalSlabBlock(Block parent, QuarkModule module) {
 		super(parent, module);
@@ -24,7 +26,12 @@ public class WeatheringCopperVerticalSlabBlock extends VerticalSlabBlock impleme
 
 	@Override
 	public boolean isRandomlyTicking(BlockState p_154947_) {
-		return WeatheringCopper.getNext(p_154947_.getBlock()).isPresent();
+		return getNext(p_154947_).isPresent();
+	}
+	
+	@Override
+	public Optional<BlockState> getNext(BlockState p_154893_) {
+		return next == null ? Optional.empty() : Optional.of(next.defaultBlockState());
 	}
 
 	@Override

@@ -34,22 +34,27 @@ public class VerticalSlabsModule extends QuarkModule {
 				Blocks.DEEPSLATE_BRICK_SLAB, Blocks.DEEPSLATE_TILE_SLAB)
 		.forEach(b -> new VerticalSlabBlock(b, this));
 
-		List<Block> copperVerticalSlabs = new ArrayList<>();
+		List<WeatheringCopperVerticalSlabBlock> copperVerticalSlabs = new ArrayList<>();
 		ImmutableSet.of(
 				Pair.of(Blocks.CUT_COPPER_SLAB, Blocks.WAXED_CUT_COPPER_SLAB), 
 				Pair.of(Blocks.EXPOSED_CUT_COPPER_SLAB, Blocks.WAXED_EXPOSED_CUT_COPPER_SLAB),
 				Pair.of(Blocks.WEATHERED_CUT_COPPER_SLAB, Blocks.WAXED_WEATHERED_CUT_COPPER_SLAB),
 				Pair.of(Blocks.OXIDIZED_CUT_COPPER_SLAB, Blocks.WAXED_OXIDIZED_CUT_COPPER_SLAB))
 		.forEach(p -> {
-			Block cleanSlab = new WeatheringCopperVerticalSlabBlock(p.getLeft(), this);
-			Block waxedSlab = new VerticalSlabBlock(p.getRight(), this);
+			WeatheringCopperVerticalSlabBlock cleanSlab = new WeatheringCopperVerticalSlabBlock(p.getLeft(), this);
+			VerticalSlabBlock waxedSlab = new VerticalSlabBlock(p.getRight(), this);
 			
 			copperVerticalSlabs.add(cleanSlab);
 			ToolInteractionHandler.registerWaxedBlock(cleanSlab, waxedSlab);
 		});
 		
-		for(int i = 1; i < copperVerticalSlabs.size(); i++)
-			ToolInteractionHandler.registerInteraction(ToolActions.AXE_SCRAPE, copperVerticalSlabs.get(i), copperVerticalSlabs.get(i - 1));
+		for(int i = 1; i < copperVerticalSlabs.size(); i++) {
+			WeatheringCopperVerticalSlabBlock prev = copperVerticalSlabs.get(i - 1);
+			WeatheringCopperVerticalSlabBlock next = copperVerticalSlabs.get(i);
+			ToolInteractionHandler.registerInteraction(ToolActions.AXE_SCRAPE, next, prev);
+			
+			prev.next = next;
+		}
 
 		VariantHandler.SLABS.forEach(b ->  {
 			if(b instanceof IVerticalSlabProvider) 
