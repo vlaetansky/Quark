@@ -20,7 +20,6 @@
     "PistonBaseBlockMixin",
     "PistonMovingBlockEntityMixin",
     "PlayerAdvancementsMixin",
-    "ServerLevelMixin",
     "StructurePieceMixin",
     "StructureStartMixin",
     "StructureTemplateMixin",
