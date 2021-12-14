@@ -75,7 +75,7 @@ public class GravisandBlock extends QuarkBlock {
 	
 	private boolean tryFall(Level worldIn, BlockPos pos, Direction facing) {
 		BlockPos target = pos.relative(facing);
-		if((worldIn.isEmptyBlock(target) || canFallThrough(worldIn, pos, worldIn.getBlockState(target))) && pos.getY() >= 0) {
+		if((worldIn.isEmptyBlock(target) || canFallThrough(worldIn, pos, worldIn.getBlockState(target))) && worldIn.isInWorldBounds(pos)) {
 			Gravisand entity = new Gravisand(worldIn, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, facing.getStepY());
 			worldIn.addFreshEntity(entity);
 			return true;

@@ -6,53 +6,84 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.tags.FluidTags;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.DirectionalPlaceContext;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ConcretePowderBlock;
+import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import vazkii.quark.content.automation.module.GravisandModule;
 
 public class Gravisand extends FallingBlockEntity {
 
-	private static final EntityDataAccessor<Float> DIRECTION = SynchedEntityData.defineId(Gravisand.class, EntityDataSerializers.FLOAT);
+	private static final EntityDataAccessor<Float> DIRECTION = SynchedEntityData.defineId(Gravisand.class,
+			EntityDataSerializers.FLOAT);
 
 	private static final String TAG_DIRECTION = "fallDirection";
 
-	private final BlockState fallTile = GravisandModule.gravisand.defaultBlockState();
-
 	public Gravisand(EntityType<? extends Gravisand> type, Level world) {
 		super(type, world);
+		this.blockState = GravisandModule.gravisand.defaultBlockState();
 	}
 
 	public Gravisand(Level world, double x, double y, double z, float direction) {
 		this(GravisandModule.gravisandType, world);
+		this.blockState = GravisandModule.gravisand.defaultBlockState();
 		this.blocksBuilding = true;
-		this.setPos(x, y + (double)((1.0F - this.getBbHeight()) / 2.0F), z);
+		this.setPos(x, y + (double) ((1.0F - this.getBbHeight()) / 2.0F), z);
 		this.setDeltaMovement(Vec3.ZERO);
 		this.xo = x;
 		this.yo = y;
 		this.zo = z;
-		this.setStartPos(new BlockPos(position()));
+		this.setStartPos(new BlockPos(blockPosition()));
 		entityData.set(DIRECTION, direction);
 	}
 
+	@Override
+	public void tick() {
+		super.tick();
+
+		//  vanilla copy for falling upwards stuff
+		BlockPos blockpos1 = this.blockPosition();
+		boolean aboveHasCollision = !level.getBlockState(blockpos1.above()).getCollisionShape(level, blockpos1.above()).isEmpty();
+		if (!this.level.isClientSide && getFallDirection() > 0 && !isRemoved() && aboveHasCollision) {
+			Block block = this.blockState.getBlock();
+			BlockState blockstate = this.level.getBlockState(blockpos1);
+			this.setDeltaMovement(this.getDeltaMovement().multiply(0.7D, 0.5D, 0.7D));
+			boolean flag2 = blockstate.canBeReplaced(new DirectionalPlaceContext(this.level, blockpos1, Direction.UP, ItemStack.EMPTY, Direction.DOWN));
+			boolean flag3 = FallingBlock.isFree(this.level.getBlockState(blockpos1.above()));
+			boolean flag4 = this.blockState.canSurvive(this.level, blockpos1) && !flag3;
+			
+			if (flag2 && flag4) {
+				if (this.level.setBlock(blockpos1, this.blockState, 3)) {
+					((ServerLevel)this.level).getChunkSource().chunkMap.broadcast(this, new ClientboundBlockUpdatePacket(blockpos1, this.level.getBlockState(blockpos1)));
+					this.discard();
+				} else if (this.dropItem && this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+					this.discard();
+					this.callOnBrokenAfterFall(block, blockpos1);
+					this.spawnAtLocation(block);
+				}
+			} else {
+				this.discard();
+				if (this.dropItem && this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+					this.callOnBrokenAfterFall(block, blockpos1);
+					this.spawnAtLocation(block);
+				}
+			}
+		}
+	}
 
 	@Override
 	protected void defineSynchedData() {
@@ -61,74 +92,12 @@ public class Gravisand extends FallingBlockEntity {
 		entityData.define(DIRECTION, 0F);
 	}
 
-	// Mostly vanilla copy but supporting directional falling
 	@Override
-	public void tick() {
-		Vec3 pos = position();
-		if (this.fallTile.isAir() || pos.y > (level.getMaxBuildHeight() + 100) || pos.y < (level.getMinBuildHeight() - 100)) {
-			this.discard();
-		} else {
-			this.xo = pos.x;
-			this.yo = pos.y;
-			this.zo = pos.z;
-			Block block = this.fallTile.getBlock();
-			if (this.time++ == 0) {
-				BlockPos blockpos = new BlockPos(position());
-				if (this.level.getBlockState(blockpos).getBlock() == block) {
-					this.level.removeBlock(blockpos, false);
-				} else if (!this.level.isClientSide) {
-					this.discard();
-					return;
-				}
-			}
-
-			if (!this.isNoGravity()) {
-				this.setDeltaMovement(this.getDeltaMovement().add(0.0D, 0.04D * getFallDirection(), 0.0D));
-			}
-
-			this.move(MoverType.SELF, this.getDeltaMovement());
-			if (!this.level.isClientSide) {
-				BlockPos fallTarget = new BlockPos(position());
-				boolean flag = this.fallTile.getBlock() instanceof ConcretePowderBlock;
-				boolean flag1 = flag && this.level.getFluidState(fallTarget).is(FluidTags.WATER);
-				double d0 = this.getDeltaMovement().lengthSqr();
-				if (flag && d0 > 1.0D) {
-					BlockHitResult blockraytraceresult = this.level.clip(new ClipContext(new Vec3(this.xo, this.yo, this.zo), pos, ClipContext.Block.COLLIDER, ClipContext.Fluid.SOURCE_ONLY, this));
-					if (blockraytraceresult.getType() != HitResult.Type.MISS && this.level.getFluidState(blockraytraceresult.getBlockPos()).is(FluidTags.WATER)) {
-						fallTarget = blockraytraceresult.getBlockPos();
-						flag1 = true;
-					}
-				}
-
-				if (!verticalCollision && !flag1) {
-					if (!this.level.isClientSide && (this.time > 100 && (fallTarget.getY() < 1 || fallTarget.getY() > 256) || this.time > 600)) {
-						if (this.dropItem && this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
-							this.spawnAtLocation(block);
-						}
-
-						this.discard();
-					}
-				} else {
-					BlockState blockstate = this.level.getBlockState(fallTarget);
-					this.setDeltaMovement(this.getDeltaMovement().multiply(0.7D, -0.5D, 0.7D));
-					if (blockstate.getBlock() != Blocks.MOVING_PISTON) {
-						this.discard();
-						Direction facing = getFallDirection() < 0 ? Direction.DOWN : Direction.UP;
-						boolean flag2 = blockstate.canBeReplaced(new DirectionalPlaceContext(this.level, fallTarget, facing, ItemStack.EMPTY, facing.getOpposite()));
-						boolean flag3 = this.fallTile.canSurvive(this.level, fallTarget);
-						if (flag2 && flag3) {
-							this.level.setBlock(fallTarget, this.fallTile, 3);
-						} else if (this.dropItem && this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
-							this.spawnAtLocation(block);
-						}
-					} else if (this.dropItem && this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
-						this.spawnAtLocation(block);
-					}
-				}
-			}
-		}
-
-		this.setDeltaMovement(this.getDeltaMovement().scale(0.98D));
+	public void move(MoverType type, Vec3 vec) {
+		if (type == MoverType.SELF)
+			super.move(type, vec.scale(getFallDirection() * -1));
+		else
+			super.move(type, vec);
 	}
 
 	@Override
@@ -158,12 +127,6 @@ public class Gravisand extends FallingBlockEntity {
 	@Override
 	public Packet<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
-	}
-
-	@Nonnull
-	@Override
-	public BlockState getBlockState() {
-		return fallTile;
 	}
 
 }
