@@ -124,10 +124,7 @@ public class CrateMenu extends AbstractContainerMenu {
 	}
 
 	private void forceSync() {
-//		Level world = crate.getLevel(); TODO FIX figure this one out
-//		if(!world.isClientSide)
-//			for(ContainerListener icontainerlistener : containerListeners)
-//				icontainerlistener.refreshContainer(this, getItems());
+		broadcastFullState();
 	}
 
 	public void scroll(boolean down, boolean packet) {

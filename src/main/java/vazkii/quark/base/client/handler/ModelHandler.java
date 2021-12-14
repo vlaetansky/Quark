@@ -68,7 +68,7 @@ public class ModelHandler {
 		wraith = addModel("wraith", WraithModel::createBodyLayer, WraithModel::new);
 		
 		forgotten_hat = addArmorModel("forgotten_hat", ForgottenHatModel::createBodyLayer);
-		forgotten_hat = addArmorModel("backpack", BackpackModel::createBodyLayer);
+		backpack = addArmorModel("backpack", BackpackModel::createBodyLayer);
 
 		modelsInitted = true;
 	}

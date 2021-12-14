@@ -110,7 +110,7 @@ public class BackpackMenu extends InventoryMenu {
 			if (stack.getCount() == baseStack.getCount())
 				return ItemStack.EMPTY;
 
-			slot.onTake(playerIn, stack); // TODO CHECK works?
+			slot.onTake(playerIn, stack);
 			if(index == 0) 
 				playerIn.drop(stack, false);
 		}
@@ -181,9 +181,9 @@ public class BackpackMenu extends InventoryMenu {
 	
 	@Nonnull
 	@Override
-	public void clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) { // TODO CHECK
+	public void clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) {
 		SlotCachingItemHandler.cache(this);
-		clicked(slotId, dragType, clickTypeIn, player);
+		super.clicked(slotId, dragType, clickTypeIn, player);
 		SlotCachingItemHandler.applyCache(this);
 	}
 
