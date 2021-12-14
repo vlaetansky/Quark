@@ -27,7 +27,7 @@ public class MagnetsModule extends QuarkModule {
     public static BlockEntityType<MagnetizedBlockBlockEntity> magnetizedBlockType;
     
     @Config(description = "Any items you place in this list will be derived so that any block made of it will become magnetizable") 
-    public static List<String> magneticDerivationList = Lists.newArrayList("minecraft:iron_ingot");
+    public static List<String> magneticDerivationList = Lists.newArrayList("minecraft:iron_ingot", "minecraft:copper_ingot");
     
     @Config public static List<String> magneticWhitelist = Lists.newArrayList("minecraft:chipped_anvil", "minecraft:damaged_anvil");
     @Config public static List<String> magneticBlacklist = Lists.newArrayList("minecraft:tripwire_hook");

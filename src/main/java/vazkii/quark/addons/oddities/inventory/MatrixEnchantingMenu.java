@@ -24,7 +24,7 @@ public class MatrixEnchantingMenu extends AbstractContainerMenu {
 	public final MatrixEnchantingTableBlockEntity enchanter;
 
 	public MatrixEnchantingMenu(int id, Inventory playerInv, MatrixEnchantingTableBlockEntity tile) {
-		super(MatrixEnchantingModule.containerType, id);
+		super(MatrixEnchantingModule.menuType, id);
 		enchanter = tile;
 
 		// Item Slot

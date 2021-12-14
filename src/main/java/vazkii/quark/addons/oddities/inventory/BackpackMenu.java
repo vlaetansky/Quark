@@ -207,7 +207,7 @@ public class BackpackMenu extends InventoryMenu {
 
 	@Override
 	public MenuType<?> getType() {
-		return BackpackModule.container;
+		return BackpackModule.menyType;
 	}
 
 }

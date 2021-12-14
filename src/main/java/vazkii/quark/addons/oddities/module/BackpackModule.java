@@ -64,7 +64,7 @@ public class BackpackModule extends QuarkModule {
 	
 	public static Block bonded_ravager_hide;
 	
-    public static MenuType<BackpackMenu> container;
+    public static MenuType<BackpackMenu> menyType;
     private static ItemStack heldStack = null;
 
 	@OnlyIn(Dist.CLIENT)
@@ -75,8 +75,8 @@ public class BackpackModule extends QuarkModule {
 		backpack = new BackpackItem(this);
 		ravager_hide = new QuarkItem("ravager_hide", this, new Item.Properties().rarity(Rarity.RARE).tab(CreativeModeTab.TAB_MATERIALS)).setCondition(() -> enableRavagerHide);
 		
-		container = IForgeMenuType.create(BackpackMenu::fromNetwork);
-		RegistryHelper.register(container, "backpack");
+		menyType = IForgeMenuType.create(BackpackMenu::fromNetwork);
+		RegistryHelper.register(menyType, "backpack");
 		
 		bonded_ravager_hide = new QuarkBlock("bonded_ravager_hide", this, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.of(Material.WOOL, DyeColor.BLACK)
 				.strength(1F)
@@ -87,7 +87,7 @@ public class BackpackModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		MenuScreens.register(container, BackpackInventoryScreen::new);
+		MenuScreens.register(menyType, BackpackInventoryScreen::new);
 		
 		enqueue(() -> ItemProperties.register(backpack, new ResourceLocation("has_items"), 
 				(stack, world, entity, i) -> (!BackpackModule.superOpMode && BackpackItem.doesBackpackHaveItems(stack)) ? 1 : 0));

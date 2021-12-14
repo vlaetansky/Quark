@@ -13,6 +13,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -213,7 +214,6 @@ public class MagnetizedBlockBlockEntity extends BlockEntity {
         return this.magnetState;
     }
 
-
     private IMagnetMoveAction getMoveAction() {
         Block block = magnetState.getBlock();
         if(block instanceof IMagnetMoveAction)
@@ -268,6 +268,10 @@ public class MagnetizedBlockBlockEntity extends BlockEntity {
         }
 
     }
+    
+	public static void tick(Level level, BlockPos pos, BlockState state, MagnetizedBlockBlockEntity be) {
+		be.tick();
+	}
 
     public void tick() {
         if (this.level == null)

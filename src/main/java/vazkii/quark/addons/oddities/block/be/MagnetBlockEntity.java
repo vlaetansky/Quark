@@ -3,6 +3,7 @@ package vazkii.quark.addons.oddities.block.be;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,6 +18,10 @@ public class MagnetBlockEntity extends BlockEntity {
 		super(MagnetsModule.magnetType, pos, state);
 	}
 
+	public static void tick(Level level, BlockPos pos, BlockState state, MagnetBlockEntity be) {
+		be.tick();
+	}
+	
 	public void tick() {
 		BlockState state = getBlockState();
 		boolean powered = state.getValue(MagnetBlock.POWERED);

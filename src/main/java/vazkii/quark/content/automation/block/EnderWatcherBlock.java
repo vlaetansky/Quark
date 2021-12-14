@@ -51,7 +51,6 @@ public class EnderWatcherBlock extends QuarkBlock implements EntityBlock {
 	public int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
 		return blockState.getValue(POWER);
 	}
-	
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {

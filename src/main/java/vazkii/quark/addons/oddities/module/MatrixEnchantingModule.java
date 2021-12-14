@@ -45,8 +45,8 @@ import vazkii.quark.base.module.config.Config;
 @LoadModule(category = ModuleCategory.ODDITIES, hasSubscriptions = true)
 public class MatrixEnchantingModule extends QuarkModule {
 
-	public static BlockEntityType<MatrixEnchantingTableBlockEntity> tileEntityType;
-	public static MenuType<MatrixEnchantingMenu> containerType;
+	public static BlockEntityType<MatrixEnchantingTableBlockEntity> blockEntityType;
+	public static MenuType<MatrixEnchantingMenu> menuType;
 
 	@Config(description = "The maximum enchanting power the matrix enchanter can accept")
 	public static int maxBookshelves = 15;
@@ -139,18 +139,18 @@ public class MatrixEnchantingModule extends QuarkModule {
 	public void construct() {
 		matrixEnchanter = new MatrixEnchantingTableBlock(this);
 
-		containerType = IForgeMenuType.create(MatrixEnchantingMenu::fromNetwork);
-		RegistryHelper.register(containerType, "matrix_enchanting");
+		menuType = IForgeMenuType.create(MatrixEnchantingMenu::fromNetwork);
+		RegistryHelper.register(menuType, "matrix_enchanting");
 
-		tileEntityType = BlockEntityType.Builder.of(MatrixEnchantingTableBlockEntity::new, matrixEnchanter).build(null);
-		RegistryHelper.register(tileEntityType, "matrix_enchanting");
+		blockEntityType = BlockEntityType.Builder.of(MatrixEnchantingTableBlockEntity::new, matrixEnchanter).build(null);
+		RegistryHelper.register(blockEntityType, "matrix_enchanting");
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		MenuScreens.register(containerType, MatrixEnchantingScreen::new);
-		BlockEntityRenderers.register(tileEntityType, MatrixEnchantingTableRenderer::new);	
+		MenuScreens.register(menuType, MatrixEnchantingScreen::new);
+		BlockEntityRenderers.register(blockEntityType, MatrixEnchantingTableRenderer::new);	
 	}
 
 	@SubscribeEvent

@@ -47,7 +47,7 @@ import vazkii.quark.base.handler.QuarkSounds;
 public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 
 	public PipeBlockEntity(BlockPos pos, BlockState state) {
-		super(PipesModule.tileEntityType, pos, state);
+		super(PipesModule.blockEntityType, pos, state);
 	}
 	
 	private static final String TAG_PIPE_ITEMS = "pipeItems";
@@ -61,6 +61,10 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 	public static boolean isTheGoodDay(Level world) {
 		Calendar calendar = Calendar.getInstance();
 		return calendar.get(Calendar.MONTH) + 1 == 4 && calendar.get(Calendar.DAY_OF_MONTH) == 1;
+	}
+	
+	public static void tick(Level level, BlockPos pos, BlockState state, PipeBlockEntity be) {
+		be.tick();
 	}
 
 	public void tick() {

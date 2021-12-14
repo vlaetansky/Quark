@@ -64,7 +64,7 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 	};
 
 	public CrateBlockEntity(BlockPos pos, BlockState state) {
-		super(CrateModule.crateType, pos, state);
+		super(CrateModule.blockEntityType, pos, state);
 	}
 
 	public void spillTheTea() {
@@ -75,6 +75,10 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 				Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), stack);
 	}
 
+	public static void tick(Level level, BlockPos pos, BlockState state, CrateBlockEntity be) {
+		be.tick();
+	}
+	
 	public void tick() {
 		if(needsUpdate) {
 			stacks.removeIf(ItemStack::isEmpty);

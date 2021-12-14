@@ -21,7 +21,7 @@ import vazkii.quark.base.module.config.Config;
 @LoadModule(category = ModuleCategory.ODDITIES)
 public class PipesModule extends QuarkModule {
 
-    public static BlockEntityType<PipeBlockEntity> tileEntityType;
+    public static BlockEntityType<PipeBlockEntity> blockEntityType;
 
 	@Config(description = "How long it takes for an item to cross a pipe. Bigger = slower.") 
 	private static int pipeSpeed = 5;
@@ -40,8 +40,8 @@ public class PipesModule extends QuarkModule {
     public void construct() {
     	pipe = new PipeBlock(this);
     	
-    	tileEntityType = BlockEntityType.Builder.of(PipeBlockEntity::new, pipe).build(null);
-		RegistryHelper.register(tileEntityType, "pipe");
+    	blockEntityType = BlockEntityType.Builder.of(PipeBlockEntity::new, pipe).build(null);
+		RegistryHelper.register(blockEntityType, "pipe");
     }
     
     @Override
@@ -52,7 +52,7 @@ public class PipesModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		BlockEntityRenderers.register(tileEntityType, PipeRenderer::new);
+		BlockEntityRenderers.register(blockEntityType, PipeRenderer::new);
 	}
 
     @Override

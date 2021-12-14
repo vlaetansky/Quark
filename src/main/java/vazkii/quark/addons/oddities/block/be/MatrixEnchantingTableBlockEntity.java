@@ -29,8 +29,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.addons.oddities.inventory.EnchantmentMatrix;
-import vazkii.quark.addons.oddities.inventory.MatrixEnchantingMenu;
 import vazkii.quark.addons.oddities.inventory.EnchantmentMatrix.Piece;
+import vazkii.quark.addons.oddities.inventory.MatrixEnchantingMenu;
 import vazkii.quark.addons.oddities.module.MatrixEnchantingModule;
 import vazkii.quark.api.IEnchantmentInfluencer;
 import vazkii.quark.api.IModifiableEnchantmentInfluencer;
@@ -59,7 +59,11 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 	public int bookshelfPower, enchantability, charge;
 
 	public MatrixEnchantingTableBlockEntity(BlockPos pos, BlockState state) {
-		super(MatrixEnchantingModule.tileEntityType, pos, state);
+		super(MatrixEnchantingModule.blockEntityType, pos, state);
+	}
+	
+	public static void tick(Level level, BlockPos pos, BlockState state, MatrixEnchantingTableBlockEntity be) {
+		be.tick();
 	}
 	
 	@Override

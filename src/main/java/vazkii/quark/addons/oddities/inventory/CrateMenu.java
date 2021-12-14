@@ -34,7 +34,7 @@ public class CrateMenu extends AbstractContainerMenu {
 	}
 
 	public CrateMenu(int id, Inventory inv, CrateBlockEntity crate, ContainerData data) {
-		super(CrateModule.containerType, id);
+		super(CrateModule.menuType, id);
 		crate.startOpen(inv.player);
 
 		this.crate = crate;

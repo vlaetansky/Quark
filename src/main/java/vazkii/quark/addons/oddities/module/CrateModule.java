@@ -20,8 +20,8 @@ import vazkii.quark.base.module.config.Config;
 @LoadModule(category = ModuleCategory.ODDITIES)
 public class CrateModule extends QuarkModule {
 
-    public static BlockEntityType<CrateBlockEntity> crateType;
-	public static MenuType<CrateMenu> containerType;
+    public static BlockEntityType<CrateBlockEntity> blockEntityType;
+	public static MenuType<CrateMenu> menuType;
 	
 	public static Block crate;
 	
@@ -31,17 +31,17 @@ public class CrateModule extends QuarkModule {
 	public void construct() {
 		crate = new CrateBlock(this);
 		
-		containerType = IForgeMenuType.create(CrateMenu::fromNetwork);
-		RegistryHelper.register(containerType, "crate");
+		menuType = IForgeMenuType.create(CrateMenu::fromNetwork);
+		RegistryHelper.register(menuType, "crate");
 		
-		crateType = BlockEntityType.Builder.of(CrateBlockEntity::new, crate).build(null);
-		RegistryHelper.register(crateType, "crate");
+		blockEntityType = BlockEntityType.Builder.of(CrateBlockEntity::new, crate).build(null);
+		RegistryHelper.register(blockEntityType, "crate");
 	}
 	
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		MenuScreens.register(containerType, CrateScreen::new);
+		MenuScreens.register(menuType, CrateScreen::new);
 	}
 	
 }
