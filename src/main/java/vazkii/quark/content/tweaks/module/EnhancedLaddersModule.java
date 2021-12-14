@@ -79,7 +79,11 @@ public class EnhancedLaddersModule extends QuarkModule {
 			return false;
 		
 		Direction facing = state.getValue(LadderBlock.FACING);
-		boolean solid = facing.getAxis() != Axis.Y && world.getBlockState(pos.relative(facing.getOpposite())).isFaceSturdy(world, pos.relative(facing.getOpposite()), facing);
+		Direction opposite = facing.getOpposite();
+		BlockPos oppositePos = pos.relative(opposite);
+		BlockState oppositeState = world.getBlockState(oppositePos);
+		
+		boolean solid = facing.getAxis() != Axis.Y && oppositeState.isFaceSturdy(world, oppositePos, facing) && !(oppositeState.getBlock() instanceof LadderBlock);
 		BlockState topState = world.getBlockState(pos.above());
 		return solid || (topState.getBlock() instanceof LadderBlock && (facing.getAxis() == Axis.Y || topState.getValue(LadderBlock.FACING) == facing));
 	}
