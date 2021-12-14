@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.google.common.base.Predicates;
+
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -56,7 +58,7 @@ public class RunAwayFromPikesGoal extends Goal {
 
 	@Nullable
 	private SkullPike getClosestEntity(Level world, LivingEntity p_225318_3_, double p_225318_4_, double p_225318_6_, double p_225318_8_, AABB p_225318_10_) {
-		return getClosestEntity(world.getEntitiesOfClass(SkullPike.class, p_225318_10_, null), p_225318_3_, p_225318_4_, p_225318_6_, p_225318_8_);
+		return getClosestEntity(world.getEntitiesOfClass(SkullPike.class, p_225318_10_, Predicates.alwaysTrue()), p_225318_3_, p_225318_4_, p_225318_6_, p_225318_8_);
 	}
 
 	@Nullable
