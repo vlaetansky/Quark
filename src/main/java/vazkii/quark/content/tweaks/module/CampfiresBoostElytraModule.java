@@ -33,7 +33,7 @@ public class CampfiresBoostElytraModule extends QuarkModule {
 				Level world = player.level;
 				
 				int moves = 0;
-				while(world.isEmptyBlock(pos) && pos.getY() > 0 && moves < 20) {
+				while(world.isEmptyBlock(pos) && world.isInWorldBounds(pos) && moves < 20) {
 					pos = pos.below();
 					moves++;
 				}
