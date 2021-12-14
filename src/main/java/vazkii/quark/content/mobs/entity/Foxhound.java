@@ -306,10 +306,11 @@ public class Foxhound extends Wolf implements Enemy {
 			}
 		}
 
-		if (!level.isClientSide)
+		InteractionResult res = super.mobInteract(player, hand);
+		if(res == InteractionResult.PASS && !level.isClientSide)
 			setWoke();
 
-		return super.mobInteract(player, hand);
+		return res;
 	}
 
 	@Override
