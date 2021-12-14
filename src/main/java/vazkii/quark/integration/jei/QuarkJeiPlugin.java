@@ -11,12 +11,14 @@ import java.util.stream.Stream;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
+import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.registration.IVanillaCategoryExtensionRegistration;
+import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.EnchantedBookItem;
@@ -28,6 +30,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.enchantment.Enchantments;
 import vazkii.arl.util.ItemNBTHelper;
+import vazkii.quark.addons.oddities.client.screen.CrateScreen;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.building.module.VariantFurnacesModule;
@@ -83,7 +86,7 @@ public class QuarkJeiPlugin implements IModPlugin {
 	
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-//		registration.addGuiContainerHandler(CrateScreen.class, new CrateGuiHandler()); TODO ODDITIES
+		registration.addGuiContainerHandler(CrateScreen.class, new CrateGuiHandler());
 	}
 
 	private void registerAncientTomeAnvilRecipes(IRecipeRegistration registration, IVanillaRecipeFactory factory) {
@@ -152,13 +155,13 @@ public class QuarkJeiPlugin implements IModPlugin {
 		registration.addRecipes(Arrays.asList(materialRepair, toolRepair), VanillaRecipeCategoryUid.ANVIL);
 	}
 	
-//	private static class CrateGuiHandler implements IGuiContainerHandler<CrateScreen> { TODO ODDITIES
-//		
-//		@Override
-//		public List<Rectangle2d> getGuiExtraAreas(CrateScreen containerScreen) {
-//			return containerScreen.getExtraAreas();
-//		}
-//	
-//	}
+	private static class CrateGuiHandler implements IGuiContainerHandler<CrateScreen> {
+		
+		@Override
+		public List<Rect2i> getGuiExtraAreas(CrateScreen containerScreen) {
+			return containerScreen.getExtraAreas();
+		}
+	
+	}
 }
 

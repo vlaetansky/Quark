@@ -272,7 +272,7 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 				if(ord != null) {
 					List<Enchantment> influencedEnchants = MatrixEnchantingModule.candleInfluences.get(ord);
 					if(influencedEnchants != null) {
-						// TODO 1.18: hardcode vanilla candles 
+						// TODO FIX hardcode vanilla candles 
 					    if(influencer instanceof IModifiableEnchantmentInfluencer) {
 					        IModifiableEnchantmentInfluencer modifiableInfluencer = (IModifiableEnchantmentInfluencer) influencer;
                             influencedEnchants = modifiableInfluencer.getModifiedEnchantments(world, pos, state, getItem(0), new ArrayList<>(influencedEnchants));

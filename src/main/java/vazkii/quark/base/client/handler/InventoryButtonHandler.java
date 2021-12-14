@@ -28,6 +28,7 @@ import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import vazkii.quark.addons.oddities.client.screen.BackpackInventoryScreen;
 import vazkii.quark.api.IQuarkButtonAllowed;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.GeneralConfig;
@@ -133,8 +134,8 @@ public final class InventoryButtonHandler {
 					int x = slot.x + 6;
 					int y = slot.y - 13;
 					
-//					if(screen instanceof BackpackInventoryScreen) TODO ODDITIES
-//						y -= 60;
+					if(screen instanceof BackpackInventoryScreen) 
+						y -= 60;
 					
 					for(ButtonProviderHolder holder : holders) {
 						Button button = holder.getButton(screen, x, y);
