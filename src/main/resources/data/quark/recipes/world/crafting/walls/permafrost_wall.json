@@ -16,7 +16,7 @@
   "conditions": [
     {
       "type": "quark:flag",
-      "flag": "permafrost_underground_biome"
+      "flag": "permafrost"
     }
   ]
 } 

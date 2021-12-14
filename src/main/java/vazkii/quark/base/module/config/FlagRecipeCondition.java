@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
+import vazkii.quark.base.Quark;
 
 /**
  * @author WireSegal
@@ -32,6 +33,9 @@ public class FlagRecipeCondition implements ICondition {
     public boolean test() {
     	if(flag.contains("%"))
     		throw new RuntimeException("Illegal flag: " + flag);
+    	
+    	if(!manager.isValidFlag(flag))
+    		Quark.LOG.warn("Non-existant flag " + flag + " being used");
     	
         return manager.getFlag(flag);
     }

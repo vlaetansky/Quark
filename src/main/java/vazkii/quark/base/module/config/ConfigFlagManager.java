@@ -39,6 +39,10 @@ public final class ConfigFlagManager {
 		flags.put(module.lowercaseName, module.enabled);
 	}
 	
+	public boolean isValidFlag(String flag) {
+		return flags.containsKey(flag);
+	}
+	
 	public boolean getFlag(String flag) {
 		Boolean obj = flags.get(flag);
 		return obj != null && obj;
