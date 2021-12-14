@@ -26,6 +26,9 @@ public class HedgesModule extends QuarkModule {
 		new HedgeBlock(this, Blocks.JUNGLE_FENCE, Blocks.JUNGLE_LEAVES);
 		new HedgeBlock(this, Blocks.ACACIA_FENCE, Blocks.ACACIA_LEAVES);
 		new HedgeBlock(this, Blocks.DARK_OAK_FENCE, Blocks.DARK_OAK_LEAVES);
+		
+		new HedgeBlock(this, Blocks.OAK_FENCE, Blocks.AZALEA_LEAVES);
+		new HedgeBlock(this, Blocks.OAK_FENCE, Blocks.FLOWERING_AZALEA_LEAVES);
 	}
 
 	@Override
