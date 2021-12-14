@@ -19,7 +19,6 @@ import vazkii.quark.base.network.message.RequestEmoteMessage;
 import vazkii.quark.base.network.message.SetLockProfileMessage;
 import vazkii.quark.base.network.message.SortInventoryMessage;
 import vazkii.quark.base.network.message.SpamlessChatMessage;
-import vazkii.quark.base.network.message.UpdateAfkMessage;
 
 public final class QuarkNetwork {
 
