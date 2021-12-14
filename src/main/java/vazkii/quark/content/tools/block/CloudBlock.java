@@ -36,7 +36,8 @@ public class CloudBlock extends QuarkBlock implements EntityBlock {
 				Block.Properties.of(Material.CLAY)
 				.sound(SoundType.WOOL)
 				.strength(0)
-				.noOcclusion());
+				.noOcclusion()
+				.noCollission());
 	}
 	
 	@Override
