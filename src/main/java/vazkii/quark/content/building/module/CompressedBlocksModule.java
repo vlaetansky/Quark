@@ -20,7 +20,6 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.content.building.block.BurnForeverBlock;
 
 @LoadModule(category = ModuleCategory.BUILDING)
 public class CompressedBlocksModule extends QuarkModule {
@@ -73,11 +72,11 @@ public class CompressedBlocksModule extends QuarkModule {
 
 	@Override
 	public void construct() {
-		charcoal_block = new BurnForeverBlock("charcoal_block", this, CreativeModeTab.TAB_BUILDING_BLOCKS,
+		charcoal_block = new QuarkBlock("charcoal_block", this, CreativeModeTab.TAB_BUILDING_BLOCKS,
 				Block.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK)
 						.requiresCorrectToolForDrops()
 						.strength(5F, 10F)
-						.sound(SoundType.STONE), true)
+						.sound(SoundType.STONE))
 				.setCondition(() -> enableCharcoalBlock);
 		
 		bamboo_bundle = pillar("sugar_cane", MaterialColor.COLOR_LIGHT_GREEN, true, () -> enableSugarCaneBlock, 200);
@@ -98,11 +97,11 @@ public class CompressedBlocksModule extends QuarkModule {
 		sack("berry", MaterialColor.COLOR_RED, true, () -> enableBerrySack);
 		sack("glowberry", MaterialColor.COLOR_YELLOW, 14, true, () -> enableGlowBerrySack);
 
-		blaze_lantern = new BurnForeverBlock("blaze_lantern", this, CreativeModeTab.TAB_BUILDING_BLOCKS,
+		blaze_lantern = new QuarkBlock("blaze_lantern", this, CreativeModeTab.TAB_BUILDING_BLOCKS,
 				Block.Properties.of(Material.GLASS, DyeColor.YELLOW)
 				.strength(0.3F)
 				.sound(SoundType.GLASS)
-				.lightLevel(b -> 15), false)
+				.lightLevel(b -> 15))
 		.setCondition(() -> enableBlazeLantern);
 		
 		new QuarkBlock("bonded_leather", this, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.of(Material.WOOL, DyeColor.ORANGE)
