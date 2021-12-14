@@ -1,14 +1,8 @@
 package vazkii.quark.addons.oddities.client.screen;
 
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
 
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.renderer.GameRenderer;
@@ -55,24 +49,23 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 		int j = i + 6;
 		int k = this.getRowLeft();
 		int l = this.y0 + 4 - (int)this.getScrollAmount();
-		
+
 		fill(stack, getLeft(), getTop(), getLeft() + getWidth() + 1, getTop() + getHeight(), 0xFF2B2B2B);
-		
+
 		Window main = parent.getMinecraft().getWindow();
 		int res = (int) main.getGuiScale();
-		GL11.glEnable(GL11.GL_SCISSOR_TEST);
-		GL11.glScissor(getLeft() * res, (main.getGuiScaledHeight() - getBottom()) * res, getWidth() * res, getHeight() * res);
+		RenderSystem.enableScissor(getLeft() * res, (main.getGuiScaledHeight() - getBottom()) * res, getWidth() * res, getHeight() * res);
 		renderList(stack, k, l, p_render_1_, p_render_2_, p_render_3_);
-		GL11.glDisable(GL11.GL_SCISSOR_TEST);
+		RenderSystem.disableScissor();
 		
-		renderScroll(i, j);
+		renderScroll(stack, i, j);
 	}
 
 	protected int getMaxScroll2() {
 		return Math.max(0, this.getMaxPosition() - (this.y1 - this.y0 - 4));
 	}
 
-	private void renderScroll(int i, int j) {
+	private void renderScroll(PoseStack stack, int i, int j) {
 		int j1 = this.getMaxScroll2();
 		if (j1 > 0) {
 			int k1 = (int)((float)((this.y1 - this.y0) * (this.y1 - this.y0)) / (float)this.getMaxPosition());
@@ -82,30 +75,9 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 				l1 = this.y0;
 			}
 			
-			RenderSystem.disableTexture();
-			Tesselator tessellator = Tesselator.getInstance();
-			BufferBuilder bufferbuilder = tessellator.getBuilder();
-			bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-			bufferbuilder.vertex((double)i, (double)this.y1, 0.0D).uv(0.0F, 1.0F).color(0, 0, 0, 255).endVertex();
-			bufferbuilder.vertex((double)j, (double)this.y1, 0.0D).uv(1.0F, 1.0F).color(0, 0, 0, 255).endVertex();
-			bufferbuilder.vertex((double)j, (double)this.y0, 0.0D).uv(1.0F, 0.0F).color(0, 0, 0, 255).endVertex();
-			bufferbuilder.vertex((double)i, (double)this.y0, 0.0D).uv(0.0F, 0.0F).color(0, 0, 0, 255).endVertex();
-			tessellator.end();
-			
-			bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-			bufferbuilder.vertex((double)i, (double)(l1 + k1), 0.0D).uv(0.0F, 1.0F).color(128, 128, 128, 255).endVertex();
-			bufferbuilder.vertex((double)j, (double)(l1 + k1), 0.0D).uv(1.0F, 1.0F).color(128, 128, 128, 255).endVertex();
-			bufferbuilder.vertex((double)j, (double)l1, 0.0D).uv(1.0F, 0.0F).color(128, 128, 128, 255).endVertex();
-			bufferbuilder.vertex((double)i, (double)l1, 0.0D).uv(0.0F, 0.0F).color(128, 128, 128, 255).endVertex();
-			tessellator.end();
-			// TODO fixme
-			bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-			bufferbuilder.vertex((double)i, (double)(l1 + k1 - 1), 0.0D).uv(0.0F, 1.0F).color(192, 192, 192, 255).endVertex();
-			bufferbuilder.vertex((double)(j - 1), (double)(l1 + k1 - 1), 0.0D).uv(1.0F, 1.0F).color(192, 192, 192, 255).endVertex();
-			bufferbuilder.vertex((double)(j - 1), (double)l1, 0.0D).uv(1.0F, 0.0F).color(192, 192, 192, 255).endVertex();
-			bufferbuilder.vertex((double)i, (double)l1, 0.0D).uv(0.0F, 0.0F).color(192, 192, 192, 255).endVertex();
-			tessellator.end();
-			RenderSystem.enableTexture();
+			fill(stack, i, y1, j, y0, 0xFF000000);
+			fill(stack, i, (l1 + k1), j, l1, 0xFF818181);
+			fill(stack, i, (l1 + k1 - 1), j - 1, l1, 0xFFc0c0c0);
 		}
 	}
 
@@ -126,13 +98,13 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 
 		@Override
 		public void render(PoseStack stack, int entryIdx, int top, int left, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hover, float partialTicks) {
-			if(hover)
+			if(mouseX > left && mouseY > top && mouseX <= (left + entryWidth) && mouseY <= (top + entryHeight))
 				parent.hoveredPiece = piece;
 
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 			RenderSystem.setShaderTexture(0, MatrixEnchantingScreen.BACKGROUND);
-			
+
 			stack.pushPose();
 			stack.translate(left + (listWidth - 7) / 2f, top + entryHeight / 2f, 0);
 			stack.scale(0.5F, 0.5F, 0.5F);

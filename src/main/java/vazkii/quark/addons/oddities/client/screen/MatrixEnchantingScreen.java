@@ -272,6 +272,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 		blit(stack, x * 10, y * 10, 11 + type * 10, imageHeight, 10, 10);
 		if(hovered)
 			renderHover(stack, x, y);
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 	}
 
 	private void renderHover(PoseStack stack, int x, int y) {

@@ -92,7 +92,7 @@ public class MagnetBlock extends QuarkBlock implements EntityBlock {
 		BlockEntity tilePresent = world.getBlockEntity(targetPos);
 		CompoundTag tileData = new CompoundTag();
 		if (tilePresent != null && !(tilePresent instanceof MagnetizedBlockBlockEntity))
-			tilePresent.save(tileData);
+			tileData = tilePresent.saveWithFullMetadata();
 
 		BlockState setState = MagnetsModule.magnetized_block.defaultBlockState().setValue(MovingMagnetizedBlock.FACING, moveDir);
 		MagnetizedBlockBlockEntity movingTile = new MagnetizedBlockBlockEntity(endPos, setState, targetState, tileData, moveDir);
