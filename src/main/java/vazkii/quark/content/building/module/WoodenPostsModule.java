@@ -25,7 +25,7 @@ public class WoodenPostsModule extends QuarkModule {
 				Blocks.JUNGLE_FENCE, Blocks.ACACIA_FENCE, Blocks.DARK_OAK_FENCE, 
 				Blocks.CRIMSON_FENCE, Blocks.WARPED_FENCE)
 		.forEach(b -> {
-			boolean nether = b.material == Material.NETHER_WOOD;
+			boolean nether = b.defaultBlockState().getMaterial() == Material.NETHER_WOOD;
 			WoodPostBlock post = new WoodPostBlock(this, b, "",  nether);
 			WoodPostBlock stripped = new WoodPostBlock(this, b, "stripped_", nether);
 			ToolInteractionHandler.registerInteraction(ToolActions.AXE_STRIP, post, stripped);

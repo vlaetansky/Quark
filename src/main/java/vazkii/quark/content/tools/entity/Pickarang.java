@@ -109,7 +109,7 @@ public class Pickarang extends Projectile {
 		float f2 = Mth.cos(rotationYawIn * ((float)Math.PI / 180F)) * Mth.cos(rotationPitchIn * ((float)Math.PI / 180F));
 		this.shoot(f, f1, f2, velocity, inaccuracy);
 		Vec3 Vector3d = entityThrower.getDeltaMovement();
-		this.setDeltaMovement(this.getDeltaMovement().add(Vector3d.x, entityThrower.onGround ? 0.0D : Vector3d.y, Vector3d.z));
+		this.setDeltaMovement(this.getDeltaMovement().add(Vector3d.x, entityThrower.isOnGround() ? 0.0D : Vector3d.y, Vector3d.z));
 	}
 
 

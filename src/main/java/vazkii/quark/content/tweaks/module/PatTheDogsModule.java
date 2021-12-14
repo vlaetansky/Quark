@@ -33,7 +33,7 @@ public class PatTheDogsModule extends QuarkModule {
     public void onWolfAppear(EntityJoinWorldEvent event) {
         if (dogsWantLove > 0 && event.getEntity() instanceof Wolf) {
             Wolf wolf = (Wolf) event.getEntity();
-            boolean alreadySetUp = wolf.goalSelector.availableGoals.stream().anyMatch((goal) -> goal.getGoal() instanceof WantLoveGoal);
+            boolean alreadySetUp = wolf.goalSelector.getAvailableGoals().stream().anyMatch((goal) -> goal.getGoal() instanceof WantLoveGoal);
 
             if (!alreadySetUp) {
                 wolf.goalSelector.addGoal(4, new NuzzleGoal(wolf, 0.5F, 16, 2, SoundEvents.WOLF_WHINE));

@@ -197,7 +197,7 @@ public class BackpackMenu extends InventoryMenu {
 	}
 
 	public static void saveCraftingInventory(Player player) {
-		CraftingContainer crafting = ((InventoryMenu) player.containerMenu).craftSlots;
+		CraftingContainer crafting = ((InventoryMenu) player.containerMenu).getCraftSlots();
 		for(int i = 0; i < crafting.getContainerSize(); i++) {
 			ItemStack stack = crafting.getItem(i);
 			if(!stack.isEmpty() && !player.addItem(stack))

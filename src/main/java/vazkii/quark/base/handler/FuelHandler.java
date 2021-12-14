@@ -36,7 +36,7 @@ public class FuelHandler {
 
 	public static void addAllWoods() {
 		for(Block block : ForgeRegistries.BLOCKS)
-			if(block != null && block.getRegistryName().getNamespace().equals(Quark.MOD_ID) && block.material == Material.WOOD)
+			if(block != null && block.getRegistryName().getNamespace().equals(Quark.MOD_ID) && block.defaultBlockState().getMaterial() == Material.WOOD)
 				addWood(block);
 	}
 

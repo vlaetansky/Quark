@@ -459,7 +459,7 @@ public class Frog extends Animal implements IEntityAdditionalSpawnData, IForgeSh
 	public void customServerAiStep() {
 		if (this.currentMoveTypeDuration > 0) --this.currentMoveTypeDuration;
 
-		if (this.onGround) {
+		if (this.isOnGround()) {
 			if (!this.wasOnGround) {
 				this.setJumping(false);
 				this.checkLandingDelay();
@@ -481,7 +481,7 @@ public class Frog extends Animal implements IEntityAdditionalSpawnData, IForgeSh
 			} else if (!jumpHelper.canJump()) this.enableJumpControl();
 		}
 
-		this.wasOnGround = this.onGround;
+		this.wasOnGround = this.isOnGround();
 	}
 
 	@Override // spawnRunningParticles
@@ -628,7 +628,7 @@ public class Frog extends Animal implements IEntityAdditionalSpawnData, IForgeSh
 
 		@Override
 		public void tick() {
-			if (onGround && !jumping && !((FrogJumpController) jumpControl).getIsJumping())
+			if (isOnGround() && !jumping && !((FrogJumpController) jumpControl).getIsJumping())
 				setMovementSpeed(0.0D);
 			else if (this.hasWanted()) setMovementSpeed(this.nextJumpSpeed);
 

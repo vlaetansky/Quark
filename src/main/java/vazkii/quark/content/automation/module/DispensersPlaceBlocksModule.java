@@ -61,7 +61,7 @@ public class DispensersPlaceBlocksModule extends QuarkModule {
 		@Nonnull
 		@Override
 		public ItemStack execute(BlockSource source, ItemStack stack) {
-			success = false;
+			setSuccess(false);
 
 			Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
 			Direction against = direction;
@@ -74,7 +74,7 @@ public class DispensersPlaceBlocksModule extends QuarkModule {
 			else if(block instanceof SlabBlock)
 				against = Direction.UP;
 
-			success = item.place(new NotStupidDirectionalPlaceContext(source.getLevel(), pos, direction, stack, against)) == InteractionResult.SUCCESS;
+			setSuccess(item.place(new NotStupidDirectionalPlaceContext(source.getLevel(), pos, direction, stack, against)) == InteractionResult.SUCCESS);
 
 			return stack;
 		}

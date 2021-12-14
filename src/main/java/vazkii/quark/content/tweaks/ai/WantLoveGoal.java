@@ -62,7 +62,7 @@ public class WantLoveGoal extends Goal {
             double distanceToTarget = this.creature.distanceToSqr(this.leapTarget);
 
             return 4 <= distanceToTarget && distanceToTarget <= 16 &&
-                    this.creature.onGround && this.creature.getRandom().nextInt(5) == 0;
+                    this.creature.isOnGround() && this.creature.getRandom().nextInt(5) == 0;
         }
     }
 
@@ -70,7 +70,7 @@ public class WantLoveGoal extends Goal {
     public boolean canContinueToUse() {
         if (!WantLoveGoal.needsPets(creature))
             return false;
-        return !this.creature.onGround;
+        return !this.creature.isOnGround();
     }
 
     @Override

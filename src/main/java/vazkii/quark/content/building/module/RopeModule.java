@@ -57,12 +57,12 @@ public class RopeModule extends QuarkModule {
 			Direction facing = source.getBlockState().getValue(DispenserBlock.FACING);
 			BlockPos pos = source.getPos().relative(facing);
 			Level world = source.getLevel();
-			this.success = false;
+			setSuccess(false);
 			
 			BlockState state = world.getBlockState(pos);
 			if(state.getBlock() == rope) {
 				if(((RopeBlock) rope).pullDown(world, pos)) {
-					this.success = true;
+					setSuccess(true);
 					stack.shrink(1);
 					return stack;
 				}
@@ -70,7 +70,7 @@ public class RopeModule extends QuarkModule {
 				SoundType soundtype = rope.getSoundType(state, world, pos, null);
 				world.setBlockAndUpdate(pos, rope.defaultBlockState());
 				world.playSound(null, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-				this.success = true;
+				setSuccess(true);
 				stack.shrink(1);
 				
 				return stack;
