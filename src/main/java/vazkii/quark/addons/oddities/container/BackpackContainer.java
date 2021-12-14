@@ -3,7 +3,6 @@ package vazkii.quark.addons.oddities.container;
 import javax.annotation.Nonnull;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlot.Type;
 import net.minecraft.world.entity.Mob;
@@ -11,7 +10,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.inventory.CraftingMenu;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
@@ -21,23 +19,21 @@ import vazkii.quark.addons.oddities.module.BackpackModule;
 
 public class BackpackContainer extends InventoryMenu {
 
-	private final Player player;
-	
-	public BackpackContainer(int windowId, Player player) {
-		super(player.inventory, !player.level.isClientSide, player);
 
-		this.player = player;
+	public BackpackContainer(int windowId, Player player) {
+		super(player.getInventory(), !player.level.isClientSide, player);
 		this.containerId = windowId;
-		
+
+		Inventory inventory = player.getInventory();
 		for(Slot slot : slots)
-			if (slot.container == player.inventory && slot.getSlotIndex() < player.inventory.getContainerSize() - 5)
+			if (slot.container == inventory && slot.getSlotIndex() < inventory.getContainerSize() - 5)
 				slot.y += 58;
 
 		Slot anchor = slots.get(9);
 		int left = anchor.x;
 		int top = anchor.y - 58;
 
-		ItemStack backpack = player.inventory.armor.get(2);
+		ItemStack backpack = inventory.armor.get(2);
 		if(backpack.getItem() == BackpackModule.backpack) {
 			InventoryIIH inv = new InventoryIIH(backpack);
 
@@ -52,12 +48,6 @@ public class BackpackContainer extends InventoryMenu {
 	public static BackpackContainer fromNetwork(int windowId, Inventory playerInventory, FriendlyByteBuf buf) {
 		return new BackpackContainer(windowId, playerInventory.player);
 	}
-	
-	// override this so it doesn't trip FastWorkbench's hook
-	@Override
-	public void slotsChanged(Container inventoryIn) {
-      CraftingMenu.slotChangedCraftingGrid(containerId, player.level, player, craftSlots, resultSlots);
-   }
 
 	@Nonnull
 	@Override
@@ -70,10 +60,10 @@ public class BackpackContainer extends InventoryMenu {
 		final int shieldSlot = hotbarEnd;
 		final int backpackStart = shieldSlot + 1;
 		final int backpackEnd = backpackStart + 27;
-		
+
 		ItemStack baseStack = ItemStack.EMPTY;
 		Slot slot = this.slots.get(index);
-		
+
 		if (slot != null && slot.hasItem()) {
 			ItemStack stack = slot.getItem();
 			baseStack = stack.copy();
@@ -84,33 +74,33 @@ public class BackpackContainer extends InventoryMenu {
 				ItemStack target = null;
 				if(!this.moveItemStackTo(stack, invStart, hotbarEnd, false) && !this.moveItemStackTo(stack, backpackStart, backpackEnd, false)) 
 					target = ItemStack.EMPTY;
-				
+
 				if(target != null)
 					return target;
 				else if(index == 0) // crafting result
 					slot.onQuickCraft(stack, baseStack);
 			}
-			
+
 			else if(slotType != null && slotType.getType() == Type.ARMOR && !this.slots.get(equipIndex).hasItem()) { // shift clicking armor
 				if(!this.moveItemStackTo(stack, equipIndex, equipIndex + 1, false)) 
 					return ItemStack.EMPTY;
 			}
-			
+
 			else if (slotType != null && slotType == EquipmentSlot.OFFHAND && !this.slots.get(shieldSlot).hasItem()) { // shift clicking shield
 				if(!this.moveItemStackTo(stack, shieldSlot, shieldSlot + 1, false)) 
 					return ItemStack.EMPTY;
 			} 
-			
+
 			else if (index < invEnd) {
 				if (!this.moveItemStackTo(stack, hotbarStart, hotbarEnd, false) && !this.moveItemStackTo(stack, backpackStart, backpackEnd, false)) 
 					return ItemStack.EMPTY;
 			} 
-			
+
 			else if(index < hotbarEnd) {
 				if(!this.moveItemStackTo(stack, invStart, invEnd, false) && !this.moveItemStackTo(stack, backpackStart, backpackEnd, false)) 
 					return ItemStack.EMPTY;
 			}
-			
+
 			else if(!this.moveItemStackTo(stack, hotbarStart, hotbarEnd, false) && !this.moveItemStackTo(stack, invStart, invEnd, false)) 
 				return ItemStack.EMPTY;
 
@@ -121,10 +111,9 @@ public class BackpackContainer extends InventoryMenu {
 			if (stack.getCount() == baseStack.getCount())
 				return ItemStack.EMPTY;
 
-			ItemStack remainder = slot.onTake(playerIn, stack);
-
+			slot.onTake(playerIn, stack); // TODO CHECK works?
 			if(index == 0) 
-				playerIn.drop(remainder, false);
+				playerIn.drop(stack, false);
 		}
 
 		return baseStack;
@@ -190,14 +179,13 @@ public class BackpackContainer extends InventoryMenu {
 		}
 		return successful;
 	}
-
+	
 	@Nonnull
 	@Override
-	public ItemStack clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) {
+	public void clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) { // TODO CHECK
 		SlotCachingItemHandler.cache(this);
-		ItemStack stack = super.clicked(slotId, dragType, clickTypeIn, player);
+		clicked(slotId, dragType, clickTypeIn, player);
 		SlotCachingItemHandler.applyCache(this);
-		return stack;
 	}
 
 	private static ItemStack cloneStack(ItemStack stack, int size) {

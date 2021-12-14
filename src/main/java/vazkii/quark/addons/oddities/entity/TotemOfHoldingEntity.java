@@ -147,7 +147,7 @@ public class TotemOfHoldingEntity extends Entity {
 
         if(isDying()) {
             if(deathTicks > DEATH_TIME)
-                remove();
+                discard();
             else deathTicks++;
         }
 
@@ -162,7 +162,7 @@ public class TotemOfHoldingEntity extends Entity {
 
         storedItems.clear();
 
-        remove();
+        discard();
     }
 
     public int getDeathTicks() {

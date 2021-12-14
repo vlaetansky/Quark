@@ -1,24 +1,22 @@
-package vazkii.quark.addons.oddities.tile;
+package vazkii.quark.addons.oddities.block.be;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import vazkii.quark.addons.oddities.block.MagnetBlock;
 import vazkii.quark.addons.oddities.magnetsystem.MagnetSystem;
 import vazkii.quark.addons.oddities.module.MagnetsModule;
 
-public class MagnetTileEntity extends BlockEntity implements TickableBlockEntity {
+public class MagnetTileEntity extends BlockEntity {
 
-	public MagnetTileEntity() {
-		super(MagnetsModule.magnetType);
+	public MagnetTileEntity(BlockPos pos, BlockState state) {
+		super(MagnetsModule.magnetType, pos, state);
 	}
 
-	@Override
 	public void tick() {
 		BlockState state = getBlockState();
 		boolean powered = state.getValue(MagnetBlock.POWERED);
@@ -55,12 +53,12 @@ public class MagnetTileEntity extends BlockEntity implements TickableBlockEntity
 				if (reaction == PushReaction.IGNORE || reaction == PushReaction.DESTROY) {
 					BlockPos frontPos = targetPos.relative(moveDir);
 					BlockState frontState = level.getBlockState(frontPos);
-					if(frontState.isAir(level, frontPos))
+					if(frontState.isAir())
 						MagnetSystem.applyForce(level, targetPos, power - i + 1, dir == moveDir, moveDir, i, worldPosition);
 				}
 			}
 
-			if(!targetState.isAir(level, targetPos))
+			if(!targetState.isAir())
 				break;
 
 			if (level.isClientSide && Math.random() <= particleChance) {

@@ -6,12 +6,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.extensions.IForgeContainerType;
+import net.minecraftforge.common.extensions.IForgeMenuType;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.addons.oddities.block.CrateBlock;
+import vazkii.quark.addons.oddities.block.be.CrateTileEntity;
 import vazkii.quark.addons.oddities.client.screen.CrateScreen;
 import vazkii.quark.addons.oddities.container.CrateContainer;
-import vazkii.quark.addons.oddities.tile.CrateTileEntity;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
@@ -31,7 +31,7 @@ public class CrateModule extends QuarkModule {
 	public void construct() {
 		crate = new CrateBlock(this);
 		
-		containerType = IForgeContainerType.create(CrateContainer::fromNetwork);
+		containerType = IForgeMenuType.create(CrateContainer::fromNetwork);
 		RegistryHelper.register(containerType, "crate");
 		
 		crateType = BlockEntityType.Builder.of(CrateTileEntity::new, crate).build(null);

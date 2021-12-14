@@ -1,4 +1,4 @@
-package vazkii.quark.addons.oddities.tile;
+package vazkii.quark.addons.oddities.block.be;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +13,7 @@ import java.util.Random;
 import javax.annotation.Nonnull;
 
 import com.google.common.base.Predicate;
+import com.mojang.math.Vector3f;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -32,22 +33,21 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.CapabilityItemHandler;
-import vazkii.arl.block.tile.TileSimpleInventory;
+import vazkii.arl.block.be.SimpleInventoryBlockEntity;
 import vazkii.quark.addons.oddities.block.PipeBlock;
 import vazkii.quark.addons.oddities.module.PipesModule;
 import vazkii.quark.base.client.handler.NetworkProfilingHandler;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.handler.QuarkSounds;
 
-public class PipeTileEntity extends TileSimpleInventory implements TickableBlockEntity {
+public class PipeTileEntity extends SimpleInventoryBlockEntity {
 
-	public PipeTileEntity() {
-		super(PipesModule.tileEntityType);
+	public PipeTileEntity(BlockPos pos, BlockState state) {
+		super(PipesModule.tileEntityType, pos, state);
 	}
 	
 	private static final String TAG_PIPE_ITEMS = "pipeItems";
@@ -63,11 +63,10 @@ public class PipeTileEntity extends TileSimpleInventory implements TickableBlock
 		return calendar.get(Calendar.MONTH) + 1 == 4 && calendar.get(Calendar.DAY_OF_MONTH) == 1;
 	}
 
-	@Override
 	public void tick() {
 		boolean enabled = isPipeEnabled();
 		if(!enabled && level.getGameTime() % 10 == 0 && level instanceof ServerLevel) 
-			((ServerLevel) level).sendParticles(new DustParticleOptions(1.0F, 0.0F, 0.0F, 1.0F), worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5, 3, 0.2, 0.2, 0.2, 0);
+			((ServerLevel) level).sendParticles(new DustParticleOptions(new Vector3f(1.0F, 0.0F, 0.0F), 1.0F), worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5, 3, 0.2, 0.2, 0.2, 0);
 
 		BlockState blockAt = level.getBlockState(worldPosition);
 		if(!level.isClientSide && enabled && blockAt.getBlock() instanceof PipeBlock) {
@@ -104,7 +103,7 @@ public class PipeTileEntity extends TileSimpleInventory implements TickableBlock
 						}
 
 						pickedItemsUp = true;
-						item.remove();
+						item.discard();
 					}
 
 					if(pickedItemsUp)

@@ -5,6 +5,8 @@ import java.util.function.BooleanSupplier;
 
 import javax.annotation.Nullable;
 
+import com.mojang.math.Vector3f;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -18,7 +20,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -30,8 +31,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
 import vazkii.arl.util.RegistryHelper;
+import vazkii.quark.addons.oddities.block.be.MatrixEnchantingTableTileEntity;
 import vazkii.quark.addons.oddities.module.MatrixEnchantingModule;
-import vazkii.quark.addons.oddities.tile.MatrixEnchantingTableTileEntity;
 import vazkii.quark.api.IEnchantmentInfluencer;
 import vazkii.quark.api.IModifiableEnchantmentInfluencer;
 import vazkii.quark.base.block.IQuarkBlock;
@@ -80,14 +81,14 @@ public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return new MatrixEnchantingTableTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return new MatrixEnchantingTableTileEntity(pos, state);
 	}
-
+	
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult raytrace) {
 		if(!(worldIn.getBlockEntity(pos) instanceof MatrixEnchantingTableTileEntity))
-			worldIn.setBlockEntity(pos, createTileEntity(state, worldIn));
+			worldIn.setBlockEntity(newBlockEntity(pos, state));
 
 		if(ModuleLoader.INSTANCE.isModuleEnabled(MatrixEnchantingModule.class)) {
 			if(player instanceof ServerPlayer)
@@ -144,7 +145,7 @@ public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements
 										double py = blockpos.getY() + 0.5 + dy * p + Math.sin((double) p / steps * Math.PI) * 0.5 + rand.nextDouble() * 0.2 - 0.1;
 										double pz = blockpos.getZ() + 0.5 + dz * p + rand.nextDouble() * 0.2 - 0.1;
 										
-										worldIn.addParticle(new DustParticleOptions(comp[0], comp[1], comp[2], 1F), px, py, pz, 0, 0, 0);
+										worldIn.addParticle(new DustParticleOptions(new Vector3f(comp[0], comp[1], comp[2]), 1F), px, py, pz, 0, 0, 0);
 									}
 								}
 							}

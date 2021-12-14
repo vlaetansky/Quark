@@ -4,17 +4,17 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.ClientRegistry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.addons.oddities.block.MagnetBlock;
 import vazkii.quark.addons.oddities.block.MovingMagnetizedBlock;
+import vazkii.quark.addons.oddities.block.be.MagnetTileEntity;
+import vazkii.quark.addons.oddities.block.be.MagnetizedBlockTileEntity;
 import vazkii.quark.addons.oddities.client.render.MagnetizedBlockTileEntityRenderer;
-import vazkii.quark.addons.oddities.tile.MagnetTileEntity;
-import vazkii.quark.addons.oddities.tile.MagnetizedBlockTileEntity;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
@@ -50,7 +50,7 @@ public class MagnetsModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		ClientRegistry.bindTileEntityRenderer(magnetizedBlockType, MagnetizedBlockTileEntityRenderer::new);
+		BlockEntityRenderers.register(magnetizedBlockType, MagnetizedBlockTileEntityRenderer::new);
 	}
 	
 }

@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -22,8 +23,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.ClientRegistry;
-import net.minecraftforge.common.extensions.IForgeContainerType;
+import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -32,10 +32,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.addons.oddities.block.MatrixEnchantingTableBlock;
+import vazkii.quark.addons.oddities.block.be.MatrixEnchantingTableTileEntity;
 import vazkii.quark.addons.oddities.client.render.MatrixEnchantingTableTileEntityRenderer;
 import vazkii.quark.addons.oddities.client.screen.MatrixEnchantingScreen;
 import vazkii.quark.addons.oddities.container.MatrixEnchantingContainer;
-import vazkii.quark.addons.oddities.tile.MatrixEnchantingTableTileEntity;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -139,7 +139,7 @@ public class MatrixEnchantingModule extends QuarkModule {
 	public void construct() {
 		matrixEnchanter = new MatrixEnchantingTableBlock(this);
 
-		containerType = IForgeContainerType.create(MatrixEnchantingContainer::fromNetwork);
+		containerType = IForgeMenuType.create(MatrixEnchantingContainer::fromNetwork);
 		RegistryHelper.register(containerType, "matrix_enchanting");
 
 		tileEntityType = BlockEntityType.Builder.of(MatrixEnchantingTableTileEntity::new, matrixEnchanter).build(null);
@@ -150,7 +150,7 @@ public class MatrixEnchantingModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
 		MenuScreens.register(containerType, MatrixEnchantingScreen::new);
-		ClientRegistry.bindTileEntityRenderer(tileEntityType, MatrixEnchantingTableTileEntityRenderer::new);	
+		BlockEntityRenderers.register(tileEntityType, MatrixEnchantingTableTileEntityRenderer::new);	
 	}
 
 	@SubscribeEvent

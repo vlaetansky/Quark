@@ -1,9 +1,10 @@
-package vazkii.quark.addons.oddities.tile;
+package vazkii.quark.addons.oddities.block.be;
 
 import java.util.Random;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -13,12 +14,11 @@ import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import vazkii.arl.block.tile.TileSimpleInventory;
+import vazkii.arl.block.be.SimpleInventoryBlockEntity;
 import vazkii.quark.base.handler.MiscUtil;
 
-public abstract class BaseEnchantingTableTile extends TileSimpleInventory implements TickableBlockEntity, Nameable {
+public abstract class BaseEnchantingTableTile extends SimpleInventoryBlockEntity implements Nameable {
 
 	public int tickCount;
 	public float pageFlip, pageFlipPrev, flipT, flipA, bookSpread, bookSpreadPrev, bookRotation, bookRotationPrev, tRot;
@@ -26,8 +26,8 @@ public abstract class BaseEnchantingTableTile extends TileSimpleInventory implem
 	private static final Random rand = new Random();
 	private Component customName;
 	
-	public BaseEnchantingTableTile(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public BaseEnchantingTableTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+		super(tileEntityTypeIn, pos, state);
 	}
 
 	@Override
@@ -52,14 +52,13 @@ public abstract class BaseEnchantingTableTile extends TileSimpleInventory implem
 	}
 
 	@Override 
-	public void load(BlockState p_230337_1_, CompoundTag compound) {
-		super.load(p_230337_1_, compound);
+	public void load(CompoundTag compound) {
+		super.load(compound);
 
 		if(compound.contains("CustomName", 8))
 			customName = Component.Serializer.fromJson(compound.getString("CustomName"));
 	}
 
-	@Override
 	public void tick() {
 		performVanillaUpdate();
 	}

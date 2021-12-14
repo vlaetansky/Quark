@@ -16,8 +16,8 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.Tags;
+import vazkii.quark.addons.oddities.block.be.MatrixEnchantingTableTileEntity;
 import vazkii.quark.addons.oddities.module.MatrixEnchantingModule;
-import vazkii.quark.addons.oddities.tile.MatrixEnchantingTableTileEntity;
 
 public class MatrixEnchantingContainer extends AbstractContainerMenu {
 

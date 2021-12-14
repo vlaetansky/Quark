@@ -1,10 +1,11 @@
-package vazkii.quark.addons.oddities.tile;
+package vazkii.quark.addons.oddities.block.be;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -23,7 +24,6 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
@@ -35,7 +35,7 @@ import vazkii.quark.addons.oddities.container.CrateContainer;
 import vazkii.quark.addons.oddities.module.CrateModule;
 import vazkii.quark.base.handler.SortingHandler;
 
-public class CrateTileEntity extends BaseContainerBlockEntity implements WorldlyContainer, TickableBlockEntity {
+public class CrateTileEntity extends BaseContainerBlockEntity implements WorldlyContainer {
 
 	private int totalItems = 0;
 	private int numPlayersUsing;
@@ -63,8 +63,8 @@ public class CrateTileEntity extends BaseContainerBlockEntity implements Worldly
 		}
 	};
 
-	public CrateTileEntity() {
-		super(CrateModule.crateType);
+	public CrateTileEntity(BlockPos pos, BlockState state) {
+		super(CrateModule.crateType, pos, state);
 	}
 
 	public void spillTheTea() {
@@ -75,7 +75,6 @@ public class CrateTileEntity extends BaseContainerBlockEntity implements Worldly
 				Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), stack);
 	}
 
-	@Override
 	public void tick() {
 		if(needsUpdate) {
 			stacks.removeIf(ItemStack::isEmpty);
@@ -99,7 +98,7 @@ public class CrateTileEntity extends BaseContainerBlockEntity implements Worldly
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt) {
+	public void load(CompoundTag nbt) {
 		totalItems = nbt.getInt("totalItems");
 
 		ListTag list = nbt.getList("stacks", 10);
@@ -107,7 +106,7 @@ public class CrateTileEntity extends BaseContainerBlockEntity implements Worldly
 		for(int i = 0; i < list.size(); i++)
 			stacks.add(ItemStack.of(list.getCompound(i)));
 
-		super.load(state, nbt);
+		super.load(nbt);
 	}
 
 	@Override
@@ -250,7 +249,7 @@ public class CrateTileEntity extends BaseContainerBlockEntity implements Worldly
 	}
 
 	private void scheduleTick() {
-		this.level.getBlockTicks().scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
+		this.level.scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
 	}
 
 	public void crateTick() {

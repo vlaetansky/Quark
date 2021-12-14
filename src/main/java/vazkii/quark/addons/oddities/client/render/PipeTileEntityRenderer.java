@@ -11,8 +11,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
@@ -22,19 +22,19 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import vazkii.quark.addons.oddities.tile.PipeTileEntity;
-import vazkii.quark.addons.oddities.tile.PipeTileEntity.ConnectionType;
-import vazkii.quark.addons.oddities.tile.PipeTileEntity.PipeItem;
+import vazkii.quark.addons.oddities.block.be.PipeTileEntity;
+import vazkii.quark.addons.oddities.block.be.PipeTileEntity.ConnectionType;
+import vazkii.quark.addons.oddities.block.be.PipeTileEntity.PipeItem;
 import vazkii.quark.base.Quark;
 
-public class PipeTileEntityRenderer extends BlockEntityRenderer<PipeTileEntity> {
+public class PipeTileEntityRenderer implements BlockEntityRenderer<PipeTileEntity> {
 
 	private static final ModelResourceLocation LOCATION_MODEL = new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, "pipe_flare"), "inventory");
 	
 	private Random random = new Random();
 	
-	public PipeTileEntityRenderer(BlockEntityRenderDispatcher p_i226006_1_) {
-		super(p_i226006_1_);
+	public PipeTileEntityRenderer(BlockEntityRendererProvider.Context context) {
+
 	}
 
 	@Override
@@ -115,7 +115,7 @@ public class PipeTileEntityRenderer extends BlockEntityRenderer<PipeTileEntity> 
                 matrix.translate(x, y, z);
 			}
 			
-			render.renderStatic(item.stack, ItemTransforms.TransformType.FIXED, light, overlay, matrix, buffer);
+			render.renderStatic(item.stack, ItemTransforms.TransformType.FIXED, light, overlay, matrix, buffer, 0);
 			matrix.popPose();
 		}
 		matrix.popPose();

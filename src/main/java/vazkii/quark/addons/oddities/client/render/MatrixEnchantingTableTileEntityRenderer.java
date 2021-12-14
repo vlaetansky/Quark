@@ -6,23 +6,26 @@ import com.mojang.math.Vector3f;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.BookModel;
+import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.EnchantTableRenderer;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import vazkii.quark.addons.oddities.tile.MatrixEnchantingTableTileEntity;
+import vazkii.quark.addons.oddities.block.be.MatrixEnchantingTableTileEntity;
 
-public class MatrixEnchantingTableTileEntityRenderer extends BlockEntityRenderer<MatrixEnchantingTableTileEntity> {
+public class MatrixEnchantingTableTileEntityRenderer implements BlockEntityRenderer<MatrixEnchantingTableTileEntity> {
 
-	public MatrixEnchantingTableTileEntityRenderer(BlockEntityRenderDispatcher p_i226006_1_) {
-		super(p_i226006_1_);
+	public static final Material TEXTURE_BOOK = EnchantTableRenderer.BOOK_LOCATION;
+	private BookModel modelBook;
+	
+	public MatrixEnchantingTableTileEntityRenderer(BlockEntityRendererProvider.Context context) {
+		modelBook = new BookModel(context.bakeLayer(ModelLayers.BOOK));
 	}
 
 	@Override
@@ -62,12 +65,9 @@ public class MatrixEnchantingTableTileEntityRenderer extends BlockEntityRenderer
 		matrix.translate(0F, trans, 0F);
 
 		ItemRenderer render = Minecraft.getInstance().getItemRenderer();
-		render.renderStatic(item, ItemTransforms.TransformType.FIXED, light, overlay, matrix, buffer);
+		render.renderStatic(item, ItemTransforms.TransformType.FIXED, light, overlay, matrix, buffer, 0);
 		matrix.popPose();
 	}
-
-	public static final Material TEXTURE_BOOK = new Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation("entity/enchanting_table_book"));
-	private final BookModel modelBook = new BookModel();
 
 	// Copy of vanilla's book render
 	private void renderBook(MatrixEnchantingTableTileEntity tileEntityIn, float time, float bookRot, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {

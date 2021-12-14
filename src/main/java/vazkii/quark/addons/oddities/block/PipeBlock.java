@@ -17,6 +17,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -31,14 +32,13 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.ToolType;
-import vazkii.quark.addons.oddities.tile.PipeTileEntity;
+import vazkii.quark.addons.oddities.block.be.PipeTileEntity;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
 
-public class PipeBlock extends QuarkBlock implements SimpleWaterloggedBlock {
+public class PipeBlock extends QuarkBlock implements SimpleWaterloggedBlock, EntityBlock {
 
 	private static final VoxelShape CENTER_SHAPE = Shapes.box(0.3125, 0.3125, 0.3125, 0.6875, 0.6875, 0.6875);
 
@@ -81,11 +81,6 @@ public class PipeBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 				.setValue(WATERLOGGED, false));
 		
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
-	}
-	
-	@Override
-	public boolean isToolEffective(BlockState state, ToolType tool) {
-		return tool == ToolType.PICKAXE;
 	}
 	
 	@Override
@@ -222,13 +217,8 @@ public class PipeBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-	
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return new PipeTileEntity();	
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return new PipeTileEntity(pos, state);
 	}
 	
 }

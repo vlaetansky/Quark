@@ -40,7 +40,7 @@ public class SoulCompassItem extends QuarkItem {
     }
     
     @OnlyIn(Dist.CLIENT)
-    public static float angle(ItemStack stack, ClientLevel world, LivingEntity entityIn) {
+    public static float angle(ItemStack stack, ClientLevel world, LivingEntity entityIn, int i) {
         if(entityIn == null && !stack.isFramed())
             return 0;
 
@@ -58,7 +58,7 @@ public class SoulCompassItem extends QuarkItem {
             BlockPos pos = getPos(stack);
 
             if(getDim(stack).equals(world.dimension().location().toString())) {
-                double yaw = hasEntity ? entity.yRot : getFrameRotation((ItemFrame) entity);
+                double yaw = hasEntity ? entity.getYRot() : getFrameRotation((ItemFrame) entity);
                 yaw = Mth.positiveModulo(yaw / 360.0, 1.0);
                 double relAngle = getDeathToAngle(entity, pos) / (Math.PI * 2);
                 angle = 0.5 - (yaw - 0.25 - relAngle);

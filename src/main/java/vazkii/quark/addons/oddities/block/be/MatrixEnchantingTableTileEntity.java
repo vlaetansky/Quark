@@ -1,4 +1,4 @@
-package vazkii.quark.addons.oddities.tile;
+package vazkii.quark.addons.oddities.block.be;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,8 +58,8 @@ public class MatrixEnchantingTableTileEntity extends BaseEnchantingTableTile imp
 	public final Map<Enchantment, Integer> influences = new HashMap<>();
 	public int bookshelfPower, enchantability, charge;
 
-	public MatrixEnchantingTableTileEntity() {
-		super(MatrixEnchantingModule.tileEntityType);
+	public MatrixEnchantingTableTileEntity(BlockPos pos, BlockState state) {
+		super(MatrixEnchantingModule.tileEntityType, pos, state);
 	}
 	
 	@Override

@@ -1,4 +1,4 @@
-package vazkii.quark.addons.oddities.tile;
+package vazkii.quark.addons.oddities.block.be;
 
 import java.util.List;
 
@@ -16,7 +16,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.PushReaction;
@@ -30,7 +29,7 @@ import vazkii.quark.addons.oddities.magnetsystem.MagnetSystem;
 import vazkii.quark.addons.oddities.module.MagnetsModule;
 import vazkii.quark.api.IMagnetMoveAction;
 
-public class MagnetizedBlockTileEntity extends BlockEntity implements TickableBlockEntity {
+public class MagnetizedBlockTileEntity extends BlockEntity {
     private BlockState magnetState;
     private CompoundTag subTile;
     private Direction magnetFacing;
@@ -39,12 +38,12 @@ public class MagnetizedBlockTileEntity extends BlockEntity implements TickableBl
     private float lastProgress;
     private long lastTicked;
 
-    public MagnetizedBlockTileEntity() {
-        super(MagnetsModule.magnetizedBlockType);
+    public MagnetizedBlockTileEntity(BlockPos pos, BlockState state) {
+        super(MagnetsModule.magnetizedBlockType, pos, state);
     }
 
-    public MagnetizedBlockTileEntity(BlockState magnetStateIn, CompoundTag subTileIn, Direction magnetFacingIn) {
-        this();
+    public MagnetizedBlockTileEntity(BlockPos pos, BlockState state, BlockState magnetStateIn, CompoundTag subTileIn, Direction magnetFacingIn) {
+        this(pos, state);
         this.magnetState = magnetStateIn;
         this.subTile = subTileIn;
         this.magnetFacing = magnetFacingIn;
@@ -230,22 +229,22 @@ public class MagnetizedBlockTileEntity extends BlockEntity implements TickableBl
         SoundType soundType = blockState.getSoundType();
         level.playSound(null, worldPosition, soundType.getPlaceSound(), SoundSource.BLOCKS, (soundType.getVolume() + 1) * 0.05F, soundType.getPitch() * 0.8F);
 
-        BlockEntity newTile = getSubTile();
+        BlockEntity newTile = getSubTile(worldPosition);
         if (newTile != null)
-            level.setBlockEntity(worldPosition, newTile);
+            level.setBlockEntity(newTile); // TODO CHECK
 
         IMagnetMoveAction action = getMoveAction();
         if(action != null)
             action.onMagnetMoved(level, worldPosition, magnetFacing, blockState, newTile);
     }
     
-    public BlockEntity getSubTile() {
+    public BlockEntity getSubTile(BlockPos pos) {
         if (subTile != null && !subTile.isEmpty()) {
             CompoundTag tileData = subTile.copy();
             tileData.putInt("x", this.worldPosition.getX());
             tileData.putInt("y", this.worldPosition.getY());
             tileData.putInt("z", this.worldPosition.getZ());
-            return BlockEntity.loadStatic(magnetState, subTile);
+            return BlockEntity.loadStatic(pos, magnetState, subTile);
         }
         
         return null;
@@ -270,7 +269,6 @@ public class MagnetizedBlockTileEntity extends BlockEntity implements TickableBl
 
     }
 
-    @Override
     public void tick() {
         if (this.level == null)
             return;
@@ -309,8 +307,8 @@ public class MagnetizedBlockTileEntity extends BlockEntity implements TickableBl
     
     
     @Override
-    public void load(BlockState p_230337_1_, CompoundTag compound) {
-    	super.load(p_230337_1_, compound);
+    public void load(CompoundTag compound) {
+    	super.load(compound);
     	
         this.magnetState = NbtUtils.readBlockState(compound.getCompound("blockState"));
         this.magnetFacing = Direction.from3DDataValue(compound.getInt("facing"));

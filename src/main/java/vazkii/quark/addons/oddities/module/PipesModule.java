@@ -1,17 +1,17 @@
 package vazkii.quark.addons.oddities.module;
 
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.ClientRegistry;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ForgeModelBakery;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.addons.oddities.block.PipeBlock;
+import vazkii.quark.addons.oddities.block.be.PipeTileEntity;
 import vazkii.quark.addons.oddities.client.render.PipeTileEntityRenderer;
-import vazkii.quark.addons.oddities.tile.PipeTileEntity;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -52,13 +52,13 @@ public class PipesModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		ClientRegistry.bindTileEntityRenderer(tileEntityType, PipeTileEntityRenderer::new);
+		BlockEntityRenderers.register(tileEntityType, PipeTileEntityRenderer::new);
 	}
 
     @Override
     @OnlyIn(Dist.CLIENT)
     public void modelRegistry() {
-        ModelLoader.addSpecialModel(new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, "pipe_flare"), "inventory"));
+    	ForgeModelBakery.addSpecialModel(new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, "pipe_flare"), "inventory"));
     }
 	
 }

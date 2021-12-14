@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
@@ -32,7 +33,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import vazkii.quark.addons.oddities.tile.MagnetizedBlockTileEntity;
+import vazkii.quark.addons.oddities.block.be.MagnetizedBlockTileEntity;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.module.QuarkModule;
 
@@ -40,7 +41,7 @@ import vazkii.quark.base.module.QuarkModule;
  * @author WireSegal
  * Created at 3:05 PM on 2/26/20.
  */
-public class MovingMagnetizedBlock extends QuarkBlock {
+public class MovingMagnetizedBlock extends QuarkBlock implements EntityBlock {
 	public static final DirectionProperty FACING = PistonHeadBlock.FACING;
 
 	public MovingMagnetizedBlock(QuarkModule module) {
@@ -52,17 +53,6 @@ public class MovingMagnetizedBlock extends QuarkBlock {
 	@Override
 	public RenderShape getRenderShape(BlockState state) {
 		return RenderShape.INVISIBLE;
-	}
-
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Nullable
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return null;
 	}
 
 	@Override
@@ -78,16 +68,6 @@ public class MovingMagnetizedBlock extends QuarkBlock {
 	public boolean useShapeForLightOcclusion(BlockState state) {
 		return true;
 	}
-
-//	@Override
-//	public boolean isNormalCube(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
-//		return false;
-//	}
-//
-//	@Override
-//	public boolean causesSuffocation(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
-//		return false;
-//	}
 
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
@@ -156,5 +136,10 @@ public class MovingMagnetizedBlock extends QuarkBlock {
 	@Override
 	public boolean isPathfindable(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, PathComputationType type) {
 		return false;
+	}
+
+	@Override
+	public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
+		return null;
 	}
 }

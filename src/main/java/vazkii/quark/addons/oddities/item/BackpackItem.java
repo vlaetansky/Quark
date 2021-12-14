@@ -37,6 +37,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -45,10 +46,10 @@ import net.minecraftforge.items.ItemStackHandler;
 import vazkii.arl.interf.IItemColorProvider;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.arl.util.RegistryHelper;
-import vazkii.quark.addons.oddities.client.model.BackpackModel;
 import vazkii.quark.addons.oddities.container.BackpackContainer;
 import vazkii.quark.addons.oddities.module.BackpackModule;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.client.handler.ModelHandler;
 import vazkii.quark.base.client.handler.RequiredModTooltipHandler;
 import vazkii.quark.base.handler.ProxiedItemStackHandler;
 import vazkii.quark.base.item.IQuarkItem;
@@ -212,12 +213,16 @@ public class BackpackItem extends DyeableArmorItem implements IQuarkItem, IItemC
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	@SuppressWarnings("unchecked")
-	public <A extends HumanoidModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, A _default) {
-		if(model == null)
-			model = new BackpackModel();
-
-		return (A) model;
+	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+		consumer.accept(new IItemRenderProperties() {
+			
+			@Override
+			@SuppressWarnings("unchecked")
+			public <A extends HumanoidModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, A _default) {
+				return (A) ModelHandler.armorModel(ModelHandler.backpack, armorSlot);
+			}
+		
+		});	
 	}
 
 	@Override

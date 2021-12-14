@@ -18,6 +18,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -29,14 +30,14 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import vazkii.quark.addons.oddities.block.be.MagnetTileEntity;
+import vazkii.quark.addons.oddities.block.be.MagnetizedBlockTileEntity;
 import vazkii.quark.addons.oddities.magnetsystem.MagnetSystem;
 import vazkii.quark.addons.oddities.module.MagnetsModule;
-import vazkii.quark.addons.oddities.tile.MagnetTileEntity;
-import vazkii.quark.addons.oddities.tile.MagnetizedBlockTileEntity;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.module.QuarkModule;
 
-public class MagnetBlock extends QuarkBlock {
+public class MagnetBlock extends QuarkBlock implements EntityBlock {
 
 	public static final DirectionProperty FACING = BlockStateProperties.FACING;
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -91,7 +92,8 @@ public class MagnetBlock extends QuarkBlock {
 		if (tilePresent != null && !(tilePresent instanceof MagnetizedBlockTileEntity))
 			tilePresent.save(tileData);
 
-		MagnetizedBlockTileEntity movingTile = new MagnetizedBlockTileEntity(targetState, tileData, moveDir);
+		BlockState setState = MagnetsModule.magnetized_block.defaultBlockState().setValue(MovingMagnetizedBlock.FACING, moveDir);
+		MagnetizedBlockTileEntity movingTile = new MagnetizedBlockTileEntity(endPos, setState, targetState, tileData, moveDir);
 
 		if (!world.isClientSide && reaction == PushReaction.DESTROY) {
 			BlockState blockstate = world.getBlockState(endPos);
@@ -101,9 +103,8 @@ public class MagnetBlock extends QuarkBlock {
 		if (tilePresent != null)
 			tilePresent.setRemoved();
 
-		world.setBlock(endPos, MagnetsModule.magnetized_block.defaultBlockState()
-				.setValue(MovingMagnetizedBlock.FACING, moveDir), 68);
-		world.setBlockEntity(endPos, movingTile);
+		world.setBlock(endPos, setState, 68);
+		world.setBlockEntity(movingTile); // TODO CHECK if this works
 
 		world.setBlock(targetPos, Blocks.AIR.defaultBlockState(), 66);
 
@@ -139,13 +140,8 @@ public class MagnetBlock extends QuarkBlock {
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return new MagnetTileEntity(pos, state);
 	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return new MagnetTileEntity();
-	}
-
+	
 }

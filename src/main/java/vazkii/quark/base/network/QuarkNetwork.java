@@ -19,6 +19,9 @@ import vazkii.quark.base.network.message.RequestEmoteMessage;
 import vazkii.quark.base.network.message.SetLockProfileMessage;
 import vazkii.quark.base.network.message.SortInventoryMessage;
 import vazkii.quark.base.network.message.SpamlessChatMessage;
+import vazkii.quark.base.network.message.oddities.HandleBackpackMessage;
+import vazkii.quark.base.network.message.oddities.MatrixEnchanterOperationMessage;
+import vazkii.quark.base.network.message.oddities.ScrollCrateMessage;
 
 public final class QuarkNetwork {
 

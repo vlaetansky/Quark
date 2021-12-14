@@ -13,7 +13,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.WeighedRandom;
+import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -168,7 +168,7 @@ public class EnchantmentMatrix {
 				wrapper.weight++;
 		} 
 
-		return WeighedRandom.getRandomItem(rng, validEnchants);
+		return WeightedRandom.getRandomItem(rng, validEnchants).get();
 	}
 	
 	public boolean place(int id, int x, int y) {
@@ -473,7 +473,7 @@ public class EnchantmentMatrix {
 		public void normalizeRarity(Map<Enchantment, Integer> influences, List<Piece> markedEnchants) {
 			if(MatrixEnchantingModule.normalizeRarity) {
 				switch(enchantment.getRarity()) {
-				case COMMON:
+				case COMMON: // TODO AT
 					weight = 80000;
 					break;
 				case UNCOMMON:

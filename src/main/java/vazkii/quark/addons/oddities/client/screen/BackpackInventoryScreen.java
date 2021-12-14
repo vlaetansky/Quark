@@ -20,7 +20,7 @@ import vazkii.quark.addons.oddities.container.BackpackContainer;
 import vazkii.quark.addons.oddities.module.BackpackModule;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.network.QuarkNetwork;
-import vazkii.quark.base.network.message.HandleBackpackMessage;
+import vazkii.quark.base.network.message.oddities.HandleBackpackMessage;
 
 public class BackpackInventoryScreen extends InventoryScreen {
 	
@@ -59,8 +59,8 @@ public class BackpackInventoryScreen extends InventoryScreen {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void containerTick() {
+		super.containerTick();
 
 		buttonYs.forEach((button, y) -> button.y = y);
 		

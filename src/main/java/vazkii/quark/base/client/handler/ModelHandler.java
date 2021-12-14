@@ -23,6 +23,7 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import vazkii.quark.addons.oddities.client.model.BackpackModel;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.render.QuarkArmorModel;
 import vazkii.quark.content.mobs.client.model.CrabModel;
@@ -50,6 +51,7 @@ public class ModelHandler {
 	public static ModelLayerLocation wraith;
 	
 	public static ModelLayerLocation forgotten_hat;
+	public static ModelLayerLocation backpack;
 
 	private static boolean modelsInitted = false;
 	
@@ -66,6 +68,7 @@ public class ModelHandler {
 		wraith = addModel("wraith", WraithModel::createBodyLayer, WraithModel::new);
 		
 		forgotten_hat = addArmorModel("forgotten_hat", ForgottenHatModel::createBodyLayer);
+		forgotten_hat = addArmorModel("backpack", BackpackModel::createBodyLayer);
 
 		modelsInitted = true;
 	}

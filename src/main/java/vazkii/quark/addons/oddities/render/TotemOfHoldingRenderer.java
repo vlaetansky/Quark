@@ -9,8 +9,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.ModelManager;
@@ -31,8 +31,8 @@ import vazkii.quark.addons.oddities.module.TotemOfHoldingModule;
 @OnlyIn(Dist.CLIENT)
 public class TotemOfHoldingRenderer extends EntityRenderer<TotemOfHoldingEntity> {
 
-    public TotemOfHoldingRenderer(EntityRenderDispatcher manager) {
-        super(manager);
+    public TotemOfHoldingRenderer(EntityRendererProvider.Context context) {
+        super(context);
     }
 
 	@Override
@@ -73,7 +73,7 @@ public class TotemOfHoldingRenderer extends EntityRenderer<TotemOfHoldingEntity>
             Minecraft mc = Minecraft.getInstance();
             return !mc.options.hideGui && mc.hitResult != null &&
                     mc.hitResult.getType() == HitResult.Type.ENTITY &&
-                    ((EntityHitResult) mc.hitResult).hitInfo == entity;
+                    ((EntityHitResult) mc.hitResult).getEntity() == entity;
         }
 
         return false;

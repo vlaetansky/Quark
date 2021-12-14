@@ -38,8 +38,8 @@ import net.minecraftforge.event.TickEvent.WorldTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import vazkii.quark.addons.oddities.block.be.MagnetTileEntity;
 import vazkii.quark.addons.oddities.module.MagnetsModule;
-import vazkii.quark.addons.oddities.tile.MagnetTileEntity;
 import vazkii.quark.api.IMagnetMoveAction;
 import vazkii.quark.api.IMagnetTracker;
 import vazkii.quark.api.QuarkCapabilities;
@@ -106,7 +106,7 @@ public class MagnetSystem {
 		if(world != null && isBlockMagnetic(state)) {
 			BlockPos targetLocation = pos.relative(moveDir);
 			BlockState stateAtTarget = world.getBlockState(targetLocation);
-			if (stateAtTarget.isAir(world, targetLocation))
+			if (stateAtTarget.isAir())
 				return PushReaction.IGNORE;
 			else if (stateAtTarget.getPistonPushReaction() == PushReaction.DESTROY)
 				return PushReaction.DESTROY;
