@@ -38,10 +38,10 @@ public class SocialButton extends Button {
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, SOCIAL_ICONS);
 		
-		int u = (socialId % 4) * 16;
-		int v = (socialId / 4) * 16;
+		int u = socialId * 20;
+		int v = isHovered ? 20 : 0;
 		
-		blit(mstack, x + 2, y + 2, u, v, 16, 16, 64, 64);
+		blit(mstack, x, y, u, v, 20, 20, 128, 64);
 		
 		if(isHovered)
 			TopLayerTooltipHandler.setTooltip(Arrays.asList(text.getString()), p_renderButton_1_, p_renderButton_2_);
