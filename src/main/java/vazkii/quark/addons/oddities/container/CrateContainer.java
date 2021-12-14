@@ -7,7 +7,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.ContainerListener;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -16,7 +15,7 @@ import vazkii.quark.addons.oddities.block.be.CrateTileEntity;
 import vazkii.quark.addons.oddities.module.CrateModule;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.network.QuarkNetwork;
-import vazkii.quark.base.network.message.ScrollCrateMessage;
+import vazkii.quark.base.network.message.oddities.ScrollCrateMessage;
 
 public class CrateContainer extends AbstractContainerMenu {
 
@@ -125,10 +124,10 @@ public class CrateContainer extends AbstractContainerMenu {
 	}
 
 	private void forceSync() {
-		Level world = crate.getLevel();
-		if(!world.isClientSide)
-			for(ContainerListener icontainerlistener : containerListeners)
-				icontainerlistener.refreshContainer(this, getItems());
+//		Level world = crate.getLevel(); TODO FIX figure this one out
+//		if(!world.isClientSide)
+//			for(ContainerListener icontainerlistener : containerListeners)
+//				icontainerlistener.refreshContainer(this, getItems());
 	}
 
 	public void scroll(boolean down, boolean packet) {

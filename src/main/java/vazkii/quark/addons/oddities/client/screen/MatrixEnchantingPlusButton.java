@@ -3,8 +3,8 @@ package vazkii.quark.addons.oddities.client.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.TextComponent;
 
 public class MatrixEnchantingPlusButton extends Button {
@@ -19,7 +19,9 @@ public class MatrixEnchantingPlusButton extends Button {
 		if(!visible)
 			return;
 		
-		Minecraft.getInstance().textureManager.bind(MatrixEnchantingScreen.BACKGROUND);
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.setShaderTexture(0, MatrixEnchantingScreen.BACKGROUND);
 		int u = 0;
 		int v = 177;
 		
@@ -28,7 +30,6 @@ public class MatrixEnchantingPlusButton extends Button {
 		else if(hovered)
 			v += 24;
 
-		RenderSystem.color3f(1F, 1F, 1F);
 		blit(stack, x, y, u, v, width, height);
 	}
 

@@ -3,7 +3,6 @@ package vazkii.quark.base.network.message.oddities;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkHooks;
@@ -29,11 +28,10 @@ public class HandleBackpackMessage implements IMessage {
 			if(open) {
 				ItemStack stack = player.getItemBySlot(EquipmentSlot.CHEST);
 				if(stack.getItem() instanceof MenuProvider) {
-//					Inventory inventory = player.getInventory();
-//					ItemStack holding = inventory.getCarried(); TODO FIX how do you get this now?
-//					inventory.setCarried(ItemStack.EMPTY);
-//					NetworkHooks.openGui(player, (MenuProvider) stack.getItem(), player.blockPosition());
-//					inventory.setCarried(holding);
+					ItemStack holding = player.inventoryMenu.getCarried();
+					player.inventoryMenu.setCarried(ItemStack.EMPTY);
+					NetworkHooks.openGui(player, (MenuProvider) stack.getItem(), player.blockPosition());
+					player.inventoryMenu.setCarried(holding);
 				}
 			} else {
 				BackpackContainer.saveCraftingInventory(player);

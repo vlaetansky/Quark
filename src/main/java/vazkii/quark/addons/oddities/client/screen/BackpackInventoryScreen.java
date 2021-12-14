@@ -6,10 +6,11 @@ import java.util.Map;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -23,26 +24,26 @@ import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.oddities.HandleBackpackMessage;
 
 public class BackpackInventoryScreen extends InventoryScreen {
-	
+
 	private static final ResourceLocation BACKPACK_INVENTORY_BACKGROUND = new ResourceLocation(Quark.MOD_ID, "textures/misc/backpack_gui.png");
-	
+
 	private final Player player;
 	private final Map<Button, Integer> buttonYs = new HashMap<>();
-	
+
 	private boolean closeHack = false;
 	private static InventoryMenu oldContainer;
-	
+
 	public BackpackInventoryScreen(InventoryMenu backpack, Inventory inventory, Component component) {
 		super(setBackpackContainer(inventory.player, backpack));
-		
+
 		this.player = inventory.player;
 		setBackpackContainer(player, oldContainer);
 	}
-	
+
 	public static Player setBackpackContainer(Player entity, InventoryMenu container) {
 		oldContainer = entity.inventoryMenu;
 		entity.inventoryMenu = container;
-		
+
 		return entity;
 	}
 
@@ -50,7 +51,7 @@ public class BackpackInventoryScreen extends InventoryScreen {
 	public void init() {
 		imageHeight = 224;
 		super.init();
-		
+
 		/*for(Widget widget : buttons)
 			if(widget instanceof ImageButton || widget.getClass().getName().contains("svenhjol.charm")) {
 				widget.y -= 29;
@@ -63,31 +64,32 @@ public class BackpackInventoryScreen extends InventoryScreen {
 		super.containerTick();
 
 		buttonYs.forEach((button, y) -> button.y = y);
-		
+
 		if(!BackpackModule.isEntityWearingBackpack(player)) {
-			ItemStack curr = player.inventory.getCarried();
+			ItemStack curr = player.inventoryMenu.getCarried();
 			BackpackContainer.saveCraftingInventory(player);
 			closeHack = true;
 			QuarkNetwork.sendToServer(new HandleBackpackMessage(false));
 			minecraft.setScreen(new InventoryScreen(player));
-			player.inventory.setCarried(curr);
+			player.inventoryMenu.setCarried(curr);
 		}
 	}
-	
+
 	@Override
 	public void removed() {
 		if(closeHack) {
 			closeHack = false;
 			return;
 		}
-			
+
 		super.removed();
 	}
-	
+
 	@Override 
 	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		minecraft.getTextureManager().bind(BACKPACK_INVENTORY_BACKGROUND);
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.setShaderTexture(0, BACKPACK_INVENTORY_BACKGROUND);
 		int i = leftPos;
 		int j = topPos;
 		blit(stack, i, j, 0, 0, imageWidth, imageHeight);
@@ -96,12 +98,14 @@ public class BackpackInventoryScreen extends InventoryScreen {
 	}
 
 	private void moveCharmsButtons() {
-		for(AbstractWidget widget : buttons) {
+		for(Widget widget : renderables) {
 			//Charms buttons have a static Y pos, so use that to only focus on them.
-			if(widget instanceof ImageButton && widget.y == height / 2 - 22) {
-				((ImageButton) widget).setPosition(widget.x, widget.y - 29);
+			if(widget instanceof ImageButton) {
+				ImageButton img = (ImageButton) widget;
+				if(img.y == height / 2 - 22)
+					img.setPosition(img.x, img.y - 29);
 			}
 		}
 	}
-	
+
 }

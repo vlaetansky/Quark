@@ -161,11 +161,11 @@ public class EnchantmentMatrix {
 		int total = 0;
 
 		for (EnchantmentDataWrapper wrapper : validEnchants)
-			total += wrapper.weight;
+			total += wrapper.weight.value;
 
 		if (total == 0) {
 			for (EnchantmentDataWrapper wrapper : validEnchants)
-				wrapper.weight++;
+				wrapper.weight.value++;
 		} 
 
 		return WeightedRandom.getRandomItem(rng, validEnchants).get();
@@ -473,17 +473,17 @@ public class EnchantmentMatrix {
 		public void normalizeRarity(Map<Enchantment, Integer> influences, List<Piece> markedEnchants) {
 			if(MatrixEnchantingModule.normalizeRarity) {
 				switch(enchantment.getRarity()) {
-				case COMMON: // TODO AT
-					weight = 80000;
+				case COMMON:
+					weight.value = 80000;
 					break;
 				case UNCOMMON:
-					weight = 40000;
+					weight.value = 40000;
 					break;
 				case RARE:
-					weight = 25000;
+					weight.value = 25000;
 					break;
 				case VERY_RARE:
-					weight = 5000; 
+					weight.value = 5000; 
 					break;
 				default: 
 					break;
@@ -491,17 +491,17 @@ public class EnchantmentMatrix {
 				
 				influence = influences.getOrDefault(enchantment, 0);
 				float multiplier = 1F + influence * (float) MatrixEnchantingModule.influencePower;
-				weight *= multiplier;
+				weight.value *= multiplier;
 				
 				boolean mark = true;
 				
 				for(Piece other : markedEnchants) {
 					if(other.enchant == enchantment) {
-						weight *= MatrixEnchantingModule.dupeMultiplier;
+						weight.value *= MatrixEnchantingModule.dupeMultiplier;
 						mark = false;
 						break;
 					} else if(!other.enchant.isCompatibleWith(enchantment) || !enchantment.isCompatibleWith(other.enchant)) {
-						weight *= MatrixEnchantingModule.incompatibleMultiplier;
+						weight.value *= MatrixEnchantingModule.incompatibleMultiplier;
 						mark = false;
 						break;
 					}

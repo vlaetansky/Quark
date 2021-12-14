@@ -10,6 +10,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
@@ -27,7 +28,7 @@ import vazkii.quark.addons.oddities.module.MatrixEnchantingModule;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.network.QuarkNetwork;
-import vazkii.quark.base.network.message.MatrixEnchanterOperationMessage;
+import vazkii.quark.base.network.message.oddities.MatrixEnchanterOperationMessage;
 
 public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchantingContainer> {
 
@@ -51,11 +52,11 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 	}
 
 	@Override
-	public void init(Minecraft mc, int x, int y) {
-		super.init(mc, x, y);
+	public void init() {
+		super.init();
 
 		selectedPiece = -1;
-		addButton(plusButton = new MatrixEnchantingPlusButton(leftPos + 86, topPos + 63, this::add));
+		addRenderableWidget(plusButton = new MatrixEnchantingPlusButton(leftPos + 86, topPos + 63, this::add));
 		pieceList = new MatrixEnchantingPieceList(this, 28, 64, topPos + 11, topPos + 75, 22);
 		pieceList.setLeftPos(leftPos + 139);
 		children.add(pieceList);
@@ -65,8 +66,8 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void containerTick() {
+		super.containerTick();
 		updateButtonStatus();
 
 		if(enchanter.matrix == null) {
@@ -83,8 +84,10 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 	@Override
 	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		Minecraft mc = getMinecraft();
-		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		mc.getTextureManager().bind(BACKGROUND);
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.setShaderTexture(0, BACKGROUND);
+		
 		int i = leftPos;
 		int j = topPos;
 		blit(stack, i, j, 0, 0, imageWidth, imageHeight);
@@ -215,40 +218,42 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 	}
 
 	private void renderMatrixGrid(PoseStack stack, EnchantmentMatrix matrix) {
-		Minecraft mc = getMinecraft();
-		mc.getTextureManager().bind(BACKGROUND);
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(86, 11, 0);
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.setShaderTexture(0, BACKGROUND);
+		
+		stack.pushPose();
+		stack.translate(86, 11, 0);
 
 		for(int i : matrix.placedPieces) {
 			Piece piece = getPiece(i);
 			if (piece != null) {
-				RenderSystem.pushMatrix();
-				RenderSystem.translatef(piece.x * 10, piece.y * 10, 0);
+				stack.pushPose();
+				stack.translate(piece.x * 10, piece.y * 10, 0);
 				renderPiece(stack, piece, 1F);
-				RenderSystem.popMatrix();
+				stack.popPose();
 			}
 		}
 
 		if(selectedPiece != -1 && gridHoverX != -1) {
 			Piece piece = getPiece(selectedPiece);
 			if(piece != null && !(hoveredPiece != null && piece.enchant == hoveredPiece.enchant && hoveredPiece.level < hoveredPiece.enchant.getMaxLevel())) {
-				RenderSystem.pushMatrix();
-				RenderSystem.translatef(gridHoverX * 10, gridHoverY * 10, 0);
+				stack.pushPose();
+				stack.translate(gridHoverX * 10, gridHoverY * 10, 0);
 
 				float a = 0.2F;
 				if(matrix.canPlace(piece, gridHoverX, gridHoverY))
 					a = (float) ((Math.sin(ClientTicker.total * 0.2) + 1) * 0.4 + 0.4);
 
 				renderPiece(stack, piece, a);
-				RenderSystem.popMatrix();
+				stack.popPose();
 			}
 		}
 
 		if(hoveredPiece == null && gridHoverX != -1)
 			renderHover(stack, gridHoverX, gridHoverY);
 
-		RenderSystem.popMatrix();
+		stack.popPose();
 	}
 
 	protected void renderPiece(PoseStack stack, Piece piece, float a) {
@@ -260,12 +265,10 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 
 		for(int[] block : piece.blocks)
 			renderBlock(stack, block[0], block[1], piece.type, r, g, b, a, hovered);
-
-		RenderSystem.color3f(1F, 1F, 1F);
 	}
 
 	private void renderBlock(PoseStack stack, int x, int y, int type, float r, float g, float b, float a, boolean hovered) {
-		RenderSystem.color4f(r, g, b, a);
+		RenderSystem.setShaderColor(r, g, b, a);
 		blit(stack, x * 10, y * 10, 11 + type * 10, imageHeight, 10, 10);
 		if(hovered)
 			renderHover(stack, x, y);

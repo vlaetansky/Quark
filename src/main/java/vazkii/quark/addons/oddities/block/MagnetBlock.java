@@ -104,7 +104,7 @@ public class MagnetBlock extends QuarkBlock implements EntityBlock {
 			tilePresent.setRemoved();
 
 		world.setBlock(endPos, setState, 68);
-		world.setBlockEntity(movingTile); // TODO CHECK if this works
+		world.setBlockEntity(movingTile);
 
 		world.setBlock(targetPos, Blocks.AIR.defaultBlockState(), 66);
 

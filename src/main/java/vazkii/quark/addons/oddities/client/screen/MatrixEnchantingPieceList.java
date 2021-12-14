@@ -8,8 +8,12 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 
 import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 import vazkii.quark.addons.oddities.container.EnchantmentMatrix.Piece;
 
@@ -81,19 +85,21 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 			RenderSystem.disableTexture();
 			Tesselator tessellator = Tesselator.getInstance();
 			BufferBuilder bufferbuilder = tessellator.getBuilder();
-			bufferbuilder.begin(7, DefaultVertexFormat.POSITION_TEX_COLOR);
+			bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
 			bufferbuilder.vertex((double)i, (double)this.y1, 0.0D).uv(0.0F, 1.0F).color(0, 0, 0, 255).endVertex();
 			bufferbuilder.vertex((double)j, (double)this.y1, 0.0D).uv(1.0F, 1.0F).color(0, 0, 0, 255).endVertex();
 			bufferbuilder.vertex((double)j, (double)this.y0, 0.0D).uv(1.0F, 0.0F).color(0, 0, 0, 255).endVertex();
 			bufferbuilder.vertex((double)i, (double)this.y0, 0.0D).uv(0.0F, 0.0F).color(0, 0, 0, 255).endVertex();
 			tessellator.end();
-			bufferbuilder.begin(7, DefaultVertexFormat.POSITION_TEX_COLOR);
+			
+			bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
 			bufferbuilder.vertex((double)i, (double)(l1 + k1), 0.0D).uv(0.0F, 1.0F).color(128, 128, 128, 255).endVertex();
 			bufferbuilder.vertex((double)j, (double)(l1 + k1), 0.0D).uv(1.0F, 1.0F).color(128, 128, 128, 255).endVertex();
 			bufferbuilder.vertex((double)j, (double)l1, 0.0D).uv(1.0F, 0.0F).color(128, 128, 128, 255).endVertex();
 			bufferbuilder.vertex((double)i, (double)l1, 0.0D).uv(0.0F, 0.0F).color(128, 128, 128, 255).endVertex();
 			tessellator.end();
-			bufferbuilder.begin(7, DefaultVertexFormat.POSITION_TEX_COLOR);
+			// TODO fixme
+			bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
 			bufferbuilder.vertex((double)i, (double)(l1 + k1 - 1), 0.0D).uv(0.0F, 1.0F).color(192, 192, 192, 255).endVertex();
 			bufferbuilder.vertex((double)(j - 1), (double)(l1 + k1 - 1), 0.0D).uv(1.0F, 1.0F).color(192, 192, 192, 255).endVertex();
 			bufferbuilder.vertex((double)(j - 1), (double)l1, 0.0D).uv(1.0F, 0.0F).color(192, 192, 192, 255).endVertex();
@@ -123,13 +129,16 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 			if(hover)
 				parent.hoveredPiece = piece;
 
-			parent.getMinecraft().getTextureManager().bind(MatrixEnchantingScreen.BACKGROUND);
-			RenderSystem.pushMatrix();
-			RenderSystem.translatef(left + (listWidth - 7) / 2f, top + entryHeight / 2f, 0);
-			RenderSystem.scaled(0.5, 0.5, 0.5);
-			RenderSystem.translatef(-8, -8, 0);
+			RenderSystem.setShader(GameRenderer::getPositionTexShader);
+			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+			RenderSystem.setShaderTexture(0, MatrixEnchantingScreen.BACKGROUND);
+			
+			stack.pushPose();
+			stack.translate(left + (listWidth - 7) / 2f, top + entryHeight / 2f, 0);
+			stack.scale(0.5F, 0.5F, 0.5F);
+			stack.translate(-8, -8, 0);
 			parent.renderPiece(stack, piece, 1F);
-			RenderSystem.popMatrix();
+			stack.popPose();
 		}
 
 		@Override
@@ -137,6 +146,11 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 			parent.selectedPiece = index;
 			setSelected(this);
 			return false;
+		}
+
+		@Override
+		public Component getNarration() {
+			return new TextComponent("");
 		}
 
 	}

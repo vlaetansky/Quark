@@ -231,7 +231,7 @@ public class MagnetizedBlockTileEntity extends BlockEntity {
 
         BlockEntity newTile = getSubTile(worldPosition);
         if (newTile != null)
-            level.setBlockEntity(newTile); // TODO CHECK
+            level.setBlockEntity(newTile);
 
         IMagnetMoveAction action = getMoveAction();
         if(action != null)

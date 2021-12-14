@@ -129,7 +129,7 @@ public class BackpackModule extends QuarkModule {
 			backpackRequested = true;
 		} else if(mc.screen instanceof BackpackInventoryScreen) {
 			if(heldStack != null) {
-//				mc.player.getInventory().setCarried(heldStack); TODO how does this work???
+				mc.player.inventoryMenu.setCarried(heldStack);
 				heldStack = null;
 			}
 			
@@ -138,7 +138,7 @@ public class BackpackModule extends QuarkModule {
 	}
 
 	private void requestBackpack() {
-//		heldStack = Minecraft.getInstance().player.getInventory().getCarried(); TODO how do
+		heldStack = Minecraft.getInstance().player.inventoryMenu.getCarried();
 		QuarkNetwork.sendToServer(new HandleBackpackMessage(true));
 	}
 

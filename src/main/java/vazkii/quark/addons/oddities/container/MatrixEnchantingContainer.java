@@ -52,9 +52,9 @@ public class MatrixEnchantingContainer extends AbstractContainerMenu {
 
 			@Nonnull
 			@Override
-			public ItemStack onTake(Player thePlayer, @Nonnull ItemStack stack) {
+			public void onTake(Player thePlayer, @Nonnull ItemStack stack) {
 				finish(thePlayer, stack);
-				return super.onTake(thePlayer, stack);
+				super.onTake(thePlayer, stack);
 			}
 		});
 
@@ -69,11 +69,11 @@ public class MatrixEnchantingContainer extends AbstractContainerMenu {
 	public static MatrixEnchantingContainer fromNetwork(int windowId, Inventory playerInventory, FriendlyByteBuf buf) {
 		BlockPos pos = buf.readBlockPos();
 		MatrixEnchantingTableTileEntity te = (MatrixEnchantingTableTileEntity) playerInventory.player.level.getBlockEntity(pos);
-		return new MatrixEnchantingContainer(windowId, playerInventory, te);
+		return new MatrixEnchantingContainer(windowId, playerInventory, te);	
 	}
 
 	private boolean isLapis(ItemStack stack) {
-		return stack.getItem().is(Tags.Items.GEMS_LAPIS);
+		return stack.is(Tags.Items.GEMS_LAPIS);
 	}
 
 	private void finish(Player player, ItemStack stack) {
