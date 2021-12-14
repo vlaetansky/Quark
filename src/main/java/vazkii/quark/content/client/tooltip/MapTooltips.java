@@ -98,7 +98,9 @@ public class MapTooltips {
 
 		@Override
 		public int getHeight() {
-			return 75;
+			Minecraft mc = Minecraft.getInstance();
+			MapItemSavedData mapdata = MapItem.getSavedData(stack, mc.level);
+			return mapdata != null ? 75 : 0;
 		}
 
 		@Override
