@@ -327,10 +327,10 @@ public class MagnetizedBlockBlockEntity extends BlockEntity {
         return writeNBTData(super.save(new CompoundTag()), false);
     }
 
-    @Nonnull
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        return writeNBTData(super.save(new CompoundTag()), true);
+    protected void saveAdditional(CompoundTag nbt) {
+    	super.saveAdditional(nbt);
+    	writeNBTData(nbt, true);
     }
 
     private CompoundTag writeNBTData(CompoundTag compound, boolean includeSubTile) {

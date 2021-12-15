@@ -42,16 +42,13 @@ public abstract class AbstractEnchantingTableBlockEntity extends SimpleInventory
 	public boolean isAutomationEnabled() {
 		return false;
 	}
-
-	@Nonnull
+	
 	@Override
-	public CompoundTag save(CompoundTag compound) {
-		super.save(compound);
-
+	protected void saveAdditional(CompoundTag compoundTag) {
+		super.saveAdditional(compoundTag);
+		
 		if(hasCustomName())
-			compound.putString("CustomName", Component.Serializer.toJson(customName));
-
-		return compound;
+			compoundTag.putString("CustomName", Component.Serializer.toJson(customName));
 	}
 
 	@Override 

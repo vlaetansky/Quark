@@ -194,17 +194,15 @@ public class FeedingTroughBlockEntity extends RandomizableContainerBlockEntity {
     }
 
     @Override
-    @Nonnull
-    public CompoundTag save(CompoundTag nbt) {
-        super.save(nbt);
+    protected void saveAdditional(CompoundTag nbt) {
+    	super.saveAdditional(nbt);
+    	
         nbt.putInt("Cooldown", cooldown);
         nbt.putLong("rng", internalRng);
         if (!this.trySaveLootTable(nbt))
             ContainerHelper.saveAllItems(nbt, this.stacks);
-
-        return nbt;
     }
-
+    
     @Override
     @Nonnull
     protected NonNullList<ItemStack> getItems() {

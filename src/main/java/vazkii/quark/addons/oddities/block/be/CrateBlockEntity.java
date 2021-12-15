@@ -87,7 +87,9 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag compound) {
+	protected void saveAdditional(CompoundTag compound) {
+		super.saveAdditional(compound);
+		
 		compound.putInt("totalItems", totalItems);
 
 		ListTag list = new ListTag();
@@ -97,20 +99,18 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 			list.add(stackCmp);
 		}
 		compound.put("stacks", list);
-
-		return super.save(compound);
 	}
 
 	@Override
 	public void load(CompoundTag nbt) {
+		super.load(nbt);
+
 		totalItems = nbt.getInt("totalItems");
 
 		ListTag list = nbt.getList("stacks", 10);
 		stacks = new ArrayList<>(list.size());
 		for(int i = 0; i < list.size(); i++)
 			stacks.add(ItemStack.of(list.getCompound(i)));
-
-		super.load(nbt);
 	}
 
 	@Override
