@@ -1,6 +1,8 @@
 package vazkii.quark.content.automation.module;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import net.minecraft.core.BlockPos;
@@ -66,7 +68,8 @@ public class FeedingTroughModule extends QuarkModule {
         if (event.side == LogicalSide.SERVER) {
             if (event.phase == TickEvent.Phase.START) {
                 breedingOccurred.remove();
-                for (TickingBlockEntity ticking : event.world.blockEntityTickers) { 
+                List<TickingBlockEntity> tickers = new ArrayList<>(event.world.blockEntityTickers);
+                for (TickingBlockEntity ticking : tickers) { 
                 	BlockEntity tile = event.world.getBlockEntity(ticking.getPos());
                     if (tile instanceof FeedingTroughBlockEntity)
                         troughs.add((FeedingTroughBlockEntity) tile);
