@@ -11,6 +11,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.CreativeModeTab;
@@ -29,6 +30,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import vazkii.quark.base.block.QuarkBlock;
@@ -47,12 +49,9 @@ public class FeedingTroughBlock extends QuarkBlock implements EntityBlock {
 	public static BooleanProperty FULL = BooleanProperty.create("full");
 
 	public static final VoxelShape CUBOID_SHAPE = box(0, 0, 0, 16, 8, 16);
-	public static final VoxelShape EMPTY_SHAPE = Shapes.join(CUBOID_SHAPE,
-			box(2, 2, 2, 14, 8, 14), BooleanOp.ONLY_FIRST);
-
-	public static final VoxelShape FULL_SHAPE = Shapes.join(CUBOID_SHAPE,
-			box(2, 6, 2, 14, 8, 14), BooleanOp.ONLY_FIRST);
-
+	public static final VoxelShape EMPTY_SHAPE = Shapes.join(CUBOID_SHAPE, box(2, 2, 2, 14, 8, 14), BooleanOp.ONLY_FIRST);
+	public static final VoxelShape FULL_SHAPE = Shapes.join(CUBOID_SHAPE, box(2, 6, 2, 14, 8, 14), BooleanOp.ONLY_FIRST);
+	public static final VoxelShape ANIMAL_SHAPE = box(0, 0, 0, 16, 24, 16);
 
 	public FeedingTroughBlock(String regname, QuarkModule module, CreativeModeTab creativeTab, Properties properties) {
 		super(regname, module, creativeTab, properties);
@@ -62,6 +61,10 @@ public class FeedingTroughBlock extends QuarkBlock implements EntityBlock {
 	@Nonnull
 	@Override
 	public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, CollisionContext context) {
+		Entity entity = context instanceof EntityCollisionContext ? ((EntityCollisionContext) context).getEntity() : null;
+		if(entity != null && (entity instanceof Animal))
+			return ANIMAL_SHAPE;
+		
 		return EMPTY_SHAPE;
 	}
 
