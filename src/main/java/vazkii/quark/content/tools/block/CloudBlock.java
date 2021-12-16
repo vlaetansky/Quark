@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -38,6 +39,11 @@ public class CloudBlock extends QuarkBlock implements EntityBlock {
 				.strength(0)
 				.noOcclusion()
 				.noCollission());
+	}
+	
+	@Override
+	public PushReaction getPistonPushReaction(BlockState p_60584_) {
+		return PushReaction.BLOCK;
 	}
 	
 	@Override
