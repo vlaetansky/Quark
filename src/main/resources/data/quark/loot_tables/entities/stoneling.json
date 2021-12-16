@@ -12,11 +12,6 @@
             {
               "condition": "quark:flag",
               "flag": "stoneling_drop_diamond_heart"
-            },
-            {
-              "condition": "random_chance_with_looting",
-              "chance": 0.2,
-              "looting_multiplier": 0.033
             }
           ]
         }
