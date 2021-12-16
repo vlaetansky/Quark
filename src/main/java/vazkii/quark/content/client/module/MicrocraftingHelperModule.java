@@ -9,6 +9,7 @@ import java.util.function.BooleanSupplier;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -24,8 +25,7 @@ import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -36,6 +36,7 @@ import net.minecraftforge.client.event.ContainerScreenEvent;
 import net.minecraftforge.client.event.ScreenEvent.MouseClickedEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import vazkii.quark.base.client.handler.TopLayerTooltipHandler;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -163,10 +164,8 @@ public class MicrocraftingHelperModule extends QuarkModule {
 			Pair<GhostRecipe, GhostIngredient> pair = getHoveredGhost(cscreen, cscreen.getRecipeBookComponent());
 			if(pair != null) {
 				GhostIngredient ingr = pair.getRight();
-				if(ingr != null) {
-					Component tooltip = new TranslatableComponent("quark.misc.rightclick_to_craft");
-					cscreen.renderTooltip(mstack, tooltip, event.getMouseX(), event.getMouseY() - 15);
-				}
+				if(ingr != null)
+					TopLayerTooltipHandler.setTooltip(Lists.newArrayList(I18n.get("quark.misc.rightclick_to_craft")), event.getMouseX(), event.getMouseY() - 15);
 			}
 		}
 	}
