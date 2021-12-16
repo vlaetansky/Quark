@@ -1,6 +1,7 @@
 package vazkii.quark.content.tools.item;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -21,6 +22,7 @@ import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -306,14 +308,28 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 
 		return 0;
 	}
+	
+	@Override
+	public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
+		return getContents(stack) == null ? Optional.empty() : Optional.of(new Tooltip(stack));
+	}
 
-	class PouchItemUseContext extends UseOnContext {
+	public static class PouchItemUseContext extends UseOnContext {
 
 		protected PouchItemUseContext(UseOnContext parent, ItemStack stack, BlockPos targetPos) {
 			super(parent.getLevel(), parent.getPlayer(), parent.getHand(), stack, 
 					new BlockHitResult(parent.getClickLocation(), parent.getClickedFace(), targetPos, parent.isInside()));
 		}
 
+	}
+	
+	public static class Tooltip implements TooltipComponent {
+		
+		public final ItemStack stack; 
+		public Tooltip(ItemStack stack) {
+			this.stack = stack;
+		}
+		
 	}
 
 }

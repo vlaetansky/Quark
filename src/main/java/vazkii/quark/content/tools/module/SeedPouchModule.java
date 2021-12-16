@@ -16,6 +16,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.Quark;
@@ -23,6 +24,7 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
+import vazkii.quark.content.tools.client.tooltip.SeedPouchClientTooltipComponent;
 import vazkii.quark.content.tools.item.SeedPouchItem;
 
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true)
@@ -50,6 +52,8 @@ public class SeedPouchModule extends QuarkModule {
 	@Override
 	public void clientSetup() {
 		enqueue(() -> ItemProperties.register(seed_pouch, new ResourceLocation("pouch_items"), SeedPouchItem::itemFraction));
+		
+		MinecraftForgeClient.registerTooltipComponentFactory(SeedPouchItem.Tooltip.class, t -> new SeedPouchClientTooltipComponent(t.stack));
 	}
 
 	@SubscribeEvent
@@ -77,7 +81,7 @@ public class SeedPouchModule extends QuarkModule {
 						SeedPouchItem.setCount(heldStack, curr + toAdd);
 
 						if(player.level instanceof ServerLevel)
-							((ServerLevel) player.level).playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ARMOR_EQUIP_LEATHER, SoundSource.PLAYERS, 0.2F, (player.level.random.nextFloat() - player.level.random.nextFloat()) * 1.4F + 2.0F);
+							((ServerLevel) player.level).playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BUNDLE_INSERT, SoundSource.PLAYERS, 0.2F, (player.level.random.nextFloat() - player.level.random.nextFloat()) * 1.4F + 2.0F);
 
 						if(stack.getCount() == 0)
 							break;
@@ -85,64 +89,5 @@ public class SeedPouchModule extends QuarkModule {
 				}
 			}
 	}
-
-//	@SubscribeEvent
-//	@OnlyIn(Dist.CLIENT)
-//	public void makeTooltip(ItemTooltipEvent event) {
-//		ItemStack stack = event.getItemStack();
-//		if(stack.getItem() == seed_pouch) {
-//			Pair<ItemStack, Integer> contents = SeedPouchItem.getContents(stack);
-//			if(contents != null) {	
-//				List<Component> tooltip = event.getToolTip();
-//
-//				int stacks = Math.max(1, (contents.getRight() - 1) / contents.getLeft().getMaxStackSize() + 1);
-//				int len = 16 + stacks * 8;
-//
-//				String s = "";
-//				Minecraft mc = Minecraft.getInstance();
-//				while(mc.font.width(s) < len)
-//					s += " ";
-//
-//				tooltip.add(1, new TextComponent(s));
-//				tooltip.add(1, new TextComponent(s));
-//			}
-//
-//		}
-//	}
-//	@SubscribeEvent
-//	@OnlyIn(Dist.CLIENT)
-//	public void renderTooltip(RenderTooltipEvent.PostText event) {
-//		ItemStack stack = event.getStack();
-//		if(stack.getItem() == seed_pouch) {
-//			Pair<ItemStack, Integer> contents = SeedPouchItem.getContents(stack);
-//			if(contents != null) {			
-//				ItemStack seed = contents.getLeft().copy();
-//
-//				Minecraft mc = Minecraft.getInstance();
-//				ItemRenderer render = mc.getItemRenderer();
-//
-//				int x = event.getX();
-//				int y = event.getY();
-//
-//				int count = contents.getRight();
-//				int stacks = Math.max(1, (count - 1) / seed.getMaxStackSize() + 1);
-//
-//				GlStateManager._pushMatrix();
-//				GlStateManager._translated(x, y + 12, 500);
-//				for(int i = 0; i < stacks; i++) {
-//					if(i == (stacks - 1))
-//						seed.setCount(count);
-//
-//					GlStateManager._pushMatrix();
-//					GlStateManager._translated(8 * i, Math.sin(i * 498543) * 2, 0);
-//
-//					render.renderAndDecorateItem(seed, 0, 0);
-//					render.renderGuiItemDecorations(mc.font, seed, 0, 0);
-//					GlStateManager._popMatrix();
-//				}
-//				GlStateManager._popMatrix();
-//			}
-//		}
-//	}
 
 }
