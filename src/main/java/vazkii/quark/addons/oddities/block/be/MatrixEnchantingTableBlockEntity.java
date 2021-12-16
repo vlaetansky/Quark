@@ -220,6 +220,7 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 		matrixDirty = true;
 		makeUUID();
 		sync();
+		setChanged();
 	}
 
 	private void makeUUID() {
