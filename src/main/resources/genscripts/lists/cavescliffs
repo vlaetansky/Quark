@@ -8,10 +8,10 @@ from=polished_deepslate
 deepslate_brick
 deepslate_tile
 polished_deepslate
-from=deepslate_brick
+from=deepslate_bricks
 deepslate_brick
 deepslate_tile
-from=deepslate_tile
+from=deepslate_tiles
 deepslate_tile
 from=cut_copper
 cut_copper
