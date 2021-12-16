@@ -424,6 +424,9 @@
     "quark:polished_dripstone_slab",
     "quark:polished_dripstone_vertical_slab",
     "quark:dripstone_pillar",
-    "quark:chiseled_dripstone_bricks"
+    "quark:chiseled_dripstone_bricks",
+    "quark:pipe",
+    "quark:matrix_enchanter",
+    "quark:magnet"
   ]
 }
