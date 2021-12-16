@@ -13,6 +13,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.random.Weight;
 import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -161,11 +162,11 @@ public class EnchantmentMatrix {
 		int total = 0;
 
 		for (EnchantmentDataWrapper wrapper : validEnchants)
-			total += wrapper.weight.value;
+			total += wrapper.mutableWeight.val;
 
 		if (total == 0) {
 			for (EnchantmentDataWrapper wrapper : validEnchants)
-				wrapper.weight.value++;
+				wrapper.mutableWeight.val++;
 		} 
 
 		return WeightedRandom.getRandomItem(rng, validEnchants).get();
@@ -465,25 +466,27 @@ public class EnchantmentMatrix {
 
 		private boolean marked;
 		private int influence;
+		private MutableWeight mutableWeight;
 		
 		public EnchantmentDataWrapper(Enchantment enchantmentObj, int enchLevel) {
 			super(enchantmentObj, enchLevel);
+			mutableWeight = new MutableWeight(enchantment.getRarity().getWeight());
 		}
 		
 		public void normalizeRarity(Map<Enchantment, Integer> influences, List<Piece> markedEnchants) {
 			if(MatrixEnchantingModule.normalizeRarity) {
 				switch(enchantment.getRarity()) {
 				case COMMON:
-					weight.value = 80000;
+					mutableWeight.val = 80000;
 					break;
 				case UNCOMMON:
-					weight.value = 40000;
+					mutableWeight.val = 40000;
 					break;
 				case RARE:
-					weight.value = 25000;
+					mutableWeight.val = 25000;
 					break;
 				case VERY_RARE:
-					weight.value = 5000; 
+					mutableWeight.val = 5000; 
 					break;
 				default: 
 					break;
@@ -491,17 +494,17 @@ public class EnchantmentMatrix {
 				
 				influence = influences.getOrDefault(enchantment, 0);
 				float multiplier = 1F + influence * (float) MatrixEnchantingModule.influencePower;
-				weight.value *= multiplier;
+				mutableWeight.val *= multiplier;
 				
 				boolean mark = true;
 				
 				for(Piece other : markedEnchants) {
 					if(other.enchant == enchantment) {
-						weight.value *= MatrixEnchantingModule.dupeMultiplier;
+						mutableWeight.val *= MatrixEnchantingModule.dupeMultiplier;
 						mark = false;
 						break;
 					} else if(!other.enchant.isCompatibleWith(enchantment) || !enchantment.isCompatibleWith(other.enchant)) {
-						weight.value *= MatrixEnchantingModule.incompatibleMultiplier;
+						mutableWeight.val *= MatrixEnchantingModule.incompatibleMultiplier;
 						mark = false;
 						break;
 					}
@@ -512,6 +515,24 @@ public class EnchantmentMatrix {
 			}
 		}
 		
+		@Override
+		public Weight getWeight() {
+			return mutableWeight;
+		}
 	}
 	
+	private static class MutableWeight extends Weight {
+		
+		protected int val;
+		
+		public MutableWeight(int val) {
+			super(val);
+		}
+		
+		@Override
+		public int asInt() {
+			return val;
+		}
+		
+	}
 }
