@@ -66,7 +66,7 @@ public class BackpackInventoryScreen extends InventoryScreen {
 		buttonYs.forEach((button, y) -> button.y = y);
 
 		if(!BackpackModule.isEntityWearingBackpack(player)) {
-			ItemStack curr = player.inventoryMenu.getCarried();
+			ItemStack curr = player.containerMenu.getCarried();
 			BackpackMenu.saveCraftingInventory(player);
 			closeHack = true;
 			QuarkNetwork.sendToServer(new HandleBackpackMessage(false));
