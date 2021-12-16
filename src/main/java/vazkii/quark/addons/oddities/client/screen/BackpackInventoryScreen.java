@@ -52,11 +52,11 @@ public class BackpackInventoryScreen extends InventoryScreen {
 		imageHeight = 224;
 		super.init();
 
-		/*for(Widget widget : buttons)
-			if(widget instanceof ImageButton || widget.getClass().getName().contains("svenhjol.charm")) {
-				widget.y -= 29;
-				buttonYs.put((Button) widget, widget.y);
-			}*/
+		for(Widget widget : renderables)
+			if(widget instanceof ImageButton) {
+				((ImageButton) widget).y -= 29;
+				buttonYs.put((ImageButton) widget, ((ImageButton) widget).y);
+			}
 	}
 
 	@Override

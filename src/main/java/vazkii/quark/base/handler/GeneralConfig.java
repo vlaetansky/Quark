@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import vazkii.quark.addons.oddities.client.screen.BackpackInventoryScreen;
+import vazkii.quark.addons.oddities.client.screen.CrateScreen;
 import vazkii.quark.base.module.config.Config;
 
 public class GeneralConfig {
@@ -12,7 +14,8 @@ public class GeneralConfig {
 
 	private static final List<String> STATIC_ALLOWED_SCREENS = Lists.newArrayList(
 			"com.progwml6.ironchest.client.screen.IronChestScreen",
-			"vazkii.quark.addons.oddities.client.screen.CrateScreen"
+			CrateScreen.class.getName(),
+			BackpackInventoryScreen.class.getName()
 	);
 	
 	@Config(name = "Enable 'q' Button")

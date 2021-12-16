@@ -14,12 +14,15 @@ import javax.annotation.Nonnull;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -44,13 +47,18 @@ public final class InventoryButtonHandler {
 	
 	@SubscribeEvent
 	public static void initGui(ScreenEvent.InitScreenEvent.Post event) {
+		Minecraft mc = Minecraft.getInstance();
 		Screen screen = event.getScreen();
-		if(GeneralConfig.printScreenClassnames)
-			Quark.LOG.info("Opened screen {}", screen.getClass().getName());
+		if(GeneralConfig.printScreenClassnames) {
+			String print = I18n.get("quark.misc.opened_screen", ChatFormatting.AQUA + screen.getClass().getName());
+			Quark.LOG.info(print);
+			
+			if(mc.player != null)
+				mc.player.sendMessage(new TextComponent(print), mc.player.getUUID());
+		}
 		currentButtons.clear();
 		
 		if(screen instanceof AbstractContainerScreen && (screen instanceof IQuarkButtonAllowed || GeneralConfig.isScreenAllowed(screen))) {
-			Minecraft mc = Minecraft.getInstance();
 			AbstractContainerScreen<?> containerScreen = (AbstractContainerScreen<?>) screen;
 
 			if(containerScreen instanceof InventoryScreen || containerScreen.getClass().getName().contains("CuriosScreen"))

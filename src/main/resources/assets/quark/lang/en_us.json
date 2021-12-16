@@ -257,6 +257,7 @@
 	"quark.misc.ancient_tome_tooltip": "+I %s (Max. %s)",
 	"quark.misc.autowalking": "Auto-Walking",
 	"quark.misc.rightclick_to_craft": "Right Click to Craft",
+	"quark.misc.opened_screen": "Opened Screen %s",
 
 	"quark.misc.reloaded0": "Your quark config has been reloaded.",
 	"quark.misc.reloaded1": "- If you changed anything that would change recipes, please run /reload.",
