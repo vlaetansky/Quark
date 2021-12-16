@@ -1,18 +1,17 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "##",
-    "##",
-    "##"
+    "#",
+    "#"
   ],
   "key": {
     "#": {
-      "item": "quark:iron_plate"
+      "item": "quark:iron_plate_slab"
     }
   },
   "result": {
     "item": "quark:iron_pillar",
-    "count": 6
+    "count": 1
   },
   "conditions": [
     {
