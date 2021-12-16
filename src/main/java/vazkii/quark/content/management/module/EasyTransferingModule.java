@@ -1,6 +1,7 @@
 package vazkii.quark.content.management.module;
 
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.base.client.handler.InventoryButtonHandler;
@@ -40,7 +41,8 @@ public class EasyTransferingModule extends QuarkModule {
 		InventoryButtonHandler.addButtonProvider(this, ButtonTargetType.CONTAINER_PLAYER_INVENTORY, priority,
 				"transfer_" + name,
 				(screen) -> QuarkNetwork.sendToServer(new InventoryTransferMessage(Screen.hasShiftDown(), restock)),
-				(parent, x, y) -> new MiniInventoryButton(parent, priority, x, y, "quark.gui.button." + name,
+				(parent, x, y) -> new MiniInventoryButton(parent, priority, x, y, 
+						(t) -> t.add(I18n.get("quark.gui.button." + name + (Screen.hasShiftDown() ? "_filtered" : ""))),
 						(b) -> QuarkNetwork.sendToServer(new InventoryTransferMessage(Screen.hasShiftDown(), restock)))
 				.setTextureShift(Screen::hasShiftDown));
 	}

@@ -8,6 +8,8 @@
 	"quark.gui.button.sort_container": "Sort Container",
 	"quark.gui.button.insert": "Insert",
 	"quark.gui.button.extract": "Extract",
+	"quark.gui.button.insert_filtered": "Insert (Filtered)",
+	"quark.gui.button.extract_filtered": "Extract (Filtered)",
 	"quark.gui.button.filter": "Filter",
 	"quark.gui.button.emotes": "Emotes",
 	"quark.gui.button.back": "Back",
