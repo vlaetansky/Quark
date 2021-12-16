@@ -1,10 +1,10 @@
 {
   "type": "minecraft:stonecutting",
   "ingredient": {
-    "item": "minecraft:%name%"
+    "item": "minecraft:%from%"
   },
   "result": "%modid%:%name%_vertical_slab",
-  "count": 2,
+  "count": %count%,
   "conditions": [
     {
       "type": "quark:flag",
