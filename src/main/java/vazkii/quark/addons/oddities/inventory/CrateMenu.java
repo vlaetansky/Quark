@@ -124,7 +124,7 @@ public class CrateMenu extends AbstractContainerMenu {
 	}
 
 	private void forceSync() {
-		broadcastFullState();
+//		broadcastFullState();
 	}
 
 	public void scroll(boolean down, boolean packet) {
