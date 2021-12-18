@@ -54,7 +54,7 @@ public class ShearVinesModule extends QuarkModule {
 				
 				BlockPos testPos = pos.below();
 				BlockState testState = world.getBlockState(testPos);
-				while(testState.getBlock() == Blocks.VINE) {
+				while(testState.is(Blocks.VINE) || testState.is(cut_vine)) {
 					world.removeBlock(testPos, false);
 					testPos = testPos.below();
 					testState = world.getBlockState(testPos);
