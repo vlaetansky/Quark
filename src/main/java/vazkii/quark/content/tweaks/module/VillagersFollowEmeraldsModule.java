@@ -21,7 +21,7 @@ public class VillagersFollowEmeraldsModule extends QuarkModule {
     public void onVillagerAppear(EntityJoinWorldEvent event) {
         if(event.getEntity() instanceof Villager) {
             Villager villager = (Villager) event.getEntity();
-            boolean alreadySetUp = villager.goalSelector.availableGoals.stream().anyMatch((goal) -> goal.getGoal() instanceof TemptGoal);
+            boolean alreadySetUp = villager.goalSelector.getAvailableGoals().stream().anyMatch((goal) -> goal.getGoal() instanceof TemptGoal);
 
             if (!alreadySetUp)
             	try {

@@ -30,7 +30,7 @@ public class SleepGoal extends Goal {
 
 	@Override
 	public boolean canUse() {
-		if (!this.foxhound.isTame() || this.foxhound.isInWater() || !this.foxhound.onGround)
+		if (!this.foxhound.isTame() || this.foxhound.isInWater() || !this.foxhound.isOnGround())
 			return false;
 		else {
 			LivingEntity living = this.foxhound.getOwner();

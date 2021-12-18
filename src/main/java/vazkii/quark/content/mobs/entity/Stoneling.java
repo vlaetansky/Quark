@@ -338,7 +338,7 @@ public class Stoneling extends PathfinderMob {
 
 	public void startle() {
 		waryGoal.startle();
-		Set<WrappedGoal> entries = Sets.newHashSet(goalSelector.availableGoals);
+		Set<WrappedGoal> entries = Sets.newHashSet(goalSelector.getAvailableGoals());
 
 		for (WrappedGoal task : entries)
 			if (task.getGoal() instanceof TemptGoal)

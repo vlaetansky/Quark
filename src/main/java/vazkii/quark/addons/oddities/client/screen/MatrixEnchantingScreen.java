@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.language.I18n;
@@ -59,7 +60,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 		addRenderableWidget(plusButton = new MatrixEnchantingPlusButton(leftPos + 86, topPos + 63, this::add));
 		pieceList = new MatrixEnchantingPieceList(this, 28, 64, topPos + 11, topPos + 75, 22);
 		pieceList.setLeftPos(leftPos + 139);
-		children.add(pieceList);
+		addRenderableWidget(pieceList);
 		updateButtonStatus();
 		
 		pieceList.refresh();
