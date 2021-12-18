@@ -110,7 +110,7 @@ public class TotemOfHoldingModule extends QuarkModule {
 
 			if(!drops.isEmpty()) {
 				TotemOfHoldingEntity totem = new TotemOfHoldingEntity(totemType, player.level);
-				totem.setPos(player.getX(), Math.max(3, player.getY() + 1), player.getZ());
+				totem.setPos(player.getX(), Math.max(player.level.getMinBuildHeight() + 3, player.getY() + 1), player.getZ());
 				totem.setOwner(player);
 				totem.setCustomName(player.getDisplayName());
 				drops.stream()
