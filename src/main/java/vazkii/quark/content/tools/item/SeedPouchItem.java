@@ -74,6 +74,11 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 
 		return false;
 	}
+	
+	@Override
+	public boolean isEnchantable(ItemStack p_41456_) {
+		return false;
+	}
 
 	public static boolean addItemToMe(Player player, ItemStack stack, ItemStack incoming, Slot slot) {
 		if(slot.mayPickup(player) && slot.mayPlace(stack) && canTakeItem(stack, incoming)) {
