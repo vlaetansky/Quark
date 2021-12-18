@@ -4,8 +4,6 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import vazkii.quark.addons.oddities.client.screen.BackpackInventoryScreen;
-import vazkii.quark.addons.oddities.client.screen.CrateScreen;
 import vazkii.quark.base.module.config.Config;
 
 public class GeneralConfig {
@@ -14,8 +12,8 @@ public class GeneralConfig {
 
 	private static final List<String> STATIC_ALLOWED_SCREENS = Lists.newArrayList(
 			"com.progwml6.ironchest.client.screen.IronChestScreen",
-			CrateScreen.class.getName(),
-			BackpackInventoryScreen.class.getName()
+			"vazkii.quark.addons.oddities.client.screen.CrateScreen",
+			"vazkii.quark.addons.oddities.client.screen.BackpackInventoryScreen"
 	);
 	
 	@Config(name = "Enable 'q' Button")
@@ -34,7 +32,7 @@ public class GeneralConfig {
 			description = "Quark replaces the Piston logic to allow for its piston features to work. If you're having troubles, try turning this off.")
 	public static boolean usePistonLogicRepl = true;
 
-	@Config
+	@Config	
 	@Config.Min(value = 0, exclusive = true)
 	public static int pistonPushLimit = 12;
 	
