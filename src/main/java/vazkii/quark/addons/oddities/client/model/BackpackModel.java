@@ -12,7 +12,7 @@ import vazkii.quark.base.client.render.QuarkArmorModel;
 public class BackpackModel {
 
 	public static LayerDefinition createBodyLayer() {
-		return QuarkArmorModel.createLayer(64, 64, root -> {
+		return QuarkArmorModel.createLayer(64, 32, root -> {
 			PartDefinition body = root.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.ZERO);
 			
 			body.addOrReplaceChild("straps", 
