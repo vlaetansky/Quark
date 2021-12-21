@@ -100,20 +100,26 @@ public class Shiba extends TamableAnimal {
 		if(!level.isClientSide) {
 			if(hyperfocusCooldown > 0)
 				hyperfocusCooldown--;
-			
+
 			if(fetching != null || isSleeping() || isInSittingPose() || !isTame() || isLeashed())
 				currentHyperfocus = null;
 			else {
-				if(currentHyperfocus != null && level.getBrightness(LightLayer.BLOCK, currentHyperfocus) > 0) {
+				LivingEntity owner = getOwner();
+
+				if(currentHyperfocus != null && 
+						(level.getBrightness(LightLayer.BLOCK, currentHyperfocus) > 0
+								|| owner == null
+								|| (owner instanceof Player 
+										&& (!((Player) owner).getMainHandItem().is(Items.TORCH)  
+										&& !((Player) owner).getOffhandItem().is(Items.TORCH)))
+								)) {
 					currentHyperfocus = null;
 					hyperfocusCooldown = 40;
 				}
 
-				LivingEntity owner = getOwner();
-				
 				if(currentHyperfocus == null && owner != null && owner instanceof Player && hyperfocusCooldown == 0) {
 					Player player = (Player) owner;
-					
+
 					if(player.getMainHandItem().is(Items.TORCH) || player.getOffhandItem().is(Items.TORCH)) {
 						BlockPos ourPos = blockPosition();
 						final int searchRange = 10;
@@ -123,7 +129,7 @@ public class Shiba extends TamableAnimal {
 									&& level.getBlockState(test).isAir() 
 									&& level.getBlockState(test.below()).isSolidRender(level, test.below()) 
 									&& level.getBrightness(LightLayer.BLOCK, test) == 0) {
-								
+
 								currentHyperfocus = test;
 							}
 						}
