@@ -99,17 +99,6 @@ public class CorundumClusterBlock extends QuarkBlock implements SimpleWaterlogge
 		return offState.isFaceSturdy(worldIn, off, dir);
 	}
 
-
-	@Override
-	public VoxelShape getBlockSupportShape(BlockState state, BlockGetter reader, BlockPos pos) {
-		return Shapes.empty();
-	}
-
-	@Override
-	public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		return Shapes.empty();
-	}
-
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		return defaultBlockState().setValue(FACING, context.getClickedFace()).setValue(WATERLOGGED, context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER);
