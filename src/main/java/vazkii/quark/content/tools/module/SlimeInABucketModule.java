@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
@@ -68,6 +69,9 @@ public class SlimeInABucketModule extends QuarkModule {
 						event.getTarget().discard();
 					}
 					else player.swing(hand);
+					
+					event.setCanceled(true);
+					event.setCancellationResult(InteractionResult.SUCCESS);
 				}
 			}
 		}
