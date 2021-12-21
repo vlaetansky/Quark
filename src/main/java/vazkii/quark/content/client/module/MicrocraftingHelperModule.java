@@ -85,11 +85,14 @@ public class MicrocraftingHelperModule extends QuarkModule {
 					}
 
 					if(ourCount > 0) {
+						int prevCount = compoundCount;
+						int reqCount = ourCount * prevCount;
+						
 						int mult = (int) (Math.ceil((double) ourCount / (double) testStack.getCount()));
 						compoundCount *= mult;
 
 						Recipe<?> ghostRecipe = ghost.getRecipe();
-						StackedRecipe stackedRecipe = new StackedRecipe(ghostRecipe, testStack, compoundCount, getClearCondition(ingr));
+						StackedRecipe stackedRecipe = new StackedRecipe(ghostRecipe, testStack, compoundCount, getClearCondition(ingr, reqCount));
 						boolean stackIt = true;
 						
 						if(recipes.isEmpty()) {
@@ -282,10 +285,10 @@ public class MicrocraftingHelperModule extends QuarkModule {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private BooleanSupplier getClearCondition(Ingredient ingr) {
+	private BooleanSupplier getClearCondition(final Ingredient ingr, final int req) {
 		Minecraft mc = Minecraft.getInstance();
 		return () -> {
-			int missing = compoundCount;
+			int missing = req;
 			for(ItemStack invStack : mc.player.getInventory().items) {
 				if(ingr.test(invStack)) {
 					missing -= invStack.getCount();
