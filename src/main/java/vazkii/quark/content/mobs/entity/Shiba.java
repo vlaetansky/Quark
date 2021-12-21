@@ -125,7 +125,7 @@ public class Shiba extends TamableAnimal {
 						final int searchRange = 10;
 						for(int i = 0; i < 20; i++) {
 							BlockPos test = ourPos.offset(random.nextInt(searchRange * 2 + 1) - searchRange, random.nextInt(searchRange * 2 + 1) - searchRange, random.nextInt(searchRange * 2 + 1) - searchRange);
-							if(hasLineOfSight(ourPos, searchRange) 
+							if(hasLineOfSight(test.above(), searchRange)
 									&& level.getBlockState(test).isAir() 
 									&& level.getBlockState(test.below()).isSolidRender(level, test.below()) 
 									&& level.getBrightness(LightLayer.BLOCK, test) == 0) {
