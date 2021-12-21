@@ -15,6 +15,7 @@ import net.minecraftforge.items.IItemHandler;
 import vazkii.arl.block.be.ARLBlockEntity;
 import vazkii.quark.content.automation.block.ChuteBlock;
 import vazkii.quark.content.automation.module.ChuteModule;
+import vazkii.quark.content.building.module.GrateModule;
 
 /**
  * @author WireSegal
@@ -30,7 +31,7 @@ public class ChuteBlockEntity extends ARLBlockEntity {
         if(level != null && level.getBlockState(worldPosition).getValue(ChuteBlock.ENABLED)) {
             BlockPos below = worldPosition.below();
             BlockState state = level.getBlockState(below);
-            return state.isAir() || state.getCollisionShape(level, below).isEmpty();
+            return state.isAir() || state.getCollisionShape(level, below).isEmpty() || state.getBlock() == GrateModule.grate;
         }
 
         return false;
