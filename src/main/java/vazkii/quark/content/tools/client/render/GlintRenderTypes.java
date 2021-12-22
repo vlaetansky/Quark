@@ -19,8 +19,12 @@ import vazkii.quark.base.Quark;
 import vazkii.quark.content.tools.module.ColorRunesModule;
 
 @OnlyIn(Dist.CLIENT)
-public class GlintRenderTypes {
-	
+public class GlintRenderTypes extends RenderType {
+    private GlintRenderTypes(String name, VertexFormat vf, VertexFormat.Mode mode, int bufSize, boolean affectsCrumbling, boolean sortOnUpload, Runnable setup, Runnable clean) {
+        super(name, vf, mode, bufSize, affectsCrumbling, sortOnUpload, setup, clean);
+        throw new UnsupportedOperationException("Don't instantiate this");
+    }
+
     public static List<RenderType> glint = newRenderList(GlintRenderTypes::buildGlintRenderType);
     public static List<RenderType> glintTranslucent = newRenderList(GlintRenderTypes::buildGlintTranslucentRenderType);
     public static List<RenderType> entityGlint = newRenderList(GlintRenderTypes::buildEntityGlintRenderType);
