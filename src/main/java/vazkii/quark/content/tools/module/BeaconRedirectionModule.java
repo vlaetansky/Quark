@@ -54,7 +54,7 @@ public class BeaconRedirectionModule extends QuarkModule {
 		boolean check = true;
 		boolean setColor = false;
 		
-		while(currPos.getY() < 256 && currPos.getY() > 0 && horizontalMoves > 0) {
+		while(world.isInWorldBounds(currPos) && horizontalMoves > 0) {
 			currPos = currPos.relative(currSegment.dir);
 			if(currSegment.dir.getAxis().isHorizontal())
 				horizontalMoves--;
