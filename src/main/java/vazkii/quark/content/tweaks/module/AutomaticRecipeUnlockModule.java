@@ -50,7 +50,12 @@ public class AutomaticRecipeUnlockModule extends QuarkModule {
 			MinecraftServer server = spe.getServer();
 			if (server != null) {
 				List<Recipe<?>> recipes = new ArrayList<>(server.getRecipeManager().getRecipes());
-				recipes.removeIf((recipe) -> ignoredRecipes.contains(Objects.toString(recipe.getId())) || recipe.getResultItem().isEmpty());
+				recipes.removeIf(
+						(recipe) -> 
+						recipe == null
+						|| recipe.getResultItem() == null 
+						|| ignoredRecipes.contains(Objects.toString(recipe.getId())) 
+						|| recipe.getResultItem().isEmpty());
 				
 				int idx = 0;
 				int maxShift = 1000;
