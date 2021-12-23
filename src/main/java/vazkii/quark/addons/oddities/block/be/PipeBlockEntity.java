@@ -28,6 +28,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
+import net.minecraft.world.WorldlyContainerHolder;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -182,22 +183,32 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 	}
 
 	protected void passOut(PipeItem item) {
-		BlockPos targetPos = getBlockPos().relative(item.outgoingFace);
-		BlockEntity tile = level.getBlockEntity(targetPos);
 		boolean did = false;
-		if(tile != null) {
-			if(tile instanceof PipeBlockEntity)
-				did = ((PipeBlockEntity) tile).passIn(item.stack, item.outgoingFace.getOpposite(), null, item.rngSeed, item.timeInWorld);
-			else {
-				ItemStack result = MiscUtil.putIntoInv(item.stack, tile, item.outgoingFace.getOpposite(), false, false);
-				if(result.getCount() != item.stack.getCount()) {
-					did = true;
-					if(!result.isEmpty())
-						bounceBack(item, result);
+		
+		BlockPos targetPos = getBlockPos().relative(item.outgoingFace);
+		if(level.getBlockState(targetPos).getBlock() instanceof WorldlyContainerHolder holder) {
+			ItemStack result = MiscUtil.putIntoInv(item.stack, level, targetPos, null, item.outgoingFace.getOpposite(), false, false);
+			if(result.getCount() != item.stack.getCount()) {
+				did = true;
+				if(!result.isEmpty())
+					bounceBack(item, result);
+			}
+		} else {
+			BlockEntity tile = level.getBlockEntity(targetPos);
+			if(tile != null) {
+				if(tile instanceof PipeBlockEntity)
+					did = ((PipeBlockEntity) tile).passIn(item.stack, item.outgoingFace.getOpposite(), null, item.rngSeed, item.timeInWorld);
+				else {
+					ItemStack result = MiscUtil.putIntoInv(item.stack, level, targetPos, tile, item.outgoingFace.getOpposite(), false, false);
+					if(result.getCount() != item.stack.getCount()) {
+						did = true;
+						if(!result.isEmpty())
+							bounceBack(item, result);
+					}
 				}
 			}
 		}
-
+		
 		if(!did)
 			bounceBack(item, null);
 	}
@@ -299,6 +310,9 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 	}
 
 	protected boolean canFit(ItemStack stack, BlockPos pos, Direction face) {
+		if(level.getBlockState(pos).getBlock() instanceof WorldlyContainerHolder)
+			return MiscUtil.canPutIntoInv(stack, level, pos, null, face,false);
+			
 		BlockEntity tile = level.getBlockEntity(pos);
 		if(tile == null)
 			return false;
@@ -306,7 +320,7 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 		if(tile instanceof PipeBlockEntity)
 			return ((PipeBlockEntity) tile).isPipeEnabled();
 		else
-			return MiscUtil.canPutIntoInv(stack, tile, face, false);
+			return MiscUtil.canPutIntoInv(stack, level, pos, tile, face, false);
 	}
 
 	protected boolean isPipeEnabled() {
@@ -351,6 +365,10 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 	
 	private static ConnectionType getConnectionTo(BlockGetter world, BlockPos pos, Direction face, boolean recursed) {
 		BlockPos truePos = pos.relative(face);
+		
+		if(world.getBlockState(truePos).getBlock() instanceof WorldlyContainerHolder)
+			return ConnectionType.TERMINAL;
+		
 		BlockEntity tile = world.getBlockEntity(truePos);
 		
 		if(tile != null) {

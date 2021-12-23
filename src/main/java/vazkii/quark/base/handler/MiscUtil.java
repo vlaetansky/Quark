@@ -25,6 +25,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.WorldlyContainerHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -210,16 +211,20 @@ public class MiscUtil {
 		return biome == null ? null : world.findNearestBiome(biome, start, searchRadius, searchIncrement);
 	}
 	
-	public static ItemStack putIntoInv(ItemStack stack, BlockEntity tile, Direction face, boolean simulate, boolean doSimulation) {
+	public static ItemStack putIntoInv(ItemStack stack, LevelAccessor level, BlockPos blockPos, BlockEntity tile, Direction face, boolean simulate, boolean doSimulation) {
 		IItemHandler handler = null;
 		
-		LazyOptional<IItemHandler> opt = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, face); 
-		if(opt.isPresent())
-			handler = opt.orElse(null);
-		else if(tile instanceof WorldlyContainer)
-			handler = new SidedInvWrapper((WorldlyContainer) tile, face);
-		else if(tile instanceof Container)
-			handler = new InvWrapper((Container) tile);
+		if(level != null && blockPos != null && level.getBlockState(blockPos).getBlock() instanceof WorldlyContainerHolder holder) {
+			handler = new SidedInvWrapper(holder.getContainer(level.getBlockState(blockPos), level, blockPos), face);
+		} else if(tile != null) {
+			LazyOptional<IItemHandler> opt = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, face);
+			if(opt.isPresent())
+				handler = opt.orElse(null);
+			else if(tile instanceof WorldlyContainer)
+				handler = new SidedInvWrapper((WorldlyContainer) tile, face);
+			else if(tile instanceof Container)
+				handler = new InvWrapper((Container) tile);
+		}
 
 		if(handler != null)
 			return (simulate && !doSimulation) ? ItemStack.EMPTY : ItemHandlerHelper.insertItem(handler, stack, simulate);
@@ -227,8 +232,8 @@ public class MiscUtil {
 		return stack;
 	}
 	
-	public static boolean canPutIntoInv(ItemStack stack, BlockEntity tile, Direction face, boolean doSimulation) {
-		return putIntoInv(stack, tile, face, true, doSimulation).isEmpty();
+	public static boolean canPutIntoInv(ItemStack stack, LevelAccessor level, BlockPos blockPos, BlockEntity tile, Direction face, boolean doSimulation) {
+		return putIntoInv(stack, level, blockPos, tile, face, true, doSimulation).isEmpty();
 	}
 	
 	@OnlyIn(Dist.CLIENT)
