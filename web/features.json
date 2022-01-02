@@ -60,7 +60,7 @@
 				"*There's a chance the animal will need more than one bit of food to get in love mode;",
 				"*Animals bred with the trough will not produce XP;",
 				"*If there's more than 32 animals in a 10 block radius, the animals will eat, but never enter love mode.",
-				"This block is considered to be one and a half blocks tall for animals so they won't get on it (1.18+)."
+				"1.18+: This block is considered to be one and a half blocks tall for animals so they won't get on it."
 			]
 		},
 		{
@@ -105,7 +105,7 @@
 		},
 		{
 			"name": "Redstone Randomizer",
-			"image": "restone-randomizer.jpg",
+			"image": "redstone-randomizer.jpg",
 			"added": "1.18",
 			"desc": [
 				"The Randomizer is a new redstone compontent and is crafted the same way as a comparator, but with Prismarine Crystals. When given a redstone signal from the back, it'll randomly enable either the left or right output."
@@ -229,16 +229,16 @@
 			"added": "1.18",
 			"desc": [
 				"You can now craft a Glass Item Frame. Glass Item Frames will hide the frame around the item when you put it in, so you can have a display that only shows the item.",
-				"Glass Item Frames have some additional features unique to them, click on More Info to check them out!"
+				"Glass Item Frames also have some additional features unique to them, click on More Info to check them out!"
 			],
 			"expand": [
-				"#Glass Item Frames",
+				"#Additional Features",
 				"*If you put a banner inside a Glass Item Frame, it'll sit flat with the wall with the pattern that's in it, allowing you to create a wallpaper of sorts.",
 				"*Shields display differently in Glass Item Frames, they sit flush with the wall and look nice.",
-				"*1.16.3+ Only: Glass Item Frames can attach to the front of a Sign that's placed on the floor. This will make the item show flush with the sign.",
-				"*1.16.4+ Only: Combining a Glass Item Frame with a Glowing Ink Sac creates a Glowing Glass Item Frame - it glows in the dark!.",
-				"*1.16.4+ Only: Glass Item Frames can be right clicked through to open chests or other inventories.",
-				"*1.16.4+ Only: When a map is placed in a Glass Item Frame, it will update in real time. Perfect for spies!"
+				"*Glass Item Frames can attach to the front of a Sign that's placed on the floor. This will make the item show flush with the sign.",
+				"*Combining a Glass Item Frame with a Glowing Ink Sac creates a Glowing Glass Item Frame, like the vanilla one.",
+				"*Glass Item Frames can be right clicked through to open chests or other inventories.",
+				"*When a map is placed in a Glass Item Frame, it will update in real time. Perfect for spies!"
 			]
 		},
 		{
@@ -298,7 +298,7 @@
 				"*Blackstone Bricks can be crafted with Cobblestone Bricks and Blackstone.",
 				"*Dirt Bricks can be crafted with Cobblestone Bricks and Dirt.",
 				"*Netherrack Bricks can be crafted with Cobblestone Bricks and Netherrack.",
-				"*Blue Nether Bricks (1.16+ only) can be crafted with Nether Bricks and Warped Wart Blocks. Additionally, a similar recipe is added for Red Nether Bricks.",
+				"*Blue Nether Bricks can be crafted with Nether Bricks and Warped Wart Blocks. Additionally, a similar recipe is added for Red Nether Bricks.",
 				"*Additionally, all of these come in Slab, Stairs, and Wall variants."
 			]
 		},
@@ -348,7 +348,7 @@
 				"Oriental style decoration can now be made with Paper, Bamboo, and Sticks.",
 				"*Paper Walls (\"Shoji\") come in three variants: Normal, Big, and Decorated. The latter can be crafted by adding a Sapling.",
 				"*Paper Lanterns (\"Chochin\") come in Normal and Decorated variants, the latter similarly crafted with a Sapling. Try hanging or propping them with fences!",
-				"*Bamboo Mats are a carpet sized block and is crafted using Bamboo and Sticks. They can also be crafted into a full block sized version."
+				"*Bamboo Mats (\"Tatami\") are a carpet sized block, crafted using Bamboo and Sticks. They can also be crafted into a full block sized version."
 			]
 		},
 		{
@@ -367,7 +367,7 @@
 			"desc": [
 				"Industrial style decoration can now be made using Iron.",
 				"*Iron Plates can be crafted using Iron Ingots. You can also craft Rusty Iron Plates using a Water Bucket as well. They can further be crafted into variants such as stairs and pillars.",
-				"*You can also make Iron Ladders, using Iron Ingots. They work like normal ladders, except that they can stand by themselves as long as there is an Iron Ladder on top, even if there isn't a block behind."
+				"*You can also make Iron Ladders, using Iron Nuggets. They work like normal ladders, but fit the industrial style."
 			]
 		},
 		{
@@ -791,7 +791,7 @@
 		},
 		{
 			"name": "Expanded Item Interactions",
-			"image": "expanded-item-iteractions.jpg",
+			"image": "expanded-item-interactions.jpg",
 			"added": "1.18",
 			"desc": [
 				"A few new ways to interact with the items in your inventory have been added.",
@@ -871,8 +871,7 @@
             "desc": [
                 "Toretoises are new neutral mobs that will spawn deep underground and in complete darkness. When a Toretoise spawns, it'll come with a random type of ore (Coal, Iron, Lapis, or Redstone). You may attack the Toretoise with a pickaxe to have it drop that ore!",
            		"If you hit a Toretoise without a pickaxe, or when it has no ore, it'll emit a shockwave attack. This will damage any non-Toretoise entities around, and redirect their aggro to you.",
-           		"With enough care, it's possible to carry a Toretoise home and feed it so it grows more ores, feel free to click More Info for some tips on how to do it.",
-           		"Note: Prior to 1.18, Toretoises did not require complete darkness to spawn."
+           		"With enough care, it's possible to carry a Toretoise home and feed it so it grows more ores, feel free to click More Info for some tips on how to do it."
             ],
             "expand": [
             	"If you want to take these huge creatures home and use them to generate ores, there's some things you should know.",
@@ -885,7 +884,7 @@
             	"*Toretoises are 1 block tall, but grow to 1.4 blocks tall if they have an ore.",
             	"*Toretoises move very slowly, and can't be leashed, using Minecarts is recommended.",
             	"*If Iron Rods (from the Automation module) are enabled, pushing them onto a Toretoise with a piston will break its ore.",
-            	"Note: Prior to 1.18, Toretoises were fed with Cave Roots (from the World module) instead (or Cactus if disabled)."
+            	"Note: Prior to 1.18, Toretoises were fed with Cave Roots (from the World module) instead (or Cactus if disabled). They also did not require complete darkness to spawn."
             ]
 		},
 		{
@@ -956,12 +955,12 @@
 			"added": "1.14",
 			"desc": [
 				"Cartographer Villagers will now sell Pathfinder Maps, new maps that will take you to certain biomes. Each Cartographer will stock a random assortment of them, and the possible trades are as follows by default:",
-				"*Apprentice (Expert in 1.16+): Sandy Plains Map, Windswept Hills, Dark Forest, Desert, Savanna",
+				"*Apprentice (Expert in 1.16+): Snowy Plains Map, Windswept Hills, Dark Forest, Desert, Savanna",
 				"*Journeyman (Master in 1.16+): Swamp, Old Growth Pine Taiga, Flower Forest",
 				"*Expert: Jungle, Bamboo Jungle, Badlands",
 				"*Master: Mushroom Fields, Ice Spikes",
 				"If you're using mods that add more biomes, more maps can be added in the config file.",
-				"Note: Prior to 1.18, Sandy Plains Map, Windswept Hills Map, and Old Growth Pine Taiga Map were replaced by Snowy Tundra Map, Mountains Map, and Giant Tree Taiga Map, respectively."
+				"Note: Prior to 1.18, Snowy Plains Map, Windswept Hills Map, and Old Growth Pine Taiga Map were replaced by Snowy Tundra Map, Mountains Map, and Giant Tree Taiga Map, respectively."
 			]
 		},
 		{
@@ -988,7 +987,7 @@
 			"added": "1.14",
 			"desc": [
 				"A Trowel tool can be crafted with Iron and Sticks. The Trowel, when right clicked, will place a random block from your hotbar, making it useful for ruins or paths.",
-				"A Trowel will break after placing 256 blocks, or four stacks."
+				"Prior to 1.16.4, a Trowel will break after placing 256 blocks, or four stacks."
 			]
 		},
 		{
@@ -1050,10 +1049,11 @@
 		},
 		{
 			"name": "Beacon Redirection",
-			"image": "beacon-redirection.jpg",
+			"image": "beam-redirection.jpg",
 			"added": "1.18",
             "desc": [
-				"The Cluster variants of Corundum (from the World module) can be used to redirect beacon beams and change their color. If Corundum is disabled, Amethyst can be used instead."
+				"The Cluster variants of Corundum (from the World module) can be used to redirect beacon beams and change their color. If Corundum is disabled, Amethyst can be used instead.",
+				"Note that for a beacon to function, the final segment must always face upwards towards the sky."
 			]
 		}
 	],
@@ -1469,8 +1469,7 @@
 			"desc": [
 				"Corundum Crystals are fancy semi-transparent, light emitting blocks that spawn in clusters above Deepslate in biome that isn't an Ocean.",
 				"Corundum can also be turned into pane variants, and crafted into Colored Runes (from the Tools category), if enabled.",
-				"Furthermore, if placed deep underground, they'll grow up to 4 blocks tall, and will emit some particles to let you know they're growing. This growth can be prevented by using honeycomb to wax them, with the wax being removable with an axe.",
-				"Note: Prior to 1.16.4, these were called Cave Crystals, with a different look."
+				"Furthermore, if placed deep underground, they'll grow up to 4 blocks tall, and will emit some particles to let you know they're growing. This growth can be prevented by using honeycomb to wax them, with the wax being removable with an axe."
 			],
 			"expand": [
 				"#Waxed Corundum Comparison",
@@ -1538,7 +1537,7 @@
 			"image": "permafrost.jpg",
 			"added": "1.18",
 			"desc": [
-				"A new block that spawns together with Packed Ice underground in Frozen Peaks biomes.",
+				"A new block that spawns together with Packed Ice underground towards the layers of Frozen Peaks biomes.",
 				"The Permafrost blocks can be turned into Bricks, and used for Slabs, Stairs, and Walls. They have a calming blue, which can go well in cold themed builds."
 			]
 		},
@@ -1612,7 +1611,7 @@
 				"*Warm Blossom Oaks (orange) spawn in savannas.",
 				"*Sweet Blossom Oaks (pink) spawn in mountains.",
 				"*Sunny Blossom Oaks (yellow) spawn in plains.",
-				"*1.16.3+: Fiery Blossom Oaks (red) spawn in badlands.",
+				"*Fiery Blossom Oaks (red) spawn in badlands.",
 				"The trees come with pretty leaves, as well as new saplings you can put in flower pots for decor."
 			]
 		},
@@ -1703,7 +1702,7 @@
 			"desc": [
 				"Spiral Spires are new uncommon setpieces that spawn in the outer end. Atop these large obsidian spires, you'll find new Myalite Crystal blocks arranged in a spiral.",
 				"Myalite Cystals can be used as a decoration, or to create Myalite Viaducts - a way to allow ender pearls to be used to phase through solid blocks. Click on More Info to see how they work.",
-				"Lastly, if the Crystal Cave feature is enabled, placing Myalite Crystals below any sort of cave crystal that can grow, has the myalite crystal grow instead."
+				"Lastly, if the Corundum feature is enabled, placing Myalite Crystals below any Corundum block that can grow, has the Myalite Crystal grow instead."
 			],
 			"expand": [
 				"-",
@@ -1773,9 +1772,7 @@
 				"*Comparators can read how many items are in a pipe:",
 				"!img/features/oddities/pipes/tip1.jpg",
 				"*A pipe with 15 or more items inside at once will break:",
-				"!img/features/oddities/pipes/tip2.jpg",
-				"*If you connect walls to pipes, you'll get a structural tidbit:",
-				"!img/features/oddities/pipes/tip3.jpg"
+				"!img/features/oddities/pipes/tip2.jpg"
 			]
 		},
 		{
