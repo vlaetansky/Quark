@@ -309,7 +309,7 @@
 			"removed": "1.18",
 			"desc": [
 				"Brick, Chiseled Brick, Pillar, and Pavement variants are available for all types of stone added by vanilla and Quark.",
-				"The Brick types come in Slab, Stair, and Wall variants, and the Chiseled Brick types look different for each type of stone.",
+				"The Brick types come in Slab, Stair, and Wall variants, and the Chiseled Brick types look different for each type of stone."
 			]
 		},
 		{
@@ -1458,7 +1458,7 @@
 				"Pictured in the screenshot:",
 				"*Top layer: Shale, Myalite",
 				"*Bottom layer: Limestone, Jasper",
-				"Most of these generate in the overworld. Myalite generates in the end and is immune to the dragon.",
+				"Most of these generate in the overworld. Myalite generates in the end and is immune to the dragon."
 			]
 		},
 		{
