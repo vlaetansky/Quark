@@ -306,10 +306,19 @@
 			"name": "More Stone Variants",
 			"image": "more-stone-variants.jpg",
 			"added": "1.14",
+			"removed": "1.18",
+			"desc": [
+				"Brick, Chiseled Brick, Pillar, and Pavement variants are available for all types of stone added by vanilla and Quark.",
+				"The Brick types come in Slab, Stair, and Wall variants, and the Chiseled Brick types look different for each type of stone.",
+			]
+		},
+		{
+			"name": "More Stone Variants",
+			"image": "more-stone-variants-1.18.jpg",
+			"added": "1.18",
 			"desc": [
 				"Brick, Chiseled Brick, and Pillar variants are available for all types of stone added by vanilla and Quark.",
-				"The Brick types come in Slab, Stair, and Wall variants, and the Chiseled Brick types look different for each type of stone.",
-				"Note: Prior to 1.18, Quark also added a Pavement variant for all types of stone."
+				"The Brick types come in Slab, Stair, and Wall variants, and the Chiseled Brick types look different for each type of stone."
 			]
 		},
 		{
@@ -1357,25 +1366,42 @@
 			"name": "Big Stone Clusters",
 			"image": "big-stone-clusters.jpg",
 			"added": "1.14",
+			"removed": "1.18",
 			"desc": [
 				"Variant stone types (such as Andesite, Granite, or Diorite) will now generate in rare massive clusters rather than small nodes that dot the landscape.",
 				"The type of clusters you can find underground vary by biome. If you want to know the distribution, click on More Info."
 			],
 			"expand": [
+				"#Vanilla Stones",
+				"*Granite will spawn in Mountain and Hill biomes.",
+				"*Diorite will spawn in Savanna, Jungle, and Mushroom biomes.",
+				"*Andesite will spawn in Forest biomes.",
 				"#Quark Stones",
 				"*Marble will spawn in Plains biomes.",
 				"*Limestone will spawn in Swamp and Ocean biomes.",
 				"*Jasper will spawn in Mesa and Desert biomes.",
-				"*Shale will spawn in cold biomes.",
+				"*Slate will spawn in cold biomes.",
+				"*Voidstone will spawn in any end biome (Pre 1.16 it's Basalt, which spawns in any nether biome).",
 				"*1.16.3+: Myalite will spawn in end highlands.",
-				"*Prior to 1.18, Quark also spawned Voidstone in any end biome (which was Basalt, prior to 1.16, and spawned in any nether biome).",
-				"#Vanilla Stones",
-				"*1.18+: Calcite will spawn in Mountains.",
-				"Prior to 1.18, Quark also took over generation for the generation of the following vanilla stone types in clusters:",
-				"*Granite will spawn in Mountain and Hill biomes.",
-				"*Diorite will spawn in Savanna, Jungle, and Mushroom biomes.",
-				"*Andesite will spawn in Forest biomes.",
 				"Note that the distributions are for biome types, not specific biomes. For example, Andesite will also spawn in Birch Forests, Dark Forests, etc."
+			]
+		},
+		{
+			"name": "Big Stone Clusters",
+			"image": "big-stone-clusters-1.18.jpg",
+			"added": "1.18",
+			"desc": [
+				"Quark's variant stone types (such as Limestone, Jasper, and Shale) generate in rare massive clusters rather than small nodes that dot the landscape.",
+				"The type of clusters you can find underground vary by biome. If you want to know the distribution, click on More Info."
+			],
+			"expand": [
+				"#Quark Stones",
+				"*Limestone will spawn in Swamp and Ocean biomes.",
+				"*Jasper will spawn in Mesa and Desert biomes.",
+				"*Shale will spawn in cold biomes.",
+				"*Myalite will spawn in end highlands.",
+				"*Additionally, Quark also generates big clusters of Calcite, which will spawn in Mountains.",
+				"Note that the distributions are for biome types, not specific biomes. For example, Limestone will also spawn in Cold Oceans, Warm Oceans, etc."
 			]
 		},
 		{
@@ -1412,15 +1438,28 @@
 		},
 		{
 			"name": "New Stone Types",
+			"image": "new-stone-types.jpg",
+			"added": "1.14",
+			"removed": "1.18",
+			"desc": [
+				"Six new stone types are added to your world.",
+				"Pictured in the screenshot:",
+				"*Top layer: Slate, Voidstone, Myalite (1.16.3+ only)",
+				"*Bottom layer: Limestone, Marble, Jasper",
+				"Most of these generate in the overworld. Voidstone and Myalite generate in the end and are immune to the dragon.",
+				"Note: Prior to 1.16, Voidstone was known as Basalt and spawned in the nether."
+			]
+		},
+		{
+			"name": "New Stone Types",
 			"image": "new-stone-types-1.18.jpg",
 			"added": "1.14",
 			"desc": [
 				"Four new stone types are added to your world.",
 				"Pictured in the screenshot:",
-				"*Top layer: Shale, Myalite (1.16.3+ only)",
+				"*Top layer: Shale, Myalite",
 				"*Bottom layer: Limestone, Jasper",
 				"Most of these generate in the overworld. Myalite generates in the end and is immune to the dragon.",
-				"Note: Prior to 1.18, Quark also added Voidstone, generating in the end, (which was known as Basalt and spawned in the nether, prior to 1.16) and Marble, and Shale was known as Slate."
 			]
 		},
 		{
@@ -1473,7 +1512,7 @@
 			],
 			"expand": [
 				"#Waxed Corundum Comparison",
-				"!img/features/world/underground-biome-corundum/waxed-corundum.png"
+				"!img/features/world/underground-biome-corundum/waxed-corundum-1.18.png"
 			]
 		},
 		{
