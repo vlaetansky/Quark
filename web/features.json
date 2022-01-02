@@ -1395,7 +1395,6 @@
 				"The type of clusters you can find underground vary by biome. If you want to know the distribution, click on More Info."
 			],
 			"expand": [
-				"#Quark Stones",
 				"*Limestone will spawn in Swamp and Ocean biomes.",
 				"*Jasper will spawn in Mesa and Desert biomes.",
 				"*Shale will spawn in cold biomes.",
