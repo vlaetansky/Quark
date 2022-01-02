@@ -108,7 +108,7 @@
 			"image": "restone-randomizer.jpg",
 			"added": "1.18",
 			"desc": [
-				"The Randomizer is a new redstone compontent and is crafted the same way as a comparator, but with Prismarine Crystals. When given a redstone signal from the back, it'll randomly enable either the left or right output.",
+				"The Randomizer is a new redstone compontent and is crafted the same way as a comparator, but with Prismarine Crystals. When given a redstone signal from the back, it'll randomly enable either the left or right output."
 			]
 		},
 		{
@@ -297,7 +297,7 @@
 				"*Cobblestone Bricks and their mossy variants are made just like you'd make Stone Bricks, except with Cobblestone. They can be combined with other blocks (1.16+ only) to create new color variants.",
 				"*Blackstone Bricks can be crafted with Cobblestone Bricks and Blackstone.",
 				"*Dirt Bricks can be crafted with Cobblestone Bricks and Dirt.",
-				"*Netherrack Bricks can be crafted with Cobblestone Bricks and Netherrack."
+				"*Netherrack Bricks can be crafted with Cobblestone Bricks and Netherrack.",
 				"*Blue Nether Bricks (1.16+ only) can be crafted with Nether Bricks and Warped Wart Blocks. Additionally, a similar recipe is added for Red Nether Bricks.",
 				"*Additionally, all of these come in Slab, Stairs, and Wall variants."
 			]
@@ -347,7 +347,7 @@
 			"desc": [
 				"Oriental style decoration can now be made with Paper, Bamboo, and Sticks.",
 				"*Paper Walls (\"Shoji\") come in three variants: Normal, Big, and Decorated. The latter can be crafted by adding a Sapling.",
-				"*Paper Lanterns (\"Chochin\") come in Normal and Decorated variants, the latter similarly crafted with a Sapling. Try hanging or propping them with fences!"
+				"*Paper Lanterns (\"Chochin\") come in Normal and Decorated variants, the latter similarly crafted with a Sapling. Try hanging or propping them with fences!",
 				"*Bamboo Mats are a carpet sized block and is crafted using Bamboo and Sticks. They can also be crafted into a full block sized version."
 			]
 		},
@@ -365,7 +365,7 @@
 			"image": "industrial-palette.jpg",
 			"added": "1.18",
 			"desc": [
-				"Industrial style decoration can now be made using Iron."
+				"Industrial style decoration can now be made using Iron.",
 				"*Iron Plates can be crafted using Iron Ingots. You can also craft Rusty Iron Plates using a Water Bucket as well. They can further be crafted into variants such as stairs and pillars.",
 				"*You can also make Iron Ladders, using Iron Ingots. They work like normal ladders, except that they can stand by themselves as long as there is an Iron Ladder on top, even if there isn't a block behind."
 			]
@@ -497,7 +497,7 @@
 			"image": "variant-ladders-1.18.jpg",
 			"added": "1.18",
 			"desc": [
-				"Ladders can be made of all the different wood types. To compensate for the fact that sticks do not come in different wood types, the recipe for ladders is changed to have a single plank of the corresponding wood type in the center.",
+				"Ladders can be made of all the different wood types. To compensate for the fact that sticks do not come in different wood types, the recipe for ladders is changed to have a single plank of the corresponding wood type in the center."
 			]
 		},
 		{
@@ -570,7 +570,7 @@
 			"image": "shear-vine-tips.jpg",
 			"added": "1.18",
 			"desc": [
-				"The tip of a vine can now be right clicked with Shears. When you do so, the vine will no longer be able to grow.",
+				"The tip of a vine can now be right clicked with Shears. When you do so, the vine will no longer be able to grow."
 			]
 		},
 		{
@@ -731,7 +731,7 @@
                 "*Upon crafting the current item, the previous item in the queue is loaded again",
                 "<a href='https://streamable.com/2k512k'>Here</a> is a demo video to better demonstrate this feature."
             ]
-		},
+		}
 	],
 	"management": [
 		{
@@ -795,7 +795,7 @@
 			"added": "1.18",
 			"desc": [
 				"A few new ways to interact with the items in your inventory have been added.",
-				"*While holding an item in your cursor (that isn't a Shulker Box), you can right click on top of a non-full Shulker Box to add the item to it. Alternatively, you can also right click the shulker box on the item."
+				"*While holding an item in your cursor (that isn't a Shulker Box), you can right click on top of a non-full Shulker Box to add the item to it. Alternatively, you can also right click the shulker box on the item.",
 				"*Right clicking an armor item in an inventory will swap it for whatever armor you're currently holding.",
 				"*Items can now be right clicked onto a Lava Bucket to destroy them forever. Shulker Boxes and items that are immune to fire (eg. Netherite) can not be destroyed this way."
 			]
@@ -918,7 +918,7 @@
                 "If you are holding a torch, they will also look for dark spots and get mad at them so you know where to light up next.",
                 "They'll also lay down if you're having them sit on a bed!"
             ]
-        },
+        }
 	],
 	"tools": [
 		{
@@ -1015,7 +1015,7 @@
 			"added": "1.15",
             "desc": [
                 "Using a Glass Bottle at the cloud levels (192-196 by default) will get you a Bottled Cloud.",
-                "The Bottled Cloud can be right clicked to produce a (non-solid) block floating in midair in front of you. The cloud block disappears after a few seconds, but you can right click it with any other block to replace the two. The cloud will go back in the bottle when you do this."
+                "The Bottled Cloud can be right clicked to produce a (non-solid) block floating in midair in front of you. The cloud block disappears after a few seconds, but you can right click it with any other block to replace the two. The cloud will go back in the bottle when you do this.",
             	"Note: Prior to 1.18, the blocks produced by the Bottled Cloud were solid and the cloud levels were different (126-132 by default)."
             ]
 		},
@@ -1368,9 +1368,9 @@
 				"*Jasper will spawn in Mesa and Desert biomes.",
 				"*Shale will spawn in cold biomes.",
 				"*1.16.3+: Myalite will spawn in end highlands.",
-				"*Prior to 1.18, Quark also spawned Voidstone in any end biome (which was Basalt, prior to 1.16, and spawend in any nether biome)."
+				"*Prior to 1.18, Quark also spawned Voidstone in any end biome (which was Basalt, prior to 1.16, and spawned in any nether biome).",
 				"#Vanilla Stones",
-				"*1.18+: Calcite will spawn in Mountains."
+				"*1.18+: Calcite will spawn in Mountains.",
 				"Prior to 1.18, Quark also took over generation for the generation of the following vanilla stone types in clusters:",
 				"*Granite will spawn in Mountain and Hill biomes.",
 				"*Diorite will spawn in Savanna, Jungle, and Mushroom biomes.",
@@ -1474,7 +1474,7 @@
 			],
 			"expand": [
 				"#Waxed Corundum Comparison",
-				"!img/features/world/underground-biome-corundum/waxed-corundum.png",
+				"!img/features/world/underground-biome-corundum/waxed-corundum.png"
 			]
 		},
 		{
@@ -1785,7 +1785,7 @@
 			"desc": [
 				"Copper Pipes are crafted using some Copper Ingots and Glass. As you would expect, they transport items from point A to point B. To get items into a pipe simply use a Hopper, Dropper, or any other insertion means you may have handy.",
 				"Copper Pipes are rudimentary and don't include any filtering or pathing for items. The way items flow in pipes is based in a small set of rules.",
-				"If you want to know more about how Copper Pipes work and how the items flow in them, press More Info.",
+				"If you want to know more about how Copper Pipes work and how the items flow in them, press More Info."
 			],
 			"expand": [
 				"-",
