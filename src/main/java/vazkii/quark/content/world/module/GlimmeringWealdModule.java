@@ -1,0 +1,101 @@
+package vazkii.quark.content.world.module;
+
+import java.util.function.Consumer;
+import java.util.function.Function;
+
+import com.mojang.datafixers.util.Pair;
+
+import net.minecraft.core.Registry;
+import net.minecraft.data.worldgen.BiomeDefaultFeatures;
+import net.minecraft.data.worldgen.biome.OverworldBiomes;
+import net.minecraft.data.worldgen.features.FeatureUtils;
+import net.minecraft.data.worldgen.placement.PlacementUtils;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.Music;
+import net.minecraft.sounds.Musics;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeGenerationSettings;
+import net.minecraft.world.level.biome.Climate;
+import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.biome.OverworldBiomeBuilder;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import vazkii.arl.util.RegistryHelper;
+import vazkii.quark.base.Quark;
+import vazkii.quark.base.module.LoadModule;
+import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.ModuleLoader;
+import vazkii.quark.base.module.QuarkModule;
+import vazkii.quark.content.world.feature.TestFeature;
+
+@LoadModule(category = ModuleCategory.WORLD)
+public class GlimmeringWealdModule extends QuarkModule {
+
+	private static final Climate.Parameter FULL_RANGE = Climate.Parameter.span(-1.0F, 1.0F);
+	private static final String BIOME_NAME = "glimmering_weald";
+
+	public static PlacedFeature placed_test_feature;
+	
+	public static ResourceKey<Biome> glimmering_weald;
+
+	@Override
+	public void construct() {
+		makeFeatures();
+		RegistryHelper.register(makeBiome());
+	}
+
+	private static void makeFeatures() {
+		placed_test_feature = place("test_feature", new TestFeature(), TestFeature::placed);
+	}
+
+	private static PlacedFeature place(String featureName, Feature<NoneFeatureConfiguration> feature, Function<ConfiguredFeature<NoneFeatureConfiguration, ?>, PlacedFeature> placer) {
+		String name = Quark.MOD_ID + ":" + featureName;
+		feature.setRegistryName(name);
+
+		RegistryHelper.register(feature);
+		ConfiguredFeature<NoneFeatureConfiguration, ?> configured = FeatureUtils.register(name, feature.configured(NoneFeatureConfiguration.NONE));
+		return PlacementUtils.register(name, placer.apply(configured));
+	}
+
+	private static Biome makeBiome() {
+		MobSpawnSettings.Builder mobs = new MobSpawnSettings.Builder();
+		BiomeDefaultFeatures.commonSpawns(mobs);
+
+		BiomeGenerationSettings.Builder settings = new BiomeGenerationSettings.Builder();
+		OverworldBiomes.globalOverworldGeneration(settings);
+		BiomeDefaultFeatures.addPlainGrass(settings);
+		BiomeDefaultFeatures.addDefaultOres(settings, true);
+		BiomeDefaultFeatures.addDefaultSoftDisks(settings);
+		BiomeDefaultFeatures.addPlainVegetation(settings);
+		BiomeDefaultFeatures.addDefaultMushrooms(settings);
+		BiomeDefaultFeatures.addDefaultExtraVegetation(settings);
+
+		settings.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, placed_test_feature);
+
+		Music music = Musics.createGameMusic(SoundEvents.MUSIC_BIOME_DRIPSTONE_CAVES);
+		Biome biome = OverworldBiomes.biome(Biome.Precipitation.RAIN, Biome.BiomeCategory.UNDERGROUND, 0.8F, 0.4F, mobs, settings, music);
+		biome.setRegistryName(new ResourceLocation(Quark.MOD_ID, BIOME_NAME));
+
+		return biome;
+	}
+
+	public static void addUndergroundBiomes(OverworldBiomeBuilder builder, Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer) {
+		if(!ModuleLoader.INSTANCE.isModuleEnabled(GlimmeringWealdModule.class))
+			return;
+
+		if(glimmering_weald == null)
+			glimmering_weald = ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Quark.MOD_ID, BIOME_NAME));
+
+		addBiome(consumer, Climate.Parameter.span(0.7F, 0.9F), glimmering_weald);
+	}
+
+	private static void addBiome(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer, Climate.Parameter depth, ResourceKey<Biome> biome) {
+		consumer.accept(Pair.of(Climate.parameters(FULL_RANGE, FULL_RANGE, FULL_RANGE, FULL_RANGE, depth, FULL_RANGE, 0F), biome));
+	}
+
+}
