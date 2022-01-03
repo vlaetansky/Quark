@@ -1387,7 +1387,7 @@
 			]
 		},
 		{
-			"name": "Big Stone Clusters",
+			"name": "Quark Stone Clusters",
 			"image": "big-stone-clusters-1.18.jpg",
 			"added": "1.18",
 			"desc": [
@@ -1458,7 +1458,7 @@
 				"Pictured in the screenshot:",
 				"*Top layer: Shale, Myalite",
 				"*Bottom layer: Limestone, Jasper",
-				"Most of these generate in the overworld. Myalite generates in the end and is immune to the dragon."
+				"Most of these generate in the overworld. Myalite generates in the end and is immune to the dragon. Myalite also has a slight color tinting property based on its position, shifting between several hues of purple."
 			]
 		},
 		{

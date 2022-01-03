@@ -43,14 +43,14 @@
 		<div class="content-holder active-holder default-page" data-entry="home">
 			<div id="big-branding">
 				<div id="big-branding-background">
-					<img src="img/features/automation/color-slime.jpg"></img>
+					<img src="img/features/automation/feeding-trough.jpg"></img>
 					<img src="img/features/automation/pistons-move-tes.jpg"></img>
 					<img src="img/features/building/variant-chests.jpg"></img>
 					<img src="img/features/management/chests-in-boats.jpg"></img>
 					<img src="img/features/mobs/foxhounds.jpg"></img>
-					<img src="img/features/world/speleothems.jpg"></img>
+					<img src="img/features/world/spiral-spires.jpg"></img>
 					<img src="img/features/mobs/stonelings.jpg"></img>
-					<img src="img/features/world/underground-biome-crystal-cave.jpg"></img>
+					<img src="img/features/world/corundum.jpg"></img>
 				</div>
 
 				<div id="big-title"><span class="theme-color">q</span>uark</div>
