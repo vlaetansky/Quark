@@ -106,12 +106,10 @@
 						if(array_key_exists('custom_version', $feature))
 							write($feature['custom_version']);
 						else {
-							write($added_ver);
-
-							if($removed_ver) {
-								write('-');
-								write($removed_ver);
-							} else write('+');
+							if($removed_ver)
+								write("[$added_ver, $removed_ver".'[');
+							else 
+								write("$added_ver+");
 						}
 					pop();
 				pop();

@@ -432,24 +432,26 @@ a:not(.no-external)::after, .show-external::after {
 
 .spotlight-right {
 	text-align: right;
-	margin-top: -250px;
+	margin-top: -150px;
 }
 
 .spotlight-image {
 	display: inline-block;
 	vertical-align: top;
+	border-radius: 10px;
+	border: 1px dashed #444;
 }
 
 .spotlight-image img {
-	width: 450px;
-	border-radius: 10px;
+	width: 300px;
 	padding: 4px;
+	border-radius: 10px;
 }
 
 .spotlight-info {
 	display: inline-block;
 	vertical-align: top;
-	width: 400px;
+	width: 600px;
 	margin: 45px 10px 45px 10px;
 }
 
@@ -524,6 +526,7 @@ a:not(.no-external)::after, .show-external::after {
 	height: 0px;
 	margin: 0px;
 	opacity: 0%;
+	display: none;
 }
 
 .feature-desc-header {
@@ -705,6 +708,21 @@ a:not(.no-external)::after, .show-external::after {
 
 #install-instructions .section-header {
 	margin-top: 15px;
+}
+
+.vm-holder {
+	text-align: center;
+	margin-bottom: 40px;
+}
+
+.vm-logo img {
+	width: 50px;
+	margin-bottom: -15px;
+}
+
+.vm-title {
+	font-size: 25px;
+	margin-top: -20px;
 }
 
 @media screen and (max-device-width: 1200px) {

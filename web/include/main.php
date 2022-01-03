@@ -44,13 +44,13 @@
 			<div id="big-branding">
 				<div id="big-branding-background">
 					<img src="img/features/automation/feeding-trough.jpg"></img>
-					<img src="img/features/automation/pistons-move-tes.jpg"></img>
-					<img src="img/features/building/variant-chests.jpg"></img>
-					<img src="img/features/management/chests-in-boats.jpg"></img>
-					<img src="img/features/mobs/foxhounds.jpg"></img>
+					<img src="img/features/building/oriental-palette.jpg"></img>
+					<img src="img/features/client/camera.jpg"></img>
+					<img src="img/features/management/inventory-sorting.jpg"></img>
+					<img src="img/features/mobs/toretoises.jpg"></img>
+					<img src="img/features/tools/beam-redirection.jpg"></img>
+					<img src="img/features/tweaks/glass-shards.jpg"></img>
 					<img src="img/features/world/spiral-spires.jpg"></img>
-					<img src="img/features/mobs/stonelings.jpg"></img>
-					<img src="img/features/world/corundum.jpg"></img>
 				</div>
 
 				<div id="big-title"><span class="theme-color">q</span>uark</div>
@@ -68,10 +68,10 @@
 			</div>
 
 			<div id="social-strip">
-				<div class="social-link"><img src="https://twitter.com/favicon.ico"></img> <a href="https://twitter.com/VazkiiMods">Twitter</a></div>
-				<div class="social-link"><img src="https://github.com/favicon.ico"></img> <a href="https://github.com/Vazkii/Quark">GitHub</a></div>
-				<div class="social-link"><img src="https://discordapp.com/assets/07dca80a102d4149e9736d4b162cff6f.ico"></img> <a href="https://vazkii.net/discord">Discord</a></div>
-				<div class="social-link"><img src="https://c5.patreon.com/external/favicon/favicon-16x16.png"></img> <a href="https://patreon.com/Vazkii">Patreon</a></div>
+				<div class="social-link"><img src="img/ico/twitter.ico"></img> <a href="https://twitter.com/VazkiiMods">Twitter</a></div>
+				<div class="social-link"><img src="img/ico/github.ico"></img> <a href="https://github.com/Vazkii/Quark">GitHub</a></div>
+				<div class="social-link"><img src="img/ico/discord.ico"></img> <a href="https://vazkii.net/discord">Discord</a></div>
+				<div class="social-link"><img src="img/ico/patreon.ico"></img> <a href="https://patreon.com/Vazkii">Patreon</a></div>
 				<div class="social-link"><img src="https://vazkii.net/favicon.ico"></img> <a href="https://vazkii.net">vazkii.net</a></div>
 			</div>
 
@@ -89,27 +89,55 @@
 			<hr>
 
 			<div class="main-page-section">
-				<div class="section-header">The Team</div>
+				<div class="vm-holder">
+					<div class="vm-logo">
+						<div class="section-header">
+							<img src='img/violetmoon.png'></img>
+						</div>
+					</div>
+
+					<div class="vm-title">
+						<a href="https://twitter.com/vazkiimods">Violet Moon Modding</a>
+					</div>
+					<div class="vm-subtitle">
+						Quark Team
+					</div>
+				</div>
 
 				<div class="team-holder">
 					<div class="team-member">
-						<div class="team-avatar"><img src="img/avatars/vazkii.png"></img></div>
+						<div class="team-avatar"><img src="img/avatars/sully_full.png"></img></div>
+						<div class="team-name"><a href="https://twitter.com/ModSully">Sully</a></div>
+						<div class="team-role">Lead Artist</div>
+					</div>
+					<div class="team-separator"></div>
+
+					<div class="team-member">
+						<div class="team-avatar"><img src="img/avatars/vazkii_full.png"></img></div>
 						<div class="team-name"><a href="https://twitter.com/vazkii">Vazkii</a></div>
 						<div class="team-role">Lead Developer / Designer</div>
 					</div>
 					<div class="team-separator"></div>
 
 					<div class="team-member">
-						<div class="team-avatar"><img src="img/avatars/wiresegal.png"></img></div>
+						<div class="team-avatar"><img src="img/avatars/wiresegal_full.png"></img></div>
 						<div class="team-name"><a href="https://twitter.com/wiresegal">Wire Segal</a></div>
 						<div class="team-role">Developer / Maintainer</div>
+					</div>
+
+					<br>
+
+					<div class="team-member">
+						<div class="team-avatar"><img src="img/avatars/vinny_full.png"></img></div>
+						<div class="team-name"><a href="https://twitter.com/MCVinnyq">MCVinnyq</a></div>
+						<div class="team-role">Ex-Artist</div>
 					</div>
 					<div class="team-separator"></div>
 
 					<div class="team-member">
-						<div class="team-avatar"><img src="img/avatars/mcvinnyq.png"></img></div>
-						<div class="team-name"><a href="https://twitter.com/mcvinnyq">MCVinnyq</a></div>
-						<div class="team-role">Lead Artist</div>
+						<div class="team-avatar"><img src="img/avatars/alwinfy_full.png"></img></div>
+						<div class="team-name"><a href="https://twitter.com/alwinfy">Alwinfy</a></div>
+						<div class="team-role">Issue Management</div>
 					</div>
 				</div>
 			</div>
@@ -119,26 +147,26 @@
 				<div class="section-header">Feature Spotlight</div>
 
 				<div class="spotlight-entry spotlight-left">
-					<div class="spotlight-image"><img src="img/spotlight/cave_render.png"></img></div>
+					<div class="spotlight-image"><img src="img/features/client/microcrafting-helper.jpg"></img></div>
 					<div class="spotlight-info">
-						<div class="spotlight-header">Upgraded Caves</div>
-						<div class="spotlight-desc">Quark adds all sorts of new features to caves - underground biomes, stalactites and stalagmites, new mobs, a pickaxe boomerang, you name it!</div>
+						<div class="spotlight-header">Quality of Life</div>
+						<div class="spotlight-desc">Play Minecraft like never before with a huge amount of QoL changes you never knew you wanted. Inventory Sorting, Hotbar Swapping, Auto-Walk, Chest Searching, Crafting Helper, and many, many more.</div>
 					</div>
 				</div>
 
 				<div class="spotlight-entry spotlight-right">
 					<div class="spotlight-info">
 						<div class="spotlight-header">New Redstone Opportunities</div>
-						<div class="spotlight-desc">Power up your redstone game with many new redstone features, such as Pistons moving Tile Entities, Colored Slime Blocks, Dispensers placing blocks, and much more.</div>
+						<div class="spotlight-desc">Power up your redstone game with many new features, such as Pistons Moving Tile Entities, Chains Connect Blocks, Dispensers Placing Blocks, and much more.</div>
 					</div>
-					<div class="spotlight-image"><img src="img/spotlight/redstone_render.png"></img></div>
+					<div class="spotlight-image"><img src="img/features/automation/chains-connect-blocks.jpg"></img></div>
 				</div>
 
 				<div class="spotlight-entry spotlight-left">
-					<div class="spotlight-image"><img src="img/spotlight/blocks_render.png"></img></div>
+					<div class="spotlight-image"><img src="img/features/building/more-brick-types-1.18.jpg"></img></div>
 						<div class="spotlight-info">
 						<div class="spotlight-header">Building Blocks</div>
-						<div class="spotlight-desc">Fuel your inner artist with a large assortment of new building blocks, from Thatch, to Stained Wood Planks, Magma Bricks, and many others!<br><br>Oh and we have Vertical Slabs too.</div>
+						<div class="spotlight-desc">Fuel your inner artist with a large assortment of new building blocks, featuring many new block variants, Industrial and Oriental palettes, Vertical Slabs, and much more!</div>
 					</div>
 				</div>
 
@@ -151,6 +179,7 @@
 			<div class="main-page-section">
 				<div class="section-header">Additional Credits</div>
 				<ul>
+					<li><b>AmyMialee</b> and <b>Hudeler</b> for helping with updating the website.</li>
 					<li><b>cheeserolls</b> for the biome location code from Biomes'o'Plenty used for Pathfinder Maps.</li>
 					<li><b>Daniel Astral</b> for the world stone variant textures.</li>
 					<li><b>Endergy</b> for the variant chest, bookshelf, and ladder textures, as well as the compressed block textures.</li>
@@ -166,9 +195,9 @@
 
 		<div class="content-holder" data-entry="features">
 			<div class="section-header">Features</div>
-			<div class="info">
+			<!--<div class="info">
 				This page shows the list of features available for Quark in Minecraft 1.14.4 and further versions. If you're looking for 1.12.2 or previous, please check the old site in the header.
-			</div>
+			</div>-->
 
 			<div class="info">
 				If there's any features you don't want in your game, you can turn them off individually! Simply click the <span class="theme-color">q</span> button in your main menu to open the mod's configuration.
