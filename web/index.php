@@ -1,5 +1,5 @@
 <?php
-	$cache_enabled = false;
+	$cache_enabled = true;
 	$cache_file = 'cached.php';
 	$cache_expiry_time = 86400; // 24h
 
