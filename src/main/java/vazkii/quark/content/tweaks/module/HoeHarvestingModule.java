@@ -45,16 +45,20 @@ public class HoeHarvestingModule extends QuarkModule {
 		if(!ModuleLoader.INSTANCE.isModuleEnabled(HoeHarvestingModule.class))
 			return 1;
 
-		if(hoe.isEmpty() || !(hoe.getItem() instanceof HoeItem))
+		if(!isHoe(hoe))
 			return 1;
 		else if (hoe.is(bigHarvestingHoesTag))
 			return 3;
 		else
 			return 2;
 	}
+	
+	public static boolean isHoe(ItemStack itemStack) {
+		return !itemStack.isEmpty() && itemStack.getItem() instanceof HoeItem;
+	}
 
 	public static boolean canFortuneApply(Enchantment enchantment, ItemStack stack) {
-		return enchantment == Enchantments.BLOCK_FORTUNE && hoesCanHaveFortune && !stack.isEmpty() && stack.getItem() instanceof HoeItem;
+		return enchantment == Enchantments.BLOCK_FORTUNE && hoesCanHaveFortune && isHoe(stack);
 	}
 
 	@Override
@@ -71,7 +75,7 @@ public class HoeHarvestingModule extends QuarkModule {
 		Player player = event.getPlayer();
 		BlockPos basePos = event.getPos();
 		ItemStack stack = player.getMainHandItem();
-		if (!stack.isEmpty() && stack.getItem() instanceof HoeItem && canHarvest(player, world, basePos, event.getState())) {
+		if (isHoe(stack) && canHarvest(player, world, basePos, event.getState())) {
 			int range = getRange(stack);
 
 			for (int i = 1 - range; i < range; i++)
@@ -103,7 +107,12 @@ public class HoeHarvestingModule extends QuarkModule {
 		}
 
 		Material mat = state.getMaterial();
-		return (mat == Material.PLANT || mat == Material.REPLACEABLE_FIREPROOF_PLANT || mat == Material.REPLACEABLE_PLANT || mat == Material.WATER_PLANT) && 
+		boolean isHarvestableMaterial =
+					mat == Material.PLANT ||
+					mat == Material.REPLACEABLE_FIREPROOF_PLANT ||
+					mat == Material.REPLACEABLE_PLANT ||
+					mat == Material.WATER_PLANT;
+		return isHarvestableMaterial &&
 				state.canBeReplaced(new BlockPlaceContext(new UseOnContext(player, InteractionHand.MAIN_HAND, new BlockHitResult(new Vec3(0.5, 0.5, 0.5), Direction.DOWN, pos, false))));
 	}
 
