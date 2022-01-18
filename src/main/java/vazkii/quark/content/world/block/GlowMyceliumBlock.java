@@ -10,7 +10,7 @@ public class GlowMyceliumBlock extends QuarkBlock {
 	public GlowMyceliumBlock(QuarkModule module) {
 		super("glow_mycelium", module, CreativeModeTab.TAB_BUILDING_BLOCKS, 
 				Properties.copy(Blocks.DEEPSLATE)
-				.lightLevel(s -> 5));
+				.lightLevel(s -> 4));
 	}
 
 }

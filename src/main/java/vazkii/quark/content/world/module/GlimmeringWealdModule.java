@@ -32,8 +32,10 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
+import vazkii.quark.content.world.block.GlowLichenGrowthBlock;
 import vazkii.quark.content.world.block.GlowMyceliumBlock;
 import vazkii.quark.content.world.block.GlowShroomBlock;
+import vazkii.quark.content.world.feature.GlowExtrasFeature;
 import vazkii.quark.content.world.feature.GlowMyceliumFeature;
 
 @LoadModule(category = ModuleCategory.WORLD)
@@ -43,16 +45,19 @@ public class GlimmeringWealdModule extends QuarkModule {
 	private static final String BIOME_NAME = "glimmering_weald";
 
 	public static PlacedFeature placed_glow_mycelium;
-	
+	public static PlacedFeature placed_glow_extras;
+
 	public static ResourceKey<Biome> glimmering_weald;
 
 	public static Block glow_mycelium;
 	public static Block glow_shroom;
+	public static Block glow_lichen_growth;
 
 	@Override
 	public void construct() {
 		glow_mycelium = new GlowMyceliumBlock(this);
 		glow_shroom = new GlowShroomBlock(this);
+		glow_lichen_growth = new GlowLichenGrowthBlock(this);
 		
 		makeFeatures();
 		RegistryHelper.register(makeBiome());
@@ -60,6 +65,7 @@ public class GlimmeringWealdModule extends QuarkModule {
 
 	private static void makeFeatures() {
 		placed_glow_mycelium = place("glow_mycelium", new GlowMyceliumFeature(), GlowMyceliumFeature::placed);
+		placed_glow_extras = place("glow_extras", new GlowExtrasFeature(), GlowExtrasFeature::placed);
 	}
 
 	private static PlacedFeature place(String featureName, Feature<NoneFeatureConfiguration> feature, Function<ConfiguredFeature<NoneFeatureConfiguration, ?>, PlacedFeature> placer) {
@@ -85,6 +91,7 @@ public class GlimmeringWealdModule extends QuarkModule {
 		BiomeDefaultFeatures.addDefaultExtraVegetation(settings);
 
 		settings.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, placed_glow_mycelium);
+		settings.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, placed_glow_extras);
 
 		Music music = Musics.createGameMusic(SoundEvents.MUSIC_BIOME_DRIPSTONE_CAVES);
 		Biome biome = OverworldBiomes.biome(Biome.Precipitation.RAIN, Biome.BiomeCategory.UNDERGROUND, 0.8F, 0.4F, mobs, settings, music);
