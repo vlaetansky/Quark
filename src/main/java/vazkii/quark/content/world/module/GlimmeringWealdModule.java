@@ -20,6 +20,7 @@ import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.biome.OverworldBiomeBuilder;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -31,7 +32,9 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
-import vazkii.quark.content.world.feature.TestFeature;
+import vazkii.quark.content.world.block.GlowMyceliumBlock;
+import vazkii.quark.content.world.block.GlowShroomBlock;
+import vazkii.quark.content.world.feature.GlowMyceliumFeature;
 
 @LoadModule(category = ModuleCategory.WORLD)
 public class GlimmeringWealdModule extends QuarkModule {
@@ -39,18 +42,24 @@ public class GlimmeringWealdModule extends QuarkModule {
 	private static final Climate.Parameter FULL_RANGE = Climate.Parameter.span(-1.0F, 1.0F);
 	private static final String BIOME_NAME = "glimmering_weald";
 
-	public static PlacedFeature placed_test_feature;
+	public static PlacedFeature placed_glow_mycelium;
 	
 	public static ResourceKey<Biome> glimmering_weald;
 
+	public static Block glow_mycelium;
+	public static Block glow_shroom;
+
 	@Override
 	public void construct() {
+		glow_mycelium = new GlowMyceliumBlock(this);
+		glow_shroom = new GlowShroomBlock(this);
+		
 		makeFeatures();
 		RegistryHelper.register(makeBiome());
 	}
 
 	private static void makeFeatures() {
-		placed_test_feature = place("test_feature", new TestFeature(), TestFeature::placed);
+		placed_glow_mycelium = place("glow_mycelium", new GlowMyceliumFeature(), GlowMyceliumFeature::placed);
 	}
 
 	private static PlacedFeature place(String featureName, Feature<NoneFeatureConfiguration> feature, Function<ConfiguredFeature<NoneFeatureConfiguration, ?>, PlacedFeature> placer) {
@@ -75,7 +84,7 @@ public class GlimmeringWealdModule extends QuarkModule {
 		BiomeDefaultFeatures.addDefaultMushrooms(settings);
 		BiomeDefaultFeatures.addDefaultExtraVegetation(settings);
 
-		settings.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, placed_test_feature);
+		settings.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, placed_glow_mycelium);
 
 		Music music = Musics.createGameMusic(SoundEvents.MUSIC_BIOME_DRIPSTONE_CAVES);
 		Biome biome = OverworldBiomes.biome(Biome.Precipitation.RAIN, Biome.BiomeCategory.UNDERGROUND, 0.8F, 0.4F, mobs, settings, music);
@@ -91,7 +100,7 @@ public class GlimmeringWealdModule extends QuarkModule {
 		if(glimmering_weald == null)
 			glimmering_weald = ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Quark.MOD_ID, BIOME_NAME));
 
-		addBiome(consumer, Climate.Parameter.span(0.7F, 0.9F), glimmering_weald);
+		addBiome(consumer, Climate.Parameter.span(1.55F, 2.05F), glimmering_weald);
 	}
 
 	private static void addBiome(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer, Climate.Parameter depth, ResourceKey<Biome> biome) {
