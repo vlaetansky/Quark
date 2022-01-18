@@ -31,7 +31,7 @@ public class WeatheringCopperVerticalSlabBlock extends VerticalSlabBlock impleme
 	
 	@Override
 	public Optional<BlockState> getNext(BlockState p_154893_) {
-		return next == null ? Optional.empty() : Optional.of(next.defaultBlockState());
+		return next == null ? Optional.empty() : Optional.of(next.withPropertiesOf(p_154893_));
 	}
 
 	@Override
