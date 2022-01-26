@@ -29,6 +29,8 @@ public class FuelHandler {
 	}
 
 	public static void addWood(Block block) {
+		if(block.getRegistryName().toString().contains("crimson") || block.getRegistryName().toString().contains("warped"))
+			return; //do nothing if block is crimson or warped, since they aren't flammable. #3549
 		if(block instanceof VerticalSlabBlock || block instanceof SlabBlock)
 			addFuel(block, 150);
 		else addFuel(block, 300);
