@@ -2,25 +2,22 @@ buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
         maven { url = 'https://repo.spongepowered.org/maven' }
-        jcenter()
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
         classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
     }
 }
 
 plugins {
     id 'com.diffplug.gradle.spotless' version '4.5.1'
+    id 'eclipse'
+    id 'maven-publish'
+    id 'pmd'
 }
-
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
-apply plugin: 'eclipse'
-apply plugin: 'maven'
-
-apply plugin: 'pmd'
 
 ext.configFile = file('build.properties')
 ext.config = parseConfig(configFile)
@@ -29,9 +26,11 @@ version = "${config.version}-${config.build_number}"
 group = "vazkii.${config.mod_id}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = config.mod_name
 
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(8)
+    withSourcesJar()
+}
 compileJava.options.compilerArgs << "-Xlint:all,-classfile,-processing,-deprecation" << "-Werror"
-
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
@@ -54,33 +53,18 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
-            arg "-mixin.config=quark.mixins.json"
-
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-
             mods {
-                examplemod {
+                quark {
                     source sourceSets.main
                 }
             }
         }
-
         server {
             workingDirectory project.file('run')
-            arg "-mixin.config=quark.mixins.json"
-
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-
             mods {
-                examplemod {
+                quark {
                     source sourceSets.main
                 }
             }
@@ -90,35 +74,32 @@ minecraft {
 
 mixin {
     add sourceSets.main, 'quark.mixins.refmap.json'
+    config 'quark.mixins.json'
+    dumpTargetOnFailure true
 }
 
 repositories {
     maven {
         // for AutoRegLib
         name "blamejared"
-        url "http://maven.blamejared.com/"
+        url "https://maven.blamejared.com/"
     }
     maven {
         // for JEI
         name "progwml6"
-        url "http://dvs1.progwml6.com/files/maven"
-    }
-    maven {
-        // for Mappings
-        name "gigaherz"
-        url "http://dogforce-games.com/maven/"
+        url "https://dvs1.progwml6.com/files/maven"
     }
 }
 
 
 dependencies {
     minecraft "net.minecraftforge:forge:${config.mc_version}-${config.forge_version}"
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
-    compile fg.deobf("vazkii.autoreglib:AutoRegLib:${config.arl_version}")
+    implementation fg.deobf("vazkii.autoreglib:AutoRegLib:${config.arl_version}")
   
     compileOnly fg.deobf("mezz.jei:${config.jei_version}:api")
     runtimeOnly fg.deobf("mezz.jei:${config.jei_version}")
-
 }
 
 spotless {
@@ -148,18 +129,12 @@ task checkSyntax (group: "verification") {
 }
 
 processResources {
+    inputs.property "version", project.version
     // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'META-INF/mods.toml'
-
-        // replace version and mcversion
+    filesMatching('**/mods.toml') {
         expand 'version': project.version
     }
-
-    // copy everything else, thats not the mods.toml
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'META-INF/mods.toml', '**/psd/**'
-    }
+    exclude '**/psd/**'
 }
 
 task incrementBuildNumber {
@@ -224,17 +199,31 @@ jar {
     exclude "**/unused"
     exclude "**/genscripts"
 }
+tasks.withType(GenerateModuleMetadata).configureEach {
+    it.enabled = false
+}
 
-//artifacts {
-//    archives deobfJar
-//}
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
+            from components.java
 
-uploadArchives {
+            // Allows the maven pom file to be modified.
+            pom.withXml {
+                // Go through all the dependencies.
+                asNode().dependencies.dependency.each { dep ->
+                    dep.parent().remove(dep)
+                }
+            }
+        }
+    }
+
     repositories {
-        mavenDeployer {
-            repository(url: "file://" + (System.getenv("local_maven") != null ? System.getenv("local_maven") : System.getenv("bamboo_local_maven")))
+        maven {
+            url "file://" + System.getenv("local_maven")
         }
     }
 }
-
-defaultTasks 'clean', 'build', 'sortArtifacts', 'incrementBuildNumber'
