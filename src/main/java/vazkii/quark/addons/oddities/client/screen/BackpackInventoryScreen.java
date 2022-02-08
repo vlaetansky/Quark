@@ -3,7 +3,6 @@ package vazkii.quark.addons.oddities.client.screen;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -14,6 +13,8 @@ import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.fml.ModList;
+
 import vazkii.quark.addons.oddities.container.BackpackContainer;
 import vazkii.quark.addons.oddities.module.BackpackModule;
 import vazkii.quark.base.Quark;
@@ -26,7 +27,8 @@ import java.util.Map;
 public class BackpackInventoryScreen extends InventoryScreen {
 	
 	private static final ResourceLocation BACKPACK_INVENTORY_BACKGROUND = new ResourceLocation(Quark.MOD_ID, "textures/misc/backpack_gui.png");
-	
+	private static final Class<?> PATCHOULI_BUTTON = getPatchouliBookButtonClass();
+
 	private final PlayerEntity player;
 	private final Map<Button, Integer> buttonYs = new HashMap<>();
 	
@@ -101,8 +103,20 @@ public class BackpackInventoryScreen extends InventoryScreen {
 			//Charms buttons have a static Y pos, so use that to only focus on them.
 			if(widget instanceof ImageButton && widget.y == height / 2 - 22) {
 				((ImageButton) widget).setPosition(widget.x, widget.y - 29);
+			} else if (widget.getClass() == PATCHOULI_BUTTON && widget.y == height / 2 - 23) {
+				widget.y = widget.y - 29;
 			}
 		}
 	}
-	
+
+	private static Class<?> getPatchouliBookButtonClass() {
+		if (ModList.get().isLoaded("patchouli")) {
+			try {
+				return Class.forName("vazkii.patchouli.client.gui.GuiButtonInventoryBook");
+			} catch (ClassNotFoundException e) {
+				Quark.LOG.warn("Patchouli button class not found, backpack might be obstructed");
+			}
+		}
+		return null;
+	}
 }
