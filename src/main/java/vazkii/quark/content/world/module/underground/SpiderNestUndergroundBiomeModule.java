@@ -14,7 +14,7 @@ import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.world.IWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.BiomeDictionary;
@@ -86,8 +86,8 @@ public class SpiderNestUndergroundBiomeModule extends UndergroundBiomeModule {
 		if(entity.getType() == EntityType.ZOMBIE && entity instanceof MobEntity && enabledWrapped && result != Result.DENY) {
 			MobEntity mob = (MobEntity) entity;
 			 
-			if(result == Result.ALLOW || (mob.canSpawn(entity.world, event.getSpawnReason()) && mob.isNotColliding(entity.world)))
-				if(changeToWrapped(entity))
+			if(result == Result.ALLOW || (mob.canSpawn(event.getWorld(), event.getSpawnReason()) && mob.isNotColliding(event.getWorld())))
+				if(changeToWrapped(entity, event.getWorld()))
 					event.setResult(Result.DENY);
 		}
 	}
@@ -96,26 +96,26 @@ public class SpiderNestUndergroundBiomeModule extends UndergroundBiomeModule {
 	public void onZombieSpecialSpawn(LivingSpawnEvent.SpecialSpawn event) {
 		LivingEntity entity = event.getEntityLiving();
 		if(entity.getType() == EntityType.ZOMBIE && enabledWrapped)
-			if(changeToWrapped(entity))
+			if(changeToWrapped(entity, event.getWorld()))
 				event.setCanceled(true);
 	}
 	
-	private static boolean changeToWrapped(Entity entity) {
+	private static boolean changeToWrapped(Entity entity, IWorld world) {
 		BlockPos pos = entity.getPosition();
 		int i = 0;
 
 		while(i < 4) {
 			pos = pos.down();
 			i++;
-			if(entity.world.isAirBlock(pos))
+			if(world.isAirBlock(pos))
 				continue;
 
-			if(entity.world.getBlockState(pos).getBlock() == cobbedstone) {
+			if(world.getBlockState(pos).getBlock() == cobbedstone) {
 				WrappedEntity wrapped = new WrappedEntity(wrappedType, entity.world);
 				Vector3d epos = entity.getPositionVec();
 				
 				wrapped.setPositionAndRotation(epos.x, epos.y, epos.z, entity.rotationYaw, entity.rotationPitch);
-				entity.world.addEntity(wrapped);
+				world.addEntity(wrapped);
 
 				return true;
 			}
