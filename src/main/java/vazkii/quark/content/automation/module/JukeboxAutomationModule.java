@@ -38,9 +38,11 @@ public class JukeboxAutomationModule extends QuarkModule {
 	@Override
 	public void setup() {
 		MusicDiscBehaviour behaviour = new MusicDiscBehaviour();
-		ForgeRegistries.ITEMS.forEach(i -> {
-			if(i instanceof RecordItem)
-				DispenserBlock.DISPENSER_REGISTRY.put(i, behaviour);
+		enqueue(() -> {
+				ForgeRegistries.ITEMS.forEach(i -> {
+				if(i instanceof RecordItem)
+					DispenserBlock.DISPENSER_REGISTRY.put(i, behaviour);
+			});
 		});
 	}
 

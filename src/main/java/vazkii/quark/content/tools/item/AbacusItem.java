@@ -77,7 +77,7 @@ public class AbacusItem extends QuarkItem {
 		Minecraft mc = Minecraft.getInstance();
 		Player player = mc.player;
 
-		if(entityIn == player) {
+		if(entityIn == player && player != null) {
 			HitResult result = mc.hitResult;
 			if(result instanceof BlockHitResult) {
 				BlockPos target = ((BlockHitResult) result).getBlockPos();
