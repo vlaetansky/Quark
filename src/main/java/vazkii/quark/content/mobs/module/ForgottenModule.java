@@ -6,6 +6,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -62,17 +63,18 @@ public class ForgottenModule extends QuarkModule {
 	public void onSkeletonSpawn(LivingSpawnEvent.CheckSpawn event) {
 		LivingEntity entity = event.getEntityLiving();
 		Result result = event.getResult();
-		
-		if(entity.getType() == EntityType.SKELETON && entity instanceof Mob && result != Result.DENY && entity.getY() < maxHeightForSpawn && entity.level.random.nextDouble() < forgottenSpawnRate) {
+		LevelAccessor world = event.getWorld();
+
+		if(entity.getType() == EntityType.SKELETON && entity instanceof Mob && result != Result.DENY && entity.getY() < maxHeightForSpawn && world.getRandom().nextDouble() < forgottenSpawnRate) {
 			Mob mob = (Mob) entity;
 
-			if(result == Result.ALLOW || (mob.checkSpawnRules(entity.level, event.getSpawnReason()) && mob.checkSpawnObstruction(entity.level))) {
+			if(result == Result.ALLOW || (mob.checkSpawnRules(world, event.getSpawnReason()) && mob.checkSpawnObstruction(world))) {
 				Forgotten forgotten = new Forgotten(forgottenType, entity.level);
 				Vec3 epos = entity.position();
 	
 				forgotten.absMoveTo(epos.x, epos.y, epos.z, entity.getYRot(), entity.getXRot());
 				forgotten.prepareEquipment();
-				entity.level.addFreshEntity(forgotten);
+				world.addFreshEntity(forgotten);
 				event.setResult(Result.DENY);
 			}
 		}
