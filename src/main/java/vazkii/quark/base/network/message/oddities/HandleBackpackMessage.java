@@ -28,10 +28,10 @@ public class HandleBackpackMessage implements IMessage {
 			if(open) {
 				ItemStack stack = player.getItemBySlot(EquipmentSlot.CHEST);
 				if(stack.getItem() instanceof MenuProvider && player.containerMenu != null) {
-					ItemStack holding = player.containerMenu.getCarried();
+					ItemStack holding = player.containerMenu.getCarried().copy();
 					player.containerMenu.setCarried(ItemStack.EMPTY);
 					NetworkHooks.openGui(player, (MenuProvider) stack.getItem(), player.blockPosition());
-					player.inventoryMenu.setCarried(holding);
+					player.containerMenu.setCarried(holding);
 				}
 			} else {
 				if(player.containerMenu != null) {

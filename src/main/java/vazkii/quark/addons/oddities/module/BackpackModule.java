@@ -126,6 +126,7 @@ public class BackpackModule extends QuarkModule {
 		Minecraft mc = Minecraft.getInstance();
 		if(isInventoryGUI(mc.screen) && !backpackRequested && isEntityWearingBackpack(mc.player)) {
 			requestBackpack();
+			mc.player.inventoryMenu.setCarried(mc.player.getItemBySlot(EquipmentSlot.CHEST));
 			backpackRequested = true;
 		} else if(mc.screen instanceof BackpackInventoryScreen) {
 			if(heldStack != null) {
