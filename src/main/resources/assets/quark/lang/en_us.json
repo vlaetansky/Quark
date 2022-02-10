@@ -955,6 +955,8 @@
 	"block.quark.iron_ladder": "Iron Ladder",
 	"block.quark.deepslate_furnace": "Deepslate Furnace",
 	"block.quark.blackstone_furnace": "Blackstone Furnace",
+	"block.quark.glow_mycelium": "Glow Mycelium",
+	"block.quark.glow_lichen_growth": "Glow Lichen Growth",
 
 	"item.quark.stoneling_spawn_egg": "Stoneling Spawn Egg",
 	"item.quark.frog_spawn_egg": "Frog Spawn Egg",

@@ -27,7 +27,8 @@
     "TrapDoorBlockMixin",
     "LadderBlockMixin",
     "ItemMixin",
-    "ItemsMixin"
+    "ItemsMixin",
+    "OverworldBiomeBuilderMixin"
   ],
   "client": [
     "client.BannerItemMixin",
