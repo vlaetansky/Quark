@@ -12,7 +12,9 @@ public class GlowLichenGrowthBlock extends QuarkBushBlock {
 	protected static final VoxelShape SHAPE = Block.box(5.0D, 0.0D, 5.0D, 11.0D, 6.0D, 11.0D);
 	
 	public GlowLichenGrowthBlock(QuarkModule module) {
-		super("glow_lichen_growth", module, CreativeModeTab.TAB_DECORATIONS, Properties.copy(Blocks.GLOW_LICHEN));
+		super("glow_lichen_growth", module, CreativeModeTab.TAB_DECORATIONS, 
+				Properties.copy(Blocks.GLOW_LICHEN)
+				.lightLevel(s -> 8));
 	}
 
 }

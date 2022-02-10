@@ -10,7 +10,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import vazkii.quark.base.block.QuarkBushBlock;
 import vazkii.quark.base.module.QuarkModule;
-import vazkii.quark.content.world.module.GlimmeringWealdModule;
 
 public class GlowShroomBlock extends QuarkBushBlock {
 
@@ -19,12 +18,17 @@ public class GlowShroomBlock extends QuarkBushBlock {
 	public GlowShroomBlock(QuarkModule module) {
 		super("glow_shroom", module, CreativeModeTab.TAB_DECORATIONS, 
 				Properties.copy(Blocks.RED_MUSHROOM)
-				.lightLevel(s -> 12));
+				.lightLevel(s -> 10));
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState p_54889_, BlockGetter p_54890_, BlockPos p_54891_, CollisionContext p_54892_) {
 		return SHAPE;
+	}
+
+	@Override
+	protected boolean mayPlaceOn(BlockState p_54894_, BlockGetter p_54895_, BlockPos p_54896_) {
+		return p_54894_.getBlock() == Blocks.DEEPSLATE;
 	}
 
 }

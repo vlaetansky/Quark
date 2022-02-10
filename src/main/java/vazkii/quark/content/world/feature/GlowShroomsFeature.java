@@ -37,6 +37,9 @@ public class GlowShroomsFeature extends Feature<NoneFeatureConfiguration> {
 				RandomOffsetPlacement.vertical(ConstantInt.of(1)), BiomeFilter.biome());
 	}
 
+	// seed -3443924530208591640
+	// /tp 1035 -38 -368
+	
 	@Override
 	public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> config) {
 		WorldGenLevel worldgenlevel = config.level();

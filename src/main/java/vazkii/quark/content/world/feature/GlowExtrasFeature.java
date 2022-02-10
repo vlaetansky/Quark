@@ -43,32 +43,38 @@ public class GlowExtrasFeature extends Feature<NoneFeatureConfiguration> {
 		Random rng = config.random();
 
 		MutableBlockPos setPos = new MutableBlockPos(blockpos.getX(), blockpos.getY(), blockpos.getZ());
-		for(int k = -6; k < 7; k++) {
-			setPos.set(blockpos.getX(), blockpos.getY() + k, blockpos.getZ());
+		final int horiz = 2;
+		final int vert = 6;
+		final float chance = 0.5F;
 
-			if(worldgenlevel.isStateAtPosition(setPos, BlockState::isAir)) {
-				double res = rng.nextDouble();
-				if(res > 0.7) { // try to place shrub
-					if(worldgenlevel.isStateAtPosition(setPos.below(), s -> s.getBlock() == Blocks.DEEPSLATE))
-						worldgenlevel.setBlock(setPos, GlimmeringWealdModule.glow_lichen_growth.defaultBlockState(), 2);
-				} 
+		for(int i = -horiz; i < horiz + 1; i++)
+			for(int j = -horiz; j < horiz + 1; j++)
+				for(int k = -vert; k < vert + 1; k++) {
+					setPos.set(blockpos.getX() + i, blockpos.getY() + k, blockpos.getZ() + j);
 
-				else if(res > 0.55) { // try to place lichen
-					for(Direction dir : Direction.values()) {
-						if(worldgenlevel.isStateAtPosition(setPos.relative(dir), s -> s.getBlock() == Blocks.DEEPSLATE)) {
-							BlockState place = Blocks.GLOW_LICHEN.defaultBlockState();
-							for(Direction dir2 : Direction.values()) {
-								BooleanProperty prop = GlowLichenBlock.getFaceProperty(dir2);
-								place = place.setValue(prop, dir == dir2);
+					if(rng.nextFloat() < chance && worldgenlevel.isStateAtPosition(setPos, BlockState::isAir)) {
+						double res = rng.nextDouble();
+						if(res > 0.85) { // try to place shrub
+							if(worldgenlevel.isStateAtPosition(setPos.below(), s -> s.getBlock() == Blocks.DEEPSLATE))
+								worldgenlevel.setBlock(setPos, GlimmeringWealdModule.glow_lichen_growth.defaultBlockState(), 2);
+						} 
+
+						else if(res > 0.35) { // try to place lichen
+							for(Direction dir : Direction.values()) {
+								if(worldgenlevel.isStateAtPosition(setPos.relative(dir), s -> s.getBlock() == Blocks.DEEPSLATE)) {
+									BlockState place = Blocks.GLOW_LICHEN.defaultBlockState();
+									for(Direction dir2 : Direction.values()) {
+										BooleanProperty prop = GlowLichenBlock.getFaceProperty(dir2);
+										place = place.setValue(prop, dir == dir2);
+									}
+
+									worldgenlevel.setBlock(setPos, place, 2);
+									break;
+								}
 							}
-
-							worldgenlevel.setBlock(setPos, place, 2);
-							break;
 						}
 					}
 				}
-			}
-		}
 
 		return true;
 	}
