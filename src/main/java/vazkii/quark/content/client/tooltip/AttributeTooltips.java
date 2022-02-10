@@ -208,7 +208,7 @@ public class AttributeTooltips {
 					if (showSlots)
 						len += 20;
 
-					tooltipRaw.add(Either.right(new AttributeComponent(stack, len, 10)));
+					tooltipRaw.add(1, Either.right(new AttributeComponent(stack, len, 10)));
 					
 					if(allAreSame)
 						break;
