@@ -1,8 +1,0 @@
-{
-    "parent": "block/cube_bottom_top",
-    "textures": {
-        "top": "quark:block/glow_mycelium_top",
-        "bottom": "minecraft:block/deepslate_top",
-        "side": "quark:block/glow_mycelium_side"
-    }
-}

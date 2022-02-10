@@ -27,9 +27,4 @@ public class GlowShroomBlock extends QuarkBushBlock {
 		return SHAPE;
 	}
 
-	@Override
-	protected boolean mayPlaceOn(BlockState p_54894_, BlockGetter p_54895_, BlockPos p_54896_) {
-		return p_54894_.getBlock() == GlimmeringWealdModule.glow_mycelium;
-	}
-
 }

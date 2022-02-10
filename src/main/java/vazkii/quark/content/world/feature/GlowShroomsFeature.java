@@ -23,9 +23,9 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.RandomOffsetPlacement;
 import vazkii.quark.content.world.module.GlimmeringWealdModule;
 
-public class GlowMyceliumFeature extends Feature<NoneFeatureConfiguration> {
+public class GlowShroomsFeature extends Feature<NoneFeatureConfiguration> {
 
-	public GlowMyceliumFeature() {
+	public GlowShroomsFeature() {
 		super(NoneFeatureConfiguration.CODEC);
 	}
 
@@ -56,8 +56,6 @@ public class GlowMyceliumFeature extends Feature<NoneFeatureConfiguration> {
 					}
 					
 					if(worldgenlevel.isStateAtPosition(setPos, s -> s.getBlock() == Blocks.DEEPSLATE) && worldgenlevel.isStateAtPosition(setPos.above(), BlockState::isAir)) {
-						worldgenlevel.setBlock(setPos, GlimmeringWealdModule.glow_mycelium.defaultBlockState(), 2);
-						
 						if(rng.nextDouble() < 0.05)
 							worldgenlevel.setBlock(setPos.above(), GlimmeringWealdModule.glow_shroom.defaultBlockState(), 2);
 					}
