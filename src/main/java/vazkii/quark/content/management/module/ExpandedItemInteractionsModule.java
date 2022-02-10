@@ -51,8 +51,11 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 			return false;
 
 		ItemStack stackAt = slot.getItem();
-		if(enableShulkerBoxInteraction && shulkerOverride(stack, stackAt, slot, action, player, false))
+		if(enableShulkerBoxInteraction && shulkerOverride(stack, stackAt, slot, action, player, false)) {
+			if (player.containerMenu != null)
+				player.containerMenu.slotsChanged(slot.container);
 			return true;
+		}
 		
 		return false;
 	}
