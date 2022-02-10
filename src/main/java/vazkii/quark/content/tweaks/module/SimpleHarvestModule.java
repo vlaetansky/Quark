@@ -26,7 +26,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -136,12 +135,13 @@ public class SimpleHarvestModule extends QuarkModule {
 		}
 	}
 
-	private static void replant(Level world, BlockPos pos, BlockState inWorld, Player player) {
-		ItemStack mainHand = player.getMainHandItem();
-		boolean isHoe = !mainHand.isEmpty() && mainHand.getItem() instanceof HoeItem;
+	private static void harvestAndReplant(Level world, BlockPos pos, BlockState inWorld, Player player) {
+		if (!(world instanceof ServerLevel))
+			return;
 
-		BlockState newBlock = crops.get(inWorld);
-		int fortune = HoeHarvestingModule.canFortuneApply(Enchantments.BLOCK_FORTUNE, mainHand) && isHoe ?
+		ItemStack mainHand = player.getMainHandItem();
+
+		int fortune = HoeHarvestingModule.canFortuneApply(Enchantments.BLOCK_FORTUNE, mainHand) ?
 				EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, mainHand) : 0;
 
 		ItemStack copy = mainHand.copy();
@@ -152,21 +152,22 @@ public class SimpleHarvestModule extends QuarkModule {
 		enchMap.put(Enchantments.BLOCK_FORTUNE, fortune);
 		EnchantmentHelper.setEnchantments(enchMap, copy);
 
-		if (world instanceof ServerLevel) {
-			Item blockItem = inWorld.getBlock().asItem();
-	        Block.getDrops(inWorld, (ServerLevel) world, pos, world.getBlockEntity(pos), player, copy).forEach((stack) -> {
-	        	if(stack.getItem() == blockItem)
-	        		stack.shrink(1);
-	        	
-	        	if(!stack.isEmpty())
-	        		Block.popResource(world, pos, stack);
-	        });
-	        inWorld.spawnAfterBreak((ServerLevel) world, pos, copy);
+		Item blockItem = inWorld.getBlock().asItem();
+		Block.getDrops(inWorld, (ServerLevel) world, pos, world.getBlockEntity(pos), player, copy)
+			.forEach((stack) -> {
+				if(stack.getItem() == blockItem)
+					stack.shrink(1);
+				
+				if(!stack.isEmpty())
+					Block.popResource(world, pos, stack);
+			});
+		inWorld.spawnAfterBreak((ServerLevel) world, pos, copy);
 
-			if (!world.isClientSide) {
-				world.levelEvent(2001, pos, Block.getId(newBlock));
-				world.setBlockAndUpdate(pos, newBlock);
-			}
+		// ServerLevel sets this to `false` in the constructor, do we really need this check?
+		if (!world.isClientSide) {
+			BlockState newBlock = crops.get(inWorld);
+			world.levelEvent(2001, pos, Block.getId(newBlock));
+			world.setBlockAndUpdate(pos, newBlock);
 		}
 	}
 
@@ -183,36 +184,37 @@ public class SimpleHarvestModule extends QuarkModule {
 			return false;
 
 		ItemStack mainHand = player.getMainHandItem();
-		boolean isHoe = !mainHand.isEmpty() && mainHand.getItem() instanceof HoeItem;
+		boolean isHoe = HoeHarvestingModule.isHoe(mainHand);
 
 		if (!emptyHandHarvest && !isHoe)
 			return false;
 
 		int range = HoeHarvestingModule.getRange(mainHand);
 
-		int harvests = 0;
+		boolean hasHarvested = false;
 
-		for(int x = 1 - range; x < range; x++) {
+		for(int x = 1 - range; x < range; x++)
 			for (int z = 1 - range; z < range; z++) {
 				BlockPos shiftPos = pos.offset(x, 0, z);
 
 				BlockState worldBlock = player.level.getBlockState(shiftPos);
 				if (crops.containsKey(worldBlock)) {
-					replant(player.level, shiftPos, worldBlock, player);
-					harvests++;
+					harvestAndReplant(player.level, shiftPos, worldBlock, player);
+					hasHarvested = true;
 				}
 			}
-		}
 
-		if (harvests > 0) {
-			if (harvestingCostsDurability && isHoe && !player.level.isClientSide)
-				mainHand.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(InteractionHand.MAIN_HAND));
+		if (!hasHarvested)
+			return false;
 
-			if (mainHand.isEmpty() && player.level.isClientSide)
+		if (player.level.isClientSide) {
+			if (mainHand.isEmpty())
 				QuarkNetwork.sendToServer(new HarvestMessage(pos));
-			return true;
+		} else {
+			if (harvestingCostsDurability && isHoe)
+				mainHand.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(InteractionHand.MAIN_HAND));
 		}
 
-		return false;
+		return true;
 	}
 }
