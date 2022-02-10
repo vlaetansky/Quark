@@ -34,6 +34,8 @@ import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.world.block.GlowLichenGrowthBlock;
 import vazkii.quark.content.world.block.GlowShroomBlock;
+import vazkii.quark.content.world.block.GlowShroomRingBlock;
+import vazkii.quark.content.world.block.HugeGlowShroomBlock;
 import vazkii.quark.content.world.feature.GlowExtrasFeature;
 import vazkii.quark.content.world.feature.GlowShroomsFeature;
 
@@ -50,11 +52,17 @@ public class GlimmeringWealdModule extends QuarkModule {
 
 	public static Block glow_shroom;
 	public static Block glow_lichen_growth;
+	public static Block glow_shroom_block;
+	public static Block glow_shroom_stem;
+	public static Block glow_shroom_ring;
 
 	@Override
 	public void construct() {
 		glow_shroom = new GlowShroomBlock(this);
 		glow_lichen_growth = new GlowLichenGrowthBlock(this);
+		glow_shroom_block = new HugeGlowShroomBlock("glow_shroom_block", this, true);
+		glow_shroom_stem = new HugeGlowShroomBlock("glow_shroom_stem", this, false);
+		glow_shroom_ring = new GlowShroomRingBlock(this);
 		
 		makeFeatures();
 		RegistryHelper.register(makeBiome());

@@ -957,6 +957,9 @@
 	"block.quark.blackstone_furnace": "Blackstone Furnace",
 	"block.quark.glow_lichen_growth": "Glow Lichen Growth",
 	"block.quark.glow_shroom": "Glow Shroom",
+	"block.quark.glow_shroom_stem": "Glow Shroom Stem",
+	"block.quark.glow_shroom_block": "Glow Shroom Block",
+	"block.quark.glow_shroom_ring": "Glow Shroom Ring",
 
 	"item.quark.stoneling_spawn_egg": "Stoneling Spawn Egg",
 	"item.quark.frog_spawn_egg": "Frog Spawn Egg",
