@@ -29,33 +29,33 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
 
 	public CrateScreen(CrateMenu container, Inventory inv, Component component) {
 		super(container, inv, component);
-		
+
 		inventoryRows = CrateMenu.numRows;
 		imageHeight = 114 + this.inventoryRows * 18;
 		inventoryLabelY = imageHeight - 94;
 	}
-	
+
 	@Override
 	protected void init() {
 		super.init();
-		
+
 		int i = (width - imageWidth) / 2;
 		int j = (height - imageHeight) / 2;
 		extraAreas = Lists.newArrayList(new Rect2i(i + imageWidth, j, 23, 136));
 	} 
 	// TODO LOW PRIO scroll with mouse 
-	
+
 	public List<Rect2i> getExtraAreas() {
 		return extraAreas;
 	}
-	
+
 	@Override
 	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		renderBackground(matrixStack);
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
 		renderTooltip(matrixStack, mouseX, mouseY);
 	}
-	
+
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
 		menu.scroll(delta < 0, true);
@@ -67,24 +67,32 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, TEXTURE);
-		
+
 		int i = (width - imageWidth) / 2;
 		int j = (height - imageHeight) / 2;
 		blit(matrixStack, i, j, 0, 0, imageWidth + 20, imageHeight);
-		
+
 		int maxScroll = (menu.getStackCount() / CrateMenu.numCols) * CrateMenu.numCols;
 		int currScroll = (menu.scroll * 95) / Math.max(1, maxScroll);
-		
+
 		int u = 232 + (maxScroll == 0 ? 12 : 0);
 		int by = j + 18 + currScroll;
 		blit(matrixStack, i + imageWidth, by, u, 0, 12, 15);
 
 		if(!ChestSearchingModule.searchEnabled) {
 			String s = menu.getTotal() + "/" + CrateModule.maxItems;
-			
+
 			int color = MiscUtil.getGuiTextColor("crate_count");
 			font.draw(matrixStack, s, i + this.imageWidth - font.width(s) - 8 - InventoryButtonHandler.getActiveButtons(ButtonTargetType.CONTAINER_INVENTORY).size() * 12, j + 6, color);
 		}
+	}
+	
+	@Override
+	protected void renderLabels(PoseStack p_97808_, int p_97809_, int p_97810_) {
+		int color = MiscUtil.getGuiTextColor("crate_count");
+		
+		this.font.draw(p_97808_, this.title, (float)this.titleLabelX, (float)this.titleLabelY, color);
+		this.font.draw(p_97808_, this.playerInventoryTitle, (float)this.inventoryLabelX, (float)this.inventoryLabelY, color);
 	}
 
 }
