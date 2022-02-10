@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.WorldTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -80,9 +81,10 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 			BlockEntity tile = BlockEntity.loadStatic(pos, state, delay.getRight());
 
 			if(tile != null) {
-				event.world.setBlockEntity(tile);
 				tile.setBlockState(state);
 				tile.setChanged();
+				
+				event.world.setBlockEntity(tile);
 			}
 			
 			event.world.updateNeighbourForOutputSignal(pos, state.getBlock());
@@ -171,6 +173,7 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 
 		if (!destroyed) {
 			world.setBlock(pos, state, flags);
+			
 			if (world.getBlockEntity(pos) != null)
 				world.setBlock(pos, state, 0);
 
@@ -178,10 +181,10 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 				if (delayedUpdateList.contains(block.getRegistryName().toString()))
 					registerDelayedUpdate(world, pos, entity);
 				else {
-					world.setBlockEntity(entity);
-					world.getChunk(pos).setBlockEntity(entity);
 					entity.setBlockState(state);
 					entity.setChanged();
+					
+					world.setBlockEntity(entity);
 				}
 			}
 			world.updateNeighborsAt(pos, block);
@@ -234,7 +237,7 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 		if (!delayedUpdates.containsKey(world))
 			delayedUpdates.put(world, new ArrayList<>());
 
-		delayedUpdates.get(world).add(Pair.of(pos, tile.serializeNBT()));
+		delayedUpdates.get(world).add(Pair.of(pos, tile.saveWithFullMetadata()));
 	}
 
 	private static boolean hasCallback(BlockEntity tile) {
