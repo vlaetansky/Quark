@@ -2,11 +2,13 @@ package vazkii.quark.content.tweaks.module;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
 
 import com.google.common.collect.Lists;
 
+import net.minecraft.advancements.Advancement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -15,6 +17,7 @@ import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -27,6 +30,7 @@ import net.minecraftforge.client.event.ScreenEvent.InitScreenEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
@@ -40,6 +44,16 @@ public class AutomaticRecipeUnlockModule extends QuarkModule {
 
 	@Config public static boolean forceLimitedCrafting = false;	
 	@Config public static boolean disableRecipeBook = false;
+	@Config(description = "If enabled, advancements granting recipes will be stopped from loading, " +
+			"potentially reducing the lagspike on first world join.")
+	public static boolean filterRecipeAdvancements = true;
+
+	private static boolean staticEnabled;
+
+	@Override
+	public void configChanged() {
+		staticEnabled = enabled;
+	}
 
 	@SubscribeEvent 
 	public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
@@ -112,4 +126,18 @@ public class AutomaticRecipeUnlockModule extends QuarkModule {
 		}
 	}
 
+	public static void removeRecipeAdvancements(Map<ResourceLocation, Advancement.Builder> builders) {
+		if (!staticEnabled || !filterRecipeAdvancements)
+			return;
+
+		int i = 0;
+		for (var iterator = builders.entrySet().iterator(); iterator.hasNext(); ) {
+			Map.Entry<ResourceLocation, Advancement.Builder> entry = iterator.next();
+			if (entry.getKey().getPath().startsWith("recipes/") && entry.getValue().getCriteria().containsKey("has_the_recipe")) {
+				iterator.remove();
+				i++;
+			}
+		}
+		Quark.LOG.info("[Automatic Recipe Unlock] Removed {} recipe advancements", i);
+	}
 }
