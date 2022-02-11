@@ -1,18 +1,13 @@
 package vazkii.quark.content.world.module;
 
-import java.util.function.Consumer;
 import java.util.function.Function;
 
-import com.mojang.datafixers.util.Pair;
-
-import net.minecraft.core.Registry;
 import net.minecraft.data.worldgen.BiomeDefaultFeatures;
 import net.minecraft.data.worldgen.biome.OverworldBiomes;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.features.OreFeatures;
 import net.minecraft.data.worldgen.placement.OrePlacements;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.Music;
 import net.minecraft.sounds.Musics;
@@ -25,7 +20,6 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.MobSpawnSettings;
-import net.minecraft.world.level.biome.OverworldBiomeBuilder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
@@ -37,6 +31,7 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.QuarkSounds;
+import vazkii.quark.base.handler.UndergroundBiomeHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.ModuleLoader;
@@ -53,13 +48,11 @@ import vazkii.quark.content.world.feature.GlowShroomsFeature;
 public class GlimmeringWealdModule extends QuarkModule {
 
 	private static final Climate.Parameter FULL_RANGE = Climate.Parameter.span(-1.0F, 1.0F);
-	private static final String BIOME_NAME = "glimmering_weald";
+	public static final ResourceLocation BIOME_NAME = new ResourceLocation(Quark.MOD_ID, "glimmering_weald");
 
 	public static final PlacedFeature ORE_LAPIS_EXTRA = PlacementUtils.register("ore_lapis_glimmering_weald", OreFeatures.ORE_LAPIS.placed(OrePlacements.commonOrePlacement(12, HeightRangePlacement.uniform(VerticalAnchor.absolute(-64), VerticalAnchor.absolute(0)))));
 	public static PlacedFeature placed_glow_shrooms;
 	public static PlacedFeature placed_glow_extras;
-
-	public static ResourceKey<Biome> glimmering_weald;
 
 	public static Block glow_shroom;
 	public static Block glow_lichen_growth;
@@ -78,7 +71,9 @@ public class GlimmeringWealdModule extends QuarkModule {
 		glow_shroom_ring = new GlowShroomRingBlock(this);
 		
 		makeFeatures();
+		
 		RegistryHelper.register(makeBiome());
+		UndergroundBiomeHandler.addUndergroundBiome(this, Climate.parameters(FULL_RANGE, FULL_RANGE, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(1.55F, 2.05F), FULL_RANGE, 0F), BIOME_NAME);
 	}
 
 	@Override
@@ -124,23 +119,9 @@ public class GlimmeringWealdModule extends QuarkModule {
 
 		Music music = Musics.createGameMusic(QuarkSounds.MUSIC_GLIMMERING_WEALD);
 		Biome biome = OverworldBiomes.biome(Biome.Precipitation.RAIN, Biome.BiomeCategory.UNDERGROUND, 0.8F, 0.4F, mobs, settings, music);
-		biome.setRegistryName(new ResourceLocation(Quark.MOD_ID, BIOME_NAME));
+		biome.setRegistryName(BIOME_NAME);
 
 		return biome;
-	}
-
-	public static void addUndergroundBiomes(OverworldBiomeBuilder builder, Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer) {
-		if(!ModuleLoader.INSTANCE.isModuleEnabled(GlimmeringWealdModule.class))
-			return;
-
-		if(glimmering_weald == null)
-			glimmering_weald = ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Quark.MOD_ID, BIOME_NAME));
-
-		addBiome(consumer, Climate.Parameter.span(1.55F, 2.05F), glimmering_weald);
-	}
-
-	private static void addBiome(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer, Climate.Parameter depth, ResourceKey<Biome> biome) {
-		consumer.accept(Pair.of(Climate.parameters(FULL_RANGE, FULL_RANGE, FULL_RANGE, FULL_RANGE, depth, FULL_RANGE, 0F), biome));
 	}
 
 }

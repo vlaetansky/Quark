@@ -17,6 +17,7 @@ import vazkii.quark.base.handler.BrewingHandler;
 import vazkii.quark.base.handler.ContributorRewardHandler;
 import vazkii.quark.base.handler.FuelHandler;
 import vazkii.quark.base.handler.QuarkSounds;
+import vazkii.quark.base.handler.UndergroundBiomeHandler;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.config.IConfigCallback;
 import vazkii.quark.base.network.QuarkNetwork;
@@ -56,6 +57,8 @@ public class CommonProxy {
 		BrewingHandler.setup();
 		ModuleLoader.INSTANCE.setup(event);
 		initContributorRewards();
+		
+		UndergroundBiomeHandler.init(event);
 	}
 	
 	public void loadComplete(FMLLoadCompleteEvent event) {

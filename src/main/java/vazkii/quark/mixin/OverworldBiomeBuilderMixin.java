@@ -13,14 +13,14 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.OverworldBiomeBuilder;
-import vazkii.quark.content.world.module.GlimmeringWealdModule;
+import vazkii.quark.base.handler.UndergroundBiomeHandler;
 
 @Mixin(OverworldBiomeBuilder.class)
 public class OverworldBiomeBuilderMixin {
 
 	@Inject(method = "addUndergroundBiomes", at = @At("RETURN"))
 	public void addUndergroundBiomes(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer, CallbackInfo info) {
-		GlimmeringWealdModule.addUndergroundBiomes((OverworldBiomeBuilder) (Object) this, consumer);
+		UndergroundBiomeHandler.addUndergroundBiomes((OverworldBiomeBuilder) (Object) this, consumer);
 	}
 	
 }

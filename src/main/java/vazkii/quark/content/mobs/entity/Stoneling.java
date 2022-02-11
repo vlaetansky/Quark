@@ -415,9 +415,8 @@ public class Stoneling extends PathfinderMob {
 	}
 
 	public static boolean spawnPredicate(EntityType<? extends Stoneling> type, ServerLevelAccessor world, MobSpawnType reason, BlockPos pos, Random rand) {
-		System.out.println("checking in " + world.getBiome(pos).getRegistryName());
 		return pos.getY() <= StonelingsModule.maxYLevel 
-				&& (MiscUtil.validSpawnLight(world, pos, rand) || world.getBiome(pos).getRegistryName().equals(GlimmeringWealdModule.glimmering_weald.getRegistryName())) 
+				&& (MiscUtil.validSpawnLight(world, pos, rand) || world.getBiome(pos).getRegistryName().equals(GlimmeringWealdModule.BIOME_NAME)) 
 				&& MiscUtil.validSpawnLocation(type, world, reason, pos);
 	}
 
