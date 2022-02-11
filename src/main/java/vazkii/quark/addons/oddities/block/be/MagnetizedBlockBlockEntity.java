@@ -324,7 +324,7 @@ public class MagnetizedBlockBlockEntity extends BlockEntity {
     @Override
     @Nonnull
     public CompoundTag getUpdateTag() {
-        return writeNBTData(super.save(new CompoundTag()), false);
+        return writeNBTData(serializeNBT(), false);
     }
 
     @Override

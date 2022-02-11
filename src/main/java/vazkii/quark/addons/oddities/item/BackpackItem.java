@@ -217,9 +217,8 @@ public class BackpackItem extends DyeableArmorItem implements IQuarkItem, IItemC
 		consumer.accept(new IItemRenderProperties() {
 			
 			@Override
-			@SuppressWarnings("unchecked")
-			public <A extends HumanoidModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, A _default) {
-				return (A) ModelHandler.armorModel(ModelHandler.backpack, armorSlot);
+			public HumanoidModel<?> getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> _default) {
+				return ModelHandler.armorModel(ModelHandler.backpack, armorSlot);
 			}
 		
 		});	

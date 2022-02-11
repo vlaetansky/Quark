@@ -68,9 +68,8 @@ public class ForgottenHatItem extends ArmorItem implements IQuarkItem {
 		consumer.accept(new IItemRenderProperties() {
 			
 			@Override
-			@SuppressWarnings("unchecked")
-			public <A extends HumanoidModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, A _default) {
-				return (A) ModelHandler.armorModel(ModelHandler.forgotten_hat, armorSlot);
+			public HumanoidModel<?> getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot,  HumanoidModel<?> _default) {
+				return ModelHandler.armorModel(ModelHandler.forgotten_hat, armorSlot);
 			}
 		
 		});	
