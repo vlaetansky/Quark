@@ -9,6 +9,8 @@ import net.minecraft.core.Registry;
 import net.minecraft.data.worldgen.BiomeDefaultFeatures;
 import net.minecraft.data.worldgen.biome.OverworldBiomes;
 import net.minecraft.data.worldgen.features.FeatureUtils;
+import net.minecraft.data.worldgen.features.OreFeatures;
+import net.minecraft.data.worldgen.placement.OrePlacements;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -16,6 +18,7 @@ import net.minecraft.sounds.Music;
 import net.minecraft.sounds.Musics;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
@@ -25,9 +28,11 @@ import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.biome.OverworldBiomeBuilder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.levelgen.placement.HeightRangePlacement;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
@@ -50,6 +55,7 @@ public class GlimmeringWealdModule extends QuarkModule {
 	private static final Climate.Parameter FULL_RANGE = Climate.Parameter.span(-1.0F, 1.0F);
 	private static final String BIOME_NAME = "glimmering_weald";
 
+	public static final PlacedFeature ORE_LAPIS_EXTRA = PlacementUtils.register("ore_lapis_glimmering_weald", OreFeatures.ORE_LAPIS.placed(OrePlacements.commonOrePlacement(12, HeightRangePlacement.uniform(VerticalAnchor.absolute(-64), VerticalAnchor.absolute(0)))));
 	public static PlacedFeature placed_glow_shrooms;
 	public static PlacedFeature placed_glow_extras;
 
@@ -100,6 +106,7 @@ public class GlimmeringWealdModule extends QuarkModule {
 		
 		if(ModuleLoader.INSTANCE.isModuleEnabled(StonelingsModule.class))
 		      mobs.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(StonelingsModule.stonelingType, 200, 1, 4));
+		mobs.addSpawn(MobCategory.UNDERGROUND_WATER_CREATURE, new MobSpawnSettings.SpawnerData(EntityType.GLOW_SQUID, 20, 4, 6));
 
 		BiomeGenerationSettings.Builder settings = new BiomeGenerationSettings.Builder();
 		OverworldBiomes.globalOverworldGeneration(settings);
@@ -112,6 +119,8 @@ public class GlimmeringWealdModule extends QuarkModule {
 
 		settings.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, placed_glow_shrooms);
 		settings.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, placed_glow_extras);
+		
+		settings.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_LAPIS_EXTRA);
 
 		Music music = Musics.createGameMusic(QuarkSounds.MUSIC_GLIMMERING_WEALD);
 		Biome biome = OverworldBiomes.biome(Biome.Precipitation.RAIN, Biome.BiomeCategory.UNDERGROUND, 0.8F, 0.4F, mobs, settings, music);
