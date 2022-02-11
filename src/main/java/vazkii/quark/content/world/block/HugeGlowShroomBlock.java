@@ -81,8 +81,10 @@ public class HugeGlowShroomBlock extends HugeMushroomBlock implements IQuarkBloc
 			}
 
 			// Offset stem in random direction
-			Direction dir = MiscUtil.HORIZONTALS[rand.nextInt(MiscUtil.HORIZONTALS.length)];
-			placePos = placePos.relative(dir);
+			if(stemHeight2 > 0) {
+				Direction dir = MiscUtil.HORIZONTALS[rand.nextInt(MiscUtil.HORIZONTALS.length)];
+				placePos = placePos.relative(dir);
+			}
 
 			// Stem #2
 			for(int i = 0; i < stemHeight2; i++) {
