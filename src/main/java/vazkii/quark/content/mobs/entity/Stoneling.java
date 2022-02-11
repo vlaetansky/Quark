@@ -2,8 +2,8 @@ package vazkii.quark.content.mobs.entity;
 
 import static vazkii.quark.content.world.module.NewStoneTypesModule.jasperBlock;
 import static vazkii.quark.content.world.module.NewStoneTypesModule.limestoneBlock;
-import static vazkii.quark.content.world.module.NewStoneTypesModule.shaleBlock;
 import static vazkii.quark.content.world.module.NewStoneTypesModule.polishedBlocks;
+import static vazkii.quark.content.world.module.NewStoneTypesModule.shaleBlock;
 
 import java.util.List;
 import java.util.Random;
@@ -27,7 +27,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -73,6 +72,7 @@ import vazkii.quark.content.mobs.ai.ActWaryGoal;
 import vazkii.quark.content.mobs.ai.FavorBlockGoal;
 import vazkii.quark.content.mobs.ai.RunAndPoofGoal;
 import vazkii.quark.content.mobs.module.StonelingsModule;
+import vazkii.quark.content.world.module.GlimmeringWealdModule;
 
 public class Stoneling extends PathfinderMob {
 
@@ -131,13 +131,6 @@ public class Stoneling extends PathfinderMob {
 			maxUpStep = 1F;
 		else
 			maxUpStep = 0.6F;
-
-		if (!level.isClientSide && level.getDifficulty() == Difficulty.PEACEFUL && !isTame) {
-			discard();
-			for (Entity passenger : getIndirectPassengers())
-				if (!(passenger instanceof Player))
-					passenger.discard();
-		}
 
 		this.yBodyRotO = this.yRotO;
 		this.yBodyRot = this.getYRot();
@@ -416,7 +409,10 @@ public class Stoneling extends PathfinderMob {
 	}
 
 	public static boolean spawnPredicate(EntityType<? extends Stoneling> type, ServerLevelAccessor world, MobSpawnType reason, BlockPos pos, Random rand) {
-		return pos.getY() <= StonelingsModule.maxYLevel && MiscUtil.validSpawnLight(world, pos, rand) && MiscUtil.validSpawnLocation(type, world, reason, pos);
+		System.out.println("checking in " + world.getBiome(pos).getRegistryName());
+		return pos.getY() <= StonelingsModule.maxYLevel 
+				&& (MiscUtil.validSpawnLight(world, pos, rand) || world.getBiome(pos).getRegistryName().equals(GlimmeringWealdModule.glimmering_weald.getRegistryName())) 
+				&& MiscUtil.validSpawnLocation(type, world, reason, pos);
 	}
 
 	@Override

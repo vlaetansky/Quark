@@ -1,6 +1,9 @@
 package vazkii.quark.content.world.block;
 
+import java.util.Random;
+
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -13,6 +16,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.base.block.QuarkBushBlock;
 import vazkii.quark.base.module.QuarkModule;
 
@@ -23,17 +28,25 @@ public class GlowShroomBlock extends QuarkBushBlock {
 	public GlowShroomBlock(QuarkModule module) {
 		super("glow_shroom", module, CreativeModeTab.TAB_DECORATIONS, 
 				Properties.copy(Blocks.RED_MUSHROOM)
+				.randomTicks()
 				.lightLevel(s -> 10));
 	}
-	
-	@Override // TODO for test only
-	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult res) {
-		if(!level.isClientSide && hand == InteractionHand.MAIN_HAND)
-			HugeGlowShroomBlock.place(level, level.random, pos);
-		
-		return InteractionResult.SUCCESS;
-	}
 
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
+		super.animateTick(stateIn, worldIn, pos, rand);
+
+		if(rand.nextInt(12) == 0 && worldIn.getBlockState(pos.above()).isAir())
+			worldIn.addParticle(ParticleTypes.END_ROD, 
+					pos.getX() + 0.4 + rand.nextDouble() * 0.2, 
+					pos.getY() + 0.5 + rand.nextDouble() * 0.1, 
+					pos.getZ() + 0.4 + rand.nextDouble() * 0.2, 
+					(Math.random() - 0.5) * 0.04, 
+					(1 + Math.random()) * 0.02, 
+					(Math.random() - 0.5) * 0.04);
+	}
+	
 	@Override
 	public VoxelShape getShape(BlockState p_54889_, BlockGetter p_54890_, BlockPos p_54891_, CollisionContext p_54892_) {
 		return SHAPE;

@@ -44,7 +44,8 @@ public class HugeGlowShroomBlock extends HugeMushroomBlock implements IQuarkBloc
 	public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
 		super.animateTick(stateIn, worldIn, pos, rand);
 
-		if(glowing && rand.nextInt(6) == 0 && worldIn.getBlockState(pos.below()).isAir())
+		BlockState below = worldIn.getBlockState(pos.below());
+		if(glowing && rand.nextInt(10) == 0 && (below.isAir() || below.getBlock() == GlimmeringWealdModule.glow_shroom_ring))
 			worldIn.addParticle(ParticleTypes.END_ROD, pos.getX() + rand.nextDouble(), pos.getY(), pos.getZ() + rand.nextDouble(), 0, -0.05 - Math.random() * 0.05, 0);
 	}
 

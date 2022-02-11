@@ -14,7 +14,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.Music;
 import net.minecraft.sounds.Musics;
-import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.biome.Climate;
@@ -28,10 +28,12 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
+import vazkii.quark.content.mobs.module.StonelingsModule;
 import vazkii.quark.content.world.block.GlowLichenGrowthBlock;
 import vazkii.quark.content.world.block.GlowShroomBlock;
 import vazkii.quark.content.world.block.GlowShroomRingBlock;
@@ -85,6 +87,9 @@ public class GlimmeringWealdModule extends QuarkModule {
 	private static Biome makeBiome() {
 		MobSpawnSettings.Builder mobs = new MobSpawnSettings.Builder();
 		BiomeDefaultFeatures.commonSpawns(mobs);
+		
+		if(ModuleLoader.INSTANCE.isModuleEnabled(StonelingsModule.class))
+		      mobs.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(StonelingsModule.stonelingType, 200, 1, 4));
 
 		BiomeGenerationSettings.Builder settings = new BiomeGenerationSettings.Builder();
 		OverworldBiomes.globalOverworldGeneration(settings);
@@ -98,7 +103,7 @@ public class GlimmeringWealdModule extends QuarkModule {
 		settings.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, placed_glow_shrooms);
 		settings.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, placed_glow_extras);
 
-		Music music = Musics.createGameMusic(SoundEvents.MUSIC_BIOME_DRIPSTONE_CAVES);
+		Music music = Musics.createGameMusic(QuarkSounds.MUSIC_GLIMMERING_WEALD);
 		Biome biome = OverworldBiomes.biome(Biome.Precipitation.RAIN, Biome.BiomeCategory.UNDERGROUND, 0.8F, 0.4F, mobs, settings, music);
 		biome.setRegistryName(new ResourceLocation(Quark.MOD_ID, BIOME_NAME));
 

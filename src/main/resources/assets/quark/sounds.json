@@ -440,5 +440,14 @@
         "stream": true
       }
     ]
+  },
+  "music.glimmering_weald": {
+    "category": "music",
+    "sounds": [
+      {
+        "name": "quark:music/glimmering_weald",
+        "stream": true
+      }
+    ]
   }
 }

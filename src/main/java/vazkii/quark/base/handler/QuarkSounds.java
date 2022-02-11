@@ -76,6 +76,7 @@ public class QuarkSounds {
     public static final SoundEvent AMBIENT_CHATTER = register("ambient.chatter");
     
     public static final SoundEvent MUSIC_ENDERMOSH = register("music.endermosh");
+    public static final SoundEvent MUSIC_GLIMMERING_WEALD = register("music.glimmering_weald");
 
     public static void start() {
         for (SoundEvent event : REGISTRY_DEFERENCE)
