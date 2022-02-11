@@ -14,7 +14,10 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.Music;
 import net.minecraft.sounds.Musics;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.Tag;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.biome.Climate;
@@ -57,6 +60,8 @@ public class GlimmeringWealdModule extends QuarkModule {
 	public static Block glow_shroom_block;
 	public static Block glow_shroom_stem;
 	public static Block glow_shroom_ring;
+	
+	public static Tag<Item> glowShroomFeedablesTag;
 
 	@Override
 	public void construct() {
@@ -70,6 +75,11 @@ public class GlimmeringWealdModule extends QuarkModule {
 		RegistryHelper.register(makeBiome());
 	}
 
+	@Override
+	public void setup() {
+		glowShroomFeedablesTag = ItemTags.createOptional(new ResourceLocation(Quark.MOD_ID, "glow_shroom_feedables"));
+	}
+	
 	private static void makeFeatures() {
 		placed_glow_shrooms = place("glow_shrooms", new GlowShroomsFeature(), GlowShroomsFeature::placed);
 		placed_glow_extras = place("glow_extras", new GlowExtrasFeature(), GlowExtrasFeature::placed);

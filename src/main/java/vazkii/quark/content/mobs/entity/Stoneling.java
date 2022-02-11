@@ -26,6 +26,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -44,6 +45,7 @@ import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -67,6 +69,7 @@ import net.minecraftforge.network.NetworkHooks;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.handler.QuarkSounds;
+import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.util.IfFlagGoal;
 import vazkii.quark.content.mobs.ai.ActWaryGoal;
 import vazkii.quark.content.mobs.ai.FavorBlockGoal;
@@ -110,11 +113,14 @@ public class Stoneling extends PathfinderMob {
 	protected void registerGoals() {
 		goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.2, 0.98F));
 		goalSelector.addGoal(4, new FavorBlockGoal(this, 0.2, s -> s.is(Tags.Blocks.ORES_DIAMOND)));
-		goalSelector.addGoal(3, new IfFlagGoal(new TemptGoal(this, 0.6, Ingredient.of(Tags.Items.GEMS_DIAMOND), false), () -> StonelingsModule.enableDiamondHeart && !StonelingsModule.tamableStonelings));
+		goalSelector.addGoal(3, new IfFlagGoal(new TemptGoal(this, 0.6, Ingredient.of(temptTag()), false), () -> StonelingsModule.enableDiamondHeart && !StonelingsModule.tamableStonelings));
 		goalSelector.addGoal(2, new RunAndPoofGoal<>(this, Player.class, 4, 0.5, 0.5));
 		goalSelector.addGoal(1, waryGoal = new ActWaryGoal(this, 0.1, 6, () -> StonelingsModule.cautiousStonelings));
-		goalSelector.addGoal(0, new IfFlagGoal(new TemptGoal(this, 0.6, Ingredient.of(Tags.Items.GEMS_DIAMOND), false), () -> StonelingsModule.tamableStonelings));
-
+		goalSelector.addGoal(0, new IfFlagGoal(new TemptGoal(this, 0.6, Ingredient.of(temptTag()), false), () -> StonelingsModule.tamableStonelings));
+	}
+	
+	private Tag<Item> temptTag() {
+		return ModuleLoader.INSTANCE.isModuleEnabled(GlimmeringWealdModule.class) ? GlimmeringWealdModule.glowShroomFeedablesTag : Tags.Items.GEMS_DIAMOND;
 	}
 
 	public static AttributeSupplier.Builder prepareAttributes() {
@@ -227,7 +233,7 @@ public class Stoneling extends PathfinderMob {
 							playSound(QuarkSounds.ENTITY_STONELING_GIVE, 1F, 1F);
 						else playSound(QuarkSounds.ENTITY_STONELING_TAKE, 1F, 1F);
 					}
-				} else if (StonelingsModule.tamableStonelings && playerItem.is(Tags.Items.GEMS_DIAMOND)) {
+				} else if (StonelingsModule.tamableStonelings && playerItem.is(temptTag())) {
 					heal(8);
 
 					setPlayerMade(true);
