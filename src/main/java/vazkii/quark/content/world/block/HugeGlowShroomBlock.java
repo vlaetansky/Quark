@@ -61,8 +61,8 @@ public class HugeGlowShroomBlock extends HugeMushroomBlock implements IQuarkBloc
 			BlockState cap = GlimmeringWealdModule.glow_shroom_block.defaultBlockState().setValue(HugeGlowShroomBlock.DOWN, false);
 
 			int stemHeight1 = 2;
-			int stemHeight2 = rand.nextInt(5);
-			boolean hasBigCap = rand.nextDouble() < 0.7;
+			int stemHeight2 = rand.nextInt(4);
+			boolean hasBigCap = rand.nextDouble() < 0.6;
 
 			// Check if it has space
 			int totalHeight = stemHeight1 + stemHeight2 + (hasBigCap ? 2 : 1);

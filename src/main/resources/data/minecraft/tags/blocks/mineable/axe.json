@@ -61,6 +61,8 @@
     "quark:stripped_crimson_post",
     "quark:stripped_warped_post",
     "quark:chute",
-    "quark:crate"
+    "quark:crate",
+    "quark:glow_shroom_block",
+    "quark:glow_shroom_stem"
   ]
 }

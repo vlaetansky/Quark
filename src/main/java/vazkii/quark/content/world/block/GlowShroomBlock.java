@@ -4,11 +4,13 @@ import java.util.Random;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -17,7 +19,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.base.block.QuarkBushBlock;
 import vazkii.quark.base.module.QuarkModule;
 
-public class GlowShroomBlock extends QuarkBushBlock {
+public class GlowShroomBlock extends QuarkBushBlock implements BonemealableBlock {
 
 	protected static final VoxelShape SHAPE = Block.box(5.0D, 0.0D, 5.0D, 11.0D, 6.0D, 11.0D);
 
@@ -51,6 +53,21 @@ public class GlowShroomBlock extends QuarkBushBlock {
 	@Override
 	protected boolean mayPlaceOn(BlockState p_54894_, BlockGetter p_54895_, BlockPos p_54896_) {
 		return p_54894_.getBlock() == Blocks.DEEPSLATE;
+	}
+
+	@Override
+	public boolean isValidBonemealTarget(BlockGetter p_50897_, BlockPos p_50898_, BlockState p_50899_, boolean p_50900_) {
+		return true;
+	}
+
+	@Override
+	public boolean isBonemealSuccess(Level p_50901_, Random p_50902_, BlockPos p_50903_, BlockState p_50904_) {
+		return p_50902_.nextFloat() < 0.4D;
+	}
+
+	@Override
+	public void performBonemeal(ServerLevel p_50893_, Random p_50894_, BlockPos p_50895_, BlockState p_50896_) {
+		HugeGlowShroomBlock.place(p_50893_, p_50894_, p_50895_);
 	}
 
 }
