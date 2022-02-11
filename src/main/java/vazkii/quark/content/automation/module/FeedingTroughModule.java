@@ -1,13 +1,15 @@
 package vazkii.quark.content.automation.module;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.mojang.datafixers.util.Pair;
+
+import java.util.Objects;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.ai.goal.TemptGoal;
+import net.minecraft.world.entity.ai.village.poi.PoiManager;
+import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
@@ -15,20 +17,16 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.TickingBlockEntity;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.LogicalSide;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -45,6 +43,7 @@ import vazkii.quark.content.automation.block.be.FeedingTroughBlockEntity;
 @LoadModule(category = ModuleCategory.AUTOMATION, hasSubscriptions = true)
 public class FeedingTroughModule extends QuarkModule {
     public static BlockEntityType<FeedingTroughBlockEntity> blockEntityType;
+    public static PoiType feedingTroughPoi;
 
     @Config(description = "How long, in game ticks, between animals being able to eat from the trough")
     @Config.Min(1)
@@ -59,26 +58,6 @@ public class FeedingTroughModule extends QuarkModule {
     public static double loveChance = 0.333333333;
     
     @Config public static double range = 10;
-
-    private static final ThreadLocal<Set<FeedingTroughBlockEntity>> loadedTroughs = ThreadLocal.withInitial(HashSet::new);
-
-    @SubscribeEvent
-    public void buildTroughSet(TickEvent.WorldTickEvent event) {
-        Set<FeedingTroughBlockEntity> troughs = loadedTroughs.get();
-        if (event.side == LogicalSide.SERVER) {
-            if (event.phase == TickEvent.Phase.START) {
-                breedingOccurred.remove();
-                List<TickingBlockEntity> tickers = new ArrayList<>(event.world.blockEntityTickers);
-                for (TickingBlockEntity ticking : tickers) { 
-                	BlockEntity tile = event.world.getBlockEntity(ticking.getPos());
-                    if (tile instanceof FeedingTroughBlockEntity)
-                        troughs.add((FeedingTroughBlockEntity) tile);
-                }
-            } else {
-                troughs.clear();
-            }
-        }
-    }
 
     private static final ThreadLocal<Boolean> breedingOccurred = ThreadLocal.withInitial(() -> false);
 
@@ -96,41 +75,34 @@ public class FeedingTroughModule extends QuarkModule {
         }
     }
 
-    public static Player temptWithTroughs(TemptGoal goal, Player found) {
+    public static Player temptWithTroughs(TemptGoal goal, Player found, ServerLevel level) {
         if (!ModuleLoader.INSTANCE.isModuleEnabled(FeedingTroughModule.class) ||
                 (found != null && (goal.items.test(found.getMainHandItem()) || goal.items.test(found.getOffhandItem()))))
             return found;
 
-        if (!(goal.mob instanceof Animal) ||
-                !((Animal) goal.mob).canFallInLove() ||
-                ((Animal) goal.mob).getAge() != 0)
+        if (!(goal.mob instanceof Animal animal) ||
+                !animal.canFallInLove() ||
+                animal.getAge() != 0)
             return found;
 
-        double shortestDistanceSq = Double.MAX_VALUE;
-        BlockPos location = null;
-        FakePlayer target = null;
+        Pair<BlockPos, FakePlayer> pair = level.getPoiManager().findAllClosestFirst(
+                    feedingTroughPoi.getPredicate(), p -> p.distSqr(animal.position(), true) <= range * range,
+                        animal.blockPosition(), (int) range, PoiManager.Occupancy.ANY)
+                .map(pos -> level.getBlockEntity(pos) instanceof FeedingTroughBlockEntity trough ? trough : null)
+                .filter(Objects::nonNull)
+                .map(trough -> Pair.of(trough.getBlockPos(), trough.getFoodHolder(goal)))
+                .filter(p -> p.getSecond() != null)
+                .findFirst()
+                .orElse(null);
 
-        Set<FeedingTroughBlockEntity> troughs = loadedTroughs.get();
-        for (FeedingTroughBlockEntity tile : troughs) {
-            BlockPos pos = tile.getBlockPos();
-            double distanceSq = pos.distSqr(goal.mob.position(), true);
-            if (distanceSq <= range * range && distanceSq < shortestDistanceSq) {
-                FakePlayer foodHolder = tile.getFoodHolder(goal);
-                if (foodHolder != null) {
-                    shortestDistanceSq = distanceSq;
-                    target = foodHolder;
-                    location = pos.immutable();
-                }
-            }
-        }
-
-        if (target != null) {
-        	Vec3 eyesPos = goal.mob.position().add(0, goal.mob.getEyeHeight(), 0);
+        if (pair != null) {
+            BlockPos location = pair.getFirst();
+            Vec3 eyesPos = goal.mob.position().add(0, goal.mob.getEyeHeight(), 0);
             Vec3 targetPos = new Vec3(location.getX(), location.getY(), location.getZ()).add(0.5, 0.0625, 0.5);
             BlockHitResult ray = goal.mob.level.clip(new ClipContext(eyesPos, targetPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, goal.mob));
 
             if (ray.getType() == HitResult.Type.BLOCK && ray.getBlockPos().equals(location))
-                return target;
+                return pair.getSecond();
         }
 
         return found;
@@ -142,5 +114,7 @@ public class FeedingTroughModule extends QuarkModule {
                 Block.Properties.of(Material.WOOD).strength(0.6F).sound(SoundType.WOOD));
         blockEntityType = BlockEntityType.Builder.of(FeedingTroughBlockEntity::new, feedingTrough).build(null);
         RegistryHelper.register(blockEntityType, "feeding_trough");
+        feedingTroughPoi = new PoiType("quark:feeding_trough", PoiType.getBlockStates(feedingTrough), 1, 32);
+        RegistryHelper.register(feedingTroughPoi, "feeding_trough");
     }
 }
