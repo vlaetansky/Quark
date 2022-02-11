@@ -1,11 +1,16 @@
 package vazkii.quark.content.world.block;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import vazkii.quark.base.block.QuarkBushBlock;
@@ -19,6 +24,14 @@ public class GlowShroomBlock extends QuarkBushBlock {
 		super("glow_shroom", module, CreativeModeTab.TAB_DECORATIONS, 
 				Properties.copy(Blocks.RED_MUSHROOM)
 				.lightLevel(s -> 10));
+	}
+	
+	@Override // TODO for test only
+	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult res) {
+		if(!level.isClientSide && hand == InteractionHand.MAIN_HAND)
+			HugeGlowShroomBlock.place(level, level.random, pos);
+		
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
