@@ -18,7 +18,7 @@ import vazkii.quark.content.tweaks.module.AutomaticRecipeUnlockModule;
 
 import java.util.Map;
 
-@Mixin(ServerAdvancementManager.class)
+@Mixin(value = ServerAdvancementManager.class, priority = 1001)
 public class ServerAdvancementManagerMixin {
 	@Inject(method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V",
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/advancements/AdvancementList;<init>()V"),
