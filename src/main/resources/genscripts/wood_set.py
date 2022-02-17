@@ -1,4 +1,4 @@
-import sys, os, json
+import sys, os, json, re
 from os import system as run
 
 # TODO allow input from cmd
@@ -9,7 +9,10 @@ flag = 'azalea_wood'
 def main():
 	for arg in sys.argv:
 		if not '.py' in arg:
-			makeWood(arg)
+			if '=' in arg:
+				pass # TODO
+			else:
+				makeWood(arg)
 
 def makeWood(type):
 	#run(f"py generic_block.py {type}_planks")
@@ -35,11 +38,32 @@ def appendTags(type):
 	print('')
 	print('Appending tags for', type)
 
-	addToTag('logs', type, ["%_log", "stripped_%_log", "%_wood", "stripped_%_wood"])
+	bulkTag(['logs', 'logs_that_burn', f"{modid}:{type}_logs"], type, ["%_log", "stripped_%_log", "%_wood", "stripped_%_wood"])
+	addToTag('quark:ladders', type, ["%_ladder"])
+	addToTag('climbable', type, ["%_ladder"], False)
+	addToTag('planks', type, ["%_plank"])
+	addToTag('wooden_stairs', type, ["%_plank_stairs"])
+	addToTag('wooden_slabs', type, ["%_plank_slab"])
+	addToTag('quark:wooden_vertical_slabs', type, ["%_plank_vertical_slab"])
+	bulkTag(['trapdoors', 'wooden_trapdoors'], type, ["%_trapdoor"])
+	bulkTag(['fences', 'wooden_fences', 'forge:fences', 'forge:fences/wooden'], type, ["%_fence"])
+	bulkTag(['fence_gates', 'forge:fence_gates', 'forge:fence_gates/wooden'], type, ["%_fence_gate"])
+	bulkTag(['buttons', 'wooden_buttons'], type, ["%_button"])
+	bulkTag(['pressure_plates', 'pressure_plates'], type, ["%_pressure_plate"])
+	bulkTag(['doors', 'wooden_doors'], type, ["%_door"])
+	addToTag('forge:bookshelves', type, ["%_bookshelf"])
+	bulkTag(['signs', 'standing_signs'], type, ["%_sign"], False)
+	bulkTag(['signs', 'wall_signs'], type, ["%_wall_sign"], False)
+	bulkTag(['forge:chests', 'forge:chests/wooden', 'guarded_by_piglins'], type, ["%_chest", "%_trapped_chest"])
+	addToTag('forge:chests/trapped', type, ["%_trapped_chest"])
 
-def addToTag(tag, type, items, is_block=True, mirror=True):
+def bulkTag(tags, type, items, mirror=True, is_block=True):
+	for tag in tags:
+		addToTag(tag, type, items, is_block, mirror)
+
+def addToTag(tag, type, items, mirror=True, is_block=True):
 	if mirror:
-		addToTag(tag, type, items, not is_block, False)
+		addToTag(tag, type, items, not mirror, is_block)
 
 	if ':' in tag:
 		resloc = tag.split(':')
@@ -50,6 +74,10 @@ def addToTag(tag, type, items, is_block=True, mirror=True):
 	path = f"../data/{resloc[0]}/tags/{tag_type}/{resloc[1]}.json"
 
 	if not os.path.exists(path):
+		parent = re.sub(r'/[^/]+$', '', path)
+		print("parent", parent)
+		os.makedirs(parent, exist_ok=True)
+
 		with open(path, 'w') as f:
 			f.write('{ "replace": false, "values": [] }')
 
