@@ -1,5 +1,9 @@
 package vazkii.quark.content.world.module;
 
+import net.minecraft.data.worldgen.features.TreeFeatures;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.material.MaterialColor;
 import vazkii.quark.base.handler.WoodSetHandler;
 import vazkii.quark.base.handler.WoodSetHandler.WoodSet;
@@ -15,6 +19,17 @@ public class AzaleaWoodModule extends QuarkModule {
 	@Override
 	public void construct() {
 		woodSet = WoodSetHandler.addWoodSet(this, "azalea", MaterialColor.COLOR_LIGHT_GREEN, MaterialColor.COLOR_BROWN);
+	}
+	
+	@Override
+	public void enabledStatusChanged(boolean firstLoad, boolean oldStatus, boolean newStatus) {
+		Object obj = TreeFeatures.AZALEA_TREE.config();
+		if(obj instanceof TreeConfiguration config) {
+			if(newStatus)
+				config.trunkProvider = BlockStateProvider.simple(woodSet.log);
+			else if(!firstLoad)
+				config.trunkProvider = BlockStateProvider.simple(Blocks.OAK_LOG);
+		}
 	}
 	
 }
