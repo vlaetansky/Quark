@@ -77,7 +77,6 @@ public class WoodSetHandler {
 		
 		VariantChestsModule.addChest(name, module, Block.Properties.copy(Blocks.CHEST), true);
 		
-		// TODO ensure everything is tagged and recipes work
 		set.signItem = new QuarkSignItem(module, set.sign, set.wallSign);
 		set.boatItem = new QuarkItem(name + "_boat", module, new Item.Properties().tab(CreativeModeTab.TAB_TRANSPORTATION)); // TODO make do stuff
 		
