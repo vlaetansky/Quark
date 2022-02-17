@@ -59,11 +59,11 @@ def appendTags(type):
 
 def bulkTag(tags, type, items, mirror=True, is_block=True):
 	for tag in tags:
-		addToTag(tag, type, items, is_block, mirror)
+		addToTag(tag, type, items, mirror, is_block)
 
 def addToTag(tag, type, items, mirror=True, is_block=True):
 	if mirror:
-		addToTag(tag, type, items, not mirror, is_block)
+		addToTag(tag, type, items, False, not is_block)
 
 	if ':' in tag:
 		resloc = tag.split(':')
@@ -75,7 +75,6 @@ def addToTag(tag, type, items, mirror=True, is_block=True):
 
 	if not os.path.exists(path):
 		parent = re.sub(r'/[^/]+$', '', path)
-		print("parent", parent)
 		os.makedirs(parent, exist_ok=True)
 
 		with open(path, 'w') as f:
