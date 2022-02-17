@@ -19,29 +19,33 @@ def main():
 				makeWood(arg)
 
 def makeWood(type):
-	#run(f"py generic_block.py {type}_planks")
-	#run(f"py pillar.py {type}_log stripped_{type}_log")
-	#run(f"py wood_block.py {type} stripped_{type}")
-	#run(f"py stairs_slabs.py category={category} flag={flag} {type}_planks")
-	#run(f"py post_modded.py flag={flag} {type} stripped_{type}")
-	#run(f"py bookshelves.py {type}")
-	#run(f"py chest.py {type}")
-	#run(f"py ladder.py {type}")
-	#run(f"py door.py {type}")
-	#run(f"py trapdoor.py {type}")
-	#run(f"py fence_gates.py {type}")
-	#run(f"py fences.py {type}")
-	#run(f"py sign.py {type}")
-	#run(f"py buttons.py texname={type}_planks {type}")
-	#run(f"py pressure_plates.py texname={type}_planks {type}")
-	#run(f"py generic_item.py {type}_boat")
+	run(f"py generic_block.py {type}_planks")
+	run(f"py pillar.py {type}_log stripped_{type}_log")
+	run(f"py wood_block.py {type} stripped_{type}")
+	run(f"py stairs_slabs.py category={category} flag={flag} {type}_planks")
+	run(f"py post_modded.py flag={flag} {type} stripped_{type}")
+	run(f"py bookshelves.py {type}")
+	run(f"py chest.py {type}")
+	run(f"py ladder.py {type}")
+	run(f"py door.py {type}")
+	run(f"py trapdoor.py {type}")
+	run(f"py fence_gates.py {type}")
+	run(f"py fences.py {type}")
+	run(f"py sign.py {type}")
+	run(f"py buttons.py texname={type}_planks {type}")
+	run(f"py pressure_plates.py texname={type}_planks {type}")
+	run(f"py generic_item.py {type}_boat")
 	run(f"py wood_set_recipes.py category={category} flag={flag} {type}")
 
-	#appendTags(type)
+	appendTags(type)
 
 def appendTags(type):
-	print('')
-	print('Appending tags for', type)
+	addToTag('mineable/axe', type, ["%_planks", "%_log", "%_wood", 
+		"stripped_%_log", "%_wood", "stripped_%_wood", "%_post", 
+		"stripped_%_post", "%_bookshelf", "%_planks_slab", "%_planks_stairs", 
+		"%_planks_vertical_slab", "%_fence", "%_fence_gate", "%_door",
+		 "%_trapdoor", "%_ladder", "%_sign", "%_wall_sign", "%_chest", 
+		 "%_trapped_chest", "%_button", "%_pressure_plate"], False)
 
 	bulkTag(['logs', 'logs_that_burn', f"{modid}:{type}_logs"], type, ["%_log", "stripped_%_log", "%_wood", "stripped_%_wood"])
 	addToTag('quark:ladders', type, ["%_ladder"])
@@ -101,6 +105,5 @@ def addToTag(tag, type, items, mirror=True, is_block=True):
 		if changed:
 			with open(path, 'w') as fw:
 				json.dump(data, fw, indent=4)
-				print('Updating', path)
 
 main()
