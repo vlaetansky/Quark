@@ -9,7 +9,7 @@
       "item": "minecraft:flowering_azalea_leaves"
     },
     "W": {
-      "tag": "minecraft:oak_logs"
+      "tag": "quark:azalea_logs"
     }
   },
   "result": {
@@ -18,8 +18,17 @@
   },
   "conditions": [
     {
-      "type": "quark:flag",
-      "flag": "hedges"
+      "type": "forge:and",
+      "values": [
+        {
+          "type": "quark:flag",
+          "flag": "hedges"
+        },
+        {
+          "type": "quark:flag",
+          "flag": "azalea_wood"
+        }
+      ]
     }
   ]
 } 

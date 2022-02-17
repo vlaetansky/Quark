@@ -6,14 +6,14 @@
   ],
   "key": {
     "L": {
-      "item": "quark:orange_blossom_leaves"
+      "item": "minecraft:azalea_leaves"
     },
     "W": {
-      "tag": "quark:blossom_logs"
+      "tag": "minecraft:oak_logs"
     }
   },
   "result": {
-    "item": "quark:orange_blossom_hedge",
+    "item": "quark:azalea_hedge",
     "count": 2
   },
   "conditions": [
@@ -25,10 +25,13 @@
           "flag": "hedges"
         },
         {
-          "type": "quark:flag",
-          "flag": "blossom_trees"
+          "type": "forge:not",
+          "value": {
+            "type": "quark:flag",
+            "flag": "azalea_wood"  
+          }
         }
       ]
     }
   ]
-}
+} 
