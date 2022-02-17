@@ -63,6 +63,13 @@
     "quark:chute",
     "quark:crate",
     "quark:glow_shroom_block",
-    "quark:glow_shroom_stem"
+    "quark:glow_shroom_stem",
+    "quark:acacia_ladder",
+    "quark:birch_ladder",
+    "quark:crimson_ladder",
+    "quark:dark_oak_ladder",
+    "quark:jungle_ladder",
+    "quark:spruce_ladder",
+    "quark:warped_ladder"
   ]
 }
