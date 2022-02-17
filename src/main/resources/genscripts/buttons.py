@@ -6,7 +6,7 @@ import re
 copy([
 	('block_model_button.json', 'assets/{modid}/models/block/{name}_button.json'),
 	('block_model_button_pressed.json', 'assets/{modid}/models/block/{name}_button_pressed.json'),
-	('block_item_generic.json', 'assets/{modid}/models/item/{name}_button.json'),
+	('block_item_button.json', 'assets/{modid}/models/item/{name}_button.json'),
 
 	('blockstate_button.json', 'assets/{modid}/blockstates/{name}_button.json')
 ])

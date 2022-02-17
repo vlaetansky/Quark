@@ -10,6 +10,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.PressurePlateBlock.Sensitivity;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -26,9 +27,11 @@ import vazkii.quark.base.block.QuarkDoorBlock;
 import vazkii.quark.base.block.QuarkFenceBlock;
 import vazkii.quark.base.block.QuarkFenceGateBlock;
 import vazkii.quark.base.block.QuarkPillarBlock;
+import vazkii.quark.base.block.QuarkPressurePlateBlock;
 import vazkii.quark.base.block.QuarkStandingSignBlock;
 import vazkii.quark.base.block.QuarkTrapdoorBlock;
 import vazkii.quark.base.block.QuarkWallSignBlock;
+import vazkii.quark.base.block.QuarkWoodenButtonBlock;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.item.QuarkSignItem;
 import vazkii.quark.base.module.ModuleLoader;
@@ -60,6 +63,10 @@ public class WoodSetHandler {
 		
 		set.door = new QuarkDoorBlock(name + "_door", module, CreativeModeTab.TAB_DECORATIONS, BlockBehaviour.Properties.of(Material.WOOD, color).strength(3.0F).sound(SoundType.WOOD).noOcclusion());
 		set.trapdoor = new QuarkTrapdoorBlock(name + "_trapdoor", module, CreativeModeTab.TAB_DECORATIONS, BlockBehaviour.Properties.of(Material.WOOD, color).strength(3.0F).sound(SoundType.WOOD).noOcclusion().isValidSpawn((s, g, p, e) -> false));
+		
+		set.button = new QuarkWoodenButtonBlock(name + "_button", module, BlockBehaviour.Properties.of(Material.DECORATION).noCollission().strength(0.5F).sound(SoundType.WOOD));
+		set.pressurePlate = new QuarkPressurePlateBlock(Sensitivity.EVERYTHING, name + "_pressure_plate", module, CreativeModeTab.TAB_REDSTONE, BlockBehaviour.Properties.of(Material.WOOD, color).noCollission().strength(0.5F).sound(SoundType.WOOD));
+		
 		set.sign = new QuarkStandingSignBlock(name + "_sign", module, CreativeModeTab.TAB_DECORATIONS, type, BlockBehaviour.Properties.of(Material.WOOD, color).noCollission().strength(1.0F).sound(SoundType.WOOD));
 		set.wallSign = new QuarkWallSignBlock(name + "_wall_sign", module, CreativeModeTab.TAB_DECORATIONS, type, BlockBehaviour.Properties.of(Material.WOOD, color).noCollission().strength(1.0F).sound(SoundType.WOOD).dropsLike(set.sign));
 

@@ -15,7 +15,7 @@ import vazkii.quark.base.module.QuarkModule;
  * @author WireSegal
  * Created at 9:41 PM on 10/8/19.
  */
-public abstract class QuarkPressurePlateBlock extends PressurePlateBlock implements IQuarkBlock {
+public class QuarkPressurePlateBlock extends PressurePlateBlock implements IQuarkBlock {
 
     private final QuarkModule module;
     private BooleanSupplier enabledSupplier = () -> true;

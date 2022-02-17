@@ -1000,6 +1000,10 @@
 	"block.quark.blossom_fence": "Blossom Fence",
 	"block.quark.blossom_sign": "Blossom Sign",
 	"block.quark.azalea_sign": "Azalea Sign",
+	"block.quark.blossom_button": "Blossom Button",
+	"block.quark.blossom_pressure_plate": "Blossom Pressure Plate",
+	"block.quark.azalea_button": "Azalea Button",
+	"block.quark.azalea_pressure_plate": "Azalea Pressure Plate",
 
 	"item.quark.stoneling_spawn_egg": "Stoneling Spawn Egg",
 	"item.quark.frog_spawn_egg": "Frog Spawn Egg",

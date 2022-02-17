@@ -6,15 +6,9 @@ category = 'world'
 flag = 'azalea_wood'
 
 def main():
-	print('Starting...')
-	print('')
 	for arg in sys.argv:
 		if not '.py' in arg:
 			makeWood(arg)
-
-	print('')
-	print('Completed! Make sure to update tags:')
-	print('breakable_axe, fences, ladders')	# TODO finalize this list
 
 def makeWood(type):
 	run(f"py generic_block.py {type}_planks")
@@ -30,6 +24,8 @@ def makeWood(type):
 	run(f"py fence_gates.py {type}")
 	run(f"py fences.py {type}")
 	run(f"py sign.py {type}")
+	run(f"py buttons.py texname={type}_planks {type}")
+	run(f"py pressure_plates.py texname={type}_planks {type}")
 	run(f"py generic_item.py {type}_boat")
 
 main()

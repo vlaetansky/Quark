@@ -1,6 +1,6 @@
 {
   "parent": "block/pressure_plate_up",
   "textures": {
-    "texture": "%modid%:block/%texname%"
+    "texture": "quark:block/azalea_planks"
   }
 }
