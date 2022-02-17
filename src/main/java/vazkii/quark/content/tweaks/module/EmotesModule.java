@@ -104,6 +104,9 @@ public class EmotesModule extends QuarkModule {
 	@Override
 	public void constructClient() {
 		Minecraft mc = Minecraft.getInstance();
+		if (mc == null)
+			return; // Mojang datagen has no client instance available
+
 		emotesDir = new File(mc.gameDirectory, "/config/quark_emotes");
 		if(!emotesDir.exists())
 			emotesDir.mkdirs();
