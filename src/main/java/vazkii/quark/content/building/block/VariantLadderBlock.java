@@ -64,7 +64,7 @@ public class VariantLadderBlock extends LadderBlock implements IQuarkBlock {
 	}
 
 	@Override
-	public IQuarkBlock setCondition(BooleanSupplier condition) {
+	public VariantLadderBlock setCondition(BooleanSupplier condition) {
 		this.condition = condition;
 		return this;
 	}
