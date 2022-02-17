@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
@@ -24,74 +25,62 @@ public class StonelingModel extends EntityModel<Stoneling> {
 
 	public StonelingModel(ModelPart root) {
 		body = root.getChild("body");
-		arm_right = body.getChild("arm_right");
-		arm_left = body.getChild("arm_left");
-		leg_right = body.getChild("leg_right");
-		leg_left = body.getChild("leg_left");
+		arm_right = root.getChild("arm_right");
+		arm_left = root.getChild("arm_left");
+		leg_right = root.getChild("leg_right");
+		leg_left = root.getChild("leg_left");
 	}
 
+	// Made with Blockbench 4.1.5
 	public static LayerDefinition createBodyLayer() {
 		MeshDefinition mesh = new MeshDefinition();
 		PartDefinition root = mesh.getRoot();
 
-		PartDefinition body = root.addOrReplaceChild("body", 
-				CubeListBuilder.create(),
-				PartPose.offset(0.0F, 14.0F, 0.0F));
+		PartDefinition body = root.addOrReplaceChild("body", CubeListBuilder.create()
+				.texOffs(0, 0).addBox(-4.0F, -9.0F, -3.0F, 8.0F, 9.0F, 7.0F, new CubeDeformation(0.0F))
+				.texOffs(36, 13).addBox(-4.0F, -2.0F, -4.0F, 8.0F, 2.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(44, 7).addBox(-4.0F, -9.0F, -5.0F, 8.0F, 4.0F, 2.0F, new CubeDeformation(0.0F))
+				.texOffs(23, 0).addBox(-2.0F, -12.0F, -1.0F, 4.0F, 3.0F, 4.0F, new CubeDeformation(0.0F))
+				.texOffs(30, 7).addBox(-2.0F, -9.0F, -6.0F, 4.0F, 3.0F, 3.0F, new CubeDeformation(0.0F))
+				.texOffs(25, 24).addBox(-2.0F, -12.0F, -5.0F, 4.0F, 6.0F, 3.0F, new CubeDeformation(0.0F))
+				.texOffs(36, 17).addBox(-2.0F, -11.0F, 3.0F, 4.0F, 5.0F, 3.0F, new CubeDeformation(0.0F))
+				.texOffs(0, 27).addBox(-2.0F, -2.0F, -4.0F, 4.0F, 5.0F, 2.0F, new CubeDeformation(0.0F)), 
+				PartPose.offset(0.0F, 21.0F, 0.0F));
 
-		body.addOrReplaceChild("head", 
-				CubeListBuilder.create()
-				.texOffs(0, 0)
-				.addBox(-3.0F, -2.0F, -3.0F, 6, 8, 6)
-				.texOffs(8, 24)
-				.addBox(-1.0F, -4.0F, -5.0F, 2, 4, 2)
-				.texOffs(16, 20)
-				.addBox(-1.0F, 6.0F, -3.0F, 2, 2, 2)
-				.texOffs(0, 24)
-				.addBox(-1.0F, -4.0F, 3.0F, 2, 4, 2)
-				.texOffs(16, 24)
-				.addBox(-1.0F, -4.0F, -3.0F, 2, 2, 6)
-				.texOffs(24, 20)
-				.addBox(-1.0F, -4.0F, -1.0F, 2, 2, 2)
-				.texOffs(18, 0)
-				.addBox(-1.0F, 1.0F, -5.0F, 2, 2, 2)
-				.texOffs(0, 0)
-				.addBox(-4.0F, -1.0F, -3.0F, 1, 2, 2)
-				.texOffs(0, 0)
-				.addBox(3.0F, -1.0F, -3.0F, 1, 2, 2),
-				PartPose.ZERO);
-		
-		body.addOrReplaceChild("arm_right",
-			CubeListBuilder.create()
-			.texOffs(0, 14)
-			.addBox(-2.0F, 0.0F, -1.0F, 2, 8, 2),
-		PartPose.offsetAndRotation(-3.0F, 2.0F, 0.0F, 3.1416F, 0.0F, 0.0F));
-		
-		body.addOrReplaceChild("arm_left",
-			CubeListBuilder.create()
-			.texOffs(8, 14)
-			.addBox(0.0F, 0.0F, -1.0F, 2, 8, 2),
-		PartPose.offsetAndRotation(3.0F, 2.0F, 0.0F, 3.1416F, 0.0F, 0.0F));
-		
-		body.addOrReplaceChild("leg_right",
-			CubeListBuilder.create()
-			.texOffs(16, 14)
-			.addBox(-1.0F, 2.0F, -1.0F, 2, 4, 2),
-		PartPose.offsetAndRotation(-2.0F, 4.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+		body.addOrReplaceChild("lychen", CubeListBuilder.create()
+				.texOffs(10, 12).addBox(0.0F, -4.0F, -2.0F, 0.0F, 4.0F, 4.0F, new CubeDeformation(0.0F))
+				.texOffs(10, 16).addBox(-2.0F, -4.0F, 0.0F, 4.0F, 4.0F, 0.0F, new CubeDeformation(0.0F)), 
+				PartPose.offsetAndRotation(3.0F, -9.0F, 3.0F, 0.0F, 0.7854F, 0.0F));
 
-		body.addOrReplaceChild("leg_left",
-			CubeListBuilder.create()
-			.texOffs(24, 14)
-			.addBox(0.0F, 2.0F, -1.0F, 2, 4, 2),
-		PartPose.offsetAndRotation(1.0F, 4.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+		body.addOrReplaceChild("dripstone", CubeListBuilder.create()
+				.texOffs(14, 16).addBox(0.0F, -5.0F, -3.0F, 0.0F, 5.0F, 6.0F, new CubeDeformation(0.0F))
+				.texOffs(14, 22).addBox(-3.0F, -5.0F, 0.0F, 6.0F, 5.0F, 0.0F, new CubeDeformation(0.0F)), 
+				PartPose.offsetAndRotation(0.0F, -9.0F, 1.0F, 0.0F, 0.7854F, 0.0F));
 
-		return LayerDefinition.create(mesh, 32, 32);
+		root.addOrReplaceChild("leg_left", CubeListBuilder.create()
+				.texOffs(27, 13).addBox(-1.5F, 1.0F, -1.5F, 3.0F, 4.0F, 3.0F, new CubeDeformation(0.0F)), 
+				PartPose.offset(2.25F, 19.0F, 0.5F));
+
+		root.addOrReplaceChild("leg_right", CubeListBuilder.create()
+				.texOffs(27, 13).mirror().addBox(-1.5F, 1.0F, -1.5F, 3.0F, 4.0F, 3.0F, new CubeDeformation(0.0F)).mirror(false), 
+				PartPose.offset(-2.25F, 19.0F, 0.5F));
+
+		root.addOrReplaceChild("arm_right", CubeListBuilder.create()
+				.texOffs(0, 16).addBox(-3.0F, 0.0F, -2.0F, 3.0F, 7.0F, 4.0F, new CubeDeformation(0.0F)), 
+				PartPose.offset(-4.0F, 15.0F, 0.5F));
+
+		root.addOrReplaceChild("arm_left", CubeListBuilder.create()
+				.texOffs(0, 16).mirror().addBox(0.0F, 0.0F, -2.0F, 3.0F, 7.0F, 4.0F, new CubeDeformation(0.0F)).mirror(false), 
+				PartPose.offset(4.0F, 15.0F, 0.5F));
+
+		return LayerDefinition.create(mesh, 64, 64);
 	}
 
 	@Override
 	public void setupAnim(Stoneling stoneling, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		leg_right.xRot = Mth.cos(limbSwing * 0.6662F) * limbSwingAmount;
 		leg_left.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * limbSwingAmount;
-
+		
 		ItemStack carry = stoneling.getCarryingItem();
 		if(carry.isEmpty() && !stoneling.isVehicle()) {
 			arm_right.xRot = 0F;
@@ -105,6 +94,10 @@ public class StonelingModel extends EntityModel<Stoneling> {
 	@Override
 	public void renderToBuffer(PoseStack matrix, VertexConsumer vb, int p_225598_3_, int p_225598_4_, float p_225598_5_, float p_225598_6_, float p_225598_7_, float p_225598_8_) {
 		body.render(matrix, vb, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
+		arm_right.render(matrix, vb, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
+		arm_left.render(matrix, vb, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
+		leg_right.render(matrix, vb, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
+		leg_left.render(matrix, vb, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
 	}
 
 	public void setRotationAngle(ModelPart modelRenderer, float x, float y, float z) {

@@ -84,9 +84,11 @@ public class Stoneling extends PathfinderMob {
 	private static final EntityDataAccessor<ItemStack> CARRYING_ITEM = SynchedEntityData.defineId(Stoneling.class, EntityDataSerializers.ITEM_STACK);
 	private static final EntityDataAccessor<Byte> VARIANT = SynchedEntityData.defineId(Stoneling.class, EntityDataSerializers.BYTE);
 	private static final EntityDataAccessor<Float> HOLD_ANGLE = SynchedEntityData.defineId(Stoneling.class, EntityDataSerializers.FLOAT);
+	public static final EntityDataAccessor<Boolean> HAS_LICHEN = SynchedEntityData.defineId(Stoneling.class, EntityDataSerializers.BOOLEAN);
 
 	private static final String TAG_CARRYING_ITEM = "carryingItem";
 	private static final String TAG_VARIANT = "variant";
+	private static final String TAG_HAS_LICHEN = "has_lichen";
 	private static final String TAG_HOLD_ANGLE = "itemAngle";
 	private static final String TAG_PLAYER_MADE = "playerMade";
 
@@ -107,6 +109,7 @@ public class Stoneling extends PathfinderMob {
 		entityData.define(CARRYING_ITEM, ItemStack.EMPTY);
 		entityData.define(VARIANT, (byte) 0);
 		entityData.define(HOLD_ANGLE, 0F);
+		entityData.define(HAS_LICHEN, false);
 	}
 
 	@Override
@@ -184,7 +187,6 @@ public class Stoneling extends PathfinderMob {
 			if(!level.isClientSide) {
 				if (isPlayerMade()) {
 					if (!player.isDiscrete() && !playerItem.isEmpty()) {
-
 						StonelingVariant currentVariant = getVariant();
 						StonelingVariant targetVariant = null;
 						Block targetBlock = null;
@@ -257,13 +259,15 @@ public class Stoneling extends PathfinderMob {
 	@Nullable
 	@Override
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData data, @Nullable CompoundTag compound) {
+		Random rand = world.getRandom();
 		byte variant;
 		if (data instanceof StonelingVariant)
 			variant = ((StonelingVariant) data).getIndex();
 		else
-			variant = (byte) world.getRandom().nextInt(StonelingVariant.values().length);
+			variant = (byte) rand.nextInt(StonelingVariant.values().length);
 
 		entityData.set(VARIANT, variant);
+		entityData.set(HAS_LICHEN, world.getBiome(getOnPos()).getRegistryName().equals(GlimmeringWealdModule.BIOME_NAME) && rand.nextInt(5) < 3);
 		entityData.set(HOLD_ANGLE, world.getRandom().nextFloat() * 90 - 45);
 
 		if(!isTame && !world.isClientSide()) {
@@ -385,6 +389,7 @@ public class Stoneling extends PathfinderMob {
 
 		entityData.set(VARIANT, compound.getByte(TAG_VARIANT));
 		entityData.set(HOLD_ANGLE, compound.getFloat(TAG_HOLD_ANGLE));
+		entityData.set(HAS_LICHEN, compound.getBoolean(TAG_HAS_LICHEN));
 		setPlayerMade(compound.getBoolean(TAG_PLAYER_MADE));
 	}
 
@@ -412,6 +417,7 @@ public class Stoneling extends PathfinderMob {
 		compound.putByte(TAG_VARIANT, getVariant().getIndex());
 		compound.putFloat(TAG_HOLD_ANGLE, getItemAngle());
 		compound.putBoolean(TAG_PLAYER_MADE, isPlayerMade());
+		compound.putBoolean(TAG_HAS_LICHEN, entityData.get(HAS_LICHEN));
 	}
 
 	public static boolean spawnPredicate(EntityType<? extends Stoneling> type, ServerLevelAccessor world, MobSpawnType reason, BlockPos pos, Random rand) {
@@ -484,7 +490,10 @@ public class Stoneling extends PathfinderMob {
 		LIMESTONE("limestone", limestoneBlock, polishedBlocks.get(limestoneBlock)),
 		CALCITE("calcite", Blocks.CALCITE),
 		SHALE("shale", shaleBlock, polishedBlocks.get(shaleBlock)),
-		JASPER("jasper", jasperBlock, polishedBlocks.get(jasperBlock));
+		JASPER("jasper", jasperBlock, polishedBlocks.get(jasperBlock)),
+		DEEPSLATE("deepslate", Blocks.DEEPSLATE, Blocks.POLISHED_DEEPSLATE),
+		TUFF("tuff", Blocks.TUFF, polishedBlocks.get(Blocks.TUFF)),
+		DRIPSTONE("dripstone", Blocks.DRIPSTONE_BLOCK, polishedBlocks.get(Blocks.DRIPSTONE_BLOCK));
 
 		private final ResourceLocation texture;
 		private final List<Block> blocks;
