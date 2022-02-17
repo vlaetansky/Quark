@@ -25,6 +25,7 @@ import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
+import vazkii.quark.content.world.module.BlossomTreesModule;
 
 public class BlossomSaplingBlock extends SaplingBlock implements IQuarkBlock {
 
@@ -72,7 +73,7 @@ public class BlossomSaplingBlock extends SaplingBlock implements IQuarkBlock {
 
 		public BlossomTree(Block leafBlock) {
 			config = (new TreeConfiguration.TreeConfigurationBuilder(
-					BlockStateProvider.simple(Blocks.OAK_LOG),
+					BlockStateProvider.simple(BlossomTreesModule.woodSet.log),
 					new FancyTrunkPlacer(8, 10, 10), 
 					BlockStateProvider.simple(leafBlock), 
 					new FancyFoliagePlacer(ConstantInt.of(3), ConstantInt.of(1), 4),
