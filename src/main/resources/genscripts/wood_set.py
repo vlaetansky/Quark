@@ -1,36 +1,41 @@
 import sys, os, json, re
 from os import system as run
 
-# TODO allow input from cmd
 modid = 'quark'
 category = 'world'
-flag = 'azalea_wood'
+flag = 'flag%' # using % ensures the game explodes if unset
 
 def main():
+	global category, flag
 	for arg in sys.argv:
 		if not '.py' in arg:
 			if '=' in arg:
-				pass # TODO
+				toks = arg.split('=')
+				if toks[0] == 'category':
+					category = toks[1]
+				elif toks[0] == 'flag':
+					flag = toks[1]
 			else:
 				makeWood(arg)
 
 def makeWood(type):
-	#run(f"py generic_block.py {type}_planks")
-	#run(f"py pillar.py {type}_log stripped_{type}_log")
-	#run(f"py wood_block.py {type} stripped_{type}")
-	#run(f"py stairs_slabs.py category={category} flag={flag} {type}_planks")
-	#run(f"py post_modded.py flag={flag} {type} stripped_{type}")
-	#run(f"py bookshelves.py {type}")
-	#run(f"py chest.py {type}")
-	#run(f"py ladder.py {type}")
-	#run(f"py door.py {type}")
-	#run(f"py trapdoor.py {type}")
-	#run(f"py fence_gates.py {type}")
-	#run(f"py fences.py {type}")
-	#run(f"py sign.py {type}")
-	#run(f"py buttons.py texname={type}_planks {type}")
-	#run(f"py pressure_plates.py texname={type}_planks {type}")
-	#run(f"py generic_item.py {type}_boat")
+	run(f"py generic_block.py {type}_planks")
+	run(f"py pillar.py {type}_log stripped_{type}_log")
+	run(f"py wood_block.py {type} stripped_{type}")
+	run(f"py stairs_slabs.py category={category} flag={flag} {type}_planks")
+	run(f"py post_modded.py flag={flag} {type} stripped_{type}")
+	run(f"py bookshelves.py {type}")
+	run(f"py chest.py {type}")
+	run(f"py ladder.py {type}")
+	run(f"py door.py {type}")
+	run(f"py trapdoor.py {type}")
+	run(f"py fence_gates.py {type}")
+	run(f"py fences.py {type}")
+	run(f"py sign.py {type}")
+	run(f"py buttons.py texname={type}_planks {type}")
+	run(f"py pressure_plates.py texname={type}_planks {type}")
+	run(f"py generic_item.py {type}_boat")
+	run(f"py wood_set_recipes.py category={category} flag={flag} {type}")
 
 	appendTags(type)
 
