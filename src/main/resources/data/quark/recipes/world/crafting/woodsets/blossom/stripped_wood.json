@@ -7,17 +7,17 @@
   ],
   "key": {
     "#": {
-      "item": "%modid%:stripped_%name%_log"
+      "item": "quark:stripped_blossom_log"
     }
   },
   "result": {
-    "item": "%modid%:stripped_%name%_wood",
+    "item": "quark:stripped_blossom_wood",
     "count": 3
   },
   "conditions": [
     {
       "type": "quark:flag",
-      "flag": "%flag%"
+      "flag": "blossom_trees"
     }
   ]
 }

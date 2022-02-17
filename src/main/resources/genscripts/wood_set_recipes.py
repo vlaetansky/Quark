@@ -17,8 +17,9 @@ def copy_tuples(values):
 			recipe_type = toks[1]
 
 		tuple_list.append(wsr_tuple(recipe, recipe_type))
+	copy(tuple_list)
 
 def wsr_tuple(name, recipe_type):
-	return ('wsr/' +  name + '.json', 'data/{modid}/recipes/{category}/' + recipe_type + '/woodsets/{name}/planks.json')
+	return ('wsr/' +  name + '.json', 'data/{modid}/recipes/{category}/' + recipe_type + '/woodsets/{name}/' + name + '.json')
 
 main()

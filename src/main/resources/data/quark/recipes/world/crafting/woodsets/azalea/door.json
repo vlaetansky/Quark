@@ -1,23 +1,24 @@
 {
   "type": "minecraft:crafting_shaped",
-  "group": "bark",
+  "group": "wooden_door",
   "pattern": [
+    "##",
     "##",
     "##"
   ],
   "key": {
     "#": {
-      "item": "%modid%:stripped_%name%_log"
+      "item": "quark:azalea_planks"
     }
   },
   "result": {
-    "item": "%modid%:stripped_%name%_wood",
+    "item": "quark:azalea_door",
     "count": 3
   },
   "conditions": [
     {
       "type": "quark:flag",
-      "flag": "%flag%"
+      "flag": "azalea_wood"
     }
   ]
 }

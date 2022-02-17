@@ -1,23 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
-  "group": "bark",
+  "group": "wooden_pressure_plate",
   "pattern": [
-    "##",
     "##"
   ],
   "key": {
     "#": {
-      "item": "%modid%:stripped_%name%_log"
+      "item": "quark:blossom_planks"
     }
   },
   "result": {
-    "item": "%modid%:stripped_%name%_wood",
-    "count": 3
+    "item": "quark:blossom_pressure_plate"
   },
   "conditions": [
     {
       "type": "quark:flag",
-      "flag": "%flag%"
+      "flag": "blossom_trees"
     }
   ]
 }
