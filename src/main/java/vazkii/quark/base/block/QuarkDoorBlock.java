@@ -13,6 +13,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoorBlock;
 import vazkii.arl.interf.IBlockItemProvider;
 import vazkii.arl.util.RegistryHelper;
+import vazkii.quark.base.handler.RenderLayerHandler;
+import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.item.QuarkDoubleHighBlockItem;
 import vazkii.quark.base.module.QuarkModule;
 
@@ -25,6 +27,7 @@ public class QuarkDoorBlock extends DoorBlock implements IQuarkBlock, IBlockItem
         super(properties);
         this.module = module;
 
+        RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
         RegistryHelper.registerBlock(this, regname);
         if(creativeTab != null)
             RegistryHelper.setCreativeTab(this, creativeTab);

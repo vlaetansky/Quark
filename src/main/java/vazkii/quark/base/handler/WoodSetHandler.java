@@ -12,7 +12,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
-import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.block.IQuarkBlock;
@@ -24,6 +23,7 @@ import vazkii.quark.base.block.QuarkPillarBlock;
 import vazkii.quark.base.block.QuarkStandingSignBlock;
 import vazkii.quark.base.block.QuarkTrapdoorBlock;
 import vazkii.quark.base.block.QuarkWallSignBlock;
+import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.item.QuarkSignItem;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
@@ -59,16 +59,18 @@ public class WoodSetHandler {
 
 		set.bookshelf = new VariantBookshelfBlock(name, module, true).setCondition(() -> ModuleLoader.INSTANCE.isModuleEnabled(VariantBookshelvesModule.class));
 		set.ladder = new VariantLadderBlock(name, module, true).setCondition(() -> ModuleLoader.INSTANCE.isModuleEnabled(VariantLaddersModule.class));
-		set.post = new WoodPostBlock(module, set.wood, name, true).setCondition(() -> ModuleLoader.INSTANCE.isModuleEnabled(WoodenPostsModule.class));
+		set.post = new WoodPostBlock(module, set.fence, "", false).setCondition(() -> ModuleLoader.INSTANCE.isModuleEnabled(WoodenPostsModule.class));
+		set.strippedPost = new WoodPostBlock(module, set.fence, "stripped_", false).setCondition(() -> ModuleLoader.INSTANCE.isModuleEnabled(WoodenPostsModule.class));
 		
 		VariantChestsModule.addChest(name, module, Block.Properties.copy(Blocks.CHEST), true);
 		
-		set.signItem = new QuarkSignItem(module, set.sign, set.wallSign);
-		// TODO boat
+		set.signItem = new QuarkSignItem(module, set.sign, set.wallSign); // TODO make work
+		set.boatItem = new QuarkItem(name + "_boat", module, new Item.Properties()); // TODO make do stuff
 		
 		ToolInteractionHandler.registerInteraction(ToolActions.AXE_STRIP, set.log, set.strippedLog);
 		ToolInteractionHandler.registerInteraction(ToolActions.AXE_STRIP, set.wood, set.strippedWood);
-		
+		ToolInteractionHandler.registerInteraction(ToolActions.AXE_STRIP, set.post, set.strippedPost);
+
 		return set;
 	}
 
@@ -83,7 +85,7 @@ public class WoodSetHandler {
 		public Block log, wood, planks, strippedLog, strippedWood,
 		slab, stairs, fence, fenceGate,
 		door, trapdoor, button, pressurePlate, sign, wallSign, 
-		bookshelf, ladder, post;
+		bookshelf, ladder, post, strippedPost;
 
 		public Item signItem, boatItem;
 

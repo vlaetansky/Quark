@@ -8,4 +8,9 @@ copy([
 	('unique/recipe_post.json', 'data/{modid}/recipes/building/crafting/{name}_post.json')
 ])
 
+localize((
+	lambda name, modid: 'block.{modid}.{name}_post'.format(name = name, modid = modid),
+	lambda name, modid: re.sub(r's$', '', localize_name(name, modid)) + ' Post'
+))
+
 import update_drop_tables

@@ -9,6 +9,8 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import vazkii.arl.util.RegistryHelper;
+import vazkii.quark.base.handler.RenderLayerHandler;
+import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
 
 public class QuarkTrapdoorBlock extends TrapDoorBlock implements IQuarkBlock {
@@ -20,6 +22,7 @@ public class QuarkTrapdoorBlock extends TrapDoorBlock implements IQuarkBlock {
         super(properties);
         this.module = module;
 
+        RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
         RegistryHelper.registerBlock(this, regname);
         if(creativeTab != null)
             RegistryHelper.setCreativeTab(this, creativeTab);
