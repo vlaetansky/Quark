@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
+    "quark:azalea_fence_gate",
+    "quark:blossom_fence_gate",
     "quark:nether_brick_fence_gate"
   ]
 }

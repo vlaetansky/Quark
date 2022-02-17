@@ -55,7 +55,7 @@ public class WoodSetHandler {
 		set.door = new QuarkDoorBlock(name + "_door", module, CreativeModeTab.TAB_DECORATIONS, BlockBehaviour.Properties.of(Material.WOOD, color).strength(3.0F).sound(SoundType.WOOD).noOcclusion());
 		set.trapdoor = new QuarkTrapdoorBlock(name + "_trapdoor", module, CreativeModeTab.TAB_DECORATIONS, BlockBehaviour.Properties.of(Material.WOOD, color).strength(3.0F).sound(SoundType.WOOD).noOcclusion().isValidSpawn((s, g, p, e) -> false));
 		set.sign = new QuarkStandingSignBlock(name + "_sign", module, CreativeModeTab.TAB_DECORATIONS, type, BlockBehaviour.Properties.of(Material.WOOD, color).noCollission().strength(1.0F).sound(SoundType.WOOD));
-		set.wallSign = new QuarkWallSignBlock(name + "__wall_sign", module, CreativeModeTab.TAB_DECORATIONS, type, BlockBehaviour.Properties.of(Material.WOOD, color).noCollission().strength(1.0F).sound(SoundType.WOOD).dropsLike(set.sign));
+		set.wallSign = new QuarkWallSignBlock(name + "_wall_sign", module, CreativeModeTab.TAB_DECORATIONS, type, BlockBehaviour.Properties.of(Material.WOOD, color).noCollission().strength(1.0F).sound(SoundType.WOOD).dropsLike(set.sign));
 
 		set.bookshelf = new VariantBookshelfBlock(name, module, true).setCondition(() -> ModuleLoader.INSTANCE.isModuleEnabled(VariantBookshelvesModule.class));
 		set.ladder = new VariantLadderBlock(name, module, true).setCondition(() -> ModuleLoader.INSTANCE.isModuleEnabled(VariantLaddersModule.class));
@@ -64,6 +64,7 @@ public class WoodSetHandler {
 		
 		VariantChestsModule.addChest(name, module, Block.Properties.copy(Blocks.CHEST), true);
 		
+		// TODO ensure everything is tagged and recipes work
 		set.signItem = new QuarkSignItem(module, set.sign, set.wallSign); // TODO make work
 		set.boatItem = new QuarkItem(name + "_boat", module, new Item.Properties()); // TODO make do stuff
 		

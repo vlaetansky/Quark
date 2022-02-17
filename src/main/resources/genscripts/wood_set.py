@@ -21,6 +21,8 @@ def makeWood(type):
 	run(f"py ladder.py {type}")
 	run(f"py door.py {type}")
 	run(f"py trapdoor.py {type}")
+	run(f"py fence_gates.py {type}")
+	run(f"py fences.py {type}")
 	run(f"py generic_item.py {type}_sign {type}_boat")
 
 main()
