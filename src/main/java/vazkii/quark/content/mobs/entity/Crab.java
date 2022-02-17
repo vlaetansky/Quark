@@ -76,6 +76,7 @@ import vazkii.quark.content.mobs.module.CrabsModule;
 
 public class Crab extends Animal implements IEntityAdditionalSpawnData {
 
+	public static final int COLORS = 3;
 	public static final ResourceLocation CRAB_LOOT_TABLE = new ResourceLocation("quark", "entities/crab");
 
 	private static final EntityDataAccessor<Float> SIZE_MODIFIER = SynchedEntityData.defineId(Crab.class, EntityDataSerializers.FLOAT);
@@ -191,9 +192,11 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData {
 
 		if(!level.isClientSide && entityData.get(VARIANT) == -1) {
 			int variant = 0;
-			if(random.nextBoolean()) {
-				variant += random.nextInt(2) + 1;
-			}
+			if(random.nextBoolean()) // Color change 
+				variant += random.nextInt(COLORS - 1) + 1;
+			
+			if(random.nextInt(3) == 0) // Mold
+				variant += COLORS;
 
 			entityData.set(VARIANT, variant);
 		}
