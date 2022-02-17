@@ -27,9 +27,11 @@ import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.building.block.VariantBookshelfBlock;
 import vazkii.quark.content.building.block.VariantLadderBlock;
+import vazkii.quark.content.building.block.WoodPostBlock;
 import vazkii.quark.content.building.module.VariantBookshelvesModule;
 import vazkii.quark.content.building.module.VariantChestsModule;
 import vazkii.quark.content.building.module.VariantLaddersModule;
+import vazkii.quark.content.building.module.WoodenPostsModule;
 
 public class WoodSetHandler {
 
@@ -55,6 +57,7 @@ public class WoodSetHandler {
 
 		set.bookshelf = new VariantBookshelfBlock(name, module, true).setCondition(() -> ModuleLoader.INSTANCE.isModuleEnabled(VariantBookshelvesModule.class));
 		set.ladder = new VariantLadderBlock(name, module, true).setCondition(() -> ModuleLoader.INSTANCE.isModuleEnabled(VariantLaddersModule.class));
+		set.post = new WoodPostBlock(module, set.wood, name, true).setCondition(() -> ModuleLoader.INSTANCE.isModuleEnabled(WoodenPostsModule.class));
 		
 		VariantChestsModule.addChest(name, module, Block.Properties.copy(Blocks.CHEST), true);
 		
@@ -75,7 +78,7 @@ public class WoodSetHandler {
 		public Block log, wood, planks, strippedLog, strippedWood,
 		slab, stairs, fence, fenceGate,
 		door, trapdoor, button, pressurePlate, sign, wallSign, 
-		bookshelf, ladder;
+		bookshelf, ladder, post;
 
 		public Item signItem, boatItem;
 
