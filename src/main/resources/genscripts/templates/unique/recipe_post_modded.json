@@ -7,11 +7,11 @@
   ],
   "key": {
     "F": {
-      "item": "quark:stripped_blossom_wood"
+      "item": "quark:%name%_wood"
     }
   },
   "result": {
-    "item": "quark:stripped_blossom_post",
+    "item": "quark:%name%_post",
     "count": 8
   },
   "conditions": [
@@ -24,7 +24,7 @@
         },
         {
           "type": "quark:flag",
-          "flag": "azalea_wood"
+          "flag": "%flag%"
         }
       ]
     }

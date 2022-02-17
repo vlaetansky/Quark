@@ -1,5 +1,10 @@
 package vazkii.quark.base.handler;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import com.google.common.collect.ImmutableSet;
+
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -7,6 +12,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.properties.WoodType;
@@ -65,8 +71,14 @@ public class WoodSetHandler {
 		VariantChestsModule.addChest(name, module, Block.Properties.copy(Blocks.CHEST), true);
 		
 		// TODO ensure everything is tagged and recipes work
-		set.signItem = new QuarkSignItem(module, set.sign, set.wallSign); // TODO make work
-		set.boatItem = new QuarkItem(name + "_boat", module, new Item.Properties()); // TODO make do stuff
+		set.signItem = new QuarkSignItem(module, set.sign, set.wallSign);
+		set.boatItem = new QuarkItem(name + "_boat", module, new Item.Properties().tab(CreativeModeTab.TAB_TRANSPORTATION)); // TODO make do stuff
+		
+		Set<Block> validBlocks = new HashSet<>();
+		validBlocks.add(set.sign);
+		validBlocks.add(set.wallSign);
+		validBlocks.addAll(BlockEntityType.SIGN.validBlocks);
+		BlockEntityType.SIGN.validBlocks = ImmutableSet.copyOf(validBlocks);
 		
 		ToolInteractionHandler.registerInteraction(ToolActions.AXE_STRIP, set.log, set.strippedLog);
 		ToolInteractionHandler.registerInteraction(ToolActions.AXE_STRIP, set.wood, set.strippedWood);

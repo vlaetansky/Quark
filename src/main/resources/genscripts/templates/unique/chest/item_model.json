@@ -1,7 +1,7 @@
 {
     "parent": "builtin/entity",
     "textures": {
-        "particle": "quark:block/compat/%name%_planks"
+        "particle": "quark:block/%name%_planks"
     },
     "display": {
         "gui": {

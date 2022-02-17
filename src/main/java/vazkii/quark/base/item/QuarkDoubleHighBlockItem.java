@@ -8,7 +8,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DoubleHighBlockItem;
 import net.minecraft.world.item.ItemStack;
-import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.module.QuarkModule;
 
@@ -21,7 +20,6 @@ public class QuarkDoubleHighBlockItem extends DoubleHighBlockItem implements IQu
 	public QuarkDoubleHighBlockItem(IQuarkBlock baseBlock, Properties props) {
 		super(baseBlock.getBlock(), props);
 
-//		RegistryHelper.registerItem(this, baseBlock.getBlock().getRegistryName().toString());
 		this.module = baseBlock.getModule();
 	}
 

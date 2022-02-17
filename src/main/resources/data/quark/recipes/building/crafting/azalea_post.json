@@ -7,7 +7,7 @@
   ],
   "key": {
     "F": {
-      "item": "minecraft:azalea_wood"
+      "item": "quark:azalea_wood"
     }
   },
   "result": {
@@ -16,8 +16,17 @@
   },
   "conditions": [
     {
-      "type": "quark:flag",
-      "flag": "wooden_posts"
+      "type": "forge:and",
+      "values": [
+        {
+          "type": "quark:flag",
+          "flag": "wooden_posts"
+        },
+        {
+          "type": "quark:flag",
+          "flag": "azalea_wood"
+        }
+      ]
     }
   ]
 }

@@ -328,9 +328,7 @@
 	"item.quark.forgotten_hat": "Forgotten Hat",
 	"item.quark.soul_bead": "Soul Bead",
 	"item.quark.abacus": "Abacus",
-	"item.quark.azalea_sign": "Azalea Sign",
 	"item.quark.azalea_boat": "Azalea Boat",
-	"item.quark.blossom_sign": "Blossom Sign",
 	"item.quark.blossom_boat": "Blossom Boat",
 
 	"item.quark.music_disc_endermosh": "Music Disc",
@@ -1000,6 +998,8 @@
 	"block.quark.blossom_trapdoor": "Blossom Trapdoor",
 	"block.quark.blossom_fence_gate": "Blossom Fence Gate",
 	"block.quark.blossom_fence": "Blossom Fence",
+	"block.quark.blossom_sign": "Blossom Sign",
+	"block.quark.azalea_sign": "Azalea Sign",
 
 	"item.quark.stoneling_spawn_egg": "Stoneling Spawn Egg",
 	"item.quark.frog_spawn_egg": "Frog Spawn Egg",
