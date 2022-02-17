@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "quark:blossom_sign"
+          "name": "%modid%:%name%_sign"
         }
       ],
       "conditions": [

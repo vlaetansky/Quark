@@ -4,8 +4,9 @@ copy([
 	('unique/block_model_sign.json', 'assets/{modid}/models/block/{name}_sign.json'),
 	('blockstate_sign.json', 'assets/{modid}/blockstates/{name}_sign.json'),
 	('blockstate_sign.json', 'assets/{modid}/blockstates/{name}_wall_sign.json'),
+	('block_item_sign.json', 'assets/{modid}/models/item/{name}_sign.json'),
 
-	('block_item_sign.json', 'assets/{modid}/models/item/{name}_sign.json')
+	('loot_table_wall_sign.json', 'data/{modid}/loot_tables/blocks/{name}_wall_sign.json')
 ])
 
 localize((
