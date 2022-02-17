@@ -1,7 +1,12 @@
-from jsongen import *
+import sys
+from os import system as run
 
-copy([
-	('item_model_generic.json', 'assets/{modid}/models/item/{name}.json')
-])
+def main():
+	for arg in sys.argv:
+		if not '.py' in arg:
+			makeWood(arg)
 
-localize_standard('item')
+def makeWood(type):
+	run(f"py generic_block.py {type}_planks")
+
+main()
