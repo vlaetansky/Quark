@@ -80,17 +80,21 @@ public class WoodSetHandler {
 		set.signItem = new QuarkSignItem(module, set.sign, set.wallSign);
 		set.boatItem = new QuarkItem(name + "_boat", module, new Item.Properties().tab(CreativeModeTab.TAB_TRANSPORTATION)); // TODO make do stuff
 		
-		Set<Block> validBlocks = new HashSet<>();
-		validBlocks.add(set.sign);
-		validBlocks.add(set.wallSign);
-		validBlocks.addAll(BlockEntityType.SIGN.validBlocks);
-		BlockEntityType.SIGN.validBlocks = ImmutableSet.copyOf(validBlocks);
+		makeSignWork(set.sign, set.wallSign);
 		
 		ToolInteractionHandler.registerInteraction(ToolActions.AXE_STRIP, set.log, set.strippedLog);
 		ToolInteractionHandler.registerInteraction(ToolActions.AXE_STRIP, set.wood, set.strippedWood);
 		ToolInteractionHandler.registerInteraction(ToolActions.AXE_STRIP, set.post, set.strippedPost);
 
 		return set;
+	}
+	
+	public static void makeSignWork(Block sign, Block wallSign) {
+		Set<Block> validBlocks = new HashSet<>();
+		validBlocks.add(sign);
+		validBlocks.add(wallSign);
+		validBlocks.addAll(BlockEntityType.SIGN.validBlocks);
+		BlockEntityType.SIGN.validBlocks = ImmutableSet.copyOf(validBlocks);
 	}
 
 	private static RotatedPillarBlock log(String name, QuarkModule module, MaterialColor topColor, MaterialColor sideColor) {
