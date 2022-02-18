@@ -9,13 +9,13 @@
           "conditions": [
             {
               "condition": "minecraft:block_state_property",
-              "block": "quark:blossom_door",
+              "block": "%modid%:%name%_door",
               "properties": {
                 "half": "lower"
               }
             }
           ],
-          "name": "quark:blossom_door"
+          "name": "%modid%:%name%_door"
         }
       ],
       "conditions": [
