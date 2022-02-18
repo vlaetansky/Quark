@@ -111,8 +111,8 @@ public class WoodSetHandler {
 		set.button = new QuarkWoodenButtonBlock(name + "_button", module, BlockBehaviour.Properties.of(Material.DECORATION).noCollission().strength(0.5F).sound(SoundType.WOOD));
 		set.pressurePlate = new QuarkPressurePlateBlock(Sensitivity.EVERYTHING, name + "_pressure_plate", module, CreativeModeTab.TAB_REDSTONE, BlockBehaviour.Properties.of(Material.WOOD, color).noCollission().strength(0.5F).sound(SoundType.WOOD));
 		
-		set.sign = new QuarkStandingSignBlock(name + "_sign", module, CreativeModeTab.TAB_DECORATIONS, type, BlockBehaviour.Properties.of(Material.WOOD, color).noCollission().strength(1.0F).sound(SoundType.WOOD));
-		set.wallSign = new QuarkWallSignBlock(name + "_wall_sign", module, CreativeModeTab.TAB_DECORATIONS, type, BlockBehaviour.Properties.of(Material.WOOD, color).noCollission().strength(1.0F).sound(SoundType.WOOD).dropsLike(set.sign));
+		set.sign = new QuarkStandingSignBlock(name + "_sign", module, type, BlockBehaviour.Properties.of(Material.WOOD, color).noCollission().strength(1.0F).sound(SoundType.WOOD));
+		set.wallSign = new QuarkWallSignBlock(name + "_wall_sign", module, type, BlockBehaviour.Properties.of(Material.WOOD, color).noCollission().strength(1.0F).sound(SoundType.WOOD).dropsLike(set.sign));
 
 		set.bookshelf = new VariantBookshelfBlock(name, module, true).setCondition(() -> ModuleLoader.INSTANCE.isModuleEnabled(VariantBookshelvesModule.class));
 		set.ladder = new VariantLadderBlock(name, module, true).setCondition(() -> ModuleLoader.INSTANCE.isModuleEnabled(VariantLaddersModule.class));
@@ -130,7 +130,7 @@ public class WoodSetHandler {
 		ToolInteractionHandler.registerInteraction(ToolActions.AXE_STRIP, set.wood, set.strippedWood);
 		ToolInteractionHandler.registerInteraction(ToolActions.AXE_STRIP, set.post, set.strippedPost);
 
-		FuelHandler.addWood(set.ladder);
+		VariantLaddersModule.variantLadders.add(set.ladder);
 		FuelHandler.addFuel(set.boatItem, 60 * 20);
 		
 		QuarkBoat.addQuarkBoatType(name, new QuarkBoatType(set.boatItem, set.planks));
