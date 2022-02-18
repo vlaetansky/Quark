@@ -45,7 +45,8 @@
     "client.PistonTileEntityRendererMixin",
     "client.RenderBuffersMixin",
     "client.ScreenMixin",
-    "client.ThrownTridentRendererMixin"
+    "client.ThrownTridentRendererMixin",
+    "client.AbstractCandleBlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1
