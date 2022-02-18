@@ -10,6 +10,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.base.Supplier;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.BoatModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -49,7 +50,8 @@ public class ModelHandler {
 	public static ModelLayerLocation frog;
 	public static ModelLayerLocation toretoise;
 	public static ModelLayerLocation wraith;
-	
+	public static ModelLayerLocation quark_boat;
+
 	public static ModelLayerLocation forgotten_hat;
 	public static ModelLayerLocation backpack;
 
@@ -66,7 +68,8 @@ public class ModelHandler {
 		frog = addModel("frog", FrogModel::createBodyLayer, FrogModel::new);
 		toretoise = addModel("toretoise", ToretoiseModel::createBodyLayer, ToretoiseModel::new);
 		wraith = addModel("wraith", WraithModel::createBodyLayer, WraithModel::new);
-		
+		quark_boat = addModel("quark_boat", BoatModel::createBodyModel, BoatModel::new);
+
 		forgotten_hat = addArmorModel("forgotten_hat", ForgottenHatModel::createBodyLayer);
 		backpack = addArmorModel("backpack", BackpackModel::createBodyLayer);
 

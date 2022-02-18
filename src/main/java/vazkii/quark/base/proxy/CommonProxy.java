@@ -18,6 +18,7 @@ import vazkii.quark.base.handler.ContributorRewardHandler;
 import vazkii.quark.base.handler.FuelHandler;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.base.handler.UndergroundBiomeHandler;
+import vazkii.quark.base.handler.WoodSetHandler;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.config.IConfigCallback;
 import vazkii.quark.base.network.QuarkNetwork;
@@ -36,6 +37,7 @@ public class CommonProxy {
 		QuarkSounds.start();
 		ModuleLoader.INSTANCE.start();
 		WorldGenHandler.register();
+		WoodSetHandler.start();
 		
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		registerListeners(bus);
@@ -57,12 +59,14 @@ public class CommonProxy {
 		BrewingHandler.setup();
 		ModuleLoader.INSTANCE.setup(event);
 		initContributorRewards();
-		
+
+		WoodSetHandler.setup(event);
 		UndergroundBiomeHandler.init(event);
 	}
 	
 	public void loadComplete(FMLLoadCompleteEvent event) {
 		ModuleLoader.INSTANCE.loadComplete(event);
+		
 		WorldGenHandler.loadComplete(event);
 		FuelHandler.addAllWoods();
 	}
