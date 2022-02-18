@@ -6,6 +6,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.module.LoadModule;
@@ -43,6 +44,9 @@ public class QuickArmorSwappingModule extends QuarkModule {
 	private void swapSlot(Player player, ArmorStand armorStand, EquipmentSlot slot) {
 		ItemStack playerItem = player.getItemBySlot(slot);
 		ItemStack armorStandItem = armorStand.getItemBySlot(slot);
+		
+		if(EnchantmentHelper.hasBindingCurse(playerItem))
+			return; // lol no
 		
 		ItemStack held = player.getItemInHand(InteractionHand.MAIN_HAND);
 		
