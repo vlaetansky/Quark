@@ -47,6 +47,7 @@ import net.minecraftforge.client.event.RenderItemInFrameEvent;
 import net.minecraftforge.common.MinecraftForge;
 import vazkii.quark.base.Quark;
 import vazkii.quark.content.building.entity.GlassItemFrame;
+import vazkii.quark.content.building.module.GlassItemFrameModule;
 
 /**
  * @author WireSegal
@@ -174,7 +175,7 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrame> {
 					Integer mapID = MapItem.getMapId(stack);
 					this.mc.gameRenderer.getMapRenderer().render(matrix, buff, mapID, mapdata, true, p_225623_6_);
 				} else {
-					float s = 1.5F;
+					float s = (float) GlassItemFrameModule.itemRenderScale;
 					if (stack.getItem() instanceof BannerItem) {
 						banner.fromItem(stack, ((BannerItem) stack.getItem()).getColor());
 						List<Pair<BannerPattern, DyeColor>> patterns = banner.getPatterns();
@@ -187,7 +188,7 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrame> {
 					}
 					else {
 						if (stack.getItem() instanceof ShieldItem) {
-							s = 4F;
+							s *= 2.66666667F;
 							matrix.translate(-0.25F, 0F, 0.5F);
 							matrix.scale(s, s, s);
 						} else {

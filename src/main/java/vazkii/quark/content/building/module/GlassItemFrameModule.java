@@ -1,6 +1,8 @@
 package vazkii.quark.content.building.module;
 
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -32,6 +34,9 @@ public class GlassItemFrameModule extends QuarkModule {
     public static Item glowingGlassFrame;
 
     public static EntityType<GlassItemFrame> glassFrameEntity;
+    
+    @Config(description = "The scale at which items render in the Glass Item Frame. To match the vanilla Item Frame size, set to 1.0")
+    public static double itemRenderScale = 1.5;
 
     @Override
     public void construct() {
