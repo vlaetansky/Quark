@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -53,6 +54,7 @@ import vazkii.quark.base.handler.StructureBlockReplacementHandler;
 import vazkii.quark.base.handler.StructureBlockReplacementHandler.StructureHolder;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.content.building.block.VariantChestBlock;
@@ -233,13 +235,16 @@ public class VariantChestsModule extends QuarkModule {
 		addChest("purpur", Blocks.PURPUR_BLOCK);
 		addChest("prismarine", Blocks.PRISMARINE);
 
+		StructureBlockReplacementHandler.functions.add(VariantChestsModule::getGenerationChestBlockState);
+	}
+	
+	@Override
+	public void modulesStarted() {
 		chestTEType = registerChests(VariantChestBlockEntity::new, chestTypes);
 		trappedChestTEType = registerChests(VariantTrappedChestBlockEntity::new, trappedChestTypes);
 
 		RegistryHelper.register(chestTEType, "variant_chest");
 		RegistryHelper.register(trappedChestTEType, "variant_trapped_chest");
-		
-		StructureBlockReplacementHandler.functions.add(VariantChestsModule::getGenerationChestBlockState);
 	}
 
 	@Override
@@ -318,13 +323,19 @@ public class VariantChestsModule extends QuarkModule {
 		return null; // no change
 	}
 
-	private void addChest(String name, Block from) {
+	 void addChest(String name, Block from) {
 		addChest(name, Block.Properties.copy(from));
 	}
 
-	private void addChest(String name, Block.Properties props) {
-		chestTypes.add(() -> new VariantChestBlock(name, this, () -> chestTEType, props));
-		trappedChestTypes.add(() -> new VariantTrappedChestBlock(name, this, () -> trappedChestTEType, props));
+	public void addChest(String name, Block.Properties props) {
+		addChest(name, this, props, false);
+	}
+	
+	public static void addChest(String name, QuarkModule module, Block.Properties props, boolean external) {
+		BooleanSupplier cond = external ? (() -> ModuleLoader.INSTANCE.isModuleEnabled(VariantChestsModule.class)) : (() -> true); 
+		
+		chestTypes.add(() -> new VariantChestBlock(name, module, () -> chestTEType, props).setCondition(cond));
+		trappedChestTypes.add(() -> new VariantTrappedChestBlock(name, module, () -> trappedChestTEType, props).setCondition(cond));
 	}
 
 	private void addModChest(String nameRaw, Block from) {

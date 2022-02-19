@@ -17,6 +17,8 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.interf.IBlockColorProvider;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
@@ -60,6 +62,7 @@ public class LeafCarpetBlock extends QuarkBlock implements IBlockColorProvider {
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public ItemColor getItemColor() {
 		if(baseStack == null)
 			baseStack = new ItemStack(baseState.getBlock());
@@ -68,6 +71,7 @@ public class LeafCarpetBlock extends QuarkBlock implements IBlockColorProvider {
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public BlockColor getBlockColor() {
 		return (state, worldIn, pos, tintIndex) -> Minecraft.getInstance().getBlockColors().getColor(baseState, worldIn, pos, tintIndex);
 	}

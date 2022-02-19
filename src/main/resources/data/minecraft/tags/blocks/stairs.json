@@ -2,8 +2,10 @@
   "replace": false,
   "values": [
     "quark:andesite_bricks_stairs",
+    "quark:azalea_planks_stairs",
     "quark:blackstone_bricks_stairs",
     "quark:black_shingles_stairs",
+    "quark:blossom_planks_stairs",
     "quark:blue_nether_bricks_stairs",
     "quark:blue_shingles_stairs",
     "quark:brown_shingles_stairs",

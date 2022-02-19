@@ -40,13 +40,16 @@ public class StonelingItemLayer extends RenderLayer<Stoneling, StonelingModel> {
 			boolean isBlock = stack.getItem() instanceof BlockItem;
 			
 			matrix.pushPose();
+			
 			matrix.translate(0F, 0.5F, 0F);
+			
 			if(!isBlock) {
 				matrix.mulPose(Vector3f.YP.rotationDegrees(stoneling.getItemAngle() + 180));
 				matrix.mulPose(Vector3f.XP.rotationDegrees(90F));
 			} else matrix.mulPose(Vector3f.XP.rotationDegrees(180F));
 			
-			matrix.scale(0.725F, 0.725F, 0.725F);
+			float scale = 0.8F;
+			matrix.scale(scale, scale, scale);
 			Minecraft mc = Minecraft.getInstance();
 			mc.getItemRenderer().renderStatic(stack, TransformType.FIXED, light, OverlayTexture.NO_OVERLAY, matrix, buffer, 0);
 			matrix.popPose();

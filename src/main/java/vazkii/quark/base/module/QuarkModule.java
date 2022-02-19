@@ -52,6 +52,10 @@ public class QuarkModule {
 	public void configChanged() {
 		// NO-OP
 	}
+	
+	public void enabledStatusChanged(boolean firstLoad, boolean oldStatus, boolean newStatus) {
+		// NO-OP
+	}
 
 	@OnlyIn(Dist.CLIENT)
 	public void configChangedClient() {
@@ -109,7 +113,6 @@ public class QuarkModule {
 			Quark.LOG.info("Loading Module " + displayName);
 			MinecraftForge.EVENT_BUS.post(new ModuleLoadedEvent(lowercaseName));
 		}
-		firstLoad = false;
 		
 		if(missingDep)
 			enabled = false;
@@ -122,20 +125,28 @@ public class QuarkModule {
 				}
 		}
 		
-		setEnabledAndManageSubscriptions(enabled);
+		setEnabledAndManageSubscriptions(firstLoad, enabled);
+		firstLoad = false;
 	}
 	
-	private void setEnabledAndManageSubscriptions(boolean enabled) {
+	private void setEnabledAndManageSubscriptions(boolean firstLoad, boolean enabled) {
 		if(MinecraftForge.EVENT_BUS.post(new ModuleStateChangedEvent(lowercaseName, enabled)))
 			enabled = false;
 		
 		boolean wasEnabled = this.enabled;
 		this.enabled = enabled;
 		
-		if(hasSubscriptions && subscriptionTarget.contains(FMLEnvironment.dist) && wasEnabled != enabled) {
-			if(enabled)
-				MinecraftForge.EVENT_BUS.register(this);
-			else MinecraftForge.EVENT_BUS.unregister(this);
+		boolean changed = wasEnabled != enabled; 
+		
+		if(changed) {
+			if(hasSubscriptions && subscriptionTarget.contains(FMLEnvironment.dist)) {
+				if(enabled)
+					MinecraftForge.EVENT_BUS.register(this);
+				else if(!firstLoad) 
+					MinecraftForge.EVENT_BUS.unregister(this);
+			}
+			
+			enabledStatusChanged(firstLoad, wasEnabled, enabled);
 		}
 	}
 	

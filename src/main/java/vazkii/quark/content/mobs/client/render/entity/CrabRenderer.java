@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import vazkii.quark.base.client.handler.ModelHandler;
+import vazkii.quark.content.mobs.client.layer.CrabMoldLayer;
 import vazkii.quark.content.mobs.client.model.CrabModel;
 import vazkii.quark.content.mobs.entity.Crab;
 
@@ -20,11 +21,12 @@ public class CrabRenderer extends MobRenderer<Crab, CrabModel> {
 
 	public CrabRenderer(EntityRendererProvider.Context context) {
 		super(context, ModelHandler.model(ModelHandler.crab), 0.4F);
+		addLayer(new CrabMoldLayer(this));
 	}
 
 	@Nullable
 	@Override
 	public ResourceLocation getTextureLocation(@Nonnull Crab entity) {
-		return TEXTURES[Math.min(TEXTURES.length - 1, entity.getVariant())];
+		return TEXTURES[entity.getVariant() % TEXTURES.length];
 	}
 }

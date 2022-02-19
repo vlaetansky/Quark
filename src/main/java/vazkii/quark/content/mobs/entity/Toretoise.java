@@ -59,7 +59,7 @@ import vazkii.quark.content.mobs.module.ToretoiseModule;
 
 public class Toretoise extends Animal {
 
-	public static final int ORE_TYPES = 4;
+	public static final int ORE_TYPES = 5;
 	public static final int ANGERY_TIME = 20; 
 
 	private static final String TAG_TAMED = "tamed";
@@ -267,8 +267,7 @@ public class Toretoise extends Animal {
 			drop = Items.COAL;
 			break;
 		case 2:
-			drop = Items.IRON_NUGGET;
-			countMult *= 9;
+			drop = Items.RAW_IRON;
 			break;
 		case 3:
 			drop = Items.REDSTONE;
@@ -277,6 +276,9 @@ public class Toretoise extends Animal {
 		case 4:
 			drop = Items.LAPIS_LAZULI;
 			countMult *= 2;
+			break;
+		case 5:
+			drop = Items.RAW_COPPER;
 			break;
 		}
 

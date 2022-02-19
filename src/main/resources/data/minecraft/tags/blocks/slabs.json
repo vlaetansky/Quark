@@ -2,8 +2,10 @@
   "replace": false,
   "values": [
     "quark:andesite_bricks_slab",
+    "quark:azalea_planks_slab",
     "quark:blackstone_bricks_slab",
     "quark:black_shingles_slab",
+    "quark:blossom_planks_slab",
     "quark:blue_nether_bricks_slab",
     "quark:blue_shingles_slab",
     "quark:brown_shingles_slab",

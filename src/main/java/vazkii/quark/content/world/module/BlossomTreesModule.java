@@ -10,6 +10,8 @@ import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.common.BiomeDictionary;
 import vazkii.quark.base.handler.VariantHandler;
+import vazkii.quark.base.handler.WoodSetHandler;
+import vazkii.quark.base.handler.WoodSetHandler.WoodSet;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
@@ -36,8 +38,12 @@ public class BlossomTreesModule extends QuarkModule {
 	
 	public static Map<BlossomTree, BlossomTreeConfig> trees = new HashMap<>();
 	
+	public static WoodSet woodSet;
+	
 	@Override
 	public void construct() {
+		woodSet = WoodSetHandler.addWoodSet(this, "blossom", MaterialColor.COLOR_RED, MaterialColor.COLOR_BROWN);
+		
 		add("blue", MaterialColor.COLOR_LIGHT_BLUE, blue);
 		add("lavender", MaterialColor.COLOR_PINK, lavender);
 		add("orange", MaterialColor.TERRACOTTA_ORANGE, orange);

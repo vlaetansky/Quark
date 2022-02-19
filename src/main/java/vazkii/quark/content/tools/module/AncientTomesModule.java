@@ -202,8 +202,6 @@ public class AncientTomesModule extends QuarkModule {
 						
 						event.setOutput(out);
 						event.setCost(cost);
-					} else {
-						event.setCanceled(true);
 					}
 				}
 			}
