@@ -1,11 +1,21 @@
 package vazkii.quark.content.tweaks.module;
 
+import com.google.common.collect.Lists;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.GlowSquid;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ambient.Bat;
+import net.minecraft.world.entity.animal.*;
+import net.minecraft.world.entity.animal.axolotl.Axolotl;
+import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.monster.Strider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -20,6 +30,8 @@ import vazkii.quark.content.mobs.entity.Foxhound;
 import vazkii.quark.content.tweaks.ai.NuzzleGoal;
 import vazkii.quark.content.tweaks.ai.WantLoveGoal;
 
+import java.util.List;
+
 /**
  * @author WireSegal
  * Created at 11:25 AM on 9/2/19.
@@ -28,11 +40,14 @@ import vazkii.quark.content.tweaks.ai.WantLoveGoal;
 public class PatTheDogsModule extends QuarkModule {
     @Config(description = "How many ticks it takes for a dog to want affection after being pet/tamed; leave -1 to disable")
     public static int dogsWantLove = -1;
+    @Config(description = "Whether you can pet all mobs")
+    public static boolean petAllMobs = false;
+    @Config(description = "If `petAllMobs` is set, these mobs still can't be pet")
+    public static List<String> pettableDenylist = Lists.newArrayList("minecraft:ender_dragon", "minecraft:wither", "minecraft:armor_stand");
 
     @SubscribeEvent
     public void onWolfAppear(EntityJoinWorldEvent event) {
-        if (dogsWantLove > 0 && event.getEntity() instanceof Wolf) {
-            Wolf wolf = (Wolf) event.getEntity();
+        if (dogsWantLove > 0 && event.getEntity() instanceof Wolf wolf) {
             boolean alreadySetUp = wolf.goalSelector.getAvailableGoals().stream().anyMatch((goal) -> goal.getGoal() instanceof WantLoveGoal);
 
             if (!alreadySetUp) {
@@ -44,22 +59,78 @@ public class PatTheDogsModule extends QuarkModule {
 
     @SubscribeEvent
     public void onInteract(PlayerInteractEvent.EntityInteract event) {
-        if(event.getTarget() instanceof Wolf) {
-            Wolf wolf = (Wolf) event.getTarget();
-            Player player = event.getPlayer();
+        var player = event.getPlayer();
 
-            if(player.isDiscrete() && player.getMainHandItem().isEmpty()) {
-                if(event.getHand() == InteractionHand.MAIN_HAND && WantLoveGoal.canPet(wolf)) {
-                    if(player.level instanceof ServerLevel) {
-                    	Vec3 pos = wolf.position();
-                        ((ServerLevel) player.level).sendParticles(ParticleTypes.HEART, pos.x, pos.y + 0.5, pos.z, 1, 0, 0, 0, 0.1);
+        if (player.isDiscrete() && player.getMainHandItem().isEmpty()) {
+            if (event.getTarget() instanceof Wolf wolf) {
+                if (event.getHand() == InteractionHand.MAIN_HAND && WantLoveGoal.canPet(wolf)) {
+                    if (player.level instanceof ServerLevel serverLevel) {
+                        var pos = wolf.position();
+                        serverLevel.sendParticles(ParticleTypes.HEART, pos.x, pos.y + 0.5, pos.z, 1, 0, 0, 0, 0.1);
                         wolf.playSound(SoundEvents.WOLF_WHINE, 1F, 0.5F + (float) Math.random() * 0.5F);
                     } else player.swing(InteractionHand.MAIN_HAND);
 
                     WantLoveGoal.setPetTime(wolf);
 
-                    if (wolf instanceof Foxhound && !player.isInWater() && !player.hasEffect(MobEffects.FIRE_RESISTANCE) && !player.isCreative())
+                    if (wolf instanceof Foxhound && !player.isInWater() && !player.hasEffect(
+                        MobEffects.FIRE_RESISTANCE) && !player.isCreative())
                         player.setSecondsOnFire(5);
+                }
+
+                event.setCanceled(true);
+            } else if (petAllMobs && event.getTarget() instanceof LivingEntity living && !pettableDenylist.contains(living.getEncodeId())) {
+                if (event.getHand() == InteractionHand.MAIN_HAND) {
+                    if (player.level instanceof ServerLevel serverLevel) {
+                        var pos = living.getEyePosition();
+                        serverLevel.sendParticles(ParticleTypes.HEART, pos.x, pos.y + 0.5, pos.z, 1, 0, 0, 0, 0.1);
+
+                        SoundEvent sound = null;
+                        float pitchCenter = 1f;
+                        if (living instanceof Axolotl) {
+                            sound = SoundEvents.AXOLOTL_SPLASH;
+                        } else if (living instanceof Cat || living instanceof Ocelot) {
+                            sound = SoundEvents.CAT_PURREOW;
+                        } else if (living instanceof Chicken) {
+                            sound = SoundEvents.CHICKEN_AMBIENT;
+                        } else if (living instanceof Cow) {
+                            sound = SoundEvents.COW_AMBIENT;
+                            pitchCenter = 1.2f;
+                        } else if (living instanceof AbstractHorse) {
+                            sound = SoundEvents.HORSE_AMBIENT;
+                        } else if (living instanceof AbstractFish) {
+                            sound = SoundEvents.FISH_SWIM;
+                        } else if (living instanceof Fox) {
+                            sound = SoundEvents.FOX_SLEEP;
+                        } else if (living instanceof Squid) {
+                            sound = (living instanceof GlowSquid) ?
+                                SoundEvents.GLOW_SQUID_SQUIRT : SoundEvents.SQUID_SQUIRT;
+                            pitchCenter = 1.2f;
+                        } else if (living instanceof Parrot) {
+                            sound = SoundEvents.PARROT_AMBIENT;
+                        } else if (living instanceof Pig) {
+                            sound = SoundEvents.PIG_AMBIENT;
+                        } else if (living instanceof Rabbit) {
+                            sound = SoundEvents.RABBIT_AMBIENT;
+                        } else if (living instanceof Sheep) {
+                            sound = SoundEvents.SHEEP_AMBIENT;
+                        } else if (living instanceof Strider) {
+                            sound = SoundEvents.STRIDER_HAPPY;
+                        } else if (living instanceof Turtle) {
+                            sound = SoundEvents.TURTLE_AMBIENT_LAND;
+                        }  else if (living instanceof Player pettee) {
+                            var name = pettee.getScoreboardName();
+                            if (name.equals("petra_the_kat")) {
+                                sound = SoundEvents.NOTE_BLOCK_BIT;
+                                pitchCenter = 1.5f;
+                            } else if (name.equals("MacyMacerator")) {
+                                sound = SoundEvents.CAT_PURR;
+                                pitchCenter = 1.4f;
+                            }
+                        }
+                        if (sound != null) {
+                            living.playSound(sound, 1F, pitchCenter + (float) (Math.random() - 0.5) * 0.5F);
+                        }
+                    } else player.swing(InteractionHand.MAIN_HAND);
                 }
 
                 event.setCanceled(true);
@@ -67,10 +138,11 @@ public class PatTheDogsModule extends QuarkModule {
         }
     }
 
+
+
     @SubscribeEvent
     public void onTame(AnimalTameEvent event) {
-        if(event.getAnimal() instanceof Wolf) {
-            Wolf wolf = (Wolf) event.getAnimal();
+        if(event.getAnimal() instanceof Wolf wolf) {
             WantLoveGoal.setPetTime(wolf);
         }
     }
