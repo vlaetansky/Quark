@@ -118,11 +118,13 @@ public class PatTheDogsModule extends QuarkModule {
                         } else if (living instanceof Turtle) {
                             sound = SoundEvents.TURTLE_AMBIENT_LAND;
                         }  else if (living instanceof Player pettee) {
-                            var name = pettee.getScoreboardName();
-                            if (name.equals("petra_the_kat")) {
+                            var uuid = pettee.getStringUUID();
+                            if (uuid.equals("a2ce9382-2518-4752-87b2-c6a5c97f173e")) {
+                                // petra_the_kat
                                 sound = SoundEvents.NOTE_BLOCK_BIT;
                                 pitchCenter = 1.5f;
-                            } else if (name.equals("MacyMacerator")) {
+                            } else if (uuid.equals("29a10dc6-a201-4993-80d8-c847212bc92b")) {
+                                // MacyMacerator
                                 sound = SoundEvents.CAT_PURR;
                                 pitchCenter = 1.4f;
                             }
