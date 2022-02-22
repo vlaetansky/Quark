@@ -43,6 +43,7 @@ public class QuarkBoatRenderer extends EntityRenderer<QuarkBoat> {
 
 	// All BoatRenderer copy from here on out =====================================================================================================================
 
+	@Override
 	public void render(QuarkBoat p_113929_, float p_113930_, float p_113931_, PoseStack p_113932_, MultiBufferSource p_113933_, int p_113934_) {
 		p_113932_.pushPose();
 		p_113932_.translate(0.0D, 0.375D, 0.0D);
@@ -79,6 +80,7 @@ public class QuarkBoatRenderer extends EntityRenderer<QuarkBoat> {
 		super.render(p_113929_, p_113930_, p_113931_, p_113932_, p_113933_, p_113934_);
 	}
 
+	@Override
 	@Deprecated // forge: override getModelWithLocation to change the texture / model
 	public ResourceLocation getTextureLocation(QuarkBoat p_113927_) {
 		return getModelWithLocation(p_113927_).getFirst();

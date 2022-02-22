@@ -19,6 +19,7 @@ public class QuarkBoatDispenseItemBehavior extends DefaultDispenseItemBehavior {
 		this.type = p_123371_;
 	}
 
+	@Override
 	public ItemStack execute(BlockSource p_123375_, ItemStack p_123376_) {
 		Direction direction = p_123375_.getBlockState().getValue(DispenserBlock.FACING);
 		Level level = p_123375_.getLevel();
@@ -45,6 +46,7 @@ public class QuarkBoatDispenseItemBehavior extends DefaultDispenseItemBehavior {
 		return p_123376_;
 	}
 
+	@Override
 	protected void playSound(BlockSource p_123373_) {
 		p_123373_.getLevel().levelEvent(1000, p_123373_.getPos(), 0);
 	}

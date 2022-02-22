@@ -54,6 +54,7 @@ public class VariantLadderBlock extends LadderBlock implements IQuarkBlock {
 			super.fillItemCategory(group, items);
 	}
 	
+	@Override
 	public boolean isEnabled() {
 		return module.enabled && doesConditionApply();
 	}

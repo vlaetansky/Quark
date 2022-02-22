@@ -112,6 +112,7 @@ public class HugeGlowShroomBlock extends HugeMushroomBlock implements IQuarkBloc
 		}
 	}
 
+	@Override
 	public boolean isEnabled() {
 		return module != null && module.enabled;
 	}

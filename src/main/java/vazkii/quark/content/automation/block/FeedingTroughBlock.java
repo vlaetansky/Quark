@@ -118,6 +118,7 @@ public class FeedingTroughBlock extends QuarkBlock implements EntityBlock {
 		return true;
 	}
 
+	@Override
 	public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos) {
 		return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(world.getBlockEntity(pos));
 	}

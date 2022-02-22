@@ -43,7 +43,7 @@ public class BlossomTreeGenerator extends Generator {
 				if(upState.canBeReplaced(Fluids.WATER))
 					worldIn.setBlock(up, Blocks.AIR.defaultBlockState(), 0);
 				
-				FeaturePlaceContext<TreeConfiguration> context = new FeaturePlaceContext<TreeConfiguration>(Optional.of(Feature.TREE.configured(tree.config)), worldIn, generator, rand, up, tree.config);
+				FeaturePlaceContext<TreeConfiguration> context = new FeaturePlaceContext<>(Optional.of(Feature.TREE.configured(tree.config)), worldIn, generator, rand, up, tree.config);
 				Feature.TREE.place(context);
 			}
 		}

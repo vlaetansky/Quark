@@ -138,12 +138,10 @@ public class EmoteTemplate {
 		int lines = 0;
 
 		tier = 0;
-		
-		BufferedReader reader = null;
+
 		compiled = compiledOnce = false;
 		readLines = new ArrayList<>();
-		try {
-			reader = createReader();
+		try (BufferedReader reader = createReader()) {
 
 			try {
 				String s;
@@ -168,12 +166,6 @@ public class EmoteTemplate {
 			compiledOnce = true;
 			if (desc != null)
 				desc.updateTier(this);
-			try {
-				if(reader != null)
-					reader.close();
-			} catch (IOException e) {
-				Quark.LOG.warn("Failed to load emote " + desc, e);
-			}
 		}
 	}
 	
