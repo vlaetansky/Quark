@@ -124,7 +124,7 @@ public class PatTheDogsModule extends QuarkModule {
                                 sound = SoundEvents.NOTE_BLOCK_BIT;
                                 pitchCenter = 1.5f;
                             } else if (uuid.equals("29a10dc6-a201-4993-80d8-c847212bc92b") || uuid.equals("d30d8e38-6f93-4d96-968d-dd6ec5596941")) {
-                                // MacyMacerator and Falkor220
+                                // MacyMacerator and Falkory220
                                 sound = SoundEvents.CAT_PURR;
                                 pitchCenter = 1.4f;
                             }
