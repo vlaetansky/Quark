@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
@@ -65,7 +66,7 @@ public class WoodSetHandler {
 	
 	public static EntityType<QuarkBoat> quarkBoatEntityType = null;
 
-	private static List<WoodSet> woodSets = new ArrayList<>();
+	private static final List<WoodSet> woodSets = new ArrayList<>();
 	
 	public static void start() {
 		quarkBoatEntityType = EntityType.Builder.<QuarkBoat>of(QuarkBoat::new, MobCategory.MISC)
@@ -88,12 +89,18 @@ public class WoodSetHandler {
     @OnlyIn(Dist.CLIENT)
     public static void clientSetup(FMLClientSetupEvent event) {
         EntityRenderers.register(quarkBoatEntityType, QuarkBoatRenderer::new);
-    }
+
+		event.enqueueWork(() -> {
+			for (WoodSet set : woodSets) {
+				Sheets.addWoodType(set.type);
+			}
+		});
+	}
 	
 	public static WoodSet addWoodSet(QuarkModule module, String name, MaterialColor color, MaterialColor barkColor) {
-		WoodSet set = new WoodSet(name, module);
 		WoodType type = WoodType.register(WoodType.create(Quark.MOD_ID + ":" + name));
-		
+		WoodSet set = new WoodSet(name, module, type);
+
 		set.log = log(name + "_log", module, color, barkColor);
 		set.wood = new QuarkPillarBlock(name + "_wood", module, CreativeModeTab.TAB_BUILDING_BLOCKS, BlockBehaviour.Properties.of(Material.WOOD, barkColor).strength(2.0F).sound(SoundType.WOOD));
 		set.planks = new QuarkBlock(name + "_planks", module, CreativeModeTab.TAB_BUILDING_BLOCKS, Properties.of(Material.WOOD, color).strength(2.0F, 3.0F).sound(SoundType.WOOD));
@@ -156,7 +163,8 @@ public class WoodSetHandler {
 	
 	public static class WoodSet {
 
-		private String name;
+		private final String name;
+		private final WoodType type;
 		public final QuarkModule module;
 		
 		public Block log, wood, planks, strippedLog, strippedWood,
@@ -166,9 +174,10 @@ public class WoodSetHandler {
 
 		public Item signItem, boatItem;
 
-		public WoodSet(String name, QuarkModule module) {
+		public WoodSet(String name, QuarkModule module, WoodType type) {
 			this.name = name;
 			this.module = module;
+			this.type = type;
 		}
 
 	}
