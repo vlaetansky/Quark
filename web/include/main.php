@@ -97,7 +97,7 @@
 					</div>
 
 					<div class="vm-title">
-						<a href="https://twitter.com/vazkiimods">Violet Moon Modding</a>
+						<a href="https://violetmoon.org">Violet Moon</a>
 					</div>
 					<div class="vm-subtitle">
 						Quark Team
@@ -183,6 +183,7 @@
 					<li><b>cheeserolls</b> for the biome location code from Biomes'o'Plenty used for Pathfinder Maps.</li>
 					<li><b>Daniel Astral</b> for the world stone variant textures.</li>
 					<li><b>Endergy</b> for the variant chest, bookshelf, and ladder textures, as well as the compressed block textures.</li>
+					<li><b>Evo</b> for the Shiba textures.</li>
 					<li><b>Evtema3</b> for the original Elder Prismarine idea and textures.</li>
 					<li><b>Jragon014</b> for a bunch of inspiration from The Tempest Box.</li>
 					<li><b>MushirMickeyJoe</b> for the recreation of the bedrock piston model.</li>
