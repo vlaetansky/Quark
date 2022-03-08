@@ -14,7 +14,7 @@ import java.util.EnumSet;
 import java.util.function.Predicate;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.tags.SetTag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -41,8 +41,8 @@ public class FavorBlockGoal extends Goal {
 		setFlags(EnumSet.of(Flag.MOVE, Flag.JUMP));
 	}
 
-	public FavorBlockGoal(PathfinderMob creature, double speed, SetTag<Block> tag) {
-		this(creature, speed, (state) -> tag.contains(state.getBlock()));
+	public FavorBlockGoal(PathfinderMob creature, double speed, TagKey<Block> tag) {
+		this(creature, speed, (state) -> state.is(tag));
 	}
 
 	public FavorBlockGoal(PathfinderMob creature, double speed, Block block) {

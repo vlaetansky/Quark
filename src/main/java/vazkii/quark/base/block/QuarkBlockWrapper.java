@@ -1,11 +1,9 @@
 package vazkii.quark.base.block;
 
-import java.util.Set;
 import java.util.function.BooleanSupplier;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,11 +39,6 @@ public class QuarkBlockWrapper implements IQuarkBlock {
 	@Override
 	public boolean doesConditionApply() {
 		return false;
-	}
-
-	@Override
-	public Set<ResourceLocation> getTags() {
-		return parent.getTags();
 	}
 
 	@Override

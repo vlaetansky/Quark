@@ -5,7 +5,7 @@ import java.util.Map;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -31,7 +31,7 @@ public class GlassShardModule extends QuarkModule {
 
     public static QuarkBlock dirtyGlass;
 
-    public static Tag<Item> shardTag;
+    public static TagKey<Item> shardTag;
 
     public static Item clearShard;
     public static Item dirtyShard;
@@ -53,6 +53,6 @@ public class GlassShardModule extends QuarkModule {
 
     @Override
     public void setup() {
-        shardTag = ItemTags.createOptional(new ResourceLocation(Quark.MOD_ID, "shards"));
+        shardTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "shards"));
     }
 }

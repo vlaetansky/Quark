@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CompassItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -49,7 +49,7 @@ public class ColorRunesModule extends QuarkModule {
 	public static final int RUNE_TYPES = 17;
 
 	private static final ThreadLocal<ItemStack> targetStack = new ThreadLocal<>();
-	public static Tag<Item> runesTag, runesLootableTag;
+	public static TagKey<Item> runesTag, runesLootableTag;
 	public static Item blank_rune;
 
 	@Config public static int dungeonWeight = 10;
@@ -134,8 +134,8 @@ public class ColorRunesModule extends QuarkModule {
 
 	@Override
 	public void setup() {
-		runesTag = ItemTags.createOptional(new ResourceLocation(Quark.MOD_ID, "runes"));
-		runesLootableTag = ItemTags.createOptional(new ResourceLocation(Quark.MOD_ID, "runes_lootable"));
+		runesTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "runes"));
+		runesLootableTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "runes_lootable"));
 	}
 
 	@SubscribeEvent

@@ -6,7 +6,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -28,10 +28,10 @@ public class MixedExclusionRecipe implements CraftingRecipe, IShapedRecipe<Craft
 	
 	final String type;
 	final ItemStack output;
-	final Tag.Named<Item> tag;
+	final TagKey<Item> tag;
 	final ItemStack placeholder;
 	
-	public MixedExclusionRecipe(ResourceLocation res, String type, ItemStack output, Tag.Named<Item> tag, ItemStack placeholder) {
+	public MixedExclusionRecipe(ResourceLocation res, String type, ItemStack output, TagKey<Item> tag, ItemStack placeholder) {
 		this.res = res;
 		
 		this.type = type;
@@ -42,14 +42,14 @@ public class MixedExclusionRecipe implements CraftingRecipe, IShapedRecipe<Craft
 	
 	public static MixedExclusionRecipe forChest(String type, ResourceLocation res, boolean log) {
 		ItemStack output = new ItemStack(Items.CHEST, (log ? 4 : 1));
-		Tag.Named<Item> tag = (log ? ItemTags.LOGS : ItemTags.PLANKS);
+		TagKey<Item> tag = (log ? ItemTags.LOGS : ItemTags.PLANKS);
 		ItemStack placeholder = new ItemStack(log ? Items.OAK_LOG : Items.OAK_PLANKS);
 		return new MixedExclusionRecipe(res, type, output, tag, placeholder);
 	}
 	
 	public static MixedExclusionRecipe forFurnace(String type, ResourceLocation res) {
 		ItemStack output = new ItemStack(Items.FURNACE);
-		Tag.Named<Item> tag = ItemTags.STONE_CRAFTING_MATERIALS;
+		TagKey<Item> tag = ItemTags.STONE_CRAFTING_MATERIALS;
 		ItemStack placeholder = new ItemStack(Items.COBBLESTONE);
 		return new MixedExclusionRecipe(res, type, output, tag, placeholder);
 	}

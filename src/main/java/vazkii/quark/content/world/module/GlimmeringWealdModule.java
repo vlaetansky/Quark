@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.Music;
 import net.minecraft.sounds.Musics;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.Item;
@@ -60,7 +60,7 @@ public class GlimmeringWealdModule extends QuarkModule {
 	public static Block glow_shroom_stem;
 	public static Block glow_shroom_ring;
 	
-	public static Tag<Item> glowShroomFeedablesTag;
+	public static TagKey<Item> glowShroomFeedablesTag;
 
 	@Override
 	public void construct() {
@@ -78,7 +78,7 @@ public class GlimmeringWealdModule extends QuarkModule {
 
 	@Override
 	public void setup() {
-		glowShroomFeedablesTag = ItemTags.createOptional(new ResourceLocation(Quark.MOD_ID, "glow_shroom_feedables"));
+		glowShroomFeedablesTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "glow_shroom_feedables"));
 	}
 	
 	private static void makeFeatures() {

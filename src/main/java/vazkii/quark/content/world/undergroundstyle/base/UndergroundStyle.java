@@ -5,8 +5,9 @@ import java.util.function.Predicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Rotation;
@@ -17,14 +18,14 @@ import vazkii.quark.content.world.undergroundstyle.base.UndergroundStyleGenerato
 
 public abstract class UndergroundStyle {
 	
-	private static Tag<Block> fillerTag = null;
+	private static TagKey<Block> fillerTag = null;
 	
 	public static final Predicate<BlockState> STONE_TYPES_MATCHER = (state) -> {
 		if(state == null)
 			return false;
 		
 		if(fillerTag == null)
-			fillerTag = BlockTags.bind(Quark.MOD_ID + ":underground_biome_replaceable");
+			fillerTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "underground_biome_replaceable"));
 		
 		return state.is(fillerTag);
 	};

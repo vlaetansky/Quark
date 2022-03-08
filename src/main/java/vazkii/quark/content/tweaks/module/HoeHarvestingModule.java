@@ -4,7 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.HoeItem;
@@ -39,7 +39,7 @@ public class HoeHarvestingModule extends QuarkModule {
 	@Config
 	public static boolean hoesCanHaveFortune = true;
 
-	public static Tag<Item> bigHarvestingHoesTag;
+	public static TagKey<Item> bigHarvestingHoesTag;
 
 	public static int getRange(ItemStack hoe) {
 		if(!ModuleLoader.INSTANCE.isModuleEnabled(HoeHarvestingModule.class))
@@ -63,7 +63,7 @@ public class HoeHarvestingModule extends QuarkModule {
 
 	@Override
 	public void setup() {
-		bigHarvestingHoesTag = ItemTags.createOptional(new ResourceLocation(Quark.MOD_ID, "big_harvesting_hoes"));
+		bigHarvestingHoesTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "big_harvesting_hoes"));
 	}
 
 	@SubscribeEvent

@@ -7,7 +7,7 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -40,7 +40,7 @@ public class ChestsInBoatsModule extends QuarkModule {
 
 	public static EntityType<ChestPassenger> chestPassengerEntityType;
 
-	private static Tag<Item> boatableChestsTag;
+	private static TagKey<Item> boatableChestsTag;
 	
 	@Override
 	public void construct() {
@@ -54,7 +54,7 @@ public class ChestsInBoatsModule extends QuarkModule {
 	
     @Override
     public void setup() {
-    	boatableChestsTag = ItemTags.createOptional(new ResourceLocation(Quark.MOD_ID, "boatable_chests"));
+    	boatableChestsTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "boatable_chests"));
     }
 
 	@Override

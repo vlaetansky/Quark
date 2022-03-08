@@ -8,7 +8,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacements.Type;
@@ -67,7 +67,7 @@ public class WraithModule extends QuarkModule {
 	@Config
 	public static EntitySpawnConfig spawnConfig = new CostSensitiveEntitySpawnConfig(8, 1, 3, 0.7, 0.15, CompoundBiomeConfig.fromBiomeReslocs(false, "minecraft:soul_sand_valley"));
 	
-	public static Tag<Block> wraithSpawnableTag;
+	public static TagKey<Block> wraithSpawnableTag;
 	
 	public static List<String> validWraithSounds;
 	
@@ -100,7 +100,7 @@ public class WraithModule extends QuarkModule {
 	
 	@Override
 	public void setup() {
-		wraithSpawnableTag = BlockTags.createOptional(new ResourceLocation(Quark.MOD_ID, "wraith_spawnable"));
+		wraithSpawnableTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "wraith_spawnable"));
 	}
 
 	@Override

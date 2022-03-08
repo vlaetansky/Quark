@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -34,7 +34,7 @@ public class SkullPikesModule extends QuarkModule {
 
 	public static EntityType<SkullPike> skullPikeType;
 
-    public static Tag<Block> pikeTrophiesTag;
+    public static TagKey<Block> pikeTrophiesTag;
     
     @Config public static double pikeRange = 5;
 	
@@ -52,7 +52,7 @@ public class SkullPikesModule extends QuarkModule {
 	
     @Override
     public void setup() {
-    	pikeTrophiesTag = BlockTags.createOptional(new ResourceLocation(Quark.MOD_ID, "pike_trophies"));
+    	pikeTrophiesTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "pike_trophies"));
     }
 	
 	@Override

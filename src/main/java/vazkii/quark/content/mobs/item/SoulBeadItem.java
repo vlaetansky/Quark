@@ -34,7 +34,7 @@ public class SoulBeadItem extends QuarkItem {
 		ItemStack itemstack = playerIn.getItemInHand(handIn);
 
 		if(!worldIn.isClientSide) {
-			StructureFeature<?> target = StructureFeature.NETHER_BRIDGE; // Nether Fortress
+			StructureFeature<?> target = StructureFeature.FORTRESS;
             BlockPos blockpos = ((ServerLevel)worldIn).getChunkSource().getGenerator().findNearestMapFeature((ServerLevel)worldIn, target, playerIn.blockPosition(), 100, false);
 
 			if(blockpos != null) {

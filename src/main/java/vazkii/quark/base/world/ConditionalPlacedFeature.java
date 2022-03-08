@@ -14,7 +14,7 @@ public class ConditionalPlacedFeature extends PlacedFeature {
 	public final BooleanSupplier condition;
 
 	public ConditionalPlacedFeature(PlacedFeature parent, BooleanSupplier condition) {
-		super(parent.feature, parent.getPlacement());
+		super(parent.feature(), parent.placement());
 		this.parent = parent;
 		this.condition = condition;
 	}

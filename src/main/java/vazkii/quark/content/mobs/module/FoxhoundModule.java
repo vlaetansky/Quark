@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacements.Type;
@@ -51,7 +51,7 @@ public class FoxhoundModule extends QuarkModule {
 	@Config
 	public static EntitySpawnConfig lesserSpawnConfig = new CostSensitiveEntitySpawnConfig(2, 1, 1, 0.7, 0.15, CompoundBiomeConfig.fromBiomeReslocs(false, "minecraft:soul_sand_valley"));
 	
-	public static Tag<Block> foxhoundSpawnableTag;
+	public static TagKey<Block> foxhoundSpawnableTag;
 	
 	@Override
 	public void construct() {
@@ -73,7 +73,7 @@ public class FoxhoundModule extends QuarkModule {
 
 	@Override
 	public void setup() {		
-		foxhoundSpawnableTag = BlockTags.createOptional(new ResourceLocation(Quark.MOD_ID, "foxhound_spawnable"));
+		foxhoundSpawnableTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "foxhound_spawnable"));
 	}
 	
 	@Override

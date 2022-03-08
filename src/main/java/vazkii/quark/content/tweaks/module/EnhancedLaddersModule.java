@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
@@ -49,11 +49,11 @@ public class EnhancedLaddersModule extends QuarkModule {
 	@Config public static boolean allowInventorySneak = true;
 
 	private static boolean staticEnabled;
-	private static Tag<Item> laddersTag;
+	private static TagKey<Item> laddersTag;
 	
 	@Override
 	public void setup() {
-		laddersTag = ItemTags.createOptional(new ResourceLocation(Quark.MOD_ID, "ladders"));
+		laddersTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "ladders"));
 	}
 	
 	@Override

@@ -9,7 +9,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -62,7 +62,7 @@ public class CorundumModule extends AbstractUndergroundStyleModule {
 	public static boolean staticEnabled;
 	
 	public static List<CorundumBlock> crystals = Lists.newArrayList();
-	public static Tag<Block> corundumTag;
+	public static TagKey<Block> corundumTag;
 
 	@Override
 	public void construct() {
@@ -101,7 +101,7 @@ public class CorundumModule extends AbstractUndergroundStyleModule {
 	@Override
 	public void setup() {
 		super.setup();
-		corundumTag = BlockTags.createOptional(new ResourceLocation(Quark.MOD_ID, "corundum"));
+		corundumTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "corundum"));
 	}
 
 	@Override

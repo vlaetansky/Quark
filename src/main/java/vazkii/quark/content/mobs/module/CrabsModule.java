@@ -3,7 +3,7 @@ package vazkii.quark.content.mobs.module;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.EntityType;
@@ -49,7 +49,7 @@ public class CrabsModule extends QuarkModule {
 	@Config
 	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(5, 1, 3, CompoundBiomeConfig.fromBiomeTypes(false, BiomeDictionary.Type.BEACH));
 
-	public static Tag<Block> crabSpawnableTag;
+	public static TagKey<Block> crabSpawnableTag;
 	
 	@Config(flag = "crab_brewing")
 	public static boolean enableBrewing = true;
@@ -96,7 +96,7 @@ public class CrabsModule extends QuarkModule {
 
 	@Override
 	public void setup() {
-		crabSpawnableTag = BlockTags.createOptional(new ResourceLocation(Quark.MOD_ID, "crab_spawnable"));
+		crabSpawnableTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "crab_spawnable"));
 	}
 
 	@Override
