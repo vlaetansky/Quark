@@ -65,10 +65,12 @@ minecraft {
     }
 }
 
+/*
 mixin {
     add sourceSets.main, 'quark.mixins.refmap.json'
     config 'quark.mixins.json'
 }
+*/
 
 repositories {
     maven {
@@ -87,7 +89,7 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${config.mc_version}-${config.forge_version}"
 
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    //annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     implementation fg.deobf("com.github.glitchfiend:TerraBlender-forge:${config.tb_version}")
 
@@ -182,8 +184,8 @@ jar {
             "Implementation-Title": "${config.mod_id}",
             "Implementation-Version": "${version}",
             "Implementation-Vendor" :"vazkii",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-            "MixinConfigs": "quark.mixins.json"
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")/*,
+            "MixinConfigs": "quark.mixins.json"*/
         ])
     }
 
