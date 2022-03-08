@@ -8,6 +8,7 @@ import java.util.Random;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.ChunkGenerator;
@@ -46,7 +47,7 @@ public class UndergroundStyleGenerator extends ClusterBasedGenerator {
 	@Override
 	public boolean isSourceValid(WorldGenRegion world, ChunkGenerator generator, BlockPos pos) {
 		BlockPos check = new BlockPos(pos.getX(), info.minYLevel, pos.getZ());
-		Biome biome = getBiome(world, check, true);
+		Holder<Biome> biome = getBiome(world, check, true);
 		return info.biomes.canSpawn(biome);
 	}
 	

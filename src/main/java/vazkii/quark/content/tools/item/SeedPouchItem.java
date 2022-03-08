@@ -9,6 +9,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -33,9 +34,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.api.ITrowelable;
 import vazkii.quark.api.IUsageTickerOverride;
+import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
+import vazkii.quark.content.tools.module.ColorRunesModule;
 import vazkii.quark.content.tools.module.SeedPouchModule;
 
 public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, ITrowelable {
@@ -279,7 +282,7 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 			List<Item> tagItems = null;
 
 			try {
-				tagItems = SeedPouchModule.seedPouchHoldableTag.getValues();
+				tagItems = MiscUtil.getTagValues(RegistryAccess.BUILTIN.get(), ColorRunesModule.runesTag);
 			} catch(IllegalStateException e) { // Tag not bound yet
 				return;
 			}

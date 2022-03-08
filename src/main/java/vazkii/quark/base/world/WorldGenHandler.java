@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -91,8 +92,8 @@ public class WorldGenHandler {
 		BiomeGenerationSettingsBuilder settings = ev.getGeneration();
 
 		for(GenerationStep.Decoration stage : GenerationStep.Decoration.values()) {
-			List<Supplier<PlacedFeature>> features = settings.getFeatures(stage);
-			features.add(() -> defers.get(stage));
+			List<Holder<PlacedFeature>> features = settings.getFeatures(stage);
+			features.add(Holder.direct(defers.get(stage)));
 		}
 	}
 

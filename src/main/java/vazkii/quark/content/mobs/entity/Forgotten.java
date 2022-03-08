@@ -47,6 +47,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraftforge.network.NetworkHooks;
 import vazkii.arl.util.ItemNBTHelper;
+import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.mobs.module.ForgottenModule;
 import vazkii.quark.content.tools.module.ColorRunesModule;
@@ -169,7 +170,7 @@ public class Forgotten extends Skeleton {
 		EnchantmentHelper.enchantItem(random, sheathed, 20, false);
 
 		if(ModuleLoader.INSTANCE.isModuleEnabled(ColorRunesModule.class) && random.nextBoolean()) {
-			List<Item> items = ColorRunesModule.runesLootableTag.getValues();
+			List<Item> items = MiscUtil.getTagValues(level.registryAccess(), ColorRunesModule.runesLootableTag);
 			ItemStack item = new ItemStack(items.get(random.nextInt(items.size())));
 			CompoundTag runeNbt = item.serializeNBT();
 

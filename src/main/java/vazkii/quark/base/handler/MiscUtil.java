@@ -2,16 +2,17 @@ package vazkii.quark.base.handler;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
 import com.google.common.base.Predicates;
+import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.Util;
@@ -19,12 +20,16 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.WorldlyContainer;
@@ -236,6 +241,25 @@ public class MiscUtil {
 	
 	public static boolean canPutIntoInv(ItemStack stack, LevelAccessor level, BlockPos blockPos, BlockEntity tile, Direction face, boolean doSimulation) {
 		return putIntoInv(stack, level, blockPos, tile, face, true, doSimulation).isEmpty();
+	}
+	
+	public static <T> List<T> getTagValues(RegistryAccess access, TagKey<T> tag) {
+		HolderSet<T> holderSet = access.registryOrThrow(tag.registry()).getTag(tag).orElseThrow();
+		Either<TagKey<T>, List<Holder<T>>> either = holderSet.unwrap();
+		
+		if(!either.right().isPresent())
+			return null;
+		
+		List<Holder<T>> holders = either.right().get();
+		List<T> retList = new ArrayList<>();
+		
+		for(Holder<T> h : holders) {
+			Either<ResourceKey<T>, T> hEither = h.unwrap();
+			if(hEither.right().isPresent())
+				retList.add(hEither.right().get());
+		}
+		
+		return retList;
 	}
 	
 	@OnlyIn(Dist.CLIENT)

@@ -19,6 +19,7 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.registration.IVanillaCategoryExtensionRegistration;
 import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.EnchantedBookItem;
@@ -32,6 +33,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.addons.oddities.client.screen.CrateScreen;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.building.module.VariantFurnacesModule;
 import vazkii.quark.content.tools.item.AncientTomeItem;
@@ -114,7 +116,7 @@ public class QuarkJeiPlugin implements IModPlugin {
 		}
 
 		List<Object> recipes = new ArrayList<>();
-		for (Item rune : ColorRunesModule.runesTag.getValues()) { 
+		for (Item rune : MiscUtil.getTagValues(RegistryAccess.BUILTIN.get(), ColorRunesModule.runesTag)) { 
 			ItemStack runeStack = new ItemStack(rune);
 			recipes.add(factory.createAnvilRecipe(used, Collections.singletonList(runeStack),
 				used.stream().map(stack -> {
