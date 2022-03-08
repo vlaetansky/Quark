@@ -10,7 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -32,7 +32,7 @@ public class SeedPouchModule extends QuarkModule {
 
 	public static Item seed_pouch;
 
-    public static Tag<Item> seedPouchHoldableTag;
+    public static TagKey<Item> seedPouchHoldableTag;
 	
 	@Config public static int maxItems = 640;
 	@Config public static boolean showAllVariantsInCreative = true;
@@ -45,7 +45,7 @@ public class SeedPouchModule extends QuarkModule {
 	
     @Override
     public void setup() {
-    	seedPouchHoldableTag = ItemTags.createOptional(new ResourceLocation(Quark.MOD_ID, "seed_pouch_holdable"));
+    	seedPouchHoldableTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "seed_pouch_holdable"));
     }
 
 	@OnlyIn(Dist.CLIENT)

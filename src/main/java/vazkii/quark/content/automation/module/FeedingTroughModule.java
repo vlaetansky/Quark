@@ -1,10 +1,11 @@
 package vazkii.quark.content.automation.module;
 
-import com.mojang.datafixers.util.Pair;
-
 import java.util.Objects;
 
+import com.mojang.datafixers.util.Pair;
+
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.ai.goal.TemptGoal;
@@ -85,8 +86,9 @@ public class FeedingTroughModule extends QuarkModule {
                 animal.getAge() != 0)
             return found;
 
+        Vec3 position = animal.position();
         Pair<BlockPos, FakePlayer> pair = level.getPoiManager().findAllClosestFirst(
-                    feedingTroughPoi.getPredicate(), p -> p.distSqr(animal.position(), true) <= range * range,
+                    feedingTroughPoi.getPredicate(), p -> p.distSqr(new Vec3i(position.x, position.y, position.z)) <= range * range,
                         animal.blockPosition(), (int) range, PoiManager.Occupancy.ANY)
                 .map(pos -> level.getBlockEntity(pos) instanceof FeedingTroughBlockEntity trough ? trough : null)
                 .filter(Objects::nonNull)

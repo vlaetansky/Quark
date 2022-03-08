@@ -4,6 +4,7 @@ import java.util.Random;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.biome.Biome;
@@ -29,9 +30,9 @@ public class FairyRingGenerator extends Generator {
 		int z = corner.getZ() + rand.nextInt(16);
 		BlockPos center = new BlockPos(x, 128, z);
 		
-		Biome biome = getBiome(worldIn, center, false);
+		Holder<Biome> biome = getBiome(worldIn, center, false);
 		
-		Biome.BiomeCategory category = biome.getBiomeCategory();
+		Biome.BiomeCategory category = Biome.getBiomeCategory(biome);
 		double chance = 0;
 		if(category == BiomeCategory.FOREST)
 			chance = FairyRingsModule.forestChance;

@@ -6,16 +6,19 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
 import com.google.common.base.Predicates;
+import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.Util;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -206,9 +209,8 @@ public class MiscUtil {
 	}
 
 	public static BlockPos locateBiome(ServerLevel world, ResourceLocation biomeToFind, BlockPos start, int searchRadius, int searchIncrement) {
-		Biome biome = world.getServer().registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getOptional(biomeToFind).orElse(null);
-
-		return biome == null ? null : world.findNearestBiome(biome, start, searchRadius, searchIncrement);
+		Pair<BlockPos, Holder<Biome>> pair = world.findNearestBiome(h -> h.is(biomeToFind), start, searchRadius, searchIncrement);
+		return pair == null ? null : pair.getFirst();
 	}
 	
 	public static ItemStack putIntoInv(ItemStack stack, LevelAccessor level, BlockPos blockPos, BlockEntity tile, Direction face, boolean simulate, boolean doSimulation) {
@@ -250,7 +252,7 @@ public class MiscUtil {
 			ret = Integer.valueOf(hex.substring(1), 16);
 		return ret;
 	}
-
+	
 	private static int progress;
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)

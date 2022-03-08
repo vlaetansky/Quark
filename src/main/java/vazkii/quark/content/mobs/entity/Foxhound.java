@@ -17,6 +17,7 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -132,10 +133,8 @@ public class Foxhound extends Wolf implements Enemy {
 	
 	@Override
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, SpawnGroupData spawnDataIn, CompoundTag dataTag) {
-		Biome biome = worldIn.getBiome(new BlockPos(position()));
-		ResourceLocation res = worldIn.getLevel().registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(biome);
-		
-		if(res.equals(Biomes.SOUL_SAND_VALLEY.location()))
+		Holder<Biome> biome = worldIn.getBiome(new BlockPos(position()));
+		if(biome.is(Biomes.SOUL_SAND_VALLEY.location()))
 			setBlue(true);
 		
 		return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);

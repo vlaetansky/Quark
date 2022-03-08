@@ -26,7 +26,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -122,7 +122,7 @@ public class Stoneling extends PathfinderMob {
 		goalSelector.addGoal(0, new IfFlagGoal(new TemptGoal(this, 0.6, Ingredient.of(temptTag()), false), () -> StonelingsModule.tamableStonelings));
 	}
 	
-	private Tag<Item> temptTag() {
+	private TagKey<Item> temptTag() {
 		return ModuleLoader.INSTANCE.isModuleEnabled(GlimmeringWealdModule.class) ? GlimmeringWealdModule.glowShroomFeedablesTag : Tags.Items.GEMS_DIAMOND;
 	}
 
@@ -267,7 +267,7 @@ public class Stoneling extends PathfinderMob {
 			variant = (byte) rand.nextInt(StonelingVariant.values().length);
 
 		entityData.set(VARIANT, variant);
-		entityData.set(HAS_LICHEN, world.getBiome(getOnPos()).getRegistryName().equals(GlimmeringWealdModule.BIOME_NAME) && rand.nextInt(5) < 3);
+		entityData.set(HAS_LICHEN, world.getBiome(getOnPos()).is(GlimmeringWealdModule.BIOME_NAME) && rand.nextInt(5) < 3);
 		entityData.set(HOLD_ANGLE, world.getRandom().nextFloat() * 90 - 45);
 
 		if(!isTame && !world.isClientSide()) {
@@ -422,7 +422,7 @@ public class Stoneling extends PathfinderMob {
 
 	public static boolean spawnPredicate(EntityType<? extends Stoneling> type, ServerLevelAccessor world, MobSpawnType reason, BlockPos pos, Random rand) {
 		return pos.getY() <= StonelingsModule.maxYLevel 
-				&& (MiscUtil.validSpawnLight(world, pos, rand) || world.getBiome(pos).getRegistryName().equals(GlimmeringWealdModule.BIOME_NAME)) 
+				&& (MiscUtil.validSpawnLight(world, pos, rand) || world.getBiome(pos).is(GlimmeringWealdModule.BIOME_NAME)) 
 				&& MiscUtil.validSpawnLocation(type, world, reason, pos);
 	}
 

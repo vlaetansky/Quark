@@ -35,7 +35,7 @@ public class SoulBeadItem extends QuarkItem {
 
 		if(!worldIn.isClientSide) {
 			StructureFeature<?> target = StructureFeature.FORTRESS;
-            BlockPos blockpos = ((ServerLevel)worldIn).getChunkSource().getGenerator().findNearestMapFeature((ServerLevel)worldIn, target, playerIn.blockPosition(), 100, false);
+            BlockPos blockpos = ((ServerLevel)worldIn).findNearestMapFeature(target, playerIn.blockPosition(), 100, false);
 
 			if(blockpos != null) {
 				itemstack.shrink(1);

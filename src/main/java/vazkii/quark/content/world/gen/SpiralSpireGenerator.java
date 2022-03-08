@@ -3,6 +3,7 @@ package vazkii.quark.content.world.gen;
 import java.util.Random;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Vec3i;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.level.biome.Biome;
@@ -32,7 +33,7 @@ public class SpiralSpireGenerator extends MultiChunkFeatureGenerator {
 			return;
 		
 		BlockPos pos = chunkCorner.offset(random.nextInt(16), 256, random.nextInt(16));
-		Biome biome = getBiome(world, pos, false);
+		Holder<Biome> biome = getBiome(world, pos, false);
 		if(!SpiralSpiresModule.biomes.canSpawn(biome))
 			return;
 		

@@ -18,6 +18,7 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Lists;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
@@ -212,7 +213,7 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData {
 		}
 
 		Vec3 pos = position();
-		if(isRaving() && (jukeboxPosition == null || jukeboxPosition.distSqr(pos.x, pos.y, pos.z, true) > 24.0D || level.getBlockState(jukeboxPosition).getBlock() != Blocks.JUKEBOX))
+		if(isRaving() && (jukeboxPosition == null || jukeboxPosition.distSqr(new Vec3i(pos.x, pos.y, pos.z)) > 24.0D || level.getBlockState(jukeboxPosition).getBlock() != Blocks.JUKEBOX))
 			party(null, false);
 
 		if(isRaving() && level.isClientSide && tickCount % 10 == 0) {

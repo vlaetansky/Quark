@@ -4,6 +4,7 @@ import java.util.Random;
 import java.util.function.BooleanSupplier;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -43,7 +44,7 @@ public abstract class Generator implements IGenerator {
 		return condition.getAsBoolean() && dimConfig.canSpawnHere(world.getLevel());
 	}
 	
-	public Biome getBiome(LevelAccessor world, BlockPos pos, boolean offset) {
+	public Holder<Biome> getBiome(LevelAccessor world, BlockPos pos, boolean offset) {
 		// Move the position over to the top of the world to ensure it doesn't clip into potential
 		// mod-added underground biomes
 		

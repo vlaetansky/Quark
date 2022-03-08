@@ -3,8 +3,8 @@ package vazkii.quark.content.world.gen;
 import java.util.Random;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Vec3i;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
@@ -30,8 +30,8 @@ public class ChorusVegetationGenerator extends MultiChunkFeatureGenerator {
 	@Override
 	public BlockPos[] getSourcesInChunk(WorldGenRegion world, Random random, ChunkGenerator generator, BlockPos chunkCorner) {
 		if(!chunkCorner.closerThan(Vec3i.ZERO, 1050) && ChorusVegetationModule.rarity > 0 && random.nextInt(ChorusVegetationModule.rarity) == 0) {
-			Biome b = getBiome(world, chunkCorner, true);
-			if(b.getRegistryName().equals(Biomes.END_HIGHLANDS.location()))
+			Holder<Biome> b = getBiome(world, chunkCorner, true);
+			if(b.is(Biomes.END_HIGHLANDS.location()))
 				return new BlockPos[] { chunkCorner };
 		}
 		
@@ -43,7 +43,7 @@ public class ChorusVegetationGenerator extends MultiChunkFeatureGenerator {
 		for(int i = 0; i < ChorusVegetationModule.chunkAttempts; i++) {
 			BlockPos placePos = pos.offset(rand.nextInt(16), 100, rand.nextInt(16));
 			
-			Biome b = getBiome(worldIn, placePos, true);
+			Holder<Biome> b = getBiome(worldIn, placePos, true);
 			double chance = getChance(b);
 			
 			double dist = ((placePos.getX() - src.getX()) * (placePos.getX() - src.getX())) + ((placePos.getZ() - src.getZ()) * (placePos.getZ() - src.getZ()));
@@ -70,12 +70,10 @@ public class ChorusVegetationGenerator extends MultiChunkFeatureGenerator {
 		}
 	}
 	
-	private double getChance(Biome b) {
-		ResourceLocation res = b.getRegistryName();
-		
-		if(res.equals(Biomes.END_HIGHLANDS.location()))
+	private double getChance(Holder<Biome> b) {
+		if(b.is(Biomes.END_HIGHLANDS.location()))
 			return ChorusVegetationModule.highlandsChance;
-		else if(res.equals(Biomes.END_MIDLANDS.location()))
+		else if(b.is(Biomes.END_MIDLANDS.location()))
 			return ChorusVegetationModule.midlandsChance;
 		else return ChorusVegetationModule.otherEndBiomesChance;
 	}
