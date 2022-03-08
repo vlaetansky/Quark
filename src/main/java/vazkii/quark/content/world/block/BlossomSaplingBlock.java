@@ -4,6 +4,7 @@ import java.util.OptionalInt;
 import java.util.Random;
 import java.util.function.BooleanSupplier;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.item.CreativeModeTab;
@@ -85,8 +86,8 @@ public class BlossomSaplingBlock extends SaplingBlock implements IQuarkBlock {
 		}
 
 		@Override
-		protected ConfiguredFeature<TreeConfiguration, ?> getConfiguredFeature(Random rand, boolean hjskfsd) {
-			return Feature.TREE.configured(config);
+		protected Holder<ConfiguredFeature<TreeConfiguration, ?>> getConfiguredFeature(Random rand, boolean hjskfsd) {
+			return Holder.direct(new ConfiguredFeature<>(Feature.TREE, config));
 		}
 		
 	}

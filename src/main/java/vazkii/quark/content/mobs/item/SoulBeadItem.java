@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.ConfiguredStructureTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -14,7 +15,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.phys.Vec3;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.base.item.QuarkItem;
@@ -34,8 +34,7 @@ public class SoulBeadItem extends QuarkItem {
 		ItemStack itemstack = playerIn.getItemInHand(handIn);
 
 		if(!worldIn.isClientSide) {
-			StructureFeature<?> target = StructureFeature.FORTRESS;
-            BlockPos blockpos = ((ServerLevel)worldIn).findNearestMapFeature(target, playerIn.blockPosition(), 100, false);
+            BlockPos blockpos = ((ServerLevel)worldIn).findNearestMapFeature(ConfiguredStructureTags.EYE_OF_ENDER_LOCATED, playerIn.blockPosition(), 100, false); // TODO replace with nether
 
 			if(blockpos != null) {
 				itemstack.shrink(1);

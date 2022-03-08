@@ -1,5 +1,7 @@
 package vazkii.quark.content.world.feature;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.core.BlockPos;
@@ -11,7 +13,6 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
@@ -19,7 +20,7 @@ import net.minecraft.world.level.levelgen.placement.BiomeFilter;
 import net.minecraft.world.level.levelgen.placement.CountPlacement;
 import net.minecraft.world.level.levelgen.placement.EnvironmentScanPlacement;
 import net.minecraft.world.level.levelgen.placement.InSquarePlacement;
-import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.levelgen.placement.RandomOffsetPlacement;
 import vazkii.quark.content.world.block.HugeGlowShroomBlock;
 import vazkii.quark.content.world.module.GlimmeringWealdModule;
@@ -30,8 +31,8 @@ public class GlowShroomsFeature extends Feature<NoneFeatureConfiguration> {
 		super(NoneFeatureConfiguration.CODEC);
 	}
 
-	public static PlacedFeature placed(ConfiguredFeature<NoneFeatureConfiguration, ?> f) {
-		return f.placed(CountPlacement.of(125), 
+	public static List<PlacementModifier> placed() {
+		return Arrays.asList(CountPlacement.of(125), 
 				InSquarePlacement.spread(), 
 				PlacementUtils.RANGE_BOTTOM_TO_MAX_TERRAIN_HEIGHT, 
 				EnvironmentScanPlacement.scanningFor(Direction.DOWN, BlockPredicate.solid(), BlockPredicate.ONLY_IN_AIR_PREDICATE, 12), 

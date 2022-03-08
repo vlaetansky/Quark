@@ -1,5 +1,6 @@
 package vazkii.quark.base.world;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -11,7 +12,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -72,12 +72,12 @@ public class WorldGenHandler {
 	public static void loadComplete(FMLLoadCompleteEvent event) {
 		event.enqueueWork(() -> {
 			for(GenerationStep.Decoration stage : GenerationStep.Decoration.values()) {
-				ConfiguredFeature<?, ?> feature = defersBaseFeature.get(stage).configured(FeatureConfiguration.NONE);
+				ConfiguredFeature<?, ?> feature = new ConfiguredFeature<>(defersBaseFeature.get(stage), FeatureConfiguration.NONE);
 
 				ResourceLocation resloc = new ResourceLocation(Quark.MOD_ID, "deferred_feature_" + stage.name().toLowerCase(Locale.ROOT));
 				Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, resloc, feature);
 				
-				PlacedFeature placed = feature.placed(CHUNK_CORNER_PLACEMENT);
+				PlacedFeature placed = new PlacedFeature(Holder.direct(feature), Arrays.asList(CHUNK_CORNER_PLACEMENT));
 				Registry.register(BuiltinRegistries.PLACED_FEATURE, resloc, placed);
 				
 				defers.put(stage, placed);

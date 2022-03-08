@@ -1,5 +1,7 @@
 package vazkii.quark.content.world.feature;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.core.BlockPos;
@@ -12,14 +14,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.GlowLichenBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.placement.BiomeFilter;
 import net.minecraft.world.level.levelgen.placement.CountPlacement;
 import net.minecraft.world.level.levelgen.placement.InSquarePlacement;
-import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.levelgen.placement.RandomOffsetPlacement;
 import vazkii.quark.content.world.module.GlimmeringWealdModule;
 
@@ -29,8 +30,8 @@ public class GlowExtrasFeature extends Feature<NoneFeatureConfiguration> {
 		super(NoneFeatureConfiguration.CODEC);
 	}
 
-	public static PlacedFeature placed(ConfiguredFeature<NoneFeatureConfiguration, ?> f) {
-		return f.placed(CountPlacement.of(200), 
+	public static List<PlacementModifier> placed() {
+		return  Arrays.asList(CountPlacement.of(200), 
 				InSquarePlacement.spread(), 
 				PlacementUtils.RANGE_BOTTOM_TO_MAX_TERRAIN_HEIGHT, 
 				RandomOffsetPlacement.vertical(ConstantInt.of(1)), BiomeFilter.biome());

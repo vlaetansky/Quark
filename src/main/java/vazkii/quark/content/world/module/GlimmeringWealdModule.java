@@ -1,7 +1,8 @@
 package vazkii.quark.content.world.module;
 
-import java.util.function.Function;
+import java.util.List;
 
+import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.BiomeDefaultFeatures;
 import net.minecraft.data.worldgen.biome.OverworldBiomes;
 import net.minecraft.data.worldgen.features.FeatureUtils;
@@ -28,6 +29,7 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.placement.HeightRangePlacement;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.QuarkSounds;
@@ -50,9 +52,9 @@ public class GlimmeringWealdModule extends QuarkModule {
 	private static final Climate.Parameter FULL_RANGE = Climate.Parameter.span(-1.0F, 1.0F);
 	public static final ResourceLocation BIOME_NAME = new ResourceLocation(Quark.MOD_ID, "glimmering_weald");
 
-	public static final PlacedFeature ORE_LAPIS_EXTRA = PlacementUtils.register("ore_lapis_glimmering_weald", OreFeatures.ORE_LAPIS.placed(OrePlacements.commonOrePlacement(12, HeightRangePlacement.uniform(VerticalAnchor.absolute(-64), VerticalAnchor.absolute(0)))));
-	public static PlacedFeature placed_glow_shrooms;
-	public static PlacedFeature placed_glow_extras;
+	public static final Holder<PlacedFeature> ORE_LAPIS_EXTRA = PlacementUtils.register("ore_lapis_glimmering_weald", OreFeatures.ORE_LAPIS, OrePlacements.commonOrePlacement(12, HeightRangePlacement.uniform(VerticalAnchor.absolute(-64), VerticalAnchor.absolute(0))));
+	public static Holder<PlacedFeature> placed_glow_shrooms;
+	public static Holder<PlacedFeature> placed_glow_extras;
 
 	public static Block glow_shroom;
 	public static Block glow_lichen_growth;
@@ -82,17 +84,17 @@ public class GlimmeringWealdModule extends QuarkModule {
 	}
 	
 	private static void makeFeatures() {
-		placed_glow_shrooms = place("glow_shrooms", new GlowShroomsFeature(), GlowShroomsFeature::placed);
-		placed_glow_extras = place("glow_extras", new GlowExtrasFeature(), GlowExtrasFeature::placed);
+		placed_glow_shrooms = place("glow_shrooms", new GlowShroomsFeature(), GlowShroomsFeature.placed());
+		placed_glow_extras = place("glow_extras", new GlowExtrasFeature(), GlowExtrasFeature.placed());
 	}
 
-	private static PlacedFeature place(String featureName, Feature<NoneFeatureConfiguration> feature, Function<ConfiguredFeature<NoneFeatureConfiguration, ?>, PlacedFeature> placer) {
+	private static Holder<PlacedFeature> place(String featureName, Feature<NoneFeatureConfiguration> feature, List<PlacementModifier> placer) {
 		String name = Quark.MOD_ID + ":" + featureName;
 		feature.setRegistryName(name);
 
 		RegistryHelper.register(feature);
-		ConfiguredFeature<NoneFeatureConfiguration, ?> configured = FeatureUtils.register(name, feature.configured(NoneFeatureConfiguration.NONE));
-		return PlacementUtils.register(name, placer.apply(configured));
+		Holder<ConfiguredFeature<NoneFeatureConfiguration, ?>> configured = FeatureUtils.register(name, feature, NoneFeatureConfiguration.NONE);
+		return PlacementUtils.register(name, configured, placer);
 	}
 
 	private static Biome makeBiome() {

@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
@@ -43,7 +44,7 @@ public class BlossomTreeGenerator extends Generator {
 				if(upState.canBeReplaced(Fluids.WATER))
 					worldIn.setBlock(up, Blocks.AIR.defaultBlockState(), 0);
 				
-				FeaturePlaceContext<TreeConfiguration> context = new FeaturePlaceContext<>(Optional.of(Feature.TREE.configured(tree.config)), worldIn, generator, rand, up, tree.config);
+				FeaturePlaceContext<TreeConfiguration> context = new FeaturePlaceContext<>(Optional.of(new ConfiguredFeature<>(Feature.TREE, tree.config)), worldIn, generator, rand, up, tree.config);
 				Feature.TREE.place(context);
 			}
 		}
