@@ -1,11 +1,8 @@
 package vazkii.quark.content.mobs.module;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
@@ -15,6 +12,7 @@ import net.minecraft.world.entity.SpawnPlacements.Type;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.util.RegistryHelper;
@@ -34,9 +32,12 @@ import vazkii.quark.content.mobs.entity.SoulBead;
 import vazkii.quark.content.mobs.entity.Wraith;
 import vazkii.quark.content.mobs.item.SoulBeadItem;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @LoadModule(category = ModuleCategory.MOBS)
 public class WraithModule extends QuarkModule {
-	
+
 	public static EntityType<Wraith> wraithType;
 	public static EntityType<SoulBead> soulBeadType;
 
@@ -63,18 +64,20 @@ public class WraithModule extends QuarkModule {
 			"|quark:entity.stoneling.cry|quark:entity.stoneling.die",
 			"quark:entity.frog.idle|quark:entity.frog.hurt|quark:entity.frog.die"
 			);
-	
+
 	@Config
 	public static EntitySpawnConfig spawnConfig = new CostSensitiveEntitySpawnConfig(8, 1, 3, 0.7, 0.15, CompoundBiomeConfig.fromBiomeReslocs(false, "minecraft:soul_sand_valley"));
-	
+
 	public static TagKey<Block> wraithSpawnableTag;
-	
+
+	public static TagKey<ConfiguredStructureFeature<?, ?>> soulBeadTargetTag;
+
 	public static List<String> validWraithSounds;
-	
+
 	@Override
 	public void register() {
 		new SoulBeadItem(this);
-		
+
 		wraithType = EntityType.Builder.of(Wraith::new, MobCategory.MONSTER)
 				.sized(0.6F, 1.95F)
 				.clientTrackingRange(8)
@@ -82,7 +85,7 @@ public class WraithModule extends QuarkModule {
 				.setCustomClientFactory((spawnEntity, world) -> new Wraith(wraithType, world))
 				.build("wraith");
 		RegistryHelper.register(wraithType, "wraith");
-		
+
 		soulBeadType = EntityType.Builder.of(SoulBead::new, MobCategory.MISC)
 				.sized(0F, 0F)
 				.clientTrackingRange(4)
@@ -94,13 +97,14 @@ public class WraithModule extends QuarkModule {
 
 		EntitySpawnHandler.registerSpawn(this, wraithType, MobCategory.MONSTER, Type.ON_GROUND, Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules, spawnConfig);
 		EntitySpawnHandler.addEgg(wraithType, 0xececec, 0xbdbdbd, spawnConfig);
-		
+
 		EntityAttributeHandler.put(wraithType, Wraith::registerAttributes);
 	}
-	
+
 	@Override
 	public void setup() {
 		wraithSpawnableTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "wraith_spawnable"));
+		soulBeadTargetTag = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation(Quark.MOD_ID, "soul_bead_target"));
 	}
 
 	@Override
@@ -109,10 +113,10 @@ public class WraithModule extends QuarkModule {
 		EntityRenderers.register(wraithType, WraithRenderer::new);
 		EntityRenderers.register(soulBeadType, SoulBeadRenderer::new);
 	}
-	
+
 	@Override
 	public void configChanged() {
 		validWraithSounds = wraithSounds.stream().filter((s) -> s.split("\\|").length == 3).collect(Collectors.toList());
 	}
-	
+
 }

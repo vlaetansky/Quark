@@ -1,12 +1,9 @@
 package vazkii.quark.content.mobs.item;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
-import net.minecraft.tags.ConfiguredStructureTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -22,6 +19,8 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.mobs.entity.SoulBead;
 import vazkii.quark.content.mobs.module.WraithModule;
 
+import javax.annotation.Nonnull;
+
 public class SoulBeadItem extends QuarkItem {
 
 	public SoulBeadItem(QuarkModule module) {
@@ -34,7 +33,7 @@ public class SoulBeadItem extends QuarkItem {
 		ItemStack itemstack = playerIn.getItemInHand(handIn);
 
 		if(!worldIn.isClientSide) {
-            BlockPos blockpos = ((ServerLevel)worldIn).findNearestMapFeature(ConfiguredStructureTags.EYE_OF_ENDER_LOCATED, playerIn.blockPosition(), 100, false); // TODO replace with nether
+            BlockPos blockpos = ((ServerLevel)worldIn).findNearestMapFeature(WraithModule.soulBeadTargetTag, playerIn.blockPosition(), 100, false);
 
 			if(blockpos != null) {
 				itemstack.shrink(1);
