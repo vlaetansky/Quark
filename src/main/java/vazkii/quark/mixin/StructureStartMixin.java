@@ -13,7 +13,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureFeatureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.pieces.PiecesContainer;
@@ -28,7 +28,7 @@ public class StructureStartMixin {
 	
 	@Shadow
 	@Final
-	private StructureFeature<?> feature;
+	private ConfiguredStructureFeature<?, ?>  feature;
 	
 	@Inject(method = "placeInChunk", at = @At("HEAD"))
 	public void injectReference(WorldGenLevel p_230366_1_, StructureFeatureManager p_230366_2_, ChunkGenerator p_230366_3_, Random p_230366_4_, BoundingBox p_230366_5_, ChunkPos p_230366_6_, CallbackInfo callback) {

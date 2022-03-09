@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.PiecesContainer;
@@ -33,14 +34,14 @@ public class StructureBlockReplacementHandler {
 		return structureHolder.get();
 	}
 
-	public static void setActiveStructure(StructureFeature<?> structure, PiecesContainer components) {
+	public static void setActiveStructure(ConfiguredStructureFeature<?, ?> structure, PiecesContainer components) {
 		StructureHolder curr = getCurrentSturctureHolder();
 		if(curr == null) {
 			curr = new StructureHolder();
 			structureHolder.set(curr);
 		}
 
-		curr.currentStructure = structure;
+		curr.currentStructure = structure == null ? null : structure.feature;
 		curr.currentComponents = components == null ? null : components.pieces();
 	}
 
