@@ -120,7 +120,7 @@ public final class ModuleLoader {
 	
 	private void dispatch(String step, Consumer<QuarkModule> run) {
 		Quark.LOG.info("Dispatching Module Event " + step);
-//		foundModules.values().forEach(run);
+		foundModules.values().forEach(run);
 	}
 	
 	void enqueue(Runnable r) {
