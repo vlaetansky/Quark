@@ -43,17 +43,19 @@ public class FoodTooltips {
 				int len = (int) Math.ceil((double) pips / ImprovedTooltipsModule.foodDivisor);
 
 				int saturationSimplified = 0;
-				float saturation = food.getSaturationModifier();
-				if(saturation < 1) {
-					if(saturation > 0.7)
-						saturationSimplified = 1;
-					else if(saturation > 0.5)
-						saturationSimplified = 2;
-					else if(saturation > 0.2)
-						saturationSimplified = 3;
-					else saturationSimplified = 4;
-				} else if (saturation > 2)
+				float saturation = Math.min(20, food.getSaturationModifier() * food.getNutrition() * 2);
+				if (saturation >= 19)
 					saturationSimplified = 5;
+				else if (saturation < 10) {
+					if (saturation >= 8)
+						saturationSimplified = 1;
+					else if (saturation >= 6)
+						saturationSimplified = 2;
+					else if (saturation >= 2)
+						saturationSimplified = 3;
+					else
+						saturationSimplified = 4;
+				}
 
 				Component saturationText = new TranslatableComponent("quark.misc.saturation" + saturationSimplified).withStyle(ChatFormatting.GRAY);
 				List<Either<FormattedText, TooltipComponent>> tooltip = event.getTooltipElements();
