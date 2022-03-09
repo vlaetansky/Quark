@@ -1,14 +1,5 @@
 package vazkii.quark.content.client.tooltip;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-
-import javax.annotation.Nullable;
-
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
@@ -16,7 +7,6 @@ import com.google.common.collect.Multimap;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Either;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
@@ -49,6 +39,10 @@ import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.common.ForgeMod;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.base.handler.MiscUtil;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
 
 /**
  * @author WireSegal
@@ -209,7 +203,7 @@ public class AttributeTooltips {
 						len += 20;
 
 					tooltipRaw.add(1, Either.right(new AttributeComponent(stack, len, 10)));
-					
+
 					if(allAreSame)
 						break;
 				}
@@ -429,18 +423,18 @@ public class AttributeTooltips {
 		}
 
 		@Override
-		public void renderImage(Font font, int tooltipX, int tooltipY, PoseStack pose, ItemRenderer itemRenderer, int something) {
+		public void renderImage(@Nonnull Font font, int tooltipX, int tooltipY, @Nonnull PoseStack pose, @Nonnull ItemRenderer itemRenderer, int something) {
 			if(!Screen.hasShiftDown()) {
 				pose.pushPose();
 				pose.translate(0, 0, 500);
-				
+
 				RenderSystem.setShader(GameRenderer::getPositionTexShader);
 				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-				
+
 				Minecraft mc = Minecraft.getInstance();
 				pose.translate(0F, 0F, mc.getItemRenderer().blitOffset);
 
-				int baseX = tooltipX; 
+				int baseX = tooltipX;
 				int y = tooltipY;
 
 				EquipmentSlot primarySlot = getPrimarySlot(stack);
@@ -524,7 +518,7 @@ public class AttributeTooltips {
 				}
 
 				pose.popPose();
-			}	
+			}
 		}
 
 		@Override
@@ -533,7 +527,7 @@ public class AttributeTooltips {
 		}
 
 		@Override
-		public int getWidth(Font font) {
+		public int getWidth(@Nonnull Font font) {
 			return width;
 		}
 

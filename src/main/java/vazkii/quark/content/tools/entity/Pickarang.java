@@ -184,11 +184,11 @@ public class Pickarang extends Projectile {
 
 	@Nullable
 	protected EntityHitResult raycastEntities(Vec3 from, Vec3 to) {
-		return ProjectileUtil.getEntityHitResult(level, this, from, to, getBoundingBox().expandTowards(getDeltaMovement()).inflate(1.0D), (entity) -> 
-		!entity.isSpectator() 
-		&& entity.isAlive() 
-		&& (entity.isPickable() || entity instanceof Pickarang) 
-		&& entity != getThrower() 
+		return ProjectileUtil.getEntityHitResult(level, this, from, to, getBoundingBox().expandTowards(getDeltaMovement()).inflate(1.0D), (entity) ->
+		!entity.isSpectator()
+		&& entity.isAlive()
+		&& (entity.isPickable() || entity instanceof Pickarang)
+		&& entity != getThrower()
 		&& (entitiesHit == null || !entitiesHit.contains(entity.getId())));
 	}
 
@@ -239,7 +239,7 @@ public class Pickarang extends Projectile {
 					if (owner != null) {
 						ItemStack prev = owner.getMainHandItem();
 						owner.setItemInHand(InteractionHand.MAIN_HAND, pickarang);
-						owner.getAttributes().addTransientAttributeModifiers(modifiers); 
+						owner.getAttributes().addTransientAttributeModifiers(modifiers);
 
 						int ticksSinceLastSwing = owner.attackStrengthTicker;
 						owner.attackStrengthTicker = (int) (1.0 / owner.getAttributeValue(Attributes.ATTACK_SPEED) * 20.0) + 1;
@@ -252,7 +252,7 @@ public class Pickarang extends Projectile {
 							if(hit instanceof Toretoise) {
 								Toretoise toretoise = (Toretoise) hit;
 								int ore = toretoise.getOreType();
-								
+
 								if(ore != 0) {
 									addHit(toretoise);
 									toretoise.dropOre(ore);
@@ -279,11 +279,11 @@ public class Pickarang extends Projectile {
 						owner.getAttributes().addTransientAttributeModifiers(modifiers);
 					} else {
 						Builder mapBuilder = new Builder();
-						mapBuilder.add(Attributes.ATTACK_DAMAGE, 1); 
+						mapBuilder.add(Attributes.ATTACK_DAMAGE, 1);
 						AttributeSupplier map = mapBuilder.build();
 						AttributeMap manager = new AttributeMap(map);
 						manager.addTransientAttributeModifiers(modifiers);
-						
+
 						ItemStack stack = getStack();
 						stack.hurt(1, level.random, null);
 						setStack(stack);
@@ -380,19 +380,19 @@ public class Pickarang extends Projectile {
 			return;
 
 		ItemStack stack = getStack();
-		
+
 		if(entityData.get(NETHERITE_SYNCED)) {
 			if(Math.random() < 0.4)
-				this.level.addParticle(ParticleTypes.FLAME, 
-						pos.x - ourMotion.x * 0.25D + (Math.random() - 0.5) * 0.4, 
-						pos.y - ourMotion.y * 0.25D + (Math.random() - 0.5) * 0.4, 
-						pos.z - ourMotion.z * 0.25D + (Math.random() - 0.5) * 0.4, 
-						(Math.random() - 0.5) * 0.1, 
-						(Math.random() - 0.5) * 0.1, 
+				this.level.addParticle(ParticleTypes.FLAME,
+						pos.x - ourMotion.x * 0.25D + (Math.random() - 0.5) * 0.4,
+						pos.y - ourMotion.y * 0.25D + (Math.random() - 0.5) * 0.4,
+						pos.z - ourMotion.z * 0.25D + (Math.random() - 0.5) * 0.4,
+						(Math.random() - 0.5) * 0.1,
+						(Math.random() - 0.5) * 0.1,
 						(Math.random() - 0.5) * 0.1);
 		} else if(!level.isClientSide && netherite)
 			entityData.set(NETHERITE_SYNCED, true);
-		
+
 		boolean returning = entityData.get(RETURNING);
 		liveTime++;
 
@@ -401,14 +401,14 @@ public class Pickarang extends Projectile {
 			if(!level.isClientSide) {
 				while(isInWall())
 					setPos(getX(), getY() + 1, getZ());
-					
+
 				spawnAtLocation(stack, 0);
 				discard();
 			}
 
 			return;
 		}
-		
+
 		if(!returning) {
 			if(liveTime > PickarangModule.timeout)
 				setReturning();
@@ -459,7 +459,7 @@ public class Pickarang extends Projectile {
 							if(item.isAlive())
 								giveItemToPlayer(player, item);
 
-						for (ExperienceOrb xpOrb : xp) 
+						for (ExperienceOrb xpOrb : xp)
 							if(xpOrb.isAlive())
 								xpOrb.playerTouch(player);
 
@@ -508,7 +508,7 @@ public class Pickarang extends Projectile {
 	}
 
 	@Override
-	protected boolean canAddPassenger(Entity passenger) {
+	protected boolean canAddPassenger(@Nonnull Entity passenger) {
 		return super.canAddPassenger(passenger) || passenger instanceof ItemEntity || passenger instanceof ExperienceOrb;
 	}
 
@@ -556,7 +556,7 @@ public class Pickarang extends Projectile {
 			if (owner != null)
 				this.ownerId = NbtUtils.loadUUID(owner);
 		}
-		
+
 		netherite = compound.getBoolean(TAG_NETHERITE);
 	}
 
@@ -570,7 +570,7 @@ public class Pickarang extends Projectile {
 		compound.put(TAG_ITEM_STACK, getStack().serializeNBT());
 		if (this.ownerId != null)
 			compound.put("owner", NbtUtils.createUUID(this.ownerId));
-		
+
 		compound.putBoolean(TAG_NETHERITE, netherite);
 	}
 

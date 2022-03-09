@@ -48,20 +48,20 @@ public class CustomEmoteIconResourcePack extends AbstractPackResources {
 	protected InputStream getResource(@Nonnull String name) throws IOException {
 		if(name.equals("pack.mcmeta"))
 			return Quark.class.getResourceAsStream("/proxypack.mcmeta");
-		
+
 		if(name.equals("pack.png"))
 			return Quark.class.getResourceAsStream("/proxypack.png");
-		
+
 		File file = getFile(name);
 		if(!file.exists())
 			throw new FileNotFoundException(name);
-		
+
 		return new FileInputStream(file);
 	}
-	
+
 	@Nonnull
 	@Override
-	public Collection<ResourceLocation> getResources(@Nonnull PackType type, @Nonnull String pathIn, String idk, int maxDepth, @Nonnull Predicate<String> filter) {
+	public Collection<ResourceLocation> getResources(@Nonnull PackType type, @Nonnull String pathIn, @Nonnull String idk, int maxDepth, @Nonnull Predicate<String> filter) {
 		File rootPath = new File(this.file, type.getDirectory());
 		List<ResourceLocation> allResources = Lists.newArrayList();
 
@@ -102,10 +102,10 @@ public class CustomEmoteIconResourcePack extends AbstractPackResources {
 				existingNames.add(name);
 			verifiedNames.add(name);
 		}
-		
+
 		return existingNames.contains(name);
 	}
-	
+
 	private File getFile(String name) {
 		String filename = name.substring(name.indexOf(":") + 1) + ".png";
 		return new File(EmotesModule.emotesDir, filename);

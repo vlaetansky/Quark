@@ -19,6 +19,8 @@ import vazkii.quark.addons.oddities.module.TotemOfHoldingModule;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.QuarkModule;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author WireSegal
  * Created at 1:25 PM on 3/30/20.
@@ -38,7 +40,7 @@ public class SoulCompassItem extends QuarkItem {
     public SoulCompassItem(QuarkModule module) {
         super("soul_compass", module, new Properties().tab(CreativeModeTab.TAB_TOOLS).stacksTo(1));
     }
-    
+
     @OnlyIn(Dist.CLIENT)
     public static float angle(ItemStack stack, ClientLevel world, LivingEntity entityIn, int i) {
         if(entityIn == null && !stack.isFramed())
@@ -73,10 +75,10 @@ public class SoulCompassItem extends QuarkItem {
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+    public void inventoryTick(@Nonnull ItemStack stack, Level worldIn, @Nonnull Entity entityIn, int itemSlot, boolean isSelected) {
         if(!worldIn.isClientSide) {
             Pair<BlockPos, String> deathPos = TotemOfHoldingModule.getPlayerDeathPosition(entityIn);
-            
+
             if(deathPos != null) {
             	ItemNBTHelper.setInt(stack, TAG_POS_X, deathPos.getFirst().getX());
                 ItemNBTHelper.setInt(stack, TAG_POS_Z, deathPos.getFirst().getZ());
@@ -96,11 +98,11 @@ public class SoulCompassItem extends QuarkItem {
 
         return new BlockPos(0, -1, 0);
     }
-    
+
     private static String getDim(ItemStack stack) {
     	if(stack.hasTag())
     		return ItemNBTHelper.getString(stack, TAG_DIMENSION_ID, "");
-    	
+
     	return "";
     }
 

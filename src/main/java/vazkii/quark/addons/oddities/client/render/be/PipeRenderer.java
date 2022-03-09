@@ -27,18 +27,20 @@ import vazkii.quark.addons.oddities.block.be.PipeBlockEntity.ConnectionType;
 import vazkii.quark.addons.oddities.block.be.PipeBlockEntity.PipeItem;
 import vazkii.quark.base.Quark;
 
+import javax.annotation.Nonnull;
+
 public class PipeRenderer implements BlockEntityRenderer<PipeBlockEntity> {
 
 	private static final ModelResourceLocation LOCATION_MODEL = new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, "pipe_flare"), "inventory");
-	
+
 	private Random random = new Random();
-	
+
 	public PipeRenderer(BlockEntityRendererProvider.Context context) {
 
 	}
 
 	@Override
-	public void render(PipeBlockEntity te, float pticks, PoseStack matrix, MultiBufferSource buffer, int light, int overlay) {
+	public void render(PipeBlockEntity te, float pticks, PoseStack matrix, @Nonnull MultiBufferSource buffer, int light, int overlay) {
 		matrix.pushPose();
 		matrix.translate(0.5, 0.5, 0.5);
 		ItemRenderer render = Minecraft.getInstance().getItemRenderer();
@@ -46,16 +48,16 @@ public class PipeRenderer implements BlockEntityRenderer<PipeBlockEntity> {
 
 		while(items.hasNext())
 			renderItem(items.next(), render, matrix, buffer, pticks, light, overlay);
-		
+
 		BlockRenderDispatcher blockrendererdispatcher = Minecraft.getInstance().getBlockRenderer();
 		ModelManager modelmanager = blockrendererdispatcher.getBlockModelShaper().getModelManager();
 		BakedModel model = modelmanager.getModel(LOCATION_MODEL);
 		for(Direction d : Direction.values())
 			renderFlare(te, blockrendererdispatcher, model, matrix, buffer, pticks, light, overlay, d);
-		
+
 		matrix.popPose();
 	}
-	
+
 	private void renderFlare(PipeBlockEntity te, BlockRenderDispatcher disp, BakedModel model, PoseStack matrix, MultiBufferSource buffer, float partial, int light, int overlay, Direction dir) {
 		ConnectionType type = PipeBlockEntity.getConnectionTo(te.getLevel(), te.getBlockPos(), dir);
 		if(type.isFlared) {
@@ -71,16 +73,16 @@ public class PipeRenderer implements BlockEntityRenderer<PipeBlockEntity> {
 				matrix.mulPose(Vector3f.XP.rotationDegrees(90F));
 				if(dir == Direction.UP)
 					matrix.mulPose(Vector3f.YP.rotationDegrees(180F));
-				
+
 				break;
 			}
-			
+
 			matrix.translate(-0.5, -0.5, type.flareShift);
 			disp.getModelRenderer().renderModel(matrix.last(), buffer.getBuffer(Sheets.cutoutBlockSheet()), null, model, 1.0F, 1.0F, 1.0F, light, OverlayTexture.NO_OVERLAY);
 			matrix.popPose();
 		}
 	}
-	
+
 	private void renderItem(PipeItem item, ItemRenderer render, PoseStack matrix, MultiBufferSource buffer, float partial, int light, int overlay) {
 		matrix.pushPose();
 
@@ -103,7 +105,7 @@ public class PipeRenderer implements BlockEntityRenderer<PipeBlockEntity> {
 
         int seed = item.stack.isEmpty() ? 187 : Item.getId(item.stack.getItem());
         random.setSeed(seed);
-		
+
 		int count = getModelCount(item.stack);
 		for(int i = 0; i < count; i++) {
 			matrix.pushPose();
@@ -114,7 +116,7 @@ public class PipeRenderer implements BlockEntityRenderer<PipeBlockEntity> {
                 float z = (this.random.nextFloat() * 2.0F - 1.0F) * spread;
                 matrix.translate(x, y, z);
 			}
-			
+
 			render.renderStatic(item.stack, ItemTransforms.TransformType.FIXED, light, overlay, matrix, buffer, 0);
 			matrix.popPose();
 		}
@@ -125,17 +127,17 @@ public class PipeRenderer implements BlockEntityRenderer<PipeBlockEntity> {
 	protected int getModelCount(ItemStack stack) {
 		if(stack.getCount() > 48)
 			return 5;
-		
+
 		if(stack.getCount() > 32)
 			return 4;
-		
+
 		if(stack.getCount() > 16)
 			return 3;
-		
+
 		if (stack.getCount() > 1)
 			return 2;
 
 		return 1;
 	}
-	
+
 }

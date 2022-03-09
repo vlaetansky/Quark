@@ -8,15 +8,18 @@ import net.minecraft.world.entity.animal.horse.Llama;
 import vazkii.quark.content.client.module.VariantAnimalTexturesModule;
 import vazkii.quark.content.client.module.VariantAnimalTexturesModule.VariantTextureType;
 
+import javax.annotation.Nonnull;
+
 public class VariantLlamaRenderer extends LlamaRenderer {
 
 	public VariantLlamaRenderer(EntityRendererProvider.Context context) {
 		super(context, ModelLayers.LLAMA);
 	}
 
+	@Nonnull
 	@Override
-	public ResourceLocation getTextureLocation(Llama entity) {
+	public ResourceLocation getTextureLocation(@Nonnull Llama entity) {
 		return VariantAnimalTexturesModule.getTextureOrShiny(entity, VariantTextureType.LLAMA, () -> super.getTextureLocation(entity));
 	}
-	
+
 }

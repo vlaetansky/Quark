@@ -106,11 +106,11 @@ public class Shiba extends TamableAnimal {
 			else {
 				LivingEntity owner = getOwner();
 
-				if(currentHyperfocus != null && 
+				if(currentHyperfocus != null &&
 						(level.getBrightness(LightLayer.BLOCK, currentHyperfocus) > 0
 								|| owner == null
-								|| (owner instanceof Player 
-										&& (!((Player) owner).getMainHandItem().is(Items.TORCH)  
+								|| (owner instanceof Player
+										&& (!((Player) owner).getMainHandItem().is(Items.TORCH)
 										&& !((Player) owner).getOffhandItem().is(Items.TORCH)))
 								)) {
 					currentHyperfocus = null;
@@ -126,8 +126,8 @@ public class Shiba extends TamableAnimal {
 						for(int i = 0; i < 20; i++) {
 							BlockPos test = ourPos.offset(random.nextInt(searchRange * 2 + 1) - searchRange, random.nextInt(searchRange * 2 + 1) - searchRange, random.nextInt(searchRange * 2 + 1) - searchRange);
 							if(hasLineOfSight(test.above(), searchRange)
-									&& level.getBlockState(test).isAir() 
-									&& level.getBlockState(test.below()).isSolidRender(level, test.below()) 
+									&& level.getBlockState(test).isAir()
+									&& level.getBlockState(test.below()).isSolidRender(level, test.below())
 									&& level.getBrightness(LightLayer.BLOCK, test) == 0) {
 
 								currentHyperfocus = test;
@@ -142,7 +142,7 @@ public class Shiba extends TamableAnimal {
 			LivingEntity owner = getOwner();
 			if(owner != null) {
 				AABB check = owner.getBoundingBox().inflate(2);
-				List<AbstractArrow> arrows = level.getEntitiesOfClass(AbstractArrow.class, check, 
+				List<AbstractArrow> arrows = level.getEntitiesOfClass(AbstractArrow.class, check,
 						a -> a.getOwner() == owner && a.pickup != Pickup.DISALLOWED);
 
 				if(arrows.size() > 0) {
@@ -221,7 +221,7 @@ public class Shiba extends TamableAnimal {
 	}
 
 	@Override
-	public boolean canMate(Animal otherAnimal) {
+	public boolean canMate(@Nonnull Animal otherAnimal) {
 		if (otherAnimal == this) {
 			return false;
 		} else if (!this.isTame()) {
@@ -241,7 +241,7 @@ public class Shiba extends TamableAnimal {
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundTag compound) {
+	public void addAdditionalSaveData(@Nonnull CompoundTag compound) {
 		super.addAdditionalSaveData(compound);
 		compound.putByte("CollarColor", (byte)this.getCollarColor().getId());
 
@@ -253,7 +253,7 @@ public class Shiba extends TamableAnimal {
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundTag compound) {
+	public void readAdditionalSaveData(@Nonnull CompoundTag compound) {
 		super.readAdditionalSaveData(compound);
 		if (compound.contains("CollarColor"))
 			this.setCollarColor(DyeColor.byId(compound.getInt("CollarColor")));
@@ -264,8 +264,9 @@ public class Shiba extends TamableAnimal {
 		}
 	}
 
+	@Nonnull
 	@Override
-	public InteractionResult mobInteract(Player player, InteractionHand hand) {
+	public InteractionResult mobInteract(Player player, @Nonnull InteractionHand hand) {
 		ItemStack itemstack = player.getItemInHand(hand);
 		Item item = itemstack.getItem();
 		if(player.isDiscrete() && player.getMainHandItem().isEmpty()) {
@@ -377,7 +378,7 @@ public class Shiba extends TamableAnimal {
 	}
 
 	@Override
-	protected void playStepSound(BlockPos pos, BlockState blockIn) {
+	protected void playStepSound(@Nonnull BlockPos pos, @Nonnull BlockState blockIn) {
 		playSound(SoundEvents.WOLF_STEP, 0.15F, 1.0F);
 	}
 
@@ -390,7 +391,7 @@ public class Shiba extends TamableAnimal {
 	}
 
 	@Override
-	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+	protected SoundEvent getHurtSound(@Nonnull DamageSource damageSourceIn) {
 		return SoundEvents.WOLF_HURT;
 	}
 
@@ -405,7 +406,7 @@ public class Shiba extends TamableAnimal {
 	}
 
 	@Override // make baby
-	public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob mate) {
+	public AgeableMob getBreedOffspring(@Nonnull ServerLevel world, @Nonnull AgeableMob mate) {
 		Shiba wolfentity = ShibaModule.shibaType.create(world);
 		UUID uuid = this.getOwnerUUID();
 		if (uuid != null) {

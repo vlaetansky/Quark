@@ -39,6 +39,8 @@ import vazkii.quark.addons.oddities.module.MatrixEnchantingModule;
 import vazkii.quark.api.IEnchantmentInfluencer;
 import vazkii.quark.api.IModifiableEnchantmentInfluencer;
 
+import javax.annotation.Nonnull;
+
 public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlockEntity implements MenuProvider {
 
 	public static final int OPER_ADD = 0;
@@ -48,7 +50,7 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 	public static final int OPER_MERGE = 4;
 
 	public static final String TAG_STACK_MATRIX = "quark:enchantingMatrix";
-	
+
 	private static final String TAG_MATRIX = "matrix";
 	private static final String TAG_MATRIX_UUID_LESS = "uuidLess";
 	private static final String TAG_MATRIX_UUID_MOST = "uuidMost";
@@ -65,11 +67,11 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 	public MatrixEnchantingTableBlockEntity(BlockPos pos, BlockState state) {
 		super(MatrixEnchantingModule.blockEntityType, pos, state);
 	}
-	
+
 	public static void tick(Level level, BlockPos pos, BlockState state, MatrixEnchantingTableBlockEntity be) {
 		be.tick();
 	}
-	
+
 	@Override
 	public void tick() {
 		super.tick();
@@ -86,7 +88,7 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 			if(level.getGameTime() % 20 == 0 || matrixDirty)
 				updateEnchantPower();
 		}
-		
+
 		if(charge <= 0 && !level.isClientSide) {
 			ItemStack lapis = getItem(1);
 			if(!lapis.isEmpty()) {
@@ -177,7 +179,7 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 				}
 			}
 
-			if(book) 
+			if(book)
 				for(Entry<Enchantment, Integer> e : enchantments.entrySet())
 					EnchantedBookItem.addEnchantment(out, new EnchantmentInstance(e.getKey(), e.getValue()));
 			else {
@@ -194,7 +196,7 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 			if(matrix != null)
 				matrixDirty = true;
 			matrix = null;
-			
+
 			if(stack.isEnchantable()) {
 				matrix = new EnchantmentMatrix(stack, level.random);
 				matrixDirty = true;
@@ -255,34 +257,34 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 
 		bookshelfPower = Math.min((int) power, MatrixEnchantingModule.maxBookshelves);
 	}
-	
+
 	private boolean isAirGap(int j, int k, boolean allowWater) {
 		if(j != 0 || k != 0) {
 			BlockPos test = worldPosition.offset(k, 0, j);
 			BlockPos testUp = test.above();
-			
+
 			return (level.isEmptyBlock(test) || (allowWater && level.getBlockState(test).getBlock() == Blocks.WATER))
 					&& (level.isEmptyBlock(testUp) || (allowWater && level.getBlockState(testUp).getBlock() == Blocks.WATER));
 		}
-		
+
 		return false;
 	}
-	
+
 	private float getEnchantPowerAt(Level world, BlockPos pos) {
 		BlockState state = world.getBlockState(pos);
 
 		if(MatrixEnchantingModule.allowInfluencing) {
 			Block block = state.getBlock();
-			
+
 			IEnchantmentInfluencer influencer = null;
 			if(block instanceof IEnchantmentInfluencer)
 				influencer = (IEnchantmentInfluencer) block;
 			else influencer = CandleInfluencer.forBlock(block);
-			
+
 			if(influencer != null) {
 				DyeColor ord = influencer.getEnchantmentInfluenceColor(world, pos, state);
 				int count = influencer.getInfluenceStack(world, pos, state);
-				
+
 				if(ord != null && count > 0) {
 					List<Enchantment> influencedEnchants = MatrixEnchantingModule.candleInfluences.get(ord);
 					if(influencedEnchants != null) {
@@ -295,13 +297,13 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
                             if(curr < MatrixEnchantingModule.influenceMax)
                                 influences.put(e, Math.min(MatrixEnchantingModule.influenceMax, curr + count));
                         }
-                        
+
                         return 1;
                     }
 				}
 			}
 		}
-		
+
 		return state.getEnchantPowerBonus(world, pos);
 	}
 
@@ -339,43 +341,44 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 			}
 			clientMatrixDirty = true;
 		} else matrix = null;
-		
+
 		charge = cmp.getInt(TAG_CHARGE);
 	}
 
 	@Override
-	public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
+	public AbstractContainerMenu createMenu(int id, @Nonnull Inventory inv, @Nonnull Player player) {
 		return new MatrixEnchantingMenu(id, inv, this);
 	}
 
+	@Nonnull
 	@Override
 	public Component getDisplayName() {
 		return getName();
 	}
-	
+
 	private static class CandleInfluencer implements IEnchantmentInfluencer {
-		
-		private static final List<Block> CANDLES = Lists.newArrayList(Blocks.WHITE_CANDLE, Blocks.ORANGE_CANDLE, Blocks.MAGENTA_CANDLE, Blocks.LIGHT_BLUE_CANDLE, Blocks.YELLOW_CANDLE, Blocks.LIME_CANDLE, Blocks.PINK_CANDLE, Blocks.GRAY_CANDLE, Blocks.LIGHT_GRAY_CANDLE, Blocks.CYAN_CANDLE, Blocks.PURPLE_CANDLE, Blocks.BLUE_CANDLE, Blocks.BROWN_CANDLE, Blocks.GREEN_CANDLE, Blocks.RED_CANDLE, Blocks.BLACK_CANDLE); 
+
+		private static final List<Block> CANDLES = Lists.newArrayList(Blocks.WHITE_CANDLE, Blocks.ORANGE_CANDLE, Blocks.MAGENTA_CANDLE, Blocks.LIGHT_BLUE_CANDLE, Blocks.YELLOW_CANDLE, Blocks.LIME_CANDLE, Blocks.PINK_CANDLE, Blocks.GRAY_CANDLE, Blocks.LIGHT_GRAY_CANDLE, Blocks.CYAN_CANDLE, Blocks.PURPLE_CANDLE, Blocks.BLUE_CANDLE, Blocks.BROWN_CANDLE, Blocks.GREEN_CANDLE, Blocks.RED_CANDLE, Blocks.BLACK_CANDLE);
 		private static final CandleInfluencer INSTANCE = new CandleInfluencer();
-		
+
 		public static CandleInfluencer forBlock(Block block) {
 			if(CANDLES.contains(block))
 				return INSTANCE;
-			
+
 			return null;
 		}
-		
+
 		@Override
 		public DyeColor getEnchantmentInfluenceColor(BlockGetter world, BlockPos pos, BlockState state) {
 			int index = CANDLES.indexOf(state.getBlock());
 			return index >= 0 ? DyeColor.values()[index] : null;
 		}
-		
+
 		@Override
 		public int getInfluenceStack(BlockGetter world, BlockPos pos, BlockState state) {
 			return state.getValue(CandleBlock.LIT) ? state.getValue(CandleBlock.CANDLES) : 0;
 		}
-		
+
 	}
 
 }

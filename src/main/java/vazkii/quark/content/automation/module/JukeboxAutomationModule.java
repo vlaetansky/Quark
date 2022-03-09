@@ -65,16 +65,19 @@ public class JukeboxAutomationModule extends QuarkModule {
 			return 1;
 		}
 
+		@Nonnull
 		@Override
 		public ItemStack getStackInSlot(int slot) {
 			return tile.getRecord();
 		}
 
+		@Nonnull
 		@Override
-		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
 			return stack;
 		}
 
+		@Nonnull
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate) {
 			ItemStack stackAt = getStackInSlot(slot);
@@ -83,7 +86,7 @@ public class JukeboxAutomationModule extends QuarkModule {
 				if(!simulate) {
 		            tile.getLevel().levelEvent(1010, tile.getBlockPos(), 0);
 					tile.setRecord(ItemStack.EMPTY);
-					
+
 					BlockState state = tile.getBlockState().setValue(JukeboxBlock.HAS_RECORD, false);
 					tile.getLevel().setBlock(tile.getBlockPos(), state, 1|2);
 				}
@@ -95,17 +98,18 @@ public class JukeboxAutomationModule extends QuarkModule {
 		}
 
 		@Override
-		public int getSlotLimit(int slot) {	
+		public int getSlotLimit(int slot) {
 			return 1;
 		}
 
 		@Override
-		public boolean isItemValid(int slot, ItemStack stack) {
+		public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
 			return false;
 		}
 
+		@Nonnull
 		@Override
-		public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+		public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, Direction side) {
 			if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 				return LazyOptional.of(() -> this).cast();
 
@@ -118,7 +122,7 @@ public class JukeboxAutomationModule extends QuarkModule {
 
 		@Nonnull
 		@Override
-		protected ItemStack execute(BlockSource source, ItemStack stack) {
+		protected ItemStack execute(BlockSource source, @Nonnull ItemStack stack) {
 			Direction dir = source.getBlockState().getValue(DispenserBlock.FACING);
 			BlockPos pos = source.getPos().relative(dir);
 			Level world = source.getLevel();

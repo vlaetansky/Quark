@@ -49,6 +49,8 @@ import vazkii.quark.base.Quark;
 import vazkii.quark.content.building.entity.GlassItemFrame;
 import vazkii.quark.content.building.module.GlassItemFrameModule;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author WireSegal
  * Created at 11:58 AM on 8/25/19.
@@ -73,14 +75,14 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrame> {
 
 		ModelPart part = context.bakeLayer(ModelLayers.BANNER);
 		this.bannerModel = part.getChild("flag");
-		
+
 		Minecraft mc = Minecraft.getInstance();
 		this.itemRenderer = mc.getItemRenderer();
 		this.defaultRenderer = (ItemFrameRenderer<?>) mc.getEntityRenderDispatcher().renderers.get(EntityType.ITEM_FRAME);
 	}
 
 	@Override
-	public void render(GlassItemFrame p_225623_1_, float p_225623_2_, float p_225623_3_, PoseStack p_225623_4_, MultiBufferSource p_225623_5_, int p_225623_6_) {
+	public void render(@Nonnull GlassItemFrame p_225623_1_, float p_225623_2_, float p_225623_3_, @Nonnull PoseStack p_225623_4_, @Nonnull MultiBufferSource p_225623_5_, int p_225623_6_) {
 		super.render(p_225623_1_, p_225623_2_, p_225623_3_, p_225623_4_, p_225623_5_, p_225623_6_);
 		p_225623_4_.pushPose();
 		Direction direction = p_225623_1_.getDirection();
@@ -109,18 +111,20 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrame> {
 		p_225623_4_.popPose();
 	}
 
+	@Nonnull
 	@Override
 	public Vec3 getRenderOffset(GlassItemFrame p_225627_1_, float p_225627_2_) {
 		return new Vec3((double)((float)p_225627_1_.getDirection().getStepX() * 0.3F), -0.25D, (double)((float)p_225627_1_.getDirection().getStepZ() * 0.3F));
 	}
 
+	@Nonnull
 	@Override
-	public ResourceLocation getTextureLocation(GlassItemFrame p_110775_1_) {
+	public ResourceLocation getTextureLocation(@Nonnull GlassItemFrame p_110775_1_) {
 		return TextureAtlas.LOCATION_BLOCKS;
 	}
 
 	@Override
-	protected boolean shouldShowName(GlassItemFrame p_177070_1_) {
+	protected boolean shouldShowName(@Nonnull GlassItemFrame p_177070_1_) {
 		if (Minecraft.renderNames() && !p_177070_1_.getItem().isEmpty() && p_177070_1_.getItem().hasCustomHoverName() && this.entityRenderDispatcher.crosshairPickEntity == p_177070_1_) {
 			double d0 = this.entityRenderDispatcher.distanceToSqr(p_177070_1_);
 			float f = p_177070_1_.isDiscrete() ? 32.0F : 64.0F;
@@ -131,7 +135,7 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrame> {
 	}
 
 	@Override
-	protected void renderNameTag(GlassItemFrame p_225629_1_, Component p_225629_2_, PoseStack p_225629_3_, MultiBufferSource p_225629_4_, int p_225629_5_) {
+	protected void renderNameTag(@Nonnull GlassItemFrame p_225629_1_, @Nonnull Component p_225629_2_, @Nonnull PoseStack p_225629_3_, @Nonnull MultiBufferSource p_225629_4_, int p_225629_5_) {
 		super.renderNameTag(p_225629_1_, p_225629_1_.getItem().getHoverName(), p_225629_3_, p_225629_4_, p_225629_5_);
 	}
 
@@ -171,7 +175,7 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrame> {
 					matrix.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
 					matrix.scale(0.0078125F, 0.0078125F, 0.0078125F);
 					matrix.translate(-64.0F, -64.0F, 62.5F); // <- Use 62.5 instead of 64 to prevent z-fighting
-					
+
 					Integer mapID = MapItem.getMapId(stack);
 					this.mc.gameRenderer.getMapRenderer().render(matrix, buff, mapID, mapdata, true, p_225623_6_);
 				} else {

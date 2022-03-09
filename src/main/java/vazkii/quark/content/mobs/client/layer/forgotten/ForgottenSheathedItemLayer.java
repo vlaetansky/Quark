@@ -14,6 +14,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.content.mobs.entity.Forgotten;
 
+import javax.annotation.Nonnull;
+
 @OnlyIn(Dist.CLIENT)
 public class ForgottenSheathedItemLayer<M extends EntityModel<Forgotten>> extends RenderLayer<Forgotten, M> {
 
@@ -22,9 +24,9 @@ public class ForgottenSheathedItemLayer<M extends EntityModel<Forgotten>> extend
 	}
 
 	@Override
-	public void render(PoseStack matrix, MultiBufferSource bufferIn, int packedLightIn, Forgotten entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void render(PoseStack matrix, @Nonnull MultiBufferSource bufferIn, int packedLightIn, Forgotten entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 		ItemStack item = entitylivingbaseIn.getEntityData().get(Forgotten.SHEATHED_ITEM);
-		
+
 		matrix.pushPose();
 		matrix.translate(0.1, 0.2, 0.15);
 		matrix.scale(0.75F, 0.75F, 0.75F);

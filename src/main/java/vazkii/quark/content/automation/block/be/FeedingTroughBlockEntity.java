@@ -95,7 +95,7 @@ public class FeedingTroughBlockEntity extends RandomizableContainerBlockEntity {
             else {
             	be.cooldown = FeedingTroughModule.cooldown; // minimize aabb calls
             	List<Animal> animals = level.getEntitiesOfClass(Animal.class, new AABB(be.worldPosition).inflate(1.5, 0, 1.5).contract(0, 0.75, 0));
-            	
+
                 for (Animal creature : animals) {
                     if (creature.canFallInLove() && creature.getAge() == 0) {
                         for (int i = 0; i < be.getContainerSize(); i++) {
@@ -103,7 +103,7 @@ public class FeedingTroughBlockEntity extends RandomizableContainerBlockEntity {
                             if (creature.isFood(stack)) {
                                 creature.playSound(creature.getEatingSound(stack), 0.5F + 0.5F * level.random.nextInt(2), (level.random.nextFloat() - level.random.nextFloat()) * 0.2F + 1.0F);
                                 be.addItemParticles(creature, stack, 16);
-                                
+
                                 if(be.getSpecialRand().nextDouble() < FeedingTroughModule.loveChance) {
                                 	List<Animal> animalsAround = level.getEntitiesOfClass(Animal.class, new AABB(be.worldPosition).inflate(FeedingTroughModule.range));
                                 	if(animalsAround.size() <= FeedingTroughModule.maxAnimals)
@@ -112,7 +112,7 @@ public class FeedingTroughBlockEntity extends RandomizableContainerBlockEntity {
 
                                 stack.shrink(1);
                                 be.setChanged();
-                                
+
                                 return;
                             }
                         }
@@ -152,7 +152,7 @@ public class FeedingTroughBlockEntity extends RandomizableContainerBlockEntity {
                 this.level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack), position.x, position.y, position.z, direction.x, direction.y + 0.05D, direction.z);
         }
     }
-    
+
     private Random getSpecialRand() {
         Random specialRand = new Random(internalRng);
         internalRng = specialRand.nextLong();
@@ -182,9 +182,9 @@ public class FeedingTroughBlockEntity extends RandomizableContainerBlockEntity {
     }
 
     @Override
-    public void load(CompoundTag nbt) {
+    public void load(@Nonnull CompoundTag nbt) {
     	super.load(nbt);
-    	
+
         this.cooldown = nbt.getInt("Cooldown");
         this.internalRng = nbt.getLong("rng");
         this.stacks = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
@@ -194,15 +194,15 @@ public class FeedingTroughBlockEntity extends RandomizableContainerBlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag nbt) {
+    protected void saveAdditional(@Nonnull CompoundTag nbt) {
     	super.saveAdditional(nbt);
-    	
+
         nbt.putInt("Cooldown", cooldown);
         nbt.putLong("rng", internalRng);
         if (!this.trySaveLootTable(nbt))
             ContainerHelper.saveAllItems(nbt, this.stacks);
     }
-    
+
     @Override
     @Nonnull
     protected NonNullList<ItemStack> getItems() {

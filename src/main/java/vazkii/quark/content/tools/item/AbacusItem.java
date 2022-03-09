@@ -19,6 +19,8 @@ import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.QuarkModule;
 
+import javax.annotation.Nonnull;
+
 public class AbacusItem extends QuarkItem {
 
 	public static final String TAG_POS_X = "boundPosX";
@@ -31,6 +33,7 @@ public class AbacusItem extends QuarkItem {
 		super("abacus", module, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS).stacksTo(1));
 	}
 
+	@Nonnull
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
 		ItemStack stack = context.getItemInHand();
@@ -63,14 +66,14 @@ public class AbacusItem extends QuarkItem {
 	}
 
 	public static int getCount(ItemStack stack, BlockPos target, Level world) {
-		BlockPos pos = getBlockPos(stack); 
+		BlockPos pos = getBlockPos(stack);
 
 		if(pos != null && !world.isEmptyBlock(target))
 			return target.distManhattan(pos);
 
 		return -1;
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public static int getCount(ItemStack stack, LivingEntity entityIn) {
 		int count = -1;
@@ -84,7 +87,7 @@ public class AbacusItem extends QuarkItem {
 				count = getCount(stack, target, player.level);
 			}
 		}
-	
+
 		return count;
 	}
 

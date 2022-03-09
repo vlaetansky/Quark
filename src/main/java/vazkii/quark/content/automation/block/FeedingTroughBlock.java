@@ -60,23 +60,23 @@ public class FeedingTroughBlock extends QuarkBlock implements EntityBlock {
 
 	@Nonnull
 	@Override
-	public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, CollisionContext context) {
+	public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
 		Entity entity = context instanceof EntityCollisionContext ? ((EntityCollisionContext) context).getEntity() : null;
 		if(entity != null && (entity instanceof Animal))
 			return ANIMAL_SHAPE;
-		
+
 		return EMPTY_SHAPE;
 	}
 
 	@Nonnull
 	@Override
-	public VoxelShape getInteractionShape(BlockState state, BlockGetter world, BlockPos pos) {
+	public VoxelShape getInteractionShape(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos) {
 		return CUBOID_SHAPE;
 	}
 
 	@Nonnull
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+	public VoxelShape getShape(BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
 		return state.getValue(FULL) ? FULL_SHAPE : EMPTY_SHAPE;
 	}
 
@@ -93,7 +93,7 @@ public class FeedingTroughBlock extends QuarkBlock implements EntityBlock {
 	}
 
 	@Override
-	public void fallOn(Level world, BlockState state, BlockPos pos, Entity entity, float distance) {
+	public void fallOn(Level world, @Nonnull BlockState state, @Nonnull BlockPos pos, @Nonnull Entity entity, float distance) {
 		if (world.getBlockState(pos).getValue(FULL))
 			entity.causeFallDamage(distance, 0.2F, DamageSource.FALL);
 		else
@@ -114,18 +114,19 @@ public class FeedingTroughBlock extends QuarkBlock implements EntityBlock {
 	}
 
 	@Override
-	public boolean hasAnalogOutputSignal(BlockState state) {
+	public boolean hasAnalogOutputSignal(@Nonnull BlockState state) {
 		return true;
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos) {
+	public int getAnalogOutputSignal(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos) {
 		return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(world.getBlockEntity(pos));
 	}
 
 
+	@Nonnull
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult trace) {
+	public InteractionResult use(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult trace) {
 		if (world.isClientSide)
 			return InteractionResult.SUCCESS;
 		else {
@@ -138,7 +139,7 @@ public class FeedingTroughBlock extends QuarkBlock implements EntityBlock {
 	}
 
 	@Override
-	public boolean triggerEvent(BlockState state, Level world, BlockPos pos, int id, int param) {
+	public boolean triggerEvent(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, int id, int param) {
 		super.triggerEvent(state, world, pos, id, param);
 		BlockEntity tile = world.getBlockEntity(pos);
 		return tile != null && tile.triggerEvent(id, param);
@@ -146,18 +147,18 @@ public class FeedingTroughBlock extends QuarkBlock implements EntityBlock {
 
 	@Override
 	@Nullable
-	public MenuProvider getMenuProvider(BlockState state, Level world, BlockPos pos) {
+	public MenuProvider getMenuProvider(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos) {
 		BlockEntity tile = world.getBlockEntity(pos);
 		return tile instanceof MenuProvider ? (MenuProvider)tile : null;
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+	public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
 		return new FeedingTroughBlockEntity(pos, state);
 	}
 
 	@Override
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level world, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
 		return createTickerHelper(type, FeedingTroughModule.blockEntityType, FeedingTroughBlockEntity::tick);
 	}
 

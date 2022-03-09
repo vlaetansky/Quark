@@ -9,9 +9,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 
+import javax.annotation.Nonnull;
+
 // Pretty much just a copy of BoatDispenseItemBehavior but for the quark boat
 public class QuarkBoatDispenseItemBehavior extends DefaultDispenseItemBehavior {
-	
+
 	private final DefaultDispenseItemBehavior defaultDispenseItemBehavior = new DefaultDispenseItemBehavior();
 	private final String type;
 
@@ -19,8 +21,9 @@ public class QuarkBoatDispenseItemBehavior extends DefaultDispenseItemBehavior {
 		this.type = p_123371_;
 	}
 
+	@Nonnull
 	@Override
-	public ItemStack execute(BlockSource p_123375_, ItemStack p_123376_) {
+	public ItemStack execute(BlockSource p_123375_, @Nonnull ItemStack p_123376_) {
 		Direction direction = p_123375_.getBlockState().getValue(DispenserBlock.FACING);
 		Level level = p_123375_.getLevel();
 		double d0 = p_123375_.x() + (double)((float)direction.getStepX() * 1.125F);

@@ -6,20 +6,23 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import vazkii.quark.content.building.entity.Stool;
 
+import javax.annotation.Nonnull;
+
 public class StoolEntityRenderer extends EntityRenderer<Stool> {
 
 	public StoolEntityRenderer(EntityRendererProvider.Context context) {
 		super(context);
 	}
 
+	@Nonnull
 	@Override
-	public ResourceLocation getTextureLocation(Stool entity) {
+	public ResourceLocation getTextureLocation(@Nonnull Stool entity) {
 		return null;
 	}
-	
+
 	@Override
-	public boolean shouldRender(Stool livingEntityIn, Frustum camera, double camX, double camY, double camZ) {
+	public boolean shouldRender(@Nonnull Stool livingEntityIn, @Nonnull Frustum camera, double camX, double camY, double camZ) {
 		return false;
 	}
-	
+
 }

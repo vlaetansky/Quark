@@ -28,36 +28,36 @@ import vazkii.quark.base.module.QuarkModule;
 public class LeafCarpetBlock extends QuarkBlock implements IBlockColorProvider {
 
 	private static final VoxelShape SHAPE = box(0, 0, 0, 16, 1, 16);
-	
+
 	private final BlockState baseState;
 	private ItemStack baseStack;
-	
+
 	public LeafCarpetBlock(String name, Block base, QuarkModule module) {
-		super(name + "_leaf_carpet", module, CreativeModeTab.TAB_DECORATIONS, 
+		super(name + "_leaf_carpet", module, CreativeModeTab.TAB_DECORATIONS,
 				Block.Properties.of(Material.CLOTH_DECORATION)
 				.strength(0F)
 				.sound(SoundType.GRASS)
 				.noOcclusion());
-		
+
 		baseState = base.defaultBlockState();
-		
+
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT_MIPPED);
 	}
-	
+
 	@Override
-	public boolean canBeReplaced(BlockState state, BlockPlaceContext useContext) {
+	public boolean canBeReplaced(@Nonnull BlockState state, @Nonnull BlockPlaceContext useContext) {
 		return true;
 	}
-	
+
 	@Nonnull
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+	public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
 		return SHAPE;
 	}
 
 	@Nonnull
 	@Override
-	public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, CollisionContext p_220071_4_) {
+	public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nonnull CollisionContext p_220071_4_) {
 		return Shapes.empty();
 	}
 

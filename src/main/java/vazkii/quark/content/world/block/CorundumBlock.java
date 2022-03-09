@@ -2,6 +2,7 @@ package vazkii.quark.content.world.block;
 
 import java.util.Random;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.mojang.math.Vector3f;
@@ -68,7 +69,7 @@ public class CorundumBlock extends QuarkGlassBlock {
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random) {
+	public void tick(@Nonnull BlockState state, @Nonnull ServerLevel worldIn, @Nonnull BlockPos pos, @Nonnull Random random) {
 		if(canGrow(worldIn, pos) && random.nextInt(CorundumModule.caveCrystalGrowthChance) == 0) {
 			BlockState down = worldIn.getBlockState(pos.below());
 			BlockPos up = pos.above();
@@ -85,7 +86,7 @@ public class CorundumBlock extends QuarkGlassBlock {
 	}
 
 	@Override
-	public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
+	public void animateTick(@Nonnull BlockState stateIn, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Random rand) {
 		if(canGrow(worldIn, pos)) {
 			double x = (double)pos.getX() + rand.nextDouble();
 			double y = (double)pos.getY() + rand.nextDouble();

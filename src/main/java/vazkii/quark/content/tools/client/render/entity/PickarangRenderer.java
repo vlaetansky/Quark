@@ -19,22 +19,23 @@ public class PickarangRenderer extends EntityRenderer<Pickarang> {
 	public PickarangRenderer(EntityRendererProvider.Context context) {
 		super(context);
 	}
-	
+
 	@Override
-	public void render(Pickarang entity, float yaw, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int light) {
+	public void render(Pickarang entity, float yaw, float partialTicks, PoseStack matrix, @Nonnull MultiBufferSource buffer, int light) {
 		matrix.pushPose();
 		matrix.translate(0, 0.2, 0);
 		matrix.mulPose(Vector3f.XP.rotationDegrees(90F));
-		
+
 		Minecraft mc = Minecraft.getInstance();
 		float time = entity.tickCount + (mc.isPaused() ? 0 : partialTicks);
 		matrix.mulPose(Vector3f.ZP.rotationDegrees(time * 20F));
 
-		mc.getItemRenderer().renderStatic(entity.getStack(), TransformType.FIXED, light, OverlayTexture.NO_OVERLAY, matrix, buffer, 0); 
-		
+		mc.getItemRenderer().renderStatic(entity.getStack(), TransformType.FIXED, light, OverlayTexture.NO_OVERLAY, matrix, buffer, 0);
+
 		matrix.popPose();
 	}
 
+	@Nonnull
 	@Override
 	public ResourceLocation getTextureLocation(@Nonnull Pickarang entity) {
 		return null;

@@ -31,6 +31,7 @@ import vazkii.quark.content.tools.module.ColorRunesModule;
 import vazkii.quark.content.tools.module.PickarangModule;
 import vazkii.quark.content.tweaks.recipe.ElytraDuplicationRecipe;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -39,6 +40,7 @@ import java.util.stream.Stream;
 public class QuarkJeiPlugin implements IModPlugin {
 	private static final ResourceLocation UID = new ResourceLocation(Quark.MOD_ID, Quark.MOD_ID);
 
+	@Nonnull
 	@Override
 	public ResourceLocation getPluginUid() {
 		return UID;
@@ -69,7 +71,7 @@ public class QuarkJeiPlugin implements IModPlugin {
 	}
 
 	@Override
-	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
+	public void registerRecipeCatalysts(@Nonnull IRecipeCatalystRegistration registration) {
 		if(ModuleLoader.INSTANCE.isModuleEnabled(VariantFurnacesModule.class)) {
 			registration.addRecipeCatalyst(new ItemStack(VariantFurnacesModule.deepslateFurnace), RecipeTypes.FUELING, RecipeTypes.SMELTING);
 			registration.addRecipeCatalyst(new ItemStack(VariantFurnacesModule.blackstoneFurnace), RecipeTypes.FUELING, RecipeTypes.SMELTING);
@@ -149,6 +151,7 @@ public class QuarkJeiPlugin implements IModPlugin {
 
 	private static class CrateGuiHandler implements IGuiContainerHandler<CrateScreen> {
 
+		@Nonnull
 		@Override
 		public List<Rect2i> getGuiExtraAreas(CrateScreen containerScreen) {
 			return containerScreen.getExtraAreas();

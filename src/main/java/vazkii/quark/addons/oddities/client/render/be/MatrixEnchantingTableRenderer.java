@@ -19,17 +19,19 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import vazkii.quark.addons.oddities.block.be.MatrixEnchantingTableBlockEntity;
 
+import javax.annotation.Nonnull;
+
 public class MatrixEnchantingTableRenderer implements BlockEntityRenderer<MatrixEnchantingTableBlockEntity> {
 
 	public static final Material TEXTURE_BOOK = EnchantTableRenderer.BOOK_LOCATION;
 	private BookModel modelBook;
-	
+
 	public MatrixEnchantingTableRenderer(BlockEntityRendererProvider.Context context) {
 		modelBook = new BookModel(context.bakeLayer(ModelLayers.BOOK));
 	}
 
 	@Override
-	public void render(MatrixEnchantingTableBlockEntity te, float pticks, PoseStack matrix, MultiBufferSource buffer, int light, int overlay) {
+	public void render(MatrixEnchantingTableBlockEntity te, float pticks, @Nonnull PoseStack matrix, @Nonnull MultiBufferSource buffer, int light, int overlay) {
 		float time = te.tickCount + pticks;
 
 		float f1 = te.bookRotation - te.bookRotationPrev;

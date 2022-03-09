@@ -1,11 +1,7 @@
 package vazkii.quark.addons.oddities.client.screen;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Widget;
@@ -22,6 +18,10 @@ import vazkii.quark.addons.oddities.module.BackpackModule;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.oddities.HandleBackpackMessage;
+
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BackpackInventoryScreen extends InventoryScreen {
 
@@ -85,8 +85,8 @@ public class BackpackInventoryScreen extends InventoryScreen {
 		super.removed();
 	}
 
-	@Override 
-	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
+	@Override
+	protected void renderBg(@Nonnull PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, BACKPACK_INVENTORY_BACKGROUND);

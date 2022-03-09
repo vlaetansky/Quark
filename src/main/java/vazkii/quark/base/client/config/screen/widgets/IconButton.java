@@ -12,6 +12,8 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import vazkii.quark.base.client.handler.TopLayerTooltipHandler;
 
+import javax.annotation.Nonnull;
+
 public class IconButton extends Button {
 
 	private final ItemStack icon;
@@ -24,7 +26,7 @@ public class IconButton extends Button {
 	}
 
 	@Override
-	public void render(PoseStack mstack, int mouseX, int mouseY, float pticks) {
+	public void render(@Nonnull PoseStack mstack, int mouseX, int mouseY, float pticks) {
 		super.render(mstack, mouseX, mouseY, pticks);
 
 		if(!active && mouseX >= x && mouseY >= y && mouseX < (x + width) && mouseY < (y + height))
@@ -32,7 +34,7 @@ public class IconButton extends Button {
 
 		Minecraft mc = Minecraft.getInstance();
 		mc.getItemRenderer().renderGuiItem(icon, x + 5, y + 2);
-		
+
 		int iconPad = (16 + 5) / 2;
 		drawCenteredString(mstack, mc.font, text, x + width / 2 + iconPad, y + (height - 8) / 2, getFGColor());
 	}

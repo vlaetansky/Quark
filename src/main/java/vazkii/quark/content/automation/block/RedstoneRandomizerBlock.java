@@ -54,12 +54,12 @@ public class RedstoneRandomizerBlock extends QuarkBlock {
         registerDefaultState(defaultBlockState()
                 .setValue(FACING, Direction.NORTH)
                 .setValue(POWERED, RandomizerPowerState.OFF));
-        
+
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel world, BlockPos pos, Random rand) {
+    public void tick(@Nonnull BlockState state, @Nonnull ServerLevel world, @Nonnull BlockPos pos, @Nonnull Random rand) {
         boolean isPowered = isPowered(state);
         boolean willBePowered = shouldBePowered(world, pos, state);
         if(isPowered != willBePowered) {
@@ -90,12 +90,12 @@ public class RedstoneRandomizerBlock extends QuarkBlock {
 
     @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
         return SHAPE;
     }
 
     @Override
-    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+    public boolean canSurvive(@Nonnull BlockState state, @Nonnull LevelReader world, BlockPos pos) {
         return canSupportRigidBlock(world, pos.below());
     }
 
@@ -104,12 +104,12 @@ public class RedstoneRandomizerBlock extends QuarkBlock {
     }
 
     @Override
-    public int getDirectSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
+    public int getDirectSignal(BlockState blockState, @Nonnull BlockGetter blockAccess, @Nonnull BlockPos pos, @Nonnull Direction side) {
         return blockState.getSignal(blockAccess, pos, side);
     }
 
     @Override
-    public int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
+    public int getSignal(BlockState blockState, @Nonnull BlockGetter blockAccess, @Nonnull BlockPos pos, @Nonnull Direction side) {
         RandomizerPowerState powerState = blockState.getValue(POWERED);
         switch (powerState) {
             case RIGHT:
@@ -122,7 +122,7 @@ public class RedstoneRandomizerBlock extends QuarkBlock {
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+    public void neighborChanged(BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Block blockIn, @Nonnull BlockPos fromPos, boolean isMoving) {
         if (state.canSurvive(world, pos))
             this.updateState(world, pos, state);
         else
@@ -154,7 +154,7 @@ public class RedstoneRandomizerBlock extends QuarkBlock {
     }
 
     @Override
-    public boolean isSignalSource(BlockState state) {
+    public boolean isSignalSource(@Nonnull BlockState state) {
         return true;
     }
 
@@ -164,19 +164,19 @@ public class RedstoneRandomizerBlock extends QuarkBlock {
     }
 
     @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(@Nonnull Level world, @Nonnull BlockPos pos, @Nonnull BlockState state, LivingEntity placer, @Nonnull ItemStack stack) {
         if (this.shouldBePowered(world, pos, state)) {
             world.scheduleTick(pos, this, 1);
         }
     }
 
     @Override
-    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean isMoving) {
+    public void onPlace(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull BlockState oldState, boolean isMoving) {
         notifyNeighbors(this, world, pos, state);
     }
 
     @Override
-    public void onRemove(BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
+    public void onRemove(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
         if (!isMoving && state.getBlock() != newState.getBlock()) {
             super.onRemove(state, world, pos, newState, false);
             notifyNeighbors(this, world, pos, state);
@@ -194,7 +194,7 @@ public class RedstoneRandomizerBlock extends QuarkBlock {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
+    public void animateTick(BlockState stateIn, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Random rand) {
         if (stateIn.getValue(POWERED) != RandomizerPowerState.OFF) {
             double x = (pos.getX() + 0.5D) + (rand.nextFloat() - 0.5D) * 0.2D;
             double y = (pos.getY() + 0.4D) + (rand.nextFloat() - 0.5D) * 0.2D;

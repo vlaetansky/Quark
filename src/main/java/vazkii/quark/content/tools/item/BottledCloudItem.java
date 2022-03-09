@@ -19,29 +19,32 @@ import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.tools.module.BottledCloudModule;
 
+import javax.annotation.Nonnull;
+
 public class BottledCloudItem extends QuarkItem {
 
 	public BottledCloudItem(QuarkModule module) {
 		super("bottled_cloud", module, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS));
 	}
-	
+
+	@Nonnull
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+	public InteractionResultHolder<ItemStack> use(@Nonnull Level world, Player player, @Nonnull InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
-		
+
 		HitResult result = RayTraceHandler.rayTrace(player, world, player, Block.OUTLINE, Fluid.ANY);
 		if(result instanceof BlockHitResult) {
 			BlockHitResult bresult = (BlockHitResult) result;
 			BlockPos pos = bresult.getBlockPos();
 			if(!world.isEmptyBlock(pos))
 				pos = pos.relative(bresult.getDirection());
-			
+
 			if(world.isEmptyBlock(pos)) {
 				if(!world.isClientSide)
 					world.setBlockAndUpdate(pos, BottledCloudModule.cloud.defaultBlockState());
-				
+
 				stack.shrink(1);
-				
+
 				if(!player.isCreative()) {
 					ItemStack returnStack = new ItemStack(Items.GLASS_BOTTLE);
 					if(stack.isEmpty())
@@ -49,12 +52,12 @@ public class BottledCloudItem extends QuarkItem {
 					else if(!player.addItem(returnStack))
 						player.drop(returnStack, false);
 				}
-				
+
 				player.getCooldowns().addCooldown(this, 10);
 				return new InteractionResultHolder<ItemStack>(InteractionResult.SUCCESS, stack);
 			}
 		}
-		
+
 		return new InteractionResultHolder<ItemStack>(InteractionResult.PASS, stack);
 	}
 

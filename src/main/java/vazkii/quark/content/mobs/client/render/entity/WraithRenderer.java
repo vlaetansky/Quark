@@ -1,14 +1,13 @@
 package vazkii.quark.content.mobs.client.render.entity;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import vazkii.quark.base.client.handler.ModelHandler;
 import vazkii.quark.content.mobs.client.model.WraithModel;
 import vazkii.quark.content.mobs.entity.Wraith;
+
+import javax.annotation.Nonnull;
 
 public class WraithRenderer extends MobRenderer<Wraith, WraithModel> {
 
@@ -17,12 +16,12 @@ public class WraithRenderer extends MobRenderer<Wraith, WraithModel> {
 	public WraithRenderer(EntityRendererProvider.Context context) {
 		super(context, ModelHandler.model(ModelHandler.wraith), 0F);
 	}
-	
-	@Nullable
+
+	@Nonnull
 	@Override
 	public ResourceLocation getTextureLocation(@Nonnull Wraith entity) {
 		return TEXTURE;
 	}
-	
+
 }
 

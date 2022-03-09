@@ -3,6 +3,7 @@ package vazkii.quark.content.building.block;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.base.Supplier;
@@ -60,7 +61,7 @@ public class VariantChestBlock extends ChestBlock implements IBlockItemProvider,
 	}
 
 	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+	public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
 		if(isEnabled() || group == CreativeModeTab.TAB_SEARCH)
 			super.fillItemCategory(group, items);
 	}
@@ -83,7 +84,7 @@ public class VariantChestBlock extends ChestBlock implements IBlockItemProvider,
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockPos p_153064_, BlockState p_153065_) {
+	public BlockEntity newBlockEntity(@Nonnull BlockPos p_153064_, @Nonnull BlockState p_153065_) {
 		return new VariantChestBlockEntity(p_153064_, p_153065_);
 	}
 
@@ -122,14 +123,14 @@ public class VariantChestBlock extends ChestBlock implements IBlockItemProvider,
 						private final BlockEntity tile = new VariantChestBlockEntity(BlockPos.ZERO, getBlock().defaultBlockState());
 
 						@Override
-						public void renderByItem(ItemStack stack, TransformType transformType, PoseStack pose, MultiBufferSource buffer, int x, int y) {
+						public void renderByItem(@Nonnull ItemStack stack, @Nonnull TransformType transformType, @Nonnull PoseStack pose, @Nonnull MultiBufferSource buffer, int x, int y) {
 							mc.getBlockEntityRenderDispatcher().renderItem(tile, pose, buffer, x, y);
 						}
 
 					};
 				}
 
-			});	
+			});
 		}
 	}
 

@@ -3,6 +3,7 @@ package vazkii.quark.base.block;
 import java.util.Objects;
 import java.util.function.BooleanSupplier;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.client.color.block.BlockColor;
@@ -30,16 +31,16 @@ public class QuarkSlabBlock extends SlabBlock implements IQuarkBlock, IBlockColo
 
 	public QuarkSlabBlock(IQuarkBlock parent) {
 		super(VariantHandler.realStateCopy(parent));
-		
+
 		this.parent = parent;
 		RegistryHelper.registerBlock(this, Objects.toString(parent.getBlock().getRegistryName()) + "_slab");
 		RegistryHelper.setCreativeTab(this, CreativeModeTab.TAB_BUILDING_BLOCKS);
-		
+
 		RenderLayerHandler.setInherited(this, parent.getBlock());
 	}
-	
+
 	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+	public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
 		if(group == CreativeModeTab.TAB_SEARCH || parent.isEnabled())
 			super.fillItemCategory(group, items);
 	}

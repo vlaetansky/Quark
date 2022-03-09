@@ -11,6 +11,8 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 import vazkii.quark.addons.oddities.inventory.EnchantmentMatrix.Piece;
 
+import javax.annotation.Nonnull;
+
 public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchantingPieceList.PieceEntry> {
 
 	private final MatrixEnchantingScreen parent;
@@ -44,7 +46,7 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 	}
 
 	@Override
-	public void render(PoseStack stack, int p_render_1_, int p_render_2_, float p_render_3_) {
+	public void render(@Nonnull PoseStack stack, int p_render_1_, int p_render_2_, float p_render_3_) {
 		int i = this.getScrollbarPosition();
 		int j = i + 6;
 		int k = this.getRowLeft();
@@ -57,7 +59,7 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 		RenderSystem.enableScissor(getLeft() * res, (main.getGuiScaledHeight() - getBottom()) * res, getWidth() * res, getHeight() * res);
 		renderList(stack, k, l, p_render_1_, p_render_2_, p_render_3_);
 		RenderSystem.disableScissor();
-		
+
 		renderScroll(stack, i, j);
 	}
 
@@ -74,7 +76,7 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 			if (l1 < this.y0) {
 				l1 = this.y0;
 			}
-			
+
 			fill(stack, i, y1, j, y0, 0xFF000000);
 			fill(stack, i, (l1 + k1), j, l1, 0xFF818181);
 			fill(stack, i, (l1 + k1 - 1), j - 1, l1, 0xFFc0c0c0);
@@ -82,7 +84,7 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 	}
 
 	@Override
-	protected void renderBackground(PoseStack stack) {
+	protected void renderBackground(@Nonnull PoseStack stack) {
 		// NO-OP
 	}
 
@@ -97,7 +99,7 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 		}
 
 		@Override
-		public void render(PoseStack stack, int entryIdx, int top, int left, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hover, float partialTicks) {
+		public void render(@Nonnull PoseStack stack, int entryIdx, int top, int left, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hover, float partialTicks) {
 			if(mouseX > left && mouseY > top && mouseX <= (left + entryWidth) && mouseY <= (top + entryHeight))
 				parent.hoveredPiece = piece;
 
@@ -120,6 +122,7 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 			return false;
 		}
 
+		@Nonnull
 		@Override
 		public Component getNarration() {
 			return new TextComponent("");

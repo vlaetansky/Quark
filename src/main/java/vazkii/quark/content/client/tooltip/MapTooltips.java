@@ -31,6 +31,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import vazkii.quark.content.client.module.ImprovedTooltipsModule;
 
+import javax.annotation.Nonnull;
+
 public class MapTooltips {
 
 	private static final ResourceLocation RES_MAP_BACKGROUND = new ResourceLocation("textures/map/map_background.png");
@@ -57,7 +59,7 @@ public class MapTooltips {
 		}
 
 		@Override
-		public void renderImage(Font font, int tooltipX, int tooltipY, PoseStack pose, ItemRenderer itemRenderer, int something) {
+		public void renderImage(@Nonnull Font font, int tooltipX, int tooltipY, @Nonnull PoseStack pose, @Nonnull ItemRenderer itemRenderer, int something) {
 			Minecraft mc = Minecraft.getInstance();
 
 			MapItemSavedData mapdata = MapItem.getSavedData(stack, mc.level);
@@ -104,7 +106,7 @@ public class MapTooltips {
 		}
 
 		@Override
-		public int getWidth(Font font) {
+		public int getWidth(@Nonnull Font font) {
 			return 72;
 		}
 	}

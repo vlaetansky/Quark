@@ -1,21 +1,17 @@
 package vazkii.quark.addons.oddities.inventory;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlot.Type;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ClickType;
-import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import vazkii.arl.util.InventoryIIH;
 import vazkii.quark.addons.oddities.module.BackpackModule;
+
+import javax.annotation.Nonnull;
 
 public class BackpackMenu extends InventoryMenu {
 
@@ -71,7 +67,7 @@ public class BackpackMenu extends InventoryMenu {
 
 			if (index < invStart || index == shieldSlot) { // crafting and armor slots
 				ItemStack target = null;
-				if(!this.moveItemStackTo(stack, invStart, hotbarEnd, false) && !this.moveItemStackTo(stack, backpackStart, backpackEnd, false)) 
+				if(!this.moveItemStackTo(stack, invStart, hotbarEnd, false) && !this.moveItemStackTo(stack, backpackStart, backpackEnd, false))
 					target = ItemStack.EMPTY;
 
 				if(target != null)
@@ -81,26 +77,26 @@ public class BackpackMenu extends InventoryMenu {
 			}
 
 			else if(slotType != null && slotType.getType() == Type.ARMOR && !this.slots.get(equipIndex).hasItem()) { // shift clicking armor
-				if(!this.moveItemStackTo(stack, equipIndex, equipIndex + 1, false)) 
+				if(!this.moveItemStackTo(stack, equipIndex, equipIndex + 1, false))
 					return ItemStack.EMPTY;
 			}
 
 			else if (slotType != null && slotType == EquipmentSlot.OFFHAND && !this.slots.get(shieldSlot).hasItem()) { // shift clicking shield
-				if(!this.moveItemStackTo(stack, shieldSlot, shieldSlot + 1, false)) 
-					return ItemStack.EMPTY;
-			} 
-
-			else if (index < invEnd) {
-				if (!this.moveItemStackTo(stack, hotbarStart, hotbarEnd, false) && !this.moveItemStackTo(stack, backpackStart, backpackEnd, false)) 
-					return ItemStack.EMPTY;
-			} 
-
-			else if(index < hotbarEnd) {
-				if(!this.moveItemStackTo(stack, invStart, invEnd, false) && !this.moveItemStackTo(stack, backpackStart, backpackEnd, false)) 
+				if(!this.moveItemStackTo(stack, shieldSlot, shieldSlot + 1, false))
 					return ItemStack.EMPTY;
 			}
 
-			else if(!this.moveItemStackTo(stack, hotbarStart, hotbarEnd, false) && !this.moveItemStackTo(stack, invStart, invEnd, false)) 
+			else if (index < invEnd) {
+				if (!this.moveItemStackTo(stack, hotbarStart, hotbarEnd, false) && !this.moveItemStackTo(stack, backpackStart, backpackEnd, false))
+					return ItemStack.EMPTY;
+			}
+
+			else if(index < hotbarEnd) {
+				if(!this.moveItemStackTo(stack, invStart, invEnd, false) && !this.moveItemStackTo(stack, backpackStart, backpackEnd, false))
+					return ItemStack.EMPTY;
+			}
+
+			else if(!this.moveItemStackTo(stack, hotbarStart, hotbarEnd, false) && !this.moveItemStackTo(stack, invStart, invEnd, false))
 				return ItemStack.EMPTY;
 
 			if (stack.isEmpty())
@@ -111,7 +107,7 @@ public class BackpackMenu extends InventoryMenu {
 				return ItemStack.EMPTY;
 
 			slot.onTake(playerIn, stack);
-			if(index == 0) 
+			if(index == 0)
 				playerIn.drop(stack, false);
 		}
 
@@ -178,10 +174,9 @@ public class BackpackMenu extends InventoryMenu {
 		}
 		return successful;
 	}
-	
-	@Nonnull
+
 	@Override
-	public void clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) {
+	public void clicked(int slotId, int dragType, @Nonnull ClickType clickTypeIn, @Nonnull Player player) {
 		SlotCachingItemHandler.cache(this);
 		super.clicked(slotId, dragType, clickTypeIn, player);
 		SlotCachingItemHandler.applyCache(this);
@@ -206,7 +201,7 @@ public class BackpackMenu extends InventoryMenu {
 	}
 
 	@Override
-	public MenuType<?> getType() {
+	public @Nonnull MenuType<?> getType() {
 		return BackpackModule.menyType;
 	}
 

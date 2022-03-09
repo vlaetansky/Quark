@@ -28,6 +28,8 @@ import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import vazkii.quark.content.client.module.ImprovedTooltipsModule;
 
+import javax.annotation.Nonnull;
+
 public class FoodTooltips {
 
 	@OnlyIn(Dist.CLIENT)
@@ -89,7 +91,7 @@ public class FoodTooltips {
 		}
 
 		@Override
-		public void renderImage(Font font, int tooltipX, int tooltipY, PoseStack pose, ItemRenderer itemRenderer, int something) {
+		public void renderImage(@Nonnull Font font, int tooltipX, int tooltipY, @Nonnull PoseStack pose, @Nonnull ItemRenderer itemRenderer, int something) {
 			if(stack.isEdible()) {
 				FoodProperties food = stack.getItem().getFoodProperties();
 				if (food != null) {
@@ -159,7 +161,7 @@ public class FoodTooltips {
 		}
 
 		@Override
-		public int getWidth(Font font) {
+		public int getWidth(@Nonnull Font font) {
 			return width;
 		}
 	}

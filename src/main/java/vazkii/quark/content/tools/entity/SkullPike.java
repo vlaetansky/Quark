@@ -62,12 +62,12 @@ public class SkullPike extends Entity {
 	}
 
 	@Override
-	protected void readAdditionalSaveData(CompoundTag nbt) {
+	protected void readAdditionalSaveData(@Nonnull CompoundTag nbt) {
 		// NO-OP
 	}
 
 	@Override
-	protected void addAdditionalSaveData(CompoundTag nbt) {
+	protected void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
 		// NO-OP
 	}
 

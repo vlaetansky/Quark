@@ -7,14 +7,17 @@ import net.minecraft.world.entity.animal.Pig;
 import vazkii.quark.content.client.module.VariantAnimalTexturesModule;
 import vazkii.quark.content.client.module.VariantAnimalTexturesModule.VariantTextureType;
 
+import javax.annotation.Nonnull;
+
 public class VariantPigRenderer extends PigRenderer {
 
 	public VariantPigRenderer(EntityRendererProvider.Context context) {
 		super(context);
 	}
-	
+
+	@Nonnull
 	@Override
-	public ResourceLocation getTextureLocation(Pig entity) {
+	public ResourceLocation getTextureLocation(@Nonnull Pig entity) {
 		return VariantAnimalTexturesModule.getTextureOrShiny(entity, VariantTextureType.PIG, VariantAnimalTexturesModule.enablePig);
 	}
 

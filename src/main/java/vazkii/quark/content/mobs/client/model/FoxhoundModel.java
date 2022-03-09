@@ -14,6 +14,8 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import vazkii.quark.content.mobs.entity.Foxhound;
 
+import javax.annotation.Nonnull;
+
 /**
  * ModelFoxhound - McVinnyq
  * Created using Tabula 7.0.0
@@ -45,7 +47,7 @@ public class FoxhoundModel extends EntityModel<Foxhound> {
 		rightEar = head.getChild("rightEar");
 		leftEar = head.getChild("leftEar");
 		tail = body.getChild("tail");
-		fluff = body.getChild("fluff");	
+		fluff = body.getChild("fluff");
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -57,7 +59,7 @@ public class FoxhoundModel extends EntityModel<Foxhound> {
 				.texOffs(0, 20)
 				.addBox(-4.0F, -3.0F, -6.0F, 8, 6, 6),
 				PartPose.offsetAndRotation(0.0F, 14.5F, 0.0F, 0.0F, 0.0F, 0.0F));
-		
+
 		PartDefinition body = root.addOrReplaceChild("body",
 				CubeListBuilder.create()
 				.texOffs(0, 2)
@@ -133,7 +135,7 @@ public class FoxhoundModel extends EntityModel<Foxhound> {
 		this.head.xRot = 0;
 		this.body.yRot = hound.getBodyRollAngle(partialTickTime, -0.16F);
 		this.tail.yRot = hound.getBodyRollAngle(partialTickTime, -0.2F);
-		
+
 		if (hound.isSleeping()) {
 			this.head.setPos(1.0F, 20.5F, 0.0F);
 			this.setRotateAngle(head, 0.0F, 0.7853981633974483F, -0.04363323129985824F);
@@ -188,17 +190,17 @@ public class FoxhoundModel extends EntityModel<Foxhound> {
 			head.yRot += yaw * 0.017453292F;
 			head.xRot += pitch * 0.017453292F;
 		} else
-			head.yRot += Mth.cos(entity.tickCount / 30) / 20;    	
+			head.yRot += Mth.cos(entity.tickCount / 30) / 20;
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack matrix, VertexConsumer vb, int p_225598_3_, int p_225598_4_, float p_225598_5_, float p_225598_6_, float p_225598_7_, float p_225598_8_) {
+	public void renderToBuffer(PoseStack matrix, @Nonnull VertexConsumer vb, int p_225598_3_, int p_225598_4_, float p_225598_5_, float p_225598_6_, float p_225598_7_, float p_225598_8_) {
 		matrix.pushPose();
 		if(entity.isSleeping()) {
 			matrix.mulPose(Vector3f.XP.rotationDegrees(90F));
 			matrix.translate(0, -1.5, -1.5);
 		}
-		
+
 		matrix.translate(0, 0, entity.isOrderedToSit() ? -0.25F : -0.35F);
 
 		matrix.pushPose();

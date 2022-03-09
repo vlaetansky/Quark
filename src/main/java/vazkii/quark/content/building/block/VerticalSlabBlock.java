@@ -53,7 +53,7 @@ public class VerticalSlabBlock extends QuarkBlock implements SimpleWaterloggedBl
 	public VerticalSlabBlock(Block parent, QuarkModule module) {
 		super(parent.getRegistryName().getPath().replace("_slab", "_vertical_slab"), module, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.copy(parent));
 		this.parent = parent;
-		
+
 		if(!(parent instanceof SlabBlock))
 			throw new IllegalArgumentException("Can't rotate a non-slab block into a vertical slab.");
 
@@ -62,25 +62,27 @@ public class VerticalSlabBlock extends QuarkBlock implements SimpleWaterloggedBl
 
 		registerDefaultState(defaultBlockState().setValue(TYPE, VerticalSlabType.NORTH).setValue(WATERLOGGED, false));
 	}
-	
+
+	@Nonnull
 	@Override
-	public BlockState rotate(BlockState state, Rotation rot) {
+	public BlockState rotate(BlockState state, @Nonnull Rotation rot) {
 		return state.getValue(TYPE) == VerticalSlabType.DOUBLE ? state : state.setValue(TYPE, VerticalSlabType.fromDirection(rot.rotate(state.getValue(TYPE).direction)));
 	}
-	
+
+	@Nonnull
 	@Override
-	public BlockState mirror(BlockState state, Mirror mirrorIn) {
+	public BlockState mirror(BlockState state, @Nonnull Mirror mirrorIn) {
 		VerticalSlabType type = state.getValue(TYPE);
 		if(type == VerticalSlabType.DOUBLE || mirrorIn == Mirror.NONE)
 			return state;
-		
+
 		if((mirrorIn == Mirror.LEFT_RIGHT && type.direction.getAxis() == Axis.Z)
 				|| (mirrorIn == Mirror.FRONT_BACK && type.direction.getAxis() == Axis.X))
 			return state.setValue(TYPE, VerticalSlabType.fromDirection(state.getValue(TYPE).direction.getOpposite()));
-		
+
 		return state;
 	}
-	
+
 	@Override
 	public boolean useShapeForLightOcclusion(BlockState state) {
 		return state.getValue(TYPE) != VerticalSlabType.DOUBLE;
@@ -93,10 +95,10 @@ public class VerticalSlabBlock extends QuarkBlock implements SimpleWaterloggedBl
 
 	@Nonnull
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+	public VoxelShape getShape(BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
 		return state.getValue(TYPE).shape;
 	}
-	
+
 	@Override
 	public boolean isConduitFrame(BlockState state, LevelReader world, BlockPos pos, BlockPos conduit) {
 		return parent.isConduitFrame(state, world, pos, conduit);
@@ -107,22 +109,22 @@ public class VerticalSlabBlock extends QuarkBlock implements SimpleWaterloggedBl
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		BlockPos blockpos = context.getClickedPos();
 		BlockState blockstate = context.getLevel().getBlockState(blockpos);
-		if(blockstate.getBlock() == this) 
+		if(blockstate.getBlock() == this)
 			return blockstate.setValue(TYPE, VerticalSlabType.DOUBLE).setValue(WATERLOGGED, false);
-		
+
 		FluidState fluid = context.getLevel().getFluidState(blockpos);
 		BlockState retState = defaultBlockState().setValue(WATERLOGGED, fluid.getType() == Fluids.WATER);
 		Direction direction = getDirectionForPlacement(context);
 		VerticalSlabType type = VerticalSlabType.fromDirection(direction);
-		
+
 		return retState.setValue(TYPE, type);
 	}
-	
+
 	private Direction getDirectionForPlacement(BlockPlaceContext context) {
 		Direction direction = context.getClickedFace();
 		if(direction.getAxis() != Axis.Y)
 			return direction;
-		
+
 		BlockPos pos = context.getClickedPos();
 		Vec3 vec = context.getClickLocation().subtract(new Vec3(pos.getX(), pos.getY(), pos.getZ())).subtract(0.5, 0, 0.5);
 		double angle = Math.atan2(vec.x, vec.z) * -180.0 / Math.PI;
@@ -150,13 +152,13 @@ public class VerticalSlabBlock extends QuarkBlock implements SimpleWaterloggedBl
 	}
 
 	@Override
-	public boolean canPlaceLiquid(BlockGetter worldIn, BlockPos pos, BlockState state, Fluid fluidIn) {
+	public boolean canPlaceLiquid(@Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, BlockState state, @Nonnull Fluid fluidIn) {
 		return state.getValue(TYPE) != VerticalSlabType.DOUBLE && SimpleWaterloggedBlock.super.canPlaceLiquid(worldIn, pos, state, fluidIn);
 	}
 
 	@Nonnull
 	@Override
-	public BlockState updateShape(@Nonnull BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+	public BlockState updateShape(@Nonnull BlockState stateIn, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull LevelAccessor worldIn, @Nonnull BlockPos currentPos, @Nonnull BlockPos facingPos) {
 		if(stateIn.getValue(WATERLOGGED))
 			worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
 
@@ -164,8 +166,8 @@ public class VerticalSlabBlock extends QuarkBlock implements SimpleWaterloggedBl
 	}
 
 	@Override
-	public boolean isPathfindable(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, PathComputationType type) {
-		return type == PathComputationType.WATER && worldIn.getFluidState(pos).is(FluidTags.WATER); 
+	public boolean isPathfindable(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull PathComputationType type) {
+		return type == PathComputationType.WATER && worldIn.getFluidState(pos).is(FluidTags.WATER);
 	}
 
 	@Override

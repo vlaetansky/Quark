@@ -22,34 +22,36 @@ import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
 
+import javax.annotation.Nonnull;
+
 public class IronRodBlock extends EndRodBlock implements ICollateralMover {
 
 	private final QuarkModule module;
-	
+
 	public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
-	
+
 	public IronRodBlock(QuarkModule module) {
 		super(Block.Properties.of(Material.METAL, DyeColor.GRAY)
 				.strength(5F, 10F)
 				.sound(SoundType.METAL)
 				.noOcclusion());
-		
+
 		RegistryHelper.registerBlock(this, "iron_rod");
 		RegistryHelper.setCreativeTab(this, CreativeModeTab.TAB_DECORATIONS);
-		
+
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
-		
+
 		this.module = module;
 	}
-	
+
 	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+	public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
 		if(module.enabled || group == CreativeModeTab.TAB_SEARCH)
 			super.fillItemCategory(group, items);
 	}
-	
+
 	@Override
-	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(@Nonnull Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
 		builder.add(CONNECTED);
 	}
@@ -58,14 +60,14 @@ public class IronRodBlock extends EndRodBlock implements ICollateralMover {
 	public boolean isCollateralMover(Level world, BlockPos source, Direction moveDirection, BlockPos pos) {
 		return moveDirection == world.getBlockState(pos).getValue(FACING);
 	}
-	
+
 	@Override
 	public MoveResult getCollateralMovement(Level world, BlockPos source, Direction moveDirection, Direction side, BlockPos pos) {
 		return side == moveDirection ? MoveResult.BREAK : MoveResult.SKIP;
 	}
-	
+
 	@Override
-	public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
+	public void animateTick(@Nonnull BlockState stateIn, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Random rand) {
 		// NO-OP
 	}
 

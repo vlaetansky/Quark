@@ -129,13 +129,13 @@ public class Foxhound extends Wolf implements Enemy {
 //	public boolean isEntityInsideOpaqueBlock() {
 //		return MiscUtil.isEntityInsideOpaqueBlock(this);
 //	}
-	
+
 	@Override
-	public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, SpawnGroupData spawnDataIn, CompoundTag dataTag) {
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, @Nonnull DifficultyInstance difficultyIn, @Nonnull MobSpawnType reason, SpawnGroupData spawnDataIn, CompoundTag dataTag) {
 		Holder<Biome> biome = worldIn.getBiome(new BlockPos(position()));
 		if(biome.is(Biomes.SOUL_SAND_VALLEY.location()))
 			setBlue(true);
-		
+
 		return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
 	}
 
@@ -149,7 +149,7 @@ public class Foxhound extends Wolf implements Enemy {
 				setPose(Pose.SLEEPING);
 		} else if(pose == Pose.SLEEPING)
 			setPose(Pose.STANDING);
-		
+
 		if (!level.isClientSide && level.getDifficulty() == Difficulty.PEACEFUL && !isTame()) {
 			discard();
 			return;
@@ -172,7 +172,7 @@ public class Foxhound extends Wolf implements Enemy {
 			if(aabb.getYsize() < 0.21)
 				setBoundingBox(new AABB(aabb.minX - 0.2, aabb.minY, aabb.minZ - 0.2, aabb.maxX + 0.2, aabb.maxY + 0.5, aabb.maxZ + 0.2));
 		}
-		
+
 		if (WantLoveGoal.needsPets(this)) {
 			Entity owner = getOwner();
 			if (owner != null && owner.distanceToSqr(this) < 1 && !owner.isInWater() && !owner.fireImmune() && (!(owner instanceof Player) || !((Player) owner).isCreative()))
@@ -186,7 +186,7 @@ public class Foxhound extends Wolf implements Enemy {
 				particle = ParticleTypes.SMOKE;
 			else if(isBlue())
 				particle = ParticleTypes.SOUL_FIRE_FLAME;
-			
+
 			this.level.addParticle(particle, pos.x + (this.random.nextDouble() - 0.5D) * this.getBbWidth(), pos.y + (this.random.nextDouble() - 0.5D) * this.getBbHeight(), pos.z + (this.random.nextDouble() - 0.5D) * this.getBbWidth(), 0.0D, 0.0D, 0.0D);
 		}
 
@@ -251,7 +251,7 @@ public class Foxhound extends Wolf implements Enemy {
 			return 0;
 		return super.getRemainingPersistentAngerTime();
 	}
-	
+
 	@Override
 	public boolean doHurtTarget(Entity entityIn) {
 		if (entityIn.getType().fireImmune()) {
@@ -312,12 +312,12 @@ public class Foxhound extends Wolf implements Enemy {
 	}
 
 	@Override
-	public boolean canMate(Animal otherAnimal) {
+	public boolean canMate(@Nonnull Animal otherAnimal) {
 		return super.canMate(otherAnimal) && otherAnimal instanceof Foxhound;
 	}
 
 	@Override // createChild
-	public Wolf getBreedOffspring(ServerLevel sworld, AgeableMob otherParent) {
+	public Wolf getBreedOffspring(@Nonnull ServerLevel sworld, @Nonnull AgeableMob otherParent) {
 		Foxhound kid = new Foxhound(FoxhoundModule.foxhoundType, this.level);
 		UUID uuid = this.getOwnerUUID();
 
@@ -325,7 +325,7 @@ public class Foxhound extends Wolf implements Enemy {
 			kid.setOwnerUUID(uuid);
 			kid.setTame(true);
 		}
-		
+
 		if(isBlue())
 			kid.setBlue(true);
 
@@ -333,18 +333,18 @@ public class Foxhound extends Wolf implements Enemy {
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundTag compound) {
+	public void addAdditionalSaveData(@Nonnull CompoundTag compound) {
 		super.addAdditionalSaveData(compound);
-		
+
 		compound.putInt("OhLawdHeComin", timeUntilPotatoEmerges);
 		compound.putBoolean("IsSlep", isSleeping());
 		compound.putBoolean("IsBlue", isBlue());
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundTag compound) {
+	public void readAdditionalSaveData(@Nonnull CompoundTag compound) {
 		super.readAdditionalSaveData(compound);
-		
+
 		timeUntilPotatoEmerges = compound.getInt("OhLawdHeComin");
 		setInSittingPose(compound.getBoolean("IsSlep"));
 		setBlue(compound.getBoolean("IsBlue"));
@@ -365,7 +365,7 @@ public class Foxhound extends Wolf implements Enemy {
 	}
 
 	@Override
-	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+	protected SoundEvent getHurtSound(@Nonnull DamageSource damageSourceIn) {
 		return QuarkSounds.ENTITY_FOXHOUND_HURT;
 	}
 
@@ -373,11 +373,11 @@ public class Foxhound extends Wolf implements Enemy {
 	protected SoundEvent getDeathSound() {
 		return QuarkSounds.ENTITY_FOXHOUND_DIE;
 	}
-	
+
 	public boolean isBlue() {
 		return entityData.get(IS_BLUE);
 	}
-	
+
 	public void setBlue(boolean blue) {
 		entityData.set(IS_BLUE, blue);
 	}
@@ -395,7 +395,7 @@ public class Foxhound extends Wolf implements Enemy {
 	public float getWalkTargetValue(BlockPos pos, LevelReader worldIn) {
 		return worldIn.getBlockState(pos.below()).is(FoxhoundModule.foxhoundSpawnableTag) ? 10.0F : worldIn.getBrightness(pos) - 0.5F;
 	}
-	
+
 	public static boolean spawnPredicate(EntityType<? extends Foxhound> type, ServerLevelAccessor world, MobSpawnType reason, BlockPos pos, Random rand) {
 		return world.getDifficulty() != Difficulty.PEACEFUL && world.getBlockState(pos.below()).is(FoxhoundModule.foxhoundSpawnableTag);
 	}

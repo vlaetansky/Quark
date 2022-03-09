@@ -237,7 +237,7 @@ public class MagnetizedBlockBlockEntity extends BlockEntity {
         if(action != null)
             action.onMagnetMoved(level, worldPosition, magnetFacing, blockState, newTile);
     }
-    
+
     public BlockEntity getSubTile(BlockPos pos) {
         if (subTile != null && !subTile.isEmpty()) {
             CompoundTag tileData = subTile.copy();
@@ -246,7 +246,7 @@ public class MagnetizedBlockBlockEntity extends BlockEntity {
             tileData.putInt("z", this.worldPosition.getZ());
             return BlockEntity.loadStatic(pos, magnetState, subTile);
         }
-        
+
         return null;
     }
 
@@ -268,7 +268,7 @@ public class MagnetizedBlockBlockEntity extends BlockEntity {
         }
 
     }
-    
+
 	public static void tick(Level level, BlockPos pos, BlockState state, MagnetizedBlockBlockEntity be) {
 		be.tick();
 	}
@@ -308,12 +308,12 @@ public class MagnetizedBlockBlockEntity extends BlockEntity {
 
         }
     }
-    
-    
+
+
     @Override
-    public void load(CompoundTag compound) {
+    public void load(@Nonnull CompoundTag compound) {
     	super.load(compound);
-    	
+
         this.magnetState = NbtUtils.readBlockState(compound.getCompound("blockState"));
         this.magnetFacing = Direction.from3DDataValue(compound.getInt("facing"));
         this.progress = compound.getFloat("progress");
@@ -328,7 +328,7 @@ public class MagnetizedBlockBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag nbt) {
+    protected void saveAdditional(@Nonnull CompoundTag nbt) {
     	super.saveAdditional(nbt);
     	writeNBTData(nbt, true);
     }

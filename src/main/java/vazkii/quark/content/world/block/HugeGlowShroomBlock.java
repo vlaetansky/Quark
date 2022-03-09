@@ -21,6 +21,8 @@ import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.world.module.GlimmeringWealdModule;
 
+import javax.annotation.Nonnull;
+
 public class HugeGlowShroomBlock extends HugeMushroomBlock implements IQuarkBlock {
 
 	private final QuarkModule module;
@@ -41,7 +43,7 @@ public class HugeGlowShroomBlock extends HugeMushroomBlock implements IQuarkBloc
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
+	public void animateTick(@Nonnull BlockState stateIn, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Random rand) {
 		super.animateTick(stateIn, worldIn, pos, rand);
 
 		BlockState below = worldIn.getBlockState(pos.below());
@@ -104,7 +106,7 @@ public class HugeGlowShroomBlock extends HugeMushroomBlock implements IQuarkBloc
 				for(int j = -1; j < 2; j++)
 					worldIn.setBlock(placePos.offset(i, 0, j), cap, 2);
 
-			// Triangle cap 
+			// Triangle cap
 			if(hasBigCap)
 				worldIn.setBlock(placePos.above(), cap, 2);
 

@@ -71,7 +71,7 @@ public class TotemOfHoldingEntity extends Entity {
     }
 
     @Override
-    public boolean skipAttackInteraction(Entity e) {
+    public boolean skipAttackInteraction(@Nonnull Entity e) {
         if(!level.isClientSide && e instanceof Player) {
             Player player = (Player) e;
 

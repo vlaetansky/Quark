@@ -1,7 +1,5 @@
 package vazkii.quark.addons.oddities.inventory;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -19,6 +17,8 @@ import net.minecraftforge.common.Tags;
 import vazkii.quark.addons.oddities.block.be.MatrixEnchantingTableBlockEntity;
 import vazkii.quark.addons.oddities.module.MatrixEnchantingModule;
 
+import javax.annotation.Nonnull;
+
 public class MatrixEnchantingMenu extends AbstractContainerMenu {
 
 	public final MatrixEnchantingTableBlockEntity enchanter;
@@ -29,16 +29,16 @@ public class MatrixEnchantingMenu extends AbstractContainerMenu {
 
 		// Item Slot
 		addSlot(new Slot(tile, 0, 15, 20) {
-			@Override 
-			public int getMaxStackSize() { 
-				return 1; 
+			@Override
+			public int getMaxStackSize() {
+				return 1;
 			}
 		});
 
 		// Lapis Slot
 		addSlot(new Slot(tile, 1, 15, 44) {
 			@Override
-			public boolean mayPlace(ItemStack stack) {
+			public boolean mayPlace(@Nonnull ItemStack stack) {
 				return isLapis(stack);
 			}
 		});
@@ -46,13 +46,12 @@ public class MatrixEnchantingMenu extends AbstractContainerMenu {
 		// Output Slot
 		addSlot(new Slot(tile, 2, 59, 32) {
 			@Override
-			public boolean mayPlace(ItemStack stack) {
+			public boolean mayPlace(@Nonnull ItemStack stack) {
 				return false;
 			}
 
-			@Nonnull
 			@Override
-			public void onTake(Player thePlayer, @Nonnull ItemStack stack) {
+			public void onTake(@Nonnull Player thePlayer, @Nonnull ItemStack stack) {
 				finish(thePlayer, stack);
 				super.onTake(thePlayer, stack);
 			}
@@ -65,11 +64,11 @@ public class MatrixEnchantingMenu extends AbstractContainerMenu {
 		for(int k = 0; k < 9; ++k)
 			addSlot(new Slot(playerInv, k, 8 + k * 18, 142));
 	}
-	
+
 	public static MatrixEnchantingMenu fromNetwork(int windowId, Inventory playerInventory, FriendlyByteBuf buf) {
 		BlockPos pos = buf.readBlockPos();
 		MatrixEnchantingTableBlockEntity te = (MatrixEnchantingTableBlockEntity) playerInventory.player.level.getBlockEntity(pos);
-		return new MatrixEnchantingMenu(windowId, playerInventory, te);	
+		return new MatrixEnchantingMenu(windowId, playerInventory, te);
 	}
 
 	private boolean isLapis(ItemStack stack) {
@@ -99,7 +98,7 @@ public class MatrixEnchantingMenu extends AbstractContainerMenu {
 
 	@Nonnull
 	@Override
-	public ItemStack quickMoveStack(Player playerIn, int index) {
+	public ItemStack quickMoveStack(@Nonnull Player playerIn, int index) {
 		ItemStack originalStack = ItemStack.EMPTY;
 		Slot slot = slots.get(index);
 

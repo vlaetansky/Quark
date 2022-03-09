@@ -20,6 +20,8 @@ import vazkii.quark.base.Quark;
 import vazkii.quark.content.mobs.client.model.FoxhoundModel;
 import vazkii.quark.content.mobs.entity.Foxhound;
 
+import javax.annotation.Nonnull;
+
 public class FoxhoundCollarLayer extends RenderLayer<Foxhound, FoxhoundModel> {
 
 	private static final ResourceLocation WOLF_COLLAR = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/foxhound/collar.png");
@@ -29,7 +31,7 @@ public class FoxhoundCollarLayer extends RenderLayer<Foxhound, FoxhoundModel> {
 	}
 
 	@Override
-	public void render(PoseStack matrix, MultiBufferSource buffer, int light, Foxhound foxhound,  float limbAngle, float limbDistance, float tickDelta, float customAngle, float headYaw, float headPitch) {
+	public void render(@Nonnull PoseStack matrix, @Nonnull MultiBufferSource buffer, int light, Foxhound foxhound, float limbAngle, float limbDistance, float tickDelta, float customAngle, float headYaw, float headPitch) {
 		if (foxhound.isTame() && !foxhound.isInvisible()) {
 			float[] afloat = foxhound.getCollarColor().getTextureDiffuseColors();
 			renderColoredCutoutModel(getParentModel(), WOLF_COLLAR, matrix, buffer, light, foxhound, afloat[0], afloat[1], afloat[2]);

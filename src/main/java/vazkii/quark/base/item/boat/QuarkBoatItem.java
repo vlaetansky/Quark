@@ -22,6 +22,8 @@ import net.minecraft.world.phys.Vec3;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.QuarkModule;
 
+import javax.annotation.Nonnull;
+
 public class QuarkBoatItem extends QuarkItem {
 
 	private static final Predicate<Entity> ENTITY_PREDICATE = EntitySelector.NO_SPECTATORS.and(Entity::isPickable);
@@ -30,13 +32,14 @@ public class QuarkBoatItem extends QuarkItem {
 
 	public QuarkBoatItem(String type, QuarkModule module) {
 		super(type + "_boat", module,  (new Item.Properties()).stacksTo(1).tab(CreativeModeTab.TAB_TRANSPORTATION));
-		
+
 		this.type = type;
 	}
 
 	// Vanilla copy
+	@Nonnull
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level p_40622_, Player p_40623_, InteractionHand p_40624_) {
+	public InteractionResultHolder<ItemStack> use(@Nonnull Level p_40622_, Player p_40623_, @Nonnull InteractionHand p_40624_) {
 		ItemStack itemstack = p_40623_.getItemInHand(p_40624_);
 		HitResult hitresult = getPlayerPOVHitResult(p_40622_, p_40623_, ClipContext.Fluid.ANY);
 		if (hitresult.getType() == HitResult.Type.MISS) {

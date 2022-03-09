@@ -60,7 +60,7 @@ import vazkii.quark.content.mobs.module.ToretoiseModule;
 public class Toretoise extends Animal {
 
 	public static final int ORE_TYPES = 5;
-	public static final int ANGERY_TIME = 20; 
+	public static final int ANGERY_TIME = 20;
 
 	private static final String TAG_TAMED = "tamed";
 	private static final String TAG_ORE = "oreType";
@@ -99,7 +99,7 @@ public class Toretoise extends Animal {
 		goalSelector.addGoal(4, new LookAtPlayerGoal(this, Player.class, 6.0F));
 		goalSelector.addGoal(5, new RandomLookAroundGoal(this));
 	}
-	
+
 	private Ingredient getGoodFood() {
 		if(goodFood == null)
 			computeGoodFood();
@@ -116,7 +116,7 @@ public class Toretoise extends Animal {
 	}
 
 	@Override
-	public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_213386_1_, DifficultyInstance p_213386_2_, MobSpawnType p_213386_3_, SpawnGroupData p_213386_4_, CompoundTag p_213386_5_) {
+	public SpawnGroupData finalizeSpawn(@Nonnull ServerLevelAccessor p_213386_1_, @Nonnull DifficultyInstance p_213386_2_, @Nonnull MobSpawnType p_213386_3_, SpawnGroupData p_213386_4_, CompoundTag p_213386_5_) {
 		popOre(true);
 		return p_213386_4_;
 	}
@@ -141,8 +141,9 @@ public class Toretoise extends Animal {
 		return getOreType() == 0 && eatCooldown == 0;
 	}
 
+	@Nonnull
 	@Override
-	public SoundEvent getEatingSound(ItemStack itemStackIn) {
+	public SoundEvent getEatingSound(@Nonnull ItemStack itemStackIn) {
 		return null;
 	}
 //
@@ -195,7 +196,7 @@ public class Toretoise extends Animal {
 						DamageSource useSource = damageSource;
 						if(e == aggressor)
 							useSource = DamageSource.mobAttack(this);
-						
+
 						e.hurt(useSource, 4 + level.getDifficulty().ordinal());
 					}
 				}
@@ -263,7 +264,7 @@ public class Toretoise extends Animal {
 		Item drop = null;
 		int countMult = 1;
 		switch(ore) {
-		case 1: 
+		case 1:
 			drop = Items.COAL;
 			break;
 		case 2:
@@ -336,7 +337,7 @@ public class Toretoise extends Animal {
 	}
 
 	@Override
-	public boolean isFood(ItemStack stack) {
+	public boolean isFood(@Nonnull ItemStack stack) {
 		return getGoodFood().test(stack);
 	}
 
@@ -350,7 +351,7 @@ public class Toretoise extends Animal {
 	}
 
 	@Override
-	public boolean checkSpawnRules(@Nonnull LevelAccessor world, MobSpawnType reason) {
+	public boolean checkSpawnRules(@Nonnull LevelAccessor world, @Nonnull MobSpawnType reason) {
 		BlockState state = world.getBlockState((new BlockPos(position())).below());
 		if (state.getMaterial() != Material.STONE)
 			return false;
@@ -364,7 +365,7 @@ public class Toretoise extends Animal {
 	}
 
 	@Override
-	public boolean causeFallDamage(float distance, float damageMultiplier, DamageSource source) {
+	public boolean causeFallDamage(float distance, float damageMultiplier, @Nonnull DamageSource source) {
 		return false;
 	}
 
@@ -374,7 +375,7 @@ public class Toretoise extends Animal {
 	}
 
 	@Override
-	public boolean canBeLeashed(Player player) {
+	public boolean canBeLeashed(@Nonnull Player player) {
 		return false;
 	}
 
@@ -389,7 +390,7 @@ public class Toretoise extends Animal {
 	}
 
 	@Override
-	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+	protected SoundEvent getHurtSound(@Nonnull DamageSource damageSourceIn) {
 		return QuarkSounds.ENTITY_TORETOISE_HURT;
 	}
 
@@ -403,7 +404,7 @@ public class Toretoise extends Animal {
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundTag compound) {
+	public void addAdditionalSaveData(@Nonnull CompoundTag compound) {
 		super.addAdditionalSaveData(compound);
 		compound.putBoolean(TAG_TAMED, isTamed);
 		compound.putInt(TAG_ORE, getOreType());
@@ -412,7 +413,7 @@ public class Toretoise extends Animal {
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundTag compound) {
+	public void readAdditionalSaveData(@Nonnull CompoundTag compound) {
 		super.readAdditionalSaveData(compound);
 		isTamed = compound.getBoolean(TAG_TAMED);
 		entityData.set(ORE_TYPE, compound.getInt(TAG_ORE));
@@ -423,12 +424,12 @@ public class Toretoise extends Animal {
     public static AttributeSupplier.Builder prepareAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 60.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.08D) 
+                .add(Attributes.MOVEMENT_SPEED, 0.08D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D);
     }
 
 	@Override // createChild
-	public Toretoise getBreedOffspring(ServerLevel sworld, AgeableMob otherParent) {
+	public Toretoise getBreedOffspring(@Nonnull ServerLevel sworld, @Nonnull AgeableMob otherParent) {
 		Toretoise e = new Toretoise(ToretoiseModule.toretoiseType, level);
 		e.kill(); // kill the entity cuz toretoise doesn't make babies
 		return e;

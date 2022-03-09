@@ -7,15 +7,18 @@ import net.minecraft.world.entity.animal.Dolphin;
 import vazkii.quark.content.client.module.VariantAnimalTexturesModule;
 import vazkii.quark.content.client.module.VariantAnimalTexturesModule.VariantTextureType;
 
+import javax.annotation.Nonnull;
+
 public class VariantDolphinRenderer extends DolphinRenderer {
 
 	public VariantDolphinRenderer(EntityRendererProvider.Context context) {
 		super(context);
 	}
 
+	@Nonnull
 	@Override
-	public ResourceLocation getTextureLocation(Dolphin entity) {
+	public ResourceLocation getTextureLocation(@Nonnull Dolphin entity) {
 		return VariantAnimalTexturesModule.getTextureOrShiny(entity, VariantTextureType.DOLPHIN, () -> super.getTextureLocation(entity));
 	}
-	
+
 }

@@ -18,6 +18,8 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import vazkii.quark.base.module.QuarkModule;
 
+import javax.annotation.Nonnull;
+
 public class SoulFurnaceBlock extends VariantFurnaceBlock {
 
 	public static final BooleanProperty SOUL = BooleanProperty.create("soul");
@@ -29,7 +31,7 @@ public class SoulFurnaceBlock extends VariantFurnaceBlock {
 	}
 
 	@Override
-	public void animateTick(BlockState state, Level level, BlockPos pos, Random random) {
+	public void animateTick(BlockState state, @Nonnull Level level, @Nonnull BlockPos pos, @Nonnull Random random) {
 		if(state.getValue(LIT) && state.getValue(SOUL)) {
 			double d0 = (double)pos.getX() + 0.5D;
 			double d1 = (double)pos.getY();
@@ -46,10 +48,10 @@ public class SoulFurnaceBlock extends VariantFurnaceBlock {
 			double d7 = direction$axis == Direction.Axis.Z ? (double)direction.getStepZ() * 0.52D : d4;
 			level.addParticle(ParticleTypes.SMOKE, d0 + d5, d1 + d6, d2 + d7, 0.0D, 0.0D, 0.0D);
 			level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, d0 + d5, d1 + d6, d2 + d7, 0.0D, 0.0D, 0.0D);
-			
+
 			return;
 		}
-		
+
 		super.animateTick(state, level, pos, random);
 	}
 
@@ -62,8 +64,9 @@ public class SoulFurnaceBlock extends VariantFurnaceBlock {
 		return super.getStateForPlacement(context).setValue(SOUL, downState.is(BlockTags.SOUL_FIRE_BASE_BLOCKS));
 	}
 
+	@Nonnull
 	@Override
-	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+	public BlockState updateShape(@Nonnull BlockState stateIn, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull LevelAccessor worldIn, @Nonnull BlockPos currentPos, @Nonnull BlockPos facingPos) {
 		if(facing == Direction.DOWN)
 			return stateIn.setValue(SOUL, facingState.is(BlockTags.SOUL_FIRE_BASE_BLOCKS));
 
@@ -71,7 +74,7 @@ public class SoulFurnaceBlock extends VariantFurnaceBlock {
 	}
 
 	@Override
-	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(@Nonnull StateDefinition.Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
 		builder.add(SOUL);
 	}

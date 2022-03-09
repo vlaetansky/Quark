@@ -148,12 +148,12 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData {
 
 	@Nullable
 	@Override
-	protected SoundEvent getHurtSound(DamageSource source) {
+	protected SoundEvent getHurtSound(@Nonnull DamageSource source) {
 		return QuarkSounds.ENTITY_CRAB_HURT;
 	}
 
 	@Override
-	protected float getStandingEyeHeight(Pose pose, EntityDimensions size) {
+	protected float getStandingEyeHeight(@Nonnull Pose pose, EntityDimensions size) {
 		return 0.2f * size.height;
 	}
 
@@ -193,9 +193,9 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData {
 
 		if(!level.isClientSide && entityData.get(VARIANT) == -1) {
 			int variant = 0;
-			if(random.nextBoolean()) // Color change 
+			if(random.nextBoolean()) // Color change
 				variant += random.nextInt(COLORS - 1) + 1;
-			
+
 			if(random.nextInt(3) == 0) // Mold
 				variant += COLORS;
 
@@ -226,7 +226,7 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData {
 
 	@Nonnull
 	@Override
-	public EntityDimensions getDimensions(Pose poseIn) {
+	public EntityDimensions getDimensions(@Nonnull Pose poseIn) {
 		return super.getDimensions(poseIn).scale(this.getSizeModifier());
 	}
 
@@ -246,9 +246,9 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData {
 				source == DamageSource.LIGHTNING_BOLT ||
 				getSizeModifier() > 1 && source.isFire();
 	}
-	
+
 	@Override
-	public void thunderHit(ServerLevel sworld, LightningBolt lightningBolt) { // onStruckByLightning
+	public void thunderHit(@Nonnull ServerLevel sworld, @Nonnull LightningBolt lightningBolt) { // onStruckByLightning
 		if (lightningCooldown > 0 || level.isClientSide)
 			return;
 
@@ -274,7 +274,7 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData {
 	}
 
 	@Override
-	protected void doPush(Entity entityIn) {
+	protected void doPush(@Nonnull Entity entityIn) {
 		super.doPush(entityIn);
 		if (level.getDifficulty() != Difficulty.PEACEFUL && !noSpike) {
 			if (entityIn instanceof LivingEntity && !(entityIn instanceof Crab))
@@ -293,16 +293,16 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData {
 					Ingredient.of(Items.WHEAT, Items.CHICKEN),
 					Ingredient.of(ItemTags.FISHES)
 					));
-		
+
 		return temptationItems;
 	}
 
 	@Nullable
 	@Override // createChild
-	public AgeableMob getBreedOffspring(ServerLevel sworld, @Nonnull AgeableMob other) {
+	public AgeableMob getBreedOffspring(@Nonnull ServerLevel sworld, @Nonnull AgeableMob other) {
 		return new Crab(CrabsModule.crabType, level);
 	}
-	
+
 	@Nonnull
 	@Override
 	protected ResourceLocation getDefaultLootTable() {
@@ -321,7 +321,7 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void setRecordPlayingNearby(BlockPos pos, boolean isPartying) {
+	public void setRecordPlayingNearby(@Nonnull BlockPos pos, boolean isPartying) {
 		party(pos, isPartying);
 	}
 
@@ -354,7 +354,7 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData {
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundTag compound) {
+	public void readAdditionalSaveData(@Nonnull CompoundTag compound) {
 		super.readAdditionalSaveData(compound);
 
 		lightningCooldown = compound.getInt("LightningCooldown");
@@ -370,7 +370,7 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData {
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundTag compound) {
+	public void addAdditionalSaveData(@Nonnull CompoundTag compound) {
 		super.addAdditionalSaveData(compound);
 		compound.putFloat("EnemyCrabRating", getSizeModifier());
 		compound.putInt("LightningCooldown", lightningCooldown);

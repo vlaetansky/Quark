@@ -51,10 +51,10 @@ public class RopeBlock extends QuarkBlock implements IBlockItemProvider {
 
 	public RopeBlock(String regname, QuarkModule module, CreativeModeTab creativeTab, Properties properties) {
 		super(regname, module, creativeTab, properties);
-		
+
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
 	}
-	
+
 	@Override
 	public BlockItem provideItemBlock(Block block, Item.Properties properties) {
 		return new BlockItem(block, properties) {
@@ -64,21 +64,23 @@ public class RopeBlock extends QuarkBlock implements IBlockItemProvider {
 			}
 		};
 	}
-	
+
+	@Nonnull
 	@Override
-	public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+	public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
 		return Shapes.empty();
 	}
-	
+
+	@Nonnull
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	public InteractionResult use(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
 		if(hand == InteractionHand.MAIN_HAND) {
 			ItemStack stack = player.getItemInHand(hand);
 			if(stack.getItem() == asItem() && !player.isDiscrete()) {
 				if(pullDown(worldIn, pos)) {
 					if(!player.isCreative())
 						stack.shrink(1);
-					
+
 					worldIn.playSound(null, pos, soundType.getPlaceSound(), SoundSource.BLOCKS, 0.5F, 1F);
 					return InteractionResult.SUCCESS;
 				}
@@ -110,41 +112,41 @@ public class RopeBlock extends QuarkBlock implements IBlockItemProvider {
 						if(!player.addItem(new ItemStack(this)))
 							player.drop(new ItemStack(this), false);
 					}
-					
+
 					worldIn.playSound(null, pos, soundType.getBreakSound(), SoundSource.BLOCKS, 0.5F, 1F);
 					return InteractionResult.SUCCESS;
 				}
 			}
 		}
-		
+
 		return InteractionResult.PASS;
 	}
 
 	public boolean pullUp(Level world, BlockPos pos) {
 		BlockPos basePos = pos;
-		
+
 		while(true) {
 			pos = pos.below();
 			BlockState state = world.getBlockState(pos);
 			if(state.getBlock() != this)
 				break;
 		}
-		
+
 		BlockPos ropePos = pos.above();
 		if(ropePos.equals(basePos))
 			return false;
 
 		world.setBlockAndUpdate(ropePos, Blocks.AIR.defaultBlockState());
 		moveBlock(world, pos, ropePos);
-		
+
 		return true;
 	}
-	
+
 	public boolean pullDown(Level world, BlockPos pos) {
 		boolean can;
 		boolean endRope = false;
 		boolean wasAirAtEnd = false;
-		
+
 		do {
 			pos = pos.below();
 			if (!world.isInWorldBounds(pos))
@@ -152,23 +154,23 @@ public class RopeBlock extends QuarkBlock implements IBlockItemProvider {
 
 			BlockState state = world.getBlockState(pos);
 			Block block = state.getBlock();
-			
+
 			if(block == this)
 				continue;
-			
+
 			if(endRope) {
 				can = wasAirAtEnd || world.isEmptyBlock(pos) || state.getMaterial().isReplaceable();
 				break;
 			}
-			
+
 			endRope = true;
 			wasAirAtEnd = world.isEmptyBlock(pos);
 		} while(true);
-		
+
 		if(can) {
 			BlockPos ropePos = pos.above();
 			moveBlock(world, ropePos, pos);
-			
+
 			BlockState ropePosState = world.getBlockState(ropePos);
 
 			if(world.isEmptyBlock(ropePos) || ropePosState.getMaterial().isReplaceable()) {
@@ -176,7 +178,7 @@ public class RopeBlock extends QuarkBlock implements IBlockItemProvider {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -191,7 +193,7 @@ public class RopeBlock extends QuarkBlock implements IBlockItemProvider {
 		return pos;
 
 	}
-	
+
 	// mojang tag pls
 	private boolean isIllegalBlock(Block block) {
 		return block == Blocks.OBSIDIAN || block == Blocks.CRYING_OBSIDIAN || block == Blocks.RESPAWN_ANCHOR;
@@ -200,11 +202,11 @@ public class RopeBlock extends QuarkBlock implements IBlockItemProvider {
 	private void moveBlock(Level world, BlockPos srcPos, BlockPos dstPos) {
 		BlockState state = world.getBlockState(srcPos);
 		Block block = state.getBlock();
-		
+
 		if(state.getDestroySpeed(world, srcPos) == -1 || !state.canSurvive(world, dstPos) || state.isAir() ||
 				state.getPistonPushReaction() != PushReaction.NORMAL || isIllegalBlock(block))
 			return;
-		
+
 		BlockEntity tile = world.getBlockEntity(srcPos);
 		if(tile != null) {
 			if(RopeModule.forceEnableMoveTileEntities ? PistonsMoveTileEntitiesModule.shouldMoveTE(state) : PistonsMoveTileEntitiesModule.shouldMoveTE(true, state))
@@ -212,15 +214,15 @@ public class RopeBlock extends QuarkBlock implements IBlockItemProvider {
 
 			tile.setRemoved();
 		}
-		
+
 		FluidState fluidState = world.getFluidState(srcPos);
 		world.setBlockAndUpdate(srcPos, fluidState.createLegacyBlock());
-		
+
 		BlockState nextState = Block.updateFromNeighbourShapes(state, world, dstPos);
 		if(nextState.getProperties().contains(BlockStateProperties.WATERLOGGED))
 			nextState = nextState.setValue(BlockStateProperties.WATERLOGGED, world.getFluidState(dstPos).getType() == Fluids.WATER);
 		world.setBlockAndUpdate(dstPos, nextState);
-		
+
 		if(tile != null) {
 			BlockEntity target = BlockEntity.loadStatic(dstPos, state, tile.saveWithFullMetadata());
 			if (target != null) {
@@ -234,14 +236,14 @@ public class RopeBlock extends QuarkBlock implements IBlockItemProvider {
 	}
 
 	@Override
-	public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
+	public boolean canSurvive(@Nonnull BlockState state, LevelReader worldIn, BlockPos pos) {
 		BlockPos upPos = pos.above();
 		BlockState upState = worldIn.getBlockState(upPos);
 		return upState.getBlock() == this || upState.isFaceSturdy(worldIn, upPos, Direction.DOWN);
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+	public void neighborChanged(BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Block blockIn, @Nonnull BlockPos fromPos, boolean isMoving) {
 		if(!state.canSurvive(worldIn, pos)) {
 			worldIn.levelEvent(2001, pos, Block.getId(worldIn.getBlockState(pos)));
 			dropResources(state, worldIn, pos);
@@ -256,7 +258,7 @@ public class RopeBlock extends QuarkBlock implements IBlockItemProvider {
 
 	@Nonnull
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+	public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
 		return SHAPE;
 	}
 

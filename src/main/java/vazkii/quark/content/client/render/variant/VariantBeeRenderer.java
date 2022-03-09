@@ -15,53 +15,56 @@ import net.minecraft.world.entity.animal.Bee;
 import vazkii.quark.base.Quark;
 import vazkii.quark.content.client.module.VariantAnimalTexturesModule;
 
+import javax.annotation.Nonnull;
+
 public class VariantBeeRenderer extends BeeRenderer {
 
 	public static EntityRendererProvider<Bee> OLD_BEE_RENDER_FACTORY = null;
 	private EntityRenderer<? super Bee> OLD_BEE_RENDER = null;
-	
+
 	private static final List<String> VARIANTS = ImmutableList.of(
-			"acebee", "agenbee", "arobee", "beefluid", "beesexual", 
-			"beequeer", "enbee", "gaybee", "interbee", "lesbeean", 
+			"acebee", "agenbee", "arobee", "beefluid", "beesexual",
+			"beequeer", "enbee", "gaybee", "interbee", "lesbeean",
 			"panbee", "polysexbee", "transbee", "helen");
-	
+
 	public VariantBeeRenderer(EntityRendererProvider.Context context) {
 		super(context);
-		
+
 		if(OLD_BEE_RENDER_FACTORY != null)
 			OLD_BEE_RENDER = OLD_BEE_RENDER_FACTORY.create(context);
 	}
-	
+
+	@Nonnull
 	@Override
 	public ResourceLocation getTextureLocation(Bee entity) {
 		UUID id = entity.getUUID();
 		long most = id.getMostSignificantBits();
-		
+
 		// From https://news.gallup.com/poll/329708/lgbt-identification-rises-latest-estimate.aspx
 		final double lgbtChance = 0.056;
 		boolean lgbt = VariantAnimalTexturesModule.everyBeeIsLGBT ||  (new Random(most)).nextDouble() < lgbtChance;
-		
+
 		if(entity.hasCustomName() || lgbt) {
 			String custName = entity.hasCustomName() ? entity.getCustomName().getString().trim() : "";
 			String name = custName.toLowerCase(Locale.ROOT);
-			
+
 			if(!VARIANTS.contains(name)) {
 				if(custName.matches("wire(se|bee)gal"))
 					name = "enbee";
 				else if(lgbt)
 					name = VARIANTS.get(Math.abs((int) (most % (VARIANTS.size() - 1)))); // -1 to not spawn helen bee naturally
 			}
-			
+
 			if(VARIANTS.contains(name)) {
 				String type = "normal";
 				boolean angery = entity.hasStung();
 				boolean nectar = entity.hasNectar();
-				
+
 				if(angery)
 					type = nectar ? "angry_nectar" : "angry";
 				else if(nectar)
 					type = "nectar";
-				
+
 				String path = String.format("textures/model/entity/variants/bees/%s/%s.png", name, type);
 				return new ResourceLocation(Quark.MOD_ID, path);
 			}
@@ -70,7 +73,7 @@ public class VariantBeeRenderer extends BeeRenderer {
 		if(OLD_BEE_RENDER != null) {
 			return OLD_BEE_RENDER.getTextureLocation(entity);
 		}
-		
+
 		return super.getTextureLocation(entity);
 	}
 

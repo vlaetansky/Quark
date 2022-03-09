@@ -36,7 +36,7 @@ public class ChuteBlock extends QuarkBlock implements EntityBlock {
 	public ChuteBlock(String regname, QuarkModule module, CreativeModeTab creativeTab, Properties properties) {
 		super(regname, module, creativeTab, properties);
 		registerDefaultState(defaultBlockState().setValue(ENABLED, true));
-		
+
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT_MIPPED);
 	}
 
@@ -51,7 +51,7 @@ public class ChuteBlock extends QuarkBlock implements EntityBlock {
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+	public void neighborChanged(BlockState state, Level worldIn, @Nonnull BlockPos pos, @Nonnull Block blockIn, @Nonnull BlockPos fromPos, boolean isMoving) {
 		boolean flag = !worldIn.hasNeighborSignal(pos);
 
 		if(flag != state.getValue(ENABLED))
@@ -60,7 +60,7 @@ public class ChuteBlock extends QuarkBlock implements EntityBlock {
 
 	@Nonnull
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+	public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
 		return DOWN_SHAPE;
 	}
 
@@ -70,12 +70,12 @@ public class ChuteBlock extends QuarkBlock implements EntityBlock {
 	}
 
 	@Override
-	public boolean isPathfindable(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, PathComputationType type) {
+	public boolean isPathfindable(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull PathComputationType type) {
 		return false;
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
+	public BlockEntity newBlockEntity(@Nonnull BlockPos p_153215_, @Nonnull BlockState p_153216_) {
 		return new ChuteBlockEntity(p_153215_, p_153216_);
 	}
 

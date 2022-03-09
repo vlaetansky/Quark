@@ -20,6 +20,8 @@ import net.minecraft.network.chat.TranslatableComponent;
 import vazkii.quark.base.client.handler.TopLayerTooltipHandler;
 import vazkii.quark.base.handler.MiscUtil;
 
+import javax.annotation.Nonnull;
+
 public class MiniInventoryButton extends Button {
 
 	private final Consumer<List<String>> tooltip;
@@ -47,7 +49,7 @@ public class MiniInventoryButton extends Button {
 	}
 
 	@Override
-	public void render(PoseStack matrix, int p_render_1_, int p_render_2_, float p_render_3_) {
+	public void render(@Nonnull PoseStack matrix, int p_render_1_, int p_render_2_, float p_render_3_) {
 		if(parent instanceof RecipeUpdateListener)
 			x = parent.getGuiLeft() + startX;
 
@@ -55,11 +57,11 @@ public class MiniInventoryButton extends Button {
 	}
 
 	@Override
-	public void renderButton(PoseStack matrix, int mouseX, int mouseY, float pticks) {
+	public void renderButton(@Nonnull PoseStack matrix, int mouseX, int mouseY, float pticks) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, MiscUtil.GENERAL_ICONS);
-		
+
 		RenderSystem.enableBlend();
 		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 		RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
@@ -75,6 +77,7 @@ public class MiniInventoryButton extends Button {
 			TopLayerTooltipHandler.setTooltip(getTooltip(), mouseX, mouseY);
 	}
 
+	@Nonnull
 	@Override
 	protected MutableComponent createNarrationMessage() {
 		List<String> tooltip = getTooltip();

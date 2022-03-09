@@ -7,14 +7,17 @@ import net.minecraft.world.entity.animal.Rabbit;
 import vazkii.quark.content.client.module.VariantAnimalTexturesModule;
 import vazkii.quark.content.client.module.VariantAnimalTexturesModule.VariantTextureType;
 
+import javax.annotation.Nonnull;
+
 public class VariantRabbitRenderer extends RabbitRenderer {
 
 	public VariantRabbitRenderer(EntityRendererProvider.Context context) {
 		super(context);
 	}
-	
+
+	@Nonnull
 	@Override
-	public ResourceLocation getTextureLocation(Rabbit entity) {
+	public ResourceLocation getTextureLocation(@Nonnull Rabbit entity) {
 		return VariantAnimalTexturesModule.getTextureOrShiny(entity, VariantTextureType.RABBIT, () -> super.getTextureLocation(entity));
 	}
 

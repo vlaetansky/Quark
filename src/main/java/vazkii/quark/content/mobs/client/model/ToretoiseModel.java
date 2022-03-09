@@ -17,6 +17,8 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import vazkii.arl.util.ClientTicker;
 import vazkii.quark.content.mobs.entity.Toretoise;
 
+import javax.annotation.Nonnull;
+
 public class ToretoiseModel extends EntityModel<Toretoise> {
 
 	private Toretoise entity;
@@ -89,7 +91,7 @@ public class ToretoiseModel extends EntityModel<Toretoise> {
 			.texOffs(0, 38)
 			.addBox(-4.0F, -4.0F, -8.0F, 8, 5, 8),
 		PartPose.offset(0.0F, 16.0F, -13.0F));
-		
+
 		head.addOrReplaceChild("mouth",
 			CubeListBuilder.create()
 			.texOffs(66, 38)
@@ -222,13 +224,13 @@ public class ToretoiseModel extends EntityModel<Toretoise> {
 	}
 
 	@Override
-	public void setupAnim(Toretoise entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(@Nonnull Toretoise entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.entity = entity;
 		animFrames = limbSwing;
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack matrix, VertexConsumer vb, int p_225598_3_, int p_225598_4_, float p_225598_5_, float p_225598_6_, float p_225598_7_, float p_225598_8_) {
+	public void renderToBuffer(PoseStack matrix, @Nonnull VertexConsumer vb, int p_225598_3_, int p_225598_4_, float p_225598_5_, float p_225598_6_, float p_225598_7_, float p_225598_8_) {
 		matrix.pushPose();
 		int bufferTime = 10;
 		if(entity.angeryTicks > 0 && entity.angeryTicks < Toretoise.ANGERY_TIME - bufferTime) {
@@ -254,9 +256,9 @@ public class ToretoiseModel extends EntityModel<Toretoise> {
 		float rideMultiplier = 0;
 
 		if(entity.rideTime > 0)
-			rideMultiplier = Math.min(30, entity.rideTime - 1 + ClientTicker.partialTicks) / 30.0F;  
+			rideMultiplier = Math.min(30, entity.rideTime - 1 + ClientTicker.partialTicks) / 30.0F;
 
-		bodyTrans *= (1F - rideMultiplier); 
+		bodyTrans *= (1F - rideMultiplier);
 
 		matrix.translate(0, bodyTrans, 0);
 		matrix.mulPose(Vector3f.ZP.rotation((bodyTrans - scale) * 0.5F));

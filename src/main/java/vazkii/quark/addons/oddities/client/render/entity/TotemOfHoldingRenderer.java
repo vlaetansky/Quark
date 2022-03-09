@@ -63,7 +63,7 @@ public class TotemOfHoldingRenderer extends EntityRenderer<TotemOfHoldingEntity>
     }
 
     @Override
-    protected int getBlockLightLevel(TotemOfHoldingEntity entityIn, BlockPos position) {
+    protected int getBlockLightLevel(@Nonnull TotemOfHoldingEntity entityIn, @Nonnull BlockPos position) {
         return 15;
     }
 

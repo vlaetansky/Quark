@@ -121,7 +121,7 @@ public class Stoneling extends PathfinderMob {
 		goalSelector.addGoal(1, waryGoal = new ActWaryGoal(this, 0.1, 6, () -> StonelingsModule.cautiousStonelings));
 		goalSelector.addGoal(0, new IfFlagGoal(new TemptGoal(this, 0.6, Ingredient.of(temptTag()), false), () -> StonelingsModule.tamableStonelings));
 	}
-	
+
 	private TagKey<Item> temptTag() {
 		return ModuleLoader.INSTANCE.isModuleEnabled(GlimmeringWealdModule.class) ? GlimmeringWealdModule.glowShroomFeedablesTag : Tags.Items.GEMS_DIAMOND;
 	}
@@ -156,7 +156,7 @@ public class Stoneling extends PathfinderMob {
 	public boolean removeWhenFarAway(double distanceToClosestPlayer) {
 		return !isTame;
 	}
-	
+
 	@Override
 	public void checkDespawn() {
 		boolean wasAlive = isAlive();
@@ -167,6 +167,7 @@ public class Stoneling extends PathfinderMob {
 					passenger.discard();
 	}
 
+	@Nonnull
 	@Override // processInteract
 	public InteractionResult mobInteract(Player player, @Nonnull InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
@@ -179,7 +180,7 @@ public class Stoneling extends PathfinderMob {
 
 	@Nonnull
 	@Override
-	public InteractionResult interactAt(Player player, Vec3 vec, InteractionHand hand) {
+	public InteractionResult interactAt(@Nonnull Player player, @Nonnull Vec3 vec, @Nonnull InteractionHand hand) {
 		if(hand == InteractionHand.MAIN_HAND && isAlive()) {
 			ItemStack playerItem = player.getItemInHand(hand);
 			Vec3 pos = position();
@@ -258,7 +259,7 @@ public class Stoneling extends PathfinderMob {
 
 	@Nullable
 	@Override
-	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData data, @Nullable CompoundTag compound) {
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, @Nonnull DifficultyInstance difficulty, @Nonnull MobSpawnType spawnReason, @Nullable SpawnGroupData data, @Nullable CompoundTag compound) {
 		Random rand = world.getRandom();
 		byte variant;
 		if (data instanceof StonelingVariant)
@@ -313,7 +314,7 @@ public class Stoneling extends PathfinderMob {
 	}
 
 	@Override
-	public boolean causeFallDamage(float distance, float damageMultiplier, DamageSource source) {
+	public boolean causeFallDamage(float distance, float damageMultiplier, @Nonnull DamageSource source) {
 		return false;
 	}
 
@@ -349,7 +350,7 @@ public class Stoneling extends PathfinderMob {
 	}
 
 	@Override
-	protected void dropCustomDeathLoot(DamageSource damage, int looting, boolean wasRecentlyHit) {
+	protected void dropCustomDeathLoot(@Nonnull DamageSource damage, int looting, boolean wasRecentlyHit) {
 		super.dropCustomDeathLoot(damage, looting, wasRecentlyHit);
 
 		ItemStack stack = getCarryingItem();
@@ -378,7 +379,7 @@ public class Stoneling extends PathfinderMob {
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundTag compound) {
+	public void readAdditionalSaveData(@Nonnull CompoundTag compound) {
 		super.readAdditionalSaveData(compound);
 
 		if(compound.contains(TAG_CARRYING_ITEM, 10)) {
@@ -397,7 +398,7 @@ public class Stoneling extends PathfinderMob {
 	public boolean hasLineOfSight(Entity entityIn) {
 		Vec3 pos = position();
 		Vec3 epos = entityIn.position();
-		
+
 		Vec3 origin = new Vec3(pos.x, pos.y + getEyeHeight(), pos.z);
 		float otherEyes = entityIn.getEyeHeight();
 		for (float height = 0; height <= otherEyes; height += otherEyes / 8) {
@@ -409,7 +410,7 @@ public class Stoneling extends PathfinderMob {
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundTag compound) {
+	public void addAdditionalSaveData(@Nonnull CompoundTag compound) {
 		super.addAdditionalSaveData(compound);
 
 		compound.put(TAG_CARRYING_ITEM, getCarryingItem().serializeNBT());
@@ -421,23 +422,23 @@ public class Stoneling extends PathfinderMob {
 	}
 
 	public static boolean spawnPredicate(EntityType<? extends Stoneling> type, ServerLevelAccessor world, MobSpawnType reason, BlockPos pos, Random rand) {
-		return pos.getY() <= StonelingsModule.maxYLevel 
-				&& (MiscUtil.validSpawnLight(world, pos, rand) || world.getBiome(pos).is(GlimmeringWealdModule.BIOME_NAME)) 
+		return pos.getY() <= StonelingsModule.maxYLevel
+				&& (MiscUtil.validSpawnLight(world, pos, rand) || world.getBiome(pos).is(GlimmeringWealdModule.BIOME_NAME))
 				&& MiscUtil.validSpawnLocation(type, world, reason, pos);
 	}
 
 	@Override
-	public boolean checkSpawnRules(@Nonnull LevelAccessor world, MobSpawnType reason) {
+	public boolean checkSpawnRules(@Nonnull LevelAccessor world, @Nonnull MobSpawnType reason) {
 		BlockState state = world.getBlockState(new BlockPos(position()).below());
 		if (state.getMaterial() != Material.STONE)
 			return false;
-		
+
 		return StonelingsModule.dimensions.canSpawnHere(world) && super.checkSpawnRules(world, reason);
 	}
 
 	@Nullable
 	@Override
-	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+	protected SoundEvent getHurtSound(@Nonnull DamageSource damageSourceIn) {
 		return QuarkSounds.ENTITY_STONELING_CRY;
 	}
 
@@ -478,10 +479,10 @@ public class Stoneling extends PathfinderMob {
 	}
 
 	@Override
-	public float getWalkTargetValue(BlockPos pos, LevelReader world) {
+	public float getWalkTargetValue(@Nonnull BlockPos pos, LevelReader world) {
 		return 0.5F - world.getBrightness(pos);
 	}
-	
+
 	public static enum StonelingVariant implements SpawnGroupData {
 		STONE("stone", Blocks.COBBLESTONE, Blocks.STONE),
 		ANDESITE("andesite", Blocks.ANDESITE, Blocks.POLISHED_ANDESITE),
@@ -520,5 +521,5 @@ public class Stoneling extends PathfinderMob {
 			return blocks;
 		}
 	}
-	
+
 }

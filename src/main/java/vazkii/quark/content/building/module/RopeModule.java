@@ -40,7 +40,7 @@ public class RopeModule extends QuarkModule {
 						.strength(0.5f)
 						.sound(SoundType.WOOL));
 	}
-	
+
 	@Override
 	public void configChanged() {
 		if(enableDispenserBehavior)
@@ -48,17 +48,17 @@ public class RopeModule extends QuarkModule {
 		else
 			DispenserBlock.DISPENSER_REGISTRY.remove(rope.asItem());
 	}
-	
+
 	public static class BehaviourRope extends OptionalDispenseItemBehavior {
-		
+
 		@Nonnull
 		@Override
-		protected ItemStack execute(BlockSource source, ItemStack stack) {
+		protected ItemStack execute(BlockSource source, @Nonnull ItemStack stack) {
 			Direction facing = source.getBlockState().getValue(DispenserBlock.FACING);
 			BlockPos pos = source.getPos().relative(facing);
 			Level world = source.getLevel();
 			setSuccess(false);
-			
+
 			BlockState state = world.getBlockState(pos);
 			if(state.getBlock() == rope) {
 				if(((RopeBlock) rope).pullDown(world, pos)) {
@@ -72,13 +72,13 @@ public class RopeModule extends QuarkModule {
 				world.playSound(null, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 				setSuccess(true);
 				stack.shrink(1);
-				
+
 				return stack;
 			}
-			
+
 			return stack;
 		}
-		
+
 	}
-	
+
 }

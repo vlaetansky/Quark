@@ -7,14 +7,17 @@ import net.minecraft.world.entity.animal.Chicken;
 import vazkii.quark.content.client.module.VariantAnimalTexturesModule;
 import vazkii.quark.content.client.module.VariantAnimalTexturesModule.VariantTextureType;
 
+import javax.annotation.Nonnull;
+
 public class VariantChickenRenderer extends ChickenRenderer {
 
 	public VariantChickenRenderer(EntityRendererProvider.Context context) {
 		super(context);
 	}
+	@Nonnull
 	@Override
-	public ResourceLocation getTextureLocation(Chicken entity) {
+	public ResourceLocation getTextureLocation(@Nonnull Chicken entity) {
 		return VariantAnimalTexturesModule.getTextureOrShiny(entity, VariantTextureType.CHICKEN, VariantAnimalTexturesModule.enableChicken);
 	}
-	
+
 }

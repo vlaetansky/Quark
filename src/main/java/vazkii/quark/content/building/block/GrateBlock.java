@@ -64,7 +64,7 @@ public class GrateBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 
 	@Nonnull
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+	public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
 		return TRUE_SHAPE;
 	}
 
@@ -74,7 +74,7 @@ public class GrateBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 
 	@Nonnull
 	@Override
-	public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, CollisionContext context) {
+	public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
 		Entity entity = context instanceof EntityCollisionContext ? ((EntityCollisionContext) context).getEntity() : null;
 
 		if (entity != null) {
@@ -115,7 +115,7 @@ public class GrateBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 	}
 
 	@Override
-	public boolean isPathfindable(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, PathComputationType path) {
+	public boolean isPathfindable(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nonnull PathComputationType path) {
 		return false;
 	}
 
@@ -123,14 +123,14 @@ public class GrateBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 	public boolean propagatesSkylightDown(BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos) {
 		return !state.getValue(WATERLOGGED);
 	}
-	
-	@Override 
+
+	@Override
 	public boolean isValidSpawn(BlockState state, BlockGetter world, BlockPos pos, Type type, EntityType<?> entityType) {
 		return false;
 	}
 
 	@Override
-	public boolean useShapeForLightOcclusion(BlockState state) {
+	public boolean useShapeForLightOcclusion(@Nonnull BlockState state) {
 		return true;
 	}
 

@@ -22,7 +22,7 @@ public class ElytraDuplicationRecipe extends CustomRecipe {
 	public ElytraDuplicationRecipe(ResourceLocation id) {
 		super(id);
 	}
-	
+
 	@Override
 	public boolean matches(@Nonnull CraftingContainer var1, @Nonnull Level var2) {
 		int sources = 0;
@@ -56,23 +56,23 @@ public class ElytraDuplicationRecipe extends CustomRecipe {
 	@Override
 	public ItemStack getResultItem() {
 		ItemStack stack = new ItemStack(Items.ELYTRA);
-//		if(EnderdragonScales.dyeBlack && ModuleLoader.isFeatureEnabled(DyableElytra.class)) 
+//		if(EnderdragonScales.dyeBlack && ModuleLoader.isFeatureEnabled(DyableElytra.class))
 //			ItemNBTHelper.setInt(stack, DyableElytra.TAG_ELYTRA_DYE, 0);
-		
+
 		return stack;
 	}
-	
+
 	@Nonnull
 	@Override
 	public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
 		NonNullList<ItemStack> ret = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
-		
+
 		for(int i = 0; i < inv.getContainerSize(); i++) {
 			ItemStack stack = inv.getItem(i);
 			if(stack.getItem() == Items.ELYTRA)
 				ret.set(i, stack.copy());
 		}
-		
+
 		return ret;
 	}
 
@@ -80,12 +80,12 @@ public class ElytraDuplicationRecipe extends CustomRecipe {
 	public boolean isSpecial() {
 		return true;
 	}
-	
+
 	@Override
 	public boolean canCraftInDimensions(int width, int height) {
 		return (width * height) >= 2;
 	}
-	
+
 	@Override
 	@Nonnull
 	public NonNullList<Ingredient> getIngredients() {
@@ -95,6 +95,7 @@ public class ElytraDuplicationRecipe extends CustomRecipe {
 		return list;
 	}
 
+	@Nonnull
 	@Override
 	public RecipeSerializer<?> getSerializer() {
 		return SERIALIZER;

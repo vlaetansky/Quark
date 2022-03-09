@@ -69,7 +69,7 @@ public class Forgotten extends Skeleton {
 
 	@Override
 	@Nullable
-	public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
+	public SpawnGroupData finalizeSpawn(@Nonnull ServerLevelAccessor worldIn, @Nonnull DifficultyInstance difficultyIn, @Nonnull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
 		SpawnGroupData ilivingentitydata = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
 		reassessWeaponGoal();
 
@@ -121,7 +121,7 @@ public class Forgotten extends Skeleton {
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundTag compound) {
+	public void addAdditionalSaveData(@Nonnull CompoundTag compound) {
 		super.addAdditionalSaveData(compound);
 
 		CompoundTag sheathed = new CompoundTag();
@@ -130,7 +130,7 @@ public class Forgotten extends Skeleton {
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundTag compound) {
+	public void readAdditionalSaveData(@Nonnull CompoundTag compound) {
 		super.readAdditionalSaveData(compound);
 
 		CompoundTag sheathed = compound.getCompound("sheathed");
@@ -138,17 +138,17 @@ public class Forgotten extends Skeleton {
 	}
 
 	@Override
-	protected float getStandingEyeHeight(Pose poseIn, EntityDimensions sizeIn) {
+	protected float getStandingEyeHeight(@Nonnull Pose poseIn, @Nonnull EntityDimensions sizeIn) {
 		return 2.1F;
 	}
 
 	@Override
-	protected void dropCustomDeathLoot(DamageSource source, int looting, boolean recentlyHitIn) {
+	protected void dropCustomDeathLoot(@Nonnull DamageSource source, int looting, boolean recentlyHitIn) {
 		// NO-OP
 	}
 
 	@Override
-	protected void populateDefaultEquipmentSlots(DifficultyInstance difficulty) {
+	protected void populateDefaultEquipmentSlots(@Nonnull DifficultyInstance difficulty) {
 		super.populateDefaultEquipmentSlots(difficulty);
 
 		prepareEquipment();
@@ -181,8 +181,9 @@ public class Forgotten extends Skeleton {
 		setItemSlot(EquipmentSlot.HEAD, new ItemStack(ForgottenModule.forgotten_hat));
 	}
 
+	@Nonnull
 	@Override
-	protected AbstractArrow getArrow(ItemStack arrowStack, float distanceFactor) {
+	protected AbstractArrow getArrow(@Nonnull ItemStack arrowStack, float distanceFactor) {
 		AbstractArrow arrow = super.getArrow(arrowStack, distanceFactor);
 		if(arrow instanceof Arrow) {
 			ItemStack stack = new ItemStack(Items.TIPPED_ARROW);

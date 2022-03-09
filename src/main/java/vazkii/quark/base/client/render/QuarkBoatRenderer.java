@@ -22,6 +22,8 @@ import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.handler.ModelHandler;
 import vazkii.quark.base.item.boat.QuarkBoat;
 
+import javax.annotation.Nonnull;
+
 public class QuarkBoatRenderer extends EntityRenderer<QuarkBoat> {
 
 	private Map<String, Pair<ResourceLocation, BoatModel>> boatResources;
@@ -35,8 +37,8 @@ public class QuarkBoatRenderer extends EntityRenderer<QuarkBoat> {
 	private static Map<String, Pair<ResourceLocation, BoatModel>> computeBoatResources(EntityRendererProvider.Context context) {
 		return QuarkBoat.boatTypes().collect(ImmutableMap.toImmutableMap(Functions.identity(), name -> {
 			ResourceLocation texture = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/boat/" + name + ".png");
-			BoatModel model = new BoatModel(context.bakeLayer(ModelHandler.quark_boat)); 
-			
+			BoatModel model = new BoatModel(context.bakeLayer(ModelHandler.quark_boat));
+
 			return Pair.of(texture, model);
 		}));
 	}
@@ -44,7 +46,7 @@ public class QuarkBoatRenderer extends EntityRenderer<QuarkBoat> {
 	// All BoatRenderer copy from here on out =====================================================================================================================
 
 	@Override
-	public void render(QuarkBoat p_113929_, float p_113930_, float p_113931_, PoseStack p_113932_, MultiBufferSource p_113933_, int p_113934_) {
+	public void render(QuarkBoat p_113929_, float p_113930_, float p_113931_, PoseStack p_113932_, @Nonnull MultiBufferSource p_113933_, int p_113934_) {
 		p_113932_.pushPose();
 		p_113932_.translate(0.0D, 0.375D, 0.0D);
 		p_113932_.mulPose(Vector3f.YP.rotationDegrees(180.0F - p_113930_));
@@ -80,14 +82,15 @@ public class QuarkBoatRenderer extends EntityRenderer<QuarkBoat> {
 		super.render(p_113929_, p_113930_, p_113931_, p_113932_, p_113933_, p_113934_);
 	}
 
+	@Nonnull
 	@Override
 	@Deprecated // forge: override getModelWithLocation to change the texture / model
-	public ResourceLocation getTextureLocation(QuarkBoat p_113927_) {
+	public ResourceLocation getTextureLocation(@Nonnull QuarkBoat p_113927_) {
 		return getModelWithLocation(p_113927_).getFirst();
 	}
 
-	public Pair<ResourceLocation, BoatModel> getModelWithLocation(QuarkBoat boat) { 
-		return this.boatResources.get(boat.getQuarkBoatType()); 
+	public Pair<ResourceLocation, BoatModel> getModelWithLocation(QuarkBoat boat) {
+		return this.boatResources.get(boat.getQuarkBoatType());
 	}
 
 }

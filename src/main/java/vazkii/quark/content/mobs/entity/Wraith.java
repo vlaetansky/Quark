@@ -31,6 +31,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.content.mobs.module.WraithModule;
 
+import javax.annotation.Nonnull;
+
 public class Wraith extends Zombie {
 
 	public static final ResourceLocation LOOT_TABLE = new ResourceLocation("quark:entities/wraith");
@@ -65,19 +67,19 @@ public class Wraith extends Zombie {
 				.add(Attributes.ARMOR, 0)
 				.add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 0);
 	}
-	
+
 	@Override
-	protected void populateDefaultEquipmentSlots(DifficultyInstance difficulty) {
+	protected void populateDefaultEquipmentSlots(@Nonnull DifficultyInstance difficulty) {
 		// NO-OP
 	}
-	
+
 	@Override
 	protected SoundEvent getAmbientSound() {
 		return getSound(IDLE_SOUND);
 	}
 
 	@Override
-	protected SoundEvent getHurtSound(DamageSource damageSource) {
+	protected SoundEvent getHurtSound(@Nonnull DamageSource damageSource) {
 		return getSound(HURT_SOUND);
 	}
 
@@ -95,20 +97,20 @@ public class Wraith extends Zombie {
 		ResourceLocation loc = new ResourceLocation(entityData.get(param));
 		return ForgeRegistries.SOUND_EVENTS.getValue(loc);
 	}
-	
+
 	@Override
 	public void tick() {
 		super.tick();
-		
+
 		AABB aabb = getBoundingBox();
 		double x = aabb.minX + Math.random() * (aabb.maxX - aabb.minX);
 		double y = aabb.minY + Math.random() * (aabb.maxY - aabb.minY);
 		double z = aabb.minZ + Math.random() * (aabb.maxZ - aabb.minZ);
 		getCommandSenderWorld().addParticle(ParticleTypes.MYCELIUM, x, y, z, 0, 0, 0);
 	}
-	
+
 	@Override
-	public boolean doHurtTarget(Entity entityIn) {
+	public boolean doHurtTarget(@Nonnull Entity entityIn) {
 		boolean did = super.doHurtTarget(entityIn);
 		if(did) {
 			if(entityIn instanceof LivingEntity)
@@ -122,9 +124,9 @@ public class Wraith extends Zombie {
 
 		return did;
 	}
-	
+
 	@Override
-	public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, SpawnGroupData spawnDataIn, CompoundTag dataTag) {
+	public SpawnGroupData finalizeSpawn(@Nonnull ServerLevelAccessor worldIn, @Nonnull DifficultyInstance difficultyIn, @Nonnull MobSpawnType reason, SpawnGroupData spawnDataIn, CompoundTag dataTag) {
 		int idx = random.nextInt(WraithModule.validWraithSounds.size());
 		String sound = WraithModule.validWraithSounds.get(idx);
 		String[] split = sound.split("\\|");
@@ -132,17 +134,17 @@ public class Wraith extends Zombie {
 		entityData.set(IDLE_SOUND, split[0]);
 		entityData.set(HURT_SOUND, split[1]);
 		entityData.set(DEATH_SOUND, split[2]);
-		
+
 		return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
 	}
-	
+
 	@Override
-	public boolean causeFallDamage(float distance, float damageMultiplier, DamageSource source) {
+	public boolean causeFallDamage(float distance, float damageMultiplier, @Nonnull DamageSource source) {
 		return false;
 	}
-	
+
 	@Override
-	public void addAdditionalSaveData(CompoundTag compound) {
+	public void addAdditionalSaveData(@Nonnull CompoundTag compound) {
 		super.addAdditionalSaveData(compound);
 
 		compound.putString(TAG_IDLE_SOUND, entityData.get(IDLE_SOUND));
@@ -151,7 +153,7 @@ public class Wraith extends Zombie {
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundTag compound) {
+	public void readAdditionalSaveData(@Nonnull CompoundTag compound) {
 		super.readAdditionalSaveData(compound);
 
 		entityData.set(IDLE_SOUND, compound.getString(TAG_IDLE_SOUND));
@@ -159,6 +161,7 @@ public class Wraith extends Zombie {
 		entityData.set(DEATH_SOUND, compound.getString(TAG_DEATH_SOUND));
 	}
 
+	@Nonnull
 	@Override
 	protected ResourceLocation getDefaultLootTable() {
 		return LOOT_TABLE;
@@ -173,15 +176,15 @@ public class Wraith extends Zombie {
 	public boolean isBaby() {
 		return false;
 	}
-	
+
 	@Override
-	public float getWalkTargetValue(BlockPos pos, LevelReader worldIn) {
+	public float getWalkTargetValue(@Nonnull BlockPos pos, LevelReader worldIn) {
 		BlockState state = worldIn.getBlockState(pos);
 		return state.is(WraithModule.wraithSpawnableTag) ? 1F : 0F;
 	}
 
 	@Override
-	public boolean hurt(DamageSource source, float amount) {
+	public boolean hurt(@Nonnull DamageSource source, float amount) {
 		if (!super.hurt(source, amount)) {
 			return false;
 		} else return this.level instanceof ServerLevel;

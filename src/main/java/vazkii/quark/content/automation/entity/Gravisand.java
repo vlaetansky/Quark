@@ -65,7 +65,7 @@ public class Gravisand extends FallingBlockEntity {
 			boolean flag2 = blockstate.canBeReplaced(new DirectionalPlaceContext(this.level, blockpos1, Direction.UP, ItemStack.EMPTY, Direction.DOWN));
 			boolean flag3 = FallingBlock.isFree(this.level.getBlockState(blockpos1.above()));
 			boolean flag4 = this.blockState.canSurvive(this.level, blockpos1) && !flag3;
-			
+
 			if (flag2 && flag4) {
 				if (this.level.setBlock(blockpos1, this.blockState, 3)) {
 					((ServerLevel)this.level).getChunkSource().chunkMap.broadcast(this, new ClientboundBlockUpdatePacket(blockpos1, this.level.getBlockState(blockpos1)));
@@ -93,7 +93,7 @@ public class Gravisand extends FallingBlockEntity {
 	}
 
 	@Override
-	public void move(MoverType type, Vec3 vec) {
+	public void move(@Nonnull MoverType type, @Nonnull Vec3 vec) {
 		if (type == MoverType.SELF)
 			super.move(type, vec.scale(getFallDirection() * -1));
 		else
@@ -101,7 +101,7 @@ public class Gravisand extends FallingBlockEntity {
 	}
 
 	@Override
-	public boolean causeFallDamage(float distance, float damageMultiplier, DamageSource source) {
+	public boolean causeFallDamage(float distance, float damageMultiplier, @Nonnull DamageSource source) {
 		return false;
 	}
 
@@ -110,14 +110,14 @@ public class Gravisand extends FallingBlockEntity {
 	}
 
 	@Override
-	protected void addAdditionalSaveData(CompoundTag compound) {
+	protected void addAdditionalSaveData(@Nonnull CompoundTag compound) {
 		super.addAdditionalSaveData(compound);
 
 		compound.putFloat(TAG_DIRECTION, getFallDirection());
 	}
 
 	@Override
-	protected void readAdditionalSaveData(CompoundTag compound) {
+	protected void readAdditionalSaveData(@Nonnull CompoundTag compound) {
 		super.readAdditionalSaveData(compound);
 
 		entityData.set(DIRECTION, compound.getFloat(TAG_DIRECTION));

@@ -10,6 +10,8 @@ import vazkii.quark.base.Quark;
 import vazkii.quark.content.mobs.client.model.ToretoiseModel;
 import vazkii.quark.content.mobs.entity.Toretoise;
 
+import javax.annotation.Nonnull;
+
 public class ToretoiseOreLayer extends RenderLayer<Toretoise, ToretoiseModel> {
 
 	private static final String ORE_BASE = Quark.MOD_ID + ":textures/model/entity/toretoise/ore%d.png";
@@ -19,7 +21,7 @@ public class ToretoiseOreLayer extends RenderLayer<Toretoise, ToretoiseModel> {
 	}
 
 	@Override
-	public void render(PoseStack matrix, MultiBufferSource buffer, int light, Toretoise entity, float limbAngle, float limbDistance, float tickDelta, float customAngle, float headYaw, float headPitch) {
+	public void render(@Nonnull PoseStack matrix, @Nonnull MultiBufferSource buffer, int light, Toretoise entity, float limbAngle, float limbDistance, float tickDelta, float customAngle, float headYaw, float headPitch) {
 		int ore = entity.getOreType();
 		if(ore != 0 && ore <= Toretoise.ORE_TYPES) {
 			ResourceLocation res = new ResourceLocation(String.format(ORE_BASE, ore));

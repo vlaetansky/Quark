@@ -1,10 +1,5 @@
 package vazkii.quark.addons.oddities.block.be;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -35,6 +30,11 @@ import vazkii.quark.addons.oddities.inventory.CrateMenu;
 import vazkii.quark.addons.oddities.module.CrateModule;
 import vazkii.quark.base.handler.SortingHandler;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+
 public class CrateBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer {
 
 	private int totalItems = 0;
@@ -56,7 +56,7 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 		public void set(int index, int value) {
 			// NO-OP
 		}
-		
+
 		@Override
 		public int getCount() {
 			return 2;
@@ -78,7 +78,7 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 	public static void tick(Level level, BlockPos pos, BlockState state, CrateBlockEntity be) {
 		be.tick();
 	}
-	
+
 	public void tick() {
 		if(needsUpdate) {
 			stacks.removeIf(ItemStack::isEmpty);
@@ -87,9 +87,9 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 	}
 
 	@Override
-	protected void saveAdditional(CompoundTag compound) {
+	protected void saveAdditional(@Nonnull CompoundTag compound) {
 		super.saveAdditional(compound);
-		
+
 		compound.putInt("totalItems", totalItems);
 
 		ListTag list = new ListTag();
@@ -102,7 +102,7 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 	}
 
 	@Override
-	public void load(CompoundTag nbt) {
+	public void load(@Nonnull CompoundTag nbt) {
 		super.load(nbt);
 
 		totalItems = nbt.getInt("totalItems");
@@ -113,11 +113,13 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 			stacks.add(ItemStack.of(list.getCompound(i)));
 	}
 
+	@Nonnull
 	@Override
 	public ItemStack getItem(int slot) {
 		return slot < stacks.size() ? stacks.get(slot) : ItemStack.EMPTY;
 	}
 
+	@Nonnull
 	@Override
 	public ItemStack removeItemNoUpdate(int slot) {
 		if(slot < stacks.size()) {
@@ -132,7 +134,7 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 	}
 
 	@Override
-	public void setItem(int slot, ItemStack stack) {
+	public void setItem(int slot, @Nonnull ItemStack stack) {
 		ItemStack stackAt = getItem(slot);
 
 		if(slot >= stacks.size()) {
@@ -145,6 +147,7 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 		}
 	}
 
+	@Nonnull
 	@Override
 	public ItemStack removeItem(int slot, int count) {
 		ItemStack stack = getItem(slot);
@@ -183,7 +186,7 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 	}
 
 	@Override
-	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction dir) {
+	public boolean canTakeItemThroughFace(int index, @Nonnull ItemStack stack, @Nonnull Direction dir) {
 		return true;
 	}
 
@@ -192,8 +195,9 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 		return (totalItems + stack.getCount()) <= CrateModule.maxItems;
 	}
 
+	@Nonnull
 	@Override
-	public int[] getSlotsForFace(Direction arg0) {
+	public int[] getSlotsForFace(@Nonnull Direction arg0) {
 		if(visibleSlots.length != (stacks.size() + 1)) {
 			visibleSlots = new int[stacks.size() + 1];
 			for(int i = 0; i < visibleSlots.length; i++)
@@ -203,18 +207,21 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 		return visibleSlots;
 	}
 
+	@Nonnull
 	@Override
 	protected Component getDefaultName() {
 		return new TranslatableComponent(CrateModule.crate.getDescriptionId());
 	}
 
+	@Nonnull
 	@Override
-	protected AbstractContainerMenu createMenu(int id, Inventory player) {
+	protected AbstractContainerMenu createMenu(int id, @Nonnull Inventory player) {
 		return new CrateMenu(id, player, this, crateData);
 	}
 
+	@Nonnull
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
+	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
 		if(!remove && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 			return wrapper.cast();
 
@@ -224,7 +231,7 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 	// Vaniller copy =========================
 
 	@Override
-	public boolean stillValid(Player player) {
+	public boolean stillValid(@Nonnull Player player) {
 		if (this.level.getBlockEntity(this.worldPosition) != this) {
 			return false;
 		} else {

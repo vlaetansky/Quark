@@ -45,9 +45,9 @@ import vazkii.quark.content.building.module.GlassItemFrameModule;
 public class GlassItemFrame extends ItemFrame implements IEntityAdditionalSpawnData {
 
 	public static final EntityDataAccessor<Boolean> IS_SHINY = SynchedEntityData.defineId(GlassItemFrame.class, EntityDataSerializers.BOOLEAN);
-	
+
 	private static final String TAG_SHINY = "isShiny";
-	
+
 	private boolean didHackery = false;
 	private FakePlayer fakePlayer = null;
 
@@ -60,30 +60,31 @@ public class GlassItemFrame extends ItemFrame implements IEntityAdditionalSpawnD
 		pos = blockPos;
 		this.setDirection(face);
 	}
-	
+
+	@Nonnull
 	@Override
-	public InteractionResult interact(Player player, InteractionHand hand) {
+	public InteractionResult interact(Player player, @Nonnull InteractionHand hand) {
 		ItemStack item = getItem();
 		if(!player.isShiftKeyDown() && !item.isEmpty() && !(item.getItem() instanceof BannerItem)) {
 			BlockPos behind = getBehindPos();
 			BlockEntity tile = level.getBlockEntity(behind);
-			
+
 			if(tile != null && tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
 				BlockState behindState = level.getBlockState(behind);
 				InteractionResult result = behindState.use(level, player, hand, new BlockHitResult(new Vec3(getX(), getY(), getZ()), direction, behind, true));
-				
+
 				if(result.consumesAction())
 					return result;
 			}
 		}
-		
+
 		return super.interact(player, hand);
 	}
-	
+
 	@Override
 	public void tick() {
 		super.tick();
-		
+
 		if(GlassItemFrameModule.glassItemFramesUpdateMaps) {
 			ItemStack stack = getItem();
 			if(stack.getItem() instanceof MapItem && level instanceof ServerLevel) {
@@ -94,13 +95,13 @@ public class GlassItemFrame extends ItemFrame implements IEntityAdditionalSpawnD
 				if(data != null && !data.locked) {
 					if(fakePlayer == null)
 						fakePlayer = new MovableFakePlayer(sworld, new GameProfile(UUID.randomUUID(), "ItemFrame"));
-					
+
 					MapItem item = (MapItem) stack.getItem();
-					
+
 					clone.setEntityRepresentation(null);
 					fakePlayer.setPos(getX(), getY(), getZ());
 					fakePlayer.getInventory().setItem(0, clone);
-					
+
 					item.update(level, fakePlayer, data);
 				}
 			}
@@ -110,10 +111,10 @@ public class GlassItemFrame extends ItemFrame implements IEntityAdditionalSpawnD
 	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
-		
+
 		entityData.define(IS_SHINY, false);
 	}
-	
+
 	@Override
 	public boolean survives() {
 		return super.survives() || isOnSign();
@@ -122,7 +123,7 @@ public class GlassItemFrame extends ItemFrame implements IEntityAdditionalSpawnD
 	public BlockPos getBehindPos() {
 		return pos.relative(direction.getOpposite());
 	}
-	
+
 	public boolean isOnSign() {
 		BlockState blockstate = level.getBlockState(getBehindPos());
 		return blockstate.is(BlockTags.STANDING_SIGNS);
@@ -148,22 +149,22 @@ public class GlassItemFrame extends ItemFrame implements IEntityAdditionalSpawnD
 		else
 			return held.copy();
 	}
-	
+
 	private Item getDroppedItem() {
 		return entityData.get(IS_SHINY) ? GlassItemFrameModule.glowingGlassFrame : GlassItemFrameModule.glassFrame;
 	}
-	
+
 	@Override
-	public void addAdditionalSaveData(CompoundTag cmp) {
+	public void addAdditionalSaveData(@Nonnull CompoundTag cmp) {
 		super.addAdditionalSaveData(cmp);
-		
+
 		cmp.putBoolean(TAG_SHINY, entityData.get(IS_SHINY));
 	}
-	
+
 	@Override
-	public void readAdditionalSaveData(CompoundTag cmp) {
+	public void readAdditionalSaveData(@Nonnull CompoundTag cmp) {
 		super.readAdditionalSaveData(cmp);
-		
+
 		entityData.set(IS_SHINY, cmp.getBoolean(TAG_SHINY));
 	}
 

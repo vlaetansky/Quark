@@ -30,68 +30,72 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.tools.block.be.CloudBlockEntity;
 import vazkii.quark.content.tools.module.BottledCloudModule;
 
+import javax.annotation.Nonnull;
+
 public class CloudBlock extends QuarkBlock implements EntityBlock {
 
 	public CloudBlock(QuarkModule module) {
-		super("cloud", module, null, 
+		super("cloud", module, null,
 				Block.Properties.of(Material.CLAY)
 				.sound(SoundType.WOOL)
 				.strength(0)
 				.noOcclusion()
 				.noCollission());
 	}
-	
+
+	@Nonnull
 	@Override
-	public PushReaction getPistonPushReaction(BlockState p_60584_) {
+	public PushReaction getPistonPushReaction(@Nonnull BlockState p_60584_) {
 		return PushReaction.BLOCK;
 	}
-	
+
+	@Nonnull
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult raytrace) {
+	public InteractionResult use(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult raytrace) {
 		ItemStack stack = player.getItemInHand(hand);
-		
+
 		if(stack.getItem() == Items.GLASS_BOTTLE) {
 			fillBottle(player, player.getInventory().selected);
 			world.removeBlock(pos, false);
 			return InteractionResult.SUCCESS;
 		}
-		
+
 		if(stack.getItem() instanceof BlockItem) {
 			BlockItem bitem = (BlockItem) stack.getItem();
 			Block block = bitem.getBlock();
-			
+
 			UseOnContext context = new UseOnContext(player, hand, new BlockHitResult(new Vec3(0.5F, 1F, 0.5F), raytrace.getDirection(), pos, false));
 			BlockPlaceContext bcontext = new BlockPlaceContext(context);
-			
+
 			BlockState stateToPlace = block.getStateForPlacement(bcontext);
 			if(stateToPlace != null && stateToPlace.canSurvive(world, pos)) {
 				world.setBlockAndUpdate(pos, stateToPlace);
 				world.playSound(player, pos, stateToPlace.getSoundType().getPlaceSound(), SoundSource.BLOCKS, 1F, 1F);
-				
+
 				if(!player.isCreative()) {
 					stack.shrink(1);
 					fillBottle(player, 0);
 				}
-				
+
 				return InteractionResult.SUCCESS;
 			}
 		}
-		
+
 		return InteractionResult.PASS;
 	}
-	
+
 	@Override
 	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
 		return ItemStack.EMPTY;
 	}
-	
+
 	private void fillBottle(Player player, int startIndex) {
 		Inventory inv = player.getInventory();
 		for(int i = startIndex ; i < inv.getContainerSize(); i++) {
 			ItemStack stackInSlot = inv.getItem(i);
 			if(stackInSlot.getItem() == Items.GLASS_BOTTLE) {
 				stackInSlot.shrink(1);
-				
+
 				ItemStack give = new ItemStack(BottledCloudModule.bottled_cloud);
 				if(!player.addItem(give))
 					player.drop(give, false);
@@ -101,12 +105,12 @@ public class CloudBlock extends QuarkBlock implements EntityBlock {
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+	public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
 		return new CloudBlockEntity(pos, state);
 	}
-	
+
 	@Override
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level world, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
 		return createTickerHelper(type, BottledCloudModule.blockEntityType, CloudBlockEntity::tick);
 	}
 

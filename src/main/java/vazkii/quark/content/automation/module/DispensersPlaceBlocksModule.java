@@ -40,9 +40,9 @@ public class DispensersPlaceBlocksModule extends QuarkModule {
 	public void setup() {
 		if(!enabled)
 			return;
-		
+
 		BlockBehaviour behavior = new BlockBehaviour();
-		
+
 		enqueue(() -> {
 			Map<Item, DispenseItemBehavior> registry = DispenserBlock.DISPENSER_REGISTRY;
 			for(Block b : ForgeRegistries.BLOCKS) {
@@ -98,6 +98,7 @@ public class DispensersPlaceBlocksModule extends QuarkModule {
 			return replaceClicked;
 		}
 
+		@Nonnull
 		@Override
 		public Direction getNearestLookingDirection() {
 			return direction.getOpposite();

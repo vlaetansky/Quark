@@ -2,6 +2,7 @@ package vazkii.quark.addons.oddities.block;
 
 import java.util.Random;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
@@ -41,8 +42,9 @@ public class CrateBlock extends QuarkBlock implements EntityBlock {
 		registerDefaultState(stateDefinition.any().setValue(PROPERTY_OPEN, false));
 	}
 
+	@Nonnull
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+	public InteractionResult use(@Nonnull BlockState state, Level worldIn, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand handIn, @Nonnull BlockHitResult hit) {
 		if(worldIn.isClientSide) {
 			return InteractionResult.SUCCESS;
 		} else {
@@ -59,7 +61,7 @@ public class CrateBlock extends QuarkBlock implements EntityBlock {
 	}
 
 	@Override
-	public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+	public void setPlacedBy(@Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
 		if(stack.hasCustomHoverName()) {
 			BlockEntity tileentity = worldIn.getBlockEntity(pos);
 			if(tileentity instanceof CrateBlockEntity)
@@ -68,14 +70,14 @@ public class CrateBlock extends QuarkBlock implements EntityBlock {
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand) {
+	public void tick(@Nonnull BlockState state, ServerLevel worldIn, @Nonnull BlockPos pos, @Nonnull Random rand) {
 		BlockEntity tileentity = worldIn.getBlockEntity(pos);
 		if(tileentity instanceof CrateBlockEntity)
 			((CrateBlockEntity)tileentity).crateTick();
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, BlockState newState, boolean isMoving) {
 		if(!state.is(newState.getBlock())) {
 			BlockEntity tileentity = worldIn.getBlockEntity(pos);
 
@@ -94,12 +96,12 @@ public class CrateBlock extends QuarkBlock implements EntityBlock {
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+	public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
 		return new CrateBlockEntity(pos, state);
 	}
-	
+
 	@Override
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level world, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
 		return createTickerHelper(type, CrateModule.blockEntityType, CrateBlockEntity::tick);
 	}
 

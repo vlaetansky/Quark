@@ -12,9 +12,9 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import org.jetbrains.annotations.NotNull;
 import vazkii.quark.content.tweaks.recipe.ElytraDuplicationRecipe;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public class ElytraDuplicationExtension implements ICraftingCategoryExtension {
 	}
 
 	@Override
-	public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull ICraftingGridHelper craftingGridHelper, @NotNull IFocusGroup focuses) {
+	public void setRecipe(@Nonnull IRecipeLayoutBuilder builder, @Nonnull ICraftingGridHelper craftingGridHelper, @Nonnull IFocusGroup focuses) {
 		List<List<ItemStack>> inputLists = new ArrayList<>();
 		for (Ingredient input : recipe.getIngredients()) {
 			ItemStack[] stacks = input.getItems();
@@ -40,7 +40,7 @@ public class ElytraDuplicationExtension implements ICraftingCategoryExtension {
 	}
 
 	@Override
-	public void drawInfo(int recipeWidth, int recipeHeight, @NotNull PoseStack poseStack, double mouseX, double mouseY) {
+	public void drawInfo(int recipeWidth, int recipeHeight, @Nonnull PoseStack poseStack, double mouseX, double mouseY) {
 		Minecraft.getInstance().font.draw(poseStack, I18n.get("quark.jei.makes_copy"), 60, 46, 0x555555);
 	}
 

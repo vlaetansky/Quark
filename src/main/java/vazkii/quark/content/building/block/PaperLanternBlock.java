@@ -33,7 +33,7 @@ public class PaperLanternBlock extends QuarkBlock {
 
 	@Nonnull
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+	public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
 		return SHAPE;
 	}
 

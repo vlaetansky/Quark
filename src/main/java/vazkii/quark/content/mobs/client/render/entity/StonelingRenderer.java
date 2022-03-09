@@ -21,7 +21,8 @@ public class StonelingRenderer extends MobRenderer<Stoneling, StonelingModel> {
 		addLayer(new StonelingItemLayer(this));
 		addLayer(new StonelingLichenLayer(this));
 	}
-	
+
+	@Nonnull
 	@Override
 	public ResourceLocation getTextureLocation(@Nonnull Stoneling entity) {
 		return entity.getVariant().getTexture();

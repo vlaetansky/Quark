@@ -17,13 +17,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import vazkii.quark.base.handler.WoodSetHandler;
 
+import javax.annotation.Nonnull;
+
 public class QuarkBoat extends Boat {
 
 	public static record QuarkBoatType(Item boat, Block planks) {}
 	private static Map<String, QuarkBoatType> quarkBoatTypes = new HashMap<>();
-	
+
 	private static final EntityDataAccessor<String> DATA_QUARK_TYPE = SynchedEntityData.defineId(QuarkBoat.class, EntityDataSerializers.STRING);
-	
+
 	public QuarkBoat(EntityType<? extends Boat> p_38290_, Level p_38291_) {
 		super(p_38290_, p_38291_);
 	}
@@ -35,15 +37,15 @@ public class QuarkBoat extends Boat {
 		this.yo = p_38295_;
 		this.zo = p_38296_;
 	}
-	
+
 	public static void addQuarkBoatType(String name, QuarkBoatType type) {
 		quarkBoatTypes.put(name, type);
 	}
-	
+
 	public static QuarkBoatType getTypeRecord(String name) {
 		return quarkBoatTypes.get(name);
 	}
-	
+
 	public static Stream<String> boatTypes() {
 		return quarkBoatTypes.keySet().stream();
 	}
@@ -63,13 +65,13 @@ public class QuarkBoat extends Boat {
 	}
 
 	@Override
-	protected void addAdditionalSaveData(CompoundTag p_38359_) {
+	protected void addAdditionalSaveData(@Nonnull CompoundTag p_38359_) {
 		super.addAdditionalSaveData(p_38359_);
 		p_38359_.putString("QuarkType", getQuarkBoatType());
 	}
 
 	@Override
-	protected void readAdditionalSaveData(CompoundTag p_38338_) {
+	protected void readAdditionalSaveData(@Nonnull CompoundTag p_38338_) {
 		super.readAdditionalSaveData(p_38338_);
 		if (p_38338_.contains("QuarkType", 8)) {
 			setQuarkBoatType(p_38338_.getString("QuarkType"));
@@ -82,19 +84,21 @@ public class QuarkBoat extends Boat {
 			return super.spawnAtLocation(getTypeRecord(getQuarkBoatType()).planks);
 		return super.spawnAtLocation(p_19999_);
 	}
-	
+
+	@Nonnull
 	@Override
 	public Item getDropItem() {
 		return getTypeRecord(getQuarkBoatType()).boat;
 	}
 
+	@Nonnull
 	@Override
 	public Type getBoatType() {
 		return Boat.Type.OAK;
 	}
 
 	@Override
-	public void setType(Type p_38333_) { 
+	public void setType(@Nonnull Type p_38333_) {
 		// NO-OP
 	}
 

@@ -1,8 +1,5 @@
 package vazkii.quark.base.handler;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -16,12 +13,15 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import vazkii.arl.util.ItemNBTHelper;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * @author WireSegal
  * Created at 4:27 PM on 12/15/18.
  */
 public class ProxiedItemStackHandler implements IItemHandler, IItemHandlerModifiable, ICapabilityProvider {
-	
+
 	protected final ItemStack stack;
 	protected final String key;
 	protected final int size;
@@ -164,7 +164,7 @@ public class ProxiedItemStackHandler implements IItemHandler, IItemHandlerModifi
 		// NO-OP
 	}
 
-	@Nullable
+	@Nonnull
 	@Override
 	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
 		return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(capability, LazyOptional.of(() -> this));

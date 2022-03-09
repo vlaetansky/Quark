@@ -26,6 +26,8 @@ import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
 
+import javax.annotation.Nonnull;
+
 public class WoodPostBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 
 	private static final VoxelShape SHAPE_X = Block.box(0F, 6F, 6F, 16F, 10F, 10F);
@@ -34,7 +36,7 @@ public class WoodPostBlock extends QuarkBlock implements SimpleWaterloggedBlock 
 
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 	public static final EnumProperty<Axis> AXIS = BlockStateProperties.AXIS;
-	
+
 	public static final BooleanProperty[] CHAINED = new BooleanProperty[] {
 			BooleanProperty.create("chain_down"),
 			BooleanProperty.create("chain_up"),
@@ -45,19 +47,20 @@ public class WoodPostBlock extends QuarkBlock implements SimpleWaterloggedBlock 
 	};
 
 	public WoodPostBlock(QuarkModule module, Block parent, String prefix, boolean nether) {
-		super(prefix + parent.getRegistryName().getPath().replace("_fence", "_post"), module, CreativeModeTab.TAB_BUILDING_BLOCKS, 
+		super(prefix + parent.getRegistryName().getPath().replace("_fence", "_post"), module, CreativeModeTab.TAB_BUILDING_BLOCKS,
 				Properties.copy(parent).sound(nether ? SoundType.STEM : SoundType.WOOD));
-		
+
 		BlockState state = stateDefinition.any().setValue(WATERLOGGED, false).setValue(AXIS, Axis.Y);
 		for(BooleanProperty prop : CHAINED)
 			state = state.setValue(prop, false);
 		registerDefaultState(state);
-		
+
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
 	}
 
+	@Nonnull
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+	public VoxelShape getShape(BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
 		switch(state.getValue(AXIS)) {
 		case X: return SHAPE_X;
 		case Y: return SHAPE_Y;
@@ -66,44 +69,45 @@ public class WoodPostBlock extends QuarkBlock implements SimpleWaterloggedBlock 
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
+	public boolean propagatesSkylightDown(BlockState state, @Nonnull BlockGetter reader, @Nonnull BlockPos pos) {
 		return !state.getValue(WATERLOGGED);
 	}
 
+	@Nonnull
 	@Override
 	public FluidState getFluidState(BlockState state) {
 		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
 	}
-	
+
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		return getState(context.getLevel(), context.getClickedPos(), context.getClickedFace().getAxis());
 	}
-	
+
 	@Override
-	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+	public void neighborChanged(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Block blockIn, @Nonnull BlockPos fromPos, boolean isMoving) {
 		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
-		
+
 		BlockState newState = getState(worldIn, pos, state.getValue(AXIS));
 		if(!newState.equals(state))
 			worldIn.setBlockAndUpdate(pos, newState);
 	}
-	
+
 	private BlockState getState(Level world, BlockPos pos, Axis axis) {
 		BlockState state = defaultBlockState().setValue(WATERLOGGED, world.getFluidState(pos).getType() == Fluids.WATER).setValue(AXIS, axis);
-		
+
 		for(Direction d : Direction.values()) {
 			if(d.getAxis() == axis)
 				continue;
 
 			BlockState sideState = world.getBlockState(pos.relative(d));
-			if((sideState.getBlock() instanceof ChainBlock && sideState.getValue(BlockStateProperties.AXIS) == d.getAxis()) 
+			if((sideState.getBlock() instanceof ChainBlock && sideState.getValue(BlockStateProperties.AXIS) == d.getAxis())
 					|| (d == Direction.DOWN && sideState.getBlock() instanceof LanternBlock && sideState.getValue(LanternBlock.HANGING))) {
 				BooleanProperty prop = CHAINED[d.ordinal()];
 				state = state.setValue(prop, true);
 			}
 		}
-		
+
 		return state;
 	}
 

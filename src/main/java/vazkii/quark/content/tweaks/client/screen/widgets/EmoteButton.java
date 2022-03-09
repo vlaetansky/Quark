@@ -11,6 +11,8 @@ import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.content.tweaks.client.emote.EmoteDescriptor;
 import vazkii.quark.content.tweaks.module.EmotesModule;
 
+import javax.annotation.Nonnull;
+
 public class EmoteButton extends TranslucentButton {
 
 	public final EmoteDescriptor desc;
@@ -21,7 +23,7 @@ public class EmoteButton extends TranslucentButton {
 	}
 
 	@Override
-	public void renderButton(PoseStack matrix, int mouseX, int mouseY, float partial) {
+	public void renderButton(@Nonnull PoseStack matrix, int mouseX, int mouseY, float partial) {
 		super.renderButton(matrix, mouseX, mouseY, partial);
 
 		if(visible) {
@@ -36,16 +38,16 @@ public class EmoteButton extends TranslucentButton {
 				RenderSystem.setShaderTexture(0, tierTexture);
 				blit(matrix, x + 4, y + 4, 0, 0, 16, 16, 16, 16);
 			}
-			
+
 			boolean hovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
 			if(hovered) {
 				String name = desc.getLocalizedName();
-				
+
 				RenderSystem.setShaderTexture(0, MiscUtil.GENERAL_ICONS);
 				int w = mc.font.width(name);
 				int left = x - w;
 				int top = y - 8;
-				
+
 				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 				blit(matrix, left, top, 242, 9, 5, 17, 256, 256);
 				for(int i = 0; i < w; i++)
@@ -56,5 +58,5 @@ public class EmoteButton extends TranslucentButton {
 			}
 		}
 	}
-	
+
 }

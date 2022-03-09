@@ -53,7 +53,7 @@ public class CorundumClusterBlock extends QuarkBlock implements SimpleWaterlogge
 	}
 
 	public CorundumClusterBlock(CorundumBlock base) {
-		super(base.getRegistryName().getPath() + "_cluster", base.getModule(), CreativeModeTab.TAB_DECORATIONS, 
+		super(base.getRegistryName().getPath() + "_cluster", base.getModule(), CreativeModeTab.TAB_DECORATIONS,
 				Block.Properties.copy(base)
 				.sound(SoundType.AMETHYST_CLUSTER));
 
@@ -64,8 +64,9 @@ public class CorundumClusterBlock extends QuarkBlock implements SimpleWaterlogge
 		registerDefaultState(defaultBlockState().setValue(FACING, Direction.DOWN).setValue(WATERLOGGED, false));
 	}
 
+	@Nonnull
 	@Override
-	public VoxelShape getShape(BlockState p_152021_, BlockGetter p_152022_, BlockPos p_152023_, CollisionContext p_152024_) {
+	public VoxelShape getShape(BlockState p_152021_, @Nonnull BlockGetter p_152022_, @Nonnull BlockPos p_152023_, @Nonnull CollisionContext p_152024_) {
 		Direction direction = p_152021_.getValue(FACING);
 		switch(direction) {
 		case NORTH:
@@ -85,7 +86,7 @@ public class CorundumClusterBlock extends QuarkBlock implements SimpleWaterlogge
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+	public void neighborChanged(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Block blockIn, @Nonnull BlockPos fromPos, boolean isMoving) {
 		if(!canSurvive(state, worldIn, pos))
 			worldIn.destroyBlock(pos, true);
 	}
@@ -110,8 +111,8 @@ public class CorundumClusterBlock extends QuarkBlock implements SimpleWaterlogge
 	}
 
 	@Override
-	public boolean isPathfindable(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, PathComputationType type) {
-		return type == PathComputationType.WATER && worldIn.getFluidState(pos).is(FluidTags.WATER); 
+	public boolean isPathfindable(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull PathComputationType type) {
+		return type == PathComputationType.WATER && worldIn.getFluidState(pos).is(FluidTags.WATER);
 	}
 
 	@Override

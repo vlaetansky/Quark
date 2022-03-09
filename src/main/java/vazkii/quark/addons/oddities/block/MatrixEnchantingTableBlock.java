@@ -3,6 +3,7 @@ package vazkii.quark.addons.oddities.block;
 import java.util.Random;
 import java.util.function.BooleanSupplier;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.mojang.math.Vector3f;
@@ -45,22 +46,23 @@ public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements
 
 	private final QuarkModule module;
 	private BooleanSupplier enabledSupplier = () -> true;
-	
+
 	public MatrixEnchantingTableBlock(QuarkModule module) {
 		super(Block.Properties.copy(Blocks.ENCHANTING_TABLE));
-		
+
 		this.module = module;
 		RegistryHelper.registerBlock(this, "matrix_enchanter");
 		RegistryHelper.setCreativeTab(this, CreativeModeTab.TAB_DECORATIONS);
 	}
 
+	@Nonnull
 	@Override
 	public MutableComponent getName() {
 		return Blocks.ENCHANTING_TABLE.getName();
 	}
-	
+
 	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+	public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
 		if(isEnabled() || group == CreativeModeTab.TAB_SEARCH)
 			super.fillItemCategory(group, items);
 	}
@@ -83,17 +85,18 @@ public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+	public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
 		return new MatrixEnchantingTableBlockEntity(pos, state);
 	}
-	
+
 	@Override
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level world, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
 		return createTickerHelper(type, MatrixEnchantingModule.blockEntityType, MatrixEnchantingTableBlockEntity::tick);
 	}
-	
+
+	@Nonnull
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult raytrace) {
+	public InteractionResult use(@Nonnull BlockState state, Level worldIn, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand handIn, @Nonnull BlockHitResult raytrace) {
 		if(!(worldIn.getBlockEntity(pos) instanceof MatrixEnchantingTableBlockEntity))
 			worldIn.setBlockEntity(newBlockEntity(pos, state));
 
@@ -108,11 +111,11 @@ public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
+	public void animateTick(@Nonnull BlockState stateIn, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Random rand) {
 		boolean enabled = ModuleLoader.INSTANCE.isModuleEnabled(MatrixEnchantingModule.class);
 		boolean showInfluences = enabled && MatrixEnchantingModule.allowInfluencing;
 		boolean allowUnderwater = enabled && MatrixEnchantingModule.allowUnderwaterEnchanting;
-		
+
 		for(int i = -2; i <= 2; ++i)
 			for(int j = -2; j <= 2; ++j) {
 				if(i > -2 && i < 2 && j == -1)
@@ -121,16 +124,16 @@ public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements
 				if(rand.nextInt(16) == 0)
 					for(int k = 0; k <= 1; ++k) {
 						BlockPos blockpos = pos.offset(i, k, j);
-						BlockState state = worldIn.getBlockState(blockpos); 
+						BlockState state = worldIn.getBlockState(blockpos);
 						if(state.getEnchantPowerBonus(worldIn, blockpos) > 0) {
 							BlockPos test = pos.offset(i / 2, 0, j / 2);
 							if(!(worldIn.isEmptyBlock(test) || (allowUnderwater && worldIn.getBlockState(test).getBlock() == Blocks.WATER)))
 								break;
-							
+
 							if(showInfluences && state.getBlock() instanceof IEnchantmentInfluencer) {
 							    IEnchantmentInfluencer influencer = (IEnchantmentInfluencer) state.getBlock();
 								DyeColor color = influencer.getEnchantmentInfluenceColor(worldIn, blockpos, state);
-								
+
 								if(color != null) {
 									float[] comp = color.getTextureDiffuseColors();
 
@@ -147,11 +150,11 @@ public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements
 									for(int p = 0; p < steps; p++) {
 										if(rand.nextDouble() < 0.5)
 											continue;
-										
+
 										double px = blockpos.getX() + 0.5 + dx * p + rand.nextDouble() * 0.2 - 0.1;
 										double py = blockpos.getY() + 0.5 + dy * p + Math.sin((double) p / steps * Math.PI) * 0.5 + rand.nextDouble() * 0.2 - 0.1;
 										double pz = blockpos.getZ() + 0.5 + dz * p + rand.nextDouble() * 0.2 - 0.1;
-										
+
 										worldIn.addParticle(new DustParticleOptions(new Vector3f(comp[0], comp[1], comp[2]), 1F), px, py, pz, 0, 0, 0);
 									}
 								}
@@ -164,7 +167,7 @@ public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements
 	}
 
 	@Override
-	public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+	public void setPlacedBy(@Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull LivingEntity placer, @Nonnull ItemStack stack) {
 		super.setPlacedBy(worldIn, pos, state, placer, stack);
 
 		if(stack.hasCustomHoverName()) {
@@ -176,7 +179,7 @@ public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(@Nonnull BlockState state, Level worldIn, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
 		BlockEntity tileentity = worldIn.getBlockEntity(pos);
 
 		if(tileentity instanceof MatrixEnchantingTableBlockEntity) {

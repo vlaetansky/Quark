@@ -14,6 +14,8 @@ import net.minecraft.world.item.TridentItem;
 import vazkii.quark.content.mobs.client.model.ShibaModel;
 import vazkii.quark.content.mobs.entity.Shiba;
 
+import javax.annotation.Nonnull;
+
 public class ShibaMouthItemLayer extends RenderLayer<Shiba, ShibaModel> {
 
 	public ShibaMouthItemLayer(RenderLayerParent<Shiba, ShibaModel> p_i50919_1_) {
@@ -21,17 +23,17 @@ public class ShibaMouthItemLayer extends RenderLayer<Shiba, ShibaModel> {
 	}
 
 	@Override
-	public void render(PoseStack matrix, MultiBufferSource bufferIn, int packedLightIn, Shiba entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void render(@Nonnull PoseStack matrix, @Nonnull MultiBufferSource bufferIn, int packedLightIn, Shiba entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 		ItemStack item = entitylivingbaseIn.getMouthItem();
 		if(item.isEmpty())
 			return;
-		
+
 		boolean sword = item.getItem() instanceof SwordItem;
 		boolean trident = item.getItem() instanceof TridentItem;
 		float scale = sword || trident ? 0.75F : 0.5F;
 		matrix.pushPose();
 		getParentModel().transformToHead(matrix);
-		
+
 		if(sword)
 			matrix.translate(0.3, -0.15, -0.5);
 		else if(trident) {

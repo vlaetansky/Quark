@@ -20,6 +20,8 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.building.block.be.VariantFurnaceBlockEntity;
 import vazkii.quark.content.building.module.VariantFurnacesModule;
 
+import javax.annotation.Nonnull;
+
 public class VariantFurnaceBlock extends FurnaceBlock implements IQuarkBlock {
 
 	private final QuarkModule module;
@@ -34,17 +36,17 @@ public class VariantFurnaceBlock extends FurnaceBlock implements IQuarkBlock {
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockPos p_153277_, BlockState p_153278_) {
+	public BlockEntity newBlockEntity(@Nonnull BlockPos p_153277_, @Nonnull BlockState p_153278_) {
 		return new VariantFurnaceBlockEntity(p_153277_, p_153278_);
 	}
 
 	@Override
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153273_, BlockState p_153274_, BlockEntityType<T> p_153275_) {
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level p_153273_, @Nonnull BlockState p_153274_, @Nonnull BlockEntityType<T> p_153275_) {
 		return createFurnaceTicker(p_153273_, p_153275_, VariantFurnacesModule.blockEntityType);
 	}
 
 	@Override
-	protected void openContainer(Level p_53631_, BlockPos p_53632_, Player p_53633_) {
+	protected void openContainer(Level p_53631_, @Nonnull BlockPos p_53632_, @Nonnull Player p_53633_) {
 		BlockEntity blockentity = p_53631_.getBlockEntity(p_53632_);
 		if(blockentity instanceof AbstractFurnaceBlockEntity) {
 			p_53633_.openMenu((MenuProvider) blockentity);

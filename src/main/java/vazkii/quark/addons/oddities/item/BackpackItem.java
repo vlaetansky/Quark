@@ -1,13 +1,7 @@
 package vazkii.quark.addons.oddities.item;
 
-import java.util.Map;
-import java.util.function.Consumer;
-
-import javax.annotation.Nonnull;
-
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.NonNullList;
@@ -25,12 +19,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ArmorMaterials;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.DyeableArmorItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -55,6 +44,10 @@ import vazkii.quark.base.handler.ProxiedItemStackHandler;
 import vazkii.quark.base.item.IQuarkItem;
 import vazkii.quark.base.module.QuarkModule;
 
+import javax.annotation.Nonnull;
+import java.util.Map;
+import java.util.function.Consumer;
+
 public class BackpackItem extends DyeableArmorItem implements IQuarkItem, IItemColorProvider, MenuProvider {
 
 	private static final String WORN_TEXTURE = Quark.MOD_ID + ":textures/misc/backpack_worn.png";
@@ -67,7 +60,7 @@ public class BackpackItem extends DyeableArmorItem implements IQuarkItem, IItemC
 	private HumanoidModel model;
 
 	public BackpackItem(QuarkModule module) {
-		super(ArmorMaterials.LEATHER, EquipmentSlot.CHEST, 
+		super(ArmorMaterials.LEATHER, EquipmentSlot.CHEST,
 				new Item.Properties()
 				.stacksTo(1)
 				.durability(0)
@@ -76,7 +69,7 @@ public class BackpackItem extends DyeableArmorItem implements IQuarkItem, IItemC
 
 		RegistryHelper.registerItem(this, "backpack");
 		this.module = module;
-		
+
 		if(module.category.isAddon())
 			RequiredModTooltipHandler.map(this, module.category.requiredMod);
 	}
@@ -92,26 +85,26 @@ public class BackpackItem extends DyeableArmorItem implements IQuarkItem, IItemC
 		if (!handlerOpt.isPresent())
 			return false;
 
-		IItemHandler handler = handlerOpt.orElse(null); 
+		IItemHandler handler = handlerOpt.orElse(null);
 		for(int i = 0; i < handler.getSlots(); i++)
 			if(!handler.getStackInSlot(i).isEmpty())
 				return true;
 
 		return false;
 	}
-	
+
 	@Override
 	public boolean canBeDepleted() {
 		return false;
 	}
-	
+
 	@Override
 	public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
 		return 0;
 	}
 
 	@Override
-	public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+	public void inventoryTick(@Nonnull ItemStack stack, Level worldIn, @Nonnull Entity entityIn, int itemSlot, boolean isSelected) {
 		if(worldIn.isClientSide)
 			return;
 
@@ -127,10 +120,10 @@ public class BackpackItem extends DyeableArmorItem implements IQuarkItem, IItemC
 					enchants.put(Enchantments.BINDING_CURSE, 1);
 					changedEnchants = true;
 				}
-				
+
 				if(BackpackModule.itemsInBackpackTick) {
 					LazyOptional<IItemHandler> handlerOpt  = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-					IItemHandler handler = handlerOpt.orElse(null); 
+					IItemHandler handler = handlerOpt.orElse(null);
 					for(int i = 0; i < handler.getSlots(); i++) {
 						ItemStack inStack = handler.getStackInSlot(i);
 						if(!inStack.isEmpty())
@@ -164,7 +157,7 @@ public class BackpackItem extends DyeableArmorItem implements IQuarkItem, IItemC
 		if(!handlerOpt.isPresent())
 			return false;
 
-		IItemHandler handler = handlerOpt.orElse(null); 
+		IItemHandler handler = handlerOpt.orElse(null);
 
 		for(int i = 0; i < handler.getSlots(); i++) {
 			ItemStack stackAt = handler.getStackInSlot(i);
@@ -196,7 +189,7 @@ public class BackpackItem extends DyeableArmorItem implements IQuarkItem, IItemC
 				handler.setStackInSlot(i, stacks.getStackInSlot(i));
 
 			oldCapNbt.remove("Parent");
-		}	
+		}
 
 		return handler;
 	}
@@ -215,17 +208,17 @@ public class BackpackItem extends DyeableArmorItem implements IQuarkItem, IItemC
 	@OnlyIn(Dist.CLIENT)
 	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
 		consumer.accept(new IItemRenderProperties() {
-			
+
 			@Override
 			public HumanoidModel<?> getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> _default) {
 				return ModelHandler.armorModel(ModelHandler.backpack, armorSlot);
 			}
-		
-		});	
+
+		});
 	}
 
 	@Override
-	public boolean isFoil(ItemStack stack) {
+	public boolean isFoil(@Nonnull ItemStack stack) {
 		return false;
 	}
 
@@ -251,10 +244,11 @@ public class BackpackItem extends DyeableArmorItem implements IQuarkItem, IItemC
 	}
 
 	@Override
-	public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
+	public AbstractContainerMenu createMenu(int id, @Nonnull Inventory inv, @Nonnull Player player) {
 		return new BackpackMenu(id, player);
 	}
 
+	@Nonnull
 	@Override
 	public Component getDisplayName() {
 		return new TranslatableComponent(getDescriptionId());

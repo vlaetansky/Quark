@@ -29,6 +29,7 @@ import vazkii.quark.content.client.module.ImprovedTooltipsModule;
 import vazkii.quark.content.tools.item.AncientTomeItem;
 import vazkii.quark.content.tools.module.AncientTomesModule;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -167,7 +168,7 @@ public class EnchantedBookTooltips {
 		}
 
 		@Override
-		public void renderImage(Font font, int tooltipX, int tooltipY, PoseStack basePose, ItemRenderer itemRenderer, int something) {
+		public void renderImage(@Nonnull Font font, int tooltipX, int tooltipY, @Nonnull PoseStack basePose, @Nonnull ItemRenderer itemRenderer, int something) {
 			PoseStack modelviewPose = RenderSystem.getModelViewStack();
 
 			modelviewPose.pushPose();
@@ -205,7 +206,7 @@ public class EnchantedBookTooltips {
 		}
 
 		@Override
-		public int getWidth(Font font) {
+		public int getWidth(@Nonnull Font font) {
 			return width;
 		}
 

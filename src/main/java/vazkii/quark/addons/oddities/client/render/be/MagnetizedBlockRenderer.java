@@ -26,17 +26,19 @@ import net.minecraftforge.client.ForgeHooksClient;
 import vazkii.quark.addons.oddities.block.be.MagnetizedBlockBlockEntity;
 import vazkii.quark.content.automation.client.render.QuarkPistonBlockEntityRenderer;
 
+import javax.annotation.Nonnull;
+
 @OnlyIn(Dist.CLIENT)
 public class MagnetizedBlockRenderer implements BlockEntityRenderer<MagnetizedBlockBlockEntity> {
 
 	private BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
 
-	public MagnetizedBlockRenderer(BlockEntityRendererProvider.Context context) { 
-		
+	public MagnetizedBlockRenderer(BlockEntityRendererProvider.Context context) {
+
 	}
-	
+
 	@Override
-	public void render(MagnetizedBlockBlockEntity tileEntityIn, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+	public void render(MagnetizedBlockBlockEntity tileEntityIn, float partialTicks, @Nonnull PoseStack matrixStackIn, @Nonnull MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 		Level world = tileEntityIn.getLevel();
 		if (world != null) {
 			BlockPos truepos = tileEntityIn.getBlockPos();
@@ -47,7 +49,7 @@ public class MagnetizedBlockRenderer implements BlockEntityRenderer<MagnetizedBl
 				Vec3 offset = new Vec3(tileEntityIn.getOffsetX(partialTicks), tileEntityIn.getOffsetY(partialTicks), tileEntityIn.getOffsetZ(partialTicks));
 				if(QuarkPistonBlockEntityRenderer.renderTESafely(world, truepos, blockstate, subTile, tileEntityIn, partialTicks, offset, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn))
 					return;
-				
+
 				ModelBlockRenderer.enableCaching();
 				matrixStackIn.pushPose();
 				matrixStackIn.translate(offset.x, offset.y, offset.z);
@@ -68,9 +70,9 @@ public class MagnetizedBlockRenderer implements BlockEntityRenderer<MagnetizedBl
 		RenderType.chunkBufferLayers().stream().filter(t -> ItemBlockRenderTypes.canRenderInLayer(p_228876_2_, t)).forEach(rendertype -> {
 			ForgeHooksClient.setRenderType(rendertype);
 			VertexConsumer ivertexbuilder = p_228876_4_.getBuffer(rendertype);
-			if (blockRenderer == null) 
+			if (blockRenderer == null)
 				blockRenderer = Minecraft.getInstance().getBlockRenderer();
-			
+
 			blockRenderer.getModelRenderer().tesselateBlock(p_228876_5_, blockRenderer.getBlockModel(p_228876_2_), p_228876_2_, p_228876_1_, p_228876_3_, ivertexbuilder, p_228876_6_, new Random(), p_228876_2_.getSeed(p_228876_1_), p_228876_7_);
 		});
 		ForgeHooksClient.setRenderType(null);

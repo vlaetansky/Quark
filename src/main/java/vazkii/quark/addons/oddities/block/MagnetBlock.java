@@ -64,7 +64,7 @@ public class MagnetBlock extends QuarkBlock implements EntityBlock {
 	@Override
 	public void neighborChanged(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Block blockIn, @Nonnull BlockPos fromPos, boolean isMoving) {
 		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
-		
+
 		boolean wasPowered = state.getValue(POWERED);
 		boolean isPowered = isPowered(worldIn, pos, state.getValue(FACING));
 		if(isPowered != wasPowered)
@@ -142,13 +142,13 @@ public class MagnetBlock extends QuarkBlock implements EntityBlock {
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+	public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
 		return new MagnetBlockEntity(pos, state);
 	}
-	
+
 	@Override
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level world, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
 		return createTickerHelper(type, MagnetsModule.magnetType, MagnetBlockEntity::tick);
 	}
-	
+
 }

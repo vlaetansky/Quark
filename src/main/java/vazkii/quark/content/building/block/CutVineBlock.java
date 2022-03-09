@@ -21,28 +21,30 @@ import vazkii.arl.interf.IBlockColorProvider;
 import vazkii.quark.base.block.QuarkVineBlock;
 import vazkii.quark.base.module.QuarkModule;
 
+import javax.annotation.Nonnull;
+
 public class CutVineBlock extends QuarkVineBlock implements IBlockColorProvider {
 
 	public CutVineBlock(QuarkModule module) {
 		super(module, "cut_vine", false);
 	}
-	
+
 	@Override
-	public boolean canSupportAtFace(BlockGetter level, BlockPos pos, Direction dir) {
+	public boolean canSupportAtFace(@Nonnull BlockGetter level, @Nonnull BlockPos pos, @Nonnull Direction dir) {
 		if(dir != Direction.UP) {
             BooleanProperty booleanproperty = PROPERTY_BY_DIRECTION.get(dir);
             BlockState blockstate = level.getBlockState(pos.above());
             return blockstate.is(Blocks.VINE) && blockstate.getValue(booleanproperty);
 		}
-		
+
 		return super.canSupportAtFace(level, pos, dir);
 	}
-	
-	@Override 
+
+	@Override
 	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
 		return new ItemStack(Items.VINE);
 	}
-	
+
     @Override
     @OnlyIn(Dist.CLIENT)
     public BlockColor getBlockColor() {

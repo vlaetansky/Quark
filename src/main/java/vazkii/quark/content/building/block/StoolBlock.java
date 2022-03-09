@@ -37,6 +37,8 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.building.entity.Stool;
 import vazkii.quark.content.building.module.StoolsModule;
 
+import javax.annotation.Nonnull;
+
 public class StoolBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 
 	private static final VoxelShape SHAPE_TOP = Block.box(0F, 1F, 0F, 16F, 9F, 16F);
@@ -60,7 +62,7 @@ public class StoolBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 	public static final BooleanProperty SAT_IN = BooleanProperty.create("sat_in");
 
 	public StoolBlock(QuarkModule module, DyeColor color) {
-		super(color.getName() + "_stool", module, CreativeModeTab.TAB_DECORATIONS, 
+		super(color.getName() + "_stool", module, CreativeModeTab.TAB_DECORATIONS,
 				BlockBehaviour.Properties.of(Material.WOOL, color.getMaterialColor())
 				.sound(SoundType.WOOD)
 				.strength(0.2F)
@@ -68,7 +70,7 @@ public class StoolBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 
 		registerDefaultState(stateDefinition.any().setValue(WATERLOGGED, false).setValue(BIG, false).setValue(SAT_IN, false));
 	}
-	
+
 	public void blockClicked(Level world, BlockPos pos) {
 		BlockState state = world.getBlockState(pos);
 		if(!state.getValue(BIG)) {
@@ -76,37 +78,38 @@ public class StoolBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 	         world.scheduleTick(pos, this, 1);
 		}
 	}
-	
+
 	@Override
-	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand) {
+	public void tick(@Nonnull BlockState state, @Nonnull ServerLevel worldIn, @Nonnull BlockPos pos, @Nonnull Random rand) {
 		fixState(worldIn, pos, state);
 	}
-	
+
+	@Nonnull
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+	public InteractionResult use(BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand handIn, @Nonnull BlockHitResult hit) {
 		if(state.getValue(SAT_IN) || !worldIn.getBlockState(pos.above()).isAir() || player.getVehicle() != null)
 			return super.use(state, worldIn, pos, player, handIn, hit);
 
 		if(!worldIn.isClientSide) {
 			Stool entity = new Stool(StoolsModule.stoolEntity, worldIn);
 			entity.setPos(pos.getX() + 0.5, pos.getY() + 0.6, pos.getZ() + 0.5);
-			
+
 			worldIn.addFreshEntity(entity);
 			player.startRiding(entity);
-			
+
 			worldIn.setBlockAndUpdate(pos, state.setValue(SAT_IN, true));
 		}
-		 
+
 		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public void fallOn(Level worldIn, BlockState state, BlockPos pos, Entity entityIn, float fallDistance) {
+	public void fallOn(@Nonnull Level worldIn, @Nonnull BlockState state, @Nonnull BlockPos pos, @Nonnull Entity entityIn, float fallDistance) {
 		super.fallOn(worldIn, state, pos, entityIn, fallDistance * 0.5F);
 	}
-	
+
 	@Override
-	public void updateEntityAfterFallOn(BlockGetter worldIn, Entity entityIn) {
+	public void updateEntityAfterFallOn(@Nonnull BlockGetter worldIn, Entity entityIn) {
 		if(entityIn.isSuppressingBounce())
 			super.updateEntityAfterFallOn(worldIn, entityIn);
 		else
@@ -121,16 +124,18 @@ public class StoolBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 		}
 	}
 
+	@Nonnull
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+	public VoxelShape getShape(BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
 		return state.getValue(BIG) ? SHAPE_BIG : SHAPE;
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
+	public boolean propagatesSkylightDown(BlockState state, @Nonnull BlockGetter reader, @Nonnull BlockPos pos) {
 		return !state.getValue(WATERLOGGED);
 	}
 
+	@Nonnull
 	@Override
 	public FluidState getFluidState(BlockState state) {
 		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
@@ -142,12 +147,12 @@ public class StoolBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+	public void neighborChanged(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Block blockIn, @Nonnull BlockPos fromPos, boolean isMoving) {
 		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
 
 		fixState(worldIn, pos, state);
 	}
-	
+
 	private void fixState(Level worldIn, BlockPos pos, BlockState state) {
 		BlockState target = getStateFor(worldIn, pos);
 		if(!target.equals(state))
@@ -160,14 +165,14 @@ public class StoolBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 				.setValue(BIG, world.getBlockState(pos.above()).getShape(world, pos.above()).min(Axis.Y) == 0)
 				.setValue(SAT_IN, world.getEntitiesOfClass(Stool.class, new AABB(pos, pos.above()).inflate(0.4), e -> e.blockPosition().equals(pos)).size() > 0);
 	}
-	
+
 	@Override
-	public boolean hasAnalogOutputSignal(BlockState state) {
+	public boolean hasAnalogOutputSignal(@Nonnull BlockState state) {
 		return true;
 	}
-	
+
 	@Override
-	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
+	public int getAnalogOutputSignal(BlockState blockState, @Nonnull Level worldIn, @Nonnull BlockPos pos) {
 		return blockState.getValue(SAT_IN) ? 15 : 0;
 	}
 

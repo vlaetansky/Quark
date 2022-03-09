@@ -2,6 +2,7 @@ package vazkii.quark.base.block;
 
 import java.util.function.BooleanSupplier;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.core.NonNullList;
@@ -34,11 +35,11 @@ public class QuarkDoorBlock extends DoorBlock implements IQuarkBlock, IBlockItem
     }
 
     @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+    public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
         if(isEnabled() || group == CreativeModeTab.TAB_SEARCH)
             super.fillItemCategory(group, items);
     }
-    
+
     @Override
     public QuarkDoorBlock setCondition(BooleanSupplier enabledSupplier) {
         this.enabledSupplier = enabledSupplier;

@@ -27,10 +27,10 @@ public class SoulBeadItem extends QuarkItem {
 	public SoulBeadItem(QuarkModule module) {
 		super("soul_bead", module, new Item.Properties().tab(CreativeModeTab.TAB_MISC));
 	}
-	
+
 	@Nonnull
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, @Nonnull InteractionHand handIn) {
 		ItemStack itemstack = playerIn.getItemInHand(handIn);
 
 		if(!worldIn.isClientSide) {
@@ -40,7 +40,7 @@ public class SoulBeadItem extends QuarkItem {
 				itemstack.shrink(1);
 				SoulBead entity = new SoulBead(WraithModule.soulBeadType, worldIn);
 				entity.setTarget(blockpos.getX(), blockpos.getZ());
-				
+
 				Vec3 look = playerIn.getLookAngle();
 				entity.setPos(playerIn.getX() + look.x * 2, playerIn.getY() + 0.25, playerIn.getZ() + look.z * 2);
 				worldIn.addFreshEntity(entity);
@@ -49,9 +49,9 @@ public class SoulBeadItem extends QuarkItem {
 			}
 		} else playerIn.swing(handIn);
 
-		
+
         playerIn.awardStat(Stats.ITEM_USED.get(this));
 		return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
 	}
-	
+
 }

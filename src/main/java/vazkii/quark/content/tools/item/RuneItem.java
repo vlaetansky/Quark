@@ -34,7 +34,7 @@ public class RuneItem extends QuarkItem implements IRuneColorProvider {
     }
 
     @Override
-    public boolean isFoil(ItemStack stack) {
+    public boolean isFoil(@Nonnull ItemStack stack) {
         return glow;
     }
 

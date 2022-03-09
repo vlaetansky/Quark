@@ -35,6 +35,7 @@ import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.tools.module.SeedPouchModule;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -55,7 +56,7 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 	}
 
 	@Override
-	public boolean overrideOtherStackedOnMe(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player, SlotAccess accessor) {
+	public boolean overrideOtherStackedOnMe(@Nonnull ItemStack stack, @Nonnull ItemStack incoming, @Nonnull Slot slot, @Nonnull ClickAction action, @Nonnull Player player, @Nonnull SlotAccess accessor) {
 		if(action == ClickAction.SECONDARY) {
 			if(!incoming.isEmpty())
 				return addItemToMe(player, stack, incoming, slot);
@@ -66,7 +67,7 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 	}
 
 	@Override
-	public boolean overrideStackedOnOther(ItemStack stack, Slot slot, ClickAction action, Player player) {
+	public boolean overrideStackedOnOther(@Nonnull ItemStack stack, @Nonnull Slot slot, @Nonnull ClickAction action, @Nonnull Player player) {
 		if(action == ClickAction.SECONDARY) {
 			ItemStack incoming = slot.getItem();
 			if(!incoming.isEmpty())
@@ -77,7 +78,7 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 	}
 
 	@Override
-	public boolean isEnchantable(ItemStack p_41456_) {
+	public boolean isEnchantable(@Nonnull ItemStack p_41456_) {
 		return false;
 	}
 
@@ -202,12 +203,13 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 	}
 
 	@Override
-	public int getBarColor(ItemStack stack) {
+	public int getBarColor(@Nonnull ItemStack stack) {
 		return BAR_COLOR;
 	}
 
+	@Nonnull
 	@Override
-	public Component getName(ItemStack stack) {
+	public Component getName(@Nonnull ItemStack stack) {
 		Component base = super.getName(stack);
 
 		Pair<ItemStack, Integer> contents = getContents(stack);
@@ -221,6 +223,7 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 		return comp;
 	}
 
+	@Nonnull
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
 		ItemStack stack = context.getItemInHand();
@@ -273,7 +276,7 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 	}
 
 	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+	public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
 		super.fillItemCategory(group, items);
 
 		if(SeedPouchModule.showAllVariantsInCreative && isEnabled() && allowdedIn(group)) {
@@ -315,8 +318,9 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 		return 0;
 	}
 
+	@Nonnull
 	@Override
-	public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
+	public Optional<TooltipComponent> getTooltipImage(@Nonnull ItemStack stack) {
 		return getContents(stack) == null ? Optional.empty() : Optional.of(new Tooltip(stack));
 	}
 

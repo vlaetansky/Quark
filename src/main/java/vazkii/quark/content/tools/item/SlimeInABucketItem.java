@@ -37,15 +37,15 @@ public class SlimeInABucketItem extends QuarkItem {
 	public static final String TAG_EXCITED = "excited";
 
 	public SlimeInABucketItem(QuarkModule module) {
-		super("slime_in_a_bucket", module, 
+		super("slime_in_a_bucket", module,
 				new Item.Properties()
 				.stacksTo(1)
 				.tab(CreativeModeTab.TAB_MISC)
 				.craftRemainder(Items.BUCKET));
 	}
-	
+
 	@Override
-	public void inventoryTick(ItemStack stack, Level world, Entity entity, int itemSlot, boolean isSelected) {
+	public void inventoryTick(@Nonnull ItemStack stack, @Nonnull Level world, @Nonnull Entity entity, int itemSlot, boolean isSelected) {
 		if(world instanceof ServerLevel) {
 			Vec3 pos = entity.position();
 			int x = Mth.floor(pos.x);
@@ -56,7 +56,7 @@ public class SlimeInABucketItem extends QuarkItem {
 				ItemNBTHelper.setBoolean(stack, TAG_EXCITED, slime);
 		}
 	}
-	
+
 	@Nonnull
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
@@ -65,14 +65,14 @@ public class SlimeInABucketItem extends QuarkItem {
 		Level worldIn = context.getLevel();
 		Player playerIn = context.getPlayer();
 		InteractionHand hand = context.getHand();
-		
+
 		double x = pos.getX() + 0.5 + facing.getStepX();
 		double y = pos.getY() + 0.5 + facing.getStepY();
 		double z = pos.getZ() + 0.5 + facing.getStepZ();
 
 		if(!worldIn.isClientSide) {
 			Slime slime = new Slime(EntityType.SLIME, worldIn);
-			
+
 			CompoundTag data = ItemNBTHelper.getCompound(playerIn.getItemInHand(hand), TAG_ENTITY_DATA, true);
 			if(data != null)
 				slime.load(data);
@@ -81,18 +81,18 @@ public class SlimeInABucketItem extends QuarkItem {
 				slime.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.3);
 				slime.setHealth(slime.getMaxHealth());
 			}
-			
+
 			slime.setPos(x, y, z);
 
 			worldIn.addFreshEntity(slime);
 			playerIn.swing(hand);
 		}
-		
+
 		worldIn.playSound(playerIn, pos, SoundEvents.BUCKET_EMPTY, SoundSource.NEUTRAL, 1.0F, 1.0F);
 
 		if(!playerIn.isCreative())
 			playerIn.setItemInHand(hand, new ItemStack(Items.BUCKET));
-		
+
 		return InteractionResult.SUCCESS;
 	}
 
@@ -106,7 +106,7 @@ public class SlimeInABucketItem extends QuarkItem {
 				return new TranslatableComponent("item.quark.slime_in_a_bucket.named", custom);
 			}
 		}
-		
+
 		return super.getName(stack);
 	}
 
@@ -114,5 +114,5 @@ public class SlimeInABucketItem extends QuarkItem {
 		ChunkPos chunkpos = new ChunkPos(new BlockPos(x, 0, z));
 		return WorldgenRandom.seedSlimeChunk(chunkpos.x, chunkpos.z, world.getSeed(), 987234911L).nextInt(10) == 0;
 	}
-	
+
 }

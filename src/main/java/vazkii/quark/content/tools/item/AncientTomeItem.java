@@ -31,7 +31,7 @@ public class AncientTomeItem extends QuarkItem {
 	}
 
 	@Override
-	public boolean isFoil(ItemStack stack) {
+	public boolean isFoil(@Nonnull ItemStack stack) {
 		return true;
 	}
 
@@ -42,7 +42,7 @@ public class AncientTomeItem extends QuarkItem {
 
 	@Nonnull
 	@Override
-	public Rarity getRarity(ItemStack stack) {
+	public Rarity getRarity(@Nonnull ItemStack stack) {
 		return EnchantedBookItem.getEnchantments(stack).isEmpty() ? super.getRarity(stack) : Rarity.UNCOMMON;
 	}
 
@@ -59,7 +59,7 @@ public class AncientTomeItem extends QuarkItem {
 				Registry.ENCHANTMENT.forEach(ench -> {
 					if ((group == CreativeModeTab.TAB_SEARCH && ench.getMaxLevel() != 1) ||
 							AncientTomesModule.validEnchants.contains(ench)) {
-						if ((group == CreativeModeTab.TAB_SEARCH && ench.category != null) || group.hasEnchantmentCategory(ench.category)) {
+						if (group == CreativeModeTab.TAB_SEARCH || group.hasEnchantmentCategory(ench.category)) {
 							items.add(getEnchantedItemStack(new EnchantmentInstance(ench, ench.getMaxLevel())));
 						}
 					}
@@ -74,7 +74,7 @@ public class AncientTomeItem extends QuarkItem {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+	public void appendHoverText(@Nonnull ItemStack stack, Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
 		super.appendHoverText(stack, worldIn, tooltip, flagIn);
 
 		Enchantment ench = AncientTomesModule.getTomeEnchantment(stack);

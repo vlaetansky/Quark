@@ -18,20 +18,22 @@ import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
+
 @OnlyIn(Dist.CLIENT)
 public class QuarkArmorModel extends HumanoidModel<LivingEntity> {
-	
+
 	protected final EquipmentSlot slot;
-	
+
 	public QuarkArmorModel(ModelPart part, EquipmentSlot slot) {
 		super(part);
 		this.slot = slot;
 	}
-	
+
 	public static LayerDefinition createLayer(int textureWidth, int textureHeight, Consumer<PartDefinition> rootConsumer) {
 		MeshDefinition mesh = new MeshDefinition();
 		PartDefinition root = mesh.getRoot();
-		
+
 		root.addOrReplaceChild("head", CubeListBuilder.create(), PartPose.ZERO);
 		root.addOrReplaceChild("hat", CubeListBuilder.create(), PartPose.ZERO);
 		root.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.ZERO);
@@ -41,14 +43,14 @@ public class QuarkArmorModel extends HumanoidModel<LivingEntity> {
 		root.addOrReplaceChild("right_leg", CubeListBuilder.create(), PartPose.ZERO);
 
 		rootConsumer.accept(root);
-		
+
 		return LayerDefinition.create(mesh, textureWidth, textureHeight);
 	}
-	
+
 	// [VanillaCopy] ArmorStandArmorModel.setupAnim because armor stands are dumb
 	// This fixes the armor "breathing" and helmets always facing south on armor stands
 	@Override
-	public void setupAnim(LivingEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(@Nonnull LivingEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		if (!(entity instanceof ArmorStand entityIn)) {
 			super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 			return;
@@ -79,7 +81,7 @@ public class QuarkArmorModel extends HumanoidModel<LivingEntity> {
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack ms, VertexConsumer buffer, int light, int overlay, float r, float g, float b, float a) {
+	public void renderToBuffer(@Nonnull PoseStack ms, @Nonnull VertexConsumer buffer, int light, int overlay, float r, float g, float b, float a) {
 		setPartVisibility(slot);
 		super.renderToBuffer(ms, buffer, light, overlay, r, g, b, a);
 	}

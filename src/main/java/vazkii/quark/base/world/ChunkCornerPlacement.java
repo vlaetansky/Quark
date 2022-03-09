@@ -11,6 +11,8 @@ import net.minecraft.world.level.levelgen.placement.PlacementContext;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 
+import javax.annotation.Nonnull;
+
 public class ChunkCornerPlacement extends PlacementModifier {
 
 	private static final ChunkCornerPlacement INSTANCE = new ChunkCornerPlacement();
@@ -18,11 +20,13 @@ public class ChunkCornerPlacement extends PlacementModifier {
 		return INSTANCE;
 	});
 
+	@Nonnull
 	@Override // getPositions
-	public Stream<BlockPos> getPositions(PlacementContext wdc, Random random, BlockPos pos) {
+	public Stream<BlockPos> getPositions(@Nonnull PlacementContext wdc, @Nonnull Random random, @Nonnull BlockPos pos) {
 		return ImmutableSet.of(pos).stream();
 	}
 
+	@Nonnull
 	@Override
 	public PlacementModifierType<?> type() {
 		return WorldGenHandler.CHUNK_CORNER_PLACEMENT_TYPE;

@@ -46,13 +46,13 @@ public class PickarangItem extends QuarkItem {
 	}
 
 	@Override
-	public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+	public boolean hurtEnemy(ItemStack stack, @Nonnull LivingEntity target, @Nonnull LivingEntity attacker) {
 		stack.hurtAndBreak(2, attacker, (player) -> player.broadcastBreakEvent(InteractionHand.MAIN_HAND));
 		return true;
 	}
 
 	@Override
-	public boolean isCorrectToolForDrops(BlockState blockIn) {
+	public boolean isCorrectToolForDrops(@Nonnull BlockState blockIn) {
 		switch (isNetherite ? PickarangModule.netheriteHarvestLevel : PickarangModule.harvestLevel) {
 		case 0:
 			return Items.WOODEN_PICKAXE.isCorrectToolForDrops(blockIn) ||
@@ -79,7 +79,7 @@ public class PickarangItem extends QuarkItem {
 	}
 
 	@Override
-	public boolean mineBlock(ItemStack stack, Level worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
+	public boolean mineBlock(@Nonnull ItemStack stack, @Nonnull Level worldIn, BlockState state, @Nonnull BlockPos pos, @Nonnull LivingEntity entityLiving) {
 		if (state.getDestroySpeed(worldIn, pos) != 0)
 			stack.hurtAndBreak(1, entityLiving, (player) -> player.broadcastBreakEvent(InteractionHand.MAIN_HAND));
 		return true;
@@ -119,25 +119,25 @@ public class PickarangItem extends QuarkItem {
 		Multimap<Attribute, AttributeModifier> multimap = Multimaps.newSetMultimap(new HashMap<>(), HashSet::new);
 
 		if (slot == EquipmentSlot.MAINHAND) {
-			multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 2, AttributeModifier.Operation.ADDITION)); 
-			multimap.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -2.8, AttributeModifier.Operation.ADDITION)); 
+			multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 2, AttributeModifier.Operation.ADDITION));
+			multimap.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -2.8, AttributeModifier.Operation.ADDITION));
 		}
 
 		return multimap;
 	}
 
 	@Override
-	public float getDestroySpeed(ItemStack stack, BlockState state) {
+	public float getDestroySpeed(@Nonnull ItemStack stack, @Nonnull BlockState state) {
 		return 0F;
 	}
 
 	@Override
-	public boolean isRepairable(ItemStack stack) {
+	public boolean isRepairable(@Nonnull ItemStack stack) {
 		return true;
 	}
 
 	@Override
-	public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
+	public boolean isValidRepairItem(@Nonnull ItemStack toRepair, ItemStack repair) {
 		return repair.getItem() == (isNetherite ? Items.NETHERITE_INGOT : Items.DIAMOND);
 	}
 

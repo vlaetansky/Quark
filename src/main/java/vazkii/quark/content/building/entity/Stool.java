@@ -24,46 +24,46 @@ public class Stool extends Entity {
 	public Stool(EntityType<?> entityTypeIn, Level worldIn) {
 		super(entityTypeIn, worldIn);
 	}
-	
+
 	@Override
 	public void tick() {
 		super.tick();
-		
+
 		List<Entity> passengers = getPassengers();
 		boolean dead = passengers.isEmpty();
-		
+
 		BlockPos pos = blockPosition();
 		BlockState state = level.getBlockState(pos);
-		
+
 		if(!dead) {
 			if(!(state.getBlock() instanceof StoolBlock)) {
 				PistonMovingBlockEntity piston = null;
 				boolean didOffset = false;
-				
+
 				BlockEntity tile = level.getBlockEntity(pos);
 				if(tile instanceof PistonMovingBlockEntity && ((PistonMovingBlockEntity) tile).getMovedState().getBlock() instanceof StoolBlock)
 					piston = (PistonMovingBlockEntity) tile;
 				else for(Direction d : Direction.values()) {
 					BlockPos offPos = pos.relative(d);
 					tile = level.getBlockEntity(offPos);
-					
+
 					if(tile instanceof PistonMovingBlockEntity && ((PistonMovingBlockEntity) tile).getMovedState().getBlock() instanceof StoolBlock) {
 						piston = (PistonMovingBlockEntity) tile;
 						break;
 					}
 				}
-				
+
 				if(piston != null) {
 					Direction dir = piston.getMovementDirection();
 					move(MoverType.PISTON, new Vec3((float) dir.getStepX() * 0.33, (float) dir.getStepY() * 0.33, (float) dir.getStepZ() * 0.33));
-					
+
 					didOffset = true;
 				}
-				
+
 				dead = !didOffset;
 			}
 		}
-		
+
 		if(dead && !level.isClientSide) {
 			removeAfterChangingDimensions();
 
@@ -76,19 +76,19 @@ public class Stool extends Entity {
 	public double getPassengersRidingOffset() {
 		return -0.3;
 	}
-	
+
 	@Override
 	protected void defineSynchedData() {
 		// NO-OP
 	}
 
 	@Override
-	protected void readAdditionalSaveData(CompoundTag compound) {
+	protected void readAdditionalSaveData(@Nonnull CompoundTag compound) {
 		// NO-OP
 	}
 
 	@Override
-	protected void addAdditionalSaveData(CompoundTag compound) {
+	protected void addAdditionalSaveData(@Nonnull CompoundTag compound) {
 		// NO-OP
 	}
 

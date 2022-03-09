@@ -2,6 +2,7 @@ package vazkii.quark.base.block;
 
 import java.util.function.BooleanSupplier;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.core.NonNullList;
@@ -15,7 +16,7 @@ import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
 
 public class QuarkPaneBlock extends IronBarsBlock implements IQuarkBlock {
-	
+
 	public final QuarkModule module;
 	private BooleanSupplier enabledSupplier = () -> true;
 
@@ -25,13 +26,13 @@ public class QuarkPaneBlock extends IronBarsBlock implements IQuarkBlock {
 		this.module = module;
 		RegistryHelper.registerBlock(this, name);
 		RegistryHelper.setCreativeTab(this, CreativeModeTab.TAB_DECORATIONS);
-		
+
 		if(renderType != null)
 			RenderLayerHandler.setRenderType(this, renderType);
 	}
 
 	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {	
+	public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
 		if(group == CreativeModeTab.TAB_SEARCH || isEnabled())
 			super.fillItemCategory(group, items);
 	}

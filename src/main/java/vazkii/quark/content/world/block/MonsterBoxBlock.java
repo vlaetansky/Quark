@@ -20,6 +20,8 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.world.block.be.MonsterBoxBlockEntity;
 import vazkii.quark.content.world.module.MonsterBoxModule;
 
+import javax.annotation.Nonnull;
+
 public class MonsterBoxBlock extends QuarkBlock implements EntityBlock {
 
 	public MonsterBoxBlock(QuarkModule module) {
@@ -32,24 +34,25 @@ public class MonsterBoxBlock extends QuarkBlock implements EntityBlock {
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
 	}
 
+	@Nonnull
 	@Override
-	public ItemStack getCloneItemStack(BlockGetter p_56785_, BlockPos p_56786_, BlockState p_56787_) {
+	public ItemStack getCloneItemStack(@Nonnull BlockGetter p_56785_, @Nonnull BlockPos p_56786_, @Nonnull BlockState p_56787_) {
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
+	public boolean isPathfindable(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull PathComputationType type) {
 		return false;
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+	public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
 		return new MonsterBoxBlockEntity(pos, state);
 	}
 
 	@Override
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level world, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
 		return createTickerHelper(type, MonsterBoxModule.blockEntityType, MonsterBoxBlockEntity::tick);
 	}
-	
+
 }

@@ -17,6 +17,8 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import vazkii.quark.content.mobs.entity.Crab;
 
+import javax.annotation.Nonnull;
+
 public class CrabModel extends EntityModel<Crab> {
 
 	private float wiggleX = 0;
@@ -180,7 +182,7 @@ public class CrabModel extends EntityModel<Crab> {
 		wiggleY = 0.0f;
 
 		crabSize = crab.getSizeModifier();
-		if(young) 
+		if(young)
 			crabSize /= 2;
 
 		if(crab.isRaving()) {
@@ -208,7 +210,7 @@ public class CrabModel extends EntityModel<Crab> {
 
 
 	@Override
-	public void renderToBuffer(PoseStack matrix, VertexConsumer vb, int p_225598_3_, int p_225598_4_, float p_225598_5_, float p_225598_6_, float p_225598_7_, float p_225598_8_) {
+	public void renderToBuffer(PoseStack matrix, @Nonnull VertexConsumer vb, int p_225598_3_, int p_225598_4_, float p_225598_5_, float p_225598_6_, float p_225598_7_, float p_225598_8_) {
 		matrix.pushPose();
 		matrix.translate(0, 1.5 - crabSize * 1.5, 0);
 		matrix.scale(crabSize, crabSize, crabSize);

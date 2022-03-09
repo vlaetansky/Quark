@@ -17,6 +17,8 @@ import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.oddities.ScrollCrateMessage;
 
+import javax.annotation.Nonnull;
+
 public class CrateMenu extends AbstractContainerMenu {
 
 	public final CrateBlockEntity crate;
@@ -65,8 +67,9 @@ public class CrateMenu extends AbstractContainerMenu {
 		return crateData.get(1);
 	}
 
+	@Nonnull
 	@Override
-	public ItemStack quickMoveStack(Player playerIn, int index) {
+	public ItemStack quickMoveStack(@Nonnull Player playerIn, int index) {
 		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.slots.get(index);
 
@@ -113,12 +116,12 @@ public class CrateMenu extends AbstractContainerMenu {
 	}
 
 	@Override
-	public boolean stillValid(Player playerIn) {
+	public boolean stillValid(@Nonnull Player playerIn) {
 		return crate.stillValid(playerIn);
 	}
 
 	@Override
-	public void removed(Player playerIn) {
+	public void removed(@Nonnull Player playerIn) {
 		super.removed(playerIn);
 		crate.stopOpen(playerIn);
 	}
@@ -169,6 +172,7 @@ public class CrateMenu extends AbstractContainerMenu {
 			return (world.isClientSide ? index : (index + scroll));
 		}
 
+		@Nonnull
 		@Override
 		public ItemStack getItem() {
 			int targetIndex = getTarget();
@@ -180,7 +184,7 @@ public class CrateMenu extends AbstractContainerMenu {
 		}
 
 		@Override
-		public void set(ItemStack stack) {
+		public void set(@Nonnull ItemStack stack) {
 			int targetIndex = getTarget();
 			container.setItem(targetIndex, stack);
 
@@ -188,11 +192,12 @@ public class CrateMenu extends AbstractContainerMenu {
 			forceSync();
 		}
 
+		@Nonnull
 		@Override
 		public ItemStack remove(int amount) {
 			return container.removeItem(getTarget(), amount);
 		}
-		
+
 		@Override
 		public boolean mayPlace(ItemStack stack) {
 			return stack.getCount() + getTotal() <= CrateModule.maxItems;

@@ -27,9 +27,9 @@ public class ChestPassengerRenderer extends EntityRenderer<ChestPassenger> {
     public ChestPassengerRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
-    
+
     @Override
-    	public void render(ChestPassenger entity, float yaw, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int light) {
+    	public void render(ChestPassenger entity, float yaw, float partialTicks, @Nonnull PoseStack matrix, @Nonnull MultiBufferSource buffer, int light) {
         if(!entity.isPassenger())
             return;
 
@@ -39,7 +39,7 @@ public class ChestPassengerRenderer extends EntityRenderer<ChestPassenger> {
 
         Boat boat = (Boat) riding;
         super.render(entity, yaw, partialTicks, matrix, buffer, light);
-        
+
         float rot = 180F - yaw;
 
         ItemStack stack = entity.getChestType();
@@ -76,6 +76,7 @@ public class ChestPassengerRenderer extends EntityRenderer<ChestPassenger> {
         matrix.popPose();
     }
 
+    @Nonnull
     @Override
     public ResourceLocation getTextureLocation(@Nonnull ChestPassenger entity) {
         return null;

@@ -37,6 +37,8 @@ import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.world.module.ChorusVegetationModule;
 
+import javax.annotation.Nonnull;
+
 public class ChorusVegetationBlock extends QuarkBlock implements BonemealableBlock, IForgeShearable {
 
 	protected static final VoxelShape SHAPE = Block.box(2, 0, 2, 14, 13, 14);
@@ -54,23 +56,23 @@ public class ChorusVegetationBlock extends QuarkBlock implements BonemealableBlo
 		this.simple = simple;
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
 	}
-	
+
 	@Override
-	public void randomTick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random) {
+	public void randomTick(@Nonnull BlockState state, @Nonnull ServerLevel worldIn, @Nonnull BlockPos pos, Random random) {
 		if(random.nextDouble() < ChorusVegetationModule.passiveTeleportChance)
 			teleport(pos, random, worldIn, state);
 	}
-	
+
 	@Override
-	public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
+	public void animateTick(@Nonnull BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
 		worldIn.addParticle(ParticleTypes.PORTAL, pos.getX() + 0.2 + rand.nextDouble() * 0.6, pos.getY() + 0.3, pos.getZ() + 0.2 + rand.nextDouble() * 0.6, 0, 0, 0);
 	}
-	
+
 	@Override
-	public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entity) {
+	public void entityInside(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Entity entity) {
 		if(simple && worldIn instanceof ServerLevel && entity instanceof LivingEntity && !(entity instanceof EnderMan) && !(entity instanceof Endermite)) {
 			BlockPos target = teleport(pos, worldIn.random, (ServerLevel) worldIn, state);
-			
+
 			if(target != null && worldIn.random.nextDouble() < ChorusVegetationModule.endermiteSpawnChance) {
 				Endermite mite = new Endermite(EntityType.ENDERMITE, worldIn);
 				mite.setPos(target.getX(), target.getY(), target.getZ());
@@ -78,15 +80,15 @@ public class ChorusVegetationBlock extends QuarkBlock implements BonemealableBlo
 			}
 		}
 	}
-	
+
 	@Override
-	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+	public void neighborChanged(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Block blockIn, @Nonnull BlockPos fromPos, boolean isMoving) {
 		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
-		
+
 		if(worldIn instanceof ServerLevel)
 			runAwayFromWater(pos, worldIn.random, (ServerLevel) worldIn, state);
 	}
-	
+
 	private void runAwayFromWater(BlockPos pos, Random random, ServerLevel worldIn, BlockState state) {
 		for(Direction d : Direction.values()) {
 			BlockPos test = pos.relative(d);
@@ -97,11 +99,11 @@ public class ChorusVegetationBlock extends QuarkBlock implements BonemealableBlo
 			}
 		}
 	}
-	
+
 	private BlockPos teleport(BlockPos pos, Random random, ServerLevel worldIn, BlockState state) {
 		return teleport(pos, random, worldIn, state, 4, (1.0 - ChorusVegetationModule.teleportDuplicationChance));
 	}
-	
+
 	private BlockPos teleport(BlockPos pos, Random random, ServerLevel worldIn, BlockState state, int range, double growthChance) {
 		int xOff = 0;
 		int zOff = 0;
@@ -110,70 +112,73 @@ public class ChorusVegetationBlock extends QuarkBlock implements BonemealableBlo
 			zOff = random.nextInt(range + 1) - (range / 2);
 		} while(xOff == 0 && zOff == 0);
 		BlockPos newPos = pos.offset(xOff, 10, zOff);
-		
+
 		for(int i = 0; i < 20; i++) {
 			BlockState stateAt = worldIn.getBlockState(newPos);
 			if(stateAt.getBlock() == Blocks.END_STONE)
 				break;
-			
+
 			else newPos = newPos.below();
 		}
-		
+
 		if(worldIn.getBlockState(newPos).getBlock() == Blocks.END_STONE && worldIn.getBlockState(newPos.above()).isAir()) {
 			newPos = newPos.above();
 			worldIn.setBlockAndUpdate(newPos, state);
-			
+
 			if(random.nextDouble() < growthChance) {
 				worldIn.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 				worldIn.sendParticles(ParticleTypes.PORTAL, pos.getX() + 0.5, pos.getY() - 0.25, pos.getZ(), 50, 0.25, 0.25, 0.25, 1);
 				worldIn.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.ENDERMAN_TELEPORT, SoundSource.BLOCKS, 0.1F, 5F + random.nextFloat());
-			} 
-			
+			}
+
 			worldIn.sendParticles(ParticleTypes.REVERSE_PORTAL, newPos.getX() + 0.5, newPos.getY() - 0.25, newPos.getZ(), 50, 0.25, 0.25, 0.25, 0.05);
-			
+
 			return newPos;
 		}
-		
+
 		return null;
 	}
 
 	@Override
-	public boolean isValidBonemealTarget(BlockGetter worldIn, BlockPos pos, BlockState state, boolean isClient) {
+	public boolean isValidBonemealTarget(@Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull BlockState state, boolean isClient) {
 		return true;
 	}
 
 	@Override
-	public boolean isBonemealSuccess(Level worldIn, Random rand, BlockPos pos, BlockState state) {
+	public boolean isBonemealSuccess(@Nonnull Level worldIn, @Nonnull Random rand, @Nonnull BlockPos pos, @Nonnull BlockState state) {
 		return true;
 	}
 
 	@Override
-	public void performBonemeal(ServerLevel worldIn, Random rand, BlockPos pos, BlockState state) {
+	public void performBonemeal(@Nonnull ServerLevel worldIn, Random rand, @Nonnull BlockPos pos, @Nonnull BlockState state) {
 		for(int i = 0; i < (3 + rand.nextInt(3)); i++)
 			teleport(pos, rand, worldIn, state, 10, 0);
 		teleport(pos, rand, worldIn, state, 4, 1);
 	}
 
+	@Nonnull
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+	public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
 		return SHAPE;
 	}
 
+	@Nonnull
 	@Override
-	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+	public BlockState updateShape(BlockState stateIn, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull LevelAccessor worldIn, @Nonnull BlockPos currentPos, @Nonnull BlockPos facingPos) {
 		return !stateIn.canSurvive(worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
 	}
 
 	@Override
-	public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
+	public boolean canSurvive(@Nonnull BlockState state, LevelReader worldIn, BlockPos pos) {
 		return worldIn.getBlockState(pos.below()).getBlock() == Blocks.END_STONE;
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
+	public boolean isPathfindable(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull PathComputationType type) {
 		return (type == PathComputationType.AIR && !this.hasCollision) || super.isPathfindable(state, worldIn, pos, type);
 	}
 
+	@Nonnull
 	@Override
 	public BlockBehaviour.OffsetType getOffsetType() {
 		return BlockBehaviour.OffsetType.XZ;

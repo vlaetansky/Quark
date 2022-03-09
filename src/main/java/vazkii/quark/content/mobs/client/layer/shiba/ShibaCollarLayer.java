@@ -20,6 +20,8 @@ import vazkii.quark.base.Quark;
 import vazkii.quark.content.mobs.client.model.ShibaModel;
 import vazkii.quark.content.mobs.entity.Shiba;
 
+import javax.annotation.Nonnull;
+
 public class ShibaCollarLayer extends RenderLayer<Shiba, ShibaModel> {
 
 	private static final ResourceLocation WOLF_COLLAR = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/shiba/collar.png");
@@ -29,7 +31,7 @@ public class ShibaCollarLayer extends RenderLayer<Shiba, ShibaModel> {
 	}
 
 	@Override
-	public void render(PoseStack matrix, MultiBufferSource buffer, int light, Shiba foxhound,  float limbAngle, float limbDistance, float tickDelta, float customAngle, float headYaw, float headPitch) {
+	public void render(@Nonnull PoseStack matrix, @Nonnull MultiBufferSource buffer, int light, Shiba foxhound, float limbAngle, float limbDistance, float tickDelta, float customAngle, float headYaw, float headPitch) {
 		if (foxhound.isTame() && !foxhound.isInvisible()) {
 			float[] afloat = foxhound.getCollarColor().getTextureDiffuseColors();
 			renderColoredCutoutModel(getParentModel(), WOLF_COLLAR, matrix, buffer, light, foxhound, afloat[0], afloat[1], afloat[2]);

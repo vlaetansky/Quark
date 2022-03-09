@@ -16,6 +16,8 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.RenderType;
 import vazkii.quark.content.mobs.entity.Wraith;
 
+import javax.annotation.Nonnull;
+
 public class WraithModel extends EntityModel<Wraith> {
 
 	public final ModelPart body;
@@ -37,7 +39,7 @@ public class WraithModel extends EntityModel<Wraith> {
 	public static LayerDefinition createBodyLayer() {
 		MeshDefinition mesh = new MeshDefinition();
 		PartDefinition root = mesh.getRoot();
-		
+
 		root.addOrReplaceChild("body",
 				CubeListBuilder.create()
 				.texOffs(0, 0)
@@ -76,7 +78,7 @@ public class WraithModel extends EntityModel<Wraith> {
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack matrix, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+	public void renderToBuffer(PoseStack matrix, @Nonnull VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
 		alpha *= alphaMult;
 
 		matrix.pushPose();

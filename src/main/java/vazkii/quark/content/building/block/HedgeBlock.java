@@ -34,6 +34,8 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.building.module.HedgesModule;
 import vazkii.quark.content.world.block.BlossomLeavesBlock;
 
+import javax.annotation.Nonnull;
+
 public class HedgeBlock extends FenceBlock implements IQuarkBlock, IBlockColorProvider {
 
 	private final QuarkModule module;
@@ -54,21 +56,21 @@ public class HedgeBlock extends FenceBlock implements IQuarkBlock, IBlockColorPr
 		} else {
 			RegistryHelper.registerBlock(this, leaf.getRegistryName().getPath().replaceAll("_leaves", "_hedge"));
 		}
-		
+
 		RegistryHelper.setCreativeTab(this, CreativeModeTab.TAB_DECORATIONS);
 
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
 
 		registerDefaultState(defaultBlockState().setValue(EXTEND, false));
 	}
-	
+
 	@Override
-	public boolean connectsTo(BlockState state, boolean isSideSolid, Direction direction) {
+	public boolean connectsTo(BlockState state, boolean isSideSolid, @Nonnull Direction direction) {
 		return state.is(HedgesModule.hedgesTag);
 	}
-	
+
 	@Override
-	public boolean canSustainPlant(BlockState state, BlockGetter world, BlockPos pos, Direction facing, IPlantable plantable) {
+	public boolean canSustainPlant(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nonnull Direction facing, @Nonnull IPlantable plantable) {
 		return facing == Direction.UP && !state.getValue(WATERLOGGED) && plantable.getPlantType(world, pos) == PlantType.PLAINS;
 	}
 
@@ -83,20 +85,21 @@ public class HedgeBlock extends FenceBlock implements IQuarkBlock, IBlockColorPr
 				.setValue(EXTEND, downState.getBlock() instanceof HedgeBlock);
 	}
 
+	@Nonnull
 	@Override
-	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+	public BlockState updateShape(BlockState stateIn, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull LevelAccessor worldIn, @Nonnull BlockPos currentPos, @Nonnull BlockPos facingPos) {
 		if (stateIn.getValue(WATERLOGGED)) {
 			worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
 		}
 
 		if(facing == Direction.DOWN)
 			return stateIn.setValue(EXTEND, facingState.getBlock() instanceof HedgeBlock);
-		
+
 		return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
 	}
-	
+
 	@Override
-	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(@Nonnull StateDefinition.Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
 		builder.add(EXTEND);
 	}
@@ -118,7 +121,7 @@ public class HedgeBlock extends FenceBlock implements IQuarkBlock, IBlockColorPr
 	}
 
 	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+	public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
 		if(isEnabled() || group == CreativeModeTab.TAB_SEARCH)
 			super.fillItemCategory(group, items);
 	}

@@ -3,6 +3,7 @@ package vazkii.quark.content.world.block;
 import java.util.Random;
 import java.util.function.BooleanSupplier;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
@@ -27,7 +28,7 @@ public class BlossomLeavesBlock extends LeavesBlock implements IQuarkBlock {
 
 	private final QuarkModule module;
 	private BooleanSupplier enabledSupplier = () -> true;
-	
+
 	public BlossomLeavesBlock(String colorName, QuarkModule module, MaterialColor color) {
 		super(Block.Properties.of(Material.LEAVES, color)
 				.strength(0.2F)
@@ -37,22 +38,22 @@ public class BlossomLeavesBlock extends LeavesBlock implements IQuarkBlock {
 				.isValidSpawn((s, r, p, t) -> false)
 				.isSuffocating((s, r, p) -> false)
 				.isViewBlocking((s, r, p) -> false));
-		
+
 		this.module = module;
 
 		RegistryHelper.registerBlock(this, colorName + "_blossom_leaves");
 		RegistryHelper.setCreativeTab(this, CreativeModeTab.TAB_DECORATIONS);
-		
+
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT_MIPPED);
 	}
-	
+
 	@Override
-	public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
+	public void animateTick(@Nonnull BlockState stateIn, Level worldIn, BlockPos pos, @Nonnull Random rand) {
 		if(worldIn.isEmptyBlock(pos.below()) && rand.nextInt(5) == 0 && BlossomTreesModule.dropLeafParticles) {
 			double windStrength = 5 + Math.cos((double) worldIn.getGameTime() / 2000) * 2;
 			double windX = Math.cos((double) worldIn.getGameTime() / 1200) * windStrength;
 			double windZ = Math.sin((double) worldIn.getGameTime() / 1000) * windStrength;
-			
+
 			worldIn.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, stateIn), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, windX, -1.0, windZ);
 		}
 	}

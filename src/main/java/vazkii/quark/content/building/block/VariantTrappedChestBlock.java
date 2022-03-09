@@ -2,6 +2,7 @@ package vazkii.quark.content.building.block;
 
 import java.util.function.BooleanSupplier;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.base.Supplier;
@@ -42,7 +43,7 @@ public class VariantTrappedChestBlock extends ChestBlock implements IBlockItemPr
 	private BooleanSupplier enabledSupplier = () -> true;
 
 	private String path;
-	
+
 	public VariantTrappedChestBlock(String type, QuarkModule module, Supplier<BlockEntityType<? extends ChestBlockEntity>> supplier, Properties props) {
 		super(props, supplier);
 		RegistryHelper.registerBlock(this, type + "_trapped_chest");
@@ -58,9 +59,9 @@ public class VariantTrappedChestBlock extends ChestBlock implements IBlockItemPr
 	public boolean isFlammable(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
 		return false;
 	}
-	
+
 	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+	public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
 		if(module.enabled || group == CreativeModeTab.TAB_SEARCH)
 			super.fillItemCategory(group, items);
 	}
@@ -83,10 +84,10 @@ public class VariantTrappedChestBlock extends ChestBlock implements IBlockItemPr
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockPos p_153064_, BlockState p_153065_) {
+	public BlockEntity newBlockEntity(@Nonnull BlockPos p_153064_, @Nonnull BlockState p_153065_) {
 		return new VariantTrappedChestBlockEntity(p_153064_, p_153065_);
 	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public BlockItem provideItemBlock(Block block, Item.Properties props) {
@@ -101,7 +102,7 @@ public class VariantTrappedChestBlock extends ChestBlock implements IBlockItemPr
 		}
 
 	}
-	
+
 	@Override
 	public String getChestTexturePath() {
 		return "model/chest/" + path;
@@ -114,23 +115,24 @@ public class VariantTrappedChestBlock extends ChestBlock implements IBlockItemPr
 
 	// VANILLA TrappedChestBlock copy
 
+	@Nonnull
 	@Override
 	protected Stat<ResourceLocation> getOpenChestStat() {
 		return Stats.CUSTOM.get(Stats.TRIGGER_TRAPPED_CHEST);
 	}
-	
+
 	@Override
-	public boolean isSignalSource(BlockState p_149744_1_) {
+	public boolean isSignalSource(@Nonnull BlockState p_149744_1_) {
 		return true;
 	}
 
 	@Override
-	public int getSignal(BlockState p_180656_1_, BlockGetter p_180656_2_, BlockPos p_180656_3_, Direction p_180656_4_) {
+	public int getSignal(@Nonnull BlockState p_180656_1_, @Nonnull BlockGetter p_180656_2_, @Nonnull BlockPos p_180656_3_, @Nonnull Direction p_180656_4_) {
 		return Mth.clamp(ChestBlockEntity.getOpenCount(p_180656_2_, p_180656_3_), 0, 15);
 	}
 
 	@Override
-	public int getDirectSignal(BlockState p_176211_1_, BlockGetter p_176211_2_, BlockPos p_176211_3_, Direction p_176211_4_) {
+	public int getDirectSignal(@Nonnull BlockState p_176211_1_, @Nonnull BlockGetter p_176211_2_, @Nonnull BlockPos p_176211_3_, @Nonnull Direction p_176211_4_) {
 		return p_176211_4_ == Direction.UP ? p_176211_1_.getSignal(p_176211_2_, p_176211_3_, p_176211_4_) : 0;
 	}
 

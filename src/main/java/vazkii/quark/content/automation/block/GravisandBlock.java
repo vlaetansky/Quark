@@ -16,19 +16,21 @@ import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.automation.entity.Gravisand;
 
+import javax.annotation.Nonnull;
+
 public class GravisandBlock extends QuarkBlock {
 
 	public GravisandBlock(String regname, QuarkModule module, CreativeModeTab creativeTab, Properties properties) {
 		super(regname, module, creativeTab, properties);
 	}
-	
+
 	@Override
-	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean isMoving) {
+	public void onPlace(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull BlockState oldState, boolean isMoving) {
 		checkRedstone(world, pos);
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+	public void neighborChanged(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Block blockIn, @Nonnull BlockPos fromPos, boolean isMoving) {
 		checkRedstone(worldIn, pos);
 	}
 
@@ -38,25 +40,25 @@ public class GravisandBlock extends QuarkBlock {
         if(powered)
         	worldIn.scheduleTick(pos, this, 2);
 	}
-	
+
 	@Override
-	public boolean hasAnalogOutputSignal(BlockState state) {
+	public boolean hasAnalogOutputSignal(@Nonnull BlockState state) {
 		return true;
 	}
-	
+
 	@Override
-	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
+	public int getAnalogOutputSignal(@Nonnull BlockState blockState, @Nonnull Level worldIn, @Nonnull BlockPos pos) {
 		return 15;
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand) {
+	public void tick(@Nonnull BlockState state, ServerLevel worldIn, @Nonnull BlockPos pos, @Nonnull Random rand) {
 		if(!worldIn.isClientSide) {
 			if(checkFallable(worldIn, pos))
 				for(Direction face : Direction.values()) {
 					BlockPos offPos = pos.relative(face);
 					BlockState offState = worldIn.getBlockState(offPos);
-					
+
 					if(offState.getBlock() == this)
 			        	worldIn.scheduleTick(offPos, this, 2);
 				}
@@ -69,10 +71,10 @@ public class GravisandBlock extends QuarkBlock {
 				return true;
 			else return tryFall(worldIn, pos, Direction.UP);
 		}
-		
+
 		return false;
 	}
-	
+
 	private boolean tryFall(Level worldIn, BlockPos pos, Direction facing) {
 		BlockPos target = pos.relative(facing);
 		if((worldIn.isEmptyBlock(target) || canFallThrough(worldIn, pos, worldIn.getBlockState(target))) && worldIn.isInWorldBounds(pos)) {
@@ -80,10 +82,10 @@ public class GravisandBlock extends QuarkBlock {
 			worldIn.addFreshEntity(entity);
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
     public static boolean canFallThrough(LevelReader world, BlockPos pos, BlockState state) {
 		Block block = state.getBlock();
 		Material material = state.getMaterial();

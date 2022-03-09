@@ -21,19 +21,21 @@ import vazkii.quark.base.client.config.screen.widgets.IWidgetProvider;
 import vazkii.quark.base.client.config.screen.widgets.PencilButton;
 import vazkii.quark.base.module.config.type.IConfigType;
 
+import javax.annotation.Nonnull;
+
 public class ConfigCategory extends AbstractConfigElement implements IConfigCategory, IWidgetProvider {
 
 	public final List<IConfigElement> subElements = new LinkedList<>();
-	
+
 	private final String path;
 	private final int depth;
 	private final Object holderObject;
-	
+
 	private boolean dirty = false;
-	
+
 	public ConfigCategory(String name, String comment, IConfigCategory parent, Object holderObject) {
 		super(name, comment, parent);
-		
+
 		this.holderObject = holderObject;
 		if(parent == null || (parent instanceof ExternalCategory)) {
 			path = name;
@@ -43,22 +45,22 @@ public class ConfigCategory extends AbstractConfigElement implements IConfigCate
 			depth = 1 + parent.getDepth();
 		}
 	}
-	
+
 	@Override
 	public String getPath() {
 		return path;
 	}
-	
+
 	@Override
 	public int getDepth() {
 		return depth;
 	}
-	
+
 	@Override
 	public List<IConfigElement> getSubElements() {
 		return subElements;
 	}
-	
+
 	@Override
 	public String getGuiDisplayName() {
 		return WordUtils.capitalize(getName().replaceAll("_", " "));
@@ -72,7 +74,7 @@ public class ConfigCategory extends AbstractConfigElement implements IConfigCate
 				dirty = true;
 				break;
 			}
-	
+
 		if(parent != null)
 			parent.updateDirty();
 	}
@@ -96,41 +98,41 @@ public class ConfigCategory extends AbstractConfigElement implements IConfigCate
 	public boolean isDirty() {
 		return dirty;
 	}
-	
+
 	@Override
 	public void refresh() {
 		subElements.forEach(IConfigElement::refresh);
 	}
-	
+
 	@Override
 	public void reset(boolean hard) {
-		subElements.forEach(e -> e.reset(hard));		
+		subElements.forEach(e -> e.reset(hard));
 	}
-	
+
 	@Override
-	public IConfigCategory addCategory(String name, String comment, Object holderObject) {
+	public IConfigCategory addCategory(String name, @Nonnull String comment, Object holderObject) {
 		if(holderObject != null && holderObject instanceof IConfigType)
 			((IConfigType) holderObject).setCategory(this);
-		
+
 		return addCategory(new ConfigCategory(name, comment, this, holderObject));
 	}
-	
+
 	public IConfigCategory addCategory(IConfigCategory category) {
 		subElements.add(category);
 		return category;
 	}
-	
+
 	@Override
-	public <T> IConfigObject<T> addEntry(ConfigValue<T> value, T default_, Supplier<T> getter, String comment, Predicate<Object> restriction) {
+	public <T> IConfigObject<T> addEntry(ConfigValue<T> value, T default_, Supplier<T> getter, @Nonnull String comment, @Nonnull Predicate<Object> restriction) {
 		IConfigObject<T> obj = ConfigObject.create(value, comment, default_, getter, restriction, this);
 		addEntry(obj, default_);
 		return obj;
 	}
-	
+
 	public <T> void addEntry(IConfigObject<T> obj, T default_) {
 		subElements.add(obj);
 	}
-	
+
 	@Override
 	public void close() {
 		subElements.removeIf(e -> e instanceof ConfigCategory && ((ConfigCategory) e).subElements.isEmpty());
@@ -149,11 +151,11 @@ public class ConfigCategory extends AbstractConfigElement implements IConfigCate
 		stream.println();
 		super.print(pad, stream);
 		stream.printf("%s[%s]%n", pad, path);
-		
+
 		final String newPad = String.format("\t%s", pad);
 		subElements.forEach(e -> e.print(newPad, stream));
 	}
-	
+
 	@Override
 	public String getSubtitle() {
 		String ret = "";
@@ -163,19 +165,19 @@ public class ConfigCategory extends AbstractConfigElement implements IConfigCate
 			int size = subElements.size();
 			ret = (size == 1 ? I18n.get("quark.gui.config.onechild") : I18n.get("quark.gui.config.nchildren", subElements.size()));
 		}
-		
+
 		if(ret.length() > 30)
 			ret = ret.substring(0, 27) + "...";
 		return ret;
 	}
 
 	@Override
-	public int compareTo(IConfigElement o) {
+	public int compareTo(@Nonnull IConfigElement o) {
 		if(o == this)
 			return 0;
 		if(!(o instanceof ConfigCategory))
 			return 1;
-		
+
 		return name.compareTo(((ConfigCategory) o).name);
 	}
 

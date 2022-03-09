@@ -11,14 +11,16 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.world.item.ItemStack;
 import vazkii.quark.content.tools.item.SeedPouchItem;
 
+import javax.annotation.Nonnull;
+
 public class SeedPouchClientTooltipComponent implements ClientTooltipComponent {
 
 	final ItemStack stack;
 	int width;
-	
+
 	public SeedPouchClientTooltipComponent(ItemStack stack) {
 		this.stack = stack;
-		
+
 		Pair<ItemStack, Integer> contents = SeedPouchItem.getContents(stack);
 		if(contents != null) {
 			ItemStack seed = contents.getLeft().copy();
@@ -28,11 +30,11 @@ public class SeedPouchClientTooltipComponent implements ClientTooltipComponent {
 			width = stacks * 8 + 8;
 		}
 	}
-	
+
 	@Override
-	public void renderImage(Font font, int tooltipX, int tooltipY, PoseStack pose, ItemRenderer itemRenderer, int something) {
+	public void renderImage(@Nonnull Font font, int tooltipX, int tooltipY, @Nonnull PoseStack pose, @Nonnull ItemRenderer itemRenderer, int something) {
 		Pair<ItemStack, Integer> contents = SeedPouchItem.getContents(stack);
-		if(contents != null) {			
+		if(contents != null) {
 			ItemStack seed = contents.getLeft().copy();
 
 			Minecraft mc = Minecraft.getInstance();
@@ -53,14 +55,14 @@ public class SeedPouchClientTooltipComponent implements ClientTooltipComponent {
 			}
 		}
 	}
-	
+
 	@Override
 	public int getHeight() {
 		return width == 0 ? 0 : 20;
 	}
 
 	@Override
-	public int getWidth(Font font) {
+	public int getWidth(@Nonnull Font font) {
 		return width;
 	}
 

@@ -11,6 +11,8 @@ import net.minecraft.network.chat.TextComponent;
 import vazkii.quark.api.config.IConfigObject;
 import vazkii.quark.base.handler.MiscUtil;
 
+import javax.annotation.Nonnull;
+
 public class CheckboxButton extends Button {
 
 	private final Supplier<Boolean> checkedSupplier;
@@ -25,7 +27,7 @@ public class CheckboxButton extends Button {
 	}
 
 	@Override
-	public void renderButton(PoseStack mstack, int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
+	public void renderButton(@Nonnull PoseStack mstack, int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
 		super.renderButton(mstack, p_renderButton_1_, p_renderButton_2_, p_renderButton_3_);
 
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);

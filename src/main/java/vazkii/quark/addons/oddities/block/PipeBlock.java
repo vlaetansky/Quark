@@ -71,33 +71,34 @@ public class PipeBlock extends QuarkBlock implements SimpleWaterloggedBlock, Ent
 	private static final VoxelShape[] shapeCache = new VoxelShape[64];
 
 	public PipeBlock(QuarkModule module) {
-		super("pipe", module, CreativeModeTab.TAB_REDSTONE, 
+		super("pipe", module, CreativeModeTab.TAB_REDSTONE,
 				Block.Properties.of(Material.GLASS)
 				.strength(3F, 10F)
 				.sound(SoundType.GLASS)
 				.noOcclusion());
-		
+
 		registerDefaultState(defaultBlockState()
 				.setValue(DOWN, false).setValue(UP, false)
 				.setValue(NORTH, false).setValue(SOUTH, false)
 				.setValue(WEST, false).setValue(EAST, false)
 				.setValue(WATERLOGGED, false));
-		
+
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
 	}
-	
+
+	@Nonnull
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+	public InteractionResult use(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, Player player, @Nonnull InteractionHand handIn, @Nonnull BlockHitResult hit) {
 		ItemStack stack = player.getItemInHand(handIn);
-		
+
 		// fix pipes if they're ruined
 		if(stack.getItem() == Items.STICK) {
 			Set<BlockPos> found = new HashSet<>();
 			boolean fixedAny = false;
-			
+
 			Set<BlockPos> candidates = new HashSet<>();
 			Set<BlockPos> newCandidates = new HashSet<>();
-			
+
 			candidates.add(pos);
 			do {
 				for(BlockPos cand : candidates) {
@@ -107,7 +108,7 @@ public class PipeBlock extends QuarkBlock implements SimpleWaterloggedBlock, Ent
 						if(offState.getBlock() == this && !candidates.contains(offPos) && !found.contains(offPos))
 							newCandidates.add(offPos);
 					}
-					
+
 					BlockState curr = worldIn.getBlockState(cand);
 					BlockState target = getTargetState(worldIn, cand, curr.getValue(WATERLOGGED));
 					if(!target.equals(curr)) {
@@ -115,74 +116,75 @@ public class PipeBlock extends QuarkBlock implements SimpleWaterloggedBlock, Ent
 						worldIn.setBlock(cand, target, 2 | 4);
 					}
 				}
-				
+
 				found.addAll(candidates);
 				candidates = newCandidates;
 				newCandidates = new HashSet<>();
 			} while(!candidates.isEmpty());
-			
+
 			if(fixedAny)
 				return InteractionResult.SUCCESS;
 		}
-		
+
 		return super.use(state, worldIn, pos, player, handIn, hit);
 	}
-	
+
 	@Nonnull
 	@Override
 	public FluidState getFluidState(BlockState state) {
 		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
 	}
-	
+
 	@Override
-	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+	public void neighborChanged(BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Block blockIn, @Nonnull BlockPos fromPos, boolean isMoving) {
 		BlockState targetState = getTargetState(worldIn, pos, state.getValue(WATERLOGGED));
 		if(!targetState.equals(state))
 			worldIn.setBlock(pos, targetState, 2 | 4);
 	}
-	
+
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		return getTargetState(context.getLevel(), context.getClickedPos(), context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER);
 	}
-	
+
 	private BlockState getTargetState(Level worldIn, BlockPos pos, boolean waterlog) {
 		BlockState newState = defaultBlockState();
 		newState = newState.setValue(WATERLOGGED, waterlog);
-		
+
 		for(Direction facing : Direction.values()) {
 			BooleanProperty prop = CONNECTIONS[facing.ordinal()];
 			PipeBlockEntity.ConnectionType type = PipeBlockEntity.getConnectionTo(worldIn, pos, facing);
 
 			newState = newState.setValue(prop, type.isSolid);
 		}
-		
+
 		return newState;
 	}
-	
+
+	@Nonnull
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+	public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
 		int index = 0;
 		for(Direction dir : Direction.values()) {
 			int ord = dir.ordinal();
 			if(state.getValue(CONNECTIONS[ord]))
 				index += (1 << ord);
 		}
-		
+
 		VoxelShape cached = shapeCache[index];
 		if(cached == null) {
 			VoxelShape currShape = CENTER_SHAPE;
-			
+
 			for(Direction dir : Direction.values()) {
 				boolean connected = isConnected(state, dir);
 				if(connected)
 					currShape = Shapes.or(currShape, SIDE_BOXES[dir.ordinal()]);
 			}
-			
+
 			shapeCache[index] = currShape;
 			cached = currShape;
 		}
-		
+
 		return cached;
 	}
 
@@ -197,36 +199,36 @@ public class PipeBlock extends QuarkBlock implements SimpleWaterloggedBlock, Ent
 	}
 
 	@Override
-	public boolean hasAnalogOutputSignal(BlockState state) {
+	public boolean hasAnalogOutputSignal(@Nonnull BlockState state) {
 		return true;
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
+	public int getAnalogOutputSignal(@Nonnull BlockState blockState, Level worldIn, @Nonnull BlockPos pos) {
 		BlockEntity tile = worldIn.getBlockEntity(pos);
 		if(tile instanceof PipeBlockEntity)
 			return ((PipeBlockEntity) tile).getComparatorOutput();
 		return 0;
 	}
-	
+
 	@Override
-	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(@Nonnull BlockState state, Level worldIn, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
 		BlockEntity tileentity = worldIn.getBlockEntity(pos);
 
 		if(tileentity instanceof PipeBlockEntity)
 			((PipeBlockEntity) tileentity).dropAllItems();
-		
+
 		super.onRemove(state, worldIn, pos, newState, isMoving);
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+	public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
 		return new PipeBlockEntity(pos, state);
 	}
-	
+
 	@Override
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level world, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
 		return createTickerHelper(type, PipesModule.blockEntityType, PipeBlockEntity::tick);
 	}
-	
+
 }

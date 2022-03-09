@@ -1,10 +1,5 @@
 package vazkii.quark.base.block;
 
-import java.util.function.BooleanSupplier;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.minecraft.core.NonNullList;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.CreativeModeTab;
@@ -12,6 +7,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.ButtonBlock;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.module.QuarkModule;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.function.BooleanSupplier;
 
 /**
  * @author WireSegal
@@ -35,11 +34,11 @@ public abstract class QuarkButtonBlock extends ButtonBlock implements IQuarkBloc
     @Override
     protected abstract SoundEvent getSound(boolean powered);
 
-    @Override 
-    public abstract int getPressDuration();
-    
     @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+    public abstract int getPressDuration();
+
+    @Override
+    public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
         if(isEnabled() || group == CreativeModeTab.TAB_SEARCH)
             super.fillItemCategory(group, items);
     }

@@ -64,7 +64,7 @@ public class DiamondHeartItem extends QuarkItem {
 						stoneling.setYRot(player.getYRot() + 180F);
 						stoneling.finalizeSpawn((ServerLevelAccessor) world, world.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, variant, null);
 						world.addFreshEntity(stoneling);
-						
+
 						if(player instanceof ServerPlayer)
 							CriteriaTriggers.SUMMONED_ENTITY.trigger((ServerPlayer) player, stoneling);
 
@@ -76,19 +76,19 @@ public class DiamondHeartItem extends QuarkItem {
 				}
 			}
 		}
-		
+
 		return InteractionResult.PASS;
 	}
 
 	@Nonnull
 	@Override
-	public Rarity getRarity(ItemStack stack) {
+	public Rarity getRarity(@Nonnull ItemStack stack) {
 		return Rarity.UNCOMMON;
 	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public boolean isFoil(ItemStack stack) {
+	public boolean isFoil(@Nonnull ItemStack stack) {
 		return true;
 	}
 

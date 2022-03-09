@@ -15,20 +15,22 @@ import vazkii.quark.base.client.config.external.ExternalCategory;
 import vazkii.quark.base.client.config.screen.widgets.ConfigElementList;
 import vazkii.quark.base.client.config.screen.widgets.ScrollableWidgetList;
 
+import javax.annotation.Nonnull;
+
 public class CategoryScreen extends AbstractScrollingWidgetScreen {
 
 	public final IConfigCategory category;
 	private String breadcrumbs;
-	
+
 	public CategoryScreen(Screen parent, IConfigCategory category) {
 		super(parent);
 		this.category = category;
 	}
-	
+
 	@Override
 	protected void init() {
 		super.init();
-		
+
 		breadcrumbs = category.getName();
 		IConfigCategory currCategory = category.getParent();
 		while(currCategory != null && !(currCategory instanceof ExternalCategory)) {
@@ -37,19 +39,19 @@ public class CategoryScreen extends AbstractScrollingWidgetScreen {
 		}
 		breadcrumbs = String.format("> %s", breadcrumbs);
 	}
-	
+
 	@Override
-	public void render(PoseStack mstack, int mouseX, int mouseY, float pticks) {
+	public void render(@Nonnull PoseStack mstack, int mouseX, int mouseY, float pticks) {
 		super.render(mstack, mouseX, mouseY, pticks);
-		
+
 		int left = 20;
-		
+
 		// change name for externals
 		String modName = WordUtils.capitalizeFully(Quark.MOD_ID);
 		IConfigCategory currCategory = category;
 		while(currCategory != null && !(currCategory instanceof ExternalCategory))
 			currCategory = currCategory.getParent();
-		
+
 		if(currCategory != null) {
 			modName = currCategory.getName();
 			if(modName.matches("common|client")) {
@@ -57,7 +59,7 @@ public class CategoryScreen extends AbstractScrollingWidgetScreen {
 				modName = currCategory.getName();
 			}
 		}
-		
+
 		font.draw(mstack, ChatFormatting.BOLD + I18n.get("quark.gui.config.header", modName), left, 10, 0x48ddbc);
 		font.draw(mstack, breadcrumbs, left, 20, 0xFFFFFF);
 	}

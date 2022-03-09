@@ -10,9 +10,6 @@
  */
 package vazkii.quark.base.capability;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -20,6 +17,9 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class SelfProvider<V> implements ICapabilityProvider {
 
@@ -49,7 +49,7 @@ public class SelfProvider<V> implements ICapabilityProvider {
 	}
 
 
-	@Nullable
+	@Nonnull
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {

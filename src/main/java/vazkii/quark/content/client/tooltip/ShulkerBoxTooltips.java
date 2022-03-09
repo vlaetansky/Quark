@@ -38,6 +38,8 @@ import vazkii.quark.base.handler.SimilarBlockTypeHandler;
 import vazkii.quark.content.client.module.ChestSearchingModule;
 import vazkii.quark.content.client.module.ImprovedTooltipsModule;
 
+import javax.annotation.Nonnull;
+
 public class ShulkerBoxTooltips {
 
 	public static final ResourceLocation WIDGET_RESOURCE = new ResourceLocation("quark", "textures/misc/shulker_widget.png");
@@ -70,7 +72,7 @@ public class ShulkerBoxTooltips {
 								tooltip.remove(either);
 						}
 					}
-					
+
 					if(!ImprovedTooltipsModule.shulkerBoxRequireShift || Screen.hasShiftDown())
 						tooltip.add(1, Either.right(new ShulkerComponent(stack)));
 					if(ImprovedTooltipsModule.shulkerBoxRequireShift && !Screen.hasShiftDown())
@@ -104,7 +106,7 @@ public class ShulkerBoxTooltips {
 
 
 		@Override
-		public void renderImage(Font font, int tooltipX, int tooltipY, PoseStack pose, ItemRenderer itemRenderer, int something) {
+		public void renderImage(@Nonnull Font font, int tooltipX, int tooltipY, @Nonnull PoseStack pose, @Nonnull ItemRenderer itemRenderer, int something) {
 			Minecraft mc = Minecraft.getInstance();
 
 			CompoundTag cmp = ItemNBTHelper.getCompound(stack, "BlockEntityTag", true);
@@ -233,7 +235,7 @@ public class ShulkerBoxTooltips {
 		}
 
 		@Override
-		public int getWidth(Font font) {
+		public int getWidth(@Nonnull Font font) {
 			return 171;
 		}
 	}

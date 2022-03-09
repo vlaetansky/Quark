@@ -28,6 +28,8 @@ import vazkii.quark.base.handler.ContributorRewardHandler;
 import vazkii.quark.base.handler.GeneralConfig;
 import vazkii.quark.base.module.ModuleCategory;
 
+import javax.annotation.Nonnull;
+
 public class QuarkConfigHomeScreen extends AbstractQScreen {
 
 	private static final CubeMap CUBE_MAP = new CubeMap(new ResourceLocation(Quark.MOD_ID, "textures/misc/panorama/panorama"));
@@ -44,27 +46,27 @@ public class QuarkConfigHomeScreen extends AbstractQScreen {
 
 		final int perLine = 3;
 		boolean addExternal = ExternalConfigHandler.instance.hasAny();
-		
+
 		int pad = 10;
 		int vpad = 23;
 		int bWidth = 120;
 		int left = width / 2 - ((bWidth + pad) * perLine / 2) + 4;
-		int vStart = 70; 
+		int vStart = 70;
 
 		int i = 0;
 		int catCount = ModuleCategory.values().length + 1;
 		if(addExternal)
 			catCount++;
-		
+
 		boolean shiftedLeft = false;
 		int useLeft = left;
-		
+
 		for(ModuleCategory category : ModuleCategory.values()) {
 			if(!shiftedLeft && catCount - i < perLine) {
 				useLeft = width / 2 - ((bWidth + pad) * (catCount - i) / 2);
 				shiftedLeft = true;
 			}
-			
+
 			int x = useLeft + (bWidth + pad) * (i % perLine);
 			int y = vStart + (i / perLine) * vpad;
 
@@ -72,7 +74,7 @@ public class QuarkConfigHomeScreen extends AbstractQScreen {
 			Component comp = componentFor(configCategory);
 
 			Button icon = new IconButton(x, y, bWidth - 20, 20, comp, new ItemStack(category.item), categoryLink(configCategory));
-			Button checkbox = new CheckboxButton(x + bWidth - 20, y, IngameConfigHandler.INSTANCE.getCategoryEnabledObject(category)); 
+			Button checkbox = new CheckboxButton(x + bWidth - 20, y, IngameConfigHandler.INSTANCE.getCategoryEnabledObject(category));
 
 			addRenderableWidget(icon);
 			addRenderableWidget(checkbox);
@@ -84,11 +86,11 @@ public class QuarkConfigHomeScreen extends AbstractQScreen {
 
 			i++;
 		}
-		
+
 		IConfigCategory cat = IngameConfigHandler.INSTANCE.getConfigCategory(null);
 		addRenderableWidget(new Button(useLeft + (bWidth + pad) * (i % perLine), vStart + (i / perLine) * vpad, bWidth, 20, componentFor(cat), categoryLink(cat)));
 		i++;
-		
+
 		if(addExternal) {
 			cat = ExternalConfigHandler.instance.mockCategory;
 			addRenderableWidget(new Button(useLeft + (bWidth + pad) * (i % perLine), vStart + (i / perLine) * vpad, bWidth, 20, componentFor(cat), categoryLink(cat)));
@@ -123,22 +125,22 @@ public class QuarkConfigHomeScreen extends AbstractQScreen {
 	}
 
 	@Override
-	public void render(PoseStack mstack, int mouseX, int mouseY, float pticks) {
+	public void render(@Nonnull PoseStack mstack, int mouseX, int mouseY, float pticks) {
 		time += pticks;
-		
+
 		Minecraft mc = Minecraft.getInstance();
 		if(mc.level == null) {
 			float spin = pticks * 2;
 			float blur = 0.85F;
-			
+
 			if(time < 20F && !GeneralConfig.disableQMenuEffects) {
 				spin += (20F - time);
 				blur = (time / 20F) * 0.75F + 0.1F;
 			}
-			
+
 			PANORAMA.render(spin, blur);
 		} else renderBackground(mstack);
-		
+
 		int boxWidth = 400;
 		fill(mstack, width / 2 - boxWidth / 2, 0, width / 2 + boxWidth / 2, this.height, 0x66000000);
 		fill(mstack, width / 2 - boxWidth / 2 - 1, 0, width / 2 - boxWidth / 2, this.height, 0x66999999); // nice

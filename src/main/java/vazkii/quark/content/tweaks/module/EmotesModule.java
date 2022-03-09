@@ -55,26 +55,28 @@ import vazkii.quark.content.tweaks.client.emote.ModelAccessor;
 import vazkii.quark.content.tweaks.client.screen.widgets.EmoteButton;
 import vazkii.quark.content.tweaks.client.screen.widgets.TranslucentButton;
 
+import javax.annotation.Nonnull;
+
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class EmotesModule extends QuarkModule {
 
 	private static final Set<String> DEFAULT_EMOTE_NAMES = ImmutableSet.of(
 			"no",
 			"yes",
-			"wave", 
-			"salute", 
+			"wave",
+			"salute",
 			"cheer",
-			"clap", 
+			"clap",
 			"think",
-			"point", 
+			"point",
 			"shrug",
 			"headbang",
 			"weep",
 			"facepalm");
 
 	private static final Set<String> PATREON_EMOTES = ImmutableSet.of(
-			"dance", 
-			"tpose", 
+			"dance",
+			"tpose",
 			"dab",
 			"jet",
 			"exorcist",
@@ -86,7 +88,7 @@ public class EmotesModule extends QuarkModule {
 	@Config(description = "The enabled default emotes. Remove from this list to disable them. You can also re-order them, if you feel like it.")
 	public static List<String> enabledEmotes = Lists.newArrayList(DEFAULT_EMOTE_NAMES);
 
-	@Config(description = "The list of Custom Emotes to be loaded.\nWatch the tutorial on Custom Emotes to learn how to make your own: https://youtu.be/ourHUkan6aQ") 
+	@Config(description = "The list of Custom Emotes to be loaded.\nWatch the tutorial on Custom Emotes to learn how to make your own: https://youtu.be/ourHUkan6aQ")
 	public static List<String> customEmotes = Lists.newArrayList();
 
 	@Config(description = "Enable this to make custom emotes read the file every time they're triggered so you can edit on the fly.\nDO NOT ship enabled this in a modpack, please.")
@@ -114,7 +116,7 @@ public class EmotesModule extends QuarkModule {
 		mc.getResourcePackRepository().addPackFinder(new RepositorySource() {
 
 			@Override
-			public void loadPacks(Consumer<Pack> packConsumer, Pack.PackConstructor packInfoFactory) {
+			public void loadPacks(@Nonnull Consumer<Pack> packConsumer, @Nonnull Pack.PackConstructor packInfoFactory) {
 				resourcePack = new CustomEmoteIconResourcePack();
 
 				String name = "quark:emote_resources";
@@ -221,7 +223,7 @@ public class EmotesModule extends QuarkModule {
 					row++;
 			}
 
-			event.addListener(new TranslucentButton(gui.width - 1 - EMOTE_BUTTON_WIDTH * EMOTES_PER_ROW, buttonY, EMOTE_BUTTON_WIDTH * EMOTES_PER_ROW, 20, 
+			event.addListener(new TranslucentButton(gui.width - 1 - EMOTE_BUTTON_WIDTH * EMOTES_PER_ROW, buttonY, EMOTE_BUTTON_WIDTH * EMOTES_PER_ROW, 20,
 					new TranslatableComponent("quark.gui.button.emotes"),
 					(b) -> {
 						for(Button bt : emoteButtons)
@@ -277,7 +279,7 @@ public class EmotesModule extends QuarkModule {
 
 				RenderSystem.enableBlend(); // TODO LOW PRIO blend doesn't enable
 				RenderSystem.defaultBlendFunc();
-				
+
 				Screen.blit(stack, x, y, 0, 0, 32, 32, 32, 32);
 				RenderSystem.enableBlend();
 
@@ -286,7 +288,7 @@ public class EmotesModule extends QuarkModule {
 				stack.popPose();
 			}
 		}
-	}	
+	}
 
 
 	@SubscribeEvent

@@ -16,6 +16,8 @@ import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.client.config.screen.CategoryScreen;
 import vazkii.quark.base.client.handler.TopLayerTooltipHandler;
 
+import javax.annotation.Nonnull;
+
 public class ConfigElementList<T extends IConfigElement & IWidgetProvider> extends ScrollableWidgetList<CategoryScreen, ConfigElementList.Entry<T>> {
 
 	public ConfigElementList(CategoryScreen parent) {
@@ -27,19 +29,19 @@ public class ConfigElementList<T extends IConfigElement & IWidgetProvider> exten
 	protected void findEntries() {
 		boolean hadObjects = false;
 		boolean isObject = true;
-		
+
 		for(IConfigElement elm : parent.category.getSubElements()) {
 			boolean wasObject = isObject;
 			isObject = elm instanceof IConfigObject;
-			
+
 			if(wasObject && !isObject && hadObjects)
 				addEntry(new Entry<T>(parent, null)); // separator
-			
-			Entry<T> entry = new Entry<>(parent, (T) elm); 
+
+			Entry<T> entry = new Entry<>(parent, (T) elm);
 			addEntry(entry);
-			
+
 			hadObjects = hadObjects || isObject;
-		}		
+		}
 	}
 
 	public static final class Entry<T extends IConfigElement & IWidgetProvider> extends ScrollableWidgetList.Entry<Entry<T>> {
@@ -48,30 +50,30 @@ public class ConfigElementList<T extends IConfigElement & IWidgetProvider> exten
 
 		public Entry(CategoryScreen parent, T element) {
 			this.element = element;
-			
+
 			if(element != null)
 				element.addWidgets(parent, children);
 		}
-		
+
 		@Override
 		public void render(PoseStack mstack, int index, int rowTop, int rowLeft, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float pticks) {
 			super.render(mstack, index, rowTop, rowLeft, rowWidth, rowHeight, mouseX, mouseY, hovered, pticks);
-			
+
 			Minecraft mc = Minecraft.getInstance();
-			
+
 			if(element != null) {
 				int left = rowLeft + 10;
 				int top = rowTop + 4;
-				
+
 				int effIndex = index + 1;
 				if(element instanceof ConfigCategory)
 					effIndex--; // compensate for the divider
 				drawBackground(mstack, effIndex, rowTop, rowLeft, rowWidth, rowHeight, mouseX, mouseY, hovered);
-				
+
 				String name = element.getGuiDisplayName();
 				if(element.isDirty())
 					name += ChatFormatting.GOLD + "*";
-				
+
 				int len = mc.font.width(name);
 				int maxLen = rowWidth - 85;
 				String originalName = null;
@@ -81,10 +83,10 @@ public class ConfigElementList<T extends IConfigElement & IWidgetProvider> exten
 						name = name.substring(0, name.length() - 1);
 						len = mc.font.width(name);
 					} while(len > maxLen);
-					
+
 					name += "...";
 				}
-				
+
 				List<String> tooltip = element.getTooltip();
 				if(originalName != null) {
 					if(tooltip == null) {
@@ -95,16 +97,16 @@ public class ConfigElementList<T extends IConfigElement & IWidgetProvider> exten
 						tooltip.add(0, originalName);
 					}
 				}
-				
+
 				if(tooltip != null) {
 					int hoverLeft = left + mc.font.width(name + " ");
 					int hoverRight = hoverLeft + mc.font.width("(?)");
-					
+
 					name += (ChatFormatting.AQUA + " (?)");
 					if(mouseX >= hoverLeft && mouseX < hoverRight && mouseY >= top && mouseY < (top + 10))
 						TopLayerTooltipHandler.setTooltip(tooltip, mouseX, mouseY);
 				}
-				
+
 				mc.font.drawShadow(mstack, name, left, top, 0xFFFFFF);
 				mc.font.drawShadow(mstack, element.getSubtitle(), left, top + 10, 0x999999);
 			} else {
@@ -113,9 +115,10 @@ public class ConfigElementList<T extends IConfigElement & IWidgetProvider> exten
 			}
 		}
 
+		@Nonnull
 		@Override
 		public Component getNarration() {
-			return new TextComponent(element == null ? "" : element.getGuiDisplayName()); 
+			return new TextComponent(element == null ? "" : element.getGuiDisplayName());
 		}
 
 	}

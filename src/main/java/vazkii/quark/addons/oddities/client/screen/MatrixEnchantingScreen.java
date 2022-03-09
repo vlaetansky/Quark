@@ -30,6 +30,8 @@ import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.oddities.MatrixEnchanterOperationMessage;
 
+import javax.annotation.Nonnull;
+
 public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchantingMenu> {
 
 	public static final ResourceLocation BACKGROUND = new ResourceLocation(Quark.MOD_ID, "textures/misc/matrix_enchanting.png");
@@ -61,7 +63,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 		pieceList.setLeftPos(leftPos + 139);
 		addRenderableWidget(pieceList);
 		updateButtonStatus();
-		
+
 		pieceList.refresh();
 	}
 
@@ -74,7 +76,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 			selectedPiece = -1;
 			pieceList.refresh();
 		}
-		
+
 		if(enchanter.clientMatrixDirty) {
 			pieceList.refresh();
 			enchanter.clientMatrixDirty = false;
@@ -82,12 +84,12 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 	}
 
 	@Override
-	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
+	protected void renderBg(@Nonnull PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		Minecraft mc = getMinecraft();
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, BACKGROUND);
-		
+
 		int i = leftPos;
 		int j = topPos;
 		blit(stack, i, j, 0, 0, imageWidth, imageHeight);
@@ -97,7 +99,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 			int barHeight = (int) (((float) enchanter.charge / MatrixEnchantingModule.chargePerLapis) * maxHeight);
 			blit(stack, i + 7, j + 32 + maxHeight - barHeight, 50, 176 + maxHeight - barHeight, 4, barHeight);
 		}
-		
+
 		pieceList.render(stack, mouseX, mouseY, partialTicks);
 
 		if(enchanter.matrix != null && enchanter.matrix.canGeneratePiece(enchanter.bookshelfPower, enchanter.enchantability) && !mc.player.isCreative()) {
@@ -123,11 +125,11 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 			font.draw(stack, text, x, y, has ? 0xc8ff8f : 0xff8f8f);
 		}
 	}
-	
+
 	@Override
-	protected void renderLabels(PoseStack matrix, int mouseX, int mouseY) {
+	protected void renderLabels(@Nonnull PoseStack matrix, int mouseX, int mouseY) {
 		int color = MiscUtil.getGuiTextColor("matrix_enchanting");
-		
+
 		font.draw(matrix, enchanter.getDisplayName().getString(), 12, 5, color);
 		font.draw(matrix, playerInv.getDisplayName().getString(), 8, imageHeight - 96 + 2, color);
 
@@ -140,7 +142,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 		}
 	}
 	@Override
-	public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+	public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		renderBackground(stack);
 		super.render(stack, mouseX, mouseY, partialTicks);
 
@@ -168,7 +170,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 			}
 
 			renderComponentTooltip(stack, tooltip, mouseX, mouseY); // renderTooltip
-		} else 
+		} else
 			renderTooltip(stack, mouseX, mouseY);
 	}
 
@@ -194,7 +196,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
-		
+
 		if(enchanter.matrix == null)
 			return true;
 
@@ -213,7 +215,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 		} else if(mouseButton == 1 && selectedPiece != -1) {
 			rotate(selectedPiece);
 		}
-		
+
 		return true;
 	}
 
@@ -221,7 +223,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, BACKGROUND);
-		
+
 		stack.pushPose();
 		stack.translate(86, 11, 0);
 
@@ -306,7 +308,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 			selectedPiece = -1;
 			click();
 		}
-	}	
+	}
 
 	private void send(int operation, int arg0, int arg1, int arg2) {
 		MatrixEnchanterOperationMessage message = new MatrixEnchanterOperationMessage(operation, arg0, arg1, arg2);
@@ -318,7 +320,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 	}
 
 	private void updateButtonStatus() {
-		plusButton.active = (enchanter.matrix != null 
+		plusButton.active = (enchanter.matrix != null
 				&& (getMinecraft().player.isCreative() || enchanter.charge > 0)
 				&& enchanter.matrix.validateXp(getMinecraft().player, enchanter.bookshelfPower)
 				&& enchanter.matrix.canGeneratePiece(enchanter.bookshelfPower, enchanter.enchantability));

@@ -96,7 +96,7 @@ public class ExclusionRecipe implements CraftingRecipe {
 
     @Nonnull
     @Override
-    public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
+    public NonNullList<ItemStack> getRemainingItems(@Nonnull CraftingContainer inv) {
         return parent.getRemainingItems(inv);
     }
 
@@ -144,7 +144,7 @@ public class ExclusionRecipe implements CraftingRecipe {
     }
 
     public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ExclusionRecipe> {
-       
+
     	public Serializer() {
             setRegistryName("quark:exclusion");
         }

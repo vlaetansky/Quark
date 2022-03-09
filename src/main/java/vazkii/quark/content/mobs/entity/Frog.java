@@ -131,7 +131,7 @@ public class Frog extends Animal implements IEntityAdditionalSpawnData, IForgeSh
                 .add(Attributes.MOVEMENT_SPEED, 0.25D)
 				.add(ForgeMod.ENTITY_GRAVITY.get());
     }
-	
+
 	@Nonnull
 	@Override
 	public MoveControl getMoveControl() {
@@ -145,7 +145,7 @@ public class Frog extends Animal implements IEntityAdditionalSpawnData, IForgeSh
 	}
 
 	@Override
-	public boolean causeFallDamage(float distance, float damageMultiplier, DamageSource source) {
+	public boolean causeFallDamage(float distance, float damageMultiplier, @Nonnull DamageSource source) {
 		return false;
 	}
 
@@ -166,7 +166,7 @@ public class Frog extends Animal implements IEntityAdditionalSpawnData, IForgeSh
 	public float getSizeModifier() {
 		return entityData.get(SIZE_MODIFIER);
 	}
-	
+
 	public static boolean canBeSweatered() {
 		Calendar calendar = Calendar.getInstance();
 		return calendar.get(Calendar.MONTH) + 1 == 4 && calendar.get(Calendar.DAY_OF_MONTH) == 1;
@@ -180,7 +180,7 @@ public class Frog extends Animal implements IEntityAdditionalSpawnData, IForgeSh
 			setSweater(CommonProxy.jingleTheBells && (getUUID().getLeastSignificantBits() % 10 == 0));
 			sweatered = true;
 		}
-		
+
 		if (this.jumpTicks != this.jumpDuration) ++this.jumpTicks;
 		else if (this.jumpDuration != 0) {
 			this.jumpTicks = 0;
@@ -275,7 +275,7 @@ public class Frog extends Animal implements IEntityAdditionalSpawnData, IForgeSh
 			return parent;
 
 		ItemStack stack = player.getItemInHand(hand);
-		
+
 		LocalDate date = LocalDate.now();
 		if(DayOfWeek.from(date) == DayOfWeek.WEDNESDAY && stack.getItem() == Items.CLOCK) {
 			if(!level.isClientSide && spawnChain > 0 && !isDuplicate) {
@@ -283,14 +283,14 @@ public class Frog extends Animal implements IEntityAdditionalSpawnData, IForgeSh
 					spawnCd = 50;
 					entityData.set(TALK_TIME, 80);
 				}
-					
+
 				Vec3 pos = position();
 				level.playSound(null, pos.x, pos.y, pos.z, QuarkSounds.ENTITY_FROG_WEDNESDAY, SoundSource.NEUTRAL, 1F, 1F);
 			}
 
 			return InteractionResult.SUCCESS;
 		}
-		
+
 		if(stack.is(ItemTags.WOOL) && !hasSweater()) {
 			if(!level.isClientSide) {
 				setSweater(true);
@@ -298,19 +298,19 @@ public class Frog extends Animal implements IEntityAdditionalSpawnData, IForgeSh
 				level.playSound(null, pos.x, pos.y, pos.z, SoundType.WOOL.getPlaceSound(), SoundSource.PLAYERS, 1F, 1F);
 				stack.shrink(1);
 			}
-			
+
 			player.swing(hand);
 			return InteractionResult.SUCCESS;
 		}
 
 		return InteractionResult.PASS;
 	}
-	
+
 	@Override
 	public boolean isShearable(@Nonnull ItemStack item, Level world, BlockPos pos) {
 		return hasSweater();
 	}
-	
+
 	@Nonnull
 	@Override
 	public List<ItemStack> onSheared(Player player, @Nonnull ItemStack item, Level iworld, BlockPos pos, int fortune) {
@@ -322,7 +322,7 @@ public class Frog extends Animal implements IEntityAdditionalSpawnData, IForgeSh
 	}
 
 	@Override // createChild
-	public Frog getBreedOffspring(ServerLevel sworld, AgeableMob otherParent) {
+	public Frog getBreedOffspring(@Nonnull ServerLevel sworld, @Nonnull AgeableMob otherParent) {
 		if (isDuplicate)
 			return null;
 
@@ -348,7 +348,7 @@ public class Frog extends Animal implements IEntityAdditionalSpawnData, IForgeSh
 				(FrogsModule.enableBigFunny && DayOfWeek.from(date) == DayOfWeek.WEDNESDAY ?
 						getTemptationItems(true) : getTemptationItems(false)).test(stack);
 	}
-	
+
 	private Ingredient getTemptationItems(boolean nice) {
 		if(temptationItems == null)
 			temptationItems =  new Ingredient[] {
@@ -361,7 +361,7 @@ public class Frog extends Animal implements IEntityAdditionalSpawnData, IForgeSh
 							Ingredient.of(ItemTags.FISHES)
 					))
 			};
-		
+
 		return temptationItems[nice ? 1 : 0];
 	}
 
@@ -377,7 +377,7 @@ public class Frog extends Animal implements IEntityAdditionalSpawnData, IForgeSh
 		entityData.set(SIZE_MODIFIER, sizeModifier);
 
 		isDuplicate = compound.getBoolean("FakeFrog");
-		
+
 		sweatered = compound.getBoolean("SweaterComp");
 		setSweater(compound.getBoolean("Sweater"));
 
@@ -415,11 +415,11 @@ public class Frog extends Animal implements IEntityAdditionalSpawnData, IForgeSh
 	protected SoundEvent getJumpSound() {
 		return QuarkSounds.ENTITY_FROG_JUMP;
 	}
-	
+
 	public boolean hasSweater() {
 		return entityData.get(HAS_SWEATER);
 	}
-	
+
 	public void setSweater(boolean sweater) {
 		entityData.set(HAS_SWEATER, sweater);
 	}
@@ -585,9 +585,10 @@ public class Frog extends Animal implements IEntityAdditionalSpawnData, IForgeSh
 	public void readSpawnData(FriendlyByteBuf buffer) {
 		entityData.set(SIZE_MODIFIER, buffer.readFloat());
 	}
-	
+
+	@Nonnull
 	@Override
-	public EntityDimensions getDimensions(Pose poseIn) {
+	public EntityDimensions getDimensions(@Nonnull Pose poseIn) {
 		return super.getDimensions(poseIn).scale(this.getSizeModifier());
 	}
 
@@ -644,7 +645,7 @@ public class Frog extends Animal implements IEntityAdditionalSpawnData, IForgeSh
 			if (speedIn > 0.0D) this.nextJumpSpeed = speedIn;
 		}
 	}
-	
+
 	public class FrogPanicGoal extends PanicGoal {
 
 		public FrogPanicGoal(double speedIn) {

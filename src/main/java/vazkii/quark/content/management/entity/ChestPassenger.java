@@ -25,7 +25,7 @@ import vazkii.quark.content.management.module.ChestsInBoatsModule;
 public class ChestPassenger extends Entity implements Container {
 
 	private final NonNullList<ItemStack> items = NonNullList.withSize(27, ItemStack.EMPTY);
-	
+
 	private static final EntityDataAccessor<ItemStack> CHEST_TYPE = SynchedEntityData.defineId(ChestPassenger.class, EntityDataSerializers.ITEM_STACK);
 	private static final String TAG_CHEST_TYPE = "chestType";
 
@@ -33,7 +33,7 @@ public class ChestPassenger extends Entity implements Container {
 		super(type, worldIn);
 		noPhysics = true;
 	}
-	
+
 	public ChestPassenger(Level worldIn, ItemStack stack) {
 		this(ChestsInBoatsModule.chestPassengerEntityType, worldIn);
 
@@ -50,10 +50,10 @@ public class ChestPassenger extends Entity implements Container {
 	@Override
 	public void tick() {
 		super.tick();
-		
+
 		if(!isAlive())
 			return;
-		
+
 		if(!isPassenger() && !level.isClientSide)
 			discard();
 
@@ -62,9 +62,9 @@ public class ChestPassenger extends Entity implements Container {
 			setYRot(riding.yRotO);
 		}
 	}
-	
+
 	@Override
-	public boolean canTrample(BlockState state, BlockPos pos, float fallDistance) {
+	public boolean canTrample(@Nonnull BlockState state, @Nonnull BlockPos pos, float fallDistance) {
 		return false;
 	}
 
@@ -180,15 +180,15 @@ public class ChestPassenger extends Entity implements Container {
 	}
 
 	@Override
-	public void remove(RemovalReason reason) {
+	public void remove(@Nonnull RemovalReason reason) {
 		if(!level.isClientSide) {
 			Containers.dropContents(level, this, this);
 			spawnAtLocation(getChestType());
 		}
-		
+
 		super.remove(reason);
 	}
-	
+
 	public ItemStack getChestType() {
 		return entityData.get(CHEST_TYPE);
 	}

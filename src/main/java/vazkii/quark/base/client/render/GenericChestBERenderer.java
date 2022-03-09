@@ -33,6 +33,8 @@ import net.minecraft.world.level.block.entity.LidBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
 
+import javax.annotation.Nonnull;
+
 // A copy of ChestTileEntityRenderer from vanilla but less private
 public abstract class GenericChestBERenderer<T extends BlockEntity & LidBlockEntity> implements BlockEntityRenderer<T> {
 
@@ -95,7 +97,7 @@ public abstract class GenericChestBERenderer<T extends BlockEntity & LidBlockEnt
 	}
 
 	@Override
-	public void render(T p_225616_1_, float p_225616_2_, PoseStack p_225616_3_, MultiBufferSource p_225616_4_, int p_225616_5_, int p_225616_6_) {
+	public void render(T p_225616_1_, float p_225616_2_, @Nonnull PoseStack p_225616_3_, @Nonnull MultiBufferSource p_225616_4_, int p_225616_5_, int p_225616_6_) {
 		Level world = p_225616_1_.getLevel();
 		boolean flag = world != null;
 		BlockState blockstate = flag ? p_225616_1_.getBlockState() : Blocks.CHEST.defaultBlockState().setValue(ChestBlock.FACING, Direction.SOUTH);

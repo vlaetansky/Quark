@@ -5,6 +5,8 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
+import javax.annotation.Nonnull;
+
 public class DeferedFeature extends Feature<NoneFeatureConfiguration> {
 
 	private final GenerationStep.Decoration stage;
@@ -15,7 +17,7 @@ public class DeferedFeature extends Feature<NoneFeatureConfiguration> {
 	}
 
 	@Override
-	public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+	public boolean place(@Nonnull FeaturePlaceContext<NoneFeatureConfiguration> context) {
 		WorldGenHandler.generateChunk(context, stage);
 		return false;
 	}

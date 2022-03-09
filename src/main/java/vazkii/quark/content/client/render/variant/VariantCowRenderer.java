@@ -7,15 +7,18 @@ import net.minecraft.world.entity.animal.Cow;
 import vazkii.quark.content.client.module.VariantAnimalTexturesModule;
 import vazkii.quark.content.client.module.VariantAnimalTexturesModule.VariantTextureType;
 
+import javax.annotation.Nonnull;
+
 public class VariantCowRenderer extends CowRenderer {
 
 	public VariantCowRenderer(EntityRendererProvider.Context context) {
 		super(context);
 	}
-	
+
+	@Nonnull
 	@Override
-	public ResourceLocation getTextureLocation(Cow entity) {
+	public ResourceLocation getTextureLocation(@Nonnull Cow entity) {
 		return VariantAnimalTexturesModule.getTextureOrShiny(entity, VariantTextureType.COW, VariantAnimalTexturesModule.enableCow);
 	}
-	
+
 }

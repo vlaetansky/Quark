@@ -20,6 +20,8 @@ import vazkii.quark.base.client.handler.InventoryButtonHandler.ButtonTargetType;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.content.client.module.ChestSearchingModule;
 
+import javax.annotation.Nonnull;
+
 public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Quark.MOD_ID, "textures/gui/crate.png");
@@ -42,15 +44,15 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
 		int i = (width - imageWidth) / 2;
 		int j = (height - imageHeight) / 2;
 		extraAreas = Lists.newArrayList(new Rect2i(i + imageWidth, j, 23, 136));
-	} 
-	// TODO LOW PRIO scroll with mouse 
+	}
+	// TODO LOW PRIO scroll with mouse
 
 	public List<Rect2i> getExtraAreas() {
 		return extraAreas;
 	}
 
 	@Override
-	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		renderBackground(matrixStack);
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
 		renderTooltip(matrixStack, mouseX, mouseY);
@@ -63,7 +65,7 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
 	}
 
 	@Override
-	protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
+	protected void renderBg(@Nonnull PoseStack matrixStack, float partialTicks, int x, int y) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, TEXTURE);
@@ -86,11 +88,11 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
 			font.draw(matrixStack, s, i + this.imageWidth - font.width(s) - 8 - InventoryButtonHandler.getActiveButtons(ButtonTargetType.CONTAINER_INVENTORY).size() * 12, j + 6, color);
 		}
 	}
-	
+
 	@Override
-	protected void renderLabels(PoseStack p_97808_, int p_97809_, int p_97810_) {
+	protected void renderLabels(@Nonnull PoseStack p_97808_, int p_97809_, int p_97810_) {
 		int color = MiscUtil.getGuiTextColor("crate_count");
-		
+
 		this.font.draw(p_97808_, this.title, (float)this.titleLabelX, (float)this.titleLabelY, color);
 		this.font.draw(p_97808_, this.playerInventoryTitle, (float)this.inventoryLabelX, (float)this.inventoryLabelY, color);
 	}

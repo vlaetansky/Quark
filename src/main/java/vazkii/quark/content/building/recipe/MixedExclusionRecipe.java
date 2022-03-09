@@ -19,72 +19,78 @@ import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import vazkii.quark.base.Quark;
 
+import javax.annotation.Nonnull;
+
 public class MixedExclusionRecipe implements CraftingRecipe, IShapedRecipe<CraftingContainer> {
-	
+
     public static final Serializer SERIALIZER = new Serializer();
 
 	final ResourceLocation res;
 	NonNullList<Ingredient> ingredients;
-	
+
 	final String type;
 	final ItemStack output;
 	final TagKey<Item> tag;
 	final ItemStack placeholder;
-	
+
 	public MixedExclusionRecipe(ResourceLocation res, String type, ItemStack output, TagKey<Item> tag, ItemStack placeholder) {
 		this.res = res;
-		
+
 		this.type = type;
 		this.output = output;
 		this.tag = tag;
 		this.placeholder = placeholder;
 	}
-	
+
 	public static MixedExclusionRecipe forChest(String type, ResourceLocation res, boolean log) {
 		ItemStack output = new ItemStack(Items.CHEST, (log ? 4 : 1));
 		TagKey<Item> tag = (log ? ItemTags.LOGS : ItemTags.PLANKS);
 		ItemStack placeholder = new ItemStack(log ? Items.OAK_LOG : Items.OAK_PLANKS);
 		return new MixedExclusionRecipe(res, type, output, tag, placeholder);
 	}
-	
+
 	public static MixedExclusionRecipe forFurnace(String type, ResourceLocation res) {
 		ItemStack output = new ItemStack(Items.FURNACE);
 		TagKey<Item> tag = ItemTags.STONE_CRAFTING_MATERIALS;
 		ItemStack placeholder = new ItemStack(Items.COBBLESTONE);
 		return new MixedExclusionRecipe(res, type, output, tag, placeholder);
 	}
-	
+
 	@Override
 	public boolean canCraftInDimensions(int x, int y) {
 		return x == 3 && y == 3;
 	}
 
+	@Nonnull
 	@Override
-	public ItemStack assemble(CraftingContainer arg0) {
+	public ItemStack assemble(@Nonnull CraftingContainer arg0) {
 		return output.copy();
 	}
 
+	@Nonnull
 	@Override
 	public ResourceLocation getId() {
 		return res;
 	}
 
+	@Nonnull
 	@Override
 	public ItemStack getResultItem() {
-		return output.copy();	
+		return output.copy();
 	}
 
+	@Nonnull
 	@Override
 	public RecipeSerializer<?> getSerializer() {
 		return SERIALIZER;
 	}
 
 	@Override
-	public boolean matches(CraftingContainer inv, Level world) {
+	public boolean matches(CraftingContainer inv, @Nonnull Level world) {
 		if(inv.getItem(4).isEmpty()) {
 			ItemStack first = null;
 			boolean foundDifference = false;
-			
+
 			for(int i = 0; i < 9; i++)
 				if(i != 4) { // ignore center
 					ItemStack stack = inv.getItem(i);
@@ -95,10 +101,10 @@ public class MixedExclusionRecipe implements CraftingRecipe, IShapedRecipe<Craft
 							foundDifference = true;
 					} else return false;
 				}
-			
+
 			return foundDifference;
 		}
-		
+
 		return false;
 	}
 
@@ -111,7 +117,8 @@ public class MixedExclusionRecipe implements CraftingRecipe, IShapedRecipe<Craft
 	public int getRecipeHeight() {
 		return 3;
 	}
-	
+
+	@Nonnull
 	@Override
 	public NonNullList<Ingredient> getIngredients() {
 		if(ingredients == null) {
@@ -121,29 +128,30 @@ public class MixedExclusionRecipe implements CraftingRecipe, IShapedRecipe<Craft
 				list.set(i < 4 ? i : i + 1, ingr);
 			ingredients = list;
 		}
-		
+
 		return ingredients;
 	}
-	
+
 	@Override
 	public boolean isSpecial() {
 		return true;
 	}
-	
+
 	private static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<MixedExclusionRecipe> {
-		
+
         public Serializer() {
             setRegistryName(Quark.MOD_ID + ":mixed_exclusion");
         }
 
+		@Nonnull
 		@Override
-		public MixedExclusionRecipe fromJson(ResourceLocation arg0, JsonObject arg1) {
+		public MixedExclusionRecipe fromJson(@Nonnull ResourceLocation arg0, JsonObject arg1) {
 			String type = arg1.get("subtype").getAsString();
 			return forType(arg0, type);
 		}
 
 		@Override
-		public MixedExclusionRecipe fromNetwork(ResourceLocation arg0, FriendlyByteBuf arg1) {
+		public MixedExclusionRecipe fromNetwork(@Nonnull ResourceLocation arg0, FriendlyByteBuf arg1) {
 			return forType(arg0, arg1.readUtf());
 		}
 
@@ -151,7 +159,7 @@ public class MixedExclusionRecipe implements CraftingRecipe, IShapedRecipe<Craft
 		public void toNetwork(FriendlyByteBuf arg0, MixedExclusionRecipe arg1) {
 			arg0.writeUtf(arg1.type);
 		}
-		
+
 		private MixedExclusionRecipe forType(ResourceLocation res, String type) {
 			switch(type) {
 			case "chest": return MixedExclusionRecipe.forChest(type, res, false);
@@ -160,7 +168,7 @@ public class MixedExclusionRecipe implements CraftingRecipe, IShapedRecipe<Craft
 			}
 			return null;
 		}
-		
+
 	}
 
 }

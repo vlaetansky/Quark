@@ -28,6 +28,8 @@ import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.world.module.BlossomTreesModule;
 
+import javax.annotation.Nonnull;
+
 public class BlossomSaplingBlock extends SaplingBlock implements IQuarkBlock {
 
 	private final QuarkModule module;
@@ -40,12 +42,12 @@ public class BlossomSaplingBlock extends SaplingBlock implements IQuarkBlock {
 		RegistryHelper.registerBlock(this, colorName + "_blossom_sapling");
 		RegistryHelper.setCreativeTab(this, CreativeModeTab.TAB_DECORATIONS);
 		tree.sapling = this;
-		
+
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
 	}
 
 	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+	public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
 		if(isEnabled() || group == CreativeModeTab.TAB_SEARCH)
 			super.fillItemCategory(group, items);
 	}
@@ -75,21 +77,21 @@ public class BlossomSaplingBlock extends SaplingBlock implements IQuarkBlock {
 		public BlossomTree(Block leafBlock) {
 			config = (new TreeConfiguration.TreeConfigurationBuilder(
 					BlockStateProvider.simple(BlossomTreesModule.woodSet.log),
-					new FancyTrunkPlacer(8, 10, 10), 
-					BlockStateProvider.simple(leafBlock), 
+					new FancyTrunkPlacer(8, 10, 10),
+					BlockStateProvider.simple(leafBlock),
 					new FancyFoliagePlacer(ConstantInt.of(3), ConstantInt.of(1), 4),
 					new TwoLayersFeatureSize(0, 0, 0, OptionalInt.of(4))))
 					.ignoreVines()
 					.build();
-			
+
 			leaf = leafBlock.defaultBlockState();
 		}
 
 		@Override
-		protected Holder<ConfiguredFeature<TreeConfiguration, ?>> getConfiguredFeature(Random rand, boolean hjskfsd) {
+		protected Holder<ConfiguredFeature<TreeConfiguration, ?>> getConfiguredFeature(@Nonnull Random rand, boolean hjskfsd) {
 			return Holder.direct(new ConfiguredFeature<>(Feature.TREE, config));
 		}
-		
+
 	}
 
 }
