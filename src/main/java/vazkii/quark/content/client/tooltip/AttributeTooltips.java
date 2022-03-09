@@ -435,7 +435,7 @@ public class AttributeTooltips {
 				pose.translate(0F, 0F, mc.getItemRenderer().blitOffset);
 
 				int baseX = tooltipX;
-				int y = tooltipY;
+				int y = tooltipY - 1;
 
 				EquipmentSlot primarySlot = getPrimarySlot(stack);
 				boolean onlyInvalid = true;

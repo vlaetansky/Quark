@@ -1,13 +1,9 @@
 package vazkii.quark.content.client.tooltip;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Either;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
@@ -39,6 +35,8 @@ import vazkii.quark.content.client.module.ChestSearchingModule;
 import vazkii.quark.content.client.module.ImprovedTooltipsModule;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ShulkerBoxTooltips {
 
@@ -127,7 +125,7 @@ public class ShulkerBoxTooltips {
 					handler.ifPresent((capability) -> {
 						ItemStack currentBox = stack;
 						int currentX = tooltipX;
-						int currentY = tooltipY;
+						int currentY = tooltipY - 1;
 
 						int size = capability.getSlots();
 						int[] dims = { Math.min(size, 9), Math.max(size / 9, 1) };
