@@ -49,7 +49,7 @@ public class ToretoiseModule extends QuarkModule {
 	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(120, 2, 4, CompoundBiomeConfig.fromBiomeTypes(true, BiomeDictionary.Type.VOID, BiomeDictionary.Type.NETHER, BiomeDictionary.Type.END));
 	
 	@Override
-	public void construct() {
+	public void register() {
 		toretoiseType = EntityType.Builder.<Toretoise>of(Toretoise::new, MobCategory.CREATURE)
 				.sized(2F, 1F)
 				.clientTrackingRange(8)

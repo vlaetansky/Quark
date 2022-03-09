@@ -65,7 +65,7 @@ public class CorundumModule extends AbstractUndergroundStyleModule {
 	public static TagKey<Block> corundumTag;
 
 	@Override
-	public void construct() {
+	public void register() {
 		add("red", 0xff0000, MaterialColor.COLOR_RED);
 		add("orange", 0xff8000, MaterialColor.COLOR_ORANGE);
 		add("yellow", 0xffff00, MaterialColor.COLOR_YELLOW);
@@ -76,7 +76,7 @@ public class CorundumModule extends AbstractUndergroundStyleModule {
 		add("white", 0xffffff, MaterialColor.SNOW);
 		add("black", 0x000000, MaterialColor.COLOR_BLACK);
 		
-		super.construct();
+		super.register();
 	}
 	
 	@Override

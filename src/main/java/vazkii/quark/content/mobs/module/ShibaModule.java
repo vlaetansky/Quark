@@ -31,7 +31,7 @@ public class ShibaModule extends QuarkModule {
 	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(40, 1, 3, CompoundBiomeConfig.fromBiomeTypes(false, BiomeDictionary.Type.MOUNTAIN));
 
 	@Override
-	public void construct() {
+	public void register() {
 		shibaType = EntityType.Builder.of(Shiba::new, MobCategory.CREATURE)
 				.sized(0.8F, 0.8F)
 				.clientTrackingRange(8)

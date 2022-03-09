@@ -39,7 +39,7 @@ public class SkullPikesModule extends QuarkModule {
     @Config public static double pikeRange = 5;
 	
 	@Override
-	public void construct() {
+	public void register() {
 		skullPikeType = EntityType.Builder.<SkullPike>of(SkullPike::new, MobCategory.MISC)
 				.sized(0.5F, 0.5F)
 				.clientTrackingRange(3)

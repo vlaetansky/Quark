@@ -29,7 +29,7 @@ public class VariantLaddersModule extends QuarkModule {
 	public static boolean moduleEnabled;
 
 	@Override
-	public void construct() {
+	public void register() {
 		for(String type : MiscUtil.OVERWORLD_VARIANT_WOOD_TYPES)
 			variantLadders.add(new VariantLadderBlock(type, this, true));
 		for(String type : MiscUtil.NETHER_WOOD_TYPES)

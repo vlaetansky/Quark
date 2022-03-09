@@ -136,7 +136,7 @@ public class MatrixEnchantingModule extends QuarkModule {
 	public static Block matrixEnchanter;
 	
 	@Override
-	public void construct() {
+	public void register() {
 		matrixEnchanter = new MatrixEnchantingTableBlock(this);
 
 		menuType = IForgeMenuType.create(MatrixEnchantingMenu::fromNetwork);

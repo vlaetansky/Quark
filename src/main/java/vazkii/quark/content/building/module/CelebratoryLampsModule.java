@@ -26,7 +26,7 @@ public class CelebratoryLampsModule extends QuarkModule {
 	private static Block stone_lamp, stone_brick_lamp;
 	
 	@Override
-	public void construct() {
+	public void register() {
 		stone_lamp = new QuarkBlock("stone_lamp", this, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.copy(Blocks.STONE).lightLevel(s -> lightLevel));
 		stone_brick_lamp = new QuarkBlock("stone_brick_lamp", this, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.copy(Blocks.STONE_BRICKS).lightLevel(s -> lightLevel));
 	}

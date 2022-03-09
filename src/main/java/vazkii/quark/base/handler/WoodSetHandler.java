@@ -68,7 +68,7 @@ public class WoodSetHandler {
 
 	private static final List<WoodSet> woodSets = new ArrayList<>();
 	
-	public static void start() {
+	public static void register() {
 		quarkBoatEntityType = EntityType.Builder.<QuarkBoat>of(QuarkBoat::new, MobCategory.MISC)
 				.sized(1.375F, 0.5625F)
 				.clientTrackingRange(10)

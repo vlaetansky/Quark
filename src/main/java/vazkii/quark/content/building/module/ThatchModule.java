@@ -18,7 +18,7 @@ public class ThatchModule extends QuarkModule {
 	public static ThatchBlock thatch;
 	
 	@Override
-	public void construct() {
+	public void register() {
 		thatch = new ThatchBlock(this);
 		VariantHandler.addSlabAndStairs(thatch);
 	}

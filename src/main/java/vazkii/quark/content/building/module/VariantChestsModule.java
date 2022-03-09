@@ -224,7 +224,7 @@ public class VariantChestsModule extends QuarkModule {
 	private static final Method CHEST_EQUIP = ObfuscationReflectionHelper.findMethod(AbstractChestedHorse.class, "m_7609_");
 	
 	@Override
-	public void construct() {
+	public void register() {
 		ForgeRegistries.RECIPE_SERIALIZERS.register(MixedExclusionRecipe.SERIALIZER);
 		
 		OVERWORLD_WOODS.forEach(s -> addChest(s, Blocks.CHEST));

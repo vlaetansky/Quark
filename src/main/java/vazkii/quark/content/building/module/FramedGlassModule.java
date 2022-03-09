@@ -15,7 +15,7 @@ import vazkii.quark.content.building.block.FramedGlassBlock;
 public class FramedGlassModule extends QuarkModule {
 
 	@Override
-	public void construct() {
+	public void register() {
 		Block.Properties props = Block.Properties.of(Material.GLASS)
 				.strength(3F, 10F)
 				.sound(SoundType.GLASS);

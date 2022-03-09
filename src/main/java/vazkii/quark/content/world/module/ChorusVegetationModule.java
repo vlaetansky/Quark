@@ -31,7 +31,7 @@ public class ChorusVegetationModule extends QuarkModule {
 	public static Block chorus_weeds, chorus_twist;
 	
 	@Override
-	public void construct() {
+	public void register() {
 		chorus_weeds = new ChorusVegetationBlock("chorus_weeds", this, true);
 		chorus_twist = new ChorusVegetationBlock("chorus_twist", this, false);
 		

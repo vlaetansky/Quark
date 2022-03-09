@@ -22,7 +22,7 @@ public class ChuteModule extends QuarkModule {
     public static BlockEntityType<ChuteBlockEntity> blockEntityType;
 
     @Override
-    public void construct() {
+    public void register() {
         Block chute = new ChuteBlock("chute", this, CreativeModeTab.TAB_REDSTONE,
                 Block.Properties.of(Material.WOOD)
                         .strength(2.5F)

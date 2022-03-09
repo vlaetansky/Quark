@@ -34,7 +34,7 @@ public class AmbientDiscsModule extends QuarkModule {
 	List<Item> discs = new ArrayList<>();
 	
 	@Override
-	public void construct() {
+	public void register() {
 		disc(QuarkSounds.AMBIENT_DRIPS);
 		disc(QuarkSounds.AMBIENT_OCEAN);
 		disc(QuarkSounds.AMBIENT_RAIN);

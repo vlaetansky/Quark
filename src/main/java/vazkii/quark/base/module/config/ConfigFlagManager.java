@@ -17,14 +17,21 @@ public final class ConfigFlagManager {
 	public static LootItemConditionType flagConditionType;
 
 	private final Map<String, Boolean> flags = new HashMap<>();
+	private boolean registered = false;
 	
-	public ConfigFlagManager() {
+	public ConfigFlagManager() { }
+	
+	public void registerConfigBoundElements() {
+		if(registered)
+			throw new RuntimeException("Can't register twice.");
+		registered = true;
+		
 		CraftingHelper.register(new FlagRecipeCondition.Serializer(this, new ResourceLocation(Quark.MOD_ID, "flag")));
 		flagConditionType = new LootItemConditionType(new FlagLootCondition.FlagSerializer(this));
 		Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation(Quark.MOD_ID, "flag"), flagConditionType);
 
 		CraftingHelper.register(new ResourceLocation(Quark.MOD_ID, "potion"), PotionIngredient.Serializer.INSTANCE);
-		CraftingHelper.register(new ResourceLocation(Quark.MOD_ID, "flag"),  new FlagIngredient.Serializer(this));
+		CraftingHelper.register(new ResourceLocation(Quark.MOD_ID, "flag"),  new FlagIngredient.Serializer(this));		
 	}
 	
 	public void clear() {

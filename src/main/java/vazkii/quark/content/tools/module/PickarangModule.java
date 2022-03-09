@@ -52,7 +52,7 @@ public class PickarangModule extends QuarkModule {
 	private static boolean isEnabled;
 
 	@Override
-	public void construct() {
+	public void register() {
 		pickarangType = EntityType.Builder.<Pickarang>of(Pickarang::new, MobCategory.MISC)
 				.sized(0.4F, 0.4F)
 				.clientTrackingRange(4)

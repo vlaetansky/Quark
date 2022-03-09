@@ -37,7 +37,7 @@ public class GlassItemFrameModule extends QuarkModule {
     public static double itemRenderScale = 1.5;
 
     @Override
-    public void construct() {
+    public void register() {
         glassFrameEntity = EntityType.Builder.<GlassItemFrame>of(GlassItemFrame::new, MobCategory.MISC)
                 .sized(0.5F, 0.5F)
                 .clientTrackingRange(10)

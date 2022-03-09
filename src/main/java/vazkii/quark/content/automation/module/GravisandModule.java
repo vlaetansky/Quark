@@ -24,7 +24,7 @@ public class GravisandModule extends QuarkModule {
 	public static Block gravisand;
 
 	@Override
-	public void construct() {
+	public void register() {
 		gravisand = new GravisandBlock("gravisand", this, CreativeModeTab.TAB_REDSTONE, Block.Properties.copy(Blocks.SAND));
 
 		gravisandType = EntityType.Builder.<Gravisand>of(Gravisand::new, MobCategory.MISC)

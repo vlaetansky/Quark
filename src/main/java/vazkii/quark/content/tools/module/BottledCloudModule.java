@@ -34,7 +34,7 @@ public class BottledCloudModule extends QuarkModule {
     public static int cloudLevelTop = 196;
 
 	@Override
-	public void construct() {
+	public void register() {
 		cloud = new CloudBlock(this);
 		bottled_cloud = new BottledCloudItem(this);
 		

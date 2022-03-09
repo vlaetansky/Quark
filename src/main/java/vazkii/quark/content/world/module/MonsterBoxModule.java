@@ -50,7 +50,7 @@ public class MonsterBoxModule extends QuarkModule {
 	public static Block monster_box = null;
 	
 	@Override
-	public void construct() {
+	public void register() {
 		monster_box = new MonsterBoxBlock(this);
 		
         blockEntityType = BlockEntityType.Builder.of(MonsterBoxBlockEntity::new, monster_box).build(null);

@@ -65,7 +65,7 @@ public class GlimmeringWealdModule extends QuarkModule {
 	public static TagKey<Item> glowShroomFeedablesTag;
 
 	@Override
-	public void construct() {
+	public void register() {
 		glow_shroom = new GlowShroomBlock(this);
 		glow_lichen_growth = new GlowLichenGrowthBlock(this);
 		glow_shroom_block = new HugeGlowShroomBlock("glow_shroom_block", this, true);

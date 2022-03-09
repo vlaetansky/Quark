@@ -25,7 +25,7 @@ public class StoolsModule extends QuarkModule {
     public static EntityType<Stool> stoolEntity;
 	
 	@Override
-	public void construct() {
+	public void register() {
 		for(DyeColor dye : DyeColor.values())
 			new StoolBlock(this, dye);
 		

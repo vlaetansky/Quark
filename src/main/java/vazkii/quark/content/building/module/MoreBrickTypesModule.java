@@ -35,7 +35,7 @@ public class MoreBrickTypesModule extends QuarkModule {
 	private static boolean enableNetherrackBricks = true;
 	
 	@Override
-	public void construct() {
+	public void register() {
 		add("blue_nether", Blocks.NETHER_BRICKS, () -> enableBlueNetherBricks);
 		
 		add("sandstone", Blocks.SANDSTONE, () -> enableSandstoneBricks);

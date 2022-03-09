@@ -15,7 +15,7 @@ public class EnderWatcherModule extends QuarkModule {
 	public static BlockEntityType<EnderWatcherBlockEntity> blockEntityType;
 
 	@Override
-	public void construct() {
+	public void register() {
 		Block ender_watcher = new EnderWatcherBlock(this);
 		blockEntityType = BlockEntityType.Builder.of(EnderWatcherBlockEntity::new, ender_watcher).build(null);
 		RegistryHelper.register(blockEntityType, "ender_watcher");

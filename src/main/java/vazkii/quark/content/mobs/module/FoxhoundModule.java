@@ -54,7 +54,7 @@ public class FoxhoundModule extends QuarkModule {
 	public static TagKey<Block> foxhoundSpawnableTag;
 	
 	@Override
-	public void construct() {
+	public void register() {
 		foxhoundType = EntityType.Builder.of(Foxhound::new, MobCategory.CREATURE)
 				.sized(0.8F, 0.8F)
 				.clientTrackingRange(8)

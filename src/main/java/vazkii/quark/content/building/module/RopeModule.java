@@ -34,7 +34,7 @@ public class RopeModule extends QuarkModule {
 	public static boolean enableDispenserBehavior = true;
 
 	@Override
-	public void construct() {
+	public void register() {
 		rope = new RopeBlock("rope", this, CreativeModeTab.TAB_DECORATIONS,
 				Block.Properties.of(Material.WOOL, MaterialColor.COLOR_BROWN)
 						.strength(0.5f)

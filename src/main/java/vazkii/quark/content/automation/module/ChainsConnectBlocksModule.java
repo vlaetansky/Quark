@@ -21,7 +21,7 @@ public class ChainsConnectBlocksModule extends QuarkModule {
 	public static boolean staticEnabled;
 	
 	@Override
-	public void construct() {
+	public void register() {
 		IIndirectConnector.INDIRECT_STICKY_BLOCKS.add(Pair.of(ChainConnection.PREDICATE, ChainConnection.INSTANCE));
 	}
 	

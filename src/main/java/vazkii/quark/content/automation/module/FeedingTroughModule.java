@@ -111,7 +111,7 @@ public class FeedingTroughModule extends QuarkModule {
     }
 
     @Override
-    public void construct() {
+    public void register() {
         Block feedingTrough = new FeedingTroughBlock("feeding_trough", this, CreativeModeTab.TAB_DECORATIONS,
                 Block.Properties.of(Material.WOOD).strength(0.6F).sound(SoundType.WOOD));
         blockEntityType = BlockEntityType.Builder.of(FeedingTroughBlockEntity::new, feedingTrough).build(null);

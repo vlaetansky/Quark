@@ -32,7 +32,7 @@ public class OrientalPaletteModule extends QuarkModule {
 	public static boolean enableBambooMats = true;
 	
 	@Override
-	public void construct() {
+	public void register() {
 		BooleanSupplier paperBlockCond = () -> enablePaperBlocks;
 		BooleanSupplier bambooMatCond = () -> enableBambooMats;
 

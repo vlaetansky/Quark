@@ -20,7 +20,7 @@ public class PermafrostModule extends AbstractUndergroundStyleModule {
 	public static QuarkBlock permafrost;
 	
 	@Override
-	public void construct() {
+	public void register() {
 		permafrost = new QuarkBlock("permafrost", this, CreativeModeTab.TAB_BUILDING_BLOCKS, 
 				Block.Properties.of(Material.STONE, MaterialColor.COLOR_LIGHT_BLUE)
 				.requiresCorrectToolForDrops()
@@ -30,7 +30,7 @@ public class PermafrostModule extends AbstractUndergroundStyleModule {
 		VariantHandler.addSlabStairsWall(permafrost);
 		VariantHandler.addSlabStairsWall(new QuarkBlock("permafrost_bricks", this, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.copy(permafrost)));
 		
-		super.construct();
+		super.register();
 	}
 	
 	@Override

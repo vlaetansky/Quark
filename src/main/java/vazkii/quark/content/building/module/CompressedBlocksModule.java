@@ -71,7 +71,7 @@ public class CompressedBlocksModule extends QuarkModule {
 	private final List<Block> compostable = Lists.newArrayList();
 
 	@Override
-	public void construct() {
+	public void register() {
 		charcoal_block = new QuarkBlock("charcoal_block", this, CreativeModeTab.TAB_BUILDING_BLOCKS,
 				Block.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK)
 						.requiresCorrectToolForDrops()

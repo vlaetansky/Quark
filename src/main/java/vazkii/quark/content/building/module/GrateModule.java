@@ -16,7 +16,7 @@ public class GrateModule extends QuarkModule {
 	public static Block grate;
 	
     @Override
-    public void construct() {
+    public void register() {
         grate = new GrateBlock(this);
     }
     

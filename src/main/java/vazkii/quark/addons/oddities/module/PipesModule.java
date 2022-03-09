@@ -37,7 +37,7 @@ public class PipesModule extends QuarkModule {
 	public static int effectivePipeSpeed;
 	
     @Override
-    public void construct() {
+    public void register() {
     	pipe = new PipeBlock(this);
     	
     	blockEntityType = BlockEntityType.Builder.of(PipeBlockEntity::new, pipe).build(null);

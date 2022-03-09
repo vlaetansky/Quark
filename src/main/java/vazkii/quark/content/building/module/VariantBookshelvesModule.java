@@ -15,7 +15,7 @@ public class VariantBookshelvesModule extends QuarkModule {
 	@Config public static boolean changeNames = true;
 
 	@Override
-	public void construct() {
+	public void register() {
 		for(String type : MiscUtil.OVERWORLD_VARIANT_WOOD_TYPES)
 			new VariantBookshelfBlock(type, this, true);
 		for(String type : MiscUtil.NETHER_WOOD_TYPES)

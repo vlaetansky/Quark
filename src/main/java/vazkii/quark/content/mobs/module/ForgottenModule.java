@@ -39,7 +39,7 @@ public class ForgottenModule extends QuarkModule {
 	@Config public int maxHeightForSpawn = 0;
 
 	@Override
-	public void construct() {
+	public void register() {
 		forgotten_hat = new ForgottenHatItem(this);
 
 		forgottenType = EntityType.Builder.of(Forgotten::new, MobCategory.MONSTER)

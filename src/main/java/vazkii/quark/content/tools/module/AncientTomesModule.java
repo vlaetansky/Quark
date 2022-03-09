@@ -107,7 +107,7 @@ public class AncientTomesModule extends QuarkModule {
 	}
 
 	@Override
-	public void construct() {
+	public void register() {
 		ancient_tome = new AncientTomeItem(this);
 
 		tomeEnchantType = new LootItemFunctionType(new EnchantTome.Serializer());

@@ -14,7 +14,7 @@ import vazkii.quark.base.module.QuarkModule;
 public class SoulSandstoneModule extends QuarkModule {
 
 	@Override
-	public void construct() {
+	public void register() {
 		Block.Properties props = Block.Properties.of(Material.STONE, MaterialColor.COLOR_BROWN)
 				.requiresCorrectToolForDrops()
         		.strength(0.8F);

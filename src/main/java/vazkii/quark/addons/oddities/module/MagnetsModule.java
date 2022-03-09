@@ -36,7 +36,7 @@ public class MagnetsModule extends QuarkModule {
 	public static Block magnetized_block;
 
 	@Override
-	public void construct() {
+	public void register() {
 		magnet = new MagnetBlock(this);
 		magnetized_block = new MovingMagnetizedBlock(this);
 		

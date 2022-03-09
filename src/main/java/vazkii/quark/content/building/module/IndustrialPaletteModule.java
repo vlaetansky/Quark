@@ -29,7 +29,7 @@ public class IndustrialPaletteModule extends QuarkModule {
 	public static boolean enableIronLadder = true;
 	
 	@Override
-	public void construct() {
+	public void register() {
 		Block.Properties props = Block.Properties.copy(Blocks.IRON_BLOCK); 
 
 		BooleanSupplier ironPlateCond = () -> enableIronPlates;

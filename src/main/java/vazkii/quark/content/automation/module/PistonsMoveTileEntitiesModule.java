@@ -56,7 +56,7 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 	public static List<String> delayedUpdateList = Lists.newArrayList("minecraft:dispenser", "minecraft:dropper");
 
 	@Override
-	public void construct() {
+	public void register() {
 		IIndirectConnector.INDIRECT_STICKY_BLOCKS.add(Pair.of(ChestConnection.PREDICATE, ChestConnection.INSTANCE));
 	}
 	

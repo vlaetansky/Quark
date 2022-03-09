@@ -1,6 +1,7 @@
 package vazkii.quark.base.module.config;
 
 import java.util.List;
+import java.util.Stack;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -13,6 +14,7 @@ public class QuarkConfigBuilder implements IConfigBuilder {
 	private final ForgeConfigSpec.Builder parent;
 	private final IConfigCallback callback;
 	
+	private Stack<String> layers = new Stack<>();
 	private String currComment = "";
 	
 	public QuarkConfigBuilder(ForgeConfigSpec.Builder parent, IConfigCallback callback) {
@@ -27,6 +29,7 @@ public class QuarkConfigBuilder implements IConfigBuilder {
 	
 	@Override
 	public void push(String s, Object holderObject) {
+		layers.push(s);
 		parent.push(s);
 		callback.push(s, currComment, holderObject);
 		currComment = "";
@@ -34,6 +37,7 @@ public class QuarkConfigBuilder implements IConfigBuilder {
 
 	@Override
 	public void pop() {
+		layers.pop();
 		parent.pop();
 		callback.pop();
 	}
@@ -53,6 +57,9 @@ public class QuarkConfigBuilder implements IConfigBuilder {
 
 	@Override
 	public ConfigValue<?> defineObj(String name, Object default_, Supplier<Object> getter, Predicate<Object> predicate) {
+		if(default_ == null)
+			throw new RuntimeException("Can't define object " + name + " with null default @ " + layers.toString());
+		
 		beforeDefine();
 		ConfigValue<Object> value = parent.define(name, default_, predicate);
 		onDefine(value, default_, getter, predicate);

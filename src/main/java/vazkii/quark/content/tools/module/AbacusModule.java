@@ -40,7 +40,7 @@ public class AbacusModule extends QuarkModule {
 	public static Item abacus;
 
 	@Override
-	public void construct() {
+	public void register() {
 		abacus = new AbacusItem(this);
 	}
 

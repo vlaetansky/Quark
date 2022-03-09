@@ -39,7 +39,7 @@ public class SeedPouchModule extends QuarkModule {
 	@Config public static int shiftRange = 3;
 
 	@Override
-	public void construct() {
+	public void register() {
 		seed_pouch = new SeedPouchItem(this);
 	}
 	

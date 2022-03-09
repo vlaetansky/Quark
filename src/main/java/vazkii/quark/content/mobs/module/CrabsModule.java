@@ -55,7 +55,7 @@ public class CrabsModule extends QuarkModule {
 	public static boolean enableBrewing = true;
 	
 	@Override
-	public void construct() {
+	public void register() {
 		new QuarkItem("crab_leg", this, new Item.Properties()
 				.tab(CreativeModeTab.TAB_FOOD)
 				.food(new FoodProperties.Builder()

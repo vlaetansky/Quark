@@ -15,7 +15,7 @@ public class TrowelModule extends QuarkModule {
 	public static int maxDamage = 0;
 	
 	@Override
-	public void construct() {
+	public void register() {
 		new TrowelItem(this);
 	}
 	

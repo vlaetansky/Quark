@@ -24,7 +24,7 @@ public class MorePottedPlantsModule extends QuarkModule {
 	private static Map<Block, Block> tintedBlocks = new HashMap<>();
 	
 	@Override
-	public void construct() {
+	public void register() {
 		add(Blocks.BEETROOTS, "beetroot");
 		add(Blocks.SWEET_BERRY_BUSH, "berries");
 		add(Blocks.CARROTS, "carrot");

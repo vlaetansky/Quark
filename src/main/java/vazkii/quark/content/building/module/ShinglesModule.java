@@ -13,7 +13,7 @@ import vazkii.quark.base.module.QuarkModule;
 public class ShinglesModule extends QuarkModule {
 
 	@Override
-	public void construct() {
+	public void register() {
 		VariantHandler.addSlabAndStairs(new QuarkBlock("shingles", this, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.copy(Blocks.TERRACOTTA)));
 
 		VariantHandler.addSlabAndStairs(new QuarkBlock("white_shingles", this, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.copy(Blocks.WHITE_TERRACOTTA)));

@@ -51,7 +51,7 @@ public class SpiralSpiresModule extends QuarkModule {
 	public static Block myalite_crystal;
 	
 	@Override
-	public void construct() {
+	public void register() {
 		Block.Properties props = Block.Properties.of(Material.STONE, MaterialColor.TERRACOTTA_PURPLE)
 				.requiresCorrectToolForDrops()
         		.strength(1.5F, 6.0F);

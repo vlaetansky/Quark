@@ -21,7 +21,7 @@ public class AzaleaWoodModule extends QuarkModule {
 	public static WoodSet woodSet;
 
 	@Override
-	public void construct() {
+	public void register() {
 		woodSet = WoodSetHandler.addWoodSet(this, "azalea", MaterialColor.COLOR_LIGHT_GREEN, MaterialColor.COLOR_BROWN);
 	}
 

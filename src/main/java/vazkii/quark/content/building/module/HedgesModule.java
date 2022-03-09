@@ -19,7 +19,7 @@ public class HedgesModule extends QuarkModule {
 	public static TagKey<Block> hedgesTag;
 	
 	@Override
-	public void construct() {
+	public void register() {
 		new HedgeBlock(this, Blocks.OAK_FENCE, Blocks.OAK_LEAVES);
 		new HedgeBlock(this, Blocks.BIRCH_FENCE, Blocks.BIRCH_LEAVES);
 		new HedgeBlock(this, Blocks.SPRUCE_FENCE, Blocks.SPRUCE_LEAVES);

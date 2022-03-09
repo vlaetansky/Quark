@@ -70,7 +70,7 @@ public class PathfinderMapsModule extends QuarkModule {
 	}
 
 	@Override
-	public void construct() {
+	public void register() {
 		loadTradeInfo(Biomes.SNOWY_PLAINS, true, 4, 8, 14, 0x7FE4FF);
 		loadTradeInfo(Biomes.WINDSWEPT_HILLS, true, 4, 8, 14, 0x8A8A8A);
 		loadTradeInfo(Biomes.DARK_FOREST, true, 4, 8, 14, 0x00590A);

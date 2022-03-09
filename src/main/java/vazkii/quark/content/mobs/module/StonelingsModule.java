@@ -45,7 +45,7 @@ public class StonelingsModule extends QuarkModule {
 	public static Item diamondHeart;
 
 	@Override
-	public void construct() {
+	public void register() {
 		diamondHeart = new DiamondHeartItem("diamond_heart", this, new Item.Properties().tab(CreativeModeTab.TAB_MISC));
 
 		stonelingType = EntityType.Builder.of(Stoneling::new, MobCategory.CREATURE)

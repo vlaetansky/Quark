@@ -49,6 +49,10 @@ public class QuarkModule {
 		// NO-OP
 	}
 	
+	public void register() {
+		// NO-OP
+	}
+	
 	public void configChanged() {
 		// NO-OP
 	}

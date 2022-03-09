@@ -13,7 +13,7 @@ import vazkii.quark.base.module.QuarkModule;
 public class DuskboundBlocksModule extends QuarkModule {
 
 	@Override
-	public void construct() {
+	public void register() {
 		VariantHandler.addSlabAndStairs(new QuarkBlock("duskbound_block", this, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.copy(Blocks.PURPUR_BLOCK)));
 		
 		new QuarkBlock("duskbound_lantern", this, CreativeModeTab.TAB_BUILDING_BLOCKS, 

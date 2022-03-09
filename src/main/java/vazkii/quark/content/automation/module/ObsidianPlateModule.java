@@ -16,7 +16,7 @@ import vazkii.quark.content.automation.block.ObsidianPressurePlateBlock;
 @LoadModule(category = ModuleCategory.AUTOMATION)
 public class ObsidianPlateModule extends QuarkModule {
     @Override
-    public void construct() {
+    public void register() {
         new ObsidianPressurePlateBlock("obsidian_pressure_plate", this, CreativeModeTab.TAB_REDSTONE,
                 Block.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK)
                 		.requiresCorrectToolForDrops()

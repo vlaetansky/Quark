@@ -28,7 +28,7 @@ public class CrateModule extends QuarkModule {
 	@Config public static int maxItems = 640;
 
 	@Override
-	public void construct() {
+	public void register() {
 		crate = new CrateBlock(this);
 		
 		menuType = IForgeMenuType.create(CrateMenu::fromNetwork);

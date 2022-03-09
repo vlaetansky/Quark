@@ -27,7 +27,7 @@ public class SlimeInABucketModule extends QuarkModule {
 	public static Item slime_in_a_bucket;
 
 	@Override
-	public void construct() {
+	public void register() {
 		slime_in_a_bucket = new SlimeInABucketItem(this);
 	}
 

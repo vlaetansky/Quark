@@ -72,7 +72,7 @@ public class WraithModule extends QuarkModule {
 	public static List<String> validWraithSounds;
 	
 	@Override
-	public void construct() {
+	public void register() {
 		new SoulBeadItem(this);
 		
 		wraithType = EntityType.Builder.of(Wraith::new, MobCategory.MONSTER)

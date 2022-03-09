@@ -39,7 +39,7 @@ public class GlassShardModule extends QuarkModule {
     private static final Map<DyeColor, Item> shardColors = new HashMap<>();
 
     @Override
-    public void construct() {
+    public void register() {
         dirtyGlass = new DirtyGlassBlock("dirty_glass", this, CreativeModeTab.TAB_DECORATIONS,
                 Block.Properties.of(Material.GLASS, MaterialColor.COLOR_BROWN).strength(0.3F).sound(SoundType.GLASS));
         new QuarkInheritedPaneBlock(dirtyGlass);

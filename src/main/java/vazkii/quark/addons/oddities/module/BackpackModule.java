@@ -71,7 +71,7 @@ public class BackpackModule extends QuarkModule {
 	private static boolean backpackRequested;
 
 	@Override
-	public void construct() {
+	public void register() {
 		backpack = new BackpackItem(this);
 		ravager_hide = new QuarkItem("ravager_hide", this, new Item.Properties().rarity(Rarity.RARE).tab(CreativeModeTab.TAB_MATERIALS)).setCondition(() -> enableRavagerHide);
 		

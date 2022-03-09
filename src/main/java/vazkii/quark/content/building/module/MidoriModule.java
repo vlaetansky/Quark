@@ -17,7 +17,7 @@ import vazkii.quark.base.module.QuarkModule;
 public class MidoriModule extends QuarkModule {
 
 	@Override
-	public void construct() {
+	public void register() {
 		new QuarkItem("moss_paste", this, new Item.Properties().tab(CreativeModeTab.TAB_MATERIALS));
 		
 		Block.Properties props = Block.Properties.of(Material.STONE, MaterialColor.COLOR_LIGHT_GREEN)

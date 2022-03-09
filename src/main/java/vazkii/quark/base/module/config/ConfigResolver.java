@@ -25,6 +25,10 @@ public class ConfigResolver {
 		this.flagManager = new ConfigFlagManager();
 	}
 	
+	public void registerConfigBoundElements() {
+		flagManager.registerConfigBoundElements();
+	}
+	
 	public void makeSpec() {
 		ForgeConfigSpec.Builder forgeBuilder = new ForgeConfigSpec.Builder();
 		IConfigCallback callback = Quark.proxy.getConfigCallback();

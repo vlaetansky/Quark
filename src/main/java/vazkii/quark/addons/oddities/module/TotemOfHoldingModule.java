@@ -67,7 +67,7 @@ public class TotemOfHoldingModule extends QuarkModule {
 	public static boolean enableSoulCompass = true;
 
 	@Override
-	public void construct() {
+	public void register() {
 		soulCompass = new SoulCompassItem(this);
 		soulCompass.setCondition(() -> enableSoulCompass);
 

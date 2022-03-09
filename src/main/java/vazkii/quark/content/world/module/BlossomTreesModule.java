@@ -41,7 +41,7 @@ public class BlossomTreesModule extends QuarkModule {
 	public static WoodSet woodSet;
 	
 	@Override
-	public void construct() {
+	public void register() {
 		woodSet = WoodSetHandler.addWoodSet(this, "blossom", MaterialColor.COLOR_RED, MaterialColor.COLOR_BROWN);
 		
 		add("blue", MaterialColor.COLOR_LIGHT_BLUE, blue);

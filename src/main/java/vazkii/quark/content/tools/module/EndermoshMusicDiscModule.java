@@ -37,7 +37,7 @@ public class EndermoshMusicDiscModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT) private SimpleSoundInstance sound;
 
 	@Override
-	public void construct() {
+	public void register() {
 		endermosh = new QuarkMusicDiscItem(14, () -> QuarkSounds.MUSIC_ENDERMOSH, "endermosh", this, false);
 	}
 	

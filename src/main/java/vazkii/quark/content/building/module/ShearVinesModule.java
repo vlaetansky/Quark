@@ -30,7 +30,7 @@ public class ShearVinesModule extends QuarkModule {
 	public static Block cut_vine;
 	
 	@Override
-	public void construct() {
+	public void register() {
 		cut_vine = new CutVineBlock(this);
 	}
 	

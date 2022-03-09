@@ -53,7 +53,7 @@ public class WorldGenHandler {
 	public static PlacementModifierType<ChunkCornerPlacement> CHUNK_CORNER_PLACEMENT_TYPE = () -> ChunkCornerPlacement.CODEC;
 	public static ChunkCornerPlacement CHUNK_CORNER_PLACEMENT = new ChunkCornerPlacement();
 
-	public static void register() {
+	public static void start() {
 		registerFeatures();
 	}
 

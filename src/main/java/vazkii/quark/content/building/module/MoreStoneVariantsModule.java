@@ -28,7 +28,7 @@ public class MoreStoneVariantsModule extends QuarkModule {
 	@Config(flag = "stone_pillar") public boolean enablePillar = true;
 	
 	@Override
-	public void construct() {
+	public void register() {
 		expandVanillaStone(this, Blocks.CALCITE, "calcite");
 		expandVanillaStone(this, Blocks.DRIPSTONE_BLOCK, "dripstone");
 		expandVanillaStone(this, Blocks.TUFF, "tuff");

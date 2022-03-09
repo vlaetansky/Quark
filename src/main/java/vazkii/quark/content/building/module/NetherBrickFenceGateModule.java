@@ -17,7 +17,7 @@ import vazkii.quark.base.module.QuarkModule;
 @LoadModule(category = ModuleCategory.BUILDING)
 public class NetherBrickFenceGateModule extends QuarkModule {
     @Override
-    public void construct() {
+    public void register() {
         new QuarkFenceGateBlock("nether_brick_fence_gate", this, CreativeModeTab.TAB_REDSTONE,
                 Block.Properties.of(Material.STONE, MaterialColor.NETHER)
                 .requiresCorrectToolForDrops()

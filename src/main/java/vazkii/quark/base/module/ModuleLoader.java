@@ -36,14 +36,14 @@ public final class ModuleLoader {
 	
 	public void start() {
 		findModules();
-		dispatch(QuarkModule::construct);
-		dispatch(QuarkModule::modulesStarted);
+		dispatch("Construct", QuarkModule::construct);
+		dispatch("ModulesStarted", QuarkModule::modulesStarted);
 		resolveConfigSpec();
 	}
 	
 	@OnlyIn(Dist.CLIENT)
 	public void clientStart() {
-		dispatch(QuarkModule::constructClient);
+		dispatch("ConstructClient", QuarkModule::constructClient);
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 	
@@ -58,49 +58,54 @@ public final class ModuleLoader {
 		config.makeSpec();
 	}
 	
+	public void register() {
+		dispatch("Register", QuarkModule::register);
+		config.registerConfigBoundElements();
+	}
+	
 	public void configChanged() {
 		config.configChanged();
-		dispatch(QuarkModule::configChanged);
+		dispatch("ConfigChanged", QuarkModule::configChanged);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public void configChangedClient() {
-		dispatch(QuarkModule::configChangedClient);
+		dispatch("ConfigChangedClient", QuarkModule::configChangedClient);
 	}
 	
 	public void setup(ParallelDispatchEvent event) {
 		this.event = event;
-		dispatch(QuarkModule::earlySetup);
+		dispatch("EarlySetup", QuarkModule::earlySetup);
 		Quark.proxy.handleQuarkConfigChange();
-		dispatch(QuarkModule::setup);
+		dispatch("Setup", QuarkModule::setup);
 		event = null;
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup(ParallelDispatchEvent event) {
 		this.event = event;
-		dispatch(QuarkModule::clientSetup);
+		dispatch("ClientSetup", QuarkModule::clientSetup);
 		event = null;
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public void modelRegistry() {
-		dispatch(QuarkModule::modelRegistry);
+		dispatch("ModelRegistry", QuarkModule::modelRegistry);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public void textureStitch(TextureStitchEvent.Pre event) {
-		dispatch(m -> m.textureStitch(event));
+		dispatch("TextureStitch", m -> m.textureStitch(event));
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public void postTextureStitch(TextureStitchEvent.Post event) {
-		dispatch(m -> m.postTextureStitch(event));
+		dispatch("PostTextureStitch", m -> m.postTextureStitch(event));
 	}
 	
 	public void loadComplete(ParallelDispatchEvent event) {
 		this.event = event;
-		dispatch(QuarkModule::loadComplete);
+		dispatch("LoadComplete", QuarkModule::loadComplete);
 		event = null;
 	}
 	
@@ -108,13 +113,14 @@ public final class ModuleLoader {
 	@SubscribeEvent
 	public void firstClientTick(ClientTickEvent event) {
 		if(!clientTicked && event.phase == Phase.END) {
-			dispatch(m -> m.firstClientTick());
+			dispatch("FirstClientTick", m -> m.firstClientTick());
 			clientTicked = true;
 		}
 	}
 	
-	private void dispatch(Consumer<QuarkModule> run) {
-		foundModules.values().forEach(run);
+	private void dispatch(String step, Consumer<QuarkModule> run) {
+		Quark.LOG.info("Dispatching Module Event " + step);
+//		foundModules.values().forEach(run);
 	}
 	
 	void enqueue(Runnable r) {

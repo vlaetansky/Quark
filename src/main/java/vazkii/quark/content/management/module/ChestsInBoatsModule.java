@@ -43,7 +43,7 @@ public class ChestsInBoatsModule extends QuarkModule {
 	private static TagKey<Item> boatableChestsTag;
 	
 	@Override
-	public void construct() {
+	public void register() {
 		chestPassengerEntityType = EntityType.Builder.<ChestPassenger>of(ChestPassenger::new, MobCategory.MISC)
 				.sized(0.8F, 0.8F)
 				.updateInterval(128) // update interval

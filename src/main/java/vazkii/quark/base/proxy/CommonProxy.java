@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -30,14 +31,14 @@ public class CommonProxy {
 
 	private int lastConfigChange = -11;
 	public static boolean jingleTheBells = false;
+	private boolean registerDone = false;
 	
 	public void start() {
 		ForgeRegistries.RECIPE_SERIALIZERS.register(ExclusionRecipe.SERIALIZER);
 
 		QuarkSounds.start();
 		ModuleLoader.INSTANCE.start();
-		WorldGenHandler.register();
-		WoodSetHandler.start();
+		WorldGenHandler.start();
 		
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		registerListeners(bus);
@@ -52,6 +53,7 @@ public class CommonProxy {
 		bus.addListener(this::loadComplete);
 		bus.addListener(this::configChanged);
 		bus.addListener(this::registerCapabilities);
+		bus.addGenericListener(Object.class, this::registerContent);
 	}
 	
 	public void setup(FMLCommonSetupEvent event) {
@@ -80,6 +82,15 @@ public class CommonProxy {
 	
 	public void registerCapabilities(RegisterCapabilitiesEvent event) {
 		CapabilityHandler.registerCapabilities(event);
+	}
+	
+	public void registerContent(RegistryEvent.Register<?> event) {
+		if(registerDone)
+			return;
+		registerDone = true;
+		
+		ModuleLoader.INSTANCE.register();
+		WoodSetHandler.register();
 	}
 	
 	public void handleQuarkConfigChange() {

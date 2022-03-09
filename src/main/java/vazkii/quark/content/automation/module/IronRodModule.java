@@ -12,7 +12,7 @@ public class IronRodModule extends QuarkModule {
 	public static Block iron_rod;
 	
 	@Override
-	public void construct() {
+	public void register() {
 		iron_rod = new IronRodBlock(this);
 	}
 	

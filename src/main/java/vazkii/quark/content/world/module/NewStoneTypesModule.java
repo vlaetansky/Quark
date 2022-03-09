@@ -51,7 +51,7 @@ public class NewStoneTypesModule extends QuarkModule {
 	private static Queue<Runnable> defers = new ArrayDeque<>();
 	
 	@Override
-	public void construct() {
+	public void register() {
 		limestoneBlock = makeStone(this, "limestone", limestone, BigStoneClustersModule.limestone, () -> enableLimestone, MaterialColor.STONE);
 		jasperBlock = makeStone(this, "jasper", jasper, BigStoneClustersModule.jasper, () -> enableJasper, MaterialColor.TERRACOTTA_RED);
 		shaleBlock = makeStone(this, "shale", shale, BigStoneClustersModule.shale, () -> enableShale, MaterialColor.ICE); 

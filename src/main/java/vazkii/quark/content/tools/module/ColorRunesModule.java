@@ -125,7 +125,7 @@ public class ColorRunesModule extends QuarkModule {
 	}
 	
 	@Override
-	public void construct() {
+	public void register() {
 		for(DyeColor color : DyeColor.values())
 			new RuneItem(color.getSerializedName() + "_rune", this, color.getId(), true);
 		new RuneItem("rainbow_rune", this, 16, true);

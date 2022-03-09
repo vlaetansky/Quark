@@ -20,7 +20,7 @@ import vazkii.quark.content.building.block.WoodPostBlock;
 public class WoodenPostsModule extends QuarkModule {
 
 	@Override
-	public void construct() {
+	public void register() {
 		ImmutableList.of(Blocks.OAK_FENCE, Blocks.SPRUCE_FENCE, Blocks.BIRCH_FENCE, 
 				Blocks.JUNGLE_FENCE, Blocks.ACACIA_FENCE, Blocks.DARK_OAK_FENCE, 
 				Blocks.CRIMSON_FENCE, Blocks.WARPED_FENCE)

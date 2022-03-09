@@ -41,7 +41,7 @@ public class FrogsModule extends QuarkModule {
 	@Config public static boolean enableBigFunny = false;
 	
 	@Override
-	public void construct() {
+	public void register() {
 		new QuarkItem("frog_leg", this, new Item.Properties()
 				.tab(CreativeModeTab.TAB_FOOD)
 				.food(new FoodProperties.Builder()
