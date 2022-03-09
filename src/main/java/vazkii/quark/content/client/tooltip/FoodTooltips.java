@@ -1,12 +1,9 @@
 package vazkii.quark.content.client.tooltip;
 
-import java.util.List;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -29,6 +26,7 @@ import net.minecraftforge.client.gui.ForgeIngameGui;
 import vazkii.quark.content.client.module.ImprovedTooltipsModule;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 public class FoodTooltips {
 
@@ -114,7 +112,7 @@ public class FoodTooltips {
 					int count = (int) Math.ceil((double) pips / ImprovedTooltipsModule.foodDivisor);
 					boolean fract = pips % 2 != 0;
 					int renderCount = count;
-					int y = tooltipY;
+					int y = tooltipY - 1;
 
 					boolean compress = count > ImprovedTooltipsModule.foodCompressionThreshold;
 					if(compress) {

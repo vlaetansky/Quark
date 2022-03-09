@@ -1,8 +1,5 @@
 package vazkii.quark.content.world.module;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -30,60 +27,63 @@ import vazkii.quark.base.world.WorldGenWeights;
 import vazkii.quark.content.world.block.MyaliteCrystalBlock;
 import vazkii.quark.content.world.gen.SpiralSpireGenerator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @LoadModule(category = ModuleCategory.WORLD, hasSubscriptions = true)
 public class SpiralSpiresModule extends QuarkModule {
 
 	@Config
 	public static DimensionConfig dimensions = DimensionConfig.end(false);
-	
+
 	@Config
 	public static CompoundBiomeConfig biomes = CompoundBiomeConfig.fromBiomeReslocs(false, "minecraft:end_highlands");
-	
+
 	@Config public static int rarity = 200;
 	@Config public static int radius = 15;
-	
-	@Config(description = "Set to 0 to turn off Myalite Conduits") 
+
+	@Config(description = "Set to 0 to turn off Myalite Conduits")
 	public static int myaliteConduitDistance = 24;
-	
+
 	@Config public static boolean renewableMyalite = true;
-	
+
 	public static Block dusky_myalite;
 	public static Block myalite_crystal;
-	
+
 	@Override
 	public void register() {
 		Block.Properties props = Block.Properties.of(Material.STONE, MaterialColor.TERRACOTTA_PURPLE)
 				.requiresCorrectToolForDrops()
         		.strength(1.5F, 6.0F);
 		dusky_myalite = new QuarkBlock("dusky_myalite", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props);
-				
+
 		myalite_crystal = new MyaliteCrystalBlock(this);
 	}
-	
+
 	@Override
 	public void setup() {
 		WorldGenHandler.addGenerator(this, new SpiralSpireGenerator(dimensions), Decoration.SURFACE_STRUCTURES, WorldGenWeights.SPIRAL_SPIRES);
 	}
-	
+
 	@SubscribeEvent
 	public void onTeleport(EntityTeleportEvent event) {
 		if(myaliteConduitDistance <= 0)
 			return;
-		
+
 		Entity entity = event.getEntity();
 		Level world = entity.level;
 		BlockPos pos = new BlockPos(event.getTargetX(), event.getTargetY(), event.getTargetZ());
-		
+
 		List<BlockPos> myalite = getAdjacentMyalite(null, world, pos, null);
-		if(myalite.isEmpty()) {
+		if (myalite == null || myalite.isEmpty()) {
 			pos = pos.below();
 			myalite = getAdjacentMyalite(null, world, pos, null);
 		}
-		
-		if(!myalite.isEmpty()) {
-			BlockPos prev = null;
+
+		if (myalite != null && !myalite.isEmpty()) {
+			BlockPos prev;
 			BlockPos cond = pos;
-			
+
 			List<BlockPos> found = new ArrayList<>();
 			int moves = 0;
 			do {
@@ -91,46 +91,46 @@ public class SpiralSpiresModule extends QuarkModule {
 				cond = myalite.get(world.random.nextInt(myalite.size()));
 				found.add(cond);
 				myalite = getAdjacentMyalite(found, world, cond, null);
-				
+
 				moves++;
-				if(myalite == null || moves > myaliteConduitDistance)
+				if (myalite == null || moves > myaliteConduitDistance)
 					return;
-			} while(!myalite.isEmpty());
-			
-			
+			} while (!myalite.isEmpty());
+
+
 			BlockPos test = cond.offset(cond.getX() - prev.getX(), cond.getY() - prev.getY(), cond.getZ() - prev.getZ());
-			
-			find: if(!world.getBlockState(test).isAir()) {
-				for(Direction d : Direction.values()) {
+
+			find:
+			if (!world.getBlockState(test).isAir()) {
+				for (Direction d : Direction.values()) {
 					test = cond.relative(d);
-					if(world.getBlockState(test).isAir()) {
-						if(d.getAxis() == Axis.Y)
+					if (world.getBlockState(test).isAir()) {
+						if (d.getAxis() == Axis.Y)
 							test = test.relative(d);
-						
+
 						break find;
 					}
 				}
-				
+
 				return;
 			}
-			
+
 			event.setTargetX(test.getX() + 0.5);
 			event.setTargetY(test.getY() + 0.5);
 			event.setTargetZ(test.getZ() + 0.5);
-			
-			if(world instanceof ServerLevel) {
-				ServerLevel sworld = (ServerLevel) world;
-				for(BlockPos f : found)
+
+			if (world instanceof ServerLevel sworld) {
+				for (BlockPos f : found)
 					sworld.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, myalite_crystal.defaultBlockState()), f.getX() + 0.5, f.getY() + 0.5, f.getZ() + 0.5, 30, 0.25, 0.25, 0.25, 0);
 			}
 		}
 	}
-	
+
 	private static List<BlockPos> getAdjacentMyalite(List<BlockPos> found, Level world, BlockPos pos, Direction ignore) {
 		List<BlockPos> ret = new ArrayList<>(6);
 		List<BlockPos> collisions = new ArrayList<>();
-		
-		for(Direction d : Direction.values()) 
+
+		for(Direction d : Direction.values())
 			if(d != ignore) {
 				BlockPos off = pos.relative(d);
 				if(world.getBlockState(off).getBlock() == myalite_crystal) {
@@ -139,10 +139,10 @@ public class SpiralSpiresModule extends QuarkModule {
 					else ret.add(off);
 				}
 			}
-		
+
 		if(ret.isEmpty() && collisions.size() > 1)
 			return null;
-		
+
 		return ret;
 	}
 
