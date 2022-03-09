@@ -15,7 +15,7 @@ import vazkii.quark.content.world.undergroundstyle.base.AbstractUndergroundStyle
 import vazkii.quark.content.world.undergroundstyle.base.UndergroundStyleConfig;
 
 @LoadModule(category = ModuleCategory.WORLD)
-public class PermafrostModule extends AbstractUndergroundStyleModule {
+public class PermafrostModule extends AbstractUndergroundStyleModule<PermafrostStyle> {
 
 	public static QuarkBlock permafrost;
 	
@@ -30,12 +30,14 @@ public class PermafrostModule extends AbstractUndergroundStyleModule {
 		VariantHandler.addSlabStairsWall(permafrost);
 		VariantHandler.addSlabStairsWall(new QuarkBlock("permafrost_bricks", this, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.copy(permafrost)));
 		
+		generationSettings.biomeObj.setBlock(permafrost.defaultBlockState());
+		
 		super.register();
 	}
 	
 	@Override
-	protected UndergroundStyleConfig getStyleConfig() {
-		UndergroundStyleConfig config = new UndergroundStyleConfig(new PermafrostStyle(), 2, 100, 30, 10, 5, CompoundBiomeConfig.fromBiomeReslocs(false, "minecraft:frozen_peaks"));
+	protected UndergroundStyleConfig<PermafrostStyle> getStyleConfig() {
+		UndergroundStyleConfig<PermafrostStyle> config = new UndergroundStyleConfig<>(new PermafrostStyle(), 2, 100, 30, 10, 5, CompoundBiomeConfig.fromBiomeReslocs(false, "minecraft:frozen_peaks"));
 		config.minYLevel = 105;
 		config.maxYLevel = 140;
 		return config;

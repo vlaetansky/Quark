@@ -45,11 +45,11 @@ public class QuarkModule {
 		// NO-OP
 	}
 
-	public void modulesStarted() {
+	public void register() {
 		// NO-OP
 	}
 	
-	public void register() {
+	public void postRegister() {
 		// NO-OP
 	}
 	
@@ -63,10 +63,6 @@ public class QuarkModule {
 
 	@OnlyIn(Dist.CLIENT)
 	public void configChangedClient() {
-		// NO-OP
-	}
-	
-	public void earlySetup() {
 		// NO-OP
 	}
 	

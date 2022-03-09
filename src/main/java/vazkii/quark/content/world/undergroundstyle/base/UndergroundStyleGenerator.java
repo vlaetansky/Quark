@@ -14,11 +14,11 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import vazkii.quark.base.world.generator.multichunk.ClusterBasedGenerator;
 
-public class UndergroundStyleGenerator extends ClusterBasedGenerator {
+public class UndergroundStyleGenerator<T extends UndergroundStyle> extends ClusterBasedGenerator {
 
-	public final UndergroundStyleConfig info;
+	public final UndergroundStyleConfig<T> info;
 
-	public UndergroundStyleGenerator(UndergroundStyleConfig info, String name) {
+	public UndergroundStyleGenerator(UndergroundStyleConfig<T> info, String name) {
 		super(info.dimensions, info, name.hashCode());
 		this.info = info;
 	}
@@ -62,7 +62,7 @@ public class UndergroundStyleGenerator extends ClusterBasedGenerator {
 		public final BlockPos source;
 		public final ChunkGenerator generator;
 		public final Random random;
-		public final UndergroundStyleConfig info;
+		public final UndergroundStyleConfig<?> info;
 
 		public final List<BlockPos> floorList = new LinkedList<>();
 		public final List<BlockPos> ceilingList = new LinkedList<>();
@@ -70,7 +70,7 @@ public class UndergroundStyleGenerator extends ClusterBasedGenerator {
 
 		public final Map<BlockPos, Direction> wallMap = new HashMap<>();
 		
-		public Context(WorldGenRegion world, BlockPos source, ChunkGenerator generator, Random random, UndergroundStyleConfig info) {
+		public Context(WorldGenRegion world, BlockPos source, ChunkGenerator generator, Random random, UndergroundStyleConfig<?> info) {
 			this.world = world;
 			this.source = source;
 			this.generator = generator;

@@ -27,7 +27,7 @@ public class LeafCarpetModule extends QuarkModule {
 	}
 	
 	@Override
-	public void modulesStarted() {
+	public void postRegister() {
 		BlossomTreesModule.trees.keySet().stream().map(t -> (BlossomLeavesBlock) t.leaf.getBlock()).forEach(this::blossomCarpet);
 	}
 	

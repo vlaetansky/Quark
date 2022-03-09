@@ -6,10 +6,10 @@ import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.world.WorldGenHandler;
 import vazkii.quark.base.world.WorldGenWeights;
 
-public abstract class AbstractUndergroundStyleModule extends QuarkModule {
+public abstract class AbstractUndergroundStyleModule<T extends UndergroundStyle> extends QuarkModule {
 
 	@Config
-	public UndergroundStyleConfig generationSettings;
+	public UndergroundStyleConfig<T> generationSettings;
 
 	@Override
 	public void construct() {
@@ -18,11 +18,11 @@ public abstract class AbstractUndergroundStyleModule extends QuarkModule {
 
 	@Override
 	public void setup() {
-		WorldGenHandler.addGenerator(this, new UndergroundStyleGenerator(generationSettings, getStyleName()), Decoration.UNDERGROUND_DECORATION, WorldGenWeights.UNDERGROUND_BIOMES);
+		WorldGenHandler.addGenerator(this, new UndergroundStyleGenerator<>(generationSettings, getStyleName()), Decoration.UNDERGROUND_DECORATION, WorldGenWeights.UNDERGROUND_BIOMES);
 	}
 	
 	protected abstract String getStyleName();
 
-	protected abstract UndergroundStyleConfig getStyleConfig();
+	protected abstract UndergroundStyleConfig<T> getStyleConfig();
 
 }

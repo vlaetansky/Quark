@@ -5,7 +5,9 @@ import java.time.Month;
 
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
@@ -53,7 +55,8 @@ public class CommonProxy {
 		bus.addListener(this::loadComplete);
 		bus.addListener(this::configChanged);
 		bus.addListener(this::registerCapabilities);
-		bus.addGenericListener(Object.class, this::registerContent);
+		
+		bus.register(RegistryListener.class);
 	}
 	
 	public void setup(FMLCommonSetupEvent event) {
@@ -84,15 +87,6 @@ public class CommonProxy {
 		CapabilityHandler.registerCapabilities(event);
 	}
 	
-	public void registerContent(RegistryEvent.Register<?> event) {
-		if(registerDone)
-			return;
-		registerDone = true;
-		
-		ModuleLoader.INSTANCE.register();
-		WoodSetHandler.register();
-	}
-	
 	public void handleQuarkConfigChange() {
 		ModuleLoader.INSTANCE.configChanged();
 		EntitySpawnHandler.refresh();
@@ -104,6 +98,22 @@ public class CommonProxy {
 	
 	public IConfigCallback getConfigCallback() {
 		return new IConfigCallback.Dummy();
+	}
+	
+	public static final class RegistryListener {
+
+		private static boolean registerDone;
+		
+		@SubscribeEvent(priority = EventPriority.HIGHEST)
+		public static void registerContent(RegistryEvent.Register<?> event) {
+			if(registerDone)
+				return;
+			registerDone = true;
+			
+			ModuleLoader.INSTANCE.register();
+			WoodSetHandler.register();
+		}
+		
 	}
 
 }

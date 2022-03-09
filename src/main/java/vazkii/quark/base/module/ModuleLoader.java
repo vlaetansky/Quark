@@ -1,6 +1,8 @@
 package vazkii.quark.base.module;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -23,11 +25,17 @@ import vazkii.quark.base.item.IQuarkItem;
 import vazkii.quark.base.module.config.ConfigResolver;
 
 public final class ModuleLoader {
+
+	private static enum Step {
+		CONSTRUCT, CONSTRUCT_CLIENT, REGISTER, POST_REGISTER, CONFIG_CHANGED, CONFIG_CHANGED_CLIENT, SETUP, SETUP_CLIENT,
+		MODEL_REGISTRY, TEXTURE_STITCH, POST_TEXTURE_STITCH, LOAD_COMPLETE, FIRST_CLIENT_TICK
+	}
 	
 	public static final ModuleLoader INSTANCE = new ModuleLoader(); 
 	
 	private Map<Class<? extends QuarkModule>, QuarkModule> foundModules = new HashMap<>();
-	
+	private List<Step> stepsHandled = new ArrayList<>();
+
 	private ConfigResolver config;
 	private boolean clientTicked = false;
 	private ParallelDispatchEvent event;
@@ -36,14 +44,13 @@ public final class ModuleLoader {
 	
 	public void start() {
 		findModules();
-		dispatch("Construct", QuarkModule::construct);
-		dispatch("ModulesStarted", QuarkModule::modulesStarted);
+		dispatch(Step.CONSTRUCT, QuarkModule::construct);
 		resolveConfigSpec();
 	}
 	
 	@OnlyIn(Dist.CLIENT)
 	public void clientStart() {
-		dispatch("ConstructClient", QuarkModule::constructClient);
+		dispatch(Step.CONSTRUCT_CLIENT, QuarkModule::constructClient);
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 	
@@ -59,53 +66,59 @@ public final class ModuleLoader {
 	}
 	
 	public void register() {
-		dispatch("Register", QuarkModule::register);
+		dispatch(Step.REGISTER, QuarkModule::register);
+		dispatch(Step.POST_REGISTER, QuarkModule::postRegister);
 		config.registerConfigBoundElements();
 	}
 	
 	public void configChanged() {
+		if(!stepsHandled.contains(Step.POST_REGISTER))
+			return; // We don't want to mess with changing config values before objects are registered
+		
 		config.configChanged();
-		dispatch("ConfigChanged", QuarkModule::configChanged);
+		dispatch(Step.CONFIG_CHANGED, QuarkModule::configChanged);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public void configChangedClient() {
-		dispatch("ConfigChangedClient", QuarkModule::configChangedClient);
+		if(!stepsHandled.contains(Step.POST_REGISTER))
+			return; // We don't want to mess with changing config values before objects are registered
+		
+		dispatch(Step.CONFIG_CHANGED_CLIENT, QuarkModule::configChangedClient);
 	}
 	
 	public void setup(ParallelDispatchEvent event) {
 		this.event = event;
-		dispatch("EarlySetup", QuarkModule::earlySetup);
 		Quark.proxy.handleQuarkConfigChange();
-		dispatch("Setup", QuarkModule::setup);
+		dispatch(Step.SETUP, QuarkModule::setup);
 		event = null;
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup(ParallelDispatchEvent event) {
 		this.event = event;
-		dispatch("ClientSetup", QuarkModule::clientSetup);
+		dispatch(Step.SETUP_CLIENT, QuarkModule::clientSetup);
 		event = null;
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public void modelRegistry() {
-		dispatch("ModelRegistry", QuarkModule::modelRegistry);
+		dispatch(Step.MODEL_REGISTRY, QuarkModule::modelRegistry);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public void textureStitch(TextureStitchEvent.Pre event) {
-		dispatch("TextureStitch", m -> m.textureStitch(event));
+		dispatch(Step.TEXTURE_STITCH, m -> m.textureStitch(event));
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public void postTextureStitch(TextureStitchEvent.Post event) {
-		dispatch("PostTextureStitch", m -> m.postTextureStitch(event));
+		dispatch(Step.POST_TEXTURE_STITCH, m -> m.postTextureStitch(event));
 	}
 	
 	public void loadComplete(ParallelDispatchEvent event) {
 		this.event = event;
-		dispatch("LoadComplete", QuarkModule::loadComplete);
+		dispatch(Step.LOAD_COMPLETE, QuarkModule::loadComplete);
 		event = null;
 	}
 	
@@ -113,14 +126,15 @@ public final class ModuleLoader {
 	@SubscribeEvent
 	public void firstClientTick(ClientTickEvent event) {
 		if(!clientTicked && event.phase == Phase.END) {
-			dispatch("FirstClientTick", m -> m.firstClientTick());
+			dispatch(Step.FIRST_CLIENT_TICK, QuarkModule::firstClientTick);
 			clientTicked = true;
 		}
 	}
 	
-	private void dispatch(String step, Consumer<QuarkModule> run) {
-		Quark.LOG.info("Dispatching Module Event " + step);
+	private void dispatch(Step step, Consumer<QuarkModule> run) {
+		Quark.LOG.info("Dispatching Module Step " + step);
 		foundModules.values().forEach(run);
+		stepsHandled.add(step);
 	}
 	
 	void enqueue(Runnable r) {

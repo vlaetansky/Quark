@@ -4,14 +4,17 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import vazkii.quark.content.world.module.PermafrostModule;
 import vazkii.quark.content.world.undergroundstyle.base.BasicUndergroundStyle;
 import vazkii.quark.content.world.undergroundstyle.base.UndergroundStyleGenerator.Context;
 
 public class PermafrostStyle extends BasicUndergroundStyle {
 	
 	public PermafrostStyle() {
-		super(Blocks.PACKED_ICE.defaultBlockState(), PermafrostModule.permafrost.defaultBlockState(), PermafrostModule.permafrost.defaultBlockState(), true);
+		super(Blocks.PACKED_ICE.defaultBlockState(), Blocks.PACKED_ICE.defaultBlockState(), Blocks.PACKED_ICE.defaultBlockState(), true);
+	}
+	
+	public void setBlock(BlockState state) {
+		ceilingState = floorState = state;
 	}
 	
 	@Override

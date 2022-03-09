@@ -29,7 +29,7 @@ import vazkii.quark.content.world.undergroundstyle.base.AbstractUndergroundStyle
 import vazkii.quark.content.world.undergroundstyle.base.UndergroundStyleConfig;
 
 @LoadModule(category = ModuleCategory.WORLD)
-public class CorundumModule extends AbstractUndergroundStyleModule {
+public class CorundumModule extends AbstractUndergroundStyleModule<CorundumStyle> {
 
 	@Config
 	@Config.Min(value = 0)
@@ -110,9 +110,8 @@ public class CorundumModule extends AbstractUndergroundStyleModule {
 	}
 
 	@Override
-	protected UndergroundStyleConfig getStyleConfig() {
-		return new UndergroundStyleConfig(new CorundumStyle(), 400, true, BiomeDictionary.Type.OCEAN)
-				.setDefaultSize(72, 20, 22, 4);
+	protected UndergroundStyleConfig<CorundumStyle> getStyleConfig() {
+		return new UndergroundStyleConfig<>(new CorundumStyle(), 400, true, BiomeDictionary.Type.OCEAN).setDefaultSize(72, 20, 22, 4);
 	}
 
 	public static class ClusterConnection implements IIndirectConnector {

@@ -239,7 +239,7 @@ public class VariantChestsModule extends QuarkModule {
 	}
 	
 	@Override
-	public void modulesStarted() {
+	public void postRegister() {
 		chestTEType = registerChests(VariantChestBlockEntity::new, chestTypes);
 		trappedChestTEType = registerChests(VariantTrappedChestBlockEntity::new, trappedChestTypes);
 

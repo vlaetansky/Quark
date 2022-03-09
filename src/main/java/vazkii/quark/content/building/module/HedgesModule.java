@@ -32,7 +32,7 @@ public class HedgesModule extends QuarkModule {
 	}
 
 	@Override
-	public void modulesStarted() {
+	public void postRegister() {
 		for (BlossomTree tree : BlossomTreesModule.trees.keySet())
 			new HedgeBlock(this, Blocks.OAK_FENCE, tree.leaf.getBlock());
 	}
