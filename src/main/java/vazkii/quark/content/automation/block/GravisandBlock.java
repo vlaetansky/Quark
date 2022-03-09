@@ -1,7 +1,5 @@
 package vazkii.quark.content.automation.block;
 
-import java.util.Random;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -17,6 +15,7 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.automation.entity.Gravisand;
 
 import javax.annotation.Nonnull;
+import java.util.Random;
 
 public class GravisandBlock extends QuarkBlock {
 
@@ -54,7 +53,7 @@ public class GravisandBlock extends QuarkBlock {
 	@Override
 	public void tick(@Nonnull BlockState state, ServerLevel worldIn, @Nonnull BlockPos pos, @Nonnull Random rand) {
 		if(!worldIn.isClientSide) {
-			if(checkFallable(worldIn, pos))
+			if(checkFallable(state, worldIn, pos))
 				for(Direction face : Direction.values()) {
 					BlockPos offPos = pos.relative(face);
 					BlockState offState = worldIn.getBlockState(offPos);
@@ -65,20 +64,21 @@ public class GravisandBlock extends QuarkBlock {
 		}
 	}
 
-	private boolean checkFallable(Level worldIn, BlockPos pos) {
+	private boolean checkFallable(BlockState state, Level worldIn, BlockPos pos) {
 		if(!worldIn.isClientSide) {
-			if(tryFall(worldIn, pos, Direction.DOWN))
+			if(tryFall(state, worldIn, pos, Direction.DOWN))
 				return true;
-			else return tryFall(worldIn, pos, Direction.UP);
+			else return tryFall(state, worldIn, pos, Direction.UP);
 		}
 
 		return false;
 	}
 
-	private boolean tryFall(Level worldIn, BlockPos pos, Direction facing) {
+	private boolean tryFall(BlockState state, Level worldIn, BlockPos pos, Direction facing) {
 		BlockPos target = pos.relative(facing);
 		if((worldIn.isEmptyBlock(target) || canFallThrough(worldIn, pos, worldIn.getBlockState(target))) && worldIn.isInWorldBounds(pos)) {
 			Gravisand entity = new Gravisand(worldIn, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, facing.getStepY());
+			worldIn.setBlock(pos, state.getFluidState().createLegacyBlock(), 3);
 			worldIn.addFreshEntity(entity);
 			return true;
 		}

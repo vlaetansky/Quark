@@ -1,8 +1,5 @@
 package vazkii.quark.content.tweaks.module;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -22,6 +19,9 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.tweaks.block.DirtyGlassBlock;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author WireSegal
  * Created at 12:26 PM on 8/24/19.
@@ -36,7 +36,7 @@ public class GlassShardModule extends QuarkModule {
     public static Item clearShard;
     public static Item dirtyShard;
 
-    private static final Map<DyeColor, Item> shardColors = new HashMap<>();
+    public static final Map<DyeColor, Item> shardColors = new HashMap<>();
 
     @Override
     public void register() {
