@@ -1,14 +1,14 @@
 package vazkii.quark.base.handler;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.BiFunction;
-
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.PiecesContainer;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiFunction;
 
 public class StructureBlockReplacementHandler {
 
@@ -17,11 +17,11 @@ public class StructureBlockReplacementHandler {
 	private static ThreadLocal<StructureHolder> structureHolder = new ThreadLocal<>();
 
 	public static BlockState getResultingBlockState(BlockState blockstate) {
-		StructureHolder curr = getCurrentSturctureHolder();
+		StructureHolder curr = getCurrentStructureHolder();
 
 		if(curr != null && curr.currentStructure != null)
 			for(StructureFunction fun : functions) {
-				
+
 				BlockState res = fun.apply(blockstate, curr);
 				if(res != null)
 					return res;
@@ -30,12 +30,12 @@ public class StructureBlockReplacementHandler {
 		return blockstate;
 	}
 
-	private static StructureHolder getCurrentSturctureHolder() {
+	private static StructureHolder getCurrentStructureHolder() {
 		return structureHolder.get();
 	}
 
 	public static void setActiveStructure(ConfiguredStructureFeature<?, ?> structure, PiecesContainer components) {
-		StructureHolder curr = getCurrentSturctureHolder();
+		StructureHolder curr = getCurrentStructureHolder();
 		if(curr == null) {
 			curr = new StructureHolder();
 			structureHolder.set(curr);

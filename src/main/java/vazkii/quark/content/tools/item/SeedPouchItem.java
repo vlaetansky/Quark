@@ -1,15 +1,9 @@
 package vazkii.quark.content.tools.item;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -31,6 +25,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.commons.lang3.tuple.Pair;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.api.ITrowelable;
 import vazkii.quark.api.IUsageTickerOverride;
@@ -38,8 +33,11 @@ import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
-import vazkii.quark.content.tools.module.ColorRunesModule;
 import vazkii.quark.content.tools.module.SeedPouchModule;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, ITrowelable {
 
@@ -49,7 +47,7 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 	private static final int BAR_COLOR = Mth.color(0.4F, 0.4F, 1.0F);
 
 	public SeedPouchItem(QuarkModule module) {
-		super("seed_pouch", module, 
+		super("seed_pouch", module,
 				new Item.Properties()
 				.stacksTo(1)
 				.durability(SeedPouchModule.maxItems + 1)
@@ -77,7 +75,7 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 
 		return false;
 	}
-	
+
 	@Override
 	public boolean isEnchantable(ItemStack p_41456_) {
 		return false;
@@ -152,7 +150,7 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 				if(canTakeItem(stack, held))
 					return 0F;
 			}
-		} 
+		}
 
 		Pair<ItemStack, Integer> contents = getContents(stack);
 		if(contents == null)
@@ -282,7 +280,7 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 			List<Item> tagItems = null;
 
 			try {
-				tagItems = MiscUtil.getTagValues(RegistryAccess.BUILTIN.get(), ColorRunesModule.runesTag);
+				tagItems = MiscUtil.getTagValues(BuiltinRegistries.ACCESS, SeedPouchModule.seedPouchHoldableTag);
 			} catch(IllegalStateException e) { // Tag not bound yet
 				return;
 			}
@@ -316,7 +314,7 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 
 		return 0;
 	}
-	
+
 	@Override
 	public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
 		return getContents(stack) == null ? Optional.empty() : Optional.of(new Tooltip(stack));
@@ -325,19 +323,19 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 	public static class PouchItemUseContext extends UseOnContext {
 
 		protected PouchItemUseContext(UseOnContext parent, ItemStack stack, BlockPos targetPos) {
-			super(parent.getLevel(), parent.getPlayer(), parent.getHand(), stack, 
+			super(parent.getLevel(), parent.getPlayer(), parent.getHand(), stack,
 					new BlockHitResult(parent.getClickLocation(), parent.getClickedFace(), targetPos, parent.isInside()));
 		}
 
 	}
-	
+
 	public static class Tooltip implements TooltipComponent {
-		
-		public final ItemStack stack; 
+
+		public final ItemStack stack;
 		public Tooltip(ItemStack stack) {
 			this.stack = stack;
 		}
-		
+
 	}
 
 }

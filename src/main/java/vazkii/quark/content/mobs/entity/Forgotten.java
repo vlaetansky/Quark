@@ -1,13 +1,6 @@
 package vazkii.quark.content.mobs.entity;
 
-import java.util.List;
-import java.util.stream.Stream;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.google.common.collect.ImmutableSet;
-
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -20,13 +13,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -51,6 +38,11 @@ import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.mobs.module.ForgottenModule;
 import vazkii.quark.content.tools.module.ColorRunesModule;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class Forgotten extends Skeleton {
 
@@ -80,7 +72,7 @@ public class Forgotten extends Skeleton {
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
 		SpawnGroupData ilivingentitydata = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
 		reassessWeaponGoal();
-		
+
 		return ilivingentitydata;
 	}
 
@@ -95,7 +87,7 @@ public class Forgotten extends Skeleton {
 				 MobEffectInstance eff = target.getEffect(MobEffects.BLINDNESS);
 				 shouldUseBow = eff == null || eff.getDuration() < 20;
 			}
-			
+
 			boolean isUsingBow = getMainHandItem().getItem() instanceof BowItem;
 			if(shouldUseBow != isUsingBow)
 				swap();
@@ -161,7 +153,7 @@ public class Forgotten extends Skeleton {
 
 		prepareEquipment();
 	}
-	
+
 	public void prepareEquipment() {
 		ItemStack bow = new ItemStack(Items.BOW);
 		ItemStack sheathed = new ItemStack(Items.IRON_SWORD);
@@ -171,14 +163,16 @@ public class Forgotten extends Skeleton {
 
 		if(ModuleLoader.INSTANCE.isModuleEnabled(ColorRunesModule.class) && random.nextBoolean()) {
 			List<Item> items = MiscUtil.getTagValues(level.registryAccess(), ColorRunesModule.runesLootableTag);
-			ItemStack item = new ItemStack(items.get(random.nextInt(items.size())));
-			CompoundTag runeNbt = item.serializeNBT();
+			if (!items.isEmpty()) {
+				ItemStack item = new ItemStack(items.get(random.nextInt(items.size())));
+				CompoundTag runeNbt = item.serializeNBT();
 
-			ItemNBTHelper.setBoolean(bow, ColorRunesModule.TAG_RUNE_ATTACHED, true);
-			ItemNBTHelper.setBoolean(sheathed, ColorRunesModule.TAG_RUNE_ATTACHED, true);
+				ItemNBTHelper.setBoolean(bow, ColorRunesModule.TAG_RUNE_ATTACHED, true);
+				ItemNBTHelper.setBoolean(sheathed, ColorRunesModule.TAG_RUNE_ATTACHED, true);
 
-			ItemNBTHelper.setCompound(bow, ColorRunesModule.TAG_RUNE_COLOR, runeNbt);
-			ItemNBTHelper.setCompound(sheathed, ColorRunesModule.TAG_RUNE_COLOR, runeNbt);
+				ItemNBTHelper.setCompound(bow, ColorRunesModule.TAG_RUNE_COLOR, runeNbt);
+				ItemNBTHelper.setCompound(sheathed, ColorRunesModule.TAG_RUNE_COLOR, runeNbt);
+			}
 		}
 
 		setItemSlot(EquipmentSlot.MAINHAND, bow);
@@ -198,7 +192,7 @@ public class Forgotten extends Skeleton {
 
 		return arrow;
 	}
-	
+
 	@Nonnull
 	@Override
 	public Packet<?> getAddEntityPacket() {

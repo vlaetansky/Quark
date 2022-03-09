@@ -1,17 +1,11 @@
 package vazkii.quark.content.client.tooltip;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Either;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -32,7 +26,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.content.client.module.ImprovedTooltipsModule;
+import vazkii.quark.content.tools.item.AncientTomeItem;
 import vazkii.quark.content.tools.module.AncientTomesModule;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class EnchantedBookTooltips {
 
@@ -57,7 +57,11 @@ public class EnchantedBookTooltips {
 
 			List<EnchantmentInstance> enchants = getEnchantedBookEnchantments(stack);
 			for(EnchantmentInstance ed : enchants) {
-				Component match = ed.enchantment.getFullname(ed.level);
+				Component match;
+				if (stack.getItem() == Items.ENCHANTED_BOOK)
+					match = ed.enchantment.getFullname(ed.level);
+				else
+					match = AncientTomeItem.getFullTooltipText(ed.enchantment);
 
 				for(; tooltipIndex < tooltip.size(); tooltipIndex++) {
 					Either<FormattedText, TooltipComponent> elmAt = tooltip.get(tooltipIndex);

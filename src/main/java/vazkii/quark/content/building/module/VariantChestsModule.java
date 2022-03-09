@@ -1,21 +1,7 @@
 package vazkii.quark.content.building.module;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.BooleanSupplier;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableSet;
-
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -64,16 +50,24 @@ import vazkii.quark.content.building.block.be.VariantTrappedChestBlockEntity;
 import vazkii.quark.content.building.client.render.be.VariantChestRenderer;
 import vazkii.quark.content.building.recipe.MixedExclusionRecipe;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.function.BooleanSupplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
 @LoadModule(category = ModuleCategory.BUILDING, hasSubscriptions = true)
 public class VariantChestsModule extends QuarkModule {
 
 	private static final Pattern VILLAGE_PIECE_PATTERN = Pattern.compile("\\w+\\[\\w+\\[([a-z_]+)\\:village\\/(.+?)\\/.+\\]\\]");
-	
+
 	private static final String DONK_CHEST = "Quark:DonkChest";
 
 	private static final ImmutableSet<String> OVERWORLD_WOODS = ImmutableSet.copyOf(MiscUtil.OVERWORLD_WOOD_TYPES);
 	private static final ImmutableSet<String> NETHER_WOODS = ImmutableSet.copyOf(MiscUtil.NETHER_WOOD_TYPES);
-	
+
 	private static final ImmutableSet<String> MOD_WOODS = ImmutableSet.of();
 
 	public static BlockEntityType<VariantChestBlockEntity> chestTEType;
@@ -81,15 +75,15 @@ public class VariantChestsModule extends QuarkModule {
 
 	private static List<Supplier<Block>> chestTypes = new LinkedList<>();
 	private static List<Supplier<Block>> trappedChestTypes = new LinkedList<>();
-	
+
 	private static List<Block> allChests = new LinkedList<>();
 	private static Map<String, Block> chestMappings = new HashMap<>();
 
 	@Config private static boolean replaceWorldgenChests = true;
 	@Config(flag = "chest_reversion") private static boolean enableRevertingWoodenChests = true;
-	
+
 	private static boolean staticEnabled = false;
-	
+
 	@Config(description =  "Chests to put in each structure. The format per entry is \"structure=chest\", where \"structure\" is a structure ID, and \"chest\" is a block ID, which must correspond to a standard chest block.")
 	public static List<String> structureChests = Arrays.asList(
 			 "minecraft:village_plains=quark:oak_chest",
@@ -106,7 +100,7 @@ public class VariantChestsModule extends QuarkModule {
 			 "minecraft:bastion_remnant=quark:crimson_chest",
 			 "minecraft:fortress=quark:nether_brick_chest",
 			 "minecraft:endcity=quark:purpur_chest");
-	
+
 	private static final List<String> BUILT_IN_MOD_STRUCTURES = Arrays.asList(
 			"bettermineshafts:mineshaft=quark:oak_chest",
 			 "betterstrongholds:stronghold=quark:oak_chest",
@@ -208,7 +202,7 @@ public class VariantChestsModule extends QuarkModule {
 			 "repurposed_structures:village_mountains=quark:spruce_chest",
 			 "repurposed_structures:village_oak=quark:oak_chest",
 			 "repurposed_structures:village_swamp=quark:oak_chest",
-			 "repurposed_structures:village_warped=quark:warped_chest", 
+			 "repurposed_structures:village_warped=quark:warped_chest",
 			 "valhelsia_structures:big_tree=quark:oak_chest",
 			 "valhelsia_structures:castle=quark:spruce_chest",
 			 "valhelsia_structures:castle_ruin=quark:oak_chest",
@@ -222,11 +216,11 @@ public class VariantChestsModule extends QuarkModule {
 			 "valhelsia_structures:witch_hut=quark:spruce_chest");
 
 	private static final Method CHEST_EQUIP = ObfuscationReflectionHelper.findMethod(AbstractChestedHorse.class, "m_7609_");
-	
+
 	@Override
 	public void register() {
 		ForgeRegistries.RECIPE_SERIALIZERS.register(MixedExclusionRecipe.SERIALIZER);
-		
+
 		OVERWORLD_WOODS.forEach(s -> addChest(s, Blocks.CHEST));
 		NETHER_WOODS.forEach(s -> addChest(s, Blocks.CHEST));
 		MOD_WOODS.forEach(s -> addModChest(s, Blocks.CHEST));
@@ -237,7 +231,7 @@ public class VariantChestsModule extends QuarkModule {
 
 		StructureBlockReplacementHandler.functions.add(VariantChestsModule::getGenerationChestBlockState);
 	}
-	
+
 	@Override
 	public void postRegister() {
 		chestTEType = registerChests(VariantChestBlockEntity::new, chestTypes);
@@ -253,23 +247,23 @@ public class VariantChestsModule extends QuarkModule {
 		BlockEntityRenderers.register(chestTEType, VariantChestRenderer::new);
 		BlockEntityRenderers.register(trappedChestTEType, VariantChestRenderer::new);
 	}
-	
+
 	@Override
 	public void configChanged() {
 		super.configChanged();
-		
+
 		staticEnabled = enabled;
-		
+
 		chestMappings.clear();
 		List<String> chestsClone = new ArrayList<>(BUILT_IN_MOD_STRUCTURES);
 		chestsClone.addAll(structureChests);
-		
+
 		for(String s : chestsClone) {
 			String[] toks = s.split("=");
 			if(toks.length == 2) {
 				String left = toks[0];
 				String right = toks[1];
-				
+
 				Registry.BLOCK.getOptional(new ResourceLocation(right)).ifPresent(block -> {
 					if (block != Blocks.AIR) {
 						chestMappings.put(left, block);
@@ -278,14 +272,14 @@ public class VariantChestsModule extends QuarkModule {
 			}
 		}
 	}
-	
+
 	private static BlockState getGenerationChestBlockState(BlockState current, StructureHolder structure) {
 		if(staticEnabled && replaceWorldgenChests && current.getBlock() == Blocks.CHEST) {
 			ResourceLocation res = structure.currentStructure.getRegistryName();
 			if(res == null)
 				return null; // no change
 			String name = res.toString();
-			
+
 			if("minecraft:village".equals(name)) {
 				if(structure.currentComponents != null && structure.currentComponents.size() > 0) {
 					StructurePiece first = structure.currentComponents.get(0);
@@ -299,17 +293,17 @@ public class VariantChestsModule extends QuarkModule {
 							if(match.matches()) {
 								String namespace = match.group(1);
 								String villageType = match.group(2);
-								
+
 								name += "_" + villageType;
 								if(!namespace.equals("minecraft"))
 									name = name.replace("minecraft\\:", namespace);
 							}
-							
+
 						}
 					}
 				}
 			}
-			
+
 			if(chestMappings.containsKey(name)) {
 				Block block = chestMappings.get(name);
 				BlockState placeState = block.defaultBlockState();
@@ -319,7 +313,7 @@ public class VariantChestsModule extends QuarkModule {
 				}
 			}
 		}
-		
+
 		return null; // no change
 	}
 
@@ -330,10 +324,10 @@ public class VariantChestsModule extends QuarkModule {
 	public void addChest(String name, Block.Properties props) {
 		addChest(name, this, props, false);
 	}
-	
+
 	public static void addChest(String name, QuarkModule module, Block.Properties props, boolean external) {
-		BooleanSupplier cond = external ? (() -> ModuleLoader.INSTANCE.isModuleEnabled(VariantChestsModule.class)) : (() -> true); 
-		
+		BooleanSupplier cond = external ? (() -> ModuleLoader.INSTANCE.isModuleEnabled(VariantChestsModule.class)) : (() -> true);
+
 		chestTypes.add(() -> new VariantChestBlock(name, module, () -> chestTEType, props).setCondition(cond));
 		trappedChestTypes.add(() -> new VariantTrappedChestBlock(name, module, () -> trappedChestTEType, props).setCondition(cond));
 	}
@@ -355,7 +349,7 @@ public class VariantChestsModule extends QuarkModule {
 		allChests.addAll(blockTypes);
 		return BlockEntityType.Builder.<T>of(factory, blockTypes.toArray(new Block[blockTypes.size()])).build(null);
 	}
-	
+
 	@Override
 	public void textureStitch(TextureStitchEvent.Pre event) {
 		if(event.getAtlas().location().toString().equals("minecraft:textures/atlas/chest.png")) {
@@ -363,7 +357,7 @@ public class VariantChestsModule extends QuarkModule {
 				VariantChestRenderer.accept(event, b);
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onClickEntity(PlayerInteractEvent.EntityInteractSpecific event) {
 		Entity target = event.getTarget();
@@ -421,10 +415,10 @@ public class VariantChestsModule extends QuarkModule {
 			WAIT_TO_REPLACE_CHEST.remove();
 		}
 	}
-	
+
 	public static interface IChestTextureProvider {
 		String getChestTexturePath();
 		boolean isTrap();
 	}
-	
+
 }

@@ -1,25 +1,14 @@
 package vazkii.quark.integration.jei;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.constants.VanillaRecipeCategoryUid;
+import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
+import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
-import mezz.jei.api.registration.IGuiHandlerRegistration;
-import mezz.jei.api.registration.IRecipeCatalystRegistration;
-import mezz.jei.api.registration.IRecipeRegistration;
-import mezz.jei.api.registration.ISubtypeRegistration;
-import mezz.jei.api.registration.IVanillaCategoryExtensionRegistration;
+import mezz.jei.api.registration.*;
 import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.EnchantedBookItem;
@@ -41,6 +30,10 @@ import vazkii.quark.content.tools.module.AncientTomesModule;
 import vazkii.quark.content.tools.module.ColorRunesModule;
 import vazkii.quark.content.tools.module.PickarangModule;
 import vazkii.quark.content.tweaks.recipe.ElytraDuplicationRecipe;
+
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @JeiPlugin
 public class QuarkJeiPlugin implements IModPlugin {
@@ -70,36 +63,33 @@ public class QuarkJeiPlugin implements IModPlugin {
 
 		if (ModuleLoader.INSTANCE.isModuleEnabled(PickarangModule.class))
 			registerPickarangAnvilRepairs(registration, factory);
-		
+
 		if (ModuleLoader.INSTANCE.isModuleEnabled(ColorRunesModule.class))
 			registerRuneAnvilRecipes(registration, factory);
 	}
-	
+
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
 		if(ModuleLoader.INSTANCE.isModuleEnabled(VariantFurnacesModule.class)) {
-			ResourceLocation smelting = VanillaRecipeCategoryUid.FURNACE;
-			ResourceLocation fuel = VanillaRecipeCategoryUid.FUEL;
-			
-			registration.addRecipeCatalyst(new ItemStack(VariantFurnacesModule.deepslateFurnace), fuel, smelting);
-			registration.addRecipeCatalyst(new ItemStack(VariantFurnacesModule.blackstoneFurnace), fuel, smelting);
+			registration.addRecipeCatalyst(new ItemStack(VariantFurnacesModule.deepslateFurnace), RecipeTypes.FUELING, RecipeTypes.SMELTING);
+			registration.addRecipeCatalyst(new ItemStack(VariantFurnacesModule.blackstoneFurnace), RecipeTypes.FUELING, RecipeTypes.SMELTING);
 		}
 	}
-	
+
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
 		registration.addGuiContainerHandler(CrateScreen.class, new CrateGuiHandler());
 	}
 
 	private void registerAncientTomeAnvilRecipes(IRecipeRegistration registration, IVanillaRecipeFactory factory) {
-		List<Object> recipes = new ArrayList<>();
+		List<IJeiAnvilRecipe> recipes = new ArrayList<>();
 		for (Enchantment enchant : AncientTomesModule.validEnchants) {
 			EnchantmentInstance data = new EnchantmentInstance(enchant, enchant.getMaxLevel());
 			recipes.add(factory.createAnvilRecipe(EnchantedBookItem.createForEnchantment(data),
 					Collections.singletonList(AncientTomeItem.getEnchantedItemStack(data)),
 					Collections.singletonList(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(data.enchantment, data.level + 1)))));
 		}
-		registration.addRecipes(recipes, VanillaRecipeCategoryUid.ANVIL);
+		registration.addRecipes(RecipeTypes.ANVIL, recipes);
 	}
 
 	private void registerRuneAnvilRecipes(IRecipeRegistration registration, IVanillaRecipeFactory factory) {
@@ -115,8 +105,8 @@ public class QuarkJeiPlugin implements IModPlugin {
 			used.add(makeEnchantedDisplayItem(PickarangModule.pickarang, random));
 		}
 
-		List<Object> recipes = new ArrayList<>();
-		for (Item rune : MiscUtil.getTagValues(RegistryAccess.BUILTIN.get(), ColorRunesModule.runesTag)) { 
+		List<IJeiAnvilRecipe> recipes = new ArrayList<>();
+		for (Item rune : MiscUtil.getTagValues(BuiltinRegistries.ACCESS, ColorRunesModule.runesTag)) {
 			ItemStack runeStack = new ItemStack(rune);
 			recipes.add(factory.createAnvilRecipe(used, Collections.singletonList(runeStack),
 				used.stream().map(stack -> {
@@ -126,7 +116,7 @@ public class QuarkJeiPlugin implements IModPlugin {
 					return output;
 				}).collect(Collectors.toList())));
 		}
-		registration.addRecipes(recipes, VanillaRecipeCategoryUid.ANVIL);
+		registration.addRecipes(RecipeTypes.ANVIL, recipes);
 	}
 
 	// Runes only show up and can be only anvilled on enchanted items, so make some random enchanted items
@@ -149,21 +139,21 @@ public class QuarkJeiPlugin implements IModPlugin {
 		ItemStack damaged = nearlyBroken.copy();
 		damaged.setDamageValue(damaged.getMaxDamage() * 2 / 4);
 
-		Object materialRepair = factory.createAnvilRecipe(nearlyBroken,
+		IJeiAnvilRecipe materialRepair = factory.createAnvilRecipe(nearlyBroken,
 				Collections.singletonList(new ItemStack(Items.DIAMOND)), Collections.singletonList(veryDamaged));
-		Object toolRepair = factory.createAnvilRecipe(veryDamaged,
+		IJeiAnvilRecipe toolRepair = factory.createAnvilRecipe(veryDamaged,
 				Collections.singletonList(veryDamaged), Collections.singletonList(damaged));
 
-		registration.addRecipes(Arrays.asList(materialRepair, toolRepair), VanillaRecipeCategoryUid.ANVIL);
+		registration.addRecipes(RecipeTypes.ANVIL, Arrays.asList(materialRepair, toolRepair));
 	}
-	
+
 	private static class CrateGuiHandler implements IGuiContainerHandler<CrateScreen> {
-		
+
 		@Override
 		public List<Rect2i> getGuiExtraAreas(CrateScreen containerScreen) {
 			return containerScreen.getExtraAreas();
 		}
-	
+
 	}
 }
 

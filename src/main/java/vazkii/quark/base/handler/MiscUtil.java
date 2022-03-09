@@ -1,31 +1,11 @@
 package vazkii.quark.base.handler;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-import java.util.stream.Collectors;
-
-import javax.annotation.Nonnull;
-
-import com.google.common.base.Predicates;
-import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
-
 import net.minecraft.Util;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.*;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
@@ -66,10 +46,17 @@ import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.config.screen.AbstractQScreen;
+
+import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @EventBusSubscriber(modid = Quark.MOD_ID)
 public class MiscUtil {
@@ -89,7 +76,7 @@ public class MiscUtil {
 			"spruce",
 			"birch",
 			"jungle",
-			"acacia", 
+			"acacia",
 			"dark_oak"
 	};
 
@@ -98,7 +85,7 @@ public class MiscUtil {
 			"spruce",
 			"birch",
 			"jungle",
-			"acacia", 
+			"acacia",
 			"dark_oak"
 	};
 
@@ -106,13 +93,13 @@ public class MiscUtil {
 			"crimson",
 			"warped"
 	};
-	
+
 	public static final Block[] OVERWORLD_WOOD_OBJECTS = new Block[] {
 			Blocks.OAK_PLANKS,
 			Blocks.SPRUCE_PLANKS,
 			Blocks.BIRCH_PLANKS,
 			Blocks.JUNGLE_PLANKS,
-			Blocks.ACACIA_PLANKS, 
+			Blocks.ACACIA_PLANKS,
 			Blocks.DARK_OAK_PLANKS
 	};
 
@@ -123,14 +110,13 @@ public class MiscUtil {
 
 	public static void addToLootTable(LootTable table, LootPoolEntryContainer entry) {
 		List<LootPool> pools = ObfuscationReflectionHelper.getPrivateValue(LootTable.class, table, "f_79109_"); // Can't AT
-		if (!pools.isEmpty()) {
+		if (pools != null && !pools.isEmpty()) {
 			LootPool firstPool = pools.get(0);
 			LootPoolEntryContainer[] entries = firstPool.entries;
-			
+
 			LootPoolEntryContainer[] newEntries = new LootPoolEntryContainer[entries.length + 1];
-			for(int i = 0; i < entries.length; i++)
-				newEntries[i] = entries[i];
-			
+			System.arraycopy(entries, 0, newEntries, 0, entries.length);
+
 			newEntries[entries.length] = entry;
 			firstPool.entries = newEntries;
 		}
@@ -200,7 +186,7 @@ public class MiscUtil {
 	}
 
 	public static <T> List<T> massRegistryGet(Collection<String> coll, Registry<T> registry) {
-		return coll.stream().map(ResourceLocation::new).map(name -> registry.getOptional(name)).filter(Optional::isPresent).map(Optional::get).filter(Predicates.notNull()).collect(Collectors.toList());
+		return coll.stream().map(ResourceLocation::new).map(registry::getOptional).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
 	}
 
 	public static void syncTE(BlockEntity tile) {
@@ -217,16 +203,16 @@ public class MiscUtil {
 		Pair<BlockPos, Holder<Biome>> pair = world.findNearestBiome(h -> h.is(biomeToFind), start, searchRadius, searchIncrement);
 		return pair == null ? null : pair.getFirst();
 	}
-	
+
 	public static ItemStack putIntoInv(ItemStack stack, LevelAccessor level, BlockPos blockPos, BlockEntity tile, Direction face, boolean simulate, boolean doSimulation) {
 		IItemHandler handler = null;
-		
+
 		if(level != null && blockPos != null && level.getBlockState(blockPos).getBlock() instanceof WorldlyContainerHolder holder) {
 			handler = new SidedInvWrapper(holder.getContainer(level.getBlockState(blockPos), level, blockPos), face);
 		} else if(tile != null) {
 			LazyOptional<IItemHandler> opt = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, face);
 			if(opt.isPresent())
-				handler = opt.orElse(null);
+				handler = opt.orElse(new ItemStackHandler());
 			else if(tile instanceof WorldlyContainer)
 				handler = new SidedInvWrapper((WorldlyContainer) tile, face);
 			else if(tile instanceof Container)
@@ -235,54 +221,41 @@ public class MiscUtil {
 
 		if(handler != null)
 			return (simulate && !doSimulation) ? ItemStack.EMPTY : ItemHandlerHelper.insertItem(handler, stack, simulate);
-		
+
 		return stack;
 	}
-	
+
 	public static boolean canPutIntoInv(ItemStack stack, LevelAccessor level, BlockPos blockPos, BlockEntity tile, Direction face, boolean doSimulation) {
 		return putIntoInv(stack, level, blockPos, tile, face, true, doSimulation).isEmpty();
 	}
-	
+
 	public static <T> List<T> getTagValues(RegistryAccess access, TagKey<T> tag) {
 		HolderSet<T> holderSet = access.registryOrThrow(tag.registry()).getTag(tag).orElseThrow();
-		Either<TagKey<T>, List<Holder<T>>> either = holderSet.unwrap();
-		
-		if(!either.right().isPresent())
-			return null;
-		
-		List<Holder<T>> holders = either.right().get();
-		List<T> retList = new ArrayList<>();
-		
-		for(Holder<T> h : holders) {
-			Either<ResourceKey<T>, T> hEither = h.unwrap();
-			if(hEither.right().isPresent())
-				retList.add(hEither.right().get());
-		}
-		
-		return retList;
+
+		return holderSet.stream().map(Holder::value).toList();
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public static int getGuiTextColor(String name) {
 		return getGuiTextColor(name, BASIC_GUI_TEXT_COLOR);
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public static int getGuiTextColor(String name, int base) {
 		int ret = base;
-		
+
 		String hex = I18n.get("quark.gui.color." + name);
-		if(hex.matches("\\#[A-F0-9]{6}"))
+		if(hex.matches("#[A-F0-9]{6}"))
 			ret = Integer.valueOf(hex.substring(1), 16);
 		return ret;
 	}
-	
+
 	private static int progress;
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void onKeystroke(KeyboardKeyPressedEvent.Pre event) {
 		final String[] ids = new String[] {
-				"-FCYE87P5L0","mybsDDymrsc","6a4BWpBJppI","thpTOAS1Vgg","ZNcBZM5SvbY","_qJEoSa3Ie0", 
+				"-FCYE87P5L0","mybsDDymrsc","6a4BWpBJppI","thpTOAS1Vgg","ZNcBZM5SvbY","_qJEoSa3Ie0",
 				"RWeyOyY_puQ","VBbeuXW8Nko","LIDe-yTxda0","BVVfMFS3mgc","m5qwcYL8a0o","UkY8HvgvBJ8",
 				"4K4b9Z9lSwc","tyInv6RWL0Q","tIWpr3tHzII","AFJPFfnzZ7w","846cjX0ZTrk","XEOCbFJjRw0",
 				"GEo5bmUKFvI","b6li05zh3Kg", "_EEo-iE5u_A"

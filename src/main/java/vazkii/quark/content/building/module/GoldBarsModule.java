@@ -19,23 +19,23 @@ import vazkii.quark.base.module.config.Config;
 public class GoldBarsModule extends QuarkModule {
 
 	@Config public static boolean generateInNetherFortress = true;
-	
+
 	public static boolean staticEnabled;
-	
+
 	public static Block gold_bars;
-	
+
 	@Override
 	public void register() {
 		gold_bars = new QuarkPaneBlock("gold_bars", this, Properties.copy(Blocks.IRON_BARS), RenderTypeSkeleton.CUTOUT);
-		
+
 		StructureBlockReplacementHandler.functions.add(GoldBarsModule::getGenerationBarBlockState);
 	}
-	
+
 	@Override
 	public void configChanged() {
 		staticEnabled = enabled;
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static BlockState getGenerationBarBlockState(BlockState current, StructureHolder structure) {
 		if(staticEnabled && generateInNetherFortress && current.getBlock() == Blocks.NETHER_BRICK_FENCE) {
@@ -43,7 +43,7 @@ public class GoldBarsModule extends QuarkModule {
 			if(res == null)
 				return null; // no change
 			String name = res.toString();
-			
+
 			if("minecraft:fortress".equals(name)) {
 				BlockState newState = gold_bars.defaultBlockState();
 				for(Property prop : current.getProperties())
@@ -54,9 +54,9 @@ public class GoldBarsModule extends QuarkModule {
 				return newState;
 			}
 		}
-		
+
 		return null; // no change
 	}
 
-	
+
 }
