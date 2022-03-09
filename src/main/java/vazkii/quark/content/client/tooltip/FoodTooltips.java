@@ -52,7 +52,8 @@ public class FoodTooltips {
 					else if(saturation > 0.2)
 						saturationSimplified = 3;
 					else saturationSimplified = 4;
-				}
+				} else if (saturation > 2)
+					saturationSimplified = 5;
 
 				Component saturationText = new TranslatableComponent("quark.misc.saturation" + saturationSimplified).withStyle(ChatFormatting.GRAY);
 				List<Either<FormattedText, TooltipComponent>> tooltip = event.getTooltipElements();

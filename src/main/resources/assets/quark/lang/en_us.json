@@ -26,7 +26,7 @@
 	"quark.gui.keygroup.misc": "Quark Misc",
 	"quark.gui.keygroup.inv": "Quark Inventory",
 	"quark.gui.keygroup.emote": "Quark Emotes",
-	
+
 	"quark.gui.config.save": "Save Changes",
 	"quark.gui.config.social.website": "Quark Website",
 	"quark.gui.config.social.discord": "Quark/Violet Moon Discord",
@@ -80,7 +80,7 @@
 	"quark.gui.celebration.doyouremember": "Do you remember?",
 
 	"quark.category.general": "General Settings",
-	"quark.category.friends": "Friend Configs",	
+	"quark.category.friends": "Friend Configs",
 	"quark.category.automation": "Automation",
 	"quark.category.building": "Building",
 	"quark.category.management": "Management",
@@ -93,7 +93,7 @@
 	"quark.category.experimental": "Experimental",
 
 	"quark.camera.filter": "Filter: ",
-	"quark.camera.filter.none": "None",	
+	"quark.camera.filter.none": "None",
 	"quark.camera.filter.grayscale": "Grayscale",
 	"quark.camera.filter.monochrome": "Monochrome",
 	"quark.camera.filter.sepia": "Sepia",
@@ -150,7 +150,7 @@
 
 	"quark.jei.makes_copy": "Makes Copy",
 	"quark.jei.any_enchanted": "Any Enchanted Item",
-	
+
 	"quark.keybind.change_hotbar": "Hotbar Swapper",
 	"quark.keybind.lock_rotation": "Rotation Lock",
 	"quark.keybind.sort_container": "Sort Target Inventory",
@@ -253,6 +253,7 @@
 	"quark.misc.saturation2": "Meal",
 	"quark.misc.saturation3": "Light Meal",
 	"quark.misc.saturation4": "Light Snack",
+	"quark.misc.saturation5": "Full Course Meal",
 	"quark.misc.mod_disabled": "Disabled. Install %s to enable.",
 	"quark.misc.repaired": "(Was Repaired)",
 	"quark.misc.celebration": "Celebrating 10 Years of Vazkii's Mods (2021)",
@@ -358,7 +359,7 @@
 	"item.minecraft.splash_potion.effect.quark.resistance": "Splash Potion of Fortitude",
 	"item.minecraft.lingering_potion.effect.quark.resistance": "Lingering Potion of Fortitude",
 	"item.minecraft.tipped_arrow.effect.quark.resistance": "Arrow of Fortitude",
-	
+
 	"item.quark.biome_map.snowy_plains": "Snowy Plains Pathfinder Map",
 	"item.quark.biome_map.windswept_hills": "Windswept Hills Pathfinder Map",
 	"item.quark.biome_map.dark_forest": "Dark Forest Pathfinder Map",
@@ -372,7 +373,7 @@
 	"item.quark.biome_map.badlands": "Badlands Pathfinder Map",
 	"item.quark.biome_map.mushroom_fields": "Mushroom Fields Pathfinder Map",
 	"item.quark.biome_map.ice_spikes": "Ice Spikes Pathfinder Map",
-	
+
 	"block.quark.charcoal_block": "Charcoal Block",
 	"block.quark.thatch": "Thatch",
 	"block.quark.thatch_slab": "Thatch Slab",
