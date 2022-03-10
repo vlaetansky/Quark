@@ -1,17 +1,10 @@
 package vazkii.quark.content.tools.module;
 
-import java.util.List;
-import java.util.function.Supplier;
-
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.CompassItem;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
@@ -34,6 +27,9 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.content.tools.client.render.GlintRenderTypes;
 import vazkii.quark.content.tools.item.RuneItem;
+
+import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * @author WireSegal
@@ -71,7 +67,6 @@ public class ColorRunesModule extends QuarkModule {
 
 		LazyOptional<IRuneColorProvider> cap = get(target);
 
-
 		if (cap.isPresent())
 			return cap.orElse((s) -> -1).getRuneColor(target);
 		if (!ItemNBTHelper.getBoolean(target, TAG_RUNE_ATTACHED, false))
@@ -79,15 +74,14 @@ public class ColorRunesModule extends QuarkModule {
 
 		ItemStack proxied = ItemStack.of(ItemNBTHelper.getCompound(target, TAG_RUNE_COLOR, false));
 		LazyOptional<IRuneColorProvider> proxyCap = get(proxied);
-		int color = proxyCap.orElse((s) -> -1).getRuneColor(target);
-		return color;
+		return proxyCap.orElse((s) -> -1).getRuneColor(target);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static RenderType getGlint() {
 		return renderType(GlintRenderTypes.glint, RenderType::glint);
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public static RenderType getGlintTranslucent() {
 		return renderType(GlintRenderTypes.glintTranslucent, RenderType::glintTranslucent);
@@ -123,7 +117,7 @@ public class ColorRunesModule extends QuarkModule {
 		int color = changeColor();
 		return color >= 0 && color <= RUNE_TYPES ? list.get(color) : vanilla.get();
 	}
-	
+
 	@Override
 	public void register() {
 		for(DyeColor color : DyeColor.values())
