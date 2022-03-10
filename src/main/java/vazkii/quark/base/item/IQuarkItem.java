@@ -21,7 +21,7 @@ public interface IQuarkItem {
 	}
 
 	default boolean appearInSearch() {
-		return this instanceof Item item && !RequiredModTooltipHandler.isEnabled(item);
+		return this instanceof Item item && RequiredModTooltipHandler.isEnabled(item);
 	}
 
 	default boolean isEnabled() {
