@@ -22,33 +22,33 @@ import vazkii.quark.content.tools.item.PickarangItem;
 
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true)
 public class PickarangModule extends QuarkModule {
-	
+
 	public static EntityType<Pickarang> pickarangType;
 
 	@Config(description = "How long it takes before the pickarang starts returning to the player if it doesn't hit anything.")
 	public static int timeout = 20;
-	@Config(description = "2 is Iron, 3 is Diamond.")
+	@Config(description = "2 is Iron, 3 is Diamond, 4 is Netherite.")
 	public static int harvestLevel = 3;
-	@Config(description = "2 is Iron, 3 is Diamond.")
-	public static int netheriteHarvestLevel = 3;
-	
+	@Config(description = "2 is Iron, 3 is Diamond, 4 is Netherite.")
+	public static int netheriteHarvestLevel = 4;
+
 	@Config(description = "Set to -1 to have the Pickarang be unbreakable.")
 	public static int durability = 800;
-	
+
 	@Config(description = "Set to -1 to have the Flamerang be unbreakable.")
 	public static int netheriteDurability = 1040;
-	
+
 	@Config(description = "22.5 is ender chests, 25.0 is monster boxes, 50 is obsidian. Most things are below 5.")
 	public static double maxHardness = 20.0;
-	
+
 	@Config(description = "Set this to true to use the recipe without the Heart of Diamond, even if the Heart of Diamond is enabled.", flag = "pickarang_never_uses_heart")
 	public static boolean neverUseHeartOfDiamond = false;
 	@Config(description = "Set this to true to disable the short cooldown between throwing pickarangs.")
 	public static boolean noCooldown = false;
-	
+
 	public static Item pickarang;
 	public static Item flamerang;
-	
+
 	private static boolean isEnabled;
 
 	@Override
@@ -64,7 +64,7 @@ public class PickarangModule extends QuarkModule {
 		pickarang = new PickarangItem("pickarang", this, propertiesFor(harvestLevel, durability, false), false);
 		flamerang = new PickarangItem("flamerang", this, propertiesFor(netheriteHarvestLevel, netheriteDurability, true), true);
 	}
-	
+
 	private static Item.Properties propertiesFor(int level, int durability, boolean netherite) {
 		Item.Properties properties = new Item.Properties()
 				.stacksTo(1)
@@ -72,25 +72,25 @@ public class PickarangModule extends QuarkModule {
 
 		if (durability > 0)
 			properties.durability(durability);
-		
+
 		if(netherite)
 			properties.fireResistant();
-		
+
 		return properties;
 	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
 		EntityRenderers.register(pickarangType, PickarangRenderer::new);
 	}
-	
+
 	@Override
 	public void configChanged() {
 		// Pass over to a static reference for easier computing the coremod hook
 		isEnabled = this.enabled;
 	}
-	
+
 	private static final ThreadLocal<Pickarang> ACTIVE_PICKARANG = new ThreadLocal<>();
 
 	public static void setActivePickarang(Pickarang pickarang) {
@@ -105,15 +105,15 @@ public class PickarangModule extends QuarkModule {
 
 		return new IndirectEntityDamageSource("player", pickarang, player).setProjectile();
 	}
-	
+
 	public static boolean getIsFireResistant(boolean vanillaVal, Entity entity) {
 		if(!isEnabled || vanillaVal)
 			return vanillaVal;
-		
+
 		Entity riding = entity.getVehicle();
 		if(riding instanceof Pickarang)
 			return ((Pickarang) riding).netherite;
-		
+
 		return false;
 	}
 
