@@ -1,22 +1,7 @@
 package vazkii.quark.base.handler;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.WeakHashMap;
-
 import com.google.common.collect.ImmutableSet;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -29,6 +14,12 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import vazkii.quark.base.Quark;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.*;
 
 @Mod.EventBusSubscriber(modid = Quark.MOD_ID)
 public class ContributorRewardHandler {
@@ -58,25 +49,24 @@ public class ContributorRewardHandler {
 	public static void init() {
 		if (thread != null && thread.isAlive())
 			return;
-		
+
 		thread = new ThreadContributorListLoader();
 	}
 
 	public static int getTier(Player player) {
 		return getTier(player.getGameProfile().getName());
 	}
-	
+
 	public static int getTier(String name) {
 		return tiers.getOrDefault(name.toLowerCase(Locale.ROOT), 0);
 	}
-	
+
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void onRenderPlayer(RenderPlayerEvent.Post event) {
 		Player player = event.getPlayer();
 		String uuid = Player.createPlayerUUID(player.getGameProfile()).toString();
-		if(player instanceof AbstractClientPlayer && DEV_UUID.contains(uuid) && !done.contains(uuid)) {
-			AbstractClientPlayer clientPlayer = (AbstractClientPlayer) player;
+		if(player instanceof AbstractClientPlayer clientPlayer && DEV_UUID.contains(uuid) && !done.contains(uuid)) {
 			if(clientPlayer.isCapeLoaded()) {
 				PlayerInfo info = ((AbstractClientPlayer) player).playerInfo;
 				Map<MinecraftProfileTexture.Type, ResourceLocation> textures = info.textureLocations;
@@ -93,23 +83,23 @@ public class ContributorRewardHandler {
 	public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
 		ContributorRewardHandler.init();
 	}
-	
+
 	private static void load(Properties props) {
 		List<String> allPatrons = new ArrayList<>(props.size());
 
 		props.forEach((k, v) -> {
 			String key = (String) k;
 			String value = (String) v;
-			
+
 			int tier = Integer.parseInt(value);
 			if(tier < 10)
 				allPatrons.add(key);
 			tiers.put(key.toLowerCase(Locale.ROOT), tier);
-			
-			if(name != null && key.toLowerCase(Locale.ROOT).equals(name))
+
+			if(key.toLowerCase(Locale.ROOT).equals(name))
 				localPatronTier = tier;
 		});
-		
+
 		if(!allPatrons.isEmpty())
 			featuredPatron = allPatrons.get((int) (Math.random() * allPatrons.size()));
 	}
@@ -129,7 +119,7 @@ public class ContributorRewardHandler {
 				URLConnection conn = url.openConnection();
 				conn.setConnectTimeout(10*1000);
 				conn.setReadTimeout(10*1000);
-				
+
 				Properties patreonTiers = new Properties();
 				try (InputStreamReader reader = new InputStreamReader(conn.getInputStream())) {
 					patreonTiers.load(reader);

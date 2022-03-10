@@ -1,37 +1,15 @@
 package vazkii.quark.base.handler;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Predicate;
-
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArrowItem;
-import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.CrossbowItem;
-import net.minecraft.world.item.DiggerItem;
-import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.MinecartItem;
-import net.minecraft.world.item.PickaxeItem;
-import net.minecraft.world.item.PotionItem;
-import net.minecraft.world.item.ShovelItem;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.TridentItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.Block;
@@ -45,6 +23,9 @@ import vazkii.quark.api.ICustomSorting;
 import vazkii.quark.api.QuarkCapabilities;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.management.module.InventorySortingModule;
+
+import java.util.*;
+import java.util.function.Predicate;
 
 public final class SortingHandler {
 
@@ -82,7 +63,7 @@ public final class SortingHandler {
 			return;
 
 		AbstractContainerMenu c = player.containerMenu;
-		boolean backpack = c instanceof BackpackMenu; 
+		boolean backpack = c instanceof BackpackMenu;
 		if ((!backpack && forcePlayer) || c == null)
 			c = player.inventoryMenu;
 
@@ -245,7 +226,7 @@ public final class SortingHandler {
 
 	public static Comparator<ItemStack> jointComparator(Comparator<ItemStack> finalComparator, List<Comparator<ItemStack>> otherComparators) {
 		if (otherComparators == null)
-			return jointComparator(Arrays.asList(finalComparator));
+			return jointComparator(List.of(finalComparator));
 
 		List<Comparator<ItemStack>> newList = new ArrayList<>(otherComparators);
 		newList.add(finalComparator);
@@ -314,12 +295,24 @@ public final class SortingHandler {
 		return itemList;
 	}
 
+	private static int nutrition(FoodProperties properties) {
+		if (properties == null)
+			return 0;
+		return properties.getNutrition();
+	}
+
 	private static int foodHealCompare(ItemStack stack1, ItemStack stack2) {
-		return stack2.getItem().getFoodProperties().getNutrition() - stack1.getItem().getFoodProperties().getNutrition();
+		return nutrition(stack2.getItem().getFoodProperties()) - nutrition(stack1.getItem().getFoodProperties());
+	}
+
+	private static float saturation(FoodProperties properties) {
+		if (properties == null)
+			return 0;
+		return Math.min(20, properties.getNutrition() * properties.getSaturationModifier() * 2);
 	}
 
 	private static int foodSaturationCompare(ItemStack stack1, ItemStack stack2) {
-		return (int) (stack2.getItem().getFoodProperties().getSaturationModifier() * 100 - stack1.getItem().getFoodProperties().getSaturationModifier() * 100);
+		return (int) (saturation(stack2.getItem().getFoodProperties()) - saturation(stack1.getItem().getFoodProperties()));
 	}
 
 	private static int enchantmentCompare(ItemStack stack1, ItemStack stack2) {
@@ -367,7 +360,7 @@ public final class SortingHandler {
 	public static int damageCompare(ItemStack stack1, ItemStack stack2) {
 		return stack1.getDamageValue() - stack2.getDamageValue();
 	}
-	
+
 	static boolean hasCustomSorting(ItemStack stack) {
 		return stack.getCapability(QuarkCapabilities.SORTING, null).isPresent();
 	}

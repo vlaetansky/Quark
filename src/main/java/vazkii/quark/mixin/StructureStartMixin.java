@@ -30,12 +30,12 @@ public class StructureStartMixin {
 	private ConfiguredStructureFeature<?, ?>  feature;
 
 	@Inject(method = "placeInChunk", at = @At("HEAD"))
-	public void injectReference(WorldGenLevel p_230366_1_, StructureFeatureManager p_230366_2_, ChunkGenerator p_230366_3_, Random p_230366_4_, BoundingBox p_230366_5_, ChunkPos p_230366_6_, CallbackInfo callback) {
+	public void injectReference(WorldGenLevel level, StructureFeatureManager manager, ChunkGenerator generator, Random random, BoundingBox bounds, ChunkPos pos, CallbackInfo callback) {
 		StructureBlockReplacementHandler.setActiveStructure(feature, pieceContainer);
 	}
 
 	@Inject(method = "placeInChunk", at = @At("RETURN"))
-	public void resetReference(WorldGenLevel p_230366_1_, StructureFeatureManager p_230366_2_, ChunkGenerator p_230366_3_, Random p_230366_4_, BoundingBox p_230366_5_, ChunkPos p_230366_6_, CallbackInfo callback) {
+	public void resetReference(WorldGenLevel level, StructureFeatureManager manager, ChunkGenerator generator, Random random, BoundingBox bounds, ChunkPos pos, CallbackInfo callback) {
 		StructureBlockReplacementHandler.setActiveStructure(null, null);
 	}
 

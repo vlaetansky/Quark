@@ -100,8 +100,7 @@ public class BackpackInventoryScreen extends InventoryScreen {
 	private void moveCharmsButtons() {
 		for(Widget widget : renderables) {
 			//Charms buttons have a static Y pos, so use that to only focus on them.
-			if(widget instanceof ImageButton) {
-				ImageButton img = (ImageButton) widget;
+			if(widget instanceof ImageButton img) {
 				if(img.y == height / 2 - 22)
 					img.setPosition(img.x, img.y - 29);
 			}

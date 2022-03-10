@@ -8,15 +8,15 @@ import net.minecraft.world.item.ItemStack;
  * Implement this on an Item to change its behavior with the quark usage ticker.
  */
 public interface IUsageTickerOverride {
-	
-	public default int getUsageTickerCountForItem(ItemStack stack, Predicate<ItemStack> target) {
+
+	default int getUsageTickerCountForItem(ItemStack stack, Predicate<ItemStack> target) {
 		return 0;
 	}
-	
-	public default boolean shouldUsageTickerCheckMatchSize(ItemStack stack) {
+
+	default boolean shouldUsageTickerCheckMatchSize(ItemStack stack) {
 		return false;
 	}
-	
-	public ItemStack getUsageTickerItem(ItemStack stack);
+
+	ItemStack getUsageTickerItem(ItemStack stack);
 
 }

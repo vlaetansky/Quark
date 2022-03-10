@@ -1,16 +1,7 @@
 package vazkii.quark.content.client.module;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.BiPredicate;
-import java.util.regex.Pattern;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
@@ -58,12 +49,16 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.management.client.screen.widgets.MiniInventoryButton;
 
+import java.util.*;
+import java.util.function.BiPredicate;
+import java.util.regex.Pattern;
+
 @LoadModule(category = ModuleCategory.CLIENT, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class ChestSearchingModule extends QuarkModule {
 
-	@OnlyIn(Dist.CLIENT) 
+	@OnlyIn(Dist.CLIENT)
 	private static EditBox searchBar;
-	
+
 	private static String text = "";
 	public static boolean searchEnabled = false;
 	private static long lastClick;
@@ -72,7 +67,7 @@ public class ChestSearchingModule extends QuarkModule {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
-		InventoryButtonHandler.addButtonProvider(this, ButtonTargetType.CONTAINER_INVENTORY, 1, (parent, x, y) -> 
+		InventoryButtonHandler.addButtonProvider(this, ButtonTargetType.CONTAINER_INVENTORY, 1, (parent, x, y) ->
 		new MiniInventoryButton(parent, 3, x, y, "quark.gui.button.filter", (b) -> {
 			searchEnabled = !searchEnabled;
 			updateSearchStatus();
@@ -84,9 +79,8 @@ public class ChestSearchingModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void initGui(ScreenEvent.InitScreenEvent.Post event) {
 		Screen gui = event.getScreen();
-		if(gui instanceof AbstractContainerScreen && (gui instanceof IQuarkButtonAllowed || GeneralConfig.isScreenAllowed(gui))) {
+		if(gui instanceof AbstractContainerScreen<?> chest && (gui instanceof IQuarkButtonAllowed || GeneralConfig.isScreenAllowed(gui))) {
 			Minecraft mc = gui.getMinecraft();
-			AbstractContainerScreen<?> chest = (AbstractContainerScreen<?>) gui;
 			if(InventoryTransferHandler.accepts(chest.getMenu(), mc.player)) {
 				searchBar = new EditBox(mc.font, chest.getGuiLeft() + 18, chest.getGuiTop() + 6, 117, 10, new TextComponent(text));
 
@@ -97,7 +91,7 @@ public class ChestSearchingModule extends QuarkModule {
 
 				return;
 			}
-		} 
+		}
 
 		searchBar = null;
 	}
@@ -106,7 +100,7 @@ public class ChestSearchingModule extends QuarkModule {
 		if(searchBar != null) {
 			searchBar.setEditable(searchEnabled);
 			searchBar.setVisible(searchEnabled);
-			
+
 			if(!searchEnabled)
 				searchBar.setFocus(false);
 		}
@@ -159,8 +153,7 @@ public class ChestSearchingModule extends QuarkModule {
 		drawBackground(matrix, gui, searchBar.x - 11, searchBar.y - 3);
 
 		if(!text.isEmpty()) {
-			if(gui instanceof AbstractContainerScreen) {
-				AbstractContainerScreen<?> guiContainer = (AbstractContainerScreen<?>) gui;
+			if(gui instanceof AbstractContainerScreen<?> guiContainer) {
 				AbstractContainerMenu container = guiContainer.getMenu();
 
 				int guiLeft = guiContainer.getGuiLeft();
@@ -194,7 +187,7 @@ public class ChestSearchingModule extends QuarkModule {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, MiscUtil.GENERAL_ICONS);
-		
+
 		Screen.blit(matrix, x, y, 0, 0, 126, 13, 256, 256);
 	}
 
@@ -219,8 +212,8 @@ public class ChestSearchingModule extends QuarkModule {
 					cmp = cmp.copy();
 					cmp.putString("id", "minecraft:shulker_box");
 				}
-				
-				BlockEntity te = BlockEntity.loadStatic(BlockPos.ZERO, ((BlockItem) item).getBlock().defaultBlockState(), cmp); 
+
+				BlockEntity te = BlockEntity.loadStatic(BlockPos.ZERO, ((BlockItem) item).getBlock().defaultBlockState(), cmp);
 				if (te != null) {
 					LazyOptional<IItemHandler> handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 					if (handler.isPresent()) {
@@ -285,10 +278,7 @@ public class ChestSearchingModule extends QuarkModule {
 		if(mod.isPresent() && matcher.test(mod.orElse(null).getModInfo().getDisplayName().toLowerCase(Locale.ROOT), search))
 			return true;
 
-		if(matcher.test(name, search))
-			return true;
-
-		return false;
+		return matcher.test(name, search);
 		//		return ISearchHandler.hasHandler(stack) && ISearchHandler.getHandler(stack).stackMatchesSearchQuery(search, matcher, ChestSearchBar::namesMatch);
 	}
 

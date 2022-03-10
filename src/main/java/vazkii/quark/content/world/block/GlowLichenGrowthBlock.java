@@ -1,11 +1,6 @@
 package vazkii.quark.content.world.block;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -26,6 +21,9 @@ import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 public class GlowLichenGrowthBlock extends QuarkBushBlock implements BonemealableBlock {
 
@@ -61,13 +59,13 @@ public class GlowLichenGrowthBlock extends QuarkBushBlock implements Bonemealabl
 
 	@Nonnull
 	@Override
-	public VoxelShape getShape(@Nonnull BlockState p_54889_, @Nonnull BlockGetter p_54890_, @Nonnull BlockPos p_54891_, @Nonnull CollisionContext p_54892_) {
+	public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
 		return SHAPE;
 	}
 
 	@Override
-	protected boolean mayPlaceOn(BlockState p_54894_, @Nonnull BlockGetter p_54895_, @Nonnull BlockPos p_54896_) {
-		return p_54894_.isFaceSturdy(p_54895_, p_54896_, Direction.UP);
+	protected boolean mayPlaceOn(BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos) {
+		return state.isFaceSturdy(world, pos, Direction.UP);
 	}
 
 	@Override
@@ -80,7 +78,7 @@ public class GlowLichenGrowthBlock extends QuarkBushBlock implements Bonemealabl
 	}
 
 	@Override
-	public boolean isBonemealSuccess(@Nonnull Level p_50901_, @Nonnull Random p_50902_, @Nonnull BlockPos p_50903_, @Nonnull BlockState p_50904_) {
+	public boolean isBonemealSuccess(@Nonnull Level world, @Nonnull Random random, @Nonnull BlockPos pos, @Nonnull BlockState state) {
 		return true;
 	}
 

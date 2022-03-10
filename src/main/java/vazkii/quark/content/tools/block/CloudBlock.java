@@ -45,7 +45,7 @@ public class CloudBlock extends QuarkBlock implements EntityBlock {
 
 	@Nonnull
 	@Override
-	public PushReaction getPistonPushReaction(@Nonnull BlockState p_60584_) {
+	public PushReaction getPistonPushReaction(@Nonnull BlockState state) {
 		return PushReaction.BLOCK;
 	}
 
@@ -60,8 +60,7 @@ public class CloudBlock extends QuarkBlock implements EntityBlock {
 			return InteractionResult.SUCCESS;
 		}
 
-		if(stack.getItem() instanceof BlockItem) {
-			BlockItem bitem = (BlockItem) stack.getItem();
+		if(stack.getItem() instanceof BlockItem bitem) {
 			Block block = bitem.getBlock();
 
 			UseOnContext context = new UseOnContext(player, hand, new BlockHitResult(new Vec3(0.5F, 1F, 0.5F), raytrace.getDirection(), pos, false));

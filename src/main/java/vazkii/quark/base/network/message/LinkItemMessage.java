@@ -5,12 +5,15 @@ import net.minecraftforge.network.NetworkEvent;
 import vazkii.arl.network.IMessage;
 import vazkii.quark.content.management.module.ItemSharingModule;
 
+import java.io.Serial;
+
 /**
  * @author WireSegal
  * Created at 1:43 PM on 9/1/19.
  */
 public class LinkItemMessage implements IMessage {
 
+	@Serial
 	private static final long serialVersionUID = -1925519137930388889L;
 
 	public ItemStack stack;

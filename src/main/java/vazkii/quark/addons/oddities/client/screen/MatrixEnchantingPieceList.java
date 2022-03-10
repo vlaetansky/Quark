@@ -46,7 +46,7 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 	}
 
 	@Override
-	public void render(@Nonnull PoseStack stack, int p_render_1_, int p_render_2_, float p_render_3_) {
+	public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		int i = this.getScrollbarPosition();
 		int j = i + 6;
 		int k = this.getRowLeft();
@@ -57,7 +57,7 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 		Window main = parent.getMinecraft().getWindow();
 		int res = (int) main.getGuiScale();
 		RenderSystem.enableScissor(getLeft() * res, (main.getGuiScaledHeight() - getBottom()) * res, getWidth() * res, getHeight() * res);
-		renderList(stack, k, l, p_render_1_, p_render_2_, p_render_3_);
+		renderList(stack, k, l, mouseX, mouseY, partialTicks);
 		RenderSystem.disableScissor();
 
 		renderScroll(stack, i, j);
@@ -116,7 +116,7 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 		}
 
 		@Override
-		public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
+		public boolean mouseClicked(double x, double y, int button) {
 			parent.selectedPiece = index;
 			setSelected(this);
 			return false;

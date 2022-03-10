@@ -1,7 +1,5 @@
 package vazkii.quark.base.block;
 
-import java.util.function.BooleanSupplier;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -10,17 +8,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.IPlantable;
 import vazkii.quark.base.module.QuarkModule;
 
-// Wrapper to allow vanilla blocks to be treated as quark blocks contextualized under a module
-public class QuarkBlockWrapper implements IQuarkBlock {
+import java.util.function.BooleanSupplier;
 
-	public final Block parent;
-	public final QuarkModule module;
-	
-	public QuarkBlockWrapper(Block parent, QuarkModule module) {
-		this.parent = parent;
-		this.module = module;
-	}
-	
+// Wrapper to allow vanilla blocks to be treated as quark blocks contextualized under a module
+public record QuarkBlockWrapper(Block parent,
+								QuarkModule module) implements IQuarkBlock {
+
 	@Override
 	public Block getBlock() {
 		return parent;
@@ -45,5 +38,5 @@ public class QuarkBlockWrapper implements IQuarkBlock {
 	public boolean canSustainPlant(BlockState state, BlockGetter world, BlockPos pos, Direction facing, IPlantable plantable) {
 		return false;
 	}
-	
+
 }

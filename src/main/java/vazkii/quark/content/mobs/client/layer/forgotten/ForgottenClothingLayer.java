@@ -24,9 +24,9 @@ public class ForgottenClothingLayer<T extends Mob & RangedAttackMob, M extends E
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/forgotten/overlay.png");
 	private final SkeletonModel<T> layerModel;
 
-	public ForgottenClothingLayer(RenderLayerParent<T, M> p_i50919_1_, EntityModelSet p_174545_) {
-		super(p_i50919_1_);
-		layerModel = new SkeletonModel<>(p_174545_.bakeLayer(ModelLayers.STRAY_OUTER_LAYER));
+	public ForgottenClothingLayer(RenderLayerParent<T, M> parent, EntityModelSet model) {
+		super(parent);
+		layerModel = new SkeletonModel<>(model.bakeLayer(ModelLayers.STRAY_OUTER_LAYER));
 	}
 
 	@Override

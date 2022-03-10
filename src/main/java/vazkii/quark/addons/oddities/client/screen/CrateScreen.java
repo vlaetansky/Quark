@@ -1,11 +1,8 @@
 package vazkii.quark.addons.oddities.client.screen;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.Rect2i;
@@ -21,6 +18,7 @@ import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.content.client.module.ChestSearchingModule;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
 
@@ -90,11 +88,11 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
 	}
 
 	@Override
-	protected void renderLabels(@Nonnull PoseStack p_97808_, int p_97809_, int p_97810_) {
+	protected void renderLabels(@Nonnull PoseStack poseStack, int mouseX, int mouseY) {
 		int color = MiscUtil.getGuiTextColor("crate_count");
 
-		this.font.draw(p_97808_, this.title, (float)this.titleLabelX, (float)this.titleLabelY, color);
-		this.font.draw(p_97808_, this.playerInventoryTitle, (float)this.inventoryLabelX, (float)this.inventoryLabelY, color);
+		this.font.draw(poseStack, this.title, (float)this.titleLabelX, (float)this.titleLabelY, color);
+		this.font.draw(poseStack, this.playerInventoryTitle, (float)this.inventoryLabelX, (float)this.inventoryLabelY, color);
 	}
 
 }

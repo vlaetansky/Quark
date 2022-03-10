@@ -20,20 +20,20 @@ import vazkii.quark.base.module.QuarkModule;
 public final class UndergroundBiomeHandler {
 
 	private static Proxy proxy = null;
-	
+
 	public static void init(FMLCommonSetupEvent event) {
 		proxy().init(event);
 	}
-	
+
 	public static void addUndergroundBiomes(OverworldBiomeBuilder builder, Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer) {
 		proxy().addUndergroundBiomes(builder, consumer);
 	}
-	
+
 	public static void addUndergroundBiome(QuarkModule module, Climate.ParameterPoint climate, ResourceLocation biome) {
 		UndergroundBiomeSkeleton skeleton = new UndergroundBiomeSkeleton(module, climate, biome);
 		proxy().addUndergroundBiome(skeleton);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private static Proxy proxy() {
 		if(proxy == null) {
@@ -46,22 +46,22 @@ public final class UndergroundBiomeHandler {
 					throw new RuntimeException(e);
 				}
 			}
-			
+
 			if(proxy == null)
 				proxy = new Proxy();
 		}
 
 		return proxy;
 	}
-	
+
 	public static class Proxy {
-		
+
 		public List<UndergroundBiomeSkeleton> skeletons = new ArrayList<>();
-		
+
 		public void init(FMLCommonSetupEvent event) {
 			// NO-OP
 		}
-		
+
 		public void addUndergroundBiomes(OverworldBiomeBuilder builder, Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer) {
 			for(UndergroundBiomeSkeleton skeleton : skeletons)
 				if(skeleton.module().enabled) {
@@ -69,13 +69,13 @@ public final class UndergroundBiomeHandler {
 					consumer.accept(Pair.of(skeleton.climate(), resourceKey));
 				}
 		}
-		
+
 		public void addUndergroundBiome(UndergroundBiomeSkeleton skeleton) {
 			skeletons.add(skeleton);
 		}
-		
+
 	}
-	
-	public static record UndergroundBiomeSkeleton(QuarkModule module, Climate.ParameterPoint climate, ResourceLocation biome) {}
+
+	public record UndergroundBiomeSkeleton(QuarkModule module, Climate.ParameterPoint climate, ResourceLocation biome) {}
 
 }

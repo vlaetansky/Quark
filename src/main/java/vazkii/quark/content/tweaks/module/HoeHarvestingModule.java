@@ -52,7 +52,7 @@ public class HoeHarvestingModule extends QuarkModule {
 		else
 			return 2;
 	}
-	
+
 	public static boolean isHoe(ItemStack itemStack) {
 		return !itemStack.isEmpty() && itemStack.getItem() instanceof HoeItem;
 	}
@@ -100,8 +100,7 @@ public class HoeHarvestingModule extends QuarkModule {
 
 	private boolean canHarvest(Player player, LevelAccessor world, BlockPos pos, BlockState state) {
 		Block block = state.getBlock();
-		if(block instanceof IPlantable) {
-			IPlantable plant = (IPlantable) block;
+		if(block instanceof IPlantable plant) {
 			PlantType type = plant.getPlantType(world, pos);
 			return type != PlantType.WATER && type != PlantType.DESERT;
 		}

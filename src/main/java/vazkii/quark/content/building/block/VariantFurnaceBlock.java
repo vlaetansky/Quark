@@ -1,7 +1,5 @@
 package vazkii.quark.content.building.block;
 
-import java.util.function.BooleanSupplier;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.MenuProvider;
@@ -21,6 +19,7 @@ import vazkii.quark.content.building.block.be.VariantFurnaceBlockEntity;
 import vazkii.quark.content.building.module.VariantFurnacesModule;
 
 import javax.annotation.Nonnull;
+import java.util.function.BooleanSupplier;
 
 public class VariantFurnaceBlock extends FurnaceBlock implements IQuarkBlock {
 
@@ -36,21 +35,21 @@ public class VariantFurnaceBlock extends FurnaceBlock implements IQuarkBlock {
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(@Nonnull BlockPos p_153277_, @Nonnull BlockState p_153278_) {
-		return new VariantFurnaceBlockEntity(p_153277_, p_153278_);
+	public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
+		return new VariantFurnaceBlockEntity(pos, state);
 	}
 
 	@Override
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level p_153273_, @Nonnull BlockState p_153274_, @Nonnull BlockEntityType<T> p_153275_) {
-		return createFurnaceTicker(p_153273_, p_153275_, VariantFurnacesModule.blockEntityType);
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level world, @Nonnull BlockState state, @Nonnull BlockEntityType<T> beType) {
+		return createFurnaceTicker(world, beType, VariantFurnacesModule.blockEntityType);
 	}
 
 	@Override
-	protected void openContainer(Level p_53631_, @Nonnull BlockPos p_53632_, @Nonnull Player p_53633_) {
-		BlockEntity blockentity = p_53631_.getBlockEntity(p_53632_);
+	protected void openContainer(Level world, @Nonnull BlockPos pos, @Nonnull Player player) {
+		BlockEntity blockentity = world.getBlockEntity(pos);
 		if(blockentity instanceof AbstractFurnaceBlockEntity) {
-			p_53633_.openMenu((MenuProvider) blockentity);
-			p_53633_.awardStat(Stats.INTERACT_WITH_FURNACE);
+			player.openMenu((MenuProvider) blockentity);
+			player.awardStat(Stats.INTERACT_WITH_FURNACE);
 		}
 	}
 

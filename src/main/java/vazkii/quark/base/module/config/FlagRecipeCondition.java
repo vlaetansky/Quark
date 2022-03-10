@@ -11,17 +11,8 @@ import vazkii.quark.base.Quark;
  * @author WireSegal
  * Created at 1:23 PM on 8/24/19.
  */
-public class FlagRecipeCondition implements ICondition {
-
-	private final ConfigFlagManager manager;
-	private final String flag;
-	private final ResourceLocation loc;
-
-	public FlagRecipeCondition(ConfigFlagManager manager, String flag, ResourceLocation loc) {
-		this.manager = manager;
-		this.flag = flag;
-		this.loc = loc;
-	}
+public record FlagRecipeCondition(ConfigFlagManager manager, String flag,
+								  ResourceLocation loc) implements ICondition {
 
 
 	@Override
@@ -31,12 +22,12 @@ public class FlagRecipeCondition implements ICondition {
 
 	@Override
 	public boolean test() {
-		if(flag.contains("%"))
+		if (flag.contains("%"))
 			throw new RuntimeException("Illegal flag: " + flag);
-		
-		if(!manager.isValidFlag(flag))
+
+		if (!manager.isValidFlag(flag))
 			Quark.LOG.warn("Non-existant flag " + flag + " being used");
-		
+
 		return manager.getFlag(flag);
 	}
 

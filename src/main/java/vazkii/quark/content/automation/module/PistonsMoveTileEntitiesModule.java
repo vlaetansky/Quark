@@ -1,26 +1,12 @@
 package vazkii.quark.content.automation.module;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
-import java.util.function.Predicate;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ChestBlock;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.JukeboxBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,6 +14,7 @@ import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.WorldTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.apache.commons.lang3.tuple.Pair;
 import vazkii.quark.api.IIndirectConnector;
 import vazkii.quark.api.IPistonCallback;
 import vazkii.quark.api.QuarkCapabilities;
@@ -37,6 +24,9 @@ import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 
+import java.util.*;
+import java.util.function.Predicate;
+
 @LoadModule(category = ModuleCategory.AUTOMATION, hasSubscriptions = true)
 public class PistonsMoveTileEntitiesModule extends QuarkModule {
 
@@ -45,9 +35,9 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 
 	@Config
 	public static boolean enableChestsMovingTogether = true;
-	
+
 	public static boolean staticEnabled;
-	
+
 	@Config
 	public static List<String> renderBlacklist = Lists.newArrayList("psi:programmer", "botania:starfield");
 	@Config
@@ -59,12 +49,12 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 	public void register() {
 		IIndirectConnector.INDIRECT_STICKY_BLOCKS.add(Pair.of(ChestConnection.PREDICATE, ChestConnection.INSTANCE));
 	}
-	
+
 	@Override
 	public void configChanged() {
 		staticEnabled = enabled;
 	}
-	
+
 	@SubscribeEvent
 	public void onWorldTick(WorldTickEvent event) {
 		if (!delayedUpdates.containsKey(event.world) || event.phase == Phase.START)
@@ -82,10 +72,10 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 			if(tile != null) {
 				tile.setBlockState(state);
 				tile.setChanged();
-				
+
 				event.world.setBlockEntity(tile);
 			}
-			
+
 			event.world.updateNeighbourForOutputSignal(pos, state.getBlock());
 		}
 
@@ -172,17 +162,17 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 
 		if (!destroyed) {
 			world.setBlock(pos, state, flags);
-			
+
 			if (world.getBlockEntity(pos) != null)
 				world.setBlock(pos, state, 0);
 
 			if (entity != null && !world.isClientSide) {
-				if (delayedUpdateList.contains(block.getRegistryName().toString()))
+				if (delayedUpdateList.contains(Objects.toString(block.getRegistryName())))
 					registerDelayedUpdate(world, pos, entity);
 				else {
 					entity.setBlockState(state);
 					entity.setChanged();
-					
+
 					world.setBlockEntity(entity);
 				}
 			}
@@ -246,37 +236,37 @@ public class PistonsMoveTileEntitiesModule extends QuarkModule {
 	private static IPistonCallback getCallback(BlockEntity tile) {
 		return tile.getCapability(QuarkCapabilities.PISTON_CALLBACK).orElse(() -> {});
 	}
-	
+
 	public static class ChestConnection implements IIndirectConnector {
 
 		public static ChestConnection INSTANCE = new ChestConnection();
 		public static Predicate<BlockState> PREDICATE = ChestConnection::isValidState;
-		
+
 		@Override
 		public boolean isEnabled() {
 			return enableChestsMovingTogether;
 		}
-		
+
 		private static boolean isValidState(BlockState state) {
 			if(!(state.getBlock() instanceof ChestBlock))
 				return false;
-			
+
 			ChestType type = state.getValue(ChestBlock.TYPE);
 			return type != ChestType.SINGLE;
 		}
-		
+
 		@Override
 		public boolean canConnectIndirectly(Level world, BlockPos ourPos, BlockPos sourcePos, BlockState ourState, BlockState sourceState) {
 			ChestType ourType = ourState.getValue(ChestBlock.TYPE);
-			
+
 			Direction baseDirection = ourState.getValue(ChestBlock.FACING);
 			Direction targetDirection = ourType == ChestType.LEFT ? baseDirection.getClockWise() : baseDirection.getCounterClockWise();
-			
+
 			BlockPos targetPos = ourPos.relative(targetDirection);
-			
+
 			return targetPos.equals(sourcePos);
 		}
-		
+
 	}
 
 }

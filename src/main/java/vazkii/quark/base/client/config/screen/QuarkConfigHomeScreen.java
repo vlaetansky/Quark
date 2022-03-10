@@ -125,12 +125,12 @@ public class QuarkConfigHomeScreen extends AbstractQScreen {
 	}
 
 	@Override
-	public void render(@Nonnull PoseStack mstack, int mouseX, int mouseY, float pticks) {
-		time += pticks;
+	public void render(@Nonnull PoseStack mstack, int mouseX, int mouseY, float partialTicks) {
+		time += partialTicks;
 
 		Minecraft mc = Minecraft.getInstance();
 		if(mc.level == null) {
-			float spin = pticks * 2;
+			float spin = partialTicks * 2;
 			float blur = 0.85F;
 
 			if(time < 20F && !GeneralConfig.disableQMenuEffects) {
@@ -146,7 +146,7 @@ public class QuarkConfigHomeScreen extends AbstractQScreen {
 		fill(mstack, width / 2 - boxWidth / 2 - 1, 0, width / 2 - boxWidth / 2, this.height, 0x66999999); // nice
 		fill(mstack, width / 2 + boxWidth / 2, 0, width / 2 + boxWidth / 2 + 1, this.height, 0x66999999);
 
-		super.render(mstack, mouseX, mouseY, pticks);
+		super.render(mstack, mouseX, mouseY, partialTicks);
 
 		drawCenteredString(mstack, font, ChatFormatting.BOLD + I18n.get("quark.gui.config.header", WordUtils.capitalizeFully(Quark.MOD_ID)), width / 2, 15, 0x48ddbc);
 		drawCenteredString(mstack, font, I18n.get("quark.gui.config.subheader1", ChatFormatting.LIGHT_PURPLE, ContributorRewardHandler.featuredPatron, ChatFormatting.RESET), width / 2, 28, 0x9EFFFE);

@@ -1,10 +1,5 @@
 package vazkii.quark.addons.oddities.block;
 
-import java.util.Random;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,6 +27,10 @@ import vazkii.quark.addons.oddities.block.be.CrateBlockEntity;
 import vazkii.quark.addons.oddities.module.CrateModule;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.module.QuarkModule;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Random;
 
 public class CrateBlock extends QuarkBlock implements EntityBlock {
 
@@ -81,8 +80,7 @@ public class CrateBlock extends QuarkBlock implements EntityBlock {
 		if(!state.is(newState.getBlock())) {
 			BlockEntity tileentity = worldIn.getBlockEntity(pos);
 
-			if(tileentity instanceof CrateBlockEntity) {
-				CrateBlockEntity crate = (CrateBlockEntity) tileentity;
+			if(tileentity instanceof CrateBlockEntity crate) {
 				crate.spillTheTea();
 			}
 		}

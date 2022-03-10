@@ -102,14 +102,9 @@ public class MagnetizedBlockBlockEntity extends BlockEntity {
 							double dY = motion.y;
 							double dZ = motion.z;
 							switch (direction.getAxis()) {
-								case X:
-									dX = direction.getStepX();
-									break;
-								case Y:
-									dY = direction.getStepY();
-									break;
-								case Z:
-									dZ = direction.getStepZ();
+								case X -> dX = direction.getStepX();
+								case Y -> dY = direction.getStepY();
+								case Z -> dZ = direction.getStepZ();
 							}
 
 							entity.setDeltaMovement(dX, dY, dZ);
@@ -162,14 +157,11 @@ public class MagnetizedBlockBlockEntity extends BlockEntity {
 	}
 
 	private double getMovement(AABB bb1, Direction facing, AABB bb2) {
-		switch(facing.getAxis()) {
-			case X:
-				return getDeltaX(bb1, facing, bb2);
-			case Z:
-				return getDeltaZ(bb1, facing, bb2);
-			default:
-				return getDeltaY(bb1, facing, bb2);
-		}
+		return switch (facing.getAxis()) {
+			case X -> getDeltaX(bb1, facing, bb2);
+			case Z -> getDeltaZ(bb1, facing, bb2);
+			default -> getDeltaY(bb1, facing, bb2);
+		};
 	}
 
 	private AABB moveByPositionAndProgress(AABB bb) {
@@ -181,20 +173,14 @@ public class MagnetizedBlockBlockEntity extends BlockEntity {
 		double d0 = movement * dir.getAxisDirection().getStep();
 		double d1 = Math.min(d0, 0.0D);
 		double d2 = Math.max(d0, 0.0D);
-		switch(dir) {
-			case WEST:
-				return new AABB(bb.minX + d1, bb.minY, bb.minZ, bb.minX + d2, bb.maxY, bb.maxZ);
-			case EAST:
-				return new AABB(bb.maxX + d1, bb.minY, bb.minZ, bb.maxX + d2, bb.maxY, bb.maxZ);
-			case DOWN:
-				return new AABB(bb.minX, bb.minY + d1, bb.minZ, bb.maxX, bb.minY + d2, bb.maxZ);
-			case NORTH:
-				return new AABB(bb.minX, bb.minY, bb.minZ + d1, bb.maxX, bb.maxY, bb.minZ + d2);
-			case SOUTH:
-				return new AABB(bb.minX, bb.minY, bb.maxZ + d1, bb.maxX, bb.maxY, bb.maxZ + d2);
-			default:
-				return new AABB(bb.minX, bb.maxY + d1, bb.minZ, bb.maxX, bb.maxY + d2, bb.maxZ);
-		}
+		return switch (dir) {
+			case WEST -> new AABB(bb.minX + d1, bb.minY, bb.minZ, bb.minX + d2, bb.maxY, bb.maxZ);
+			case EAST -> new AABB(bb.maxX + d1, bb.minY, bb.minZ, bb.maxX + d2, bb.maxY, bb.maxZ);
+			case DOWN -> new AABB(bb.minX, bb.minY + d1, bb.minZ, bb.maxX, bb.minY + d2, bb.maxZ);
+			case NORTH -> new AABB(bb.minX, bb.minY, bb.minZ + d1, bb.maxX, bb.maxY, bb.minZ + d2);
+			case SOUTH -> new AABB(bb.minX, bb.minY, bb.maxZ + d1, bb.maxX, bb.maxY, bb.maxZ + d2);
+			default -> new AABB(bb.minX, bb.maxY + d1, bb.minZ, bb.maxX, bb.maxY + d2, bb.maxZ);
+		};
 	}
 
 	private static double getDeltaX(AABB bb1, Direction facing, AABB bb2) {

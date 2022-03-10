@@ -1,14 +1,6 @@
 package vazkii.quark.base.handler;
 
-import java.util.List;
-import java.util.function.Predicate;
-
-import javax.annotation.Nonnull;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -18,10 +10,15 @@ import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
+import org.apache.commons.lang3.tuple.Pair;
 import vazkii.quark.api.ICollateralMover;
 import vazkii.quark.api.ICollateralMover.MoveResult;
 import vazkii.quark.api.IConditionalSticky;
 import vazkii.quark.api.IIndirectConnector;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.function.Predicate;
 
 public class QuarkPistonStructureResolver extends PistonStructureResolver {
 
@@ -31,8 +28,8 @@ public class QuarkPistonStructureResolver extends PistonStructureResolver {
 	private final BlockPos pistonPos;
 	private final BlockPos blockToMove;
 	private final Direction moveDirection;
-	private final List<BlockPos> toMove = Lists.<BlockPos>newArrayList();
-	private final List<BlockPos> toDestroy = Lists.<BlockPos>newArrayList();
+	private final List<BlockPos> toMove = Lists.newArrayList();
+	private final List<BlockPos> toDestroy = Lists.newArrayList();
 
 	public QuarkPistonStructureResolver(PistonStructureResolver parent, Level worldIn, BlockPos posIn, Direction pistonFacing, boolean extending) {
 		super(worldIn, posIn, pistonFacing, extending);
@@ -67,25 +64,23 @@ public class QuarkPistonStructureResolver extends PistonStructureResolver {
 		else if(!addBlockLine(blockToMove, moveDirection))
 			return false;
 		else {
-			for(int i = 0; i < toMove.size(); ++i) {
-				BlockPos blockpos = toMove.get(i);
-
-				if(addBranchingBlocks(world, blockpos, isBlockBranching(world, blockpos)) == MoveResult.PREVENT)
+			for (BlockPos blockpos : toMove) {
+				if (addBranchingBlocks(world, blockpos, isBlockBranching(world, blockpos)) == MoveResult.PREVENT)
 					return false;
 			}
 
 			return true;
 		}
 	}
-	
+
 	private boolean addBlockLine(BlockPos origin, Direction face) {
-		final int max = GeneralConfig.pistonPushLimit; 
+		final int max = GeneralConfig.pistonPushLimit;
 
 		BlockPos target = origin;
-		BlockState iblockstate = world.getBlockState(target);
+		BlockState state = world.getBlockState(target);
 
-		if(iblockstate.isAir() 
-				|| !PistonBaseBlock.isPushable(iblockstate, world, origin, moveDirection, false, face)
+		if(state.isAir()
+				|| !PistonBaseBlock.isPushable(state, world, origin, moveDirection, false, face)
 				|| origin.equals(pistonPos)
 				|| toMove.contains(origin))
 			return true;
@@ -93,17 +88,17 @@ public class QuarkPistonStructureResolver extends PistonStructureResolver {
 		else {
 			int lineLen = 1;
 
-			if(lineLen + toMove.size() > max) 
+			if(lineLen + toMove.size() > max)
 				return false;
 			else {
 				BlockPos oldPos = origin;
-				BlockState oldState = world.getBlockState(origin); 
-				
+				BlockState oldState = world.getBlockState(origin);
+
 				boolean skippingNext = false;
 				while(true) {
 					if(!isBlockBranching(world, target))
 						break;
-					
+
 					MoveResult res = getBranchResult(world, target);
 					if(res == MoveResult.PREVENT)
 						return false;
@@ -111,140 +106,133 @@ public class QuarkPistonStructureResolver extends PistonStructureResolver {
 						skippingNext = true;
 						break;
 					}
-					
+
 					target = origin.relative(moveDirection.getOpposite(), lineLen);
-					iblockstate = world.getBlockState(target);
-					
-					if(iblockstate.isAir() || !PistonBaseBlock.isPushable(iblockstate, world, target, moveDirection, false, moveDirection.getOpposite()) || target.equals(pistonPos))
+					state = world.getBlockState(target);
+
+					if(state.isAir() || !PistonBaseBlock.isPushable(state, world, target, moveDirection, false, moveDirection.getOpposite()) || target.equals(pistonPos))
 						break;
-					
-					if(getStickCompatibility(world, iblockstate, oldState, target, oldPos, moveDirection) != MoveResult.MOVE)
+
+					if(getStickCompatibility(world, state, oldState, target, oldPos) != MoveResult.MOVE)
 						break;
-					
-					oldState = iblockstate;
+
+					oldState = state;
 					oldPos = target;
 
 					lineLen++;
-					
+
 					if(lineLen + toMove.size() > max)
 						return false;
 				}
 
-				int i1 = 0;
+				int collisionEnd = 0;
 
 				for(int j = lineLen - 1; j >= 0; --j) {
 					BlockPos movePos = origin.relative(moveDirection.getOpposite(), j);
 					if(toDestroy.contains(movePos))
 						break;
-					
+
 					toMove.add(movePos);
-					i1++;
+					collisionEnd++;
 				}
-				
+
 				if(skippingNext)
 					return true;
-				
-				int j1 = 1;
+
+				int offset = 1;
 
 				while(true) {
-					BlockPos blockpos1 = origin.relative(moveDirection, j1);
-					int k = toMove.indexOf(blockpos1);
-					
-					MoveResult res = MoveResult.MOVE;
+					BlockPos currentPos = origin.relative(moveDirection, offset);
+					int collisionStart = toMove.indexOf(currentPos);
 
-					if(k > -1) {
-						reorderListAtCollision(i1, k);
+					MoveResult res;
 
-						for(int l = 0; l <= k + i1; ++l) {
-							BlockPos blockpos2 = toMove.get(l);
+					if(collisionStart > -1) {
+						reorderListAtCollision(collisionEnd, collisionStart);
 
-							res = addBranchingBlocks(world, blockpos2, isBlockBranching(world, blockpos2));
-							
-							if(res == MoveResult.PREVENT)
+						for(int i = 0; i <= collisionStart + collisionEnd; ++i) {
+							BlockPos collidingPos = toMove.get(i);
+
+							if(addBranchingBlocks(world, collidingPos, isBlockBranching(world, collidingPos)) == MoveResult.PREVENT)
 								return false;
 						}
 
 						return true;
 					}
-					
-					if(res == MoveResult.MOVE) {
-						iblockstate = world.getBlockState(blockpos1);
 
-						if(iblockstate.isAir())
-							return true;
+					state = world.getBlockState(currentPos);
 
-						if(!PistonBaseBlock.isPushable(iblockstate, world, blockpos1, moveDirection, true, moveDirection) || blockpos1.equals(pistonPos))
-							return false;
+					if(state.isAir())
+						return true;
 
-						if(iblockstate.getPistonPushReaction() == PushReaction.DESTROY) {
-							toDestroy.add(blockpos1);
-							toMove.remove(blockpos1);
-							return true;
-						}
+					if(!PistonBaseBlock.isPushable(state, world, currentPos, moveDirection, true, moveDirection) || currentPos.equals(pistonPos))
+						return false;
 
-						boolean doneFinding = false;
-						if(isBlockBranching(world, blockpos1)) {
-							res = getBranchResult(world, blockpos1);
-							if(res == MoveResult.PREVENT)
-								return false;
-							
-							if(res != MoveResult.MOVE)
-								doneFinding = true;
-						}
-						
-						if(toMove.size() >= max)
-							return false;
-						
-						toMove.add(blockpos1);
-
-						++i1;
-						++j1;
-						
-						if(doneFinding)
-							return true;
+					if(state.getPistonPushReaction() == PushReaction.DESTROY) {
+						toDestroy.add(currentPos);
+						toMove.remove(currentPos);
+						return true;
 					}
+
+					boolean doneFinding = false;
+					if(isBlockBranching(world, currentPos)) {
+						res = getBranchResult(world, currentPos);
+						if(res == MoveResult.PREVENT)
+							return false;
+
+						if(res != MoveResult.MOVE)
+							doneFinding = true;
+					}
+
+					if(toMove.size() >= max)
+						return false;
+
+					toMove.add(currentPos);
+
+					++collisionEnd;
+					++offset;
+
+					if(doneFinding)
+						return true;
 				}
 			}
 		}
 	}
 
-	private void reorderListAtCollision(int p_177255_1_, int p_177255_2_) {
-		List<BlockPos> list = Lists.<BlockPos>newArrayList();
-		List<BlockPos> list1 = Lists.<BlockPos>newArrayList();
-		List<BlockPos> list2 = Lists.<BlockPos>newArrayList();
-		list.addAll(toMove.subList(0, p_177255_2_));
-		list1.addAll(toMove.subList(toMove.size() - p_177255_1_, toMove.size()));
-		list2.addAll(toMove.subList(p_177255_2_, toMove.size() - p_177255_1_));
+	private void reorderListAtCollision(int collisionEnd, int collisionStart) {
+		List<BlockPos> before = Lists.newArrayList(toMove.subList(0, collisionStart));
+		List<BlockPos> collision = Lists.newArrayList(toMove.subList(toMove.size() - collisionEnd, toMove.size()));
+		List<BlockPos> after = Lists.newArrayList(toMove.subList(collisionStart, toMove.size() - collisionEnd));
 		toMove.clear();
-		toMove.addAll(list);
-		toMove.addAll(list1);
-		toMove.addAll(list2);
+		toMove.addAll(before);
+		toMove.addAll(collision);
+		toMove.addAll(after);
 	}
 
 	@SuppressWarnings("incomplete-switch")
 	private MoveResult addBranchingBlocks(Level world, BlockPos fromPos, boolean isSourceBranching) {
 		BlockState state = world.getBlockState(fromPos);
 		Block block = state.getBlock();
-		
+
 		Direction opposite = moveDirection.getOpposite();
 		MoveResult retResult = MoveResult.SKIP;
 		for(Direction face : Direction.values()) {
-				MoveResult res = MoveResult.MOVE;
+				MoveResult res;
 				BlockPos targetPos = fromPos.relative(face);
 				BlockState targetState = world.getBlockState(targetPos);
-				
+
 				if(!isSourceBranching) {
 					IIndirectConnector indirect = getIndirectStickiness(targetState);
 					if(indirect != null && indirect.isEnabled() && indirect.canConnectIndirectly(world, targetPos, fromPos, targetState, state))
-						res = getStickCompatibility(world, state, targetState, fromPos, targetPos, face);
+						res = getStickCompatibility(world, state, targetState, fromPos, targetPos);
 					else res = MoveResult.SKIP;
-				} 
+				}
 				else {
 					if(block instanceof ICollateralMover)
 						res = ((ICollateralMover) block).getCollateralMovement(world, pistonPos, moveDirection, face, fromPos);
-					else res = getStickCompatibility(world, state, targetState, fromPos, targetPos, face);
+					else res = getStickCompatibility(world, state, targetState, fromPos, targetPos);
 				}
-				
+
 				switch(res) {
 				case PREVENT:
 					return MoveResult.PREVENT;
@@ -258,14 +246,14 @@ public class QuarkPistonStructureResolver extends PistonStructureResolver {
 						toMove.remove(targetPos);
 						return MoveResult.BREAK;
 					}
-					
+
 					return MoveResult.PREVENT;
 				}
-				
+
 				if(face == opposite)
 					retResult = res;
 			}
-		
+
 		return retResult;
 	}
 
@@ -275,48 +263,48 @@ public class QuarkPistonStructureResolver extends PistonStructureResolver {
 
 		return block instanceof ICollateralMover ? ((ICollateralMover) block).isCollateralMover(world, pistonPos, moveDirection, pos) : isBlockSticky(state);
 	}
-	
+
 	private MoveResult getBranchResult(Level world, BlockPos pos) {
 		BlockState state = world.getBlockState(pos);
 		Block block = state.getBlock();
 
 		if(block instanceof ICollateralMover)
 			return ((ICollateralMover) block).getCollateralMovement(world, pistonPos, moveDirection, moveDirection, pos);
-		
+
 		return MoveResult.MOVE;
 	}
-	
-	private MoveResult getStickCompatibility(Level world, BlockState state1, BlockState state2, BlockPos pos1, BlockPos pos2, Direction face) {
+
+	private MoveResult getStickCompatibility(Level world, BlockState state1, BlockState state2, BlockPos pos1, BlockPos pos2) {
 		IConditionalSticky stick = getStickCondition(state1);
 		if(stick != null && !stick.canStickToBlock(world, pistonPos, pos1, pos2, state1, state2, moveDirection))
 			return MoveResult.SKIP;
-		
+
 		stick = getStickCondition(state2);
 		if(stick != null && !stick.canStickToBlock(world, pistonPos, pos2, pos1, state2, state1, moveDirection))
 			return MoveResult.SKIP;
 
 		return MoveResult.MOVE;
 	}
-	
+
 	private IConditionalSticky getStickCondition(BlockState state) {
 		Block block = state.getBlock();
 		if(block == Blocks.HONEY_BLOCK)
 			return HoneyStickCondition.INSTANCE;
-		
+
 		if(block instanceof IConditionalSticky)
 			return (IConditionalSticky) block;
-		
+
 		IIndirectConnector indirect = getIndirectStickiness(state);
 		if(indirect != null && indirect.isEnabled())
 			return indirect.getStickyCondition();
-		
+
 		return null;
 	}
 
 	@Nonnull
 	@Override
 	public List<BlockPos> getToPush() {
-		if(!GeneralConfig.usePistonLogicRepl) 
+		if(!GeneralConfig.usePistonLogicRepl)
 			return parent.getToPush();
 
 		return toMove;
@@ -325,41 +313,41 @@ public class QuarkPistonStructureResolver extends PistonStructureResolver {
 	@Nonnull
 	@Override
 	public List<BlockPos> getToDestroy() {
-		if(!GeneralConfig.usePistonLogicRepl) 
+		if(!GeneralConfig.usePistonLogicRepl)
 			return parent.getToDestroy();
 
 		return toDestroy;
 	}
-	
+
 	private static IIndirectConnector getIndirectStickiness(BlockState state) {
 		for(Pair<Predicate<BlockState>, IIndirectConnector> p : IIndirectConnector.INDIRECT_STICKY_BLOCKS)
 			if(p.getLeft().test(state))
 				return p.getRight();
-		
+
 		return null;
 	}
-	
+
 	private static boolean isBlockSticky(BlockState state) {
 		if(state.isStickyBlock())
 			return true;
-		
+
 		IIndirectConnector indirect = getIndirectStickiness(state);
 		return indirect != null && indirect.isEnabled();
 	}
-	
+
 	private static class HoneyStickCondition implements IConditionalSticky {
 
 		private static final HoneyStickCondition INSTANCE = new HoneyStickCondition();
-		
+
 		@Override
 		public boolean canStickToBlock(Level world, BlockPos pistonPos, BlockPos pos, BlockPos slimePos, BlockState state, BlockState slimeState, Direction direction) {
 			Block block = state.getBlock();
 			Block slime = slimeState.getBlock();
-			
+
 			// specifically utilize the vanilla sticky definition as to not break honey connections with blocks like chains
 			return !slime.isStickyBlock(slimeState) || block == slime;
 		}
-		
+
 	}
 
 }

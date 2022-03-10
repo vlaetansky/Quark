@@ -1,10 +1,5 @@
 package vazkii.quark.addons.oddities.entity;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -25,6 +20,10 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkHooks;
 import vazkii.quark.addons.oddities.module.TotemOfHoldingModule;
+
+import javax.annotation.Nonnull;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author WireSegal
@@ -72,8 +71,7 @@ public class TotemOfHoldingEntity extends Entity {
 
 	@Override
 	public boolean skipAttackInteraction(@Nonnull Entity e) {
-		if(!level.isClientSide && e instanceof Player) {
-			Player player = (Player) e;
+		if(!level.isClientSide && e instanceof Player player) {
 
 			if(!TotemOfHoldingModule.allowAnyoneToCollect && !player.isCreative()) {
 				Player owner = getOwnerEntity();
@@ -86,8 +84,7 @@ public class TotemOfHoldingEntity extends Entity {
 			for(int i = 0; i < drops; i++) {
 				ItemStack stack = storedItems.remove(0);
 
-				if(stack.getItem() instanceof ArmorItem) {
-					ArmorItem armor = (ArmorItem) stack.getItem();
+				if(stack.getItem() instanceof ArmorItem armor) {
 					EquipmentSlot slot = armor.getSlot();
 					ItemStack curr = player.getItemBySlot(slot);
 

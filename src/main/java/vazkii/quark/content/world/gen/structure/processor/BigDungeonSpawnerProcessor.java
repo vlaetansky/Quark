@@ -21,41 +21,41 @@
 //import vazkii.quark.content.world.module.BigDungeonModule;
 //
 //public class BigDungeonSpawnerProcessor extends StructureProcessor {
-//	
-//	public BigDungeonSpawnerProcessor() { 
+//
+//	public BigDungeonSpawnerProcessor() {
 //		// NO-OP
 //	}
-//	
+//
 //	@Override
-//	public StructureBlockInfo process(LevelReader worldReaderIn, BlockPos pos, BlockPos otherposidk, StructureBlockInfo p_215194_3_, StructureBlockInfo blockInfo, StructurePlaceSettings placementSettingsIn, StructureTemplate template) {
+//	public StructureBlockInfo process(LevelReader worldReaderIn, BlockPos pos, BlockPos otherposidk, StructureBlockInfo otherinfoidk, StructureBlockInfo blockInfo, StructurePlaceSettings placementSettingsIn, StructureTemplate template) {
 //		if(blockInfo.state.getBlock() instanceof SpawnerBlock) {
 //			Random rand = placementSettingsIn.getRandom(blockInfo.pos);
 //			BlockEntity tile = BlockEntity.loadStatic(blockInfo.pos, blockInfo.state, blockInfo.nbt);
-//			
+//
 //			if(tile instanceof SpawnerBlockEntity) {
 //				SpawnerBlockEntity spawner = (SpawnerBlockEntity) tile;
 //				BaseSpawner logic = spawner.getSpawner();
-//				
+//
 //				EntityType<?> typeToSet = null;
 //				double val = rand.nextDouble();
 //				if(val > 0.95)
 //					typeToSet = EntityType.CREEPER;
 //				else if(val > 0.5)
 //					typeToSet = EntityType.SKELETON;
-//				else typeToSet = EntityType.ZOMBIE;	
-//				
+//				else typeToSet = EntityType.ZOMBIE;
+//
 //				CompoundTag tag = new CompoundTag();
 //				tag.putString("id", typeToSet.getRegistryName().toString());
 //				logic.spawnPotentials = SimpleWeightedRandomList.single(new SpawnData(tag, Optional.empty()));
-//				
+//
 //				CompoundTag nbt = spawner.saveWithFullMetadata();
 //				return new StructureBlockInfo(blockInfo.pos, blockInfo.state, nbt);
 //			}
 //		}
-//		
+//
 //		return blockInfo;
 //	}
-//	
+//
 //	@Override
 //	protected StructureProcessorType<?> getType() {
 //		return BigDungeonModule.SPAWN_PROCESSOR_TYPE;

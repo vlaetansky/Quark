@@ -14,7 +14,7 @@ public class StructureBlockReplacementHandler {
 
 	public static List<StructureFunction> functions = new ArrayList<>();
 
-	private static ThreadLocal<StructureHolder> structureHolder = new ThreadLocal<>();
+	private static final ThreadLocal<StructureHolder> structureHolder = new ThreadLocal<>();
 
 	public static BlockState getResultingBlockState(BlockState blockstate) {
 		StructureHolder curr = getCurrentStructureHolder();
@@ -45,7 +45,7 @@ public class StructureBlockReplacementHandler {
 		curr.currentComponents = components == null ? null : components.pieces();
 	}
 
-	public static interface StructureFunction extends BiFunction<BlockState, StructureHolder, BlockState> {}
+	public interface StructureFunction extends BiFunction<BlockState, StructureHolder, BlockState> {}
 
 	public static class StructureHolder {
 		public StructureFeature<?> currentStructure;

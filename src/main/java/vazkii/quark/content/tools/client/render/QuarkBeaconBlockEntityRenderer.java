@@ -1,13 +1,10 @@
 package vazkii.quark.content.tools.client.render;
 
-import java.util.List;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
-
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
@@ -17,6 +14,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 import vazkii.quark.content.tools.module.BeaconRedirectionModule;
 import vazkii.quark.content.tools.module.BeaconRedirectionModule.ExtendedBeamSegment;
+
+import java.util.List;
 
 // Mostly vanilla copypaste but adapted to use ExtendedBeamSegment values
 public class QuarkBeaconBlockEntityRenderer {
@@ -28,11 +27,10 @@ public class QuarkBeaconBlockEntityRenderer {
 		long i = tileEntityIn.getLevel().getGameTime();
 		List<BeaconBlockEntity.BeaconBeamSection> list = tileEntityIn.getBeamSections();
 
-		for(int k = 0; k < list.size(); ++k) {
-			BeaconBlockEntity.BeaconBeamSection segment = list.get(k);
-			if(!(segment instanceof ExtendedBeamSegment))
+		for (BeaconBlockEntity.BeaconBeamSection segment : list) {
+			if (!(segment instanceof ExtendedBeamSegment))
 				return false; // Defer back to the vanilla one
-			
+
 			renderBeamSegment(matrixStackIn, bufferIn, (ExtendedBeamSegment) segment, partialTicks, i);
 		}
 
@@ -46,46 +44,37 @@ public class QuarkBeaconBlockEntityRenderer {
 	public static void renderBeamSegment(PoseStack matrixStackIn, MultiBufferSource bufferIn, ResourceLocation textureLocation, ExtendedBeamSegment segment, float partialTicks, float textureScale, long totalWorldTime, float beamRadius, float glowRadius) {
 		int height = segment.getHeight();
 		float[] colors = segment.getColor();
-		
+
 		matrixStackIn.pushPose();
-		matrixStackIn.translate(0.5D, 0.5D, 0.5D); // Y translation changed to 0.5 
+		matrixStackIn.translate(0.5D, 0.5D, 0.5D); // Y translation changed to 0.5
 		matrixStackIn.translate(segment.offset.getX(), segment.offset.getY(), segment.offset.getZ()); // offset by the correct distance
 		matrixStackIn.mulPose(segment.dir.getRotation());
-		
-		float f = -(Math.floorMod(totalWorldTime, 40L) + partialTicks);
-		float f2 = Mth.frac(1 * 0.2F - (float)Mth.floor(f * 0.1F));
-		float f3 = colors[0];
-		float f4 = colors[1];
-		float f5 = colors[2];
-		
+
+		float angle = -(Math.floorMod(totalWorldTime, 40L) + partialTicks);
+		float partAngle = Mth.frac(1 * 0.2F - (float)Mth.floor(angle * 0.1F));
+		float r = colors[0];
+		float g = colors[1];
+		float b = colors[2];
+
 		matrixStackIn.pushPose();
-		matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(f * 2.25F - 45.0F));
-		float f6 = 0.0F;
-		float f8 = 0.0F;
-		float f9 = -beamRadius;
-		float f12 = -beamRadius;
-		float f15 = -1.0F + f2;
-		float f16 = (float)height * textureScale * (0.5F / beamRadius) + f15;
-		renderPart(matrixStackIn, bufferIn.getBuffer(RenderType.beaconBeam(textureLocation, false)), f3, f4, f5, 1.0F, height, 0.0F, beamRadius, beamRadius, 0.0F, f9, 0.0F, 0.0F, f12, 0.0F, 1.0F, f16, f15);
+		matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(angle * 2.25F - 45.0F));
+		float v2 = -1.0F + partAngle;
+		float v1 = (float)height * textureScale * (0.5F / beamRadius) + v2;
+		renderPart(matrixStackIn, bufferIn.getBuffer(RenderType.beaconBeam(textureLocation, false)), r, g, b, 1.0F, height, 0.0F, beamRadius, beamRadius, 0.0F, -beamRadius, 0.0F, 0.0F, -beamRadius, 0.0F, 1.0F, v1, v2);
 		matrixStackIn.popPose();
-		f6 = -glowRadius;
-		float f7 = -glowRadius;
-		f8 = -glowRadius;
-		f9 = -glowRadius;
-		f15 = -1.0F + f2;
-		f16 = (float)height * textureScale + f15;
-		renderPart(matrixStackIn, bufferIn.getBuffer(RenderType.beaconBeam(textureLocation, true)), f3, f4, f5, 0.125F, height, f6, f7, glowRadius, f8, f9, glowRadius, glowRadius, glowRadius, 0.0F, 1.0F, f16, f15);
+		v1 = (float)height * textureScale + v2;
+		renderPart(matrixStackIn, bufferIn.getBuffer(RenderType.beaconBeam(textureLocation, true)), r, g, b, 0.125F, height, -glowRadius, -glowRadius, glowRadius, -glowRadius, -glowRadius, glowRadius, glowRadius, glowRadius, 0.0F, 1.0F, v1, v2);
 		matrixStackIn.popPose();
 	}
 
-	private static void renderPart(PoseStack matrixStackIn, VertexConsumer bufferIn, float red, float green, float blue, float alpha, int height, float p_228840_8_, float p_228840_9_, float p_228840_10_, float p_228840_11_, float p_228840_12_, float p_228840_13_, float p_228840_14_, float p_228840_15_, float u1, float u2, float v1, float v2) {
-		PoseStack.Pose matrixstack$entry = matrixStackIn.last();
-		Matrix4f matrix4f = matrixstack$entry.pose();
-		Matrix3f matrix3f = matrixstack$entry.normal();
-		addQuad(matrix4f, matrix3f, bufferIn, red, green, blue, alpha, 0, height, p_228840_8_, p_228840_9_, p_228840_10_, p_228840_11_, u1, u2, v1, v2);
-		addQuad(matrix4f, matrix3f, bufferIn, red, green, blue, alpha, 0, height, p_228840_14_, p_228840_15_, p_228840_12_, p_228840_13_, u1, u2, v1, v2);
-		addQuad(matrix4f, matrix3f, bufferIn, red, green, blue, alpha, 0, height, p_228840_10_, p_228840_11_, p_228840_14_, p_228840_15_, u1, u2, v1, v2);
-		addQuad(matrix4f, matrix3f, bufferIn, red, green, blue, alpha, 0, height, p_228840_12_, p_228840_13_, p_228840_8_, p_228840_9_, u1, u2, v1, v2);
+	private static void renderPart(PoseStack matrixStackIn, VertexConsumer bufferIn, float red, float green, float blue, float alpha, int height, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, float u1, float u2, float v1, float v2) {
+		PoseStack.Pose pose = matrixStackIn.last();
+		Matrix4f matrix4f = pose.pose();
+		Matrix3f matrix3f = pose.normal();
+		addQuad(matrix4f, matrix3f, bufferIn, red, green, blue, alpha, 0, height, x1, y1, x2, y2, u1, u2, v1, v2);
+		addQuad(matrix4f, matrix3f, bufferIn, red, green, blue, alpha, 0, height, x4, y4, x3, y3, u1, u2, v1, v2);
+		addQuad(matrix4f, matrix3f, bufferIn, red, green, blue, alpha, 0, height, x2, y2, x4, y4, u1, u2, v1, v2);
+		addQuad(matrix4f, matrix3f, bufferIn, red, green, blue, alpha, 0, height, x3, y3, x1, y1, u1, u2, v1, v2);
 	}
 
 	private static void addQuad(Matrix4f matrixPos, Matrix3f matrixNormal, VertexConsumer bufferIn, float red, float green, float blue, float alpha, int yMin, int yMax, float x1, float z1, float x2, float z2, float u1, float u2, float v1, float v2) {

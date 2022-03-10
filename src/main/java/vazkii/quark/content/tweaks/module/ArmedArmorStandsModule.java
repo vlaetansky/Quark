@@ -15,8 +15,7 @@ import vazkii.quark.base.module.QuarkModule;
 public class ArmedArmorStandsModule extends QuarkModule {
 	@SubscribeEvent
 	public void entityConstruct(EntityEvent.EntityConstructing event) {
-		if(event.getEntity() instanceof ArmorStand) {
-			ArmorStand stand = (ArmorStand) event.getEntity();
+		if(event.getEntity() instanceof ArmorStand stand) {
 			if(!stand.isShowArms())
 				setShowArms(stand, true);
 		}

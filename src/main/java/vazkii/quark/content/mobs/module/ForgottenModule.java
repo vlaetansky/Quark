@@ -33,7 +33,7 @@ public class ForgottenModule extends QuarkModule {
 
 	public static Item forgotten_hat;
 
-	@Config(description = "1 in this many Skeletons that spawn under the threshold are replaced with Forgotten.") 
+	@Config(description = "1 in this many Skeletons that spawn under the threshold are replaced with Forgotten.")
 	public double forgottenSpawnRate = 0.05;
 
 	@Config public int maxHeightForSpawn = 0;
@@ -50,7 +50,7 @@ public class ForgottenModule extends QuarkModule {
 
 		RegistryHelper.register(forgottenType, "forgotten");
 		EntitySpawnHandler.addEgg(forgottenType, 0x969487, 0x3a3330, this, () -> true);
-		
+
 		EntityAttributeHandler.put(forgottenType, Forgotten::registerAttributes);
 	}
 
@@ -69,13 +69,12 @@ public class ForgottenModule extends QuarkModule {
 		Result result = event.getResult();
 		LevelAccessor world = event.getWorld();
 
-		if(entity.getType() == EntityType.SKELETON && entity instanceof Mob && result != Result.DENY && entity.getY() < maxHeightForSpawn && world.getRandom().nextDouble() < forgottenSpawnRate) {
-			Mob mob = (Mob) entity;
+		if(entity.getType() == EntityType.SKELETON && entity instanceof Mob mob && result != Result.DENY && entity.getY() < maxHeightForSpawn && world.getRandom().nextDouble() < forgottenSpawnRate) {
 
 			if(result == Result.ALLOW || (mob.checkSpawnRules(world, event.getSpawnReason()) && mob.checkSpawnObstruction(world))) {
 				Forgotten forgotten = new Forgotten(forgottenType, entity.level);
 				Vec3 epos = entity.position();
-	
+
 				forgotten.absMoveTo(epos.x, epos.y, epos.z, entity.getYRot(), entity.getXRot());
 				forgotten.prepareEquipment();
 				world.addFreshEntity(forgotten);

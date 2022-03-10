@@ -1,8 +1,5 @@
 package vazkii.quark.base.handler;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
@@ -14,10 +11,14 @@ import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.Quark;
 import vazkii.quark.content.building.block.VerticalSlabBlock;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
 @EventBusSubscriber(modid = Quark.MOD_ID)
 public class FuelHandler {
 
-	private static Map<Item, Integer> fuelValues = new HashMap<>();
+	private static final Map<Item, Integer> fuelValues = new HashMap<>();
 
 	public static void addFuel(Item item, int fuel) {
 		if(fuel > 0 && item != null)
@@ -29,7 +30,7 @@ public class FuelHandler {
 	}
 
 	public static void addWood(Block block) {
-		if(block.getRegistryName().toString().contains("crimson") || block.getRegistryName().toString().contains("warped"))
+		if(Objects.toString(block.getRegistryName()).contains("crimson") || Objects.toString(block.getRegistryName()).contains("warped"))
 			return; //do nothing if block is crimson or warped, since they aren't flammable. #3549
 		if(block instanceof VerticalSlabBlock || block instanceof SlabBlock)
 			addFuel(block, 150);

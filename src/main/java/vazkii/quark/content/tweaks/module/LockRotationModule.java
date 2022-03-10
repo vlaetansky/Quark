@@ -1,17 +1,9 @@
 package vazkii.quark.content.tweaks.module;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.UUID;
-
-import org.lwjgl.opengl.GL11;
-
 import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -45,6 +37,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.lwjgl.opengl.GL11;
 import vazkii.arl.network.MessageSerializer;
 import vazkii.quark.api.IRotationLockable;
 import vazkii.quark.base.client.handler.ModKeybindHandler;
@@ -58,13 +51,18 @@ import vazkii.quark.base.network.message.SetLockProfileMessage;
 import vazkii.quark.content.building.block.VerticalSlabBlock;
 import vazkii.quark.content.building.block.VerticalSlabBlock.VerticalSlabType;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.UUID;
+
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
 public class LockRotationModule extends QuarkModule {
 
 	private static final String TAG_LOCKED_ONCE = "quark:locked_once";
 
 	private static final HashMap<UUID, LockProfile> lockProfiles = new HashMap<>();
-	
+
 	@OnlyIn(Dist.CLIENT)
 	private LockProfile clientProfile;
 
@@ -75,7 +73,7 @@ public class LockRotationModule extends QuarkModule {
 	public void configChanged() {
 		lockProfiles.clear();
 	}
-	
+
 	@Override
 	public void setup() {
 		MessageSerializer.mapHandlers(LockProfile.class, LockProfile::readProfile, LockProfile::writeProfile);
@@ -95,7 +93,7 @@ public class LockRotationModule extends QuarkModule {
 		if(lockProfiles.containsKey(uuid)) {
 			LockProfile profile = lockProfiles.get(uuid);
 			BlockState transformed = getRotatedState(ctx.getLevel(), ctx.getClickedPos(), state, profile.facing.getOpposite(), profile.half);
-			
+
 			if(!transformed.equals(state))
 				return Block.updateFromNeighbourShapes(transformed, ctx.getLevel(), ctx.getClickedPos());
 		}
@@ -111,7 +109,7 @@ public class LockRotationModule extends QuarkModule {
 
 		if(block instanceof IRotationLockable)
 			setState = ((IRotationLockable) block).applyRotationLock(world, pos, state, face, half);
-		
+
 		// General Facing
 		else if(props.containsKey(BlockStateProperties.FACING))
 			setState = state.setValue(BlockStateProperties.FACING, face);
@@ -125,7 +123,7 @@ public class LockRotationModule extends QuarkModule {
 			if(block instanceof StairBlock)
 				setState = state.setValue(BlockStateProperties.HORIZONTAL_FACING, face.getOpposite());
 			else setState = state.setValue(BlockStateProperties.HORIZONTAL_FACING, face);
-		} 
+		}
 
 		// Pillar Axis
 		else if(props.containsKey(BlockStateProperties.AXIS))
@@ -140,12 +138,12 @@ public class LockRotationModule extends QuarkModule {
 			// Slab type
 			if(props.containsKey(BlockStateProperties.SLAB_TYPE) && props.get(BlockStateProperties.SLAB_TYPE) != SlabType.DOUBLE)
 				setState = setState.setValue(BlockStateProperties.SLAB_TYPE, half == 1 ? SlabType.TOP : SlabType.BOTTOM);
-			
+
 			// Half (stairs)
 			else if(props.containsKey(BlockStateProperties.HALF))
 				setState = setState.setValue(BlockStateProperties.HALF, half == 1 ? Half.TOP : Half.BOTTOM);
 		}
-		
+
 		return setState;
 	}
 
@@ -173,8 +171,7 @@ public class LockRotationModule extends QuarkModule {
 			LockProfile newProfile;
 			HitResult result = mc.hitResult;
 
-			if(result instanceof BlockHitResult && result.getType() == Type.BLOCK) {
-				BlockHitResult bresult = (BlockHitResult) result;
+			if(result instanceof BlockHitResult bresult && result.getType() == Type.BLOCK) {
 				Vec3 hitVec = bresult.getLocation();
 				Direction face = bresult.getDirection();
 
@@ -203,7 +200,7 @@ public class LockRotationModule extends QuarkModule {
 	public void onHUDRender(RenderGameOverlayEvent.Post event) {
 		if(event.getType() == ElementType.ALL && clientProfile != null) {
 			PoseStack matrix = event.getMatrixStack();
-			
+
 			RenderSystem.enableBlend();
 			RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -222,7 +219,7 @@ public class LockRotationModule extends QuarkModule {
 
 	public static void setProfile(Player player, LockProfile profile) {
 		UUID uuid = player.getUUID();
-		
+
 		if(profile == null)
 			lockProfiles.remove(uuid);
 		else {
@@ -239,19 +236,11 @@ public class LockRotationModule extends QuarkModule {
 		}
 	}
 
-	public static class LockProfile {
-
-		public final Direction facing;
-		public final int half;
-
-		public LockProfile(Direction facing, int half) {
-			this.facing = facing;
-			this.half = half;
-		}
+	public record LockProfile(Direction facing, int half) {
 
 		public static LockProfile readProfile(FriendlyByteBuf buf, Field field) {
 			boolean valid = buf.readBoolean();
-			if(!valid)
+			if (!valid)
 				return null;
 
 			int face = buf.readInt();
@@ -260,7 +249,7 @@ public class LockRotationModule extends QuarkModule {
 		}
 
 		public static void writeProfile(FriendlyByteBuf buf, Field field, LockProfile p) {
-			if(p == null)
+			if (p == null)
 				buf.writeBoolean(false);
 			else {
 				buf.writeBoolean(true);
@@ -271,12 +260,11 @@ public class LockRotationModule extends QuarkModule {
 
 		@Override
 		public boolean equals(Object other) {
-			if(other == this)
+			if (other == this)
 				return true;
-			if(!(other instanceof LockProfile))
+			if (!(other instanceof LockProfile otherProfile))
 				return false;
 
-			LockProfile otherProfile = (LockProfile) other;
 			return otherProfile.facing == facing && otherProfile.half == half;
 		}
 

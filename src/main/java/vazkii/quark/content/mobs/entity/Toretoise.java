@@ -1,11 +1,5 @@
 package vazkii.quark.content.mobs.entity;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-
-import javax.annotation.Nonnull;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
@@ -20,21 +14,10 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.BreedGoal;
-import net.minecraft.world.entity.ai.goal.FollowParentGoal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
-import net.minecraft.world.entity.ai.goal.TemptGoal;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -56,6 +39,11 @@ import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.content.automation.module.IronRodModule;
 import vazkii.quark.content.mobs.module.ToretoiseModule;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 public class Toretoise extends Animal {
 
@@ -112,13 +100,13 @@ public class Toretoise extends Animal {
 				.map(loc -> Registry.ITEM.getOptional(new ResourceLocation(loc)))
 				.filter(Optional::isPresent)
 				.map(Optional::get)
-				.map(item -> new ItemStack(item)));
+				.map(ItemStack::new));
 	}
 
 	@Override
-	public SpawnGroupData finalizeSpawn(@Nonnull ServerLevelAccessor p_213386_1_, @Nonnull DifficultyInstance p_213386_2_, @Nonnull MobSpawnType p_213386_3_, SpawnGroupData p_213386_4_, CompoundTag p_213386_5_) {
+	public SpawnGroupData finalizeSpawn(@Nonnull ServerLevelAccessor world, @Nonnull DifficultyInstance difficulty, @Nonnull MobSpawnType spawnType, SpawnGroupData spawnData, CompoundTag additionalData) {
 		popOre(true);
-		return p_213386_4_;
+		return spawnData;
 	}
 
 	@Override
@@ -216,8 +204,7 @@ public class Toretoise extends Animal {
 						BlockState state = level.getBlockState(test);
 						if(state.getBlock() == Blocks.MOVING_PISTON) {
 							BlockEntity tile = level.getBlockEntity(test);
-							if(tile instanceof PistonMovingBlockEntity) {
-								PistonMovingBlockEntity piston = (PistonMovingBlockEntity) tile;
+							if(tile instanceof PistonMovingBlockEntity piston) {
 								BlockState pistonState = piston.getMovedState();
 								if(pistonState.getBlock() == IronRodModule.iron_rod) {
 									dropOre(ore);
@@ -234,8 +221,7 @@ public class Toretoise extends Animal {
 		Entity e = source.getDirectEntity();
 		int ore = getOreType();
 
-		if(e instanceof LivingEntity) {
-			LivingEntity living = (LivingEntity) e;
+		if(e instanceof LivingEntity living) {
 			ItemStack held = living.getMainHandItem();
 
 			if(ore != 0 && held.getItem().canPerformAction(held, ToolActions.PICKAXE_DIG)) {
@@ -263,24 +249,18 @@ public class Toretoise extends Animal {
 
 		Item drop = null;
 		int countMult = 1;
-		switch(ore) {
-		case 1:
-			drop = Items.COAL;
-			break;
-		case 2:
-			drop = Items.RAW_IRON;
-			break;
-		case 3:
-			drop = Items.REDSTONE;
-			countMult *= 3;
-			break;
-		case 4:
-			drop = Items.LAPIS_LAZULI;
-			countMult *= 2;
-			break;
-		case 5:
-			drop = Items.RAW_COPPER;
-			break;
+		switch (ore) {
+			case 1 -> drop = Items.COAL;
+			case 2 -> drop = Items.RAW_IRON;
+			case 3 -> {
+				drop = Items.REDSTONE;
+				countMult *= 3;
+			}
+			case 4 -> {
+				drop = Items.LAPIS_LAZULI;
+				countMult *= 2;
+			}
+			case 5 -> drop = Items.RAW_COPPER;
 		}
 
 		if(drop != null) {

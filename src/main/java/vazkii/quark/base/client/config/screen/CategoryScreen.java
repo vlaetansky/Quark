@@ -41,8 +41,8 @@ public class CategoryScreen extends AbstractScrollingWidgetScreen {
 	}
 
 	@Override
-	public void render(@Nonnull PoseStack mstack, int mouseX, int mouseY, float pticks) {
-		super.render(mstack, mouseX, mouseY, pticks);
+	public void render(@Nonnull PoseStack mstack, int mouseX, int mouseY, float partialTicks) {
+		super.render(mstack, mouseX, mouseY, partialTicks);
 
 		int left = 20;
 

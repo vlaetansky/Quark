@@ -34,7 +34,7 @@ public class SoulFurnaceBlock extends VariantFurnaceBlock {
 	public void animateTick(BlockState state, @Nonnull Level level, @Nonnull BlockPos pos, @Nonnull Random random) {
 		if(state.getValue(LIT) && state.getValue(SOUL)) {
 			double d0 = (double)pos.getX() + 0.5D;
-			double d1 = (double)pos.getY();
+			double d1 = pos.getY();
 			double d2 = (double)pos.getZ() + 0.5D;
 			if (random.nextDouble() < 0.1D) {
 				level.playLocalSound(d0, d1, d2, SoundEvents.FURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1.0F, 1.0F, false);

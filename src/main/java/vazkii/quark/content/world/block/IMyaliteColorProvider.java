@@ -1,9 +1,6 @@
 package vazkii.quark.content.world.block;
 
-import java.awt.Color;
-
 import com.google.common.collect.ImmutableList;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
@@ -16,20 +13,22 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.interf.IBlockColorProvider;
 
+import java.awt.*;
+
 public interface IMyaliteColorProvider extends IBlockColorProvider {
 
-	static final PerlinSimplexNoise NOISE = new PerlinSimplexNoise(new LegacyRandomSource(4543543),
+	PerlinSimplexNoise NOISE = new PerlinSimplexNoise(new LegacyRandomSource(4543543),
 			ImmutableList.of(-4, -3, -2, -1, 0, 1, 2, 3, 4));
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public default BlockColor getBlockColor() {
+	default BlockColor getBlockColor() {
 		return (state, world, pos, tintIndex) -> getColor(pos, myaliteS(), myaliteB());
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public default ItemColor getItemColor() {
+	default ItemColor getItemColor() {
 		return (stack, tintIndex) -> {
 			Minecraft mc = Minecraft.getInstance();
 			if(mc.player == null)
@@ -37,7 +36,7 @@ public interface IMyaliteColorProvider extends IBlockColorProvider {
 
 			BlockPos pos = mc.player.blockPosition();
 			HitResult res = mc.hitResult;
-			if(res != null && res instanceof BlockHitResult)
+			if(res instanceof BlockHitResult)
 				pos = ((BlockHitResult) res).getBlockPos();
 
 			return getColor(pos, myaliteS(), myaliteB());
@@ -47,7 +46,7 @@ public interface IMyaliteColorProvider extends IBlockColorProvider {
 	default float myaliteS() { return 0.7F; }
 	default float myaliteB() { return 0.8F; }
 
-	public static int getColor(BlockPos pos, float s, float b) {
+	static int getColor(BlockPos pos, float s, float b) {
 		final double sp = 0.15;
 		final double range = 0.3;
 		final double shift = 0.05;

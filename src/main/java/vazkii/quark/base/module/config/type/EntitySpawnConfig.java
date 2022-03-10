@@ -9,16 +9,16 @@ public class EntitySpawnConfig extends AbstractConfigType {
 
 	@Config
 	@Config.Min(value = 0, exclusive = true)
-	public int spawnWeight = 40;
+	public int spawnWeight;
 
 	@Config
 	@Config.Min(1)
-	public int minGroupSize = 1;
+	public int minGroupSize;
 
 	@Config
 	@Config.Min(1)
-	public int maxGroupSize = 3;
-	
+	public int maxGroupSize;
+
 	@Config
 	public IBiomeConfig biomes;
 
@@ -28,7 +28,7 @@ public class EntitySpawnConfig extends AbstractConfigType {
 		this.maxGroupSize = maxGroupSize;
 		this.biomes = biomes;
 	}
-	
+
 	public void setModule(QuarkModule module) {
 		this.module = module;
 	}

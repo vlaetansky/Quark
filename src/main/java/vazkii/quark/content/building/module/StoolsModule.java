@@ -23,13 +23,13 @@ import vazkii.quark.content.building.entity.Stool;
 public class StoolsModule extends QuarkModule {
 
 	public static EntityType<Stool> stoolEntity;
-	
+
 	@Override
 	public void register() {
 		for(DyeColor dye : DyeColor.values())
 			new StoolBlock(this, dye);
-		
-		stoolEntity = EntityType.Builder.<Stool>of(Stool::new, MobCategory.MISC)
+
+		stoolEntity = EntityType.Builder.of(Stool::new, MobCategory.MISC)
 				.sized(6F / 16F, 0.5F)
 				.clientTrackingRange(3)
 				.updateInterval(Integer.MAX_VALUE) // update interval
@@ -38,7 +38,7 @@ public class StoolsModule extends QuarkModule {
 				.build("stool");
 		RegistryHelper.register(stoolEntity, "stool");
 	}
-	
+
 	@SubscribeEvent
 	public void itemUsed(RightClickBlock event) {
 		if(event.getPlayer().isShiftKeyDown() && event.getItemStack().getItem() instanceof BlockItem && event.getFace() == Direction.UP) {
@@ -47,7 +47,7 @@ public class StoolsModule extends QuarkModule {
 				((StoolBlock) state.getBlock()).blockClicked(event.getWorld(), event.getPos());
 		}
 	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {

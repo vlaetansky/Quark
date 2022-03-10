@@ -78,7 +78,7 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 	}
 
 	@Override
-	public boolean isEnchantable(@Nonnull ItemStack p_41456_) {
+	public boolean isEnchantable(@Nonnull ItemStack stack) {
 		return false;
 	}
 
@@ -132,19 +132,18 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 	}
 
 	// vanilla copy
-	private static void playRemoveOneSound(Entity p_186343_) {
-		p_186343_.playSound(SoundEvents.BUNDLE_REMOVE_ONE, 0.8F, 0.8F + p_186343_.getLevel().getRandom().nextFloat() * 0.4F);
+	private static void playRemoveOneSound(Entity entity) {
+		entity.playSound(SoundEvents.BUNDLE_REMOVE_ONE, 0.8F, 0.8F + entity.getLevel().getRandom().nextFloat() * 0.4F);
 	}
 
-	private static void playInsertSound(Entity p_186352_) {
-		p_186352_.playSound(SoundEvents.BUNDLE_INSERT, 0.8F, 0.8F + p_186352_.getLevel().getRandom().nextFloat() * 0.4F);
+	private static void playInsertSound(Entity entity) {
+		entity.playSound(SoundEvents.BUNDLE_INSERT, 0.8F, 0.8F + entity.getLevel().getRandom().nextFloat() * 0.4F);
 	}
 
 
 	@OnlyIn(Dist.CLIENT)
 	public static float itemFraction(ItemStack stack, ClientLevel world, LivingEntity entityIn, int i) {
-		if(entityIn instanceof Player) {
-			Player player = (Player) entityIn;
+		if(entityIn instanceof Player player) {
 			if(player.containerMenu != null) {
 				ItemStack held = player.containerMenu.getCarried();
 
@@ -243,7 +242,7 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 
 				int range = SeedPouchModule.shiftRange;
 				int blocks = range * range;
-				int shift = -((int) Math.floor(range / 2));
+				int shift = -((int) Math.floor(range / 2f));
 
 				for(int i = 0; i < blocks; i++) {
 					int x = shift + i % range;
@@ -280,7 +279,7 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 		super.fillItemCategory(group, items);
 
 		if(SeedPouchModule.showAllVariantsInCreative && isEnabled() && allowdedIn(group)) {
-			List<Item> tagItems = null;
+			List<Item> tagItems;
 
 			try {
 				tagItems = MiscUtil.getTagValues(BuiltinRegistries.ACCESS, SeedPouchModule.seedPouchHoldableTag);
@@ -333,12 +332,7 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 
 	}
 
-	public static class Tooltip implements TooltipComponent {
-
-		public final ItemStack stack;
-		public Tooltip(ItemStack stack) {
-			this.stack = stack;
-		}
+	public record Tooltip(ItemStack stack) implements TooltipComponent {
 
 	}
 

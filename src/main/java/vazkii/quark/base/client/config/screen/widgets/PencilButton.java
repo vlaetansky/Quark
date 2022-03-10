@@ -17,8 +17,8 @@ public class PencilButton extends Button {
 	}
 
 	@Override
-	public void renderButton(@Nonnull PoseStack mstack, int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
-		super.renderButton(mstack, p_renderButton_1_, p_renderButton_2_, p_renderButton_3_);
+	public void renderButton(@Nonnull PoseStack mstack, int mouseX, int mouseY, float partialTicks) {
+		super.renderButton(mstack, mouseX, mouseY, partialTicks);
 
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

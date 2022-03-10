@@ -7,11 +7,11 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 
 import javax.annotation.Nonnull;
 
-public class DeferedFeature extends Feature<NoneFeatureConfiguration> {
+public class DeferredFeature extends Feature<NoneFeatureConfiguration> {
 
 	private final GenerationStep.Decoration stage;
 
-	public DeferedFeature(GenerationStep.Decoration stage) {
+	public DeferredFeature(GenerationStep.Decoration stage) {
 		super(NoneFeatureConfiguration.CODEC);
 		this.stage = stage;
 	}

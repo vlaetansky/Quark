@@ -10,6 +10,7 @@ import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 import java.util.function.BooleanSupplier;
 
 public class QuarkSignItem extends SignItem implements IQuarkItem {
@@ -20,7 +21,7 @@ public class QuarkSignItem extends SignItem implements IQuarkItem {
 	public QuarkSignItem(QuarkModule module, Block sign, Block wallSign) {
 		super(new Item.Properties().stacksTo(16).tab(CreativeModeTab.TAB_DECORATIONS), sign, wallSign);
 
-		RegistryHelper.registerItem(this, sign.getRegistryName().toString());
+		RegistryHelper.registerItem(this, Objects.toString(sign.getRegistryName()));
 		this.module = module;
 	}
 

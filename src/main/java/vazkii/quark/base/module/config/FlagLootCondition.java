@@ -1,29 +1,21 @@
 package vazkii.quark.base.module.config;
 
-import javax.annotation.Nonnull;
-
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.Serializer;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author WireSegal
  * Created at 1:23 PM on 8/24/19.
  */
-public class FlagLootCondition implements LootItemCondition {
-
-	private final ConfigFlagManager manager;
-	private final String flag;
-
-	public FlagLootCondition(ConfigFlagManager manager, String flag) {
-		this.manager = manager;
-		this.flag = flag;
-	}
+public record FlagLootCondition(ConfigFlagManager manager,
+								String flag) implements LootItemCondition {
 
 	@Override
 	public boolean test(LootContext lootContext) {

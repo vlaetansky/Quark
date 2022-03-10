@@ -1,11 +1,8 @@
 package vazkii.quark.content.mobs.client.model;
 
-import java.util.function.BiConsumer;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.ModelPart.Cube;
@@ -18,6 +15,7 @@ import vazkii.arl.util.ClientTicker;
 import vazkii.quark.content.mobs.entity.Toretoise;
 
 import javax.annotation.Nonnull;
+import java.util.function.BiConsumer;
 
 public class ToretoiseModel extends EntityModel<Toretoise> {
 
@@ -230,7 +228,7 @@ public class ToretoiseModel extends EntityModel<Toretoise> {
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack matrix, @Nonnull VertexConsumer vb, int p_225598_3_, int p_225598_4_, float p_225598_5_, float p_225598_6_, float p_225598_7_, float p_225598_8_) {
+	public void renderToBuffer(PoseStack matrix, @Nonnull VertexConsumer vb, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
 		matrix.pushPose();
 		int bufferTime = 10;
 		if(entity.angeryTicks > 0 && entity.angeryTicks < Toretoise.ANGERY_TIME - bufferTime) {
@@ -263,12 +261,12 @@ public class ToretoiseModel extends EntityModel<Toretoise> {
 		matrix.translate(0, bodyTrans, 0);
 		matrix.mulPose(Vector3f.ZP.rotation((bodyTrans - scale) * 0.5F));
 
-		body.render(matrix, vb, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
+		body.render(matrix, vb, packedLightIn, packedOverlayIn, red, green, blue, alpha);
 
 		matrix.pushPose();
 		matrix.translate(0, bodyTrans, rideMultiplier * 0.3);
 		head.xRot = bodyTrans * 2;
-		head.render(matrix, vb, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
+		head.render(matrix, vb, packedLightIn, packedOverlayIn, red, green, blue, alpha);
 		matrix.popPose();
 
 		float finalRideMultiplier = rideMultiplier;
@@ -297,7 +295,7 @@ public class ToretoiseModel extends EntityModel<Toretoise> {
 			float yRot = renderer.yRot;
 			renderer.xRot = rot;
 			renderer.yRot *= (1F - finalRideMultiplier);
-			renderer.render(matrix, vb, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
+			renderer.render(matrix, vb, packedLightIn, packedOverlayIn, red, green, blue, alpha);
 			renderer.yRot = yRot;
 			matrix.popPose();
 		};

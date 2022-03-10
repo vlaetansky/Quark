@@ -21,19 +21,19 @@ import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 
 public class QuarkPistonBlockEntityRenderer {
 
-	public static boolean renderPistonBlock(PistonMovingBlockEntity piston, float pTicks, PoseStack matrix, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
-		if (!PistonsMoveTileEntitiesModule.staticEnabled || piston.getProgress(pTicks) > 1.0F)
+	public static boolean renderPistonBlock(PistonMovingBlockEntity piston, float partialTicks, PoseStack matrix, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+		if (!PistonsMoveTileEntitiesModule.staticEnabled || piston.getProgress(partialTicks) > 1.0F)
 			return false;
 
 		BlockState state = piston.getMovedState();
 		BlockPos truePos = piston.getBlockPos();
 		BlockEntity tile = PistonsMoveTileEntitiesModule.getMovement(piston.getLevel(), truePos);
-		Vec3 offset = new Vec3(piston.getXOff(pTicks), piston.getYOff(pTicks), piston.getZOff(pTicks));
+		Vec3 offset = new Vec3(piston.getXOff(partialTicks), piston.getYOff(partialTicks), piston.getZOff(partialTicks));
 		
-		return renderTESafely(piston.getLevel(), truePos, state, tile, piston, pTicks, offset, matrix, bufferIn, combinedLightIn, combinedOverlayIn);
+		return renderTESafely(piston.getLevel(), truePos, state, tile, piston, partialTicks, offset, matrix, bufferIn, combinedLightIn, combinedOverlayIn);
 	}
 	
-	public static boolean renderTESafely(Level world, BlockPos truePos, BlockState state, BlockEntity tile, BlockEntity sourceTE, float pTicks, Vec3 offset, PoseStack matrix, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+	public static boolean renderTESafely(Level world, BlockPos truePos, BlockState state, BlockEntity tile, BlockEntity sourceTE, float partialTicks, Vec3 offset, PoseStack matrix, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 		Block block = state.getBlock();
 		String id = Objects.toString(block.getRegistryName());
 		
@@ -52,7 +52,7 @@ public class QuarkPistonBlockEntityRenderer {
 				matrix.translate(offset.x, offset.y, offset.z);
 
 				tile.blockState = state;
-				tileentityrenderer.render(tile, pTicks, matrix, bufferIn, combinedLightIn, combinedOverlayIn);
+				tileentityrenderer.render(tile, partialTicks, matrix, bufferIn, combinedLightIn, combinedOverlayIn);
 			}
 		} catch(Throwable e) {
 			Quark.LOG.warn(id + " can't be rendered for piston TE moving", e);

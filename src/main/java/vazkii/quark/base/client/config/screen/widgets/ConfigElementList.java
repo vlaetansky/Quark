@@ -1,10 +1,6 @@
 package vazkii.quark.base.client.config.screen.widgets;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
@@ -17,6 +13,8 @@ import vazkii.quark.base.client.config.screen.CategoryScreen;
 import vazkii.quark.base.client.handler.TopLayerTooltipHandler;
 
 import javax.annotation.Nonnull;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ConfigElementList<T extends IConfigElement & IWidgetProvider> extends ScrollableWidgetList<CategoryScreen, ConfigElementList.Entry<T>> {
 
@@ -35,7 +33,7 @@ public class ConfigElementList<T extends IConfigElement & IWidgetProvider> exten
 			isObject = elm instanceof IConfigObject;
 
 			if(wasObject && !isObject && hadObjects)
-				addEntry(new Entry<T>(parent, null)); // separator
+				addEntry(new Entry<>(parent, null)); // separator
 
 			Entry<T> entry = new Entry<>(parent, (T) elm);
 			addEntry(entry);
@@ -56,8 +54,8 @@ public class ConfigElementList<T extends IConfigElement & IWidgetProvider> exten
 		}
 
 		@Override
-		public void render(PoseStack mstack, int index, int rowTop, int rowLeft, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float pticks) {
-			super.render(mstack, index, rowTop, rowLeft, rowWidth, rowHeight, mouseX, mouseY, hovered, pticks);
+		public void render(@Nonnull PoseStack mstack, int index, int rowTop, int rowLeft, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float partialTicks) {
+			super.render(mstack, index, rowTop, rowLeft, rowWidth, rowHeight, mouseX, mouseY, hovered, partialTicks);
 
 			Minecraft mc = Minecraft.getInstance();
 
@@ -111,7 +109,7 @@ public class ConfigElementList<T extends IConfigElement & IWidgetProvider> exten
 				mc.font.drawShadow(mstack, element.getSubtitle(), left, top + 10, 0x999999);
 			} else {
 				String s = I18n.get("quark.gui.config.subcategories");
-				mc.font.drawShadow(mstack, s, rowLeft + (rowWidth - mc.font.width(s)) / 2, rowTop + 7, 0x6666FF);
+				mc.font.drawShadow(mstack, s, rowLeft + (float) (rowWidth / 2 - mc.font.width(s) / 2), rowTop + 7, 0x6666FF);
 			}
 		}
 

@@ -56,7 +56,7 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 				player.containerMenu.slotsChanged(slot.container);
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -70,18 +70,14 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 		if(enableArmorInteraction && armorOverride(stack, incoming, slot, action, player))
 			return true;
 
-		if(enableShulkerBoxInteraction && shulkerOverride(stack, incoming, slot, action, player, true))
-			return true;
-
-		return false;
+		return enableShulkerBoxInteraction && shulkerOverride(stack, incoming, slot, action, player, true);
 	}
 
 	private static boolean armorOverride(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player) {
 		if(incoming.isEmpty()) {
 			EquipmentSlot equipSlot = null;
 
-			if(stack.getItem() instanceof ArmorItem) {
-				ArmorItem armor = (ArmorItem) stack.getItem();
+			if(stack.getItem() instanceof ArmorItem armor) {
 				equipSlot = armor.getSlot();
 			} else if(stack.getItem() instanceof ElytraItem)
 				equipSlot = EquipmentSlot.CHEST;
@@ -89,7 +85,7 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 			if(equipSlot != null) {
 				ItemStack currArmor = player.getItemBySlot(equipSlot);
 
-				if(slot.mayPickup(player) && slot.mayPlace(currArmor)) 
+				if(slot.mayPickup(player) && slot.mayPlace(currArmor))
 					if(currArmor.isEmpty() || (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BINDING_CURSE, currArmor) == 0 && currArmor != stack)) {
 						int index = slot.getSlotIndex();
 						if(index < slot.container.getContainerSize()) {
@@ -107,12 +103,12 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 	}
 
 	public static boolean lavaBucketOverride(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player) {
-		if(stack.getItem() == Items.LAVA_BUCKET 
-				&& !incoming.isEmpty() 
-				&& !player.isCreative() 
-				&& slot.allowModification(player) 
-				&& slot.mayPlace(stack) 
-				&& !incoming.getItem().isFireResistant() 
+		if(stack.getItem() == Items.LAVA_BUCKET
+				&& !incoming.isEmpty()
+				&& !player.isCreative()
+				&& slot.allowModification(player)
+				&& slot.mayPlace(stack)
+				&& !incoming.getItem().isFireResistant()
 				&& !SimilarBlockTypeHandler.isShulkerBox(incoming)) {
 
 			incoming.setCount(0);
@@ -149,7 +145,7 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 
 		if (cmp != null) {
 			BlockEntity te = null;
-			cmp = cmp.copy();	
+			cmp = cmp.copy();
 			cmp.putString("id", "minecraft:shulker_box");
 			if (shulkerBox.getItem() instanceof BlockItem) {
 				Block shulkerBoxBlock = Block.byItem(shulkerBox.getItem());

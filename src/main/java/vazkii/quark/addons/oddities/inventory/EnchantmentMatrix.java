@@ -1,14 +1,5 @@
 package vazkii.quark.addons.oddities.inventory;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
-import java.util.stream.Collectors;
-
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -23,6 +14,10 @@ import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import vazkii.quark.addons.oddities.module.MatrixEnchantingModule;
 
 import javax.annotation.Nonnull;
+import java.awt.*;
+import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class EnchantmentMatrix {
 
@@ -171,7 +166,7 @@ public class EnchantmentMatrix {
 				wrapper.mutableWeight.val++;
 		}
 
-		return WeightedRandom.getRandomItem(rng, validEnchants).get();
+		return WeightedRandom.getRandomItem(rng, validEnchants).orElse(null);
 	}
 
 	public boolean place(int id, int x, int y) {
@@ -330,14 +325,11 @@ public class EnchantmentMatrix {
 		if(level >= enchantment.getMaxLevel())
 			return 0;
 
-		switch(enchantment.getRarity()) {
-			case COMMON:
-				return level;
-			case UNCOMMON:
-				return level / 2 + 1;
-			default:
-				return 1;
-		}
+		return switch (enchantment.getRarity()) {
+			case COMMON -> level;
+			case UNCOMMON -> level / 2 + 1;
+			default -> 1;
+		};
 	}
 
 	public static int getValue(Enchantment enchantment, int level) {
@@ -468,7 +460,7 @@ public class EnchantmentMatrix {
 
 		private boolean marked;
 		private int influence;
-		private MutableWeight mutableWeight;
+		private final MutableWeight mutableWeight;
 
 		public EnchantmentDataWrapper(Enchantment enchantmentObj, int enchLevel) {
 			super(enchantmentObj, enchLevel);
@@ -477,21 +469,13 @@ public class EnchantmentMatrix {
 
 		public void normalizeRarity(Map<Enchantment, Integer> influences, List<Piece> markedEnchants) {
 			if(MatrixEnchantingModule.normalizeRarity) {
-				switch(enchantment.getRarity()) {
-				case COMMON:
-					mutableWeight.val = 80000;
-					break;
-				case UNCOMMON:
-					mutableWeight.val = 40000;
-					break;
-				case RARE:
-					mutableWeight.val = 25000;
-					break;
-				case VERY_RARE:
-					mutableWeight.val = 5000;
-					break;
-				default:
-					break;
+				switch (enchantment.getRarity()) {
+					case COMMON -> mutableWeight.val = 80000;
+					case UNCOMMON -> mutableWeight.val = 40000;
+					case RARE -> mutableWeight.val = 25000;
+					case VERY_RARE -> mutableWeight.val = 5000;
+					default -> {
+					}
 				}
 
 				influence = influences.getOrDefault(enchantment, 0);

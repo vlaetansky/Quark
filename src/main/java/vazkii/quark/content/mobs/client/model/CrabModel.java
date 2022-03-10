@@ -1,12 +1,9 @@
 package vazkii.quark.content.mobs.client.model;
 
-import java.util.Set;
-
 import com.google.common.collect.ImmutableSet;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -18,6 +15,7 @@ import net.minecraft.util.Mth;
 import vazkii.quark.content.mobs.entity.Crab;
 
 import javax.annotation.Nonnull;
+import java.util.Set;
 
 public class CrabModel extends EntityModel<Crab> {
 
@@ -210,13 +208,13 @@ public class CrabModel extends EntityModel<Crab> {
 
 
 	@Override
-	public void renderToBuffer(PoseStack matrix, @Nonnull VertexConsumer vb, int p_225598_3_, int p_225598_4_, float p_225598_5_, float p_225598_6_, float p_225598_7_, float p_225598_8_) {
+	public void renderToBuffer(PoseStack matrix, @Nonnull VertexConsumer vb, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
 		matrix.pushPose();
 		matrix.translate(0, 1.5 - crabSize * 1.5, 0);
 		matrix.scale(crabSize, crabSize, crabSize);
 		matrix.mulPose(Vector3f.YP.rotationDegrees(90F));
 		matrix.translate(wiggleX, wiggleY, 0);
-		group.render(matrix, vb, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
+		group.render(matrix, vb, packedLightIn, packedOverlayIn, red, green, blue, alpha);
 		matrix.popPose();
 	}
 

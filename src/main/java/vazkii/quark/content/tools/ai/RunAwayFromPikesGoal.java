@@ -1,12 +1,5 @@
 package vazkii.quark.content.tools.ai;
 
-import java.util.EnumSet;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
-import com.google.common.base.Predicates;
-
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -17,6 +10,10 @@ import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import vazkii.quark.content.tools.entity.SkullPike;
+
+import javax.annotation.Nullable;
+import java.util.EnumSet;
+import java.util.List;
 
 // Mostly a copy of AvoidEntityGoal cleaned up to work with pikes
 public class RunAwayFromPikesGoal extends Goal {
@@ -35,7 +32,7 @@ public class RunAwayFromPikesGoal extends Goal {
 		farSpeed = nearSpeedIn;
 		nearSpeed = farSpeedIn;
 		navigation = entityIn.getNavigation();
-		setFlags(EnumSet.of(Goal.Flag.MOVE));
+		setFlags(EnumSet.of(Flag.MOVE));
 	}
 
 	@Override
@@ -43,22 +40,22 @@ public class RunAwayFromPikesGoal extends Goal {
 		avoidTarget = getClosestEntity(entity.level, entity, entity.getX(), entity.getY(), entity.getZ(), entity.getBoundingBox().inflate(avoidDistance, 3.0D, avoidDistance));
 		if(avoidTarget == null)
 			return false;
-		
+
 		Vec3 posToMove = DefaultRandomPos.getPosAway(entity, 16, 7, avoidTarget.position());
 		if(posToMove == null)
 			return false;
-		
+
 		if(avoidTarget.distanceToSqr(posToMove.x, posToMove.y, posToMove.z) < avoidTarget.distanceToSqr(entity))
 			return false;
-			
-			
+
+
 		path = navigation.createPath(posToMove.x, posToMove.y, posToMove.z, 0);
 		return path != null;
 	}
 
 	@Nullable
-	private SkullPike getClosestEntity(Level world, LivingEntity p_225318_3_, double p_225318_4_, double p_225318_6_, double p_225318_8_, AABB p_225318_10_) {
-		return getClosestEntity(world.getEntitiesOfClass(SkullPike.class, p_225318_10_, Predicates.alwaysTrue()), p_225318_3_, p_225318_4_, p_225318_6_, p_225318_8_);
+	private SkullPike getClosestEntity(Level world, LivingEntity living, double x, double y, double z, AABB bounds) {
+		return getClosestEntity(world.getEntitiesOfClass(SkullPike.class, bounds, skullPike -> true), living, x, y, z);
 	}
 
 	@Nullable
@@ -69,7 +66,7 @@ public class RunAwayFromPikesGoal extends Goal {
 		for(SkullPike t1 : entities) {
 			if(!t1.isVisible(target))
 				continue;
-			
+
 			double d1 = t1.distanceToSqr(x, y, z);
 			if (d0 == -1.0D || d1 < d0) {
 				d0 = d1;

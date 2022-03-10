@@ -92,7 +92,7 @@ public class RunAndPoofGoal<T extends Entity> extends Goal {
 
 		BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 		Vec3 epos = entity.position();
-		
+
 		for (int i = 0; i < 8; ++i) {
 			int j = Mth.floor(epos.x + (i % 2 - 0.5F) * 0.1F + entity.getEyeHeight());
 			int k = Mth.floor(epos.y + ((i >> 1) % 2 - 0.5F) * entity.getBbWidth() * 0.8F);
@@ -125,8 +125,7 @@ public class RunAndPoofGoal<T extends Entity> extends Goal {
 
 		Level world = entity.level;
 
-		if (world instanceof ServerLevel) {
-			ServerLevel ws = (ServerLevel) world;
+		if (world instanceof ServerLevel ws) {
 			Vec3 epos = entity.position();
 
 			ws.sendParticles(ParticleTypes.CLOUD, epos.x, epos.y, epos.z, 40, 0.5, 0.5, 0.5, 0.1);

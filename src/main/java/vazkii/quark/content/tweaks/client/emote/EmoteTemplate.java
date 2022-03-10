@@ -1,32 +1,21 @@
 package vazkii.quark.content.tweaks.client.emote;
 
+import com.google.common.collect.Lists;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import vazkii.aurelienribon.tweenengine.*;
+import vazkii.quark.base.Quark;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Stack;
-
-import com.google.common.collect.Lists;
-
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import vazkii.aurelienribon.tweenengine.BaseTween;
-import vazkii.aurelienribon.tweenengine.Timeline;
-import vazkii.aurelienribon.tweenengine.Tween;
-import vazkii.aurelienribon.tweenengine.TweenCallback;
-import vazkii.aurelienribon.tweenengine.TweenEquation;
-import vazkii.aurelienribon.tweenengine.TweenEquations;
-import vazkii.quark.base.Quark;
+import java.util.*;
 
 @OnlyIn(Dist.CLIENT)
 public class EmoteTemplate {
@@ -56,7 +45,7 @@ public class EmoteTemplate {
 		for(Field f : fields) {
 			if(f.getType() != int.class)
 				continue;
-			
+
 			int modifiers = f.getModifiers();
 			if(Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers)) {
 				try {
@@ -71,7 +60,7 @@ public class EmoteTemplate {
 				}
 			}
 		}
-		
+
 		clazz = TweenEquations.class;
 		fields = clazz.getDeclaredFields();
 		for(Field f : fields) {
@@ -88,7 +77,7 @@ public class EmoteTemplate {
 	}
 
 	public final String file;
-	
+
 	public List<String> readLines;
 	public List<Integer> usedParts;
 	public Stack<Timeline> timelineStack;
@@ -98,7 +87,7 @@ public class EmoteTemplate {
 	public boolean compiledOnce = false;
 
 	private List<EmoteSound> activeSounds = Lists.newArrayList();
-	
+
 	public EmoteTemplate(String file) {
 		this.file = file;
 		readAndMakeTimeline(null, null, null);
@@ -123,14 +112,14 @@ public class EmoteTemplate {
 				logError(e, i);
 				return Timeline.createSequence();
 			}
-			
-			if(timeline == null) 
+
+			if(timeline == null)
 				return Timeline.createSequence();
-			
+
 			return timeline;
 		}
 	}
-	
+
 	public Timeline readAndMakeTimeline(EmoteDescriptor desc, Player player, HumanoidModel<?> model) {
 		Timeline timeline = null;
 		usedParts = new ArrayList<>();
@@ -155,7 +144,7 @@ public class EmoteTemplate {
 				return fallback();
 			}
 
-			if(timeline == null) 
+			if(timeline == null)
 				return fallback();
 
 			return timeline;
@@ -168,15 +157,15 @@ public class EmoteTemplate {
 				desc.updateTier(this);
 		}
 	}
-	
+
 	protected BufferedReader createReader() throws FileNotFoundException {
 		return new BufferedReader(new InputStreamReader(Quark.class.getResourceAsStream("/assets/quark/emotes/" + file)));
 	}
-	
+
 	protected Timeline fallback() {
 		return Timeline.createSequence();
 	}
-	
+
 	private void logError(Exception e, int line) {
 		Quark.LOG.error("[Custom Emotes] Error loading line " + (line + 1) + " of emote " + file);
 		if(!(e instanceof IllegalArgumentException)) {
@@ -189,18 +178,18 @@ public class EmoteTemplate {
 		s = s.trim();
 		if(s.startsWith("#") || s.isEmpty())
 			return timeline;
-		
+
 		String[] tokens = s.trim().split(" ");
 		String function = tokens[0];
-		
+
 		if(functions.containsKey(function))
 			return functions.get(function).invoke(this, model, player, timeline, tokens);
 
 		throw new IllegalArgumentException("Illegal function name " + function);
 	}
-	
+
 	protected void setName(String[] tokens) { }
-	
+
 	private static Timeline name(EmoteTemplate em, Timeline timeline, String[] tokens) throws IllegalArgumentException {
 		em.setName(tokens);
 		return timeline;
@@ -209,7 +198,7 @@ public class EmoteTemplate {
 	private static Timeline use(EmoteTemplate em, Timeline timeline, String[] tokens) throws IllegalArgumentException {
 		if(em.compiledOnce)
 			return timeline;
-		
+
 		assertParamSize(tokens, 2);
 
 		String part = tokens[1];
@@ -232,7 +221,7 @@ public class EmoteTemplate {
 		em.tier = Integer.parseInt(tokens[1]);
 		return timeline;
 	}
-	
+
 	private static Timeline animation(EmoteTemplate em, Timeline timeline, String[] tokens) throws IllegalArgumentException {
 		if(timeline != null)
 			throw new IllegalArgumentException("Illegal use of function animation, animation already started");
@@ -241,18 +230,11 @@ public class EmoteTemplate {
 
 		String type = tokens[1];
 
-		Timeline newTimeline;
-
-		switch(type) {
-			case "sequence":
-				newTimeline = Timeline.createSequence();
-				break;
-			case "parallel":
-				newTimeline = Timeline.createParallel();
-				break;
-			default:
-				throw new IllegalArgumentException("Illegal animation type: " + type);
-		}
+		Timeline newTimeline = switch (type) {
+			case "sequence" -> Timeline.createSequence();
+			case "parallel" -> Timeline.createParallel();
+			default -> throw new IllegalArgumentException("Illegal animation type: " + type);
+		};
 
 		newTimeline.addCallback(TweenCallback.START, (tween) -> {
 			EmoteSound.endAll(em.activeSounds);
@@ -267,16 +249,11 @@ public class EmoteTemplate {
 		assertParamSize(tokens, 2);
 
 		String type = tokens[1];
-		Timeline newTimeline;
-		switch(type) {
-			case "sequence":
-				newTimeline = Timeline.createSequence();
-				break;
-			case "parallel":
-				newTimeline = Timeline.createParallel();
-				break;
-			default: throw new IllegalArgumentException("Illegal section type: " + type);
-		}
+		Timeline newTimeline = switch (type) {
+			case "sequence" -> Timeline.createSequence();
+			case "parallel" -> Timeline.createParallel();
+			default -> throw new IllegalArgumentException("Illegal section type: " + type);
+		};
 
 		em.timelineStack.push(timeline);
 		return newTimeline;
@@ -308,7 +285,7 @@ public class EmoteTemplate {
 		if(tweenables.containsKey(partStr))
 			part = tweenables.get(partStr);
 		else throw new IllegalArgumentException("Illegal part name for function move: " + partStr);
-		
+
 		float time = Float.parseFloat(tokens[2]) * em.speed;
 		float target = Float.parseFloat(tokens[3]);
 
@@ -322,36 +299,35 @@ public class EmoteTemplate {
 				String cmd = tokens[index++];
 				int times;
 				float delay;
-				switch(cmd) {
-					case "delay":
+				switch (cmd) {
+					case "delay" -> {
 						assertParamSize("delay", tokens, 1, index);
 						delay = Float.parseFloat(tokens[index++]) * em.speed;
-						if(valid)
+						if (valid)
 							tween = tween.delay(delay);
-						break;
-					case "yoyo":
+					}
+					case "yoyo" -> {
 						assertParamSize("yoyo", tokens, 2, index);
 						times = Integer.parseInt(tokens[index++]);
 						delay = Float.parseFloat(tokens[index++]) * em.speed;
-						if(valid)
+						if (valid)
 							tween = tween.repeatYoyo(times, delay);
-						break;
-					case "repeat":
+					}
+					case "repeat" -> {
 						assertParamSize("repeat", tokens, 2, index);
 						times = Integer.parseInt(tokens[index++]);
 						delay = Float.parseFloat(tokens[index++]) * em.speed;
-						if(valid)
+						if (valid)
 							tween = tween.repeat(times, delay);
-						break;
-					case "ease":
+					}
+					case "ease" -> {
 						assertParamSize("ease", tokens, 1, index);
 						String easeType = tokens[index++];
-						if(equations.containsKey(easeType)) {
-							if(valid) tween.ease(equations.get(easeType));
+						if (equations.containsKey(easeType)) {
+							if (valid) tween.ease(equations.get(easeType));
 						} else throw new IllegalArgumentException("Easing type " + easeType + " doesn't exist");
-						break;
-					default:
-						throw new IllegalArgumentException(String.format("Invalid modifier %s for move function", cmd));
+					}
+					default -> throw new IllegalArgumentException(String.format("Invalid modifier %s for move function", cmd));
 				}
 			}
 		}
@@ -433,7 +409,7 @@ public class EmoteTemplate {
 
 		return timeline;
 	}
-	
+
 	private static Timeline reset(EmoteTemplate em, HumanoidModel<?> model, Timeline timeline, String[] tokens) throws IllegalArgumentException {
 		if(tokens.length < 4)
 			throw new IllegalArgumentException(String.format("Illegal parameter amount for function reset: %d (at least 4 are required)", tokens.length));
@@ -442,32 +418,32 @@ public class EmoteTemplate {
 		boolean allParts = part.equals("all");
 		if(!allParts && !parts.containsKey(part))
 			throw new IllegalArgumentException("Illegal part name for function reset: " + part);
-		
+
 		String type = tokens[2];
 		boolean all = type.equals("all");
 		boolean rot = all || type.equals("rotation");
 		boolean off = all || type.equals("offset");
-		
+
 		if(!rot && !off)
 			throw new IllegalArgumentException("Illegal reset type: " + type);
-		
+
 		int partInt = allParts ? 0 : parts.get(part);
 		float time = Float.parseFloat(tokens[3]) * em.speed;
-		
+
 		if(model != null) {
 			Timeline parallel = Timeline.createParallel();
 			int lower = allParts ? 0 : partInt + (rot ? 0 : 3);
 			int upper = allParts ? ModelAccessor.STATE_COUNT : partInt + (off ? ModelAccessor.STATE_COUNT : 3);
-			
+
 			for(int i = lower; i < upper; i++) {
 				int piece = (i / ModelAccessor.MODEL_PROPS) * ModelAccessor.MODEL_PROPS;
 				if(em.usedParts.contains(piece))
 					parallel.push(Tween.to(model, i, time));
 			}
-			
+
 			timeline.push(parallel);
 		}
-		
+
 		return timeline;
 	}
 
@@ -490,7 +466,7 @@ public class EmoteTemplate {
 		float delay = Float.parseFloat(tokens[2]) * em.speed;
 		return timeline.repeat(times, delay);
 	}
-	
+
 	private static void assertParamSize(String[] tokens, int expect) throws IllegalArgumentException {
 		if(tokens.length != expect)
 			throw new IllegalArgumentException(String.format("Illegal parameter amount for function %s: %d (expected %d)", tokens[0], tokens.length, expect));
@@ -506,7 +482,7 @@ public class EmoteTemplate {
 			throw new IllegalArgumentException(String.format("Illegal parameter amount for move modifier %s: %d (expected at least %d)", mod, tokens.length, expect));
 	}
 
-	public boolean usesBodyPart(int part) {	
+	public boolean usesBodyPart(int part) {
 		return usedParts.contains(part);
 	}
 

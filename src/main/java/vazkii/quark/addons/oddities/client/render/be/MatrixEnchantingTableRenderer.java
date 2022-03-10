@@ -24,15 +24,15 @@ import javax.annotation.Nonnull;
 public class MatrixEnchantingTableRenderer implements BlockEntityRenderer<MatrixEnchantingTableBlockEntity> {
 
 	public static final Material TEXTURE_BOOK = EnchantTableRenderer.BOOK_LOCATION;
-	private BookModel modelBook;
+	private final BookModel modelBook;
 
 	public MatrixEnchantingTableRenderer(BlockEntityRendererProvider.Context context) {
 		modelBook = new BookModel(context.bakeLayer(ModelLayers.BOOK));
 	}
 
 	@Override
-	public void render(MatrixEnchantingTableBlockEntity te, float pticks, @Nonnull PoseStack matrix, @Nonnull MultiBufferSource buffer, int light, int overlay) {
-		float time = te.tickCount + pticks;
+	public void render(MatrixEnchantingTableBlockEntity te, float partialTicks, @Nonnull PoseStack matrix, @Nonnull MultiBufferSource buffer, int light, int overlay) {
+		float time = te.tickCount + partialTicks;
 
 		float f1 = te.bookRotation - te.bookRotationPrev;
 		while (f1 >= Math.PI)
@@ -40,10 +40,10 @@ public class MatrixEnchantingTableRenderer implements BlockEntityRenderer<Matrix
 		while (f1 < -Math.PI)
 			f1 += (Math.PI * 2F);
 
-		float rot = te.bookRotationPrev + f1 * pticks;
-		float bookOpen = te.bookSpreadPrev + (te.bookSpread - te.bookSpreadPrev) * pticks;
+		float rot = te.bookRotationPrev + f1 * partialTicks;
+		float bookOpen = te.bookSpreadPrev + (te.bookSpread - te.bookSpreadPrev) * partialTicks;
 
-		renderBook(te, time, rot, pticks, matrix, buffer, light, overlay);
+		renderBook(te, time, rot, partialTicks, matrix, buffer, light, overlay);
 
 		ItemStack item = te.getItem(0);
 		if(!item.isEmpty())
@@ -76,11 +76,12 @@ public class MatrixEnchantingTableRenderer implements BlockEntityRenderer<Matrix
 		matrixStackIn.pushPose();
 		matrixStackIn.translate(0.5D, 0.75D, 0.5D);
 		float f = (float) tileEntityIn.tickCount + partialTicks;
-		matrixStackIn.translate(0.0D, (double)(0.1F + Mth.sin(f * 0.1F) * 0.01F), 0.0D);
+		matrixStackIn.translate(0.0D, 0.1F + Mth.sin(f * 0.1F) * 0.01F, 0.0D);
 
 		float f1;
-		for(f1 = tileEntityIn.bookRotation - tileEntityIn.bookRotationPrev; f1 >= (float)Math.PI; f1 -= ((float)Math.PI * 2F)) {
-			;
+		f1 = tileEntityIn.bookRotation - tileEntityIn.bookRotationPrev;
+		while (f1 >= (float)Math.PI) {
+			f1 -= ((float) Math.PI * 2F);
 		}
 
 		while(f1 < -(float)Math.PI) {

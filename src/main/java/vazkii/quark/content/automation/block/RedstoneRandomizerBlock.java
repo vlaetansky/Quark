@@ -1,10 +1,5 @@
 package vazkii.quark.content.automation.block;
 
-import java.util.EnumSet;
-import java.util.Random;
-
-import javax.annotation.Nonnull;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -35,6 +30,10 @@ import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.automation.base.RandomizerPowerState;
+
+import javax.annotation.Nonnull;
+import java.util.EnumSet;
+import java.util.Random;
 
 /**
  * @author WireSegal
@@ -111,14 +110,11 @@ public class RedstoneRandomizerBlock extends QuarkBlock {
 	@Override
 	public int getSignal(BlockState blockState, @Nonnull BlockGetter blockAccess, @Nonnull BlockPos pos, @Nonnull Direction side) {
 		RandomizerPowerState powerState = blockState.getValue(POWERED);
-		switch (powerState) {
-			case RIGHT:
-				return blockState.getValue(FACING).getClockWise() == side ? 15 : 0;
-			case LEFT:
-				return blockState.getValue(FACING).getCounterClockWise() == side ? 15 : 0;
-			default:
-				return 0;
-		}
+		return switch (powerState) {
+			case RIGHT -> blockState.getValue(FACING).getClockWise() == side ? 15 : 0;
+			case LEFT -> blockState.getValue(FACING).getCounterClockWise() == side ? 15 : 0;
+			default -> 0;
+		};
 	}
 
 	@Override

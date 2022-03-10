@@ -1,13 +1,8 @@
 package vazkii.quark.content.tools.client.render;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.google.common.base.Function;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
-
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
@@ -17,6 +12,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.base.Quark;
 import vazkii.quark.content.tools.module.ColorRunesModule;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
 
 @OnlyIn(Dist.CLIENT)
 public class GlintRenderTypes extends RenderType {
@@ -42,10 +41,10 @@ public class GlintRenderTypes extends RenderType {
 		addGlintTypes(map, armorGlint);
 		addGlintTypes(map, armorEntityGlint);
 	}
-	
+
 	private static List<RenderType> newRenderList(Function<String, RenderType> func) {
 		ArrayList<RenderType> list = new ArrayList<>(ColorRunesModule.RUNE_TYPES + 1);
-		
+
 		for (DyeColor color : DyeColor.values())
 			list.add(func.apply(color.getName()));
 		list.add(func.apply("rainbow"));
@@ -53,7 +52,7 @@ public class GlintRenderTypes extends RenderType {
 
 		return list;
 	}
-	
+
 	private static void addGlintTypes(Object2ObjectLinkedOpenHashMap<RenderType, BufferBuilder> map, List<RenderType> typeList) {
 		for(RenderType renderType : typeList)
 			if (!map.containsKey(renderType))
@@ -61,9 +60,9 @@ public class GlintRenderTypes extends RenderType {
 	}
 
 	private static RenderType buildGlintRenderType(String name) {
-		return RenderType.create("glint_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, RenderType.CompositeState.builder()
+		return RenderType.create("glint_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, CompositeState.builder()
 			.setShaderState(RenderStateShard.RENDERTYPE_GLINT_SHADER)
-			.setTextureState(new RenderStateShard.TextureStateShard(texture(name), true, false))
+			.setTextureState(new TextureStateShard(texture(name), true, false))
 			.setWriteMaskState(RenderStateShard.COLOR_WRITE)
 			.setCullState(RenderStateShard.NO_CULL)
 			.setDepthTestState(RenderStateShard.EQUAL_DEPTH_TEST)
@@ -72,11 +71,11 @@ public class GlintRenderTypes extends RenderType {
 			.setTexturingState(RenderStateShard.GLINT_TEXTURING)
 			.createCompositeState(false));
 	}
-	
+
 	private static RenderType buildGlintTranslucentRenderType(String name) {
-		return RenderType.create("glint_translucent_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, RenderType.CompositeState.builder()
+		return RenderType.create("glint_translucent_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, CompositeState.builder()
 			.setShaderState(RenderStateShard.RENDERTYPE_GLINT_TRANSLUCENT_SHADER)
-			.setTextureState(new RenderStateShard.TextureStateShard(texture(name), true, false))
+			.setTextureState(new TextureStateShard(texture(name), true, false))
 			.setWriteMaskState(RenderStateShard.COLOR_WRITE)
 			.setCullState(RenderStateShard.NO_CULL)
 			.setDepthTestState(RenderStateShard.EQUAL_DEPTH_TEST)
@@ -87,9 +86,9 @@ public class GlintRenderTypes extends RenderType {
 	}
 
 	private static RenderType buildEntityGlintRenderType(String name) {
-		return RenderType.create("entity_glint_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, RenderType.CompositeState.builder()
+		return RenderType.create("entity_glint_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, CompositeState.builder()
 			.setShaderState(RenderStateShard.RENDERTYPE_ENTITY_GLINT_SHADER)
-			.setTextureState(new RenderStateShard.TextureStateShard(texture(name), true, false))
+			.setTextureState(new TextureStateShard(texture(name), true, false))
 			.setWriteMaskState(RenderStateShard.COLOR_WRITE)
 			.setCullState(RenderStateShard.NO_CULL)
 			.setDepthTestState(RenderStateShard.EQUAL_DEPTH_TEST)
@@ -99,11 +98,11 @@ public class GlintRenderTypes extends RenderType {
 			.createCompositeState(false));
 	}
 
- 
+
 	private static RenderType buildGlintDirectRenderType(String name) {
-		return RenderType.create("glint_direct_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, RenderType.CompositeState.builder()
+		return RenderType.create("glint_direct_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, CompositeState.builder()
 			.setShaderState(RenderStateShard.RENDERTYPE_GLINT_DIRECT_SHADER)
-			.setTextureState(new RenderStateShard.TextureStateShard(texture(name), true, false))
+			.setTextureState(new TextureStateShard(texture(name), true, false))
 			.setWriteMaskState(RenderStateShard.COLOR_WRITE)
 			.setCullState(RenderStateShard.NO_CULL)
 			.setDepthTestState(RenderStateShard.EQUAL_DEPTH_TEST)
@@ -112,11 +111,11 @@ public class GlintRenderTypes extends RenderType {
 			.createCompositeState(false));
 	}
 
-	
+
 	private static RenderType buildEntityGlintDriectRenderType(String name) {
-		return RenderType.create("entity_glint_direct_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, RenderType.CompositeState.builder()
+		return RenderType.create("entity_glint_direct_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, CompositeState.builder()
 			.setShaderState(RenderStateShard.RENDERTYPE_ENTITY_GLINT_DIRECT_SHADER)
-			.setTextureState(new RenderStateShard.TextureStateShard(texture(name), true, false))
+			.setTextureState(new TextureStateShard(texture(name), true, false))
 			.setWriteMaskState(RenderStateShard.COLOR_WRITE)
 			.setCullState(RenderStateShard.NO_CULL)
 			.setDepthTestState(RenderStateShard.EQUAL_DEPTH_TEST)
@@ -124,11 +123,11 @@ public class GlintRenderTypes extends RenderType {
 			.setTexturingState(RenderStateShard.ENTITY_GLINT_TEXTURING)
 			.createCompositeState(false));
 	}
-	
+
 	private static RenderType buildArmorGlintRenderType(String name) {
-		return RenderType.create("armor_glint_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, RenderType.CompositeState.builder()
+		return RenderType.create("armor_glint_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, CompositeState.builder()
 			.setShaderState(RenderStateShard.RENDERTYPE_ARMOR_GLINT_SHADER)
-			.setTextureState(new RenderStateShard.TextureStateShard(texture(name), true, false))
+			.setTextureState(new TextureStateShard(texture(name), true, false))
 			.setWriteMaskState(RenderStateShard.COLOR_WRITE)
 			.setCullState(RenderStateShard.NO_CULL)
 			.setDepthTestState(RenderStateShard.EQUAL_DEPTH_TEST)
@@ -137,11 +136,11 @@ public class GlintRenderTypes extends RenderType {
 			.setLayeringState(RenderStateShard.VIEW_OFFSET_Z_LAYERING)
 			.createCompositeState(false));
 	}
-	
+
 	private static RenderType buildArmorEntityGlintRenderType(String name) {
-		return RenderType.create("armor_entity_glint_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, RenderType.CompositeState.builder()
+		return RenderType.create("armor_entity_glint_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, CompositeState.builder()
 			.setShaderState(RenderStateShard.RENDERTYPE_ARMOR_ENTITY_GLINT_SHADER)
-			.setTextureState(new RenderStateShard.TextureStateShard(texture(name), true, false))
+			.setTextureState(new TextureStateShard(texture(name), true, false))
 			.setWriteMaskState(RenderStateShard.COLOR_WRITE)
 			.setCullState(RenderStateShard.NO_CULL)
 			.setDepthTestState(RenderStateShard.EQUAL_DEPTH_TEST)
@@ -150,8 +149,8 @@ public class GlintRenderTypes extends RenderType {
 			.setLayeringState(RenderStateShard.VIEW_OFFSET_Z_LAYERING)
 			.createCompositeState(false));
 	}
-	
-	private static final ResourceLocation texture(String name) {
+
+	private static ResourceLocation texture(String name) {
 		return new ResourceLocation(Quark.MOD_ID, "textures/glint/enchanted_item_glint_" + name + ".png");
 	}
 }

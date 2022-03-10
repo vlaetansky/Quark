@@ -1,7 +1,5 @@
 package vazkii.quark.content.world.block;
 
-import java.util.Random;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -38,6 +36,7 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.world.module.ChorusVegetationModule;
 
 import javax.annotation.Nonnull;
+import java.util.Random;
 
 public class ChorusVegetationBlock extends QuarkBlock implements BonemealableBlock, IForgeShearable {
 
@@ -105,8 +104,8 @@ public class ChorusVegetationBlock extends QuarkBlock implements BonemealableBlo
 	}
 
 	private BlockPos teleport(BlockPos pos, Random random, ServerLevel worldIn, BlockState state, int range, double growthChance) {
-		int xOff = 0;
-		int zOff = 0;
+		int xOff;
+		int zOff;
 		do {
 			xOff = random.nextInt(range + 1) - (range / 2);
 			zOff = random.nextInt(range + 1) - (range / 2);

@@ -185,16 +185,16 @@ public class FoxhoundModel extends EntityModel<Foxhound> {
 	}
 
 	@Override
-	public void setupAnim(Foxhound entity, float p_225597_2_, float p_225597_3_, float p_225597_4_, float yaw, float pitch) {
+	public void setupAnim(Foxhound entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		if (!entity.isSleeping()) {
-			head.yRot += yaw * 0.017453292F;
-			head.xRot += pitch * 0.017453292F;
+			head.yRot += netHeadYaw * 0.017453292F;
+			head.xRot += headPitch * 0.017453292F;
 		} else
-			head.yRot += Mth.cos(entity.tickCount / 30) / 20;
+			head.yRot += Mth.cos(entity.tickCount / 30f) / 20;
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack matrix, @Nonnull VertexConsumer vb, int p_225598_3_, int p_225598_4_, float p_225598_5_, float p_225598_6_, float p_225598_7_, float p_225598_8_) {
+	public void renderToBuffer(PoseStack matrix, @Nonnull VertexConsumer vb, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
 		matrix.pushPose();
 		if(entity.isSleeping()) {
 			matrix.mulPose(Vector3f.XP.rotationDegrees(90F));
@@ -208,7 +208,7 @@ public class FoxhoundModel extends EntityModel<Foxhound> {
 		if (young)
 			matrix.translate(0.0F, 5.0F / 16F, 0F);
 
-		head.render(matrix, vb, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
+		head.render(matrix, vb, packedLightIn, packedOverlayIn, red, green, blue, alpha);
 
 		matrix.popPose();
 
@@ -218,11 +218,11 @@ public class FoxhoundModel extends EntityModel<Foxhound> {
 			matrix.scale(0.5F, 0.5F, 0.5F);
 		}
 
-		leftBackLeg.render(matrix, vb, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
-		rightFrontLeg.render(matrix, vb, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
-		body.render(matrix, vb, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
-		leftFrontLeg.render(matrix, vb, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
-		rightBackLeg.render(matrix, vb, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
+		leftBackLeg.render(matrix, vb, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+		rightFrontLeg.render(matrix, vb, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+		body.render(matrix, vb, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+		leftFrontLeg.render(matrix, vb, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+		rightBackLeg.render(matrix, vb, packedLightIn, packedOverlayIn, red, green, blue, alpha);
 		matrix.popPose();
 		matrix.popPose();
 	}

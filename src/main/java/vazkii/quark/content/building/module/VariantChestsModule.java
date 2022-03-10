@@ -56,12 +56,11 @@ import java.util.*;
 import java.util.function.BooleanSupplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @LoadModule(category = ModuleCategory.BUILDING, hasSubscriptions = true)
 public class VariantChestsModule extends QuarkModule {
 
-	private static final Pattern VILLAGE_PIECE_PATTERN = Pattern.compile("\\w+\\[\\w+\\[([a-z_]+)\\:village\\/(.+?)\\/.+\\]\\]");
+	private static final Pattern VILLAGE_PIECE_PATTERN = Pattern.compile("\\w+\\[\\w+\\[([a-z_]+):village/(.+?)/.+]]");
 
 	private static final String DONK_CHEST = "Quark:DonkChest";
 
@@ -73,11 +72,11 @@ public class VariantChestsModule extends QuarkModule {
 	public static BlockEntityType<VariantChestBlockEntity> chestTEType;
 	public static BlockEntityType<VariantTrappedChestBlockEntity> trappedChestTEType;
 
-	private static List<Supplier<Block>> chestTypes = new LinkedList<>();
-	private static List<Supplier<Block>> trappedChestTypes = new LinkedList<>();
+	private static final List<Supplier<Block>> chestTypes = new LinkedList<>();
+	private static final List<Supplier<Block>> trappedChestTypes = new LinkedList<>();
 
-	private static List<Block> allChests = new LinkedList<>();
-	private static Map<String, Block> chestMappings = new HashMap<>();
+	private static final List<Block> allChests = new LinkedList<>();
+	private static final Map<String, Block> chestMappings = new HashMap<>();
 
 	@Config private static boolean replaceWorldgenChests = true;
 	@Config(flag = "chest_reversion") private static boolean enableRevertingWoodenChests = true;
@@ -283,11 +282,9 @@ public class VariantChestsModule extends QuarkModule {
 			if("minecraft:village".equals(name)) {
 				if(structure.currentComponents != null && structure.currentComponents.size() > 0) {
 					StructurePiece first = structure.currentComponents.get(0);
-					if(first instanceof PoolElementStructurePiece) {
-						PoolElementStructurePiece avp = (PoolElementStructurePiece) first;
+					if(first instanceof PoolElementStructurePiece avp) {
 						StructurePoolElement jigsaw = avp.getElement();
-						if(jigsaw instanceof LegacySinglePoolElement) {
-							LegacySinglePoolElement legacyJigsaw = (LegacySinglePoolElement) jigsaw;
+						if(jigsaw instanceof LegacySinglePoolElement legacyJigsaw) {
 							String type = legacyJigsaw.toString();
 							Matcher match = VILLAGE_PIECE_PATTERN.matcher(type);
 							if(match.matches()) {
@@ -345,9 +342,9 @@ public class VariantChestsModule extends QuarkModule {
 	}
 
 	public static <T extends BlockEntity> BlockEntityType<T> registerChests(BlockEntitySupplier<? extends T> factory, List<Supplier<Block>> list) {
-		List<Block> blockTypes = list.stream().map(Supplier::get).collect(Collectors.toList());
+		List<Block> blockTypes = list.stream().map(Supplier::get).toList();
 		allChests.addAll(blockTypes);
-		return BlockEntityType.Builder.<T>of(factory, blockTypes.toArray(new Block[blockTypes.size()])).build(null);
+		return BlockEntityType.Builder.<T>of(factory, blockTypes.toArray(new Block[0])).build(null);
 	}
 
 	@Override
@@ -364,8 +361,7 @@ public class VariantChestsModule extends QuarkModule {
 		Player player = event.getPlayer();
 		ItemStack held = player.getItemInHand(event.getHand());
 
-		if (!held.isEmpty() && target instanceof AbstractChestedHorse) {
-			AbstractChestedHorse horse = (AbstractChestedHorse) target;
+		if (!held.isEmpty() && target instanceof AbstractChestedHorse horse) {
 
 			if (!horse.hasChest() && held.getItem() != Items.CHEST) {
 				if (held.is(Tags.Items.CHESTS_WOODEN)) {
@@ -397,8 +393,7 @@ public class VariantChestsModule extends QuarkModule {
 	@SubscribeEvent
 	public void onDeath(LivingDeathEvent event) {
 		Entity target = event.getEntityLiving();
-		if (target instanceof AbstractChestedHorse) {
-			AbstractChestedHorse horse = (AbstractChestedHorse) target;
+		if (target instanceof AbstractChestedHorse horse) {
 			ItemStack chest = ItemStack.of(horse.getPersistentData().getCompound(DONK_CHEST));
 			if (!chest.isEmpty() && horse.hasChest())
 				WAIT_TO_REPLACE_CHEST.set(chest);
@@ -416,7 +411,7 @@ public class VariantChestsModule extends QuarkModule {
 		}
 	}
 
-	public static interface IChestTextureProvider {
+	public interface IChestTextureProvider {
 		String getChestTexturePath();
 		boolean isTrap();
 	}

@@ -15,7 +15,7 @@ import java.util.List;
 
 public abstract class AbstractScrollingWidgetScreen extends AbstractQScreen {
 
-	private List<AbstractWidget> scrollingWidgets = new LinkedList<>();
+	private final List<AbstractWidget> scrollingWidgets = new LinkedList<>();
 	private ScrollableWidgetList<?, ?> elementList;
 
 	private Button resetButton;
@@ -54,9 +54,6 @@ public abstract class AbstractScrollingWidgetScreen extends AbstractQScreen {
 	}
 
 	public void refresh() {
-		children().removeIf(scrollingWidgets::contains);
-		narratables.removeIf(scrollingWidgets::contains);
-		renderables.removeIf(scrollingWidgets::contains);
 		scrollingWidgets.clear();
 
 		elementList.populate(w -> {
@@ -68,7 +65,7 @@ public abstract class AbstractScrollingWidgetScreen extends AbstractQScreen {
 	}
 
 	@Override
-	public void render(@Nonnull PoseStack mstack, int mouseX, int mouseY, float pticks) {
+	public void render(@Nonnull PoseStack mstack, int mouseX, int mouseY, float partialTicks) {
 		if(needsScrollUpdate) {
 			elementList.setScrollAmount(currentScroll);
 			needsScrollUpdate = false;
@@ -79,7 +76,7 @@ public abstract class AbstractScrollingWidgetScreen extends AbstractQScreen {
 		scrollingWidgets.forEach(w -> w.visible = false);
 
 		renderBackground(mstack);
-		elementList.render(mstack, mouseX, mouseY, pticks);
+		elementList.render(mstack, mouseX, mouseY, partialTicks);
 
 		List<AbstractWidget> visibleWidgets = new LinkedList<>();
 		scrollingWidgets.forEach(w -> {
@@ -88,7 +85,7 @@ public abstract class AbstractScrollingWidgetScreen extends AbstractQScreen {
 			w.visible = false;
 		});
 
-		super.render(mstack, mouseX, mouseY, pticks);
+		super.render(mstack, mouseX, mouseY, partialTicks);
 
 		Window main = minecraft.getWindow();
 		int res = (int) main.getGuiScale();
@@ -96,7 +93,7 @@ public abstract class AbstractScrollingWidgetScreen extends AbstractQScreen {
 		RenderSystem.enableScissor(0, 40 * res, width * res, (height - 80) * res);
 		visibleWidgets.forEach(w -> {
 			w.visible = true;
-			w.render(mstack, mouseX, mouseY, pticks);
+			w.render(mstack, mouseX, mouseY, partialTicks);
 		});
 		RenderSystem.disableScissor();
 	}

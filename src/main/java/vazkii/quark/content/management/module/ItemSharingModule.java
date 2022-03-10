@@ -63,13 +63,11 @@ public class ItemSharingModule extends QuarkModule {
 		Options settings = mc.options;
 		Screen screen = event.getScreen();
 		if(InputConstants.isKeyDown(mc.getWindow().getWindow(), settings.keyChat.getKey().getValue()) &&
-				screen instanceof AbstractContainerScreen && Screen.hasShiftDown()) {
-			AbstractContainerScreen<?> gui = (AbstractContainerScreen<?>) screen;
+				screen instanceof AbstractContainerScreen<?> gui && Screen.hasShiftDown()) {
 
 			List<? extends GuiEventListener> children = gui.children();
 			for(GuiEventListener c : children)
-				if(c instanceof EditBox) {
-					EditBox tf = (EditBox) c;
+				if(c instanceof EditBox tf) {
 					if(tf.isFocused())
 						return;
 				}

@@ -31,8 +31,8 @@ public class ListInputScreen extends AbstractScrollingWidgetScreen {
 	}
 
 	@Override
-	public void render(@Nonnull PoseStack mstack, int mouseX, int mouseY, float pticks) {
-		super.render(mstack, mouseX, mouseY, pticks);
+	public void render(@Nonnull PoseStack mstack, int mouseX, int mouseY, float partialTicks) {
+		super.render(mstack, mouseX, mouseY, partialTicks);
 
 		drawCenteredString(mstack, font, new TextComponent(object.getGuiDisplayName()).withStyle(ChatFormatting.BOLD), width / 2, 20, 0xFFFFFF);
 	}

@@ -85,7 +85,7 @@ public class BackpackItem extends DyeableArmorItem implements IQuarkItem, IItemC
 		if (!handlerOpt.isPresent())
 			return false;
 
-		IItemHandler handler = handlerOpt.orElse(null);
+		IItemHandler handler = handlerOpt.orElse(new ItemStackHandler());
 		for(int i = 0; i < handler.getSlots(); i++)
 			if(!handler.getStackInSlot(i).isEmpty())
 				return true;
@@ -123,7 +123,7 @@ public class BackpackItem extends DyeableArmorItem implements IQuarkItem, IItemC
 
 				if(BackpackModule.itemsInBackpackTick) {
 					LazyOptional<IItemHandler> handlerOpt  = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-					IItemHandler handler = handlerOpt.orElse(null);
+					IItemHandler handler = handlerOpt.orElse(new ItemStackHandler());
 					for(int i = 0; i < handler.getSlots(); i++) {
 						ItemStack inStack = handler.getStackInSlot(i);
 						if(!inStack.isEmpty())
@@ -157,7 +157,7 @@ public class BackpackItem extends DyeableArmorItem implements IQuarkItem, IItemC
 		if(!handlerOpt.isPresent())
 			return false;
 
-		IItemHandler handler = handlerOpt.orElse(null);
+		IItemHandler handler = handlerOpt.orElse(new ItemStackHandler());
 
 		for(int i = 0; i < handler.getSlots(); i++) {
 			ItemStack stackAt = handler.getStackInSlot(i);

@@ -33,8 +33,7 @@ public class BottledCloudItem extends QuarkItem {
 		ItemStack stack = player.getItemInHand(hand);
 
 		HitResult result = RayTraceHandler.rayTrace(player, world, player, Block.OUTLINE, Fluid.ANY);
-		if(result instanceof BlockHitResult) {
-			BlockHitResult bresult = (BlockHitResult) result;
+		if(result instanceof BlockHitResult bresult) {
 			BlockPos pos = bresult.getBlockPos();
 			if(!world.isEmptyBlock(pos))
 				pos = pos.relative(bresult.getDirection());
@@ -54,11 +53,11 @@ public class BottledCloudItem extends QuarkItem {
 				}
 
 				player.getCooldowns().addCooldown(this, 10);
-				return new InteractionResultHolder<ItemStack>(InteractionResult.SUCCESS, stack);
+				return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
 			}
 		}
 
-		return new InteractionResultHolder<ItemStack>(InteractionResult.PASS, stack);
+		return new InteractionResultHolder<>(InteractionResult.PASS, stack);
 	}
 
 }

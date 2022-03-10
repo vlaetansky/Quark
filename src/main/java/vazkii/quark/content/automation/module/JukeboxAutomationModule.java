@@ -1,7 +1,5 @@
 package vazkii.quark.content.automation.module;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
@@ -30,6 +28,8 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 
+import javax.annotation.Nonnull;
+
 @LoadModule(category = ModuleCategory.AUTOMATION, hasSubscriptions = true)
 public class JukeboxAutomationModule extends QuarkModule {
 
@@ -38,12 +38,10 @@ public class JukeboxAutomationModule extends QuarkModule {
 	@Override
 	public void setup() {
 		MusicDiscBehaviour behaviour = new MusicDiscBehaviour();
-		enqueue(() -> {
-				ForgeRegistries.ITEMS.forEach(i -> {
-				if(i instanceof RecordItem)
-					DispenserBlock.DISPENSER_REGISTRY.put(i, behaviour);
-			});
-		});
+		enqueue(() -> ForgeRegistries.ITEMS.forEach(i -> {
+			if (i instanceof RecordItem)
+				DispenserBlock.DISPENSER_REGISTRY.put(i, behaviour);
+		}));
 	}
 
 	@SubscribeEvent
@@ -52,13 +50,7 @@ public class JukeboxAutomationModule extends QuarkModule {
 			event.addCapability(JUKEBOX_ITEM_HANDLER, new JukeboxItemHandler((JukeboxBlockEntity) event.getObject()));
 	}
 
-	public static class JukeboxItemHandler implements ICapabilityProvider, IItemHandler {
-
-		final JukeboxBlockEntity tile;
-
-		public JukeboxItemHandler(JukeboxBlockEntity tile) {
-			this.tile = tile;
-		}
+	public record JukeboxItemHandler(JukeboxBlockEntity tile) implements ICapabilityProvider, IItemHandler {
 
 		@Override
 		public int getSlots() {
@@ -81,14 +73,14 @@ public class JukeboxAutomationModule extends QuarkModule {
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate) {
 			ItemStack stackAt = getStackInSlot(slot);
-			if(!stackAt.isEmpty()) {
+			if (!stackAt.isEmpty()) {
 				ItemStack copy = stackAt.copy();
-				if(!simulate) {
+				if (!simulate) {
 					tile.getLevel().levelEvent(1010, tile.getBlockPos(), 0);
 					tile.setRecord(ItemStack.EMPTY);
 
 					BlockState state = tile.getBlockState().setValue(JukeboxBlock.HAS_RECORD, false);
-					tile.getLevel().setBlock(tile.getBlockPos(), state, 1|2);
+					tile.getLevel().setBlock(tile.getBlockPos(), state, 1 | 2);
 				}
 
 				return copy;
@@ -110,7 +102,7 @@ public class JukeboxAutomationModule extends QuarkModule {
 		@Nonnull
 		@Override
 		public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, Direction side) {
-			if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 				return LazyOptional.of(() -> this).cast();
 
 			return LazyOptional.empty();

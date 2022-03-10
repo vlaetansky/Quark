@@ -1,5 +1,6 @@
 package vazkii.quark.base.network.message;
 
+import java.io.Serial;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -19,6 +20,7 @@ import vazkii.quark.content.management.entity.ChestPassenger;
 
 public class OpenBoatChestMessage implements IMessage {
 
+	@Serial
 	private static final long serialVersionUID = 4454710003473142954L;
 
 	@Override
@@ -52,7 +54,7 @@ public class OpenBoatChestMessage implements IMessage {
 				}
 			}
 		});
-		
+
 		return true;
 	}
 

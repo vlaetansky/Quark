@@ -47,23 +47,23 @@ import vazkii.quark.base.network.message.oddities.HandleBackpackMessage;
 @LoadModule(category = ModuleCategory.ODDITIES, hasSubscriptions = true)
 public class BackpackModule extends QuarkModule {
 
-	@Config(description =  "Set this to true to allow the backpacks to be unequipped even with items in them") 
+	@Config(description =  "Set this to true to allow the backpacks to be unequipped even with items in them")
 	public static boolean superOpMode = false;
-	
+
 	@Config(flag = "ravager_hide")
 	public static boolean enableRavagerHide = true;
-	
+
 	@Config
 	public static boolean itemsInBackpackTick = true;
-	
+
 	@Config public static int baseRavagerHideDrop = 1;
 	@Config public static double extraChancePerLooting = 0.5;
 
 	public static Item backpack;
 	public static Item ravager_hide;
-	
+
 	public static Block bonded_ravager_hide;
-	
+
 	public static MenuType<BackpackMenu> menyType;
 	private static ItemStack heldStack = null;
 
@@ -74,25 +74,25 @@ public class BackpackModule extends QuarkModule {
 	public void register() {
 		backpack = new BackpackItem(this);
 		ravager_hide = new QuarkItem("ravager_hide", this, new Item.Properties().rarity(Rarity.RARE).tab(CreativeModeTab.TAB_MATERIALS)).setCondition(() -> enableRavagerHide);
-		
+
 		menyType = IForgeMenuType.create(BackpackMenu::fromNetwork);
 		RegistryHelper.register(menyType, "backpack");
-		
+
 		bonded_ravager_hide = new QuarkBlock("bonded_ravager_hide", this, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.of(Material.WOOL, DyeColor.BLACK)
 				.strength(1F)
 				.sound(SoundType.WOOL))
 		.setCondition(() -> enableRavagerHide);
 	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
 		MenuScreens.register(menyType, BackpackInventoryScreen::new);
-		
-		enqueue(() -> ItemProperties.register(backpack, new ResourceLocation("has_items"), 
+
+		enqueue(() -> ItemProperties.register(backpack, new ResourceLocation("has_items"),
 				(stack, world, entity, i) -> (!BackpackModule.superOpMode && BackpackItem.doesBackpackHaveItems(stack)) ? 1 : 0));
 	}
-	
+
 	@SubscribeEvent
 	public void onDrops(LivingDropsEvent event) {
 		LivingEntity entity = event.getEntityLiving();
@@ -105,7 +105,7 @@ public class BackpackModule extends QuarkModule {
 			}
 			if(chance > 0 && entity.level.random.nextDouble() < chance)
 				amount++;
-			
+
 			event.getDrops().add(new ItemEntity(entity.level, entity.getX(), entity.getY(), entity.getZ(), new ItemStack(ravager_hide, amount)));
 		}
 	}
@@ -119,7 +119,7 @@ public class BackpackModule extends QuarkModule {
 			event.setCanceled(true);
 		}
 	}
-	
+
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public void clientTick(ClientTickEvent event) {
@@ -133,7 +133,7 @@ public class BackpackModule extends QuarkModule {
 				mc.player.inventoryMenu.setCarried(heldStack);
 				heldStack = null;
 			}
-			
+
 			backpackRequested = false;
 		}
 	}
@@ -158,10 +158,9 @@ public class BackpackModule extends QuarkModule {
 	private static boolean isInventoryGUI(Screen gui) {
 		return gui != null && gui.getClass() == InventoryScreen.class;
 	}
-	
+
 	public static boolean isEntityWearingBackpack(Entity e) {
-		if(e instanceof LivingEntity) {
-			LivingEntity living = (LivingEntity) e;
+		if(e instanceof LivingEntity living) {
 			ItemStack chestArmor = living.getItemBySlot(EquipmentSlot.CHEST);
 			return chestArmor.getItem() instanceof BackpackItem;
 		}
@@ -170,8 +169,7 @@ public class BackpackModule extends QuarkModule {
 	}
 
 	public static boolean isEntityWearingBackpack(Entity e, ItemStack stack) {
-		if(e instanceof LivingEntity) {
-			LivingEntity living = (LivingEntity) e;
+		if(e instanceof LivingEntity living) {
 			ItemStack chestArmor = living.getItemBySlot(EquipmentSlot.CHEST);
 			return chestArmor == stack;
 		}

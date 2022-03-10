@@ -17,28 +17,28 @@ import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.content.world.undergroundstyle.base.UndergroundStyleGenerator.Context;
 
 public abstract class UndergroundStyle {
-	
+
 	private static TagKey<Block> fillerTag = null;
-	
+
 	public static final Predicate<BlockState> STONE_TYPES_MATCHER = (state) -> {
 		if(state == null)
 			return false;
-		
+
 		if(fillerTag == null)
 			fillerTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "underground_biome_replaceable"));
-		
+
 		return state.is(fillerTag);
 	};
-	
+
 	public double dungeonChance;
 
 	public final void fill(Context context, BlockPos pos) {
 		LevelAccessor world = context.world;
 		BlockState state = world.getBlockState(pos);
-		
+
 		if(state.getDestroySpeed(world, pos) == -1)
 			return;
-		
+
 		boolean shrouded = false;
 		BlockPos testPos = new MutableBlockPos(pos.getX(), pos.getY(), pos.getZ());
 		while(!world.isOutsideBuildHeight(testPos)) {
@@ -48,10 +48,10 @@ public abstract class UndergroundStyle {
 				break;
 			}
 		}
-		
+
 		if(!shrouded)
 			return;
-		
+
 		if(isFloor(world, pos, state)) {
 			context.floorList.add(pos);
 			fillFloor(context, pos, state);
@@ -71,7 +71,7 @@ public abstract class UndergroundStyle {
 	public abstract void fillCeiling(Context context, BlockPos pos, BlockState state);
 	public abstract void fillWall(Context context, BlockPos pos, BlockState state);
 	public abstract void fillInside(Context context, BlockPos pos, BlockState state);
-	
+
 	public void finalFloorPass(Context context, BlockPos pos) {
 		// NO-OP
 	}
@@ -116,14 +116,14 @@ public abstract class UndergroundStyle {
 		for(Direction facing : MiscUtil.HORIZONTALS) {
 			BlockPos offsetPos = pos.relative(facing);
 			BlockState stateAt = world.getBlockState(offsetPos);
-			
+
 			if(state != stateAt && world.isEmptyBlock(offsetPos) || stateAt.getMaterial().isReplaceable())
 				return facing;
 		}
 
 		return null;
 	}
-	
+
 	public boolean isBorder(LevelAccessor world, BlockPos pos) {
 		return getBorderSide(world, pos) != null;
 	}
@@ -131,18 +131,14 @@ public abstract class UndergroundStyle {
 	public boolean isInside(BlockState state) {
 		return STONE_TYPES_MATCHER.test(state);
 	}
-	
+
 	public static Rotation rotationFromFacing(Direction facing) {
-		switch(facing) {
-		case SOUTH:
-			return Rotation.CLOCKWISE_180;
-		case WEST:
-			return Rotation.COUNTERCLOCKWISE_90;
-		case EAST:
-			return Rotation.CLOCKWISE_90;
-		default:
-			return Rotation.NONE;
-		}
+		return switch (facing) {
+			case SOUTH -> Rotation.CLOCKWISE_180;
+			case WEST -> Rotation.COUNTERCLOCKWISE_90;
+			case EAST -> Rotation.CLOCKWISE_90;
+			default -> Rotation.NONE;
+		};
 	}
 
 }

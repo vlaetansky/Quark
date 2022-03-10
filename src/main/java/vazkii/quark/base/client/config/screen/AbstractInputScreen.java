@@ -20,10 +20,10 @@ public abstract class AbstractInputScreen<T> extends AbstractQScreen {
 	}
 
 	@Override
-	public void render(@Nonnull PoseStack mstack, int mouseX, int mouseY, float pticks) {
+	public void render(@Nonnull PoseStack mstack, int mouseX, int mouseY, float partialTicks) {
 		renderBackground(mstack);
 
-		super.render(mstack, mouseX, mouseY, pticks);
+		super.render(mstack, mouseX, mouseY, partialTicks);
 	}
 
 	@Override

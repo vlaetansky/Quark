@@ -1,15 +1,7 @@
 package vazkii.quark.base.client.config.screen.widgets;
 
-import java.awt.Color;
-import java.time.Month;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
@@ -22,6 +14,12 @@ import vazkii.quark.base.handler.ContributorRewardHandler;
 import vazkii.quark.base.handler.MiscUtil;
 
 import javax.annotation.Nonnull;
+import java.awt.*;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
 
 public class QButton extends Button {
 
@@ -102,8 +100,8 @@ public class QButton extends Button {
 	}
 
 	@Override
-	public void renderButton(@Nonnull PoseStack mstack, int mouseX, int mouseY, float pticks) {
-		super.renderButton(mstack, mouseX, mouseY, pticks);
+	public void renderButton(@Nonnull PoseStack mstack, int mouseX, int mouseY, float partialTicks) {
+		super.renderButton(mstack, mouseX, mouseY, partialTicks);
 
 		int iconIndex = Math.min(4, ContributorRewardHandler.localPatronTier);
 		if(celebrating != null) {
@@ -132,7 +130,7 @@ public class QButton extends Button {
 
 				boolean hovered = mouseX >= x && mouseY >= y && mouseX < (x + width) && mouseY < (y + height);
 				if(hovered)
-					TopLayerTooltipHandler.setTooltip(Arrays.asList(I18n.get("quark.gui.celebration." + celebrating.name)), mouseX, mouseY);
+					TopLayerTooltipHandler.setTooltip(List.of(I18n.get("quark.gui.celebration." + celebrating.name)), mouseX, mouseY);
 			}
 
 			int u = 256 - iconIndex * w;
@@ -145,17 +143,7 @@ public class QButton extends Button {
 		Minecraft.getInstance().setScreen(new QuarkConfigHomeScreen(Minecraft.getInstance().screen));
 	}
 
-	private static class Celebration {
-		public final int day, month, len, tier;
-		public final String name;
-
-		public Celebration(int day, int month, int len, int tier, String name) {
-			this.day = day;
-			this.month = month;
-			this.len = len;
-			this.tier = tier;
-			this.name = name;
-		}
+	private record Celebration(int day, int month, int len, int tier, String name) {
 
 		// AFAIK none of the ones I'm tracking pass beyond a month so this
 		// lazy check is fine

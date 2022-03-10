@@ -1,13 +1,6 @@
 package vazkii.quark.content.automation.module;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
-import javax.annotation.Nonnull;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
@@ -30,6 +23,11 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @LoadModule(category = ModuleCategory.AUTOMATION)
 public class DispensersPlaceBlocksModule extends QuarkModule {
@@ -84,13 +82,13 @@ public class DispensersPlaceBlocksModule extends QuarkModule {
 	// DirectionPlaceContext results in infinite loops when using slabs
 	private static class NotStupidDirectionalPlaceContext extends DirectionalPlaceContext {
 
-		protected boolean replaceClicked = true;
+		protected boolean replaceClicked;
 		protected Direction direction;
 
-		public NotStupidDirectionalPlaceContext(Level worldIn, BlockPos p_i50051_2_, Direction p_i50051_3_, ItemStack p_i50051_4_, Direction against) {
-			super(worldIn, p_i50051_2_, p_i50051_3_, p_i50051_4_, against);
+		public NotStupidDirectionalPlaceContext(Level worldIn, BlockPos pos, Direction facing, ItemStack stack, Direction against) {
+			super(worldIn, pos, facing, stack, against);
 			replaceClicked = worldIn.getBlockState(getHitResult().getBlockPos()).canBeReplaced(this); // getHitResult = getRayTraceResult
-			direction = p_i50051_3_;
+			this.direction = facing;
 		}
 
 		@Override

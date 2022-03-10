@@ -9,17 +9,17 @@ public interface ICollateralMover {
 	default boolean isCollateralMover(Level world, BlockPos source, Direction moveDirection, BlockPos pos) {
 		return true;
 	}
-	
-	MoveResult getCollateralMovement(Level world, BlockPos source, Direction moveDirection, Direction side, BlockPos pos); 
-	
-	public static enum MoveResult {
-		
+
+	MoveResult getCollateralMovement(Level world, BlockPos source, Direction moveDirection, Direction side, BlockPos pos);
+
+	enum MoveResult {
+
 		MOVE,
 		BREAK,
 		SKIP,
 		PREVENT
-		
+
 	}
-	
-	
+
+
 }

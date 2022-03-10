@@ -9,15 +9,18 @@ import net.minecraftforge.network.NetworkHooks;
 import vazkii.arl.network.IMessage;
 import vazkii.quark.addons.oddities.inventory.BackpackMenu;
 
+import java.io.Serial;
+
 public class HandleBackpackMessage implements IMessage {
 
+	@Serial
 	private static final long serialVersionUID = 3474816381329541425L;
 
 	public boolean open;
 
 	public HandleBackpackMessage() { }
 
-	public HandleBackpackMessage(boolean open) { 
+	public HandleBackpackMessage(boolean open) {
 		this.open = open;
 	}
 
@@ -37,7 +40,7 @@ public class HandleBackpackMessage implements IMessage {
 				if(player.containerMenu != null) {
 					ItemStack holding = player.containerMenu.getCarried();
 					player.containerMenu.setCarried(ItemStack.EMPTY);
-					
+
 					BackpackMenu.saveCraftingInventory(player);
 					player.containerMenu = player.inventoryMenu;
 					player.inventoryMenu.setCarried(holding);

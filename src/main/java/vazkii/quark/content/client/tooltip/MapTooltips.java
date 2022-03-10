@@ -1,17 +1,9 @@
 package vazkii.quark.content.client.tooltip;
 
-import java.util.List;
-
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.*;
 import com.mojang.datafixers.util.Either;
 import com.mojang.math.Matrix4f;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
@@ -32,6 +24,7 @@ import net.minecraftforge.client.event.RenderTooltipEvent;
 import vazkii.quark.content.client.module.ImprovedTooltipsModule;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 public class MapTooltips {
 
@@ -50,13 +43,7 @@ public class MapTooltips {
 		}
 	}
 
-	public static class MapComponent implements ClientTooltipComponent, TooltipComponent {
-
-		private final ItemStack stack;
-
-		public MapComponent(ItemStack stack) {
-			this.stack = stack;
-		}
+	public record MapComponent(ItemStack stack) implements ClientTooltipComponent, TooltipComponent {
 
 		@Override
 		public void renderImage(@Nonnull Font font, int tooltipX, int tooltipY, @Nonnull PoseStack pose, @Nonnull ItemRenderer itemRenderer, int something) {
@@ -65,7 +52,7 @@ public class MapTooltips {
 			MapItemSavedData mapdata = MapItem.getSavedData(stack, mc.level);
 			Integer mapID = MapItem.getMapId(stack);
 
-			if(mapdata == null)
+			if (mapdata == null)
 				return;
 
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);

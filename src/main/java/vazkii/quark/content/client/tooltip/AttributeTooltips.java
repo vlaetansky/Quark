@@ -411,20 +411,12 @@ public class AttributeTooltips {
 	}
 
 
-	public static class AttributeComponent implements ClientTooltipComponent, TooltipComponent {
-
-		private final ItemStack stack;
-		private final int height, width;
-
-		public AttributeComponent(ItemStack stack, int width, int height) {
-			this.stack = stack;
-			this.height = height;
-			this.width = width;
-		}
+	public record AttributeComponent(ItemStack stack, int width,
+									 int height) implements ClientTooltipComponent, TooltipComponent {
 
 		@Override
 		public void renderImage(@Nonnull Font font, int tooltipX, int tooltipY, @Nonnull PoseStack pose, @Nonnull ItemRenderer itemRenderer, int something) {
-			if(!Screen.hasShiftDown()) {
+			if (!Screen.hasShiftDown()) {
 				pose.pushPose();
 				pose.translate(0, 0, 500);
 
@@ -434,7 +426,6 @@ public class AttributeTooltips {
 				Minecraft mc = Minecraft.getInstance();
 				pose.translate(0F, 0F, mc.getItemRenderer().blitOffset);
 
-				int baseX = tooltipX;
 				int y = tooltipY - 1;
 
 				EquipmentSlot primarySlot = getPrimarySlot(stack);
@@ -447,7 +438,8 @@ public class AttributeTooltips {
 				EquipmentSlot[] slots = EquipmentSlot.values();
 				slots = Arrays.copyOf(slots, slots.length + 1);
 
-				shouldShow: for (EquipmentSlot slot : slots) {
+				shouldShow:
+				for (EquipmentSlot slot : slots) {
 					if (canStripAttributes(stack, slot)) {
 						Multimap<Attribute, AttributeModifier> slotAttributes = getModifiers(stack, slot);
 						if (slot == EquipmentSlot.MAINHAND)
@@ -475,7 +467,7 @@ public class AttributeTooltips {
 
 				for (EquipmentSlot slot : slots) {
 					if (canStripAttributes(stack, slot)) {
-						int x = baseX;
+						int x = tooltipX;
 
 						Multimap<Attribute, AttributeModifier> slotAttributes = getModifiers(stack, slot);
 

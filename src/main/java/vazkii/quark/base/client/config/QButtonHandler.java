@@ -1,9 +1,6 @@
 package vazkii.quark.base.client.config;
 
-import java.util.List;
-
 import com.google.common.collect.ImmutableSet;
-
 import net.minecraft.Util;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
@@ -21,6 +18,8 @@ import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.config.screen.widgets.QButton;
 import vazkii.quark.base.handler.GeneralConfig;
 
+import java.util.List;
+
 @EventBusSubscriber(modid = Quark.MOD_ID, value = Dist.CLIENT)
 public class QButtonHandler {
 
@@ -29,14 +28,13 @@ public class QButtonHandler {
 		Screen gui = event.getScreen();
 
 		if(GeneralConfig.enableQButton && (gui instanceof TitleScreen || gui instanceof PauseScreen)) {
-			ImmutableSet<String> targets = GeneralConfig.qButtonOnRight 
+			ImmutableSet<String> targets = GeneralConfig.qButtonOnRight
 					? ImmutableSet.of(I18n.get("fml.menu.modoptions"), I18n.get("menu.online"))
 							: ImmutableSet.of(I18n.get("menu.options"), I18n.get("fml.menu.mods"));
 
 			List<GuiEventListener> listeners = event.getListenersList();
 			for(GuiEventListener b : listeners)
-				if(b instanceof AbstractWidget) {
-					AbstractWidget abs = (AbstractWidget) b;
+				if(b instanceof AbstractWidget abs) {
 					if(targets.contains(abs.getMessage().getString())) {
 						Button qButton = new QButton(abs.x + (GeneralConfig.qButtonOnRight ? 103 : -24), abs.y);
 						event.addListener(qButton);

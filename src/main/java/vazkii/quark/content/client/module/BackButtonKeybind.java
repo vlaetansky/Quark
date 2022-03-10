@@ -58,8 +58,8 @@ public class BackButtonKeybind extends QuarkModule {
 	private void clicc() {
 		ImmutableSet<String> buttons = ImmutableSet.of(
 				I18n.get("gui.back"),
-				I18n.get("gui.done"), 
-				I18n.get("gui.cancel"), 
+				I18n.get("gui.done"),
+				I18n.get("gui.cancel"),
 				I18n.get("gui.toTitle"),
 				I18n.get("gui.toMenu"),
 				I18n.get("quark.gui.config.save"));
@@ -67,8 +67,7 @@ public class BackButtonKeybind extends QuarkModule {
 		// Iterate this way to ensure we match the more important back buttons first
 		for(String b : buttons)
 			for(GuiEventListener listener : listeners) {
-				if(listener instanceof Button) {
-					Button w = (Button) listener;
+				if(listener instanceof Button w) {
 					if(w.getMessage().getString().equals(b) && w.visible && w.active) {
 						w.onClick(0, 0);
 						return;

@@ -1,12 +1,5 @@
 package vazkii.quark.base.proxy;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.time.LocalDateTime;
-import java.time.Month;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -29,6 +22,13 @@ import vazkii.quark.base.handler.WoodSetHandler;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.config.IConfigCallback;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.Month;
+
 @OnlyIn(Dist.CLIENT)
 public class ClientProxy extends CommonProxy {
 
@@ -47,7 +47,7 @@ public class ClientProxy extends CommonProxy {
 		ModLoadingContext.get().registerExtensionPoint(ConfigGuiFactory.class, () -> new ConfigGuiFactory((minecraft, screen) -> new QuarkConfigHomeScreen(screen)));
 
 		copyProgrammerArtIfMissing();
-		
+
 		(new ExternalConfigHandler()).setAPIHandler();
 	}
 
@@ -64,7 +64,7 @@ public class ClientProxy extends CommonProxy {
 	public void clientSetup(FMLClientSetupEvent event) {
 		RenderLayerHandler.init();
 		WoodSetHandler.clientSetup(event);
-		
+
 		ModuleLoader.INSTANCE.clientSetup(event);
 	}
 
@@ -110,14 +110,14 @@ public class ClientProxy extends CommonProxy {
 		File dir = new File(".", "resourcepacks");
 		File target = new File(dir, "Quark Programmer Art.zip");
 
-		if(!target.exists()) 
+		if(!target.exists())
 			try {
 				dir.mkdirs();
 				InputStream in = Quark.class.getResourceAsStream("/assets/quark/programmer_art.zip");
 				FileOutputStream out = new FileOutputStream(target);
-				
+
 				byte[] buf = new byte[16384];
-				int len = 0;
+				int len;
 				while((len = in.read(buf)) > 0)
 					out.write(buf, 0, len);
 

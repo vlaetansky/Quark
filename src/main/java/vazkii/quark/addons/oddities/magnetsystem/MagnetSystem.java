@@ -1,17 +1,6 @@
 package vazkii.quark.addons.oddities.magnetsystem;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
-import com.google.common.collect.Streams;
-
+import com.google.common.collect.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -47,13 +36,15 @@ import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.ModuleLoader;
 
+import java.util.*;
+
 @EventBusSubscriber(bus = Bus.FORGE, modid = Quark.MOD_ID)
 public class MagnetSystem {
-	
-	private static HashSet<Block> magnetizableBlocks = new HashSet<>();
-	
+
+	private static final HashSet<Block> magnetizableBlocks = new HashSet<>();
+
 	private static final HashMap<Block, IMagnetMoveAction> BLOCK_MOVE_ACTIONS = new HashMap<>();
-	
+
 	static {
 		DefaultMoveActions.addActions(BLOCK_MOVE_ACTIONS);
 	}
@@ -65,12 +56,12 @@ public class MagnetSystem {
 	public static LazyOptional<IMagnetTracker> getCapability(Level world) {
 		return world.getCapability(QuarkCapabilities.MAGNET_TRACKER_CAPABILITY);
 	}
-	
+
 	@SubscribeEvent
 	public static void tick(WorldTickEvent event) {
 		if(!ModuleLoader.INSTANCE.isModuleEnabled(MagnetsModule.class))
 			return;
-		
+
 		if (event.phase == Phase.START) {
 			getCapability(event.world).ifPresent(IMagnetTracker::clear);
 		} else {
@@ -89,7 +80,7 @@ public class MagnetSystem {
 	public static void tick(ClientTickEvent event) {
 		if(!ModuleLoader.INSTANCE.isModuleEnabled(MagnetsModule.class))
 			return;
-		
+
 		if (Minecraft.getInstance().level == null) {
 			magnetizableBlocks.clear();
 		}
@@ -100,7 +91,7 @@ public class MagnetSystem {
 		getCapability(world).ifPresent(magnetTracker ->
 				magnetTracker.applyForce(pos, magnitude, pushing, dir, distance, origin));
 	}
-	
+
 	public static PushReaction getPushAction(MagnetBlockEntity magnet, BlockPos pos, BlockState state, Direction moveDir) {
 		Level world = magnet.getLevel();
 		if(world != null && isBlockMagnetic(state)) {
@@ -114,7 +105,7 @@ public class MagnetSystem {
 
 		return PushReaction.BLOCK;
 	}
-	
+
 	public static boolean isBlockMagnetic(BlockState state) {
 		Block block = state.getBlock();
 
@@ -122,10 +113,10 @@ public class MagnetSystem {
 			if (state.getValue(PistonBaseBlock.EXTENDED))
 				return false;
 		}
-		
+
 		return block != MagnetsModule.magnet && (magnetizableBlocks.contains(block) || BLOCK_MOVE_ACTIONS.containsKey(block) || block instanceof IMagnetMoveAction);
 	}
-	
+
 	private static void loadMagnetizableBlocks(Level world) {
 		RecipeManager manager = world.getRecipeManager();
 		if(!manager.getRecipes().isEmpty()) {
@@ -136,7 +127,7 @@ public class MagnetSystem {
 			for(Recipe<?> recipe : recipes) {
 				if(recipe == null || recipe.getResultItem() == null || recipe.getIngredients() == null)
 					continue;
-				
+
 				Item out = recipe.getResultItem().getItem();
 
 				NonNullList<Ingredient> ingredients = recipe.getIngredients();
@@ -150,12 +141,12 @@ public class MagnetSystem {
 			List<Item> magneticDerivationList = MiscUtil.massRegistryGet(MagnetsModule.magneticDerivationList, Registry.ITEM);
 			List<Item> magneticWhitelist = MiscUtil.massRegistryGet(MagnetsModule.magneticWhitelist, Registry.ITEM);
 			List<Item> magneticBlacklist = MiscUtil.massRegistryGet(MagnetsModule.magneticBlacklist, Registry.ITEM);
-			
+
 			Streams.concat(magneticDerivationList.stream(), magneticWhitelist.stream())
 				.filter(i -> i instanceof BlockItem)
 				.map(i -> ((BlockItem) i).getBlock())
 				.forEach(magnetizableBlocks::add);
-			
+
 			Set<Item> scanned = Sets.newHashSet(magneticDerivationList);
 			List<Item> magnetizableToScan = Lists.newArrayList(magneticDerivationList);
 

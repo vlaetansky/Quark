@@ -28,7 +28,7 @@ public class SkullPike extends Entity {
 	public void tick() {
 		super.tick();
 
-		if(level instanceof ServerLevel) {
+		if(level instanceof ServerLevel sworld) {
 			boolean good = false;
 			BlockPos pos = blockPosition();
 			BlockState state = level.getBlockState(pos);
@@ -44,7 +44,6 @@ public class SkullPike extends Entity {
 			if(!good)
 				removeAfterChangingDimensions();
 
-			ServerLevel sworld = (ServerLevel) level;
 			if(Math.random() < 0.4)
 				sworld.sendParticles(Math.random() < 0.05 ? ParticleTypes.WARPED_SPORE : ParticleTypes.ASH, pos.getX() + 0.5, pos.getY() + 0.25, pos.getZ() + 0.5, 1, 0.25, 0.25, 0.25, 0);
 		}

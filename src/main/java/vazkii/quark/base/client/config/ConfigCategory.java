@@ -1,16 +1,8 @@
 package vazkii.quark.base.client.config;
 
-import java.io.PrintStream;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-
-import org.apache.commons.lang3.text.WordUtils;
-
 import net.minecraft.client.resources.language.I18n;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
+import org.apache.commons.lang3.text.WordUtils;
 import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.api.config.IConfigElement;
 import vazkii.quark.api.config.IConfigObject;
@@ -22,6 +14,12 @@ import vazkii.quark.base.client.config.screen.widgets.PencilButton;
 import vazkii.quark.base.module.config.type.IConfigType;
 
 import javax.annotation.Nonnull;
+import java.io.PrintStream;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class ConfigCategory extends AbstractConfigElement implements IConfigCategory, IWidgetProvider {
 
@@ -111,7 +109,7 @@ public class ConfigCategory extends AbstractConfigElement implements IConfigCate
 
 	@Override
 	public IConfigCategory addCategory(String name, @Nonnull String comment, Object holderObject) {
-		if(holderObject != null && holderObject instanceof IConfigType)
+		if(holderObject instanceof IConfigType)
 			((IConfigType) holderObject).setCategory(this);
 
 		return addCategory(new ConfigCategory(name, comment, this, holderObject));
@@ -158,7 +156,7 @@ public class ConfigCategory extends AbstractConfigElement implements IConfigCate
 
 	@Override
 	public String getSubtitle() {
-		String ret = "";
+		String ret;
 		if(holderObject != null && holderObject instanceof IWidgetProvider)
 			ret = ((IWidgetProvider) holderObject).getSubtitle();
 		else {

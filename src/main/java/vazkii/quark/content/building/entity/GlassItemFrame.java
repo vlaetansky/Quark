@@ -87,8 +87,7 @@ public class GlassItemFrame extends ItemFrame implements IEntityAdditionalSpawnD
 
 		if(GlassItemFrameModule.glassItemFramesUpdateMaps) {
 			ItemStack stack = getItem();
-			if(stack.getItem() instanceof MapItem && level instanceof ServerLevel) {
-				ServerLevel sworld = (ServerLevel) level;
+			if(stack.getItem() instanceof MapItem && level instanceof ServerLevel sworld) {
 				ItemStack clone = stack.copy();
 
 				MapItemSavedData data = MapItem.getSavedData(clone, level);

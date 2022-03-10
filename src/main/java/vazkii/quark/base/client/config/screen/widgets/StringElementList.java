@@ -55,8 +55,8 @@ public class StringElementList extends ScrollableWidgetList<ListInputScreen, Str
 		}
 
 		@Override
-		public void render(PoseStack mstack, int index, int rowTop, int rowLeft, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float pticks) {
-			super.render(mstack, index, rowTop, rowLeft, rowWidth, rowHeight, mouseX, mouseY, hovered, pticks);
+		public void render(@Nonnull PoseStack mstack, int index, int rowTop, int rowLeft, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float partialTicks) {
+			super.render(mstack, index, rowTop, rowLeft, rowWidth, rowHeight, mouseX, mouseY, hovered, partialTicks);
 
 			if(initialString != null)
 				drawBackground(mstack, index, rowTop, rowLeft, rowWidth, rowHeight, mouseX, mouseY, hovered);

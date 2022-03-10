@@ -11,16 +11,16 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public interface IConfigElement extends Comparable<IConfigElement> {
 
-	public String getName();
-	public String getGuiDisplayName();
-	public List<String> getTooltip();
-	public @Nullable IConfigCategory getParent();
-	public boolean isDirty();
-	public void clean();
-	public void save();
-	
-	public void refresh();
-	public void reset(boolean hard);
-	public void print(String pad, PrintStream out);
-	
+	String getName();
+	String getGuiDisplayName();
+	List<String> getTooltip();
+	@Nullable IConfigCategory getParent();
+	boolean isDirty();
+	void clean();
+	void save();
+
+	void refresh();
+	void reset(boolean hard);
+	void print(String pad, PrintStream out);
+
 }

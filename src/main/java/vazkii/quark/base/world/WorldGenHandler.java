@@ -1,18 +1,5 @@
 package vazkii.quark.base.world;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -43,12 +30,15 @@ import vazkii.quark.base.handler.GeneralConfig;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.world.generator.IGenerator;
 
+import java.util.*;
+import java.util.concurrent.*;
+
 @EventBusSubscriber(modid = Quark.MOD_ID)
 public class WorldGenHandler {
 
-	private static Map<GenerationStep.Decoration, Feature<NoneFeatureConfiguration>> defersBaseFeature = new HashMap<>();
-	private static Map<GenerationStep.Decoration, PlacedFeature> defers = new HashMap<>();
-	private static Map<GenerationStep.Decoration, SortedSet<WeightedGenerator>> generators = new HashMap<>();
+	private static final Map<GenerationStep.Decoration, Feature<NoneFeatureConfiguration>> defersBaseFeature = new HashMap<>();
+	private static final Map<GenerationStep.Decoration, PlacedFeature> defers = new HashMap<>();
+	private static final Map<GenerationStep.Decoration, SortedSet<WeightedGenerator>> generators = new HashMap<>();
 
 	public static PlacementModifierType<ChunkCornerPlacement> CHUNK_CORNER_PLACEMENT_TYPE = () -> ChunkCornerPlacement.CODEC;
 	public static ChunkCornerPlacement CHUNK_CORNER_PLACEMENT = new ChunkCornerPlacement();
@@ -59,7 +49,7 @@ public class WorldGenHandler {
 
 	private static void registerFeatures() {
 		for(GenerationStep.Decoration stage : GenerationStep.Decoration.values()) {
-			Feature<NoneFeatureConfiguration> deferredFeature = new DeferedFeature(stage);
+			Feature<NoneFeatureConfiguration> deferredFeature = new DeferredFeature(stage);
 
 			// Always do .toLowerCase(Locale.ENGLISH) with that locale. If you leave it off, computers in
 			// countries like Turkey will use a special character instead of i and well, crash the ResourceLocation.
@@ -76,13 +66,13 @@ public class WorldGenHandler {
 
 				ResourceLocation resloc = new ResourceLocation(Quark.MOD_ID, "deferred_feature_" + stage.name().toLowerCase(Locale.ROOT));
 				Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, resloc, feature);
-				
-				PlacedFeature placed = new PlacedFeature(Holder.direct(feature), Arrays.asList(CHUNK_CORNER_PLACEMENT));
+
+				PlacedFeature placed = new PlacedFeature(Holder.direct(feature), List.of(CHUNK_CORNER_PLACEMENT));
 				Registry.register(BuiltinRegistries.PLACED_FEATURE, resloc, placed);
-				
+
 				defers.put(stage, placed);
 			}
-			
+
 			Registry.register(Registry.PLACEMENT_MODIFIERS, new ResourceLocation(Quark.MOD_ID, "chunk_corner"), CHUNK_CORNER_PLACEMENT_TYPE);
 		});
 	}
@@ -107,13 +97,12 @@ public class WorldGenHandler {
 
 	public static void generateChunk(FeaturePlaceContext<NoneFeatureConfiguration> context, GenerationStep.Decoration stage) {
 		WorldGenLevel level = context.level();
-		if(!(level instanceof WorldGenRegion))
+		if(!(level instanceof WorldGenRegion region))
 			return;
 
 		ChunkGenerator generator = context.chunkGenerator();
 		BlockPos origin = context.origin();
 		BlockPos pos = new BlockPos(origin.getX(), 0, origin.getZ());
-		WorldGenRegion region = (WorldGenRegion) level;
 		WorldgenRandom random = new WorldgenRandom(new LegacyRandomSource(region.getSeed()));
 		ChunkPos center = region.getCenter();
 		long seed = random.setDecorationSeed(region.getSeed(), center.x * 16, center.z * 16);
@@ -123,9 +112,9 @@ public class WorldGenHandler {
 			SortedSet<WeightedGenerator> set = generators.get(stage);
 
 			for(WeightedGenerator wgen : set) {
-				IGenerator gen = wgen.generator;
+				IGenerator gen = wgen.generator();
 
-				if(wgen.module.enabled && gen.canGenerate(region)) {
+				if(wgen.module().enabled && gen.canGenerate(region)) {
 					if(GeneralConfig.enableWorldgenWatchdog) {
 						final int finalStageNum = stageNum;
 						stageNum = watchdogRun(gen, () -> gen.generate(finalStageNum, seed, stage, region, generator, random, pos), 1, TimeUnit.MINUTES);
@@ -144,7 +133,7 @@ public class WorldGenHandler {
 			return future.get(time, unit);
 		} catch(Exception e) {
 			throw new RuntimeException("Error generating " + gen, e);
-		} 
+		}
 	}
 
 }

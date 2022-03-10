@@ -1,18 +1,8 @@
 package vazkii.quark.content.client.module;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Stack;
-import java.util.function.BooleanSupplier;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
@@ -36,20 +26,24 @@ import net.minecraftforge.client.event.ContainerScreenEvent;
 import net.minecraftforge.client.event.ScreenEvent.MouseClickedEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.apache.commons.lang3.tuple.Pair;
 import vazkii.quark.base.client.handler.TopLayerTooltipHandler;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 
+import java.util.*;
+import java.util.function.BooleanSupplier;
+
 @LoadModule(category =  ModuleCategory.CLIENT, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class MicrocraftingHelperModule extends QuarkModule {
 
-	@OnlyIn(Dist.CLIENT) 
+	@OnlyIn(Dist.CLIENT)
 	private static Screen currentScreen;
 	private static Recipe<?> currentRecipe;
 
-	private static Stack<StackedRecipe> recipes = new Stack<>(); 
+	private static final Stack<StackedRecipe> recipes = new Stack<>();
 	private static int compoundCount = 1;
 
 	@SubscribeEvent
@@ -58,8 +52,7 @@ public class MicrocraftingHelperModule extends QuarkModule {
 		Minecraft mc = Minecraft.getInstance();
 		Screen screen = mc.screen;
 
-		if(screen instanceof CraftingScreen && event.getButton() == 1) {
-			CraftingScreen cscreen = (CraftingScreen) screen;
+		if(screen instanceof CraftingScreen cscreen && event.getButton() == 1) {
 			RecipeBookComponent recipeBook = cscreen.getRecipeBookComponent();
 
 			Pair<GhostRecipe, GhostIngredient> pair = getHoveredGhost(cscreen, recipeBook);
@@ -87,31 +80,31 @@ public class MicrocraftingHelperModule extends QuarkModule {
 					if(ourCount > 0) {
 						int prevCount = compoundCount;
 						int reqCount = ourCount * prevCount;
-						
+
 						int mult = (int) (Math.ceil((double) ourCount / (double) testStack.getCount()));
 						compoundCount *= mult;
 
 						Recipe<?> ghostRecipe = ghost.getRecipe();
 						StackedRecipe stackedRecipe = new StackedRecipe(ghostRecipe, testStack, compoundCount, getClearCondition(ingr, reqCount));
 						boolean stackIt = true;
-						
+
 						if(recipes.isEmpty()) {
 							ItemStack rootDisplayStack = ghostRecipe.getResultItem();
 							StackedRecipe rootRecipe = new StackedRecipe(null, rootDisplayStack, rootDisplayStack.getCount(), () -> recipes.size() == 1);
 							recipes.add(rootRecipe);
-						} 
+						}
 						else for(int i = 0; i < recipes.size(); i++) { // check dupes
 							StackedRecipe currRecipe = recipes.get(recipes.size() - i - 1);
 							if(currRecipe.recipe == recipeToSet) {
 								for(int j = 0; j <= i; j++)
 									recipes.pop();
-								
+
 								stackIt = false;
 								compoundCount = currRecipe.count;
 								break;
 							}
 						}
-						
+
 						if(stackIt)
 							recipes.add(stackedRecipe);
 					}
@@ -128,12 +121,11 @@ public class MicrocraftingHelperModule extends QuarkModule {
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public void onDrawGui(ContainerScreenEvent.DrawBackground event) { 
+	public void onDrawGui(ContainerScreenEvent.DrawBackground event) {
 		Minecraft mc = Minecraft.getInstance();
 
 		Screen screen = mc.screen;
-		if(screen instanceof CraftingScreen) {
-			CraftingScreen cscreen = (CraftingScreen) screen;
+		if(screen instanceof CraftingScreen cscreen) {
 			PoseStack mstack = event.getPoseStack();
 			ItemRenderer render = mc.getItemRenderer();
 			int left = cscreen.getGuiLeft() + 95;
@@ -143,7 +135,7 @@ public class MicrocraftingHelperModule extends QuarkModule {
 				RenderSystem.setShader(GameRenderer::getPositionTexShader);
 				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 				RenderSystem.setShaderTexture(0, MiscUtil.GENERAL_ICONS);
-				
+
 				mstack.pushPose();
 				Screen.blit(mstack, left, top, 0, 0, 108, 80, 20, 256, 256);
 				mstack.popPose();
@@ -185,10 +177,9 @@ public class MicrocraftingHelperModule extends QuarkModule {
 			recipes.clear();
 			currentRecipe = null;
 		}
-		
+
 		if(!recipes.isEmpty()) {
-			if(currentScreen instanceof CraftingScreen) {
-				CraftingScreen crafting = (CraftingScreen) currentScreen;
+			if(currentScreen instanceof CraftingScreen crafting) {
 				RecipeBookComponent book = crafting.getRecipeBookComponent();
 				if(book != null) {
 					GhostRecipe ghost = book.ghostRecipe;
@@ -198,7 +189,7 @@ public class MicrocraftingHelperModule extends QuarkModule {
 					}
 				}
 			}
-			
+
 			if(!recipes.isEmpty()) {
 				StackedRecipe top = recipes.peek();
 
@@ -208,14 +199,14 @@ public class MicrocraftingHelperModule extends QuarkModule {
 						currentRecipe = top.recipe;
 						compoundCount = top.count;
 					}
-					
+
 					recipes.pop();
 				}
-				
+
 				clearCompound = false;
 			}
-		} 
-		
+		}
+
 		if(clearCompound)
 			compoundCount = 1;
 	}
@@ -254,11 +245,11 @@ public class MicrocraftingHelperModule extends QuarkModule {
 
 					for(RecipeCollection list : recipeLists) {
 						List<Recipe<?>> recipeList = list.getDisplayRecipes(craftableOnly);
-						Collections.sort(recipeList, this::compareRecipes);
+						recipeList.sort(this::compareRecipes);
 
-						for(int i = 0; i < recipeList.size(); i++)
-							if(ingr.test(recipeList.get(i).getResultItem()))
-								return recipeList.get(i);
+						for (Recipe<?> recipe : recipeList)
+							if (ingr.test(recipe.getResultItem()))
+								return recipe;
 					}
 				}
 			}
@@ -321,14 +312,11 @@ public class MicrocraftingHelperModule extends QuarkModule {
 		return null;
 	}
 
-	private static class StackedRecipe {
+	private record StackedRecipe(Recipe<?> recipe,
+								 ItemStack displayItem, int count,
+								 BooleanSupplier clearCondition) {
 
-		public final Recipe<?> recipe;
-		public final ItemStack displayItem;
-		public final int count;
-		public final BooleanSupplier clearCondition;
-
-		StackedRecipe(Recipe<?> recipe, ItemStack displayItem, int count, BooleanSupplier clearCondition) {
+		private StackedRecipe(Recipe<?> recipe, ItemStack displayItem, int count, BooleanSupplier clearCondition) {
 			this.recipe = recipe;
 			this.count = count;
 			this.clearCondition = clearCondition;

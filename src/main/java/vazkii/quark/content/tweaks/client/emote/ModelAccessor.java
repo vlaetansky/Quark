@@ -10,15 +10,15 @@
  */
 package vazkii.quark.content.tweaks.client.emote;
 
-import java.util.Map;
-import java.util.WeakHashMap;
-
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.aurelienribon.tweenengine.TweenAccessor;
+
+import java.util.Map;
+import java.util.WeakHashMap;
 
 @OnlyIn(Dist.CLIENT)
 public class ModelAccessor implements TweenAccessor<HumanoidModel<?>> {
@@ -28,11 +28,11 @@ public class ModelAccessor implements TweenAccessor<HumanoidModel<?>> {
 	private static final int ROT_X = 0;
 	private static final int ROT_Y = 1;
 	private static final int ROT_Z = 2;
-	
+
 	protected static final int MODEL_PROPS = 3;
 	protected static final int BODY_PARTS = 7;
 	protected static final int STATE_COUNT = MODEL_PROPS * BODY_PARTS;
-	
+
 	public static final int HEAD = 0;
 	public static final int BODY = MODEL_PROPS;
 	public static final int RIGHT_ARM = 2 * MODEL_PROPS;
@@ -63,7 +63,7 @@ public class ModelAccessor implements TweenAccessor<HumanoidModel<?>> {
 	public static final int MODEL_X = MODEL + ROT_X;
 	public static final int MODEL_Y = MODEL + ROT_Y;
 	public static final int MODEL_Z = MODEL + ROT_Z;
-	
+
 	// TODO LOW PRIO check if piece position can be changed again
 
 	private final Map<HumanoidModel<?>, float[]> MODEL_VALUES = new WeakHashMap<>();
@@ -92,28 +92,25 @@ public class ModelAccessor implements TweenAccessor<HumanoidModel<?>> {
 		if(model == null)
 			return 0;
 
-		switch(axis) {
-			case ROT_X:
-				returnValues[0] = model.xRot; break;
-			case ROT_Y:
-				returnValues[0] = model.yRot; break;
-			case ROT_Z:
-				returnValues[0] = model.zRot; break;
+		switch (axis) {
+			case ROT_X -> returnValues[0] = model.xRot;
+			case ROT_Y -> returnValues[0] = model.yRot;
+			case ROT_Z -> returnValues[0] = model.zRot;
 		}
 
 		return 1;
 	}
 
 	private ModelPart getBodyPart(HumanoidModel<?> model, int part) {
-		switch(part) {
-			case HEAD : return model.head;
-			case BODY : return model.body;
-			case RIGHT_ARM : return model.rightArm;
-			case LEFT_ARM : return model.leftArm;
-			case RIGHT_LEG : return model.rightLeg;
-			case LEFT_LEG : return model.leftLeg;
-		}
-		return null;
+		return switch (part) {
+			case HEAD -> model.head;
+			case BODY -> model.body;
+			case RIGHT_ARM -> model.rightArm;
+			case LEFT_ARM -> model.leftArm;
+			case RIGHT_LEG -> model.rightLeg;
+			case LEFT_LEG -> model.leftLeg;
+			default -> null;
+		};
 	}
 
 	@Override
@@ -122,9 +119,7 @@ public class ModelAccessor implements TweenAccessor<HumanoidModel<?>> {
 		int bodyPart = tweenType - axis;
 
 		if (bodyPart == MODEL) {
-			float[] values = MODEL_VALUES.get(target);
-			if (values == null)
-				MODEL_VALUES.put(target, values = new float[MODEL_PROPS]);
+			float[] values = MODEL_VALUES.computeIfAbsent(target, k -> new float[MODEL_PROPS]);
 
 			values[axis] = newValues[0];
 
@@ -159,14 +154,11 @@ public class ModelAccessor implements TweenAccessor<HumanoidModel<?>> {
 	private void setPartAxis(ModelPart part, int axis, float val) {
 		if(part == null)
 			return;
-		
-		switch(axis) {
-			case ROT_X:
-				part.xRot = val; break;
-			case ROT_Y:
-				part.yRot = val; break;
-			case ROT_Z:
-				part.zRot = val; break;
+
+		switch (axis) {
+			case ROT_X -> part.xRot = val;
+			case ROT_Y -> part.yRot = val;
+			case ROT_Z -> part.zRot = val;
 		}
 	}
 

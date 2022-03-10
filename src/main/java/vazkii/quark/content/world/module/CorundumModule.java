@@ -1,11 +1,6 @@
 package vazkii.quark.content.world.module;
 
-import java.util.List;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -15,6 +10,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.common.BiomeDictionary;
+import org.apache.commons.lang3.tuple.Pair;
 import vazkii.quark.api.IIndirectConnector;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.block.QuarkInheritedPaneBlock;
@@ -27,6 +23,8 @@ import vazkii.quark.content.world.block.CorundumClusterBlock;
 import vazkii.quark.content.world.undergroundstyle.CorundumStyle;
 import vazkii.quark.content.world.undergroundstyle.base.AbstractUndergroundStyleModule;
 import vazkii.quark.content.world.undergroundstyle.base.UndergroundStyleConfig;
+
+import java.util.List;
 
 @LoadModule(category = ModuleCategory.WORLD)
 public class CorundumModule extends AbstractUndergroundStyleModule<CorundumStyle> {
@@ -60,7 +58,7 @@ public class CorundumModule extends AbstractUndergroundStyleModule<CorundumStyle
 	@Config public static boolean enableCollateralMovement = true;
 
 	public static boolean staticEnabled;
-	
+
 	public static List<CorundumBlock> crystals = Lists.newArrayList();
 	public static TagKey<Block> corundumTag;
 
@@ -75,10 +73,10 @@ public class CorundumModule extends AbstractUndergroundStyleModule<CorundumStyle
 		add("violet", 0xff00ff, MaterialColor.COLOR_MAGENTA);
 		add("white", 0xffffff, MaterialColor.SNOW);
 		add("black", 0x000000, MaterialColor.COLOR_BLACK);
-		
+
 		super.register();
 	}
-	
+
 	@Override
 	public void configChanged() {
 		staticEnabled = enabled;
@@ -87,17 +85,17 @@ public class CorundumModule extends AbstractUndergroundStyleModule<CorundumStyle
 	private void add(String name, int color, MaterialColor material) {
 		CorundumBlock crystal = new CorundumBlock(name + "_corundum", color, this, material, false);
 		crystals.add(crystal);
-		
+
 		CorundumBlock waxed = new CorundumBlock("waxed_" + name + "_corundum", color, this, material, true);
 		ToolInteractionHandler.registerWaxedBlock(crystal, waxed);
 
 		new QuarkInheritedPaneBlock(crystal);
 		CorundumClusterBlock cluster = new CorundumClusterBlock(crystal);
-		
+
 		ClusterConnection connection = new ClusterConnection(cluster);
 		IIndirectConnector.INDIRECT_STICKY_BLOCKS.add(Pair.of(connection::isValidState, connection));
 	}
-	
+
 	@Override
 	public void setup() {
 		super.setup();
@@ -114,32 +112,26 @@ public class CorundumModule extends AbstractUndergroundStyleModule<CorundumStyle
 		return new UndergroundStyleConfig<>(new CorundumStyle(), 400, true, BiomeDictionary.Type.OCEAN).setDefaultSize(72, 20, 22, 4);
 	}
 
-	public static class ClusterConnection implements IIndirectConnector {
+	public record ClusterConnection(CorundumClusterBlock cluster) implements IIndirectConnector {
 
-		final CorundumClusterBlock cluster;
-		
-		public ClusterConnection(CorundumClusterBlock cluster) {
-			this.cluster = cluster;
-		}
-		
 		@Override
 		public boolean isEnabled() {
 			return enableCollateralMovement;
 		}
-		
+
 		private boolean isValidState(BlockState state) {
-			return state.getBlock() == cluster; 
+			return state.getBlock() == cluster;
 		}
-		
+
 		@Override
 		public boolean canConnectIndirectly(Level world, BlockPos ourPos, BlockPos sourcePos, BlockState ourState, BlockState sourceState) {
 			BlockPos offsetPos = ourPos.relative(ourState.getValue(CorundumClusterBlock.FACING).getOpposite());
-			if(!offsetPos.equals(sourcePos))
+			if (!offsetPos.equals(sourcePos))
 				return false;
-			
+
 			return sourceState.getBlock() == cluster.base;
 		}
-		
+
 	}
-	
+
 }

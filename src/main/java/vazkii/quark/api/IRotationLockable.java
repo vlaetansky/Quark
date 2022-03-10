@@ -10,6 +10,6 @@ public interface IRotationLockable {
 	/**
 	 * @param half -1 if not set, 0 if bottom, 1 if top
 	 */
-	public BlockState applyRotationLock(Level world, BlockPos pos, BlockState currState, Direction direction, int half);
-	
+	BlockState applyRotationLock(Level world, BlockPos pos, BlockState currState, Direction direction, int half);
+
 }

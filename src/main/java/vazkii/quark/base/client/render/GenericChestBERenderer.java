@@ -1,11 +1,8 @@
 package vazkii.quark.base.client.render;
 
-import java.util.Calendar;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -22,11 +19,7 @@ import net.minecraft.client.renderer.blockentity.BrightnessCombiner;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.AbstractChestBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ChestBlock;
-import net.minecraft.world.level.block.DoubleBlockCombiner;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.entity.LidBlockEntity;
@@ -34,6 +27,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
 
 import javax.annotation.Nonnull;
+import java.util.Calendar;
 
 // A copy of ChestTileEntityRenderer from vanilla but less private
 public abstract class GenericChestBERenderer<T extends BlockEntity & LidBlockEntity> implements BlockEntityRenderer<T> {
@@ -51,7 +45,7 @@ public abstract class GenericChestBERenderer<T extends BlockEntity & LidBlockEnt
 
 	public GenericChestBERenderer(BlockEntityRendererProvider.Context context) {
 		Calendar calendar = Calendar.getInstance();
-		if (calendar.get(2) + 1 == 12 && calendar.get(5) >= 24 && calendar.get(5) <= 26) {
+		if (calendar.get(Calendar.MONTH) + 1 == 12 && calendar.get(Calendar.DATE) >= 24 && calendar.get(Calendar.DATE) <= 26) {
 			this.isChristmas = true;
 		}
 
@@ -97,63 +91,62 @@ public abstract class GenericChestBERenderer<T extends BlockEntity & LidBlockEnt
 	}
 
 	@Override
-	public void render(T p_225616_1_, float p_225616_2_, @Nonnull PoseStack p_225616_3_, @Nonnull MultiBufferSource p_225616_4_, int p_225616_5_, int p_225616_6_) {
-		Level world = p_225616_1_.getLevel();
+	public void render(T chest, float partialTicks, @Nonnull PoseStack matrix, @Nonnull MultiBufferSource buffer, int light, int overlay) {
+		Level world = chest.getLevel();
 		boolean flag = world != null;
-		BlockState blockstate = flag ? p_225616_1_.getBlockState() : Blocks.CHEST.defaultBlockState().setValue(ChestBlock.FACING, Direction.SOUTH);
+		BlockState blockstate = flag ? chest.getBlockState() : Blocks.CHEST.defaultBlockState().setValue(ChestBlock.FACING, Direction.SOUTH);
 		ChestType chesttype = blockstate.getValues().containsKey(ChestBlock.TYPE) ? blockstate.getValue(ChestBlock.TYPE) : ChestType.SINGLE;
 		Block block = blockstate.getBlock();
-		if (block instanceof AbstractChestBlock) {
-			AbstractChestBlock<?> abstractchestblock = (AbstractChestBlock<?>) block;
+		if (block instanceof AbstractChestBlock<?> abstractchestblock) {
 			boolean flag1 = chesttype != ChestType.SINGLE;
-			p_225616_3_.pushPose();
+			matrix.pushPose();
 			float f = blockstate.getValue(ChestBlock.FACING).toYRot();
-			p_225616_3_.translate(0.5D, 0.5D, 0.5D);
-			p_225616_3_.mulPose(Vector3f.YP.rotationDegrees(-f));
-			p_225616_3_.translate(-0.5D, -0.5D, -0.5D);
+			matrix.translate(0.5D, 0.5D, 0.5D);
+			matrix.mulPose(Vector3f.YP.rotationDegrees(-f));
+			matrix.translate(-0.5D, -0.5D, -0.5D);
 			DoubleBlockCombiner.NeighborCombineResult<? extends ChestBlockEntity> icallbackwrapper;
 			if (flag) {
-				icallbackwrapper = abstractchestblock.combine(blockstate, world, p_225616_1_.getBlockPos(), true);
+				icallbackwrapper = abstractchestblock.combine(blockstate, world, chest.getBlockPos(), true);
 			} else {
 				icallbackwrapper = DoubleBlockCombiner.Combiner::acceptNone;
 			}
 
-			float f1 = icallbackwrapper.apply(ChestBlock.opennessCombiner((LidBlockEntity)p_225616_1_)).get(p_225616_2_);
+			float f1 = icallbackwrapper.apply(ChestBlock.opennessCombiner(chest)).get(partialTicks);
 			f1 = 1.0F - f1;
 			f1 = 1.0F - f1 * f1 * f1;
-			int i = icallbackwrapper.apply(new BrightnessCombiner<>()).applyAsInt(p_225616_5_);
-			Material material = getMaterialFinal(p_225616_1_, chesttype); // <- Changed here
+			int i = icallbackwrapper.apply(new BrightnessCombiner<>()).applyAsInt(light);
+			Material material = getMaterialFinal(chest, chesttype); // <- Changed here
 			if(material != null) {
-				VertexConsumer ivertexbuilder = material.buffer(p_225616_4_, RenderType::entityCutout);
+				VertexConsumer ivertexbuilder = material.buffer(buffer, RenderType::entityCutout);
 				if (flag1) {
 					if (chesttype == ChestType.RIGHT) {
-						this.render(p_225616_3_, ivertexbuilder, this.doubleRightLid, this.doubleRightLock, this.doubleRightBottom, f1, i, p_225616_6_);
+						this.render(matrix, ivertexbuilder, this.doubleRightLid, this.doubleRightLock, this.doubleRightBottom, f1, i, overlay);
 					} else {
-						this.render(p_225616_3_, ivertexbuilder, this.doubleLeftLid, this.doubleLeftLock, this.doubleLeftBottom, f1, i, p_225616_6_);
+						this.render(matrix, ivertexbuilder, this.doubleLeftLid, this.doubleLeftLock, this.doubleLeftBottom, f1, i, overlay);
 					}
 				} else {
-					this.render(p_225616_3_, ivertexbuilder, this.lid, this.lock, this.bottom, f1, i, p_225616_6_);
+					this.render(matrix, ivertexbuilder, this.lid, this.lock, this.bottom, f1, i, overlay);
 				}
 			}
 
-			p_225616_3_.popPose();
+			matrix.popPose();
 		}
 	}
 
 	public final Material getMaterialFinal(T t, ChestType type) {
 		if(isChristmas)
-			return Sheets.chooseMaterial(t, type, this.isChristmas);
+			return Sheets.chooseMaterial(t, type, true);
 
 		return getMaterial(t, type);
 	}
 
 	public abstract Material getMaterial(T t, ChestType type);
 
-	public void render(PoseStack p_228871_1_, VertexConsumer p_228871_2_, ModelPart p_228871_3_, ModelPart p_228871_4_, ModelPart p_228871_5_, float p_228871_6_, int p_228871_7_, int p_228871_8_) {
-		p_228871_3_.xRot = -(p_228871_6_ * ((float)Math.PI / 2F));
-		p_228871_4_.xRot = p_228871_3_.xRot;
-		p_228871_3_.render(p_228871_1_, p_228871_2_, p_228871_7_, p_228871_8_);
-		p_228871_4_.render(p_228871_1_, p_228871_2_, p_228871_7_, p_228871_8_);
-		p_228871_5_.render(p_228871_1_, p_228871_2_, p_228871_7_, p_228871_8_);
+	public void render(PoseStack matrix, VertexConsumer vertexConsumer, ModelPart lid, ModelPart lock, ModelPart bottom, float openness, int brightness, int overlay) {
+		lid.xRot = -(openness * ((float)Math.PI / 2F));
+		lock.xRot = lid.xRot;
+		lid.render(matrix, vertexConsumer, brightness, overlay);
+		lock.render(matrix, vertexConsumer, brightness, overlay);
+		bottom.render(matrix, vertexConsumer, brightness, overlay);
 	}
 }

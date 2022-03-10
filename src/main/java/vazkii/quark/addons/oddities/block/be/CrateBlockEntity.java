@@ -41,7 +41,7 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 	private int numPlayersUsing;
 	private List<ItemStack> stacks = new ArrayList<>();
 
-	private LazyOptional<SidedInvWrapper> wrapper = LazyOptional.of(() -> new SidedInvWrapper(this, Direction.UP));
+	private final LazyOptional<SidedInvWrapper> wrapper = LazyOptional.of(() -> new SidedInvWrapper(this, Direction.UP));
 
 	private int[] visibleSlots = new int[0];
 	boolean needsUpdate = false;
@@ -285,13 +285,13 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 		}
 	}
 
-	public static int calculatePlayersUsing(Level p_213976_0_, BaseContainerBlockEntity p_213976_1_, int p_213976_2_, int p_213976_3_, int p_213976_4_) {
+	public static int calculatePlayersUsing(Level world, BaseContainerBlockEntity container, int x, int y, int z) {
 		int i = 0;
 
-		for(Player playerentity : p_213976_0_.getEntitiesOfClass(Player.class, new AABB((double)((float)p_213976_2_ - 5.0F), (double)((float)p_213976_3_ - 5.0F), (double)((float)p_213976_4_ - 5.0F), (double)((float)(p_213976_2_ + 1) + 5.0F), (double)((float)(p_213976_3_ + 1) + 5.0F), (double)((float)(p_213976_4_ + 1) + 5.0F)))) {
+		for(Player playerentity : world.getEntitiesOfClass(Player.class, new AABB((float)x - 5.0F, (float)y - 5.0F, (float)z - 5.0F, (float)(x + 1) + 5.0F, (float)(y + 1) + 5.0F, (float)(z + 1) + 5.0F))) {
 			if (playerentity.containerMenu instanceof CrateMenu) {
 				Container iinventory = ((CrateMenu)playerentity.containerMenu).crate;
-				if (iinventory == p_213976_1_) {
+				if (iinventory == container) {
 					++i;
 				}
 			}
@@ -309,14 +309,14 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 	}
 
 	private void setOpenProperty(BlockState state, boolean open) {
-		this.level.setBlock(this.getBlockPos(), state.setValue(CrateBlock.PROPERTY_OPEN, Boolean.valueOf(open)), 3);
+		this.level.setBlock(this.getBlockPos(), state.setValue(CrateBlock.PROPERTY_OPEN, open), 3);
 	}
 
 	private void playSound(BlockState state, SoundEvent sound) {
 		double d0 = (double)this.worldPosition.getX() + 0.5D;
 		double d1 = (double)this.worldPosition.getY() + 0.5D;
 		double d2 = (double)this.worldPosition.getZ() + 0.5D;
-		this.level.playSound((Player)null, d0, d1, d2, sound, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F);
+		this.level.playSound(null, d0, d1, d2, sound, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F);
 	}
 
 }

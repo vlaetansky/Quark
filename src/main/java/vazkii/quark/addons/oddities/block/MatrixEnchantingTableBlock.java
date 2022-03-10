@@ -128,15 +128,13 @@ public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements
 							if(!(worldIn.isEmptyBlock(test) || (allowUnderwater && worldIn.getBlockState(test).getBlock() == Blocks.WATER)))
 								break;
 
-							if(showInfluences && state.getBlock() instanceof IEnchantmentInfluencer) {
-								IEnchantmentInfluencer influencer = (IEnchantmentInfluencer) state.getBlock();
+							if(showInfluences && state.getBlock() instanceof IEnchantmentInfluencer influencer) {
 								DyeColor color = influencer.getEnchantmentInfluenceColor(worldIn, blockpos, state);
 
 								if(color != null) {
 									float[] comp = color.getTextureDiffuseColors();
 
-									if(influencer instanceof IModifiableEnchantmentInfluencer) {
-										IModifiableEnchantmentInfluencer modifiableInfluencer = (IModifiableEnchantmentInfluencer) influencer;
+									if(influencer instanceof IModifiableEnchantmentInfluencer modifiableInfluencer) {
 										comp = modifiableInfluencer.getModifiedColorComponents(worldIn, blockpos, state, comp);
 									}
 
@@ -180,8 +178,7 @@ public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements
 	public void onRemove(@Nonnull BlockState state, Level worldIn, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
 		BlockEntity tileentity = worldIn.getBlockEntity(pos);
 
-		if(tileentity instanceof MatrixEnchantingTableBlockEntity) {
-			MatrixEnchantingTableBlockEntity enchanter = (MatrixEnchantingTableBlockEntity) tileentity;
+		if(tileentity instanceof MatrixEnchantingTableBlockEntity enchanter) {
 			enchanter.dropItem(0);
 			enchanter.dropItem(1);
 		}

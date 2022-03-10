@@ -1,7 +1,5 @@
 package vazkii.quark.content.automation.block;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.CreativeModeTab;
@@ -23,6 +21,8 @@ import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.automation.block.be.ChuteBlockEntity;
+
+import javax.annotation.Nonnull;
 
 public class ChuteBlock extends QuarkBlock implements EntityBlock {
 
@@ -75,8 +75,8 @@ public class ChuteBlock extends QuarkBlock implements EntityBlock {
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(@Nonnull BlockPos p_153215_, @Nonnull BlockState p_153216_) {
-		return new ChuteBlockEntity(p_153215_, p_153216_);
+	public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
+		return new ChuteBlockEntity(pos, state);
 	}
 
 }

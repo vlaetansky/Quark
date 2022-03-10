@@ -18,9 +18,9 @@ public class ForgottenRenderer extends SkeletonRenderer {
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/forgotten/main.png");
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public ForgottenRenderer(EntityRendererProvider.Context p_174409_) {
-		super(p_174409_);
-		addLayer(new ForgottenClothingLayer<>(this, p_174409_.getModelSet()));
+	public ForgottenRenderer(EntityRendererProvider.Context context) {
+		super(context);
+		addLayer(new ForgottenClothingLayer<>(this, context.getModelSet()));
 		addLayer(new ForgottenEyesLayer(this));
 		addLayer(new ForgottenSheathedItemLayer(this));
 	}

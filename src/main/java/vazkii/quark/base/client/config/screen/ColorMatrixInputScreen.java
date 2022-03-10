@@ -43,14 +43,14 @@ public class ColorMatrixInputScreen extends AbstractInputScreen<ColorMatrixConfi
 		for(int i = 0; i < 9; i++)
 			addRenderableWidget(new Slider(x + w * (i % 3), y + 25 * (i / 3), w - p, 20, prefix, suffix, 0f, 2f, color.colorMatrix[i], false, false, this::onSlide));
 
-		addRenderableWidget(new Button(x + w * 0, y + 115, w - p, 20, new TextComponent("Identity"), this::onSlide));
-		addRenderableWidget(new Button(x + w * 1, y + 115, w - p, 20, new TextComponent("Dreary"), this::onSlide));
+		addRenderableWidget(new Button(x, y + 115, w - p, 20, new TextComponent("Identity"), this::onSlide));
+		addRenderableWidget(new Button(x + w, y + 115, w - p, 20, new TextComponent("Dreary"), this::onSlide));
 		addRenderableWidget(new Button(x + w * 2, y + 115, w - p, 20, new TextComponent("Vibrant"), this::onSlide));
 	}
 
 	@Override
-	public void render(@Nonnull PoseStack mstack, int mouseX, int mouseY, float pticks) {
-		super.render(mstack, mouseX, mouseY, pticks);
+	public void render(@Nonnull PoseStack mstack, int mouseX, int mouseY, float partialTicks) {
+		super.render(mstack, mouseX, mouseY, partialTicks);
 
 		int x = width / 2 - 203;
 		int y = 10;
@@ -63,8 +63,7 @@ public class ColorMatrixInputScreen extends AbstractInputScreen<ColorMatrixConfi
 		int sliders = 0;
 		boolean needsUpdate = false;
 		for(Widget w : renderables)
-			if(w instanceof Slider) {
-				Slider s = (Slider) w;
+			if(w instanceof Slider s) {
 				if(mouseX < s.x || mouseY < s.y || mouseX >= s.x + s.getWidth() || mouseY >= s.y + s.getHeight())
 					s.dragging = false;
 
@@ -76,26 +75,19 @@ public class ColorMatrixInputScreen extends AbstractInputScreen<ColorMatrixConfi
 				}
 
 				String displayVal = String.format("%.2f", val);
-				font.drawShadow(mstack, displayVal, s.x + s.getWidth() / 2 - font.width(displayVal) / 2 , s.y + 6, 0xFFFFFF);
+				font.drawShadow(mstack, displayVal, s.x + (float) (s.getWidth() / 2 - font.width(displayVal) / 2) , s.y + 6, 0xFFFFFF);
 
-				switch(sliders) {
-				case 0:
-					font.drawShadow(mstack, "R =", s.x - 20, s.y + 5, 0xFF0000);
-					font.drawShadow(mstack, "R", s.x + s.getWidth() / 2 - 2, s.y - 12, 0xFF0000);
-					break;
-				case 1:
-					font.drawShadow(mstack, "G", s.x + s.getWidth() / 2 - 2, s.y - 12, 0x00FF00);
-					break;
-				case 2:
-					font.drawShadow(mstack, "B", s.x + s.getWidth() / 2 - 2, s.y - 12, 0x0077FF);
-					break;
-				case 3:
-					font.drawShadow(mstack, "G =", s.x - 20, s.y + 5, 0x00FF00);
-					break;
-				case 6:
-					font.drawShadow(mstack, "B =", s.x - 20, s.y + 5, 0x0077FF);
-					break;
-				default: break;
+				switch (sliders) {
+					case 0 -> {
+						font.drawShadow(mstack, "R =", s.x - 20, s.y + 5, 0xFF0000);
+						font.drawShadow(mstack, "R", s.x + (float) (s.getWidth() / 2 - 2), s.y - 12, 0xFF0000);
+					}
+					case 1 -> font.drawShadow(mstack, "G", s.x + (float) (s.getWidth() / 2 - 2), s.y - 12, 0x00FF00);
+					case 2 -> font.drawShadow(mstack, "B", s.x + (float) (s.getWidth() / 2 - 2), s.y - 12, 0x0077FF);
+					case 3 -> font.drawShadow(mstack, "G =", s.x - 20, s.y + 5, 0x00FF00);
+					case 6 -> font.drawShadow(mstack, "B =", s.x - 20, s.y + 5, 0x0077FF);
+					default -> {
+					}
 				}
 				if((sliders % 3) != 0)
 					font.drawShadow(mstack, "+", s.x - 9, s.y + 5, 0xFFFFFF);
@@ -176,18 +168,17 @@ public class ColorMatrixInputScreen extends AbstractInputScreen<ColorMatrixConfi
 				}
 		};
 
-		int idx = 0;
-		switch(name) {
-		case "Dreary": idx = 1; break;
-		case "Vibrant": idx = 2; break;
-		}
+		int idx = switch (name) {
+			case "Dreary" -> 1;
+			case "Vibrant" -> 2;
+			default -> 0;
+		};
 
 		int sliders = 0;
 		mutable.colorMatrix = Arrays.copyOf(matrices[idx], matrices[idx].length);
 
 		for(Widget w : renderables)
-			if(w instanceof Slider) {
-				Slider s = (Slider) w;
+			if(w instanceof Slider s) {
 				s.setValue(matrices[idx][sliders]);
 				sliders++;
 			}

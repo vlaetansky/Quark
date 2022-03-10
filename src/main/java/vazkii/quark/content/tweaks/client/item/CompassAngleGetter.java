@@ -1,10 +1,5 @@
 package vazkii.quark.content.tweaks.client.item;
 
-import java.util.Optional;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.core.BlockPos;
@@ -28,6 +23,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.content.tweaks.module.CompassesWorkEverywhereModule;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Optional;
+
 public class CompassAngleGetter {
 
 	private static final String TAG_CALCULATED = "quark:compass_calculated";
@@ -39,12 +38,12 @@ public class CompassAngleGetter {
 	public static void tickCompass(Player player, ItemStack stack) {
 		boolean calculated = isCalculated(stack);
 		boolean nether = player.level.dimension().location().equals(LevelStem.NETHER.location());
-		
+
 		if(calculated) {
 			boolean wasInNether = ItemNBTHelper.getBoolean(stack, TAG_WAS_IN_NETHER, false);
-			BlockPos pos = player.blockPosition(); 
+			BlockPos pos = player.blockPosition();
 			boolean isInPortal = player.level.getBlockState(pos).getBlock() == Blocks.NETHER_PORTAL;
-			
+
 			if(nether && !wasInNether && isInPortal) {
 				ItemNBTHelper.setInt(stack, TAG_NETHER_TARGET_X, pos.getX());
 				ItemNBTHelper.setInt(stack, TAG_NETHER_TARGET_Z, pos.getZ());
@@ -66,10 +65,10 @@ public class CompassAngleGetter {
 
 	@OnlyIn(Dist.CLIENT)
 	public static class Impl implements ItemPropertyFunction {
-		
+
 		private final Angle normalAngle = new Angle();
 		private final Angle unknownAngle = new Angle();
-		
+
 		@Override
 		@OnlyIn(Dist.CLIENT)
 		public float call(@Nonnull ItemStack stack, @Nullable ClientLevel worldIn, @Nullable LivingEntity entityIn, int id) {
@@ -95,11 +94,11 @@ public class CompassAngleGetter {
 
 			ResourceLocation dimension = worldIn.dimension().location();
 			BlockPos lodestonePos = CompassItem.isLodestoneCompass(stack) ? this.getLodestonePosition(worldIn, stack.getOrCreateTag()) : null;
-			
+
 			if(lodestonePos != null) {
 				calculate = true;
 				target = lodestonePos;
-			} else if(dimension.equals(LevelStem.END.location()) && CompassesWorkEverywhereModule.enableEnd) 
+			} else if(dimension.equals(LevelStem.END.location()) && CompassesWorkEverywhereModule.enableEnd)
 				calculate = true;
 			else if(dimension.equals(LevelStem.NETHER.location()) && isCalculated(stack) && CompassesWorkEverywhereModule.enableNether) {
 				boolean set = ItemNBTHelper.getBoolean(stack, TAG_POSITION_SET, false);
@@ -128,13 +127,13 @@ public class CompassAngleGetter {
 			} else {
 				if(unknownAngle.needsUpdate(gameTime))
 					unknownAngle.wobble(gameTime, Math.random());
-					
+
 				angle = unknownAngle.rotation + ((double) worldIn.hashCode() / Math.PI);
 			}
-			
+
 			return Mth.positiveModulo((float) angle, 1.0F);
 		}
-		
+
 
 		private double getFrameRotation(ItemFrame frame) {
 			return Mth.wrapDegrees(180 + frame.getDirection().toYRot());
@@ -147,33 +146,33 @@ public class CompassAngleGetter {
 
 		// vanilla copy from here on out
 
-		@Nullable 
-		private BlockPos getLodestonePosition(Level p_239442_1_, CompoundTag p_239442_2_) {
-			boolean flag = p_239442_2_.contains("LodestonePos");
-			boolean flag1 = p_239442_2_.contains("LodestoneDimension");
+		@Nullable
+		private BlockPos getLodestonePosition(Level world, CompoundTag tag) {
+			boolean flag = tag.contains("LodestonePos");
+			boolean flag1 = tag.contains("LodestoneDimension");
 			if (flag && flag1) {
-				Optional<ResourceKey<Level>> optional = CompassItem.getLodestoneDimension(p_239442_2_);
-				if (optional.isPresent() && p_239442_1_.dimension().equals(optional.get())) {
-					return NbtUtils.readBlockPos(p_239442_2_.getCompound("LodestonePos"));
+				Optional<ResourceKey<Level>> optional = CompassItem.getLodestoneDimension(tag);
+				if (optional.isPresent() && world.dimension().equals(optional.get())) {
+					return NbtUtils.readBlockPos(tag.getCompound("LodestonePos"));
 				}
 			}
 
 			return null;
 		}
-		
+
 		@Nullable
-		private BlockPos getWorldSpawn(ClientLevel p_239444_1_) {
-			return p_239444_1_.dimensionType().natural() ? p_239444_1_.getSharedSpawnPos() : null;
+		private BlockPos getWorldSpawn(ClientLevel world) {
+			return world.dimensionType().natural() ? world.getSharedSpawnPos() : null;
 		}
-	
+
 		@OnlyIn(Dist.CLIENT)
 		private static class Angle {
 			private double rotation;
 			private double rota;
 			private long lastUpdateTick;
 
-			private boolean needsUpdate(long p_239448_1_) {
-				return lastUpdateTick != p_239448_1_;
+			private boolean needsUpdate(long tick) {
+				return lastUpdateTick != tick;
 			}
 
 			private void wobble(long gameTime, double angle) {
@@ -185,9 +184,9 @@ public class CompassAngleGetter {
 				rotation = Mth.positiveModulo(rotation + rota, 1.0D);
 			}
 		}
-		
+
 	}
-	
+
 
 
 

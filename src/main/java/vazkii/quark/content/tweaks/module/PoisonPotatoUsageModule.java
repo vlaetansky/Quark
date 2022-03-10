@@ -21,14 +21,13 @@ import vazkii.quark.base.module.config.Config;
 public class PoisonPotatoUsageModule extends QuarkModule {
 
 	private static final String TAG_POISONED = "quark:poison_potato_applied";
-	
+
 	@Config public static double chance = 0.1;
 	@Config public static boolean poisonEffect = true;
-	
+
 	@SubscribeEvent
 	public void onInteract(EntityInteract event) {
-		if(event.getTarget() instanceof AgeableMob && event.getItemStack().getItem() == Items.POISONOUS_POTATO) {
-			AgeableMob ageable = (AgeableMob) event.getTarget();
+		if(event.getTarget() instanceof AgeableMob ageable && event.getItemStack().getItem() == Items.POISONOUS_POTATO) {
 			if(ageable.isBaby() && !isEntityPoisoned(ageable)) {
 				if(!event.getWorld().isClientSide) {
 					Vec3 pos = ageable.position();
@@ -51,22 +50,21 @@ public class PoisonPotatoUsageModule extends QuarkModule {
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onEntityUpdate(LivingUpdateEvent event) {
-		if(event.getEntity() instanceof Animal) {
-			Animal animal = (Animal) event.getEntity();
+		if(event.getEntity() instanceof Animal animal) {
 			if(animal.isBaby() && isEntityPoisoned(animal))
 				animal.setAge(-24000);
 		}
 	}
-	
+
 	private boolean isEntityPoisoned(Entity e) {
 		return e.getPersistentData().getBoolean(TAG_POISONED);
 	}
-	
+
 	private void poisonEntity(Entity e) {
 		e.getPersistentData().putBoolean(TAG_POISONED, true);
 	}
-	
+
 }

@@ -1,20 +1,7 @@
 package vazkii.quark.content.mobs.entity;
 
-import static vazkii.quark.content.world.module.NewStoneTypesModule.jasperBlock;
-import static vazkii.quark.content.world.module.NewStoneTypesModule.limestoneBlock;
-import static vazkii.quark.content.world.module.NewStoneTypesModule.polishedBlocks;
-import static vazkii.quark.content.world.module.NewStoneTypesModule.shaleBlock;
-
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -32,13 +19,7 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.TemptGoal;
@@ -49,11 +30,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -76,6 +53,14 @@ import vazkii.quark.content.mobs.ai.FavorBlockGoal;
 import vazkii.quark.content.mobs.ai.RunAndPoofGoal;
 import vazkii.quark.content.mobs.module.StonelingsModule;
 import vazkii.quark.content.world.module.GlimmeringWealdModule;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+
+import static vazkii.quark.content.world.module.NewStoneTypesModule.*;
 
 public class Stoneling extends PathfinderMob {
 
@@ -213,7 +198,7 @@ public class Stoneling extends PathfinderMob {
 								entityData.set(VARIANT, targetVariant.getIndex());
 							}
 
-							playSound(QuarkSounds.ENTITY_STONELING_PURR, 1F, 1F + level.random.nextFloat() * 1F);
+							playSound(QuarkSounds.ENTITY_STONELING_PURR, 1F, 1F + level.random.nextFloat());
 
 							heal(1);
 
@@ -241,7 +226,7 @@ public class Stoneling extends PathfinderMob {
 
 					setPlayerMade(true);
 
-					playSound(QuarkSounds.ENTITY_STONELING_PURR, 1F, 1F + level.random.nextFloat() * 1F);
+					playSound(QuarkSounds.ENTITY_STONELING_PURR, 1F, 1F + level.random.nextFloat());
 
 					if (!player.getAbilities().instabuild)
 						playerItem.shrink(1);
@@ -326,8 +311,7 @@ public class Stoneling extends PathfinderMob {
 			startle();
 			for (Entity entity : level.getEntities(this,
 					getBoundingBox().inflate(16))) {
-				if (entity instanceof Stoneling) {
-					Stoneling stoneling = (Stoneling) entity;
+				if (entity instanceof Stoneling stoneling) {
 					if (!stoneling.isPlayerMade() && stoneling.getSensing().hasLineOfSight(this)) {
 						startle();
 					}
@@ -483,7 +467,7 @@ public class Stoneling extends PathfinderMob {
 		return 0.5F - world.getBrightness(pos);
 	}
 
-	public static enum StonelingVariant implements SpawnGroupData {
+	public enum StonelingVariant implements SpawnGroupData {
 		STONE("stone", Blocks.COBBLESTONE, Blocks.STONE),
 		ANDESITE("andesite", Blocks.ANDESITE, Blocks.POLISHED_ANDESITE),
 		DIORITE("diorite", Blocks.DIORITE, Blocks.POLISHED_DIORITE),

@@ -1,7 +1,5 @@
 package vazkii.quark.content.world.block;
 
-import java.util.Random;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -20,6 +18,7 @@ import vazkii.quark.base.block.QuarkBushBlock;
 import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nonnull;
+import java.util.Random;
 
 public class GlowShroomBlock extends QuarkBushBlock implements BonemealableBlock {
 
@@ -49,28 +48,28 @@ public class GlowShroomBlock extends QuarkBushBlock implements BonemealableBlock
 
 	@Nonnull
 	@Override
-	public VoxelShape getShape(@Nonnull BlockState p_54889_, @Nonnull BlockGetter p_54890_, @Nonnull BlockPos p_54891_, @Nonnull CollisionContext p_54892_) {
+	public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
 		return SHAPE;
 	}
 
 	@Override
-	protected boolean mayPlaceOn(BlockState p_54894_, @Nonnull BlockGetter p_54895_, @Nonnull BlockPos p_54896_) {
-		return p_54894_.getBlock() == Blocks.DEEPSLATE;
+	protected boolean mayPlaceOn(BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos) {
+		return state.getBlock() == Blocks.DEEPSLATE;
 	}
 
 	@Override
-	public boolean isValidBonemealTarget(@Nonnull BlockGetter p_50897_, @Nonnull BlockPos p_50898_, @Nonnull BlockState p_50899_, boolean p_50900_) {
+	public boolean isValidBonemealTarget(@Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nonnull BlockState state, boolean isClient) {
 		return true;
 	}
 
 	@Override
-	public boolean isBonemealSuccess(@Nonnull Level p_50901_, Random p_50902_, @Nonnull BlockPos p_50903_, @Nonnull BlockState p_50904_) {
-		return p_50902_.nextFloat() < 0.4D;
+	public boolean isBonemealSuccess(@Nonnull Level world, Random random, @Nonnull BlockPos pos, @Nonnull BlockState state) {
+		return random.nextFloat() < 0.4D;
 	}
 
 	@Override
-	public void performBonemeal(@Nonnull ServerLevel p_50893_, @Nonnull Random p_50894_, @Nonnull BlockPos p_50895_, @Nonnull BlockState p_50896_) {
-		HugeGlowShroomBlock.place(p_50893_, p_50894_, p_50895_);
+	public void performBonemeal(@Nonnull ServerLevel world, @Nonnull Random random, @Nonnull BlockPos pos, @Nonnull BlockState state) {
+		HugeGlowShroomBlock.place(world, random, pos);
 	}
 
 }

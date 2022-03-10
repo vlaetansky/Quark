@@ -1,5 +1,11 @@
 package vazkii.quark.base.util;
 
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionBrewing;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
+import net.minecraftforge.registries.ForgeRegistryEntry;
+
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
@@ -7,26 +13,20 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionBrewing;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
-import net.minecraftforge.registries.ForgeRegistryEntry;
-
 /**
  * @author WireSegal
  * Created at 4:12 PM on 10/20/19.
  */
 public class PotionReflection {
 	private static final MethodHandle CREATE_MIX_PREDICATE, GET_POTION_TYPE_CONVERSIONS;
-	
-	/**
+
+	/*
 	 * TO ANY ONLOOKERS, READ THIS
-	 * 
+	 *
 	 * This class is incredibly cursed, but it's also essential, as ATs/Accessors can't be used to reproduce this
 	 * behavior, due to the fact the classes referenced here are touched by Forge.
 	 */
-	
+
 	static {
 		try {
 			Class<?> mixPredicate = Class.forName("net.minecraft.world.item.alchemy.PotionBrewing$Mix");
@@ -44,6 +44,7 @@ public class PotionReflection {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public static void addBrewingRecipe(Potion input, Ingredient reagent, Potion output) {
 		try {
 			Object mixPredicate = CREATE_MIX_PREDICATE.invokeExact((ForgeRegistryEntry<?>) input, reagent, (ForgeRegistryEntry<?>) output);

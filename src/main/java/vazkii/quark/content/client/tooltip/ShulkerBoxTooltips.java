@@ -80,27 +80,21 @@ public class ShulkerBoxTooltips {
 		}
 	}
 
-	public static class ShulkerComponent implements ClientTooltipComponent, TooltipComponent {
+	public record ShulkerComponent(ItemStack stack) implements ClientTooltipComponent, TooltipComponent {
 
-		private static final int[][] TARGET_RATIOS = new int[][] {
-			{ 1, 1 },
-			{ 9, 3 },
-			{ 9, 5 },
-			{ 9, 6 },
-			{ 9, 8 },
-			{ 9, 9 },
-			{ 12, 9 }
+		private static final int[][] TARGET_RATIOS = new int[][]{
+				{1, 1},
+				{9, 3},
+				{9, 5},
+				{9, 6},
+				{9, 8},
+				{9, 9},
+				{12, 9}
 		};
 
 		private static final int CORNER = 5;
 		private static final int BUFFER = 1;
 		private static final int EDGE = 18;
-
-		private final ItemStack stack;
-
-		public ShulkerComponent(ItemStack stack) {
-			this.stack = stack;
-		}
 
 
 		@Override
@@ -109,7 +103,7 @@ public class ShulkerBoxTooltips {
 
 			CompoundTag cmp = ItemNBTHelper.getCompound(stack, "BlockEntityTag", true);
 			if (cmp != null) {
-				if(cmp.contains("LootTable"))
+				if (cmp.contains("LootTable"))
 					return;
 
 				if (!cmp.contains("id")) {
@@ -118,7 +112,7 @@ public class ShulkerBoxTooltips {
 				}
 				BlockEntity te = BlockEntity.loadStatic(BlockPos.ZERO, ((BlockItem) stack.getItem()).getBlock().defaultBlockState(), cmp);
 				if (te != null) {
-					if(te instanceof RandomizableContainerBlockEntity)
+					if (te instanceof RandomizableContainerBlockEntity)
 						((RandomizableContainerBlockEntity) te).setLootTable(null, 0);
 
 					LazyOptional<IItemHandler> handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
@@ -128,7 +122,7 @@ public class ShulkerBoxTooltips {
 						int currentY = tooltipY - 1;
 
 						int size = capability.getSlots();
-						int[] dims = { Math.min(size, 9), Math.max(size / 9, 1) };
+						int[] dims = {Math.min(size, 9), Math.max(size / 9, 1)};
 						for (int[] testAgainst : TARGET_RATIOS) {
 							if (testAgainst[0] * testAgainst[1] == size) {
 								dims = testAgainst;

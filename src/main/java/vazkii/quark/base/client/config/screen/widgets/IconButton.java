@@ -1,9 +1,6 @@
 package vazkii.quark.base.client.config.screen.widgets;
 
-import java.util.Arrays;
-
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.language.I18n;
@@ -13,6 +10,8 @@ import net.minecraft.world.item.ItemStack;
 import vazkii.quark.base.client.handler.TopLayerTooltipHandler;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
+import java.util.List;
 
 public class IconButton extends Button {
 
@@ -26,11 +25,11 @@ public class IconButton extends Button {
 	}
 
 	@Override
-	public void render(@Nonnull PoseStack mstack, int mouseX, int mouseY, float pticks) {
-		super.render(mstack, mouseX, mouseY, pticks);
+	public void render(@Nonnull PoseStack mstack, int mouseX, int mouseY, float partialTicks) {
+		super.render(mstack, mouseX, mouseY, partialTicks);
 
 		if(!active && mouseX >= x && mouseY >= y && mouseX < (x + width) && mouseY < (y + height))
-			TopLayerTooltipHandler.setTooltip(Arrays.asList(I18n.get("quark.gui.config.missingaddon")), mouseX, mouseY);
+			TopLayerTooltipHandler.setTooltip(List.of(I18n.get("quark.gui.config.missingaddon")), mouseX, mouseY);
 
 		Minecraft mc = Minecraft.getInstance();
 		mc.getItemRenderer().renderGuiItem(icon, x + 5, y + 2);

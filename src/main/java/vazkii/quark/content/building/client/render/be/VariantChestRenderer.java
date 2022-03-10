@@ -1,8 +1,5 @@
 package vazkii.quark.content.building.client.render.be;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.ResourceLocation;
@@ -14,10 +11,13 @@ import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.render.GenericChestBERenderer;
 import vazkii.quark.content.building.module.VariantChestsModule.IChestTextureProvider;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class VariantChestRenderer extends GenericChestBERenderer<ChestBlockEntity> {
 
-	private static Map<Block, ChestTextureBatch> chestTextures = new HashMap<>();
-	
+	private static final Map<Block, ChestTextureBatch> chestTextures = new HashMap<>();
+
 	public VariantChestRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
@@ -25,23 +25,22 @@ public class VariantChestRenderer extends GenericChestBERenderer<ChestBlockEntit
 	@Override
 	public Material getMaterial(ChestBlockEntity t, ChestType type) {
 		Block block = t.getBlockState().getBlock();
-		
+
 		ChestTextureBatch batch = chestTextures.get(block);
 		if(batch == null)
 			return null;
-		
-		switch(type) {
-		case LEFT: return batch.left;
-		case RIGHT: return batch.right;
-		default: return batch.normal;
-		}
+
+		return switch (type) {
+			case LEFT -> batch.left;
+			case RIGHT -> batch.right;
+			default -> batch.normal;
+		};
 	}
 
 	public static void accept(TextureStitchEvent.Pre event, Block chest) {
 		ResourceLocation atlas = event.getAtlas().location();
 
-		if(chest instanceof IChestTextureProvider) {
-			IChestTextureProvider prov = (IChestTextureProvider) chest;
+		if(chest instanceof IChestTextureProvider prov) {
 
 			String path = prov.getChestTexturePath();
 			if(!prov.isTrap())

@@ -1,12 +1,6 @@
 package vazkii.quark.base.recipe.ingredient;
 
-import java.util.stream.Stream;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.google.gson.JsonObject;
-
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.ints.IntLists;
 import net.minecraft.network.FriendlyByteBuf;
@@ -14,6 +8,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
 import vazkii.quark.base.module.config.ConfigFlagManager;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.stream.Stream;
 
 /**
  * @author WireSegal
@@ -75,11 +73,9 @@ public class FlagIngredient extends Ingredient {
 		return Serializer.INSTANCE;
 	}
 
-	public static class Serializer implements IIngredientSerializer<FlagIngredient> {
+	public record Serializer(ConfigFlagManager flagManager) implements IIngredientSerializer<FlagIngredient> {
 
 		public static Serializer INSTANCE;
-
-		private final ConfigFlagManager flagManager;
 
 		public Serializer(ConfigFlagManager flagManager) {
 			this.flagManager = flagManager;

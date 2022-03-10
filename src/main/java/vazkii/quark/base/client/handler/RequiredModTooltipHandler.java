@@ -18,8 +18,8 @@ import java.util.Map;
 @EventBusSubscriber(modid = Quark.MOD_ID, value = Dist.CLIENT)
 public class RequiredModTooltipHandler {
 
-	private static Map<Item, String> ITEMS = new HashMap<>();
-	private static Map<Block, String> BLOCKS = new HashMap<>();
+	private static final Map<Item, String> ITEMS = new HashMap<>();
+	private static final Map<Block, String> BLOCKS = new HashMap<>();
 
 	public static void map(Item item, String mod) {
 		ITEMS.put(item, mod);

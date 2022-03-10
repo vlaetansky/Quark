@@ -46,35 +46,34 @@ public class SignEditingModule extends QuarkModule {
 	@SubscribeEvent
 	public void onInteract(PlayerInteractEvent.RightClickBlock event) {
 		if(event.getUseBlock() == Result.DENY)
-			return;	
-		
+			return;
+
 		BlockEntity tile = event.getWorld().getBlockEntity(event.getPos());
 		Player player = event.getPlayer();
 		ItemStack stack = player.getMainHandItem();
 
-		if(player instanceof ServerPlayer 
-				&& tile instanceof SignBlockEntity 
+		if(player instanceof ServerPlayer
+				&& tile instanceof SignBlockEntity sign
 				&& !doesSignHaveCommand((SignBlockEntity) tile)
-				&& (!requiresEmptyHand || stack.isEmpty()) 
+				&& (!requiresEmptyHand || stack.isEmpty())
 				&& !(stack.getItem() instanceof DyeItem)
 				&& !(stack.getItem() == Items.GLOW_INK_SAC)
 				&& !tile.getBlockState().getBlock().getRegistryName().getNamespace().equals("signbutton")
-				&& player.mayUseItemAt(event.getPos(), event.getFace(), event.getItemStack()) 
+				&& player.mayUseItemAt(event.getPos(), event.getFace(), event.getItemStack())
 				&& !event.getEntity().isDiscrete()) {
 
-			SignBlockEntity sign = (SignBlockEntity) tile;
 			sign.setAllowedPlayerEditor(player.getUUID());
 			sign.isEditable = true;
 
 			QuarkNetwork.sendToPlayer(new EditSignMessage(event.getPos()), (ServerPlayer) player);
-			
+
 			event.setCanceled(true);
 			event.setCancellationResult(InteractionResult.SUCCESS);
 		}
 	}
 
 	private boolean doesSignHaveCommand(SignBlockEntity sign) {
-		for(Component itextcomponent : sign.messages) { 
+		for(Component itextcomponent : sign.messages) {
 			Style style = itextcomponent == null ? null : itextcomponent.getStyle();
 			if (style != null && style.getClickEvent() != null) {
 				ClickEvent clickevent = style.getClickEvent();

@@ -101,22 +101,12 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 		if(matrix == null)
 			return;
 
-		switch(operation) {
-		case OPER_ADD:
-			apply(m -> generateAndPay(m, player));
-			break;
-		case OPER_PLACE:
-			apply(m -> m.place(arg0, arg1, arg2));
-			break;
-		case OPER_REMOVE:
-			apply(m -> m.remove(arg0));
-			break;
-		case OPER_ROTATE:
-			apply(m -> m.rotate(arg0));
-			break;
-		case OPER_MERGE:
-			apply(m -> m.merge(arg0, arg1));
-			break;
+		switch (operation) {
+			case OPER_ADD -> apply(m -> generateAndPay(m, player));
+			case OPER_PLACE -> apply(m -> m.place(arg0, arg1, arg2));
+			case OPER_REMOVE -> apply(m -> m.remove(arg0));
+			case OPER_ROTATE -> apply(m -> m.rotate(arg0));
+			case OPER_MERGE -> apply(m -> m.merge(arg0, arg1));
 		}
 	}
 
@@ -269,7 +259,7 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 		if(MatrixEnchantingModule.allowInfluencing) {
 			Block block = state.getBlock();
 
-			IEnchantmentInfluencer influencer = null;
+			IEnchantmentInfluencer influencer;
 			if(block instanceof IEnchantmentInfluencer)
 				influencer = (IEnchantmentInfluencer) block;
 			else influencer = CandleInfluencer.forBlock(block);
@@ -281,8 +271,7 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 				if(ord != null && count > 0) {
 					List<Enchantment> influencedEnchants = MatrixEnchantingModule.candleInfluences.get(ord);
 					if(influencedEnchants != null) {
-						if(influencer instanceof IModifiableEnchantmentInfluencer) {
-							IModifiableEnchantmentInfluencer modifiableInfluencer = (IModifiableEnchantmentInfluencer) influencer;
+						if(influencer instanceof IModifiableEnchantmentInfluencer modifiableInfluencer) {
 							influencedEnchants = modifiableInfluencer.getModifiedEnchantments(world, pos, state, getItem(0), new ArrayList<>(influencedEnchants));
 						}
 						for(Enchantment e : influencedEnchants) {

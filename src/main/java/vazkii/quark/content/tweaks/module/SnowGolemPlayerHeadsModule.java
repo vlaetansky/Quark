@@ -21,9 +21,8 @@ public class SnowGolemPlayerHeadsModule extends QuarkModule {
 	public void onDrops(LivingDropsEvent event) {
 		Entity e = event.getEntity();
 
-		if(e.hasCustomName() && e instanceof SnowGolem && event.getSource().getEntity() != null && event.getSource().getEntity() instanceof Witch) {
-			SnowGolem snowman = (SnowGolem) e;
-			if(snowman.hasPumpkin()) { 
+		if(e.hasCustomName() && e instanceof SnowGolem snowman && event.getSource().getEntity() != null && event.getSource().getEntity() instanceof Witch) {
+			if(snowman.hasPumpkin()) {
 				ItemStack stack = new ItemStack(Items.PLAYER_HEAD);
 				ItemNBTHelper.setString(stack, "SkullOwner", e.getCustomName().getString());
 				Vec3 pos = e.position();
@@ -31,5 +30,5 @@ public class SnowGolemPlayerHeadsModule extends QuarkModule {
 			}
 		}
 	}
-	
+
 }

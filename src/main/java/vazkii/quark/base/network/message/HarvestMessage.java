@@ -5,10 +5,13 @@ import net.minecraftforge.network.NetworkEvent;
 import vazkii.arl.network.IMessage;
 import vazkii.quark.content.tweaks.module.SimpleHarvestModule;
 
+import java.io.Serial;
+
 public class HarvestMessage implements IMessage {
 
+	@Serial
 	private static final long serialVersionUID = -51788488328591145L;
-	
+
 	public BlockPos pos;
 
 	public HarvestMessage() { }

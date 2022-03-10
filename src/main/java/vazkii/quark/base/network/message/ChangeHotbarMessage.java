@@ -6,14 +6,17 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
 import vazkii.arl.network.IMessage;
 
+import java.io.Serial;
+
 public class ChangeHotbarMessage implements IMessage {
 
+	@Serial
 	private static final long serialVersionUID = -3942423443215625756L;
 
 	public int bar;
-	
+
 	public ChangeHotbarMessage() { }
-	
+
 	public ChangeHotbarMessage(int bar) {
 		this.bar = bar;
 	}
@@ -27,15 +30,15 @@ public class ChangeHotbarMessage implements IMessage {
 				for(int i = 0; i < 9; i++)
 					swap(player.getInventory(), i, i + bar * 9);
 		});
-		
+
 		return true;
 	}
-	
+
 	public void swap(Container inv, int slot1, int slot2) {
 		ItemStack stack1 = inv.getItem(slot1);
 		ItemStack stack2 = inv.getItem(slot2);
 		inv.setItem(slot2, stack1);
 		inv.setItem(slot1, stack2);
 	}
-	
+
 }

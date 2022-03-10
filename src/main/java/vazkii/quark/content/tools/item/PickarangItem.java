@@ -53,24 +53,20 @@ public class PickarangItem extends QuarkItem {
 
 	@Override
 	public boolean isCorrectToolForDrops(@Nonnull BlockState blockIn) {
-		switch (isNetherite ? PickarangModule.netheriteHarvestLevel : PickarangModule.harvestLevel) {
-		case 0:
-			return Items.WOODEN_PICKAXE.isCorrectToolForDrops(blockIn) ||
+		return switch (isNetherite ? PickarangModule.netheriteHarvestLevel : PickarangModule.harvestLevel) {
+			case 0 -> Items.WOODEN_PICKAXE.isCorrectToolForDrops(blockIn) ||
 					Items.WOODEN_AXE.isCorrectToolForDrops(blockIn) ||
 					Items.WOODEN_SHOVEL.isCorrectToolForDrops(blockIn);
-		case 1:
-			return Items.STONE_PICKAXE.isCorrectToolForDrops(blockIn) ||
+			case 1 -> Items.STONE_PICKAXE.isCorrectToolForDrops(blockIn) ||
 					Items.STONE_AXE.isCorrectToolForDrops(blockIn) ||
 					Items.STONE_SHOVEL.isCorrectToolForDrops(blockIn);
-		case 2:
-			return Items.IRON_PICKAXE.isCorrectToolForDrops(blockIn) ||
+			case 2 -> Items.IRON_PICKAXE.isCorrectToolForDrops(blockIn) ||
 					Items.IRON_AXE.isCorrectToolForDrops(blockIn) ||
 					Items.IRON_SHOVEL.isCorrectToolForDrops(blockIn);
-		default:
-			return Items.DIAMOND_PICKAXE.isCorrectToolForDrops(blockIn) ||
+			default -> Items.DIAMOND_PICKAXE.isCorrectToolForDrops(blockIn) ||
 					Items.DIAMOND_AXE.isCorrectToolForDrops(blockIn) ||
 					Items.DIAMOND_SHOVEL.isCorrectToolForDrops(blockIn);
-		}
+		};
 	}
 
 	@Override

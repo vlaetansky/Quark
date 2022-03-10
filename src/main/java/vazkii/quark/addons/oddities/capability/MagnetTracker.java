@@ -48,9 +48,9 @@ public class MagnetTracker implements IMagnetTracker {
 		Direction target = Direction.getNearest(net.getX(), net.getY(), net.getZ());
 
 		for (Force force : forcesActing.get(pos)) {
-			if (force.getDirection() == target) {
-				BlockState origin = world.getBlockState(force.getOrigin());
-				world.blockEvent(force.getOrigin(), origin.getBlock(), force.isPushing() ? 0 : 1, force.getDistance());
+			if (force.direction() == target) {
+				BlockState origin = world.getBlockState(force.origin());
+				world.blockEvent(force.origin(), origin.getBlock(), force.pushing() ? 0 : 1, force.distance());
 			}
 		}
 	}

@@ -193,8 +193,7 @@ public class Foxhound extends Wolf implements Enemy {
 		if(isTame()) {
 			BlockPos below = blockPosition().below();
 			BlockEntity tile = level.getBlockEntity(below);
-			if (tile instanceof AbstractFurnaceBlockEntity) {
-				AbstractFurnaceBlockEntity furnace = (AbstractFurnaceBlockEntity) tile;
+			if (tile instanceof AbstractFurnaceBlockEntity furnace) {
 				int cookTime = furnace.cookingProgress;
 				if (cookTime > 0 && cookTime % 3 == 0) {
 					List<Foxhound> foxhounds = level.getEntitiesOfClass(Foxhound.class, new AABB(blockPosition()),

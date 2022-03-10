@@ -1,12 +1,8 @@
 package vazkii.quark.content.building.client.render.entity;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Vector3f;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
@@ -29,11 +25,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.BannerItem;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.MapItem;
-import net.minecraft.world.item.ShieldItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.StandingSignBlock;
 import net.minecraft.world.level.block.entity.BannerBlockEntity;
@@ -50,6 +42,7 @@ import vazkii.quark.content.building.entity.GlassItemFrame;
 import vazkii.quark.content.building.module.GlassItemFrameModule;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * @author WireSegal
@@ -61,9 +54,9 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrame> {
 
 	private static final ModelResourceLocation LOCATION_MODEL = new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, "glass_frame"), "inventory");
 
-	private static final List<Direction> SIGN_DIRECTIONS = Arrays.asList(new Direction[] { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST });
+	private static final List<Direction> SIGN_DIRECTIONS = List.of(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
 
-	private static BannerBlockEntity banner = new BannerBlockEntity(BlockPos.ZERO, Blocks.WHITE_BANNER.defaultBlockState());
+	private static final BannerBlockEntity banner = new BannerBlockEntity(BlockPos.ZERO, Blocks.WHITE_BANNER.defaultBlockState());
 	private final ModelPart bannerModel;
 
 	private final Minecraft mc = Minecraft.getInstance();
@@ -82,52 +75,52 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrame> {
 	}
 
 	@Override
-	public void render(@Nonnull GlassItemFrame p_225623_1_, float p_225623_2_, float p_225623_3_, @Nonnull PoseStack p_225623_4_, @Nonnull MultiBufferSource p_225623_5_, int p_225623_6_) {
-		super.render(p_225623_1_, p_225623_2_, p_225623_3_, p_225623_4_, p_225623_5_, p_225623_6_);
-		p_225623_4_.pushPose();
-		Direction direction = p_225623_1_.getDirection();
-		Vec3 Vector3d = this.getRenderOffset(p_225623_1_, p_225623_3_);
-		p_225623_4_.translate(-Vector3d.x(), -Vector3d.y(), -Vector3d.z());
-		p_225623_4_.translate((double)direction.getStepX() * 0.46875D, (double)direction.getStepY() * 0.46875D, (double)direction.getStepZ() * 0.46875D);
-		p_225623_4_.mulPose(Vector3f.XP.rotationDegrees(p_225623_1_.getXRot()));
-		p_225623_4_.mulPose(Vector3f.YP.rotationDegrees(180.0F - p_225623_1_.getYRot()));
+	public void render(@Nonnull GlassItemFrame frame, float yaw, float partialTicks, @Nonnull PoseStack matrix, @Nonnull MultiBufferSource buffer, int light) {
+		super.render(frame, yaw, partialTicks, matrix, buffer, light);
+		matrix.pushPose();
+		Direction direction = frame.getDirection();
+		Vec3 Vector3d = this.getRenderOffset(frame, partialTicks);
+		matrix.translate(-Vector3d.x(), -Vector3d.y(), -Vector3d.z());
+		matrix.translate((double)direction.getStepX() * 0.46875D, (double)direction.getStepY() * 0.46875D, (double)direction.getStepZ() * 0.46875D);
+		matrix.mulPose(Vector3f.XP.rotationDegrees(frame.getXRot()));
+		matrix.mulPose(Vector3f.YP.rotationDegrees(180.0F - frame.getYRot()));
 		BlockRenderDispatcher blockrendererdispatcher = this.mc.getBlockRenderer();
 		ModelManager modelmanager = blockrendererdispatcher.getBlockModelShaper().getModelManager();
 
-		ItemStack itemstack = p_225623_1_.getItem();
+		ItemStack itemstack = frame.getItem();
 
-		if(p_225623_1_.getEntityData().get(GlassItemFrame.IS_SHINY))
-			p_225623_6_ = 0xF000F0;
+		if(frame.getEntityData().get(GlassItemFrame.IS_SHINY))
+			light = 0xF000F0;
 
 		if (itemstack.isEmpty()) {
-			p_225623_4_.pushPose();
-			p_225623_4_.translate(-0.5D, -0.5D, -0.5D);
-			blockrendererdispatcher.getModelRenderer().renderModel(p_225623_4_.last(), p_225623_5_.getBuffer(Sheets.cutoutBlockSheet()), (BlockState)null, modelmanager.getModel(LOCATION_MODEL), 1.0F, 1.0F, 1.0F, p_225623_6_, OverlayTexture.NO_OVERLAY);
-			p_225623_4_.popPose();
+			matrix.pushPose();
+			matrix.translate(-0.5D, -0.5D, -0.5D);
+			blockrendererdispatcher.getModelRenderer().renderModel(matrix.last(), buffer.getBuffer(Sheets.cutoutBlockSheet()), null, modelmanager.getModel(LOCATION_MODEL), 1.0F, 1.0F, 1.0F, light, OverlayTexture.NO_OVERLAY);
+			matrix.popPose();
 		} else {
-			renderItemStack(p_225623_1_, p_225623_2_, p_225623_3_, p_225623_4_, p_225623_5_, p_225623_6_, itemstack);
+			renderItemStack(frame, matrix, buffer, light, itemstack);
 		}
 
-		p_225623_4_.popPose();
+		matrix.popPose();
 	}
 
 	@Nonnull
 	@Override
-	public Vec3 getRenderOffset(GlassItemFrame p_225627_1_, float p_225627_2_) {
-		return new Vec3((double)((float)p_225627_1_.getDirection().getStepX() * 0.3F), -0.25D, (double)((float)p_225627_1_.getDirection().getStepZ() * 0.3F));
+	public Vec3 getRenderOffset(GlassItemFrame frame, float partialTicks) {
+		return new Vec3((float)frame.getDirection().getStepX() * 0.3F, -0.25D, (float)frame.getDirection().getStepZ() * 0.3F);
 	}
 
 	@Nonnull
 	@Override
-	public ResourceLocation getTextureLocation(@Nonnull GlassItemFrame p_110775_1_) {
+	public ResourceLocation getTextureLocation(@Nonnull GlassItemFrame frame) {
 		return TextureAtlas.LOCATION_BLOCKS;
 	}
 
 	@Override
-	protected boolean shouldShowName(@Nonnull GlassItemFrame p_177070_1_) {
-		if (Minecraft.renderNames() && !p_177070_1_.getItem().isEmpty() && p_177070_1_.getItem().hasCustomHoverName() && this.entityRenderDispatcher.crosshairPickEntity == p_177070_1_) {
-			double d0 = this.entityRenderDispatcher.distanceToSqr(p_177070_1_);
-			float f = p_177070_1_.isDiscrete() ? 32.0F : 64.0F;
+	protected boolean shouldShowName(@Nonnull GlassItemFrame frame) {
+		if (Minecraft.renderNames() && !frame.getItem().isEmpty() && frame.getItem().hasCustomHoverName() && this.entityRenderDispatcher.crosshairPickEntity == frame) {
+			double d0 = this.entityRenderDispatcher.distanceToSqr(frame);
+			float f = frame.isDiscrete() ? 32.0F : 64.0F;
 			return d0 < (double)(f * f);
 		} else {
 			return false;
@@ -135,11 +128,11 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrame> {
 	}
 
 	@Override
-	protected void renderNameTag(@Nonnull GlassItemFrame p_225629_1_, @Nonnull Component p_225629_2_, @Nonnull PoseStack p_225629_3_, @Nonnull MultiBufferSource p_225629_4_, int p_225629_5_) {
-		super.renderNameTag(p_225629_1_, p_225629_1_.getItem().getHoverName(), p_225629_3_, p_225629_4_, p_225629_5_);
+	protected void renderNameTag(@Nonnull GlassItemFrame frame, @Nonnull Component text, @Nonnull PoseStack matrix, @Nonnull MultiBufferSource buffer, int light) {
+		super.renderNameTag(frame, frame.getItem().getHoverName(), matrix, buffer, light);
 	}
 
-	protected void renderItemStack(GlassItemFrame itemFrame, float p_225623_2_, float p_225623_3_, PoseStack matrix, MultiBufferSource buff, int p_225623_6_, ItemStack stack) {
+	protected void renderItemStack(GlassItemFrame itemFrame, PoseStack matrix, MultiBufferSource buff, int light, ItemStack stack) {
 		if (!stack.isEmpty()) {
 			matrix.pushPose();
 			MapItemSavedData mapdata = MapItem.getSavedData(stack, itemFrame.level);
@@ -170,14 +163,14 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrame> {
 			int rotation = mapdata != null ? itemFrame.getRotation() % 4 * 2 : itemFrame.getRotation();
 			matrix.mulPose(Vector3f.ZP.rotationDegrees((float) rotation * 360.0F / 8.0F));
 
-			if (!MinecraftForge.EVENT_BUS.post(new RenderItemInFrameEvent(itemFrame, defaultRenderer, matrix, buff, p_225623_6_))) {
+			if (!MinecraftForge.EVENT_BUS.post(new RenderItemInFrameEvent(itemFrame, defaultRenderer, matrix, buff, light))) {
 				if (mapdata != null) {
 					matrix.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
 					matrix.scale(0.0078125F, 0.0078125F, 0.0078125F);
 					matrix.translate(-64.0F, -64.0F, 62.5F); // <- Use 62.5 instead of 64 to prevent z-fighting
 
 					Integer mapID = MapItem.getMapId(stack);
-					this.mc.gameRenderer.getMapRenderer().render(matrix, buff, mapID, mapdata, true, p_225623_6_);
+					this.mc.gameRenderer.getMapRenderer().render(matrix, buff, mapID, mapdata, true, light);
 				} else {
 					float s = (float) GlassItemFrameModule.itemRenderScale;
 					if (stack.getItem() instanceof BannerItem) {
@@ -187,7 +180,7 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrame> {
 						matrix.pushPose();
 						matrix.translate(0.0001F, -0.5001F, 0.55F);
 						matrix.scale(0.799999F, 0.399999F, 0.5F);
-						BannerRenderer.renderPatterns(matrix, buff, p_225623_6_, OverlayTexture.NO_OVERLAY, bannerModel, ModelBakery.BANNER_BASE, true, patterns);
+						BannerRenderer.renderPatterns(matrix, buff, light, OverlayTexture.NO_OVERLAY, bannerModel, ModelBakery.BANNER_BASE, true, patterns);
 						matrix.popPose();
 					}
 					else {
@@ -200,7 +193,7 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrame> {
 							matrix.scale(s, s, s);
 						}
 						matrix.scale(0.5F, 0.5F, 0.5F);
-						this.itemRenderer.renderStatic(stack, ItemTransforms.TransformType.FIXED, p_225623_6_, OverlayTexture.NO_OVERLAY, matrix, buff, 0);
+						this.itemRenderer.renderStatic(stack, ItemTransforms.TransformType.FIXED, light, OverlayTexture.NO_OVERLAY, matrix, buff, 0);
 					}
 				}
 			}

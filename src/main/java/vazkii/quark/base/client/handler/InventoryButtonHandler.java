@@ -44,7 +44,7 @@ public final class InventoryButtonHandler {
 
 	private static final Multimap<ButtonTargetType, ButtonProviderHolder> providers = Multimaps.newSetMultimap(new HashMap<>(), TreeSet::new);
 	private static final Multimap<ButtonTargetType, Button> currentButtons = Multimaps.newSetMultimap(new HashMap<>(), LinkedHashSet::new);
-	
+
 	@SubscribeEvent
 	public static void initGui(ScreenEvent.InitScreenEvent.Post event) {
 		Minecraft mc = Minecraft.getInstance();
@@ -52,19 +52,18 @@ public final class InventoryButtonHandler {
 		if(GeneralConfig.printScreenClassnames) {
 			String print = I18n.get("quark.misc.opened_screen", ChatFormatting.AQUA + screen.getClass().getName());
 			Quark.LOG.info(print);
-			
+
 			if(mc.player != null)
 				mc.player.sendMessage(new TextComponent(print), mc.player.getUUID());
 		}
 		currentButtons.clear();
-		
-		if(screen instanceof AbstractContainerScreen && (screen instanceof IQuarkButtonAllowed || GeneralConfig.isScreenAllowed(screen))) {
-			AbstractContainerScreen<?> containerScreen = (AbstractContainerScreen<?>) screen;
+
+		if(screen instanceof AbstractContainerScreen<?> containerScreen && (screen instanceof IQuarkButtonAllowed || GeneralConfig.isScreenAllowed(screen))) {
 
 			if(containerScreen instanceof InventoryScreen || containerScreen.getClass().getName().contains("CuriosScreen"))
 				applyProviders(event, ButtonTargetType.PLAYER_INVENTORY, containerScreen, s -> s.container == mc.player.getInventory() && s.getSlotIndex() == 17);
 			else {
-				if(InventoryTransferHandler.accepts(containerScreen.getMenu(), mc.player)) { 
+				if(InventoryTransferHandler.accepts(containerScreen.getMenu(), mc.player)) {
 					applyProviders(event, ButtonTargetType.CONTAINER_INVENTORY, containerScreen, s -> s.container != mc.player.getInventory() && s.getSlotIndex() == 8);
 					applyProviders(event, ButtonTargetType.CONTAINER_PLAYER_INVENTORY, containerScreen, s -> s.container == mc.player.getInventory() && s.getSlotIndex() == 17);
 				}
@@ -74,8 +73,7 @@ public final class InventoryButtonHandler {
 
 	private static Collection<ButtonProviderHolder> forGui(Screen gui) {
 		Set<ButtonProviderHolder> holders = new HashSet<>();
-		if (gui instanceof AbstractContainerScreen) {
-			AbstractContainerScreen<?> screen = (AbstractContainerScreen<?>) gui;
+		if (gui instanceof AbstractContainerScreen<?> screen) {
 
 			if (gui instanceof InventoryScreen)
 				holders.addAll(providers.get(ButtonTargetType.PLAYER_INVENTORY));
@@ -94,11 +92,10 @@ public final class InventoryButtonHandler {
 	@SubscribeEvent
 	public static void mouseInputEvent(ScreenEvent.MouseClickedEvent.Pre pressed) {
 		Screen gui = pressed.getScreen();
-		if (gui instanceof AbstractContainerScreen) {
-			AbstractContainerScreen<?> screen = (AbstractContainerScreen<?>) gui;
+		if (gui instanceof AbstractContainerScreen<?> screen) {
 			if(!GeneralConfig.isScreenAllowed(screen))
 				return;
-			
+
 			Collection<ButtonProviderHolder> holders = forGui(screen);
 
 			for (ButtonProviderHolder holder : holders) {
@@ -115,8 +112,7 @@ public final class InventoryButtonHandler {
 	@SubscribeEvent
 	public static void keyboardInputEvent(ScreenEvent.KeyboardKeyPressedEvent.Post pressed) {
 		Screen gui = pressed.getScreen();
-		if (gui instanceof AbstractContainerScreen) {
-			AbstractContainerScreen<?> screen = (AbstractContainerScreen<?>) gui;
+		if (gui instanceof AbstractContainerScreen<?> screen) {
 			if(!GeneralConfig.isScreenAllowed(screen))
 				return;
 
@@ -141,10 +137,10 @@ public final class InventoryButtonHandler {
 				if(slotPred.test(slot)) {
 					int x = slot.x + 6;
 					int y = slot.y - 13;
-					
-					if(screen instanceof BackpackInventoryScreen) 
+
+					if(screen instanceof BackpackInventoryScreen)
 						y -= 60;
-					
+
 					for(ButtonProviderHolder holder : holders) {
 						Button button = holder.getButton(screen, x, y);
 						if(button != null) {
@@ -158,7 +154,7 @@ public final class InventoryButtonHandler {
 				}
 		}
 	}
-	
+
 	public static Collection<Button> getActiveButtons(ButtonTargetType type) {
 		return currentButtons.get(type);
 	}

@@ -1,10 +1,7 @@
 package vazkii.quark.addons.oddities.client.render.be;
 
-import java.util.Random;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -23,10 +20,12 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.model.data.EmptyModelData;
 import vazkii.quark.addons.oddities.block.be.MagnetizedBlockBlockEntity;
 import vazkii.quark.content.automation.client.render.QuarkPistonBlockEntityRenderer;
 
 import javax.annotation.Nonnull;
+import java.util.Random;
 
 @OnlyIn(Dist.CLIENT)
 public class MagnetizedBlockRenderer implements BlockEntityRenderer<MagnetizedBlockBlockEntity> {
@@ -54,7 +53,7 @@ public class MagnetizedBlockRenderer implements BlockEntityRenderer<MagnetizedBl
 				matrixStackIn.pushPose();
 				matrixStackIn.translate(offset.x, offset.y, offset.z);
 				if (blockstate.getBlock() == Blocks.PISTON_HEAD && tileEntityIn.getProgress(partialTicks) <= 4.0F) {
-					blockstate = blockstate.setValue(PistonHeadBlock.SHORT, Boolean.valueOf(true));
+					blockstate = blockstate.setValue(PistonHeadBlock.SHORT, Boolean.TRUE);
 					renderStateModel(blockpos, blockstate, matrixStackIn, bufferIn, world, false, combinedOverlayIn);
 				} else {
 					renderStateModel(blockpos, blockstate, matrixStackIn, bufferIn, world, false, combinedOverlayIn);
@@ -66,14 +65,14 @@ public class MagnetizedBlockRenderer implements BlockEntityRenderer<MagnetizedBl
 		}
 	}
 
-	private void renderStateModel(BlockPos p_228876_1_, BlockState p_228876_2_, PoseStack p_228876_3_, MultiBufferSource p_228876_4_, Level p_228876_5_, boolean p_228876_6_, int p_228876_7_) {
-		RenderType.chunkBufferLayers().stream().filter(t -> ItemBlockRenderTypes.canRenderInLayer(p_228876_2_, t)).forEach(rendertype -> {
+	private void renderStateModel(BlockPos pos, BlockState state, PoseStack matrix, MultiBufferSource buffer, Level world, boolean checkSides, int packedOverlay) {
+		RenderType.chunkBufferLayers().stream().filter(t -> ItemBlockRenderTypes.canRenderInLayer(state, t)).forEach(rendertype -> {
 			ForgeHooksClient.setRenderType(rendertype);
-			VertexConsumer ivertexbuilder = p_228876_4_.getBuffer(rendertype);
+			VertexConsumer ivertexbuilder = buffer.getBuffer(rendertype);
 			if (blockRenderer == null)
 				blockRenderer = Minecraft.getInstance().getBlockRenderer();
 
-			blockRenderer.getModelRenderer().tesselateBlock(p_228876_5_, blockRenderer.getBlockModel(p_228876_2_), p_228876_2_, p_228876_1_, p_228876_3_, ivertexbuilder, p_228876_6_, new Random(), p_228876_2_.getSeed(p_228876_1_), p_228876_7_);
+			blockRenderer.getModelRenderer().tesselateBlock(world, blockRenderer.getBlockModel(state), state, pos, matrix, ivertexbuilder, checkSides, new Random(), state.getSeed(pos), packedOverlay, EmptyModelData.INSTANCE);
 		});
 		ForgeHooksClient.setRenderType(null);
 	}

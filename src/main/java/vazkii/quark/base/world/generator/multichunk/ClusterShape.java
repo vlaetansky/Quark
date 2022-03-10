@@ -1,9 +1,6 @@
 package vazkii.quark.base.world.generator.multichunk;
 
-import java.util.Random;
-
 import com.google.common.collect.ImmutableList;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
@@ -13,18 +10,11 @@ import vazkii.quark.base.handler.GeneralConfig;
 import vazkii.quark.base.module.config.type.ClusterSizeConfig;
 import vazkii.quark.base.module.config.type.IBiomeConfig;
 
-public class ClusterShape {
-	
-	private final BlockPos src;
-	private final Vec3 radius;
-	private final PerlinSimplexNoise noiseGenerator;
-	
-	public ClusterShape(BlockPos src, Vec3 radius, PerlinSimplexNoise noiseGenerator) {
-		this.src = src;
-		this.radius = radius;
-		this.noiseGenerator = noiseGenerator;
-	}
-	
+import java.util.Random;
+
+public record ClusterShape(BlockPos src, Vec3 radius,
+						   PerlinSimplexNoise noiseGenerator) {
+
 	public boolean isInside(BlockPos pos) {
 		return noiseDiff(pos) > 0;
 	}
@@ -40,9 +30,9 @@ public class ClusterShape {
 		double dz = (double) (pos.getZ() - src.getZ()) / radius.z;
 
 		double r = Math.sqrt(dx * dx + dy * dy + dz * dz);
-		if(r > 1)
+		if (r > 1)
 			return -1;
-		if(GeneralConfig.useFastWorldgen)
+		if (GeneralConfig.useFastWorldgen)
 			return 1;
 
 		// convert to spherical
@@ -56,7 +46,7 @@ public class ClusterShape {
 
 		// when nearing the end of the loop, lerp back to the start to prevent it cutting off
 		double cutoff = 0.75 * Math.PI;
-		if(phi > cutoff) {
+		if (phi > cutoff) {
 			double noise0 = noiseGenerator.getValue(-Math.PI + src.getX(), yn, false);
 			noise = Mth.lerp((phi - cutoff) / (Math.PI - cutoff), noise, noise0);
 		}
@@ -69,40 +59,40 @@ public class ClusterShape {
 	public int getUpperBound() {
 		return (int) Math.ceil(src.getY() + radius.y());
 	}
-	
+
 	public int getLowerBound() {
 		return (int) Math.floor(src.getY() - radius.y());
 	}
-	
+
 	public static class Provider {
-		
+
 		private final ClusterSizeConfig config;
 		private final PerlinSimplexNoise noiseGenerator;
-		
+
 		public Provider(ClusterSizeConfig config, long seed) {
 			this.config = config;
-			noiseGenerator = new PerlinSimplexNoise(new LegacyRandomSource(seed), 
+			noiseGenerator = new PerlinSimplexNoise(new LegacyRandomSource(seed),
 					ImmutableList.of(-4, -3, -2, -1, 0, 1, 2, 3, 4));
 		}
-		
+
 		public ClusterShape around(BlockPos src) {
 			Random rand = randAroundBlockPos(src);
-			
+
 			int radiusX = config.horizontalSize + rand.nextInt(config.horizontalVariation);
 			int radiusY = config.verticalSize + rand.nextInt(config.verticalVariation);
 			int radiusZ = config.horizontalSize + rand.nextInt(config.horizontalVariation);
-					
+
 			return new ClusterShape(src, new Vec3(radiusX, radiusY, radiusZ), noiseGenerator);
 		}
-		
+
 		public int getRadius() {
 			return config.horizontalSize + config.horizontalVariation;
 		}
-		
+
 		public int getRarity() {
 			return config.rarity;
 		}
-		
+
 		public int getRandomYLevel(Random rand) {
 			return config.minYLevel + (config.minYLevel == config.maxYLevel ? 0 : rand.nextInt(Math.max(config.maxYLevel, config.minYLevel) - Math.min(config.maxYLevel, config.minYLevel)));
 		}
@@ -110,11 +100,11 @@ public class ClusterShape {
 		public IBiomeConfig getBiomeTypes() {
 			return config.biomes;
 		}
-		
+
 		public Random randAroundBlockPos(BlockPos pos) {
-			return new Random(31 * (31 * (31 + pos.getX()) + pos.getY()) + pos.getZ()); 
+			return new Random(31 * (31L * (31 + pos.getX()) + pos.getY()) + pos.getZ());
 		}
-		
+
 	}
-	
+
 }

@@ -1,10 +1,5 @@
 package vazkii.quark.base.client.config;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
@@ -14,6 +9,11 @@ import vazkii.quark.api.config.IConfigObject;
 import vazkii.quark.base.client.config.external.ExternalConfigHandler;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.IConfigCallback;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 @OnlyIn(Dist.CLIENT)
 public final class IngameConfigHandler implements IConfigCallback {
@@ -28,7 +28,7 @@ public final class IngameConfigHandler implements IConfigCallback {
 
 	@Override
 	public void push(String s, String comment, Object holderObject) {
-		IConfigCategory newCategory = null;
+		IConfigCategory newCategory;
 		if(currCategory == null) {
 			newCategory = new TopLevelCategory(s, comment, null);
 			topLevelCategories.put(s, (TopLevelCategory) newCategory);

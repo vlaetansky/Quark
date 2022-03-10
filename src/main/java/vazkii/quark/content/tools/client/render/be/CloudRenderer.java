@@ -22,10 +22,10 @@ public class CloudRenderer implements BlockEntityRenderer<CloudBlockEntity> {
 	}
 
 	@Override
-	public void render(CloudBlockEntity te, float pticks, @Nonnull PoseStack matrix, @Nonnull MultiBufferSource buffer, int light, int overlay) {
+	public void render(CloudBlockEntity te, float partialTicks, @Nonnull PoseStack matrix, @Nonnull MultiBufferSource buffer, int light, int overlay) {
 		Minecraft mc = Minecraft.getInstance();
 
-		float scale = ((float) (te.liveTime - pticks + Math.sin(ClientTicker.total * 0.2F) * -10F) / 200F) * 0.6F;
+		float scale = ((float) (te.liveTime - partialTicks + Math.sin(ClientTicker.total * 0.2F) * -10F) / 200F) * 0.6F;
 
 		if(scale > 0) {
 			matrix.translate(0.5, 0.5, 0.5);

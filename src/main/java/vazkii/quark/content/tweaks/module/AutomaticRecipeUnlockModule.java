@@ -1,13 +1,6 @@
 package vazkii.quark.content.tweaks.module;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Queue;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.advancements.Advancement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ImageButton;
@@ -36,13 +29,15 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 
+import java.util.*;
+
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
 public class AutomaticRecipeUnlockModule extends QuarkModule {
 
 	@Config(description = "A list of recipe names that should NOT be added in by default")
 	public static List<String> ignoredRecipes = Lists.newArrayList();
 
-	@Config public static boolean forceLimitedCrafting = false;	
+	@Config public static boolean forceLimitedCrafting = false;
 	@Config public static boolean disableRecipeBook = false;
 	@Config(description = "If enabled, advancements granting recipes will be stopped from loading, " +
 			"potentially reducing the lagspike on first world join.")
@@ -55,35 +50,34 @@ public class AutomaticRecipeUnlockModule extends QuarkModule {
 		staticEnabled = enabled;
 	}
 
-	@SubscribeEvent 
+	@SubscribeEvent
 	public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
 		Player player = event.getPlayer();
 
-		if(player instanceof ServerPlayer) {
-			ServerPlayer spe = (ServerPlayer) player;
+		if(player instanceof ServerPlayer spe) {
 			MinecraftServer server = spe.getServer();
 			if (server != null) {
 				List<Recipe<?>> recipes = new ArrayList<>(server.getRecipeManager().getRecipes());
 				recipes.removeIf(
-						(recipe) -> 
+						(recipe) ->
 						recipe == null
-						|| recipe.getResultItem() == null 
-						|| ignoredRecipes.contains(Objects.toString(recipe.getId())) 
+						|| recipe.getResultItem() == null
+						|| ignoredRecipes.contains(Objects.toString(recipe.getId()))
 						|| recipe.getResultItem().isEmpty());
-				
+
 				int idx = 0;
 				int maxShift = 1000;
-				int shift = 0;
+				int shift;
 				int size = recipes.size();
 				do {
 					shift = size - idx;
 					int effShift = Math.min(maxShift, shift);
-					
+
 					List<Recipe<?>> sectionedRecipes = recipes.subList(idx, idx + effShift);
 					player.awardRecipes(sectionedRecipes);
 					idx += effShift;
 				} while(shift > maxShift);
-				
+
 
 				if (forceLimitedCrafting)
 					player.level.getGameRules().getRule(GameRules.RULE_LIMITED_CRAFTING).set(true, server);
@@ -96,7 +90,7 @@ public class AutomaticRecipeUnlockModule extends QuarkModule {
 	public void onInitGui(InitScreenEvent.Post event) {
 		Screen gui = event.getScreen();
 		if(disableRecipeBook && gui instanceof RecipeUpdateListener) {
-			Minecraft.getInstance().player.getRecipeBook().getBookSettings().setOpen(RecipeBookType.CRAFTING, false); 
+			Minecraft.getInstance().player.getRecipeBook().getBookSettings().setOpen(RecipeBookType.CRAFTING, false);
 
 			List<GuiEventListener> widgets = event.getListenersList();
 			for(GuiEventListener w : widgets)
@@ -115,8 +109,7 @@ public class AutomaticRecipeUnlockModule extends QuarkModule {
 			ToastComponent toasts = mc.getToasts();
 			Queue<Toast> toastQueue = toasts.queued;
 			for(Toast toast : toastQueue)
-				if(toast instanceof RecipeToast) {
-					RecipeToast recipeToast = (RecipeToast) toast;
+				if(toast instanceof RecipeToast recipeToast) {
 					List<Recipe<?>> stacks = recipeToast.recipes;
 					if(stacks.size() > 100) {
 						toastQueue.remove(toast);

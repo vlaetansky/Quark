@@ -21,8 +21,11 @@ import net.minecraftforge.network.NetworkEvent;
 import vazkii.arl.network.IMessage;
 import vazkii.quark.base.network.QuarkNetwork;
 
+import java.io.Serial;
+
 public class SpamlessChatMessage implements IMessage {
 
+	@Serial
 	private static final long serialVersionUID = -4716987873031723456L;
 
 	public Component message;
@@ -42,7 +45,7 @@ public class SpamlessChatMessage implements IMessage {
 			Gui gui = Minecraft.getInstance().gui;
 			gui.getChat().addMessage(message, id, gui.getGuiTicks(), false); // print message and delete if same ID, called by printChatMessageWithOptionalDeletion
 		});
-		
+
 		return true;
 	}
 

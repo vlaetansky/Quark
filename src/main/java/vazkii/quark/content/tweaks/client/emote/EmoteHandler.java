@@ -94,14 +94,13 @@ public final class EmoteHandler {
 	}
 
 	public static void updateEmotes(Entity e) {
-		if(e instanceof AbstractClientPlayer) {
-			AbstractClientPlayer player = (AbstractClientPlayer) e;
+		if(e instanceof AbstractClientPlayer player) {
 			String name = player.getGameProfile().getName();
 
 			if(player.getPose() == Pose.STANDING) {
 				if(playerEmotes.containsKey(name)) {
 					resetPlayer(player);
-					
+
 					EmoteBase emote = playerEmotes.get(name);
 					boolean done = emote.isDone();
 
@@ -137,8 +136,7 @@ public final class EmoteHandler {
 	}
 
 	private static void updatePlayerStatus(Player e) {
-		if(e instanceof AbstractClientPlayer) {
-			AbstractClientPlayer player = (AbstractClientPlayer) e;
+		if(e instanceof AbstractClientPlayer player) {
 			String name = player.getGameProfile().getName();
 
 			if(playerEmotes.containsKey(name)) {
@@ -160,8 +158,8 @@ public final class EmoteHandler {
 	private static PlayerRenderer getRenderPlayer(AbstractClientPlayer player) {
 		Minecraft mc = Minecraft.getInstance();
 		EntityRenderDispatcher manager = mc.getEntityRenderDispatcher();
-		
-		EntityRenderer<? extends Player> render = manager.getSkinMap().get(player.getModelName()); 
+
+		EntityRenderer<? extends Player> render = manager.getSkinMap().get(player.getModelName());
 		if(render instanceof PlayerRenderer)
 			return (PlayerRenderer) render;
 		return null;
@@ -191,13 +189,13 @@ public final class EmoteHandler {
 		List<RenderLayer<AbstractClientPlayer,
 				PlayerModel<AbstractClientPlayer>>> list = render.layers;
 		for(RenderLayer<?, ?> r : list) {
-			if(r instanceof HumanoidArmorLayer)	
+			if(r instanceof HumanoidArmorLayer)
 				return ((HumanoidArmorLayer<?, ?, ?>) r).getArmorModel(slot);
 		}
-		
+
 		return null;
 	}
-	
+
 	private static void resetPlayer(AbstractClientPlayer player) {
 		resetModel(getPlayerModel(player));
 		resetModel(getPlayerArmorModel(player));
@@ -213,15 +211,14 @@ public final class EmoteHandler {
 			resetPart(model.rightArm);
 			resetPart(model.leftLeg);
 			resetPart(model.rightLeg);
-			if(model instanceof PlayerModel) {
-				PlayerModel<?> pmodel = (PlayerModel<?>) model;
+			if(model instanceof PlayerModel<?> pmodel) {
 				resetPart(pmodel.jacket);
 				resetPart(pmodel.leftSleeve);
 				resetPart(pmodel.rightSleeve);
 				resetPart(pmodel.leftPants);
 				resetPart(pmodel.rightPants);
 			}
-			
+
 
 			ModelAccessor.INSTANCE.resetModel(model);
 		}

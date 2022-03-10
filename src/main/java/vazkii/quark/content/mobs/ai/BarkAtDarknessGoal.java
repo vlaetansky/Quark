@@ -14,21 +14,20 @@ public class BarkAtDarknessGoal extends Goal {
 
 	final Shiba shiba;
 	private final PathNavigation navigator;
-	
+
 	public BarkAtDarknessGoal(Shiba shiba) {
 		this.shiba = shiba;
 		this.navigator = shiba.getNavigation();
-		
+
 		this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
 	}
-	
+
 	@Override
 	public void tick() {
 		if(shiba.currentHyperfocus != null) {
 			navigator.moveTo(navigator.createPath(shiba.currentHyperfocus, 1), 1.1);
-			
-			if(shiba.level instanceof ServerLevel && shiba.tickCount % 10 == 0) {
-				ServerLevel slevel = (ServerLevel) shiba.level;
+
+			if(shiba.level instanceof ServerLevel slevel && shiba.tickCount % 10 == 0) {
 				Vec3 pos = shiba.position();
 				slevel.sendParticles(ParticleTypes.ANGRY_VILLAGER, pos.x, pos.y + 0.5, pos.z, 1, 0.25F, 0.1F, 0.25F, 0);
 				shiba.lookAt(Anchor.EYES, new Vec3(shiba.currentHyperfocus.getX() + 0.5, shiba.currentHyperfocus.getY(), shiba.currentHyperfocus.getZ() + 0.5));
@@ -36,10 +35,10 @@ public class BarkAtDarknessGoal extends Goal {
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean canUse() {
 		return shiba.currentHyperfocus != null;
 	}
-	
+
 }

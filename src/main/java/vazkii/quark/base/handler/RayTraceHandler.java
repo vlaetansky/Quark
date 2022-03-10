@@ -19,13 +19,13 @@ public class RayTraceHandler {
 	public static HitResult rayTrace(Entity entity, Level world, Player player, Block blockMode, Fluid fluidMode) {
 		return rayTrace(entity, world, player, blockMode, fluidMode, getEntityRange(player));
 	}
-	
+
 	public static HitResult rayTrace(Entity entity, Level world, Entity player, Block blockMode, Fluid fluidMode, double range) {
 		 Pair<Vec3, Vec3> params = getEntityParams(player);
-		
+
 		return rayTrace(entity, world, params.getLeft(), params.getRight(), blockMode, fluidMode, range);
 	}
-	
+
 	public static HitResult rayTrace(Entity entity, Level world, Vec3 startPos, Vec3 ray, Block blockMode, Fluid fluidMode, double range) {
 		return rayTrace(entity, world, startPos, ray.scale(range), blockMode, fluidMode);
 	}
@@ -35,11 +35,11 @@ public class RayTraceHandler {
 		ClipContext context = new ClipContext(startPos, end, blockMode, fluidMode, entity);
 		return world.clip(context);
 	}
-	
+
 	public static double getEntityRange(LivingEntity player) {
 		return player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();
 	}
-	
+
 	public static Pair<Vec3, Vec3> getEntityParams(Entity player) {
 		float scale = 1.0F;
 		float pitch = player.xRotO + (player.getXRot() - player.xRotO) * scale;
@@ -48,7 +48,7 @@ public class RayTraceHandler {
 		double posX = player.xo + (pos.x - player.xo) * scale;
 		double posY = player.yo + (pos.y - player.yo) * scale;
 		if (player instanceof Player)
-			posY += ((Player) player).getEyeHeight();
+			posY += player.getEyeHeight();
 		double posZ = player.zo + (pos.z - player.zo) * scale;
 		Vec3 rayPos = new Vec3(posX, posY, posZ);
 
@@ -59,8 +59,8 @@ public class RayTraceHandler {
 		float xLen = xYaw * pitchMod;
 		float yLen = zYaw * pitchMod;
 		Vec3 ray = new Vec3(xLen, azimuth, yLen);
-		
+
 		return Pair.of(rayPos, ray);
 	}
-	
+
 }

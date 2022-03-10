@@ -203,10 +203,8 @@ public class Pickarang extends Projectile {
 			if(getPiercingModifier() == 0 || state.getMaterial().isSolidBlocking())
 				addHit();
 
-			if(!(owner instanceof ServerPlayer))
+			if(!(owner instanceof ServerPlayer player))
 				return;
-
-			ServerPlayer player = (ServerPlayer) owner;
 
 			float hardness = state.getDestroySpeed(level, hit);
 			if (hardness <= PickarangModule.maxHardness && hardness >= 0) {
@@ -249,8 +247,7 @@ public class Pickarang extends Projectile {
 						PickarangModule.setActivePickarang(this);
 
 						hitEntity: {
-							if(hit instanceof Toretoise) {
-								Toretoise toretoise = (Toretoise) hit;
+							if(hit instanceof Toretoise toretoise) {
 								int ore = toretoise.getOreType();
 
 								if(ore != 0) {

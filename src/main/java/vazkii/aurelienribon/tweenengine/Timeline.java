@@ -48,12 +48,12 @@ public final class Timeline extends BaseTween<Timeline> {
 	// Static -- pool
 	// -------------------------------------------------------------------------
 
-	private static final Pool.Callback<Timeline> poolCallback = new Pool.Callback<Timeline>() {
+	private static final Pool.Callback<Timeline> poolCallback = new Pool.Callback<>() {
 		@Override public void onPool(Timeline obj) {obj.reset();}
 		@Override public void onUnPool(Timeline obj) {obj.reset();}
 	};
 
-	static final Pool<Timeline> pool = new Pool<Timeline>(10, poolCallback) {
+	static final Pool<Timeline> pool = new Pool<>(10, poolCallback) {
 		@Override protected Timeline create() {return new Timeline();}
 	};
 
@@ -241,15 +241,12 @@ public final class Timeline extends BaseTween<Timeline> {
 			obj.build();
 
 			switch (mode) {
-				case SEQUENCE:
+				case SEQUENCE -> {
 					float tDelay = duration;
 					duration += obj.getFullDuration();
 					obj.delay += tDelay;
-					break;
-
-				case PARALLEL:
-					duration = Math.max(duration, obj.getFullDuration());
-					break;
+				}
+				case PARALLEL -> duration = Math.max(duration, obj.getFullDuration());
 			}
 		}
 

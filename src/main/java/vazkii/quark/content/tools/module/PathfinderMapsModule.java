@@ -1,11 +1,5 @@
 package vazkii.quark.content.tools.module;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-
-import javax.annotation.Nonnull;
-
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -34,30 +28,38 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.type.AbstractConfigType;
 
+import javax.annotation.Nonnull;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true)
 public class PathfinderMapsModule extends QuarkModule {
-	
+
 	private static final Object mutex = new Object();
 
 	public static List<TradeInfo> builtinTrades = new LinkedList<>();
 	public static List<TradeInfo> customTrades = new LinkedList<>();
 	public static List<TradeInfo> tradeList = new LinkedList<>();
 
-	@Config(description = "In this section you can add custom Pathfinder Maps. This works for both vanilla and modded biomes.\n"
-				+ "Each custom map must be on its own line.\n"
-				+ "The format for a custom map is as follows:\n"
-				+ "<id>,<level>,<min_price>,<max_price>,<color>,<name>\n\n"
-				+ "With the following descriptions:\n"
-				+ " - <id> being the biome's ID NAME. You can find vanilla names here - https://minecraft.gamepedia.com/Biome#Biome_IDs\n"
-				+ " - <level> being the Cartographer villager level required for the map to be unlockable\n"
-				+ " - <min_price> being the cheapest (in Emeralds) the map can be\n"
-				+ " - <max_price> being the most expensive (in Emeralds) the map can be\n"
-				+ " - <color> being a hex color (without the #) for the map to display. You can generate one here - http://htmlcolorcodes.com/\n"
-				+ " - <name> being the display name of the map\n\n"
-				+ "Here's an example of a map to locate Ice Mountains:\n"
-				+ "minecraft:ice_mountains,2,8,14,7FE4FF,Ice Mountains Pathfinder Map")
+	@Config(description = """
+			In this section you can add custom Pathfinder Maps. This works for both vanilla and modded biomes.
+			Each custom map must be on its own line.
+			The format for a custom map is as follows:
+			<id>,<level>,<min_price>,<max_price>,<color>,<name>
+
+			With the following descriptions:
+			 - <id> being the biome's ID NAME. You can find vanilla names here - https://minecraft.gamepedia.com/Biome#Biome_IDs
+			 - <level> being the Cartographer villager level required for the map to be unlockable
+			 - <min_price> being the cheapest (in Emeralds) the map can be
+			 - <max_price> being the most expensive (in Emeralds) the map can be
+			 - <color> being a hex color (without the #) for the map to display. You can generate one here - https://htmlcolorcodes.com/
+			 - <name> being the display name of the map
+
+			Here's an example of a map to locate Ice Mountains:
+			minecraft:ice_mountains,2,8,14,7FE4FF,Ice Mountains Pathfinder Map""")
 	private List<String> customs = new LinkedList<>();
-	
+
 	@Config public static int searchRadius = 6400;
 	@Config public static int searchDistanceIncrement = 8;
 	@Config public static int xpFromTrade = 5;
@@ -65,7 +67,7 @@ public class PathfinderMapsModule extends QuarkModule {
 	private static String getBiomeDescriptor(ResourceLocation rl) {
 		if(rl == null)
 			return "unknown";
-		
+
 		return rl.getPath();
 	}
 
@@ -78,7 +80,7 @@ public class PathfinderMapsModule extends QuarkModule {
 		loadTradeInfo(Biomes.SAVANNA, true, 4, 8, 14, 0x9BA562);
 		loadTradeInfo(Biomes.SWAMP, true, 4, 12, 18, 0x22370F);
 		loadTradeInfo(Biomes.OLD_GROWTH_PINE_TAIGA, true, 4, 12, 18, 0x5B421F);
-		
+
 		loadTradeInfo(Biomes.FLOWER_FOREST, true, 5, 12, 18, 0xDC7BEA);
 		loadTradeInfo(Biomes.JUNGLE, true, 5, 16, 22, 0x22B600);
 		loadTradeInfo(Biomes.BAMBOO_JUNGLE, true, 5, 16, 22, 0x3DE217);
@@ -86,7 +88,7 @@ public class PathfinderMapsModule extends QuarkModule {
 		loadTradeInfo(Biomes.MUSHROOM_FIELDS, true, 5, 20, 26, 0x4D4273);
 		loadTradeInfo(Biomes.ICE_SPIKES, true, 5, 20, 26, 0x41D6C9);
 	}
-	
+
 	@SubscribeEvent
 	public void onTradesLoaded(VillagerTradesEvent event) {
 		if(event.getType() == VillagerProfession.CARTOGRAPHER)
@@ -97,7 +99,7 @@ public class PathfinderMapsModule extends QuarkModule {
 						trades.get(info.level).add(new PathfinderMapTrade(info));
 			}
 	}
-	
+
 	@Override
 	public void configChanged() {
 		synchronized (mutex) {
@@ -105,7 +107,7 @@ public class PathfinderMapsModule extends QuarkModule {
 			customTrades.clear();
 
 			loadCustomMaps(customs);
-			
+
 			tradeList.addAll(builtinTrades);
 			tradeList.addAll(customTrades);
 		}
@@ -114,7 +116,7 @@ public class PathfinderMapsModule extends QuarkModule {
 	private void loadTradeInfo(ResourceKey<Biome> biome, boolean enabled, int level, int minPrice, int maxPrice, int color) {
 		builtinTrades.add(new TradeInfo(biome.location(), enabled, level, minPrice, maxPrice, color));
 	}
-	
+
 	private void loadCustomTradeInfo(ResourceLocation biome, boolean enabled, int level, int minPrice, int maxPrice, int color, String name) {
 		customTrades.add(new TradeInfo(biome, enabled, level, minPrice, maxPrice, color, name));
 	}
@@ -139,8 +141,8 @@ public class PathfinderMapsModule extends QuarkModule {
 			try {
 				loadCustomTradeInfo(s);
 			} catch(IllegalArgumentException e) {
-				Quark.LOG.warn("[Custom Pathfinder Maps] Error while reading custom map string \"%s\"", s);
-				Quark.LOG.warn("[Custom Pathfinder Maps] - %s", e.getMessage());
+				Quark.LOG.warn("[Custom Pathfinder Maps] Error while reading custom map string \"{}\"", s);
+				Quark.LOG.warn("[Custom Pathfinder Maps] - {}", e.getMessage());
 			}
 	}
 
@@ -149,10 +151,10 @@ public class PathfinderMapsModule extends QuarkModule {
 			return ItemStack.EMPTY;
 
 		BlockPos biomePos = MiscUtil.locateBiome((ServerLevel) world, info.biome, pos, searchRadius, searchDistanceIncrement);
-		
+
 		if(biomePos == null)
 			return ItemStack.EMPTY;
-			
+
 		ItemStack stack = MapItem.create(world, biomePos.getX(), biomePos.getZ(), (byte) 2, true, true);
 		// fillExplorationMap
 		MapItem.renderBiomePreviewMap((ServerLevel) world, stack);
@@ -162,25 +164,19 @@ public class PathfinderMapsModule extends QuarkModule {
 		return stack;
 	}
 
-	private static class PathfinderMapTrade implements ItemListing {
-
-		public final TradeInfo info;
-
-		public PathfinderMapTrade(TradeInfo info) {
-			this.info = info;
-		}
+	private record PathfinderMapTrade(TradeInfo info) implements ItemListing {
 
 		@Override
 		public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull Random random) {
-			if(!info.enabled)
+			if (!info.enabled)
 				return null;
-			
+
 			int i = random.nextInt(info.maxPrice - info.minPrice + 1) + info.minPrice;
 
 			ItemStack itemstack = createMap(entity.level, entity.blockPosition(), info);
-			if(itemstack.isEmpty())
+			if (itemstack.isEmpty())
 				return null;
-			
+
 			return new MerchantOffer(new ItemStack(Items.EMERALD, i), new ItemStack(Items.COMPASS), itemstack, 12, xpFromTrade * Math.max(1, (info.level - 1)), 0.2F);
 		}
 	}
@@ -210,7 +206,7 @@ public class PathfinderMapsModule extends QuarkModule {
 			this.color = color;
 			this.name = name;
 		}
-		
+
 	}
 
 }

@@ -36,7 +36,7 @@ public class MonsterBoxBlock extends QuarkBlock implements EntityBlock {
 
 	@Nonnull
 	@Override
-	public ItemStack getCloneItemStack(@Nonnull BlockGetter p_56785_, @Nonnull BlockPos p_56786_, @Nonnull BlockState p_56787_) {
+	public ItemStack getCloneItemStack(@Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nonnull BlockState state) {
 		return ItemStack.EMPTY;
 	}
 

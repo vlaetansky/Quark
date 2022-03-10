@@ -1,8 +1,5 @@
 package vazkii.quark.content.world.gen;
 
-import java.util.Random;
-import java.util.function.BooleanSupplier;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -13,13 +10,17 @@ import vazkii.quark.content.world.config.AirStoneClusterConfig;
 import vazkii.quark.content.world.config.BigStoneClusterConfig;
 import vazkii.quark.content.world.module.BigStoneClustersModule;
 
+import java.util.Objects;
+import java.util.Random;
+import java.util.function.BooleanSupplier;
+
 public class BigStoneClusterGenerator extends ClusterBasedGenerator {
 
 	private final BigStoneClusterConfig config;
 	private final BlockState placeState;
 
 	public BigStoneClusterGenerator(BigStoneClusterConfig config, BlockState placeState, BooleanSupplier condition) {
-		super(config.dimensions, () -> config.enabled && condition.getAsBoolean(), config, (long) placeState.getBlock().getRegistryName().toString().hashCode());
+		super(config.dimensions, () -> config.enabled && condition.getAsBoolean(), config, Objects.toString(placeState.getBlock().getRegistryName()).hashCode());
 		this.config = config;
 		this.placeState = placeState;
 	}
@@ -45,7 +46,7 @@ public class BigStoneClusterGenerator extends ClusterBasedGenerator {
 
 		return sources;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "BigStoneClusterGenerator[" + placeState + "]";
@@ -58,12 +59,12 @@ public class BigStoneClusterGenerator extends ClusterBasedGenerator {
 				world.setBlock(pos, placeState, 0);
 		};
 	}
-	
+
 	private boolean canPlaceBlock(ServerLevelAccessor world, BlockPos pos) {
 		if(config instanceof AirStoneClusterConfig && ((AirStoneClusterConfig) config).generateInAir)
 			return world.getBlockState(pos).isAir();
-		
+
 		return BigStoneClustersModule.blockReplacePredicate.test(world.getLevel(), world.getBlockState(pos).getBlock());
 	}
-	
+
 }

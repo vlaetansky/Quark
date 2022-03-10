@@ -1,9 +1,5 @@
 package vazkii.quark.base.item.boat;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Stream;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -18,24 +14,27 @@ import net.minecraft.world.level.block.Block;
 import vazkii.quark.base.handler.WoodSetHandler;
 
 import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Stream;
 
 public class QuarkBoat extends Boat {
 
-	public static record QuarkBoatType(Item boat, Block planks) {}
-	private static Map<String, QuarkBoatType> quarkBoatTypes = new HashMap<>();
+	public record QuarkBoatType(Item boat, Block planks) {}
+	private static final Map<String, QuarkBoatType> quarkBoatTypes = new HashMap<>();
 
 	private static final EntityDataAccessor<String> DATA_QUARK_TYPE = SynchedEntityData.defineId(QuarkBoat.class, EntityDataSerializers.STRING);
 
-	public QuarkBoat(EntityType<? extends Boat> p_38290_, Level p_38291_) {
-		super(p_38290_, p_38291_);
+	public QuarkBoat(EntityType<? extends Boat> entityType, Level world) {
+		super(entityType, world);
 	}
 
-	public QuarkBoat(Level p_38293_, double p_38294_, double p_38295_, double p_38296_) {
-		this(WoodSetHandler.quarkBoatEntityType, p_38293_);
-		this.setPos(p_38294_, p_38295_, p_38296_);
-		this.xo = p_38294_;
-		this.yo = p_38295_;
-		this.zo = p_38296_;
+	public QuarkBoat(Level world, double x, double y, double z) {
+		this(WoodSetHandler.quarkBoatEntityType, world);
+		this.setPos(x, y, z);
+		this.xo = x;
+		this.yo = y;
+		this.zo = z;
 	}
 
 	public static void addQuarkBoatType(String name, QuarkBoatType type) {
@@ -65,24 +64,24 @@ public class QuarkBoat extends Boat {
 	}
 
 	@Override
-	protected void addAdditionalSaveData(@Nonnull CompoundTag p_38359_) {
-		super.addAdditionalSaveData(p_38359_);
-		p_38359_.putString("QuarkType", getQuarkBoatType());
+	protected void addAdditionalSaveData(@Nonnull CompoundTag tag) {
+		super.addAdditionalSaveData(tag);
+		tag.putString("QuarkType", getQuarkBoatType());
 	}
 
 	@Override
-	protected void readAdditionalSaveData(@Nonnull CompoundTag p_38338_) {
-		super.readAdditionalSaveData(p_38338_);
-		if (p_38338_.contains("QuarkType", 8)) {
-			setQuarkBoatType(p_38338_.getString("QuarkType"));
+	protected void readAdditionalSaveData(@Nonnull CompoundTag tag) {
+		super.readAdditionalSaveData(tag);
+		if (tag.contains("QuarkType", 8)) {
+			setQuarkBoatType(tag.getString("QuarkType"));
 		}
 	}
 
 	@Override
-	public ItemEntity spawnAtLocation(ItemLike p_19999_) {
-		if(p_19999_.asItem().getRegistryName().getPath().contains("_planks"))
+	public ItemEntity spawnAtLocation(ItemLike itemLike) {
+		if(itemLike.asItem().getRegistryName().getPath().contains("_planks"))
 			return super.spawnAtLocation(getTypeRecord(getQuarkBoatType()).planks);
-		return super.spawnAtLocation(p_19999_);
+		return super.spawnAtLocation(itemLike);
 	}
 
 	@Nonnull
@@ -98,7 +97,7 @@ public class QuarkBoat extends Boat {
 	}
 
 	@Override
-	public void setType(@Nonnull Type p_38333_) {
+	public void setType(@Nonnull Type type) {
 		// NO-OP
 	}
 

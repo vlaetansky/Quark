@@ -9,9 +9,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public interface IExternalCategory extends IConfigCategory {
 
-	public void commit();
-	public Map<String, IConfigCategory> getTopLevelCategories();
-	
-	public IExternalCategory addTopLevelCategory(String name, Consumer<IExternalCategory> onChangedCallback);
-	
+	void commit();
+	Map<String, IConfigCategory> getTopLevelCategories();
+
+	IExternalCategory addTopLevelCategory(String name, Consumer<IExternalCategory> onChangedCallback);
+
 }

@@ -29,28 +29,28 @@ import vazkii.quark.content.mobs.entity.Toretoise;
 public class ToretoiseModule extends QuarkModule {
 
 	public static EntityType<Toretoise> toretoiseType;
-	
+
 	@Config public static int maxYLevel = 0;
-	
+
 	@Config(description="The number of ticks from mining a tortoise until feeding it could cause it to regrow.")
 	public static int cooldownTicks = 20 * 60;
-	
+
 	@Config(description="The items that can be fed to toretoises to make them regrow ores.")
-	public static List<String> foods = Lists.newArrayList("minecraft:glow_berries"); 
-	
+	public static List<String> foods = Lists.newArrayList("minecraft:glow_berries");
+
 	@Config(description="Feeding a toretoise after cooldown will regrow them with a one-in-this-number chance. "
 			+ "Set to 1 to always regrow, or 0 to disable.")
 	public static int regrowChance = 3;
-	
+
 	@Config
 	public static DimensionConfig dimensions = DimensionConfig.overworld(false);
-	
-	@Config 
+
+	@Config
 	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(120, 2, 4, CompoundBiomeConfig.fromBiomeTypes(true, BiomeDictionary.Type.VOID, BiomeDictionary.Type.NETHER, BiomeDictionary.Type.END));
-	
+
 	@Override
 	public void register() {
-		toretoiseType = EntityType.Builder.<Toretoise>of(Toretoise::new, MobCategory.CREATURE)
+		toretoiseType = EntityType.Builder.of(Toretoise::new, MobCategory.CREATURE)
 				.sized(2F, 1F)
 				.clientTrackingRange(8)
 				.fireImmune()
@@ -58,17 +58,17 @@ public class ToretoiseModule extends QuarkModule {
 				.build("toretoise");
 
 		RegistryHelper.register(toretoiseType, "toretoise");
-		
+
 		EntitySpawnHandler.registerSpawn(this, toretoiseType, MobCategory.MONSTER, Type.ON_GROUND, Types.MOTION_BLOCKING_NO_LEAVES, Toretoise::spawnPredicate, spawnConfig);
 		EntitySpawnHandler.addEgg(toretoiseType, 0x55413b, 0x383237, spawnConfig);
-		
+
 		EntityAttributeHandler.put(toretoiseType, Toretoise::prepareAttributes);
 	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
 		EntityRenderers.register(toretoiseType, ToretoiseRenderer::new);
 	}
-	
+
 }

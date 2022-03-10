@@ -1,11 +1,6 @@
 package vazkii.quark.base.client.config.screen.widgets;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ObjectSelectionList;
@@ -13,6 +8,9 @@ import vazkii.quark.base.client.config.screen.AbstractScrollingWidgetScreen;
 import vazkii.quark.base.client.config.screen.WidgetWrapper;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 public abstract class ScrollableWidgetList<S extends AbstractScrollingWidgetScreen, E extends ScrollableWidgetList.Entry<E>> extends ObjectSelectionList<E> {
 
@@ -58,7 +56,7 @@ public abstract class ScrollableWidgetList<S extends AbstractScrollingWidgetScre
 		}
 
 		@Override
-		public void render(@Nonnull PoseStack mstack, int index, int rowTop, int rowLeft, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float pticks) {
+		public void render(@Nonnull PoseStack mstack, int index, int rowTop, int rowLeft, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float partialTicks) {
 			children.forEach(c -> c.updatePosition(rowLeft, rowTop));
 		}
 

@@ -1,10 +1,7 @@
 package vazkii.quark.content.world.block;
 
-import java.util.Map;
-
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.CreativeModeTab;
@@ -12,13 +9,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -36,6 +27,7 @@ import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nonnull;
+import java.util.Map;
 
 // Mostly a copy of BaseCoralWallFanBlock
 public class GlowShroomRingBlock extends QuarkBlock implements SimpleWaterloggedBlock {
@@ -58,51 +50,51 @@ public class GlowShroomRingBlock extends QuarkBlock implements SimpleWaterlogged
 
 	@Nonnull
 	@Override
-	public VoxelShape getShape(BlockState p_49219_, @Nonnull BlockGetter p_49220_, @Nonnull BlockPos p_49221_, @Nonnull CollisionContext p_49222_) {
-		return SHAPES.get(p_49219_.getValue(FACING));
+	public VoxelShape getShape(BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
+		return SHAPES.get(state.getValue(FACING));
 	}
 
 	@Nonnull
 	@Override
-	public BlockState rotate(BlockState p_49207_, Rotation p_49208_) {
-		return p_49207_.setValue(FACING, p_49208_.rotate(p_49207_.getValue(FACING)));
+	public BlockState rotate(BlockState state, Rotation rotation) {
+		return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
 	}
 
 	@Nonnull
 	@Override
-	public BlockState mirror(BlockState p_49204_, Mirror p_49205_) {
-		return p_49204_.rotate(p_49205_.getRotation(p_49204_.getValue(FACING)));
+	public BlockState mirror(@Nonnull BlockState state, Mirror mirror) {
+		return rotate(state, mirror.getRotation(state.getValue(FACING)));
 	}
 
 	@Override
-	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_49217_) {
-		p_49217_.add(FACING, WATERLOGGED);
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		builder.add(FACING, WATERLOGGED);
 	}
 
 	@Nonnull
 	@Override
-	public BlockState updateShape(BlockState p_49210_, @Nonnull Direction p_49211_, @Nonnull BlockState p_49212_, @Nonnull LevelAccessor p_49213_, @Nonnull BlockPos p_49214_, @Nonnull BlockPos p_49215_) {
-		if (p_49210_.getValue(WATERLOGGED)) {
-			p_49213_.scheduleTick(p_49214_, Fluids.WATER, Fluids.WATER.getTickDelay(p_49213_));
+	public BlockState updateShape(BlockState state, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull LevelAccessor world, @Nonnull BlockPos pos, @Nonnull BlockPos facingPos) {
+		if (state.getValue(WATERLOGGED)) {
+			world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		}
 
-		return p_49211_.getOpposite() == p_49210_.getValue(FACING) && !p_49210_.canSurvive(p_49213_, p_49214_) ? Blocks.AIR.defaultBlockState() : p_49210_;
+		return facing.getOpposite() == state.getValue(FACING) && !state.canSurvive(world, pos) ? Blocks.AIR.defaultBlockState() : state;
 	}
 
 	@Override
-	public boolean canSurvive(BlockState p_49200_, LevelReader p_49201_, BlockPos p_49202_) {
-		Direction direction = p_49200_.getValue(FACING);
-		BlockPos blockpos = p_49202_.relative(direction.getOpposite());
-		BlockState blockstate = p_49201_.getBlockState(blockpos);
-		return blockstate.isFaceSturdy(p_49201_, blockpos, direction);
+	public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+		Direction direction = state.getValue(FACING);
+		BlockPos blockpos = pos.relative(direction.getOpposite());
+		BlockState blockstate = world.getBlockState(blockpos);
+		return blockstate.isFaceSturdy(world, blockpos, direction);
 	}
 
 	@Override
-	public BlockState getStateForPlacement(@Nonnull BlockPlaceContext p_49198_) {
-		BlockState blockstate = super.getStateForPlacement(p_49198_);
-		LevelReader levelreader = p_49198_.getLevel();
-		BlockPos blockpos = p_49198_.getClickedPos();
-		Direction[] adirection = p_49198_.getNearestLookingDirections();
+	public BlockState getStateForPlacement(@Nonnull BlockPlaceContext context) {
+		BlockState blockstate = super.getStateForPlacement(context);
+		LevelReader levelreader = context.getLevel();
+		BlockPos blockpos = context.getClickedPos();
+		Direction[] adirection = context.getNearestLookingDirections();
 
 		for(Direction direction : adirection) {
 			if (direction.getAxis().isHorizontal()) {

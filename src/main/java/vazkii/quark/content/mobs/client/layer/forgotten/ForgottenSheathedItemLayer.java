@@ -19,8 +19,8 @@ import javax.annotation.Nonnull;
 @OnlyIn(Dist.CLIENT)
 public class ForgottenSheathedItemLayer<M extends EntityModel<Forgotten>> extends RenderLayer<Forgotten, M> {
 
-	public ForgottenSheathedItemLayer(RenderLayerParent<Forgotten, M> p_i50919_1_) {
-		super(p_i50919_1_);
+	public ForgottenSheathedItemLayer(RenderLayerParent<Forgotten, M> parent) {
+		super(parent);
 	}
 
 	@Override

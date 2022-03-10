@@ -1,10 +1,5 @@
 package vazkii.quark.base.block;
 
-import java.util.function.BooleanSupplier;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -16,6 +11,10 @@ import vazkii.arl.block.BasicBlock;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.client.handler.RequiredModTooltipHandler;
 import vazkii.quark.base.module.QuarkModule;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.function.BooleanSupplier;
 
 public class QuarkBlock extends BasicBlock implements IQuarkBlock {
 
@@ -58,13 +57,13 @@ public class QuarkBlock extends BasicBlock implements IQuarkBlock {
 
 	@Nullable
 	@SuppressWarnings("unchecked")
-	protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> p_152133_, BlockEntityType<E> p_152134_, BlockEntityTicker<? super E> p_152135_) {
-		return p_152134_ == p_152133_ ? (BlockEntityTicker<A>) p_152135_ : null;
+	protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> thisType, BlockEntityType<E> targetType, BlockEntityTicker<? super E> ticker) {
+		return targetType == thisType ? (BlockEntityTicker<A>) ticker : null;
 	}
 
-	public static interface Constructor<T extends Block> {
+	public interface Constructor<T extends Block> {
 
-		public T make(String regname, QuarkModule module, CreativeModeTab creativeTab, Properties properties);
+		T make(String regname, QuarkModule module, CreativeModeTab creativeTab, Properties properties);
 
 	}
 

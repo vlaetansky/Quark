@@ -1,10 +1,5 @@
 package vazkii.quark.base.world.generator;
 
-import java.util.BitSet;
-import java.util.Random;
-import java.util.function.BooleanSupplier;
-import java.util.function.Predicate;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.util.Mth;
@@ -17,33 +12,38 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import vazkii.quark.base.module.config.type.DimensionConfig;
 import vazkii.quark.base.module.config.type.OrePocketConfig;
 
+import java.util.BitSet;
+import java.util.Random;
+import java.util.function.BooleanSupplier;
+import java.util.function.Predicate;
+
 public class OreGenerator extends Generator {
 
 	public static final Predicate<BlockState> STONE_MATCHER = (state) -> {
 		if(state == null)
 			return false;
-		
+
 		Block block = state.getBlock();
 		return block == Blocks.STONE || block == Blocks.DEEPSLATE;
 	};
-	
+
 	public static final Predicate<BlockState> NETHERRACK_MATCHER = (state) -> {
 		if(state == null)
 			return false;
-		
+
 		Block block = state.getBlock();
 		return block == Blocks.NETHERRACK;
 	};
-	
+
 	public static final Predicate<BlockState> ENDSTONE_MATCHER = (state) -> {
 		if(state == null)
 			return false;
-		
+
 		Block block = state.getBlock();
 		return block == Blocks.END_STONE;
 	};
-	
-	public static final Predicate<BlockState> ALL_DIMS_STONE_MATCHER = STONE_MATCHER.or(NETHERRACK_MATCHER).or(ENDSTONE_MATCHER); 
+
+	public static final Predicate<BlockState> ALL_DIMS_STONE_MATCHER = STONE_MATCHER.or(NETHERRACK_MATCHER).or(ENDSTONE_MATCHER);
 
 	private final OrePocketConfig oreConfig;
 	private final BlockState placeState;
@@ -67,27 +67,27 @@ public class OreGenerator extends Generator {
 	// =============================================================================================
 
 	public boolean place(LevelAccessor worldIn, Random rand, BlockPos pos) {
-		float f = rand.nextFloat() * (float)Math.PI;
-		float f1 = (float)oreConfig.clusterSize / 8.0F;
-		int i = Mth.ceil(((float)oreConfig.clusterSize / 16.0F * 2.0F + 1.0F) / 2.0F);
-		double d0 = (double)((float)pos.getX() + Mth.sin(f) * f1);
-		double d1 = (double)((float)pos.getX() - Mth.sin(f) * f1);
-		double d2 = (double)((float)pos.getZ() + Mth.cos(f) * f1);
-		double d3 = (double)((float)pos.getZ() - Mth.cos(f) * f1);
-		double d4 = (double)(pos.getY() + rand.nextInt(3) - 2);
-		double d5 = (double)(pos.getY() + rand.nextInt(3) - 2);
-		int k = pos.getX() - Mth.ceil(f1) - i;
-		int l = pos.getY() - 2 - i;
-		int i1 = pos.getZ() - Mth.ceil(f1) - i;
-		int j1 = 2 * (Mth.ceil(f1) + i);
-		int k1 = 2 * (2 + i);
-		
+		float angle = rand.nextFloat() * (float)Math.PI;
+		float factor = (float)oreConfig.clusterSize / 8.0F;
+		int minFactor = Mth.ceil(((float)oreConfig.clusterSize / 16.0F * 2.0F + 1.0F) / 2.0F);
+		double x1 = (float)pos.getX() + Mth.sin(angle) * factor;
+		double x2 = (float)pos.getX() - Mth.sin(angle) * factor;
+		double z1 = (float)pos.getZ() + Mth.cos(angle) * factor;
+		double z2 = (float)pos.getZ() - Mth.cos(angle) * factor;
+		double y1 = pos.getY() + rand.nextInt(3) - 2;
+		double y2 = pos.getY() + rand.nextInt(3) - 2;
+		int maxX = pos.getX() - Mth.ceil(factor) - minFactor;
+		int maxY = pos.getY() - 2 - minFactor;
+		int maxZ = pos.getZ() - Mth.ceil(factor) - minFactor;
+		int searchSize = 2 * (Mth.ceil(factor) + minFactor);
+		int secondarySearchSize = 2 * (2 + minFactor);
+
 		Heightmap.Types hm = worldIn instanceof WorldGenRegion ? Heightmap.Types.OCEAN_FLOOR_WG : Heightmap.Types.WORLD_SURFACE;
 
-		for(int l1 = k; l1 <= k + j1; ++l1) {
-			for(int i2 = i1; i2 <= i1 + j1; ++i2) {
-				if (l <= worldIn.getHeight(hm, l1, i2)) {
-					return this.doPlace(worldIn, rand, d0, d1, d2, d3, d4, d5, k, l, i1, j1, k1);
+		for(int x = maxX; x <= maxX + searchSize; ++x) {
+			for(int z = maxZ; z <= maxZ + searchSize; ++z) {
+				if (maxY <= worldIn.getHeight(hm, x, z)) {
+					return this.doPlace(worldIn, rand, x1, x2, z1, z2, y1, y2, maxX, maxY, maxZ, searchSize, secondarySearchSize);
 				}
 			}
 		}
@@ -95,38 +95,38 @@ public class OreGenerator extends Generator {
 		return false;
 	}
 
-	protected boolean doPlace(LevelAccessor worldIn, Random random, double p_207803_4_, double p_207803_6_, double p_207803_8_, double p_207803_10_, double p_207803_12_, double p_207803_14_, int p_207803_16_, int p_207803_17_, int p_207803_18_, int p_207803_19_, int p_207803_20_) {
-		int i = 0;
-		BitSet bitset = new BitSet(p_207803_19_ * p_207803_20_ * p_207803_19_);
-		BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
-		double[] adouble = new double[oreConfig.clusterSize * 4];
+	protected boolean doPlace(LevelAccessor worldIn, Random random, double x1, double x2, double z1, double z2, double y1, double y2, int maxX, int maxY, int maxZ, int searchSize, int secondarySearchSize) {
+		int blocksPlaced = 0;
+		BitSet bitset = new BitSet(searchSize * secondarySearchSize * searchSize);
+		BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+		double[] clusterInfo = new double[oreConfig.clusterSize * 4];
 
-		for(int j = 0; j < oreConfig.clusterSize; ++j) {
-			float f = (float)j / (float)oreConfig.clusterSize;
-			double d0 = Mth.lerp((double)f, p_207803_4_, p_207803_6_);
-			double d2 = Mth.lerp((double)f, p_207803_12_, p_207803_14_);
-			double d4 = Mth.lerp((double)f, p_207803_8_, p_207803_10_);
-			double d6 = random.nextDouble() * (double)oreConfig.clusterSize / 16.0D;
-			double d7 = ((double)(Mth.sin((float)Math.PI * f) + 1.0F) * d6 + 1.0D) / 2.0D;
-			adouble[j * 4 + 0] = d0;
-			adouble[j * 4 + 1] = d2;
-			adouble[j * 4 + 2] = d4;
-			adouble[j * 4 + 3] = d7;
+		for(int clusterSize = 0; clusterSize < oreConfig.clusterSize; ++clusterSize) {
+			float clusterSizeRatio = (float)clusterSize / (float)oreConfig.clusterSize;
+			double x = Mth.lerp(clusterSizeRatio, x1, x2);
+			double y = Mth.lerp(clusterSizeRatio, y1, y2);
+			double z = Mth.lerp(clusterSizeRatio, z1, z2);
+			double randSize = random.nextDouble() * (double)oreConfig.clusterSize / 16.0D;
+			double size = ((double)(Mth.sin((float)Math.PI * clusterSizeRatio) + 1.0F) * randSize + 1.0D) / 2.0D;
+			clusterInfo[clusterSize * 4] = x;
+			clusterInfo[clusterSize * 4 + 1] = y;
+			clusterInfo[clusterSize * 4 + 2] = z;
+			clusterInfo[clusterSize * 4 + 3] = size;
 		}
 
-		for(int l2 = 0; l2 < oreConfig.clusterSize - 1; ++l2) {
-			if (!(adouble[l2 * 4 + 3] <= 0.0D)) {
-				for(int j3 = l2 + 1; j3 < oreConfig.clusterSize; ++j3) {
-					if (!(adouble[j3 * 4 + 3] <= 0.0D)) {
-						double d12 = adouble[l2 * 4 + 0] - adouble[j3 * 4 + 0];
-						double d13 = adouble[l2 * 4 + 1] - adouble[j3 * 4 + 1];
-						double d14 = adouble[l2 * 4 + 2] - adouble[j3 * 4 + 2];
-						double d15 = adouble[l2 * 4 + 3] - adouble[j3 * 4 + 3];
-						if (d15 * d15 > d12 * d12 + d13 * d13 + d14 * d14) {
-							if (d15 > 0.0D) {
-								adouble[j3 * 4 + 3] = -1.0D;
+		for(int size1 = 0; size1 < oreConfig.clusterSize - 1; ++size1) {
+			if (!(clusterInfo[size1 * 4 + 3] <= 0.0D)) {
+				for(int size2 = size1 + 1; size2 < oreConfig.clusterSize; ++size2) {
+					if (!(clusterInfo[size2 * 4 + 3] <= 0.0D)) {
+						double dX = clusterInfo[size1 * 4] - clusterInfo[size2 * 4];
+						double dY = clusterInfo[size1 * 4 + 1] - clusterInfo[size2 * 4 + 1];
+						double dZ = clusterInfo[size1 * 4 + 2] - clusterInfo[size2 * 4 + 2];
+						double dSize = clusterInfo[size1 * 4 + 3] - clusterInfo[size2 * 4 + 3];
+						if (dSize * dSize > dX * dX + dY * dY + dZ * dZ) {
+							if (dSize > 0.0D) {
+								clusterInfo[size2 * 4 + 3] = -1.0D;
 							} else {
-								adouble[l2 * 4 + 3] = -1.0D;
+								clusterInfo[size1 * 4 + 3] = -1.0D;
 							}
 						}
 					}
@@ -134,35 +134,35 @@ public class OreGenerator extends Generator {
 			}
 		}
 
-		for(int i3 = 0; i3 < oreConfig.clusterSize; ++i3) {
-			double d11 = adouble[i3 * 4 + 3];
-			if (!(d11 < 0.0D)) {
-				double d1 = adouble[i3 * 4 + 0];
-				double d3 = adouble[i3 * 4 + 1];
-				double d5 = adouble[i3 * 4 + 2];
-				int k = Math.max(Mth.floor(d1 - d11), p_207803_16_);
-				int k3 = Math.max(Mth.floor(d3 - d11), p_207803_17_);
-				int l = Math.max(Mth.floor(d5 - d11), p_207803_18_);
-				int i1 = Math.max(Mth.floor(d1 + d11), k);
-				int j1 = Math.max(Mth.floor(d3 + d11), k3);
-				int k1 = Math.max(Mth.floor(d5 + d11), l);
+		for(int clusterSize = 0; clusterSize < oreConfig.clusterSize; ++clusterSize) {
+			double size = clusterInfo[clusterSize * 4 + 3];
+			if (size >= 0) {
+				double x = clusterInfo[clusterSize * 4];
+				double y = clusterInfo[clusterSize * 4 + 1];
+				double z = clusterInfo[clusterSize * 4 + 2];
+				int clusterMinX = Math.max(Mth.floor(x - size), maxX);
+				int clusterMinY = Math.max(Mth.floor(y - size), maxY);
+				int clusterMinZ = Math.max(Mth.floor(z - size), maxZ);
+				int clusterMaxX = Math.max(Mth.floor(x + size), clusterMinX);
+				int clusterMaxY = Math.max(Mth.floor(y + size), clusterMinY);
+				int clusterMaxZ = Math.max(Mth.floor(z + size), clusterMinZ);
 
-				for(int l1 = k; l1 <= i1; ++l1) {
-					double d8 = ((double)l1 + 0.5D - d1) / d11;
-					if (d8 * d8 < 1.0D) {
-						for(int i2 = k3; i2 <= j1; ++i2) {
-							double d9 = ((double)i2 + 0.5D - d3) / d11;
-							if (d8 * d8 + d9 * d9 < 1.0D) {
-								for(int j2 = l; j2 <= k1; ++j2) {
-									double d10 = ((double)j2 + 0.5D - d5) / d11;
-									if (d8 * d8 + d9 * d9 + d10 * d10 < 1.0D) {
-										int k2 = l1 - p_207803_16_ + (i2 - p_207803_17_) * p_207803_19_ + (j2 - p_207803_18_) * p_207803_19_ * p_207803_20_;
-										if (!bitset.get(k2)) {
-											bitset.set(k2);
-											blockpos$mutableblockpos.set(l1, i2, j2);
-											if (matcher.test(worldIn.getBlockState(blockpos$mutableblockpos))) {
-												worldIn.setBlock(blockpos$mutableblockpos, placeState, 2);
-												++i;
+				for(int clusterX = clusterMinX; clusterX <= clusterMaxX; ++clusterX) {
+					double xSize = ((double)clusterX + 0.5D - x) / size;
+					if (xSize * xSize < 1.0D) {
+						for(int clusterY = clusterMinY; clusterY <= clusterMaxY; ++clusterY) {
+							double ySize = ((double)clusterY + 0.5D - y) / size;
+							if (xSize * xSize + ySize * ySize < 1.0D) {
+								for(int clusterZ = clusterMinZ; clusterZ <= clusterMaxZ; ++clusterZ) {
+									double zSize = ((double)clusterZ + 0.5D - z) / size;
+									if (xSize * xSize + ySize * ySize + zSize * zSize < 1.0D) {
+										int index = clusterX - maxX + (clusterY - maxY) * searchSize + (clusterZ - maxZ) * searchSize * secondarySearchSize;
+										if (!bitset.get(index)) {
+											bitset.set(index);
+											pos.set(clusterX, clusterY, clusterZ);
+											if (matcher.test(worldIn.getBlockState(pos))) {
+												worldIn.setBlock(pos, placeState, 2);
+												++blocksPlaced;
 											}
 										}
 									}
@@ -174,6 +174,6 @@ public class OreGenerator extends Generator {
 			}
 		}
 
-		return i > 0;
+		return blocksPlaced > 0;
 	}
 }

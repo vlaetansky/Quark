@@ -1,14 +1,8 @@
 package vazkii.quark.content.management.client.screen.widgets;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
-
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
@@ -21,6 +15,10 @@ import vazkii.quark.base.client.handler.TopLayerTooltipHandler;
 import vazkii.quark.base.handler.MiscUtil;
 
 import javax.annotation.Nonnull;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 
 public class MiniInventoryButton extends Button {
 
@@ -49,15 +47,15 @@ public class MiniInventoryButton extends Button {
 	}
 
 	@Override
-	public void render(@Nonnull PoseStack matrix, int p_render_1_, int p_render_2_, float p_render_3_) {
+	public void render(@Nonnull PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		if(parent instanceof RecipeUpdateListener)
 			x = parent.getGuiLeft() + startX;
 
-		super.render(matrix, p_render_1_, p_render_2_, p_render_3_);
+		super.render(matrix, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
-	public void renderButton(@Nonnull PoseStack matrix, int mouseX, int mouseY, float pticks) {
+	public void renderButton(@Nonnull PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, MiscUtil.GENERAL_ICONS);

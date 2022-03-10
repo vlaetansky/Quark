@@ -156,16 +156,8 @@ public class EnchantedBookTooltips {
 		}
 	}
 
-	public static class EnchantedBookComponent implements ClientTooltipComponent, TooltipComponent {
-
-		private final int height, width;
-		private final Enchantment enchantment;
-
-		public EnchantedBookComponent(int width, int height, Enchantment enchantment) {
-			this.height = height;
-			this.width = width;
-			this.enchantment = enchantment;
-		}
+	public record EnchantedBookComponent(int width, int height,
+										 Enchantment enchantment) implements ClientTooltipComponent, TooltipComponent {
 
 		@Override
 		public void renderImage(@Nonnull Font font, int tooltipX, int tooltipY, @Nonnull PoseStack basePose, @Nonnull ItemRenderer itemRenderer, int something) {
@@ -177,24 +169,24 @@ public class EnchantedBookTooltips {
 			Minecraft mc = Minecraft.getInstance();
 			List<ItemStack> items = getItemsForEnchantment(enchantment);
 			int drawn = 0;
-			for(ItemStack testStack : items) {
+			for (ItemStack testStack : items) {
 				mc.getItemRenderer().renderGuiItem(testStack, 6 + (drawn % 10) * 18, (drawn / 10) * 20);
 				drawn++;
 			}
-//
-//			else if(stack.getItem() == Items.ENCHANTED_BOOK || stack.getItem() == AncientTomesModule.ancient_tome) {
-//				List<EnchantmentInstance> enchants = getEnchantedBookEnchantments(stack);
-//
-//				for(EnchantmentInstance ed : enchants) {
-//					List<ItemStack> items = getItemsForEnchantment(ed.enchantment);
-//					for(ItemStack testStack : items) {
-//						mc.getItemRenderer().renderGuiItem(testStack, 6 + (drawn % 10) * 18, tooltipIndex * 20 - 2 + (drawn / 10) * 20);
-//						drawn++;
-//					}
-//
-//					break;
-//				}
-//			}
+	//
+	//			else if(stack.getItem() == Items.ENCHANTED_BOOK || stack.getItem() == AncientTomesModule.ancient_tome) {
+	//				List<EnchantmentInstance> enchants = getEnchantedBookEnchantments(stack);
+	//
+	//				for(EnchantmentInstance ed : enchants) {
+	//					List<ItemStack> items = getItemsForEnchantment(ed.enchantment);
+	//					for(ItemStack testStack : items) {
+	//						mc.getItemRenderer().renderGuiItem(testStack, 6 + (drawn % 10) * 18, tooltipIndex * 20 - 2 + (drawn / 10) * 20);
+	//						drawn++;
+	//					}
+	//
+	//					break;
+	//				}
+	//			}
 
 			modelviewPose.popPose();
 			RenderSystem.applyModelViewMatrix();

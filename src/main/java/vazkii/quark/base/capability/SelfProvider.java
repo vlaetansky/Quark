@@ -21,15 +21,8 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class SelfProvider<V> implements ICapabilityProvider {
-
-	private final Capability<V> capability;
-	private final V self;
-
-	public SelfProvider(Capability<V> capability, V self) {
-		this.capability = capability;
-		this.self = self;
-	}
+public record SelfProvider<V>(Capability<V> capability,
+							  V self) implements ICapabilityProvider {
 
 	@SuppressWarnings("unchecked")
 	public static <V> SelfProvider<V> provide(Capability<V> capability, Object self) {
@@ -53,6 +46,6 @@ public class SelfProvider<V> implements ICapabilityProvider {
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
-		return capability == this.capability  ? LazyOptional.of(() -> (T) self) : LazyOptional.empty();
+		return capability == this.capability ? LazyOptional.of(() -> (T) self) : LazyOptional.empty();
 	}
 }

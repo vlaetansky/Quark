@@ -18,8 +18,8 @@ import javax.annotation.Nonnull;
 
 public class ShibaMouthItemLayer extends RenderLayer<Shiba, ShibaModel> {
 
-	public ShibaMouthItemLayer(RenderLayerParent<Shiba, ShibaModel> p_i50919_1_) {
-		super(p_i50919_1_);
+	public ShibaMouthItemLayer(RenderLayerParent<Shiba, ShibaModel> model) {
+		super(model);
 	}
 
 	@Override

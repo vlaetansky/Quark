@@ -35,12 +35,12 @@ public class SkullPikesModule extends QuarkModule {
 	public static EntityType<SkullPike> skullPikeType;
 
 	public static TagKey<Block> pikeTrophiesTag;
-	
+
 	@Config public static double pikeRange = 5;
-	
+
 	@Override
 	public void register() {
-		skullPikeType = EntityType.Builder.<SkullPike>of(SkullPike::new, MobCategory.MISC)
+		skullPikeType = EntityType.Builder.of(SkullPike::new, MobCategory.MISC)
 				.sized(0.5F, 0.5F)
 				.clientTrackingRange(3)
 				.updateInterval(Integer.MAX_VALUE) // update interval
@@ -49,12 +49,12 @@ public class SkullPikesModule extends QuarkModule {
 				.build("skull_pike");
 		RegistryHelper.register(skullPikeType, "skull_pike");
 	}
-	
+
 	@Override
 	public void setup() {
 		pikeTrophiesTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "pike_trophies"));
 	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
@@ -64,16 +64,15 @@ public class SkullPikesModule extends QuarkModule {
 	@SubscribeEvent
 	public void onPlaceBlock(BlockEvent.EntityPlaceEvent event) {
 		BlockState state = event.getPlacedBlock();
-		
+
 		if(state.is(pikeTrophiesTag)) {
 			LevelAccessor iworld = event.getWorld();
-			
-			if(iworld instanceof Level) {
-				Level world = (Level) iworld;
+
+			if(iworld instanceof Level world) {
 				BlockPos pos = event.getPos();
 				BlockPos down = pos.below();
 				BlockState downState = world.getBlockState(down);
-				
+
 				if(downState.is(BlockTags.FENCES)) {
 					SkullPike pike = new SkullPike(skullPikeType, world);
 					pike.setPos(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
@@ -82,12 +81,11 @@ public class SkullPikesModule extends QuarkModule {
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onMonsterAppear(EntityJoinWorldEvent event) {
 		Entity e = event.getEntity();
-		if(e instanceof Monster && !(e instanceof PatrollingMonster) && e.canChangeDimensions()) {
-			Monster monster = (Monster) e;
+		if(e instanceof Monster monster && !(e instanceof PatrollingMonster) && e.canChangeDimensions()) {
 			boolean alreadySetUp = monster.goalSelector.getAvailableGoals().stream().anyMatch((goal) -> goal.getGoal() instanceof RunAwayFromPikesGoal);
 
 			if (!alreadySetUp)

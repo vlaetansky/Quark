@@ -161,12 +161,12 @@ public class MixedExclusionRecipe implements CraftingRecipe, IShapedRecipe<Craft
 		}
 
 		private MixedExclusionRecipe forType(ResourceLocation res, String type) {
-			switch(type) {
-			case "chest": return MixedExclusionRecipe.forChest(type, res, false);
-			case "chest4": return MixedExclusionRecipe.forChest(type, res, true);
-			case "furnace": return MixedExclusionRecipe.forFurnace(type, res);
-			}
-			return null;
+			return switch (type) {
+				case "chest" -> MixedExclusionRecipe.forChest(type, res, false);
+				case "chest4" -> MixedExclusionRecipe.forChest(type, res, true);
+				case "furnace" -> MixedExclusionRecipe.forFurnace(type, res);
+				default -> null;
+			};
 		}
 
 	}

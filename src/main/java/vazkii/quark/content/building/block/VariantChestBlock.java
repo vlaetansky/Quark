@@ -1,14 +1,6 @@
 package vazkii.quark.content.building.block;
 
-import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.google.common.base.Supplier;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -37,13 +29,19 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.building.block.be.VariantChestBlockEntity;
 import vazkii.quark.content.building.module.VariantChestsModule.IChestTextureProvider;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 @OnlyIn(value = Dist.CLIENT, _interface = IBlockItemProvider.class)
 public class VariantChestBlock extends ChestBlock implements IBlockItemProvider, IQuarkBlock, IChestTextureProvider {
 
 	private final QuarkModule module;
 	private BooleanSupplier enabledSupplier = () -> true;
 
-	private String path;
+	private final String path;
 
 	public VariantChestBlock(String type, QuarkModule module, Supplier<BlockEntityType<? extends ChestBlockEntity>> supplier, Properties props) {
 		super(props, supplier);
@@ -84,8 +82,8 @@ public class VariantChestBlock extends ChestBlock implements IBlockItemProvider,
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(@Nonnull BlockPos p_153064_, @Nonnull BlockState p_153065_) {
-		return new VariantChestBlockEntity(p_153064_, p_153065_);
+	public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
+		return new VariantChestBlockEntity(pos, state);
 	}
 
 	@Override
@@ -101,7 +99,7 @@ public class VariantChestBlock extends ChestBlock implements IBlockItemProvider,
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public BlockItem provideItemBlock(Block block, Item.Properties props) {
-		return new VariantChestBlock.Item(block, props);
+		return new Item(block, props);
 	}
 
 	public static class Item extends BlockItem {

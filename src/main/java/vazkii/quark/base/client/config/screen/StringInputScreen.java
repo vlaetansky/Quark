@@ -23,13 +23,13 @@ public class StringInputScreen<T> extends AbstractInputScreen<T> {
 	}
 
 	@Override
-	public void render(@Nonnull PoseStack mstack, int mouseX, int mouseY, float pticks) {
-		super.render(mstack, mouseX, mouseY, pticks);
+	public void render(@Nonnull PoseStack mstack, int mouseX, int mouseY, float partialTicks) {
+		super.render(mstack, mouseX, mouseY, partialTicks);
 
 		drawCenteredString(mstack, font, new TextComponent(object.getGuiDisplayName()).withStyle(ChatFormatting.BOLD), width / 2, 20, 0xFFFFFF);
 		drawCenteredString(mstack, font, I18n.get("quark.gui.config.defaultvalue", object.defaultObj),  width / 2, 30, 0xFFFFFF);
 
-		input.render(mstack, mouseX, mouseY, pticks);
+		input.render(mstack, mouseX, mouseY, partialTicks);
 	}
 
 	@Override

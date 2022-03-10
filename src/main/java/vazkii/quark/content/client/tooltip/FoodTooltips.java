@@ -80,20 +80,12 @@ public class FoodTooltips {
 	}
 
 
-	public static class FoodComponent implements ClientTooltipComponent, TooltipComponent {
-
-		private final ItemStack stack;
-		private final int height, width;
-
-		public FoodComponent(ItemStack stack, int width, int height) {
-			this.stack = stack;
-			this.height = height;
-			this.width = width;
-		}
+	public record FoodComponent(ItemStack stack, int width,
+								int height) implements ClientTooltipComponent, TooltipComponent {
 
 		@Override
 		public void renderImage(@Nonnull Font font, int tooltipX, int tooltipY, @Nonnull PoseStack pose, @Nonnull ItemRenderer itemRenderer, int something) {
-			if(stack.isEdible()) {
+			if (stack.isEdible()) {
 				FoodProperties food = stack.getItem().getFoodProperties();
 				if (food != null) {
 					RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -101,7 +93,7 @@ public class FoodTooltips {
 					Minecraft mc = Minecraft.getInstance();
 
 					int pips = food.getNutrition();
-					if(pips == 0)
+					if (pips == 0)
 						return;
 
 					boolean poison = false;
@@ -118,9 +110,9 @@ public class FoodTooltips {
 					int y = tooltipY - 1;
 
 					boolean compress = count > ImprovedTooltipsModule.foodCompressionThreshold;
-					if(compress) {
+					if (compress) {
 						renderCount = 1;
-						if(fract)
+						if (fract)
 							count--;
 					}
 
@@ -149,7 +141,7 @@ public class FoodTooltips {
 						GuiComponent.blit(pose, x, y, u, v, 9, 9, 256, 256);
 					}
 
-					if(compress)
+					if (compress)
 						mc.font.drawShadow(pose, "x" + (count + (fract ? ".5" : "")), tooltipX + 10, y + 1, 0xFF666666);
 					pose.popPose();
 				}

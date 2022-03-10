@@ -1,14 +1,8 @@
 package vazkii.quark.content.tweaks.module;
 
-import java.util.List;
-import java.util.Objects;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -40,12 +34,16 @@ import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.apache.commons.lang3.tuple.Pair;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.RayTraceHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
+
+import java.util.List;
+import java.util.Objects;
 
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
 public class ReacharoundPlacingModule extends QuarkModule {
@@ -128,7 +126,7 @@ public class ReacharoundPlacingModule extends QuarkModule {
 			ItemStack stack = event.getItemStack();
 			if(!player.mayUseItemAt(target.pos, target.dir, stack))
 				return;
-			
+
 			int count = stack.getCount();
 			InteractionHand hand = event.getHand();
 
@@ -149,7 +147,7 @@ public class ReacharoundPlacingModule extends QuarkModule {
 					SoundType soundtype = state.getSoundType(player.level, placedPos, context.getPlayer());
 
 					if(player.level instanceof ServerLevel)
-						((ServerLevel) player.level).playSound(null, placedPos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+						player.level.playSound(null, placedPos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 
 				}
 
@@ -165,10 +163,10 @@ public class ReacharoundPlacingModule extends QuarkModule {
 			hand = InteractionHand.MAIN_HAND;
 		else if(validateReacharoundStack(player.getOffhandItem()))
 			hand = InteractionHand.OFF_HAND;
-		
+
 		if(hand == null)
 			return null;
-			
+
 		Level world = player.level;
 
 		Pair<Vec3, Vec3> params = RayTraceHandler.getEntityParams(player);
@@ -184,8 +182,7 @@ public class ReacharoundPlacingModule extends QuarkModule {
 				return target;
 
 			target = getPlayerHorizontalReacharoundTarget(player, hand, world, rayPos, ray);
-			if(target != null)
-				return target;
+			return target;
 		}
 
 		return null;
@@ -229,19 +226,10 @@ public class ReacharoundPlacingModule extends QuarkModule {
 		Item item = stack.getItem();
 		return item instanceof BlockItem || stack.is(reacharoundTag) || whitelist.contains(Objects.toString(item.getRegistryName()));
 	}
-	
-	private static class ReacharoundTarget {
-		
-		final BlockPos pos;
-		final Direction dir;
-		final InteractionHand hand;
-		
-		public ReacharoundTarget(BlockPos pos, Direction dir, InteractionHand hand) {
-			this.pos = pos;
-			this.dir = dir;
-			this.hand = hand;
-		}
-		
+
+	private record ReacharoundTarget(BlockPos pos, Direction dir,
+									 InteractionHand hand) {
+
 	}
 
 }

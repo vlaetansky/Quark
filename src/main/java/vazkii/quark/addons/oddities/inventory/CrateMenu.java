@@ -91,8 +91,7 @@ public class CrateMenu extends AbstractContainerMenu {
 			}
 
 			if(itemstack1.isEmpty()) {
-				if(slot instanceof CrateSlot) {
-					CrateSlot cslot = (CrateSlot) slot;
+				if(slot instanceof CrateSlot cslot) {
 					int target = cslot.getTarget();
 					crate.removeItemNoUpdate(target);
 				}

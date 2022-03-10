@@ -159,7 +159,7 @@ public class ExclusionRecipe implements CraftingRecipe {
 			}
 
 			Optional<RecipeSerializer<?>> serializer = Registry.RECIPE_SERIALIZER.getOptional(new ResourceLocation(trueType));
-			if (!serializer.isPresent())
+			if (serializer.isEmpty())
 				throw new JsonSyntaxException("Invalid or unsupported recipe type '" + trueType + "'");
 			Recipe<?> parent = serializer.get().fromJson(recipeId, json);
 			if (!(parent instanceof CraftingRecipe))

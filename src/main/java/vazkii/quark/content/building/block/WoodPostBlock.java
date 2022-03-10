@@ -61,11 +61,11 @@ public class WoodPostBlock extends QuarkBlock implements SimpleWaterloggedBlock 
 	@Nonnull
 	@Override
 	public VoxelShape getShape(BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
-		switch(state.getValue(AXIS)) {
-		case X: return SHAPE_X;
-		case Y: return SHAPE_Y;
-		default: return SHAPE_Z;
-		}
+		return switch (state.getValue(AXIS)) {
+			case X -> SHAPE_X;
+			case Y -> SHAPE_Y;
+			default -> SHAPE_Z;
+		};
 	}
 
 	@Override

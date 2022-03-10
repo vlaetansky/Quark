@@ -1,10 +1,7 @@
 package vazkii.quark.base.client.config.screen.widgets;
 
-import java.util.Arrays;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -14,6 +11,7 @@ import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.handler.TopLayerTooltipHandler;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 public class SocialButton extends Button {
 
@@ -31,8 +29,8 @@ public class SocialButton extends Button {
 	}
 
 	@Override
-	public void renderButton(@Nonnull PoseStack mstack, int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
-		super.renderButton(mstack, p_renderButton_1_, p_renderButton_2_, p_renderButton_3_);
+	public void renderButton(@Nonnull PoseStack mstack, int mouseX, int mouseY, float partialTicks) {
+		super.renderButton(mstack, mouseX, mouseY, partialTicks);
 
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.enableBlend();
@@ -46,7 +44,7 @@ public class SocialButton extends Button {
 		blit(mstack, x, y, u, v, 20, 20, 128, 64);
 
 		if(isHovered)
-			TopLayerTooltipHandler.setTooltip(Arrays.asList(text.getString()), p_renderButton_1_, p_renderButton_2_);
+			TopLayerTooltipHandler.setTooltip(List.of(text.getString()), mouseX, mouseY);
 	}
 
 	@Override

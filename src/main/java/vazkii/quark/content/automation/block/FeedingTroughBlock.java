@@ -1,8 +1,5 @@
 package vazkii.quark.content.automation.block;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Containers;
@@ -28,15 +25,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.BooleanOp;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.EntityCollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.*;
+import net.minecraftforge.common.util.ForgeSoundType;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.automation.block.be.FeedingTroughBlockEntity;
 import vazkii.quark.content.automation.module.FeedingTroughModule;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author WireSegal
@@ -44,7 +41,7 @@ import vazkii.quark.content.automation.module.FeedingTroughModule;
  */
 public class FeedingTroughBlock extends QuarkBlock implements EntityBlock {
 
-	private static final SoundType WOOD_WITH_PLANT_STEP = new SoundType(1.0F, 1.0F, SoundEvents.WOOD_BREAK, SoundEvents.GRASS_STEP, SoundEvents.WOOD_PLACE, SoundEvents.WOOD_HIT, SoundEvents.WOOD_FALL);
+	private static final SoundType WOOD_WITH_PLANT_STEP = new ForgeSoundType(1.0F, 1.0F, () -> SoundEvents.WOOD_BREAK, () -> SoundEvents.GRASS_STEP, () -> SoundEvents.WOOD_PLACE, () -> SoundEvents.WOOD_HIT, () -> SoundEvents.WOOD_FALL);
 
 	public static BooleanProperty FULL = BooleanProperty.create("full");
 
@@ -62,7 +59,7 @@ public class FeedingTroughBlock extends QuarkBlock implements EntityBlock {
 	@Override
 	public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
 		Entity entity = context instanceof EntityCollisionContext ? ((EntityCollisionContext) context).getEntity() : null;
-		if(entity != null && (entity instanceof Animal))
+		if(entity instanceof Animal)
 			return ANIMAL_SHAPE;
 
 		return EMPTY_SHAPE;

@@ -1,10 +1,7 @@
 package vazkii.quark.base.client.config.screen.widgets;
 
-import java.util.function.Supplier;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.TextComponent;
@@ -12,6 +9,7 @@ import vazkii.quark.api.config.IConfigObject;
 import vazkii.quark.base.handler.MiscUtil;
 
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 public class CheckboxButton extends Button {
 
@@ -23,12 +21,12 @@ public class CheckboxButton extends Button {
 	}
 
 	public CheckboxButton(int x, int y, IConfigObject<Boolean> configObj) {
-		this(x, y, () -> configObj.getCurrentObj(), (b) -> configObj.setCurrentObj(!configObj.getCurrentObj()));
+		this(x, y, configObj::getCurrentObj, (b) -> configObj.setCurrentObj(!configObj.getCurrentObj()));
 	}
 
 	@Override
-	public void renderButton(@Nonnull PoseStack mstack, int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
-		super.renderButton(mstack, p_renderButton_1_, p_renderButton_2_, p_renderButton_3_);
+	public void renderButton(@Nonnull PoseStack mstack, int mouseX, int mouseY, float partial) {
+		super.renderButton(mstack, mouseX, mouseY, partial);
 
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

@@ -55,8 +55,8 @@ public class EnderWatcherBlock extends QuarkBlock implements EntityBlock {
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(@Nonnull BlockPos p_153215_, @Nonnull BlockState p_153216_) {
-		return new EnderWatcherBlockEntity(p_153215_, p_153216_);
+	public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
+		return new EnderWatcherBlockEntity(pos, state);
 	}
 
 	@Override

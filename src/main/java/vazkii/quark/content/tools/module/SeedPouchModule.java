@@ -33,7 +33,7 @@ public class SeedPouchModule extends QuarkModule {
 	public static Item seed_pouch;
 
 	public static TagKey<Item> seedPouchHoldableTag;
-	
+
 	@Config public static int maxItems = 640;
 	@Config public static boolean showAllVariantsInCreative = true;
 	@Config public static int shiftRange = 3;
@@ -42,7 +42,7 @@ public class SeedPouchModule extends QuarkModule {
 	public void register() {
 		seed_pouch = new SeedPouchItem(this);
 	}
-	
+
 	@Override
 	public void setup() {
 		seedPouchHoldableTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "seed_pouch_holdable"));
@@ -52,8 +52,8 @@ public class SeedPouchModule extends QuarkModule {
 	@Override
 	public void clientSetup() {
 		enqueue(() -> ItemProperties.register(seed_pouch, new ResourceLocation("pouch_items"), SeedPouchItem::itemFraction));
-		
-		MinecraftForgeClient.registerTooltipComponentFactory(SeedPouchItem.Tooltip.class, t -> new SeedPouchClientTooltipComponent(t.stack));
+
+		MinecraftForgeClient.registerTooltipComponentFactory(SeedPouchItem.Tooltip.class, t -> new SeedPouchClientTooltipComponent(t.stack()));
 	}
 
 	@SubscribeEvent
@@ -81,7 +81,7 @@ public class SeedPouchModule extends QuarkModule {
 						SeedPouchItem.setCount(heldStack, curr + toAdd);
 
 						if(player.level instanceof ServerLevel)
-							((ServerLevel) player.level).playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BUNDLE_INSERT, SoundSource.PLAYERS, 0.2F, (player.level.random.nextFloat() - player.level.random.nextFloat()) * 1.4F + 2.0F);
+							player.level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BUNDLE_INSERT, SoundSource.PLAYERS, 0.2F, (player.level.random.nextFloat() - player.level.random.nextFloat()) * 1.4F + 2.0F);
 
 						if(stack.getCount() == 0)
 							break;

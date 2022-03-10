@@ -7,14 +7,17 @@ import net.minecraftforge.network.NetworkEvent;
 import vazkii.arl.network.IMessage;
 import vazkii.quark.content.tweaks.module.DoubleDoorOpeningModule;
 
+import java.io.Serial;
+
 public class DoubleDoorMessage implements IMessage {
 
+	@Serial
 	private static final long serialVersionUID = 8024722624953236124L;
-	
+
 	public BlockPos pos;
-	
+
 	public DoubleDoorMessage() { }
-	
+
 	public DoubleDoorMessage(BlockPos pos) {
 		this.pos = pos;
 	}

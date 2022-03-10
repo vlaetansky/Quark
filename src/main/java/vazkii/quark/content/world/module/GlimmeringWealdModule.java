@@ -1,7 +1,5 @@
 package vazkii.quark.content.world.module;
 
-import java.util.List;
-
 import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.BiomeDefaultFeatures;
 import net.minecraft.data.worldgen.biome.OverworldBiomes;
@@ -46,6 +44,8 @@ import vazkii.quark.content.world.block.HugeGlowShroomBlock;
 import vazkii.quark.content.world.feature.GlowExtrasFeature;
 import vazkii.quark.content.world.feature.GlowShroomsFeature;
 
+import java.util.List;
+
 @LoadModule(category = ModuleCategory.WORLD)
 public class GlimmeringWealdModule extends QuarkModule {
 
@@ -61,7 +61,7 @@ public class GlimmeringWealdModule extends QuarkModule {
 	public static Block glow_shroom_block;
 	public static Block glow_shroom_stem;
 	public static Block glow_shroom_ring;
-	
+
 	public static TagKey<Item> glowShroomFeedablesTag;
 
 	@Override
@@ -71,9 +71,9 @@ public class GlimmeringWealdModule extends QuarkModule {
 		glow_shroom_block = new HugeGlowShroomBlock("glow_shroom_block", this, true);
 		glow_shroom_stem = new HugeGlowShroomBlock("glow_shroom_stem", this, false);
 		glow_shroom_ring = new GlowShroomRingBlock(this);
-		
+
 		makeFeatures();
-		
+
 		RegistryHelper.register(makeBiome());
 		UndergroundBiomeHandler.addUndergroundBiome(this, Climate.parameters(FULL_RANGE, FULL_RANGE, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(1.55F, 2F), FULL_RANGE, 0F), BIOME_NAME);
 	}
@@ -82,7 +82,7 @@ public class GlimmeringWealdModule extends QuarkModule {
 	public void setup() {
 		glowShroomFeedablesTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "glow_shroom_feedables"));
 	}
-	
+
 	private static void makeFeatures() {
 		placed_glow_shrooms = place("glow_shrooms", new GlowShroomsFeature(), GlowShroomsFeature.placed());
 		placed_glow_extras = place("glow_extras", new GlowExtrasFeature(), GlowExtrasFeature.placed());
@@ -100,9 +100,9 @@ public class GlimmeringWealdModule extends QuarkModule {
 	private static Biome makeBiome() {
 		MobSpawnSettings.Builder mobs = new MobSpawnSettings.Builder();
 		BiomeDefaultFeatures.commonSpawns(mobs);
-		
+
 		if(ModuleLoader.INSTANCE.isModuleEnabled(StonelingsModule.class))
-			  mobs.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(StonelingsModule.stonelingType, 200, 1, 4));
+			mobs.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(StonelingsModule.stonelingType, 200, 1, 4));
 		mobs.addSpawn(MobCategory.UNDERGROUND_WATER_CREATURE, new MobSpawnSettings.SpawnerData(EntityType.GLOW_SQUID, 20, 4, 6));
 
 		BiomeGenerationSettings.Builder settings = new BiomeGenerationSettings.Builder();
@@ -116,7 +116,7 @@ public class GlimmeringWealdModule extends QuarkModule {
 
 		settings.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, placed_glow_shrooms);
 		settings.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, placed_glow_extras);
-		
+
 		settings.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_LAPIS_EXTRA);
 
 		Music music = Musics.createGameMusic(QuarkSounds.MUSIC_GLIMMERING_WEALD);

@@ -94,12 +94,12 @@ public class StonelingModel extends EntityModel<Stoneling> {
 	}
 
 	@Override
-	public void renderToBuffer(@Nonnull PoseStack matrix, @Nonnull VertexConsumer vb, int p_225598_3_, int p_225598_4_, float p_225598_5_, float p_225598_6_, float p_225598_7_, float p_225598_8_) {
-		body.render(matrix, vb, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
-		arm_right.render(matrix, vb, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
-		arm_left.render(matrix, vb, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
-		leg_right.render(matrix, vb, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
-		leg_left.render(matrix, vb, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
+	public void renderToBuffer(@Nonnull PoseStack matrix, @Nonnull VertexConsumer vb, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+		body.render(matrix, vb, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+		arm_right.render(matrix, vb, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+		arm_left.render(matrix, vb, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+		leg_right.render(matrix, vb, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+		leg_left.render(matrix, vb, packedLightIn, packedOverlayIn, red, green, blue, alpha);
 	}
 
 	public void setRotationAngle(ModelPart modelRenderer, float x, float y, float z) {

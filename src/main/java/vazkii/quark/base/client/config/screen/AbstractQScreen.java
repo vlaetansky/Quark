@@ -23,8 +23,8 @@ public abstract class AbstractQScreen extends Screen {
 	}
 
 	@Override
-	public void render(@Nonnull PoseStack mstack, int mouseX, int mouseY, float pticks) {
-		super.render(mstack, mouseX, mouseY, pticks);
+	public void render(@Nonnull PoseStack mstack, int mouseX, int mouseY, float partialTicks) {
+		super.render(mstack, mouseX, mouseY, partialTicks);
 	}
 
 	public void returnToParent(Button button) {
@@ -40,7 +40,7 @@ public abstract class AbstractQScreen extends Screen {
 	}
 
 	public <T> OnPress stringInput(AbstractStringInputObject<T> object) {
-		return b -> minecraft.setScreen(new StringInputScreen<T>(this, object));
+		return b -> minecraft.setScreen(new StringInputScreen<>(this, object));
 	}
 
 	public OnPress listInput(ListObject object) {

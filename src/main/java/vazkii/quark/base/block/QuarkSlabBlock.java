@@ -32,7 +32,7 @@ public class QuarkSlabBlock extends SlabBlock implements IQuarkBlock, IBlockColo
 		super(VariantHandler.realStateCopy(parent));
 
 		this.parent = parent;
-		RegistryHelper.registerBlock(this, Objects.toString(parent.getBlock().getRegistryName()) + "_slab");
+		RegistryHelper.registerBlock(this, parent.getBlock().getRegistryName() + "_slab");
 		RegistryHelper.setCreativeTab(this, CreativeModeTab.TAB_BUILDING_BLOCKS);
 
 		RenderLayerHandler.setInherited(this, parent.getBlock());

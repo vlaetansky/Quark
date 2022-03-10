@@ -1,6 +1,5 @@
 package vazkii.quark.content.building.block;
 
-import com.google.common.base.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -32,6 +31,7 @@ import vazkii.quark.content.building.module.VariantChestsModule.IChestTexturePro
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 @OnlyIn(value = Dist.CLIENT, _interface = IBlockItemProvider.class)
 public class VariantTrappedChestBlock extends ChestBlock implements IBlockItemProvider, IQuarkBlock, IChestTextureProvider {
@@ -40,7 +40,7 @@ public class VariantTrappedChestBlock extends ChestBlock implements IBlockItemPr
 	private final QuarkModule module;
 	private BooleanSupplier enabledSupplier = () -> true;
 
-	private String path;
+	private final String path;
 
 	public VariantTrappedChestBlock(String type, QuarkModule module, Supplier<BlockEntityType<? extends ChestBlockEntity>> supplier, Properties props) {
 		super(props, supplier);
@@ -82,8 +82,8 @@ public class VariantTrappedChestBlock extends ChestBlock implements IBlockItemPr
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(@Nonnull BlockPos p_153064_, @Nonnull BlockState p_153065_) {
-		return new VariantTrappedChestBlockEntity(p_153064_, p_153065_);
+	public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState p_153065_) {
+		return new VariantTrappedChestBlockEntity(pos, p_153065_);
 	}
 
 	@Override
@@ -120,18 +120,18 @@ public class VariantTrappedChestBlock extends ChestBlock implements IBlockItemPr
 	}
 
 	@Override
-	public boolean isSignalSource(@Nonnull BlockState p_149744_1_) {
+	public boolean isSignalSource(@Nonnull BlockState state) {
 		return true;
 	}
 
 	@Override
-	public int getSignal(@Nonnull BlockState p_180656_1_, @Nonnull BlockGetter p_180656_2_, @Nonnull BlockPos p_180656_3_, @Nonnull Direction p_180656_4_) {
-		return Mth.clamp(ChestBlockEntity.getOpenCount(p_180656_2_, p_180656_3_), 0, 15);
+	public int getSignal(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nonnull Direction side) {
+		return Mth.clamp(ChestBlockEntity.getOpenCount(world, pos), 0, 15);
 	}
 
 	@Override
-	public int getDirectSignal(@Nonnull BlockState p_176211_1_, @Nonnull BlockGetter p_176211_2_, @Nonnull BlockPos p_176211_3_, @Nonnull Direction p_176211_4_) {
-		return p_176211_4_ == Direction.UP ? p_176211_1_.getSignal(p_176211_2_, p_176211_3_, p_176211_4_) : 0;
+	public int getDirectSignal(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nonnull Direction side) {
+		return side == Direction.UP ? state.getSignal(world, pos, side) : 0;
 	}
 
 }

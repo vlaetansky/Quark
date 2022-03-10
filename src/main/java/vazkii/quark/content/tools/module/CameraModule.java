@@ -1,14 +1,8 @@
 package vazkii.quark.content.tools.module;
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-
-import org.lwjgl.glfw.GLFW;
-
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -28,6 +22,7 @@ import net.minecraftforge.client.event.ScreenshotEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.RenderTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.handler.ModKeybindHandler;
 import vazkii.quark.base.handler.QuarkSounds;
@@ -36,6 +31,9 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.experimental.module.OverlayShaderModule;
+
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class CameraModule extends QuarkModule {
@@ -179,7 +177,7 @@ public class CameraModule extends QuarkModule {
 			cameraMode = false;
 			queuedRefresh = true;
 		} else if(queuedRefresh)
-			refreshShader(); 
+			refreshShader();
 
 		if(event.phase == Phase.END && cameraMode && mc.screen == null) {
 			if(queueScreenshot)
@@ -190,11 +188,7 @@ public class CameraModule extends QuarkModule {
 
 			if(queueScreenshot) {
 				queueScreenshot = false;
-				Screenshot.grab(mc.gameDirectory, mc.getMainRenderTarget(), (msg) -> {
-					mc.execute(() -> {
-						mc.gui.getChat().addMessage(msg);
-					});
-				});
+				Screenshot.grab(mc.gameDirectory, mc.getMainRenderTarget(), (msg) -> mc.execute(() -> mc.gui.getChat().addMessage(msg)));
 			}
 		}
 	}
@@ -212,25 +206,21 @@ public class CameraModule extends QuarkModule {
 
 		double targetAspect = -1;
 
-		switch(currBorders) {
-		case 1: // Square
-			targetAspect = 1;
-			break;
-		case 2: // 4:3
-			targetAspect = 4.0 / 3.0;
-			break;
-		case 3: // 16:9
-			targetAspect = 16.0 / 9.0;
-			break;
-		case 4: // 21:9
-			targetAspect = 21.0 / 9.0;
-			break;
-		case 5: // Polaroid
-			int border = (int) (20.0 * ((double) (twidth * theight) / 518400));
-			paddingHoriz = border;
-			paddingVert = border;
-			paddingColor = 0xFFFFFFFF;
-			break;
+		switch (currBorders) {
+			case 1 -> // Square
+					targetAspect = 1;
+			case 2 -> // 4:3
+					targetAspect = 4.0 / 3.0;
+			case 3 -> // 16:9
+					targetAspect = 16.0 / 9.0;
+			case 4 -> // 21:9
+					targetAspect = 21.0 / 9.0;
+			case 5 -> { // Polaroid
+				int border = (int) (20.0 * ((double) (twidth * theight) / 518400));
+				paddingHoriz = border;
+				paddingVert = border;
+				paddingColor = 0xFFFFFFFF;
+			}
 		}
 
 		if(targetAspect > 0) {
@@ -267,35 +257,34 @@ public class CameraModule extends QuarkModule {
 		int overlayX = -1;
 		int overlayY = -1;
 
-		switch(currOverlay) {
-		case 1: // Date
-			overlayText = new SimpleDateFormat("MM/dd/yyyy").format(new Date(System.currentTimeMillis()));
-			overlayColor = 0xf77700;
-			break;
-		case 2: // Postcard
-			String worldName = "N/A";
-			if(mc.getSingleplayerServer() != null) 
-				worldName = mc.getSingleplayerServer().name();
-			else if(mc.getCurrentServer() != null)
-				worldName = mc.getCurrentServer().name;
-
-			overlayText = I18n.get("quark.camera.greetings", worldName);
-			overlayX = paddingHoriz + 20;
-			overlayY = paddingVert + 20;
-			overlayScale = 3;
-			overlayColor = 0xef5425;
-			break;
-		case 3: // Watermark
-			overlayText = mc.player.getGameProfile().getName();
-			overlayScale = 6;
-			overlayShadow = false;
-			overlayColor = 0x44000000;
-			break;
-		case 4: // Held Item
-			overlayText = mc.player.getMainHandItem().getHoverName().getString();
-			overlayX = twidth / 2 - mc.font.width(overlayText);
-			overlayY = paddingVert + 40;
-			break;
+		switch (currOverlay) {
+			case 1 -> { // Date
+				overlayText = new SimpleDateFormat("MM/dd/yyyy").format(new Date(System.currentTimeMillis()));
+				overlayColor = 0xf77700;
+			}
+			case 2 -> { // Postcard
+				String worldName = "N/A";
+				if (mc.getSingleplayerServer() != null)
+					worldName = mc.getSingleplayerServer().name();
+				else if (mc.getCurrentServer() != null)
+					worldName = mc.getCurrentServer().name;
+				overlayText = I18n.get("quark.camera.greetings", worldName);
+				overlayX = paddingHoriz + 20;
+				overlayY = paddingVert + 20;
+				overlayScale = 3;
+				overlayColor = 0xef5425;
+			}
+			case 3 -> { // Watermark
+				overlayText = mc.player.getGameProfile().getName();
+				overlayScale = 6;
+				overlayShadow = false;
+				overlayColor = 0x44000000;
+			}
+			case 4 -> { // Held Item
+				overlayText = mc.player.getMainHandItem().getHoverName().getString();
+				overlayX = twidth / 2 - mc.font.width(overlayText);
+				overlayY = paddingVert + 40;
+			}
 		}
 
 		if(overlayX == -1)
@@ -318,25 +307,25 @@ public class CameraModule extends QuarkModule {
 			// =============================================== DRAW RULERS ===============================================
 			matrix.pushPose();
 			matrix.translate(paddingHoriz, paddingVert, 0);
-			switch(currRulers) {
-			case 1: // Rule of Thirds
-				vruler(matrix, width / 3, height);
-				vruler(matrix, width / 3 * 2, height);
-				hruler(matrix, height / 3, width);
-				hruler(matrix, height / 3 * 2, width);
-				break;
-			case 2: // Golden Ratio
-				double phi1 = 1 / 2.61;
-				double phi2 = 1.61 / 2.61;
-				vruler(matrix, (int) (width * phi1), height);
-				vruler(matrix, (int) (width * phi2), height);
-				hruler(matrix, (int) (height * phi1), width);
-				hruler(matrix, (int) (height * phi2), width);
-				break;
-			case 3: // Center
-				vruler(matrix, width / 2, height);
-				hruler(matrix, height / 2, width);
-				break;
+			switch (currRulers) {
+				case 1 -> { // Rule of Thirds
+					vruler(matrix, width / 3, height);
+					vruler(matrix, width / 3 * 2, height);
+					hruler(matrix, height / 3, width);
+					hruler(matrix, height / 3 * 2, width);
+				}
+				case 2 -> { // Golden Ratio
+					double phi1 = 1 / 2.61;
+					double phi2 = 1.61 / 2.61;
+					vruler(matrix, (int) (width * phi1), height);
+					vruler(matrix, (int) (width * phi2), height);
+					hruler(matrix, (int) (height * phi1), width);
+					hruler(matrix, (int) (height * phi2), width);
+				}
+				case 3 -> { // Center
+					vruler(matrix, width / 2, height);
+					hruler(matrix, height / 2, width);
+				}
 			}
 			matrix.popPose();
 
@@ -364,10 +353,10 @@ public class CameraModule extends QuarkModule {
 			mc.font.drawShadow(matrix, text, left, top + 48, 0xFFFFFF);
 
 			text = ChatFormatting.AQUA + I18n.get("quark.camera.header");
-			mc.font.drawShadow(matrix, text, twidth / 2 - mc.font.width(text) / 2, 6, 0xFFFFFF);
+			mc.font.drawShadow(matrix, text, (float) (twidth / 2 - mc.font.width(text) / 2), 6, 0xFFFFFF);
 
 			text = I18n.get("quark.camera.info", new KeybindComponent("quark.keybind.camera_mode").getString());
-			mc.font.drawShadow(matrix, text, twidth / 2 - mc.font.width(text) / 2, 16, 0xFFFFFF);
+			mc.font.drawShadow(matrix, text, (float) (twidth / 2 - mc.font.width(text) / 2), 16, 0xFFFFFF);
 
 			ResourceLocation CAMERA_TEXTURE = new ResourceLocation(Quark.MOD_ID, "textures/misc/camera.png");
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -392,7 +381,7 @@ public class CameraModule extends QuarkModule {
 				render.loadEffect(shader);
 				return;
 			}
-		} 
+		}
 		else if(ModuleLoader.INSTANCE.isModuleEnabled(OverlayShaderModule.class)) {
 			for(ResourceLocation l : SHADERS) {
 				if(l != null && l.getPath().contains(OverlayShaderModule.shader + ".json")) {
@@ -400,7 +389,7 @@ public class CameraModule extends QuarkModule {
 					return;
 				}
 			}
-		} 
+		}
 
 		render.checkEntityPostEffect(null);
 	}
