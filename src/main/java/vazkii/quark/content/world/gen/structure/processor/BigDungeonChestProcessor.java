@@ -16,26 +16,26 @@
 //
 //public class BigDungeonChestProcessor extends StructureProcessor {
 //	
-//    public BigDungeonChestProcessor() { 
-//    	// NO-OP
-//    }
-//    
-//    @Override
-//    public StructureBlockInfo process(LevelReader worldReaderIn, BlockPos pos, BlockPos otherposidk, StructureBlockInfo p_215194_3_, StructureBlockInfo blockInfo, StructurePlaceSettings placementSettingsIn, StructureTemplate template) {
-//    	if(blockInfo.state.getBlock() instanceof ChestBlock) {
-//    		Random rand = placementSettingsIn.getRandom(blockInfo.pos);
-//    		if(rand.nextDouble() > BigDungeonModule.chestChance)
-//	            return new StructureBlockInfo(blockInfo.pos, Blocks.CAVE_AIR.defaultBlockState(), new CompoundTag());
-//    		if (blockInfo.nbt.getString("id").equals("minecraft:chest")) {
-//    			blockInfo.nbt.putString("LootTable", BigDungeonModule.lootTable);
-//    			blockInfo.nbt.putLong("LootTableSeed", rand.nextLong());
-//    			return new StructureBlockInfo(blockInfo.pos, blockInfo.state, blockInfo.nbt);
-//    		}
-//    	}
-//    	
-//    	return blockInfo;
-//    }
-//    
+//	public BigDungeonChestProcessor() { 
+//		// NO-OP
+//	}
+//	
+//	@Override
+//	public StructureBlockInfo process(LevelReader worldReaderIn, BlockPos pos, BlockPos otherposidk, StructureBlockInfo p_215194_3_, StructureBlockInfo blockInfo, StructurePlaceSettings placementSettingsIn, StructureTemplate template) {
+//		if(blockInfo.state.getBlock() instanceof ChestBlock) {
+//			Random rand = placementSettingsIn.getRandom(blockInfo.pos);
+//			if(rand.nextDouble() > BigDungeonModule.chestChance)
+//				return new StructureBlockInfo(blockInfo.pos, Blocks.CAVE_AIR.defaultBlockState(), new CompoundTag());
+//			if (blockInfo.nbt.getString("id").equals("minecraft:chest")) {
+//				blockInfo.nbt.putString("LootTable", BigDungeonModule.lootTable);
+//				blockInfo.nbt.putLong("LootTableSeed", rand.nextLong());
+//				return new StructureBlockInfo(blockInfo.pos, blockInfo.state, blockInfo.nbt);
+//			}
+//		}
+//		
+//		return blockInfo;
+//	}
+//	
 //	@Override
 //	protected StructureProcessorType<?> getType() {
 //		return BigDungeonModule.CHEST_PROCESSOR_TYPE;

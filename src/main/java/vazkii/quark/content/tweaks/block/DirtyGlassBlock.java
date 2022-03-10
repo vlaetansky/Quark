@@ -17,17 +17,17 @@ import vazkii.quark.base.module.QuarkModule;
  */
 public class DirtyGlassBlock extends QuarkGlassBlock {
 
-    private static final float[] BEACON_COLOR_MULTIPLIER = new float[] { 0.25F, 0.125F, 0F };
+	private static final float[] BEACON_COLOR_MULTIPLIER = new float[] { 0.25F, 0.125F, 0F };
 
-    public DirtyGlassBlock(String regname, QuarkModule module, CreativeModeTab creativeTab, Properties properties) {
-        super(regname, module, creativeTab, properties);
-        RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.TRANSLUCENT);
-    }
+	public DirtyGlassBlock(String regname, QuarkModule module, CreativeModeTab creativeTab, Properties properties) {
+		super(regname, module, creativeTab, properties);
+		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.TRANSLUCENT);
+	}
 
-    @Nullable
-    @Override
-    public float[] getBeaconColorMultiplier(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
-        return BEACON_COLOR_MULTIPLIER;
-    }
+	@Nullable
+	@Override
+	public float[] getBeaconColorMultiplier(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
+		return BEACON_COLOR_MULTIPLIER;
+	}
 
 }

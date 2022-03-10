@@ -21,16 +21,16 @@ import vazkii.quark.base.Quark;
 
 public final class ModuleFinder {
 	
-    private static final Type LOAD_MODULE_TYPE = Type.getType(LoadModule.class);
+	private static final Type LOAD_MODULE_TYPE = Type.getType(LoadModule.class);
 
 	private Map<Class<? extends QuarkModule>, QuarkModule> foundModules = new HashMap<>();
 
 	public void findModules() {
 		ModFileScanData scanData = ModList.get().getModFileById(Quark.MOD_ID).getFile().getScanResult();
-        scanData.getAnnotations().stream()
-                .filter(annotationData -> LOAD_MODULE_TYPE.equals(annotationData.annotationType()))
-                .sorted((d1, d2) -> d1.getClass().getName().compareTo(d2.getClass().getName()))
-                .forEach(this::loadModule);
+		scanData.getAnnotations().stream()
+				.filter(annotationData -> LOAD_MODULE_TYPE.equals(annotationData.annotationType()))
+				.sorted((d1, d2) -> d1.getClass().getName().compareTo(d2.getClass().getName()))
+				.forEach(this::loadModule);
 	}
 	
 	@SuppressWarnings("unchecked")

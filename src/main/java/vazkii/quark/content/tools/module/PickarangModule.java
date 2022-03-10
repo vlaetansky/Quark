@@ -91,7 +91,7 @@ public class PickarangModule extends QuarkModule {
 		isEnabled = this.enabled;
 	}
 	
-    private static final ThreadLocal<Pickarang> ACTIVE_PICKARANG = new ThreadLocal<>();
+	private static final ThreadLocal<Pickarang> ACTIVE_PICKARANG = new ThreadLocal<>();
 
 	public static void setActivePickarang(Pickarang pickarang) {
 		ACTIVE_PICKARANG.set(pickarang);

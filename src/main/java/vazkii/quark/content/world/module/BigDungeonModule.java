@@ -85,7 +85,7 @@
 //
 //	@Override
 //	public void construct() {
-//        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+//		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 //		DEFERRED_REGISTRY_STRUCTURE.register(modEventBus);
 //	}
 //	

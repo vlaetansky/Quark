@@ -34,10 +34,10 @@ public class GravisandBlock extends QuarkBlock {
 	}
 
 	private void checkRedstone(Level worldIn, BlockPos pos) {
-        boolean powered = worldIn.hasNeighborSignal(pos);
+		boolean powered = worldIn.hasNeighborSignal(pos);
 
-        if(powered)
-        	worldIn.scheduleTick(pos, this, 2);
+		if(powered)
+			worldIn.scheduleTick(pos, this, 2);
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class GravisandBlock extends QuarkBlock {
 					BlockState offState = worldIn.getBlockState(offPos);
 
 					if(offState.getBlock() == this)
-			        	worldIn.scheduleTick(offPos, this, 2);
+						worldIn.scheduleTick(offPos, this, 2);
 				}
 		}
 	}
@@ -86,10 +86,10 @@ public class GravisandBlock extends QuarkBlock {
 		return false;
 	}
 
-    public static boolean canFallThrough(LevelReader world, BlockPos pos, BlockState state) {
+	public static boolean canFallThrough(LevelReader world, BlockPos pos, BlockState state) {
 		Block block = state.getBlock();
 		Material material = state.getMaterial();
 		return state.isAir() || block == Blocks.FIRE || material.isLiquid() || material.isReplaceable();
-    }
+	}
 
 }

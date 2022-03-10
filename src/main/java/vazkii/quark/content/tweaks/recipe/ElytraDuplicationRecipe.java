@@ -17,7 +17,7 @@ import vazkii.quark.content.tweaks.module.DragonScalesModule;
 
 public class ElytraDuplicationRecipe extends CustomRecipe {
 
-    public static final SimpleRecipeSerializer<?> SERIALIZER = new SimpleRecipeSerializer<>(ElytraDuplicationRecipe::new);
+	public static final SimpleRecipeSerializer<?> SERIALIZER = new SimpleRecipeSerializer<>(ElytraDuplicationRecipe::new);
 
 	public ElytraDuplicationRecipe(ResourceLocation id) {
 		super(id);

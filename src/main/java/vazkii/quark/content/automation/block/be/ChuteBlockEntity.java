@@ -23,69 +23,69 @@ import vazkii.quark.content.building.module.GrateModule;
  */
 public class ChuteBlockEntity extends ARLBlockEntity {
 	
-    public ChuteBlockEntity(BlockPos pos, BlockState state) {
-        super(ChuteModule.blockEntityType, pos, state);
-    }
+	public ChuteBlockEntity(BlockPos pos, BlockState state) {
+		super(ChuteModule.blockEntityType, pos, state);
+	}
 
-    private boolean canDropItem() {
-        if(level != null && level.getBlockState(worldPosition).getValue(ChuteBlock.ENABLED)) {
-            BlockPos below = worldPosition.below();
-            BlockState state = level.getBlockState(below);
-            return state.isAir() || state.getCollisionShape(level, below).isEmpty() || state.getBlock() == GrateModule.grate;
-        }
+	private boolean canDropItem() {
+		if(level != null && level.getBlockState(worldPosition).getValue(ChuteBlock.ENABLED)) {
+			BlockPos below = worldPosition.below();
+			BlockState state = level.getBlockState(below);
+			return state.isAir() || state.getCollisionShape(level, below).isEmpty() || state.getBlock() == GrateModule.grate;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    private final IItemHandler handler = new IItemHandler() {
-        @Override
-        public int getSlots() {
-            return 1;
-        }
+	private final IItemHandler handler = new IItemHandler() {
+		@Override
+		public int getSlots() {
+			return 1;
+		}
 
-        @Nonnull
-        @Override
-        public ItemStack getStackInSlot(int slot) {
-            return ItemStack.EMPTY;
-        }
+		@Nonnull
+		@Override
+		public ItemStack getStackInSlot(int slot) {
+			return ItemStack.EMPTY;
+		}
 
-        @Nonnull
-        @Override
-        public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-            if (!canDropItem())
-                return stack;
+		@Nonnull
+		@Override
+		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+			if (!canDropItem())
+				return stack;
 
-            if(!simulate && level != null && !stack.isEmpty()) {
-                ItemEntity entity = new ItemEntity(level, worldPosition.getX() + 0.5, worldPosition.getY() - 0.5, worldPosition.getZ() + 0.5, stack.copy());
-                entity.setDeltaMovement(0, 0, 0);
-                level.addFreshEntity(entity);
-            }
+			if(!simulate && level != null && !stack.isEmpty()) {
+				ItemEntity entity = new ItemEntity(level, worldPosition.getX() + 0.5, worldPosition.getY() - 0.5, worldPosition.getZ() + 0.5, stack.copy());
+				entity.setDeltaMovement(0, 0, 0);
+				level.addFreshEntity(entity);
+			}
 
-            return ItemStack.EMPTY;
-        }
+			return ItemStack.EMPTY;
+		}
 
-        @Nonnull
-        @Override
-        public ItemStack extractItem(int slot, int amount, boolean simulate) {
-            return ItemStack.EMPTY;
-        }
+		@Nonnull
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate) {
+			return ItemStack.EMPTY;
+		}
 
-        @Override
-        public int getSlotLimit(int slot) {
-            return 64;
-        }
+		@Override
+		public int getSlotLimit(int slot) {
+			return 64;
+		}
 
-        @Override
-        public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-            return true;
-        }
-    };
+		@Override
+		public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+			return true;
+		}
+	};
 
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (side != Direction.DOWN && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-            return LazyOptional.of(() -> handler).cast();
-        return super.getCapability(cap, side);
-    }
+	@Nonnull
+	@Override
+	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+		if (side != Direction.DOWN && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			return LazyOptional.of(() -> handler).cast();
+		return super.getCapability(cap, side);
+	}
 }

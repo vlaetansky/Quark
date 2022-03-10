@@ -42,8 +42,8 @@ public class CapabilityHandler {
 		register(event, IPistonCallback.class, DummyPistonCallback::new);
 		register(event, IMagnetTracker.class, DummyMagnetTracker::new);
 		register(event, IRuneColorProvider.class, DummyRuneColor::new);
-    }
-    
+	}
+	
 	private static <T> void registerLambda(RegisterCapabilitiesEvent event, Class<T> clazz, T provider) {
 		register(event, clazz, () -> provider);
 	}
@@ -55,8 +55,8 @@ public class CapabilityHandler {
 
 	private static final ResourceLocation DROPOFF_MANAGER = new ResourceLocation(Quark.MOD_ID, "dropoff");
 	private static final ResourceLocation SORTING_HANDLER = new ResourceLocation(Quark.MOD_ID, "sort");
-    private static final ResourceLocation MAGNET_TRACKER = new ResourceLocation(Quark.MOD_ID, "magnet_tracker");
-    private static final ResourceLocation RUNE_COLOR_HANDLER = new ResourceLocation(Quark.MOD_ID, "rune_color");
+	private static final ResourceLocation MAGNET_TRACKER = new ResourceLocation(Quark.MOD_ID, "magnet_tracker");
+	private static final ResourceLocation RUNE_COLOR_HANDLER = new ResourceLocation(Quark.MOD_ID, "rune_color");
 
 	@SubscribeEvent
 	public static void attachItemCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
@@ -75,17 +75,17 @@ public class CapabilityHandler {
 			SelfProvider.attach(DROPOFF_MANAGER, QuarkCapabilities.TRANSFER, event);
 	}
 	
-    @SubscribeEvent 
-    public static void attachWorldCapabilities(AttachCapabilitiesEvent<Level> event) {
-        Level world = event.getObject();
-        MagnetTracker tracker = new MagnetTracker(world);
+	@SubscribeEvent 
+	public static void attachWorldCapabilities(AttachCapabilitiesEvent<Level> event) {
+		Level world = event.getObject();
+		MagnetTracker tracker = new MagnetTracker(world);
 
-        event.addCapability(MAGNET_TRACKER, new ICapabilityProvider() {
-            @Nonnull
-            @Override
-            public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-                return QuarkCapabilities.MAGNET_TRACKER_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> tracker));
-            }
-        });
-    }
+		event.addCapability(MAGNET_TRACKER, new ICapabilityProvider() {
+			@Nonnull
+			@Override
+			public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+				return QuarkCapabilities.MAGNET_TRACKER_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> tracker));
+			}
+		});
+	}
 }

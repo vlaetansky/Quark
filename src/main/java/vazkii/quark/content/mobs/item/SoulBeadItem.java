@@ -33,7 +33,7 @@ public class SoulBeadItem extends QuarkItem {
 		ItemStack itemstack = playerIn.getItemInHand(handIn);
 
 		if(!worldIn.isClientSide) {
-            BlockPos blockpos = ((ServerLevel)worldIn).findNearestMapFeature(WraithModule.soulBeadTargetTag, playerIn.blockPosition(), 100, false);
+			BlockPos blockpos = ((ServerLevel)worldIn).findNearestMapFeature(WraithModule.soulBeadTargetTag, playerIn.blockPosition(), 100, false);
 
 			if(blockpos != null) {
 				itemstack.shrink(1);
@@ -49,7 +49,7 @@ public class SoulBeadItem extends QuarkItem {
 		} else playerIn.swing(handIn);
 
 
-        playerIn.awardStat(Stats.ITEM_USED.get(this));
+		playerIn.awardStat(Stats.ITEM_USED.get(this));
 		return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
 	}
 

@@ -13,55 +13,55 @@ import vazkii.quark.base.Quark;
  */
 public class FlagRecipeCondition implements ICondition {
 
-    private final ConfigFlagManager manager;
-    private final String flag;
-    private final ResourceLocation loc;
+	private final ConfigFlagManager manager;
+	private final String flag;
+	private final ResourceLocation loc;
 
-    public FlagRecipeCondition(ConfigFlagManager manager, String flag, ResourceLocation loc) {
-        this.manager = manager;
-        this.flag = flag;
-        this.loc = loc;
-    }
+	public FlagRecipeCondition(ConfigFlagManager manager, String flag, ResourceLocation loc) {
+		this.manager = manager;
+		this.flag = flag;
+		this.loc = loc;
+	}
 
 
-    @Override
-    public ResourceLocation getID() {
-        return loc;
-    }
+	@Override
+	public ResourceLocation getID() {
+		return loc;
+	}
 
-    @Override
-    public boolean test() {
-    	if(flag.contains("%"))
-    		throw new RuntimeException("Illegal flag: " + flag);
-    	
-    	if(!manager.isValidFlag(flag))
-    		Quark.LOG.warn("Non-existant flag " + flag + " being used");
-    	
-        return manager.getFlag(flag);
-    }
+	@Override
+	public boolean test() {
+		if(flag.contains("%"))
+			throw new RuntimeException("Illegal flag: " + flag);
+		
+		if(!manager.isValidFlag(flag))
+			Quark.LOG.warn("Non-existant flag " + flag + " being used");
+		
+		return manager.getFlag(flag);
+	}
 
-    public static class Serializer implements IConditionSerializer<FlagRecipeCondition> {
-        private final ConfigFlagManager manager;
-        private final ResourceLocation location;
+	public static class Serializer implements IConditionSerializer<FlagRecipeCondition> {
+		private final ConfigFlagManager manager;
+		private final ResourceLocation location;
 
-        public Serializer(ConfigFlagManager manager, ResourceLocation location) {
-            this.manager = manager;
-            this.location = location;
-        }
+		public Serializer(ConfigFlagManager manager, ResourceLocation location) {
+			this.manager = manager;
+			this.location = location;
+		}
 
-        @Override
-        public void write(JsonObject json, FlagRecipeCondition value) {
-            json.addProperty("flag", value.flag);
-        }
+		@Override
+		public void write(JsonObject json, FlagRecipeCondition value) {
+			json.addProperty("flag", value.flag);
+		}
 
-        @Override
-        public FlagRecipeCondition read(JsonObject json) {
-            return new FlagRecipeCondition(manager, json.getAsJsonPrimitive("flag").getAsString(), location);
-        }
+		@Override
+		public FlagRecipeCondition read(JsonObject json) {
+			return new FlagRecipeCondition(manager, json.getAsJsonPrimitive("flag").getAsString(), location);
+		}
 
-        @Override
-        public ResourceLocation getID() {
-            return location;
-        }
-    }
+		@Override
+		public ResourceLocation getID() {
+			return location;
+		}
+	}
 }

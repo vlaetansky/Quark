@@ -129,18 +129,18 @@ public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements
 								break;
 
 							if(showInfluences && state.getBlock() instanceof IEnchantmentInfluencer) {
-							    IEnchantmentInfluencer influencer = (IEnchantmentInfluencer) state.getBlock();
+								IEnchantmentInfluencer influencer = (IEnchantmentInfluencer) state.getBlock();
 								DyeColor color = influencer.getEnchantmentInfluenceColor(worldIn, blockpos, state);
 
 								if(color != null) {
 									float[] comp = color.getTextureDiffuseColors();
 
-                                    if(influencer instanceof IModifiableEnchantmentInfluencer) {
-                                        IModifiableEnchantmentInfluencer modifiableInfluencer = (IModifiableEnchantmentInfluencer) influencer;
-                                        comp = modifiableInfluencer.getModifiedColorComponents(worldIn, blockpos, state, comp);
-                                    }
+									if(influencer instanceof IModifiableEnchantmentInfluencer) {
+										IModifiableEnchantmentInfluencer modifiableInfluencer = (IModifiableEnchantmentInfluencer) influencer;
+										comp = modifiableInfluencer.getModifiedColorComponents(worldIn, blockpos, state, comp);
+									}
 
-                                    int steps = 20;
+									int steps = 20;
 									double dx = (double) (pos.getX() - blockpos.getX()) / steps;
 									double dy = (double) (pos.getY() - blockpos.getY()) / steps;
 									double dz = (double) (pos.getZ() - blockpos.getZ()) / steps;

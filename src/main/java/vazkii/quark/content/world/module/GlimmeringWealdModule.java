@@ -102,7 +102,7 @@ public class GlimmeringWealdModule extends QuarkModule {
 		BiomeDefaultFeatures.commonSpawns(mobs);
 		
 		if(ModuleLoader.INSTANCE.isModuleEnabled(StonelingsModule.class))
-		      mobs.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(StonelingsModule.stonelingType, 200, 1, 4));
+			  mobs.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(StonelingsModule.stonelingType, 200, 1, 4));
 		mobs.addSpawn(MobCategory.UNDERGROUND_WATER_CREATURE, new MobSpawnSettings.SpawnerData(EntityType.GLOW_SQUID, 20, 4, 6));
 
 		BiomeGenerationSettings.Builder settings = new BiomeGenerationSettings.Builder();

@@ -18,46 +18,46 @@ import java.util.function.BooleanSupplier;
  */
 public abstract class QuarkButtonBlock extends ButtonBlock implements IQuarkBlock {
 
-    private final QuarkModule module;
-    private BooleanSupplier enabledSupplier = () -> true;
+	private final QuarkModule module;
+	private BooleanSupplier enabledSupplier = () -> true;
 
-    public QuarkButtonBlock(String regname, QuarkModule module, CreativeModeTab creativeTab, Properties properties) {
-        super(false, properties);
-        this.module = module;
+	public QuarkButtonBlock(String regname, QuarkModule module, CreativeModeTab creativeTab, Properties properties) {
+		super(false, properties);
+		this.module = module;
 
-        RegistryHelper.registerBlock(this, regname);
-        if(creativeTab != null)
-            RegistryHelper.setCreativeTab(this, creativeTab);
-    }
+		RegistryHelper.registerBlock(this, regname);
+		if(creativeTab != null)
+			RegistryHelper.setCreativeTab(this, creativeTab);
+	}
 
-    @Nonnull
-    @Override
-    protected abstract SoundEvent getSound(boolean powered);
+	@Nonnull
+	@Override
+	protected abstract SoundEvent getSound(boolean powered);
 
-    @Override
-    public abstract int getPressDuration();
+	@Override
+	public abstract int getPressDuration();
 
-    @Override
-    public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
-        if(isEnabled() || (group == CreativeModeTab.TAB_SEARCH && appearInSearch()))
-            super.fillItemCategory(group, items);
-    }
+	@Override
+	public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
+		if(isEnabled() || (group == CreativeModeTab.TAB_SEARCH && appearInSearch()))
+			super.fillItemCategory(group, items);
+	}
 
-    @Override
-    public QuarkButtonBlock setCondition(BooleanSupplier enabledSupplier) {
-        this.enabledSupplier = enabledSupplier;
-        return this;
-    }
+	@Override
+	public QuarkButtonBlock setCondition(BooleanSupplier enabledSupplier) {
+		this.enabledSupplier = enabledSupplier;
+		return this;
+	}
 
-    @Override
-    public boolean doesConditionApply() {
-        return enabledSupplier.getAsBoolean();
-    }
+	@Override
+	public boolean doesConditionApply() {
+		return enabledSupplier.getAsBoolean();
+	}
 
-    @Nullable
-    @Override
-    public QuarkModule getModule() {
-        return module;
-    }
+	@Nullable
+	@Override
+	public QuarkModule getModule() {
+		return module;
+	}
 
 }

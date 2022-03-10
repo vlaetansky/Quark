@@ -421,12 +421,12 @@ public class Toretoise extends Animal {
 		angeryTicks = compound.getInt(TAG_ANGERY_TICKS);
 	}
 
-    public static AttributeSupplier.Builder prepareAttributes() {
-        return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 60.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.08D)
-                .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D);
-    }
+	public static AttributeSupplier.Builder prepareAttributes() {
+		return Mob.createMobAttributes()
+				.add(Attributes.MAX_HEALTH, 60.0D)
+				.add(Attributes.MOVEMENT_SPEED, 0.08D)
+				.add(Attributes.KNOCKBACK_RESISTANCE, 1.0D);
+	}
 
 	@Override // createChild
 	public Toretoise getBreedOffspring(@Nonnull ServerLevel sworld, @Nonnull AgeableMob otherParent) {

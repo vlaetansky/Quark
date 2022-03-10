@@ -12,7 +12,7 @@ import net.minecraft.world.level.levelgen.WorldgenRandom;
  * Created at 9:03 PM on 10/1/19.
  */
 public interface IGenerator {
-    int generate(int seedIncrement, long seed, GenerationStep.Decoration stage, WorldGenRegion worldIn, ChunkGenerator generator, WorldgenRandom rand, BlockPos pos);
+	int generate(int seedIncrement, long seed, GenerationStep.Decoration stage, WorldGenRegion worldIn, ChunkGenerator generator, WorldgenRandom rand, BlockPos pos);
 
-    boolean canGenerate(ServerLevelAccessor world);
+	boolean canGenerate(ServerLevelAccessor world);
 }

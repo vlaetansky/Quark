@@ -6,5 +6,5 @@ package vazkii.quark.base.util;
  */
 @FunctionalInterface
 public interface TriFunction<R, T, U, V> {
-    R apply(T t, U u, V v);
+	R apply(T t, U u, V v);
 }

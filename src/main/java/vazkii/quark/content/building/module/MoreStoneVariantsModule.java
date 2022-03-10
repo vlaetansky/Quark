@@ -70,7 +70,7 @@ public class MoreStoneVariantsModule extends QuarkModule {
 		Block.Properties props = Block.Properties.of(Material.STONE, color)
 				.requiresCorrectToolForDrops()
 				.sound(sound)
-        		.strength(1.5F, 6.0F);
+				.strength(1.5F, 6.0F);
 		
 		QuarkBlock bricks = constr.make(name + "_bricks", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props).setCondition(() -> cond.getAsBoolean() && enableBricks);
 		VariantHandler.addSlabStairsWall(bricks);

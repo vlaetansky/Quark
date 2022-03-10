@@ -17,46 +17,46 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
  */
 public class FlagLootCondition implements LootItemCondition {
 
-    private final ConfigFlagManager manager;
-    private final String flag;
+	private final ConfigFlagManager manager;
+	private final String flag;
 
-    public FlagLootCondition(ConfigFlagManager manager, String flag) {
-        this.manager = manager;
-        this.flag = flag;
-    }
+	public FlagLootCondition(ConfigFlagManager manager, String flag) {
+		this.manager = manager;
+		this.flag = flag;
+	}
 
-    @Override
-    public boolean test(LootContext lootContext) {
-        return manager.getFlag(flag);
-    }
-    
+	@Override
+	public boolean test(LootContext lootContext) {
+		return manager.getFlag(flag);
+	}
+
 
 	@Nonnull
-    @Override
+	@Override
 	public LootItemConditionType getType() {
 		return ConfigFlagManager.flagConditionType;
 	}
 
-    
-    public static class FlagSerializer implements Serializer<FlagLootCondition> {
-    	
-        private final ConfigFlagManager manager;
 
-        public FlagSerializer(ConfigFlagManager manager) {
-            this.manager = manager;
-        }
+	public static class FlagSerializer implements Serializer<FlagLootCondition> {
 
-        @Override
-        public void serialize(@Nonnull JsonObject json, @Nonnull FlagLootCondition value, @Nonnull JsonSerializationContext context) {
-            json.addProperty("flag", value.flag);
-        }
+		private final ConfigFlagManager manager;
 
-        @Nonnull
-        @Override
-        public FlagLootCondition deserialize(@Nonnull JsonObject json, @Nonnull JsonDeserializationContext context) {
-        	String flag = json.getAsJsonPrimitive("flag").getAsString();
-            return new FlagLootCondition(manager, flag);
-        }
-    }
+		public FlagSerializer(ConfigFlagManager manager) {
+			this.manager = manager;
+		}
+
+		@Override
+		public void serialize(@Nonnull JsonObject json, @Nonnull FlagLootCondition value, @Nonnull JsonSerializationContext context) {
+			json.addProperty("flag", value.flag);
+		}
+
+		@Nonnull
+		@Override
+		public FlagLootCondition deserialize(@Nonnull JsonObject json, @Nonnull JsonDeserializationContext context) {
+			String flag = json.getAsJsonPrimitive("flag").getAsString();
+			return new FlagLootCondition(manager, flag);
+		}
+	}
 
 }

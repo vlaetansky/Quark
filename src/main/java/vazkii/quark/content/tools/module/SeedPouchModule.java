@@ -32,7 +32,7 @@ public class SeedPouchModule extends QuarkModule {
 
 	public static Item seed_pouch;
 
-    public static TagKey<Item> seedPouchHoldableTag;
+	public static TagKey<Item> seedPouchHoldableTag;
 	
 	@Config public static int maxItems = 640;
 	@Config public static boolean showAllVariantsInCreative = true;
@@ -43,10 +43,10 @@ public class SeedPouchModule extends QuarkModule {
 		seed_pouch = new SeedPouchItem(this);
 	}
 	
-    @Override
-    public void setup() {
-    	seedPouchHoldableTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "seed_pouch_holdable"));
-    }
+	@Override
+	public void setup() {
+		seedPouchHoldableTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "seed_pouch_holdable"));
+	}
 
 	@OnlyIn(Dist.CLIENT)
 	@Override

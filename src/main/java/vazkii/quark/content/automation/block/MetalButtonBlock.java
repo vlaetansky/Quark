@@ -17,25 +17,25 @@ import vazkii.quark.base.module.QuarkModule;
  */
 public class MetalButtonBlock extends QuarkButtonBlock {
 
-    private final int speed;
+	private final int speed;
 
-    public MetalButtonBlock(String regname, QuarkModule module, int speed) {
-        super(regname, module, CreativeModeTab.TAB_REDSTONE,
-                Block.Properties.of(Material.DECORATION)
-                        .noCollission()
-                        .strength(0.5F)
-                        .sound(SoundType.METAL));
-        this.speed = speed;
-    }
+	public MetalButtonBlock(String regname, QuarkModule module, int speed) {
+		super(regname, module, CreativeModeTab.TAB_REDSTONE,
+				Block.Properties.of(Material.DECORATION)
+						.noCollission()
+						.strength(0.5F)
+						.sound(SoundType.METAL));
+		this.speed = speed;
+	}
 
-    @Override
-    public int getPressDuration() {
-        return speed;
-    }
+	@Override
+	public int getPressDuration() {
+		return speed;
+	}
 
-    @Nonnull
-    @Override
-    protected SoundEvent getSound(boolean powered) {
-        return powered ? SoundEvents.STONE_BUTTON_CLICK_ON : SoundEvents.STONE_BUTTON_CLICK_OFF;
-    }
+	@Nonnull
+	@Override
+	protected SoundEvent getSound(boolean powered) {
+		return powered ? SoundEvents.STONE_BUTTON_CLICK_ON : SoundEvents.STONE_BUTTON_CLICK_OFF;
+	}
 }

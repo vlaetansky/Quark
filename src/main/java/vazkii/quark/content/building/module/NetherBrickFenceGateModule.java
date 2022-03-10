@@ -16,12 +16,12 @@ import vazkii.quark.base.module.QuarkModule;
  */
 @LoadModule(category = ModuleCategory.BUILDING)
 public class NetherBrickFenceGateModule extends QuarkModule {
-    @Override
-    public void register() {
-        new QuarkFenceGateBlock("nether_brick_fence_gate", this, CreativeModeTab.TAB_REDSTONE,
-                Block.Properties.of(Material.STONE, MaterialColor.NETHER)
-                .requiresCorrectToolForDrops()
-                .sound(SoundType.NETHER_BRICKS)
-                .strength(2.0F, 6.0F));
-    }
+	@Override
+	public void register() {
+		new QuarkFenceGateBlock("nether_brick_fence_gate", this, CreativeModeTab.TAB_REDSTONE,
+				Block.Properties.of(Material.STONE, MaterialColor.NETHER)
+				.requiresCorrectToolForDrops()
+				.sound(SoundType.NETHER_BRICKS)
+				.strength(2.0F, 6.0F));
+	}
 }

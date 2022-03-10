@@ -41,8 +41,8 @@ public class EnhancedLaddersModule extends QuarkModule {
 
 	@Config.Max(0)
 	@Config
-    public double fallSpeed = -0.2;
-	
+	public double fallSpeed = -0.2;
+
 	@Config public static boolean allowFreestanding = true;
 	@Config public static boolean allowDroppingDown = true;
 	@Config public static boolean allowSliding = true;
@@ -50,48 +50,48 @@ public class EnhancedLaddersModule extends QuarkModule {
 
 	private static boolean staticEnabled;
 	private static TagKey<Item> laddersTag;
-	
+
 	@Override
 	public void setup() {
 		laddersTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "ladders"));
 	}
-	
+
 	@Override
 	public void configChanged() {
 		staticEnabled = enabled;
 	}
-	
+
 	private static boolean canAttachTo(BlockState state, Block ladder, LevelReader world, BlockPos pos, Direction facing) {
 		if (ladder instanceof LadderBlock) {
 			if(allowFreestanding)
 				return canLadderSurvive(state, world, pos);
-			
+
 			BlockPos offset = pos.relative(facing);
 			BlockState blockstate = world.getBlockState(offset);
-			return !blockstate.isSignalSource() && blockstate.isFaceSturdy(world, offset, facing); 
+			return !blockstate.isSignalSource() && blockstate.isFaceSturdy(world, offset, facing);
 		}
 
 		return false;
 	}
-	
+
 	public static boolean canLadderSurvive(BlockState state, LevelReader world, BlockPos pos) {
 		if(!staticEnabled || !allowFreestanding)
 			return false;
-		
+
 		Direction facing = state.getValue(LadderBlock.FACING);
 		Direction opposite = facing.getOpposite();
 		BlockPos oppositePos = pos.relative(opposite);
 		BlockState oppositeState = world.getBlockState(oppositePos);
-		
+
 		boolean solid = facing.getAxis() != Axis.Y && oppositeState.isFaceSturdy(world, oppositePos, facing) && !(oppositeState.getBlock() instanceof LadderBlock);
 		BlockState topState = world.getBlockState(pos.above());
 		return solid || (topState.getBlock() instanceof LadderBlock && (facing.getAxis() == Axis.Y || topState.getValue(LadderBlock.FACING) == facing));
 	}
-	
+
 	public static boolean updateLadder(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
 		if(!staticEnabled || !allowFreestanding)
 			return true;
-		
+
 		return canLadderSurvive(state, world, currentPos);
 	}
 
@@ -99,7 +99,7 @@ public class EnhancedLaddersModule extends QuarkModule {
 	public void onInteract(PlayerInteractEvent.RightClickBlock event) {
 		if(!allowDroppingDown)
 			return;
-		
+
 		Player player = event.getPlayer();
 		InteractionHand hand = event.getHand();
 		ItemStack stack = player.getItemInHand(hand);
@@ -141,7 +141,7 @@ public class EnhancedLaddersModule extends QuarkModule {
 						}
 					}
 					break;
-				} 
+				}
 			}
 		}
 	}
@@ -150,13 +150,13 @@ public class EnhancedLaddersModule extends QuarkModule {
 	public void onPlayerTick(TickEvent.PlayerTickEvent event) {
 		if(!allowSliding)
 			return;
-		
+
 		if(event.phase == TickEvent.Phase.START) {
 			Player player = event.player;
 			if(player.onClimbable() && player.level.isClientSide) {
 				BlockPos playerPos = player.blockPosition();
 				BlockPos downPos = playerPos.below();
-				
+
 				boolean scaffold = player.level.getBlockState(playerPos).getBlock() == Blocks.SCAFFOLDING;
 				if(player.isCrouching() == scaffold &&
 						player.zza == 0 &&
@@ -166,9 +166,9 @@ public class EnhancedLaddersModule extends QuarkModule {
 						!player.jumping &&
 						!player.getAbilities().flying &&
 						player.level.getBlockState(downPos).isLadder(player.level, downPos, player)) {
-					
+
 					Vec3 move = new Vec3(0, fallSpeed, 0);
-					player.setBoundingBox(player.getBoundingBox().move(move));						
+					player.setBoundingBox(player.getBoundingBox().move(move));
 					player.move(MoverType.SELF, move);
 				}
 			}
@@ -180,7 +180,7 @@ public class EnhancedLaddersModule extends QuarkModule {
 	public void onInput(MovementInputUpdateEvent event) {
 		if(!allowInventorySneak)
 			return;
-		
+
 		Player player = event.getPlayer();
 		if(player.onClimbable() && player.level.getBlockState(player.blockPosition()).getBlock() != Blocks.SCAFFOLDING
 				&& Minecraft.getInstance().screen != null && !(player.zza == 0 && player.getXRot() > 70)) {

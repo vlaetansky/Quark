@@ -52,10 +52,10 @@ public class ChestsInBoatsModule extends QuarkModule {
 		RegistryHelper.register(chestPassengerEntityType, "chest_passenger");
 	}
 	
-    @Override
-    public void setup() {
-    	boatableChestsTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "boatable_chests"));
-    }
+	@Override
+	public void setup() {
+		boatableChestsTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "boatable_chests"));
+	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)

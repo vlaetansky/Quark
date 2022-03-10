@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 
 public class MixedExclusionRecipe implements CraftingRecipe, IShapedRecipe<CraftingContainer> {
 
-    public static final Serializer SERIALIZER = new Serializer();
+	public static final Serializer SERIALIZER = new Serializer();
 
 	final ResourceLocation res;
 	NonNullList<Ingredient> ingredients;
@@ -139,9 +139,9 @@ public class MixedExclusionRecipe implements CraftingRecipe, IShapedRecipe<Craft
 
 	private static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<MixedExclusionRecipe> {
 
-        public Serializer() {
-            setRegistryName(Quark.MOD_ID + ":mixed_exclusion");
-        }
+		public Serializer() {
+			setRegistryName(Quark.MOD_ID + ":mixed_exclusion");
+		}
 
 		@Nonnull
 		@Override

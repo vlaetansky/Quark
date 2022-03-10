@@ -28,43 +28,43 @@ public class GlassItemFrameModule extends QuarkModule {
 
 	@Config public static boolean glassItemFramesUpdateMaps = true;
 	
-    public static Item glassFrame;
-    public static Item glowingGlassFrame;
+	public static Item glassFrame;
+	public static Item glowingGlassFrame;
 
-    public static EntityType<GlassItemFrame> glassFrameEntity;
-    
-    @Config(description = "The scale at which items render in the Glass Item Frame. To match the vanilla Item Frame size, set to 1.0")
-    public static double itemRenderScale = 1.5;
+	public static EntityType<GlassItemFrame> glassFrameEntity;
+	
+	@Config(description = "The scale at which items render in the Glass Item Frame. To match the vanilla Item Frame size, set to 1.0")
+	public static double itemRenderScale = 1.5;
 
-    @Override
-    public void register() {
-        glassFrameEntity = EntityType.Builder.<GlassItemFrame>of(GlassItemFrame::new, MobCategory.MISC)
-                .sized(0.5F, 0.5F)
-                .clientTrackingRange(10)
-                .updateInterval(Integer.MAX_VALUE) // update interval
-                .setShouldReceiveVelocityUpdates(false)
-                .setCustomClientFactory((spawnEntity, world) -> new GlassItemFrame(glassFrameEntity, world))
-                .build("glass_frame");
-        RegistryHelper.register(glassFrameEntity, "glass_frame");
+	@Override
+	public void register() {
+		glassFrameEntity = EntityType.Builder.<GlassItemFrame>of(GlassItemFrame::new, MobCategory.MISC)
+				.sized(0.5F, 0.5F)
+				.clientTrackingRange(10)
+				.updateInterval(Integer.MAX_VALUE) // update interval
+				.setShouldReceiveVelocityUpdates(false)
+				.setCustomClientFactory((spawnEntity, world) -> new GlassItemFrame(glassFrameEntity, world))
+				.build("glass_frame");
+		RegistryHelper.register(glassFrameEntity, "glass_frame");
 
-        glassFrame = new QuarkItemFrameItem("glass_item_frame", this, GlassItemFrame::new);
-        glowingGlassFrame = new QuarkItemFrameItem("glowing_glass_item_frame", this, 
-        		(w, p, d) -> {
-        			GlassItemFrame e = new GlassItemFrame(w, p, d);
-        			e.getEntityData().set(GlassItemFrame.IS_SHINY, true);
-        			return e;
-        		});
-    }
+		glassFrame = new QuarkItemFrameItem("glass_item_frame", this, GlassItemFrame::new);
+		glowingGlassFrame = new QuarkItemFrameItem("glowing_glass_item_frame", this, 
+				(w, p, d) -> {
+					GlassItemFrame e = new GlassItemFrame(w, p, d);
+					e.getEntityData().set(GlassItemFrame.IS_SHINY, true);
+					return e;
+				});
+	}
 
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public void clientSetup() {
-        EntityRenderers.register(glassFrameEntity, GlassItemFrameRenderer::new);
-    }
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void clientSetup() {
+		EntityRenderers.register(glassFrameEntity, GlassItemFrameRenderer::new);
+	}
 
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public void modelRegistry() {
-        ForgeModelBakery.addSpecialModel(new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, "glass_frame"), "inventory")); 
-    }
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void modelRegistry() {
+		ForgeModelBakery.addSpecialModel(new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, "glass_frame"), "inventory")); 
+	}
 }

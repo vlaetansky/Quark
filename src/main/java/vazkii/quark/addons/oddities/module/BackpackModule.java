@@ -64,8 +64,8 @@ public class BackpackModule extends QuarkModule {
 	
 	public static Block bonded_ravager_hide;
 	
-    public static MenuType<BackpackMenu> menyType;
-    private static ItemStack heldStack = null;
+	public static MenuType<BackpackMenu> menyType;
+	private static ItemStack heldStack = null;
 
 	@OnlyIn(Dist.CLIENT)
 	private static boolean backpackRequested;

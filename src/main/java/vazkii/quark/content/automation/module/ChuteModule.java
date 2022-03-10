@@ -19,16 +19,16 @@ import vazkii.quark.content.automation.block.be.ChuteBlockEntity;
 @LoadModule(category = ModuleCategory.AUTOMATION)
 public class ChuteModule extends QuarkModule {
 
-    public static BlockEntityType<ChuteBlockEntity> blockEntityType;
+	public static BlockEntityType<ChuteBlockEntity> blockEntityType;
 
-    @Override
-    public void register() {
-        Block chute = new ChuteBlock("chute", this, CreativeModeTab.TAB_REDSTONE,
-                Block.Properties.of(Material.WOOD)
-                        .strength(2.5F)
-                        .sound(SoundType.WOOD));
+	@Override
+	public void register() {
+		Block chute = new ChuteBlock("chute", this, CreativeModeTab.TAB_REDSTONE,
+				Block.Properties.of(Material.WOOD)
+						.strength(2.5F)
+						.sound(SoundType.WOOD));
 
-        blockEntityType = BlockEntityType.Builder.of(ChuteBlockEntity::new, chute).build(null);
-        RegistryHelper.register(blockEntityType, "chute");
-    }
+		blockEntityType = BlockEntityType.Builder.of(ChuteBlockEntity::new, chute).build(null);
+		RegistryHelper.register(blockEntityType, "chute");
+	}
 }

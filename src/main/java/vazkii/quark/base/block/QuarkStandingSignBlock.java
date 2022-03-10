@@ -11,31 +11,31 @@ import vazkii.quark.base.module.QuarkModule;
 
 public class QuarkStandingSignBlock extends StandingSignBlock implements IQuarkBlock {
 
-    private final QuarkModule module;
-    private BooleanSupplier enabledSupplier = () -> true;
+	private final QuarkModule module;
+	private BooleanSupplier enabledSupplier = () -> true;
 
-    public QuarkStandingSignBlock(String regname, QuarkModule module, WoodType type, Properties properties) {
-        super(properties, type);
-        this.module = module;
+	public QuarkStandingSignBlock(String regname, QuarkModule module, WoodType type, Properties properties) {
+		super(properties, type);
+		this.module = module;
 
-        RegistryHelper.registerBlock(this, regname, false);
-    }
+		RegistryHelper.registerBlock(this, regname, false);
+	}
 
-    @Override
-    public QuarkStandingSignBlock setCondition(BooleanSupplier enabledSupplier) {
-        this.enabledSupplier = enabledSupplier;
-        return this;
-    }
+	@Override
+	public QuarkStandingSignBlock setCondition(BooleanSupplier enabledSupplier) {
+		this.enabledSupplier = enabledSupplier;
+		return this;
+	}
 
-    @Override
-    public boolean doesConditionApply() {
-        return enabledSupplier.getAsBoolean();
-    }
+	@Override
+	public boolean doesConditionApply() {
+		return enabledSupplier.getAsBoolean();
+	}
 
-    @Nullable
-    @Override
-    public QuarkModule getModule() {
-        return module;
-    }
+	@Nullable
+	@Override
+	public QuarkModule getModule() {
+		return module;
+	}
 
 }

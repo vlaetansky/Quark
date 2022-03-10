@@ -26,9 +26,9 @@ import java.util.function.BooleanSupplier;
 public class QuarkStairsBlock extends StairBlock implements IQuarkBlock, IBlockColorProvider {
 
 	private final IQuarkBlock parent;
-    private BooleanSupplier enabledSupplier = () -> true;
+	private BooleanSupplier enabledSupplier = () -> true;
 
-    public QuarkStairsBlock(IQuarkBlock parent) {
+	public QuarkStairsBlock(IQuarkBlock parent) {
 		super(parent.getBlock()::defaultBlockState, VariantHandler.realStateCopy(parent));
 
 		this.parent = parent;
@@ -40,42 +40,42 @@ public class QuarkStairsBlock extends StairBlock implements IQuarkBlock, IBlockC
 
 	@Override
 	public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
-        if(isEnabled() || (group == CreativeModeTab.TAB_SEARCH && appearInSearch()))
-            super.fillItemCategory(group, items);
+		if(isEnabled() || (group == CreativeModeTab.TAB_SEARCH && appearInSearch()))
+			super.fillItemCategory(group, items);
 	}
 
-    @Nullable
-    @Override
-    public QuarkModule getModule() {
-        return parent.getModule();
-    }
+	@Nullable
+	@Override
+	public QuarkModule getModule() {
+		return parent.getModule();
+	}
 
-    @Override
-    public QuarkStairsBlock setCondition(BooleanSupplier enabledSupplier) {
-        this.enabledSupplier = enabledSupplier;
-        return this;
-    }
+	@Override
+	public QuarkStairsBlock setCondition(BooleanSupplier enabledSupplier) {
+		this.enabledSupplier = enabledSupplier;
+		return this;
+	}
 
-    @Override
-    public boolean doesConditionApply() {
-        return enabledSupplier.getAsBoolean();
-    }
+	@Override
+	public boolean doesConditionApply() {
+		return enabledSupplier.getAsBoolean();
+	}
 
-    @Nullable
-    @Override
-    public float[] getBeaconColorMultiplier(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
-        return parent.getBlock().getBeaconColorMultiplier(parent.getBlock().defaultBlockState(), world, pos, beaconPos);
-    }
+	@Nullable
+	@Override
+	public float[] getBeaconColorMultiplier(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
+		return parent.getBlock().getBeaconColorMultiplier(parent.getBlock().defaultBlockState(), world, pos, beaconPos);
+	}
 
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public BlockColor getBlockColor() {
-        return parent instanceof IBlockColorProvider ? ((IBlockColorProvider) parent).getBlockColor() : null;
-    }
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public BlockColor getBlockColor() {
+		return parent instanceof IBlockColorProvider ? ((IBlockColorProvider) parent).getBlockColor() : null;
+	}
 
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public ItemColor getItemColor() {
-        return parent instanceof IItemColorProvider ? ((IItemColorProvider) parent).getItemColor() : null;
-    }
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public ItemColor getItemColor() {
+		return parent instanceof IItemColorProvider ? ((IItemColorProvider) parent).getItemColor() : null;
+	}
 }

@@ -13,25 +13,25 @@ import vazkii.quark.base.module.QuarkModule;
  */
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
 public class ArmedArmorStandsModule extends QuarkModule {
-    @SubscribeEvent
-    public void entityConstruct(EntityEvent.EntityConstructing event) {
-        if(event.getEntity() instanceof ArmorStand) {
-            ArmorStand stand = (ArmorStand) event.getEntity();
-            if(!stand.isShowArms())
-                setShowArms(stand, true);
-        }
-    }
+	@SubscribeEvent
+	public void entityConstruct(EntityEvent.EntityConstructing event) {
+		if(event.getEntity() instanceof ArmorStand) {
+			ArmorStand stand = (ArmorStand) event.getEntity();
+			if(!stand.isShowArms())
+				setShowArms(stand, true);
+		}
+	}
 
-    private void setShowArms(ArmorStand e, boolean showArms) {
-        e.getEntityData().set(ArmorStand.DATA_CLIENT_FLAGS, setBit(e.getEntityData().get(ArmorStand.DATA_CLIENT_FLAGS), 4, showArms));
-    }
+	private void setShowArms(ArmorStand e, boolean showArms) {
+		e.getEntityData().set(ArmorStand.DATA_CLIENT_FLAGS, setBit(e.getEntityData().get(ArmorStand.DATA_CLIENT_FLAGS), 4, showArms));
+	}
 
-    private byte setBit(byte status, int bitFlag, boolean value) {
-        if (value)
-            status = (byte)(status | bitFlag);
-        else
-            status = (byte)(status & ~bitFlag);
+	private byte setBit(byte status, int bitFlag, boolean value) {
+		if (value)
+			status = (byte)(status | bitFlag);
+		else
+			status = (byte)(status & ~bitFlag);
 
-        return status;
-    }
+		return status;
+	}
 }

@@ -15,18 +15,18 @@ public class VariantBookshelfBlock extends QuarkBlock {
 
 	private final boolean flammable;
 	
-    public VariantBookshelfBlock(String type, QuarkModule module, boolean flammable) {
-        super(type + "_bookshelf", module, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.copy(Blocks.BOOKSHELF));
-        this.flammable = flammable;
-    }
-    
-    @Override
-    public boolean isFlammable(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-    	return flammable;
-    }
-    
-    @Override
-    public float getEnchantPowerBonus(BlockState state, LevelReader world, BlockPos pos) {
-        return 1;
-    }
+	public VariantBookshelfBlock(String type, QuarkModule module, boolean flammable) {
+		super(type + "_bookshelf", module, CreativeModeTab.TAB_BUILDING_BLOCKS, Block.Properties.copy(Blocks.BOOKSHELF));
+		this.flammable = flammable;
+	}
+	
+	@Override
+	public boolean isFlammable(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
+		return flammable;
+	}
+	
+	@Override
+	public float getEnchantPowerBonus(BlockState state, LevelReader world, BlockPos pos) {
+		return 1;
+	}
 }

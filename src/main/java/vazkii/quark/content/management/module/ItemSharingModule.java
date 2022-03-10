@@ -171,7 +171,7 @@ public class ItemSharingModule extends QuarkModule {
 				int captureIndex = idx;
 				lineProperties.accept((counter_, style, character) -> {
 					String sofar = before.toString();
-					if (sofar.endsWith("    ")) {
+					if (sofar.endsWith("	")) {
 						render(mc, event.getMatrixStack(), chatGui, updateCounter, sofar.substring(0, sofar.length() - 3), line, captureIndex - shift, style);
 						return false;
 					}

@@ -9,24 +9,24 @@ import java.util.function.BooleanSupplier;
 
 public interface IQuarkItem {
 
-    @Nullable
-    QuarkModule getModule();
+	@Nullable
+	QuarkModule getModule();
 
-    default IQuarkItem setCondition(BooleanSupplier condition) {
-    	return this;
-    }
+	default IQuarkItem setCondition(BooleanSupplier condition) {
+		return this;
+	}
 
-    default boolean doesConditionApply() {
-    	return true;
-    }
+	default boolean doesConditionApply() {
+		return true;
+	}
 
-    default boolean appearInSearch() {
-        return this instanceof Item item && !RequiredModTooltipHandler.isEnabled(item);
-    }
+	default boolean appearInSearch() {
+		return this instanceof Item item && !RequiredModTooltipHandler.isEnabled(item);
+	}
 
-    default boolean isEnabled() {
-        QuarkModule module = getModule();
-        return module != null && module.enabled && doesConditionApply();
-    }
+	default boolean isEnabled() {
+		QuarkModule module = getModule();
+		return module != null && module.enabled && doesConditionApply();
+	}
 
 }

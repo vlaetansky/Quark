@@ -62,9 +62,9 @@ public class MagnetSystem {
 		return BLOCK_MOVE_ACTIONS.get(block);
 	}
 
-    public static LazyOptional<IMagnetTracker> getCapability(Level world) {
-        return world.getCapability(QuarkCapabilities.MAGNET_TRACKER_CAPABILITY);
-    }
+	public static LazyOptional<IMagnetTracker> getCapability(Level world) {
+		return world.getCapability(QuarkCapabilities.MAGNET_TRACKER_CAPABILITY);
+	}
 	
 	@SubscribeEvent
 	public static void tick(WorldTickEvent event) {

@@ -32,9 +32,9 @@ public class CutVineBlock extends QuarkVineBlock implements IBlockColorProvider 
 	@Override
 	public boolean canSupportAtFace(@Nonnull BlockGetter level, @Nonnull BlockPos pos, @Nonnull Direction dir) {
 		if(dir != Direction.UP) {
-            BooleanProperty booleanproperty = PROPERTY_BY_DIRECTION.get(dir);
-            BlockState blockstate = level.getBlockState(pos.above());
-            return blockstate.is(Blocks.VINE) && blockstate.getValue(booleanproperty);
+			BooleanProperty booleanproperty = PROPERTY_BY_DIRECTION.get(dir);
+			BlockState blockstate = level.getBlockState(pos.above());
+			return blockstate.is(Blocks.VINE) && blockstate.getValue(booleanproperty);
 		}
 
 		return super.canSupportAtFace(level, pos, dir);
@@ -45,20 +45,20 @@ public class CutVineBlock extends QuarkVineBlock implements IBlockColorProvider 
 		return new ItemStack(Items.VINE);
 	}
 
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public BlockColor getBlockColor() {
-        final BlockColors colors = Minecraft.getInstance().getBlockColors();
-        final BlockState grass = Blocks.VINE.defaultBlockState();
-        return (state, world, pos, tintIndex) -> colors.getColor(grass, world, pos, tintIndex);
-    }
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public BlockColor getBlockColor() {
+		final BlockColors colors = Minecraft.getInstance().getBlockColors();
+		final BlockState grass = Blocks.VINE.defaultBlockState();
+		return (state, world, pos, tintIndex) -> colors.getColor(grass, world, pos, tintIndex);
+	}
 
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public ItemColor getItemColor() {
-        final ItemColors colors = Minecraft.getInstance().getItemColors();
-        final ItemStack grass = new ItemStack(Items.VINE);
-        return (stack, tintIndex) -> colors.getColor(grass, tintIndex);
-    }
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public ItemColor getItemColor() {
+		final ItemColors colors = Minecraft.getInstance().getItemColors();
+		final ItemStack grass = new ItemStack(Items.VINE);
+		return (stack, tintIndex) -> colors.getColor(grass, tintIndex);
+	}
 
 }

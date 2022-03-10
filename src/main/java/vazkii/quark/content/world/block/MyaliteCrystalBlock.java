@@ -29,14 +29,14 @@ public class MyaliteCrystalBlock extends QuarkGlassBlock implements IMyaliteColo
 
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.TRANSLUCENT);
 	}
-    
-    private static float[] decompColor(int color) {
-        int r = (color & 0xFF0000) >> 16;
-        int g = (color & 0xFF00) >> 8;
-        int b = color & 0xFF;
-        return new float[] { (float) r / 255.0F, (float) g / 255.0F, (float) b / 255.0F };
-    }
-    
+	
+	private static float[] decompColor(int color) {
+		int r = (color & 0xFF0000) >> 16;
+		int g = (color & 0xFF00) >> 8;
+		int b = color & 0xFF;
+		return new float[] { (float) r / 255.0F, (float) g / 255.0F, (float) b / 255.0F };
+	}
+	
 	@Nullable
 	@Override
 	public float[] getBeaconColorMultiplier(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {

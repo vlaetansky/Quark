@@ -137,13 +137,13 @@ public class AbacusModule extends QuarkModule {
 							PoseStack.Pose pose = poseStack.last();
 							Matrix4f matrix4f = pose.pose();
 							individual.forAllEdges((minX, minY, minZ, maxX, maxY, maxZ) -> {
-						         float f = (float)(maxX - minX);
-						         float f1 = (float)(maxY - minY);
-						         float f2 = (float)(maxZ - minZ);
-						         float f3 = Mth.sqrt(f * f + f1 * f1 + f2 * f2);
-						         f /= f3;
-						         f1 /= f3;
-						         f2 /= f3;
+								 float f = (float)(maxX - minX);
+								 float f1 = (float)(maxY - minY);
+								 float f2 = (float)(maxZ - minZ);
+								 float f3 = Mth.sqrt(f * f + f1 * f1 + f2 * f2);
+								 f /= f3;
+								 f1 /= f3;
+								 f2 /= f3;
 								
 								bufferIn.vertex(matrix4f, (float)(minX + xIn), (float)(minY + yIn), (float)(minZ + zIn)).color(r, g, b, a).normal(pose.normal(), f, f1, f2).endVertex();
 								bufferIn.vertex(matrix4f, (float)(maxX + xIn), (float)(maxY + yIn), (float)(maxZ + zIn)).color(r, g, b, a).normal(pose.normal(), f, f1, f2).endVertex();

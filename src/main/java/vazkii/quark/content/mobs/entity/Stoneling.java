@@ -127,10 +127,10 @@ public class Stoneling extends PathfinderMob {
 	}
 
 	public static AttributeSupplier.Builder prepareAttributes() {
-        return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 8.0D)
-                .add(Attributes.KNOCKBACK_RESISTANCE, 1D);
-    }
+		return Mob.createMobAttributes()
+				.add(Attributes.MAX_HEALTH, 8.0D)
+				.add(Attributes.KNOCKBACK_RESISTANCE, 1D);
+	}
 
 	@Override
 	public void tick() {

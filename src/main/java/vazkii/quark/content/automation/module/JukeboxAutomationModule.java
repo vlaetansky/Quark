@@ -84,7 +84,7 @@ public class JukeboxAutomationModule extends QuarkModule {
 			if(!stackAt.isEmpty()) {
 				ItemStack copy = stackAt.copy();
 				if(!simulate) {
-		            tile.getLevel().levelEvent(1010, tile.getBlockPos(), 0);
+					tile.getLevel().levelEvent(1010, tile.getBlockPos(), 0);
 					tile.setRecord(ItemStack.EMPTY);
 
 					BlockState state = tile.getBlockState().setValue(JukeboxBlock.HAS_RECORD, false);

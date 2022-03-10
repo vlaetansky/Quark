@@ -11,21 +11,21 @@ import vazkii.quark.content.management.module.ItemSharingModule;
  */
 public class LinkItemMessage implements IMessage {
 
-    private static final long serialVersionUID = -1925519137930388889L;
+	private static final long serialVersionUID = -1925519137930388889L;
 
-    public ItemStack stack;
+	public ItemStack stack;
 
-    public LinkItemMessage() {
-        // NO-OP
-    }
+	public LinkItemMessage() {
+		// NO-OP
+	}
 
-    public LinkItemMessage(ItemStack stack) {
-        this.stack = stack;
-    }
+	public LinkItemMessage(ItemStack stack) {
+		this.stack = stack;
+	}
 
-    @Override
-    public boolean receive(NetworkEvent.Context context) {
-        context.enqueueWork(() -> ItemSharingModule.linkItem(context.getSender(), stack));
-        return false;
-    }
+	@Override
+	public boolean receive(NetworkEvent.Context context) {
+		context.enqueueWork(() -> ItemSharingModule.linkItem(context.getSender(), stack));
+		return false;
+	}
 }

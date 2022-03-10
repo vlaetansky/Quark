@@ -1,16 +1,6 @@
 package vazkii.quark.addons.oddities.block.be;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Random;
-import java.util.UUID;
-import java.util.function.Predicate;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -40,6 +30,9 @@ import vazkii.quark.api.IEnchantmentInfluencer;
 import vazkii.quark.api.IModifiableEnchantmentInfluencer;
 
 import javax.annotation.Nonnull;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.Predicate;
 
 public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlockEntity implements MenuProvider {
 
@@ -288,18 +281,18 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 				if(ord != null && count > 0) {
 					List<Enchantment> influencedEnchants = MatrixEnchantingModule.candleInfluences.get(ord);
 					if(influencedEnchants != null) {
-					    if(influencer instanceof IModifiableEnchantmentInfluencer) {
-					        IModifiableEnchantmentInfluencer modifiableInfluencer = (IModifiableEnchantmentInfluencer) influencer;
-                            influencedEnchants = modifiableInfluencer.getModifiedEnchantments(world, pos, state, getItem(0), new ArrayList<>(influencedEnchants));
-                        }
-                        for(Enchantment e : influencedEnchants) {
-                            int curr = influences.getOrDefault(e, 0);
-                            if(curr < MatrixEnchantingModule.influenceMax)
-                                influences.put(e, Math.min(MatrixEnchantingModule.influenceMax, curr + count));
-                        }
+						if(influencer instanceof IModifiableEnchantmentInfluencer) {
+							IModifiableEnchantmentInfluencer modifiableInfluencer = (IModifiableEnchantmentInfluencer) influencer;
+							influencedEnchants = modifiableInfluencer.getModifiedEnchantments(world, pos, state, getItem(0), new ArrayList<>(influencedEnchants));
+						}
+						for(Enchantment e : influencedEnchants) {
+							int curr = influences.getOrDefault(e, 0);
+							if(curr < MatrixEnchantingModule.influenceMax)
+								influences.put(e, Math.min(MatrixEnchantingModule.influenceMax, curr + count));
+						}
 
-                        return 1;
-                    }
+						return 1;
+					}
 				}
 			}
 		}

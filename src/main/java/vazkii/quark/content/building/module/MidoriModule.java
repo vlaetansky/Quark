@@ -22,7 +22,7 @@ public class MidoriModule extends QuarkModule {
 		
 		Block.Properties props = Block.Properties.of(Material.STONE, MaterialColor.COLOR_LIGHT_GREEN)
 				.requiresCorrectToolForDrops()
-        		.strength(1.5F, 6.0F);
+				.strength(1.5F, 6.0F);
 		
 		VariantHandler.addSlabAndStairs(new QuarkBlock("midori_block", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props));
 		new QuarkPillarBlock("midori_pillar", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props);

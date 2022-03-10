@@ -23,22 +23,22 @@ import vazkii.quark.content.tools.item.BottledCloudItem;
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true)
 public class BottledCloudModule extends QuarkModule {
 
-    public static BlockEntityType<CloudBlockEntity> blockEntityType;
-    public static Block cloud;
-    public static Item bottled_cloud;
-    
-    @Config
-    public static int cloudLevelBottom = 191;
-    
-    @Config 
-    public static int cloudLevelTop = 196;
+	public static BlockEntityType<CloudBlockEntity> blockEntityType;
+	public static Block cloud;
+	public static Item bottled_cloud;
+	
+	@Config
+	public static int cloudLevelBottom = 191;
+	
+	@Config 
+	public static int cloudLevelTop = 196;
 
 	@Override
 	public void register() {
 		cloud = new CloudBlock(this);
 		bottled_cloud = new BottledCloudItem(this);
 		
-    	blockEntityType = BlockEntityType.Builder.of(CloudBlockEntity::new, cloud).build(null);
+		blockEntityType = BlockEntityType.Builder.of(CloudBlockEntity::new, cloud).build(null);
 		RegistryHelper.register(blockEntityType, "cloud");
 	} 
 	

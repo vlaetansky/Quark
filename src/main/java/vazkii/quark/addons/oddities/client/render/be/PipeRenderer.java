@@ -103,18 +103,18 @@ public class PipeRenderer implements BlockEntityRenderer<PipeBlockEntity> {
 		float speed = 4F;
 		matrix.mulPose(Vector3f.YP.rotationDegrees((item.timeInWorld + partial) * speed));
 
-        int seed = item.stack.isEmpty() ? 187 : Item.getId(item.stack.getItem());
-        random.setSeed(seed);
+		int seed = item.stack.isEmpty() ? 187 : Item.getId(item.stack.getItem());
+		random.setSeed(seed);
 
 		int count = getModelCount(item.stack);
 		for(int i = 0; i < count; i++) {
 			matrix.pushPose();
 			if(i > 0) {
 				float spread = 0.15F;
-                float x = (this.random.nextFloat() * 2.0F - 1.0F) * spread;
-                float y = (this.random.nextFloat() * 2.0F - 1.0F) * spread;
-                float z = (this.random.nextFloat() * 2.0F - 1.0F) * spread;
-                matrix.translate(x, y, z);
+				float x = (this.random.nextFloat() * 2.0F - 1.0F) * spread;
+				float y = (this.random.nextFloat() * 2.0F - 1.0F) * spread;
+				float z = (this.random.nextFloat() * 2.0F - 1.0F) * spread;
+				matrix.translate(x, y, z);
 			}
 
 			render.renderStatic(item.stack, ItemTransforms.TransformType.FIXED, light, overlay, matrix, buffer, 0);

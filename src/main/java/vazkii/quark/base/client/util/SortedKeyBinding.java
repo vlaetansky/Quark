@@ -12,17 +12,17 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 @OnlyIn(Dist.CLIENT)
 public class SortedKeyBinding extends KeyMapping {
-    private final int priority;
+	private final int priority;
 
-    public SortedKeyBinding(String description, Type type, int keyCode, String category, int priority) {
-        super(description, type, keyCode, category);
-        this.priority = priority;
-    }
+	public SortedKeyBinding(String description, Type type, int keyCode, String category, int priority) {
+		super(description, type, keyCode, category);
+		this.priority = priority;
+	}
 
-    @Override
-    public int compareTo(KeyMapping keyBinding) {
-        if (this.getCategory().equals(keyBinding.getCategory()) && keyBinding instanceof SortedKeyBinding)
-            return Integer.compare(priority, ((SortedKeyBinding) keyBinding).priority);
-        return super.compareTo(keyBinding);
-    }
+	@Override
+	public int compareTo(KeyMapping keyBinding) {
+		if (this.getCategory().equals(keyBinding.getCategory()) && keyBinding instanceof SortedKeyBinding)
+			return Integer.compare(priority, ((SortedKeyBinding) keyBinding).priority);
+		return super.compareTo(keyBinding);
+	}
 }

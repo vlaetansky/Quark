@@ -75,7 +75,7 @@ public class StoolBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 		BlockState state = world.getBlockState(pos);
 		if(!state.getValue(BIG)) {
 			world.setBlockAndUpdate(pos, state.setValue(BIG, true));
-	         world.scheduleTick(pos, this, 1);
+			 world.scheduleTick(pos, this, 1);
 		}
 	}
 

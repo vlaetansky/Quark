@@ -21,7 +21,7 @@ import vazkii.quark.base.module.config.Config;
 @LoadModule(category = ModuleCategory.ODDITIES)
 public class PipesModule extends QuarkModule {
 
-    public static BlockEntityType<PipeBlockEntity> blockEntityType;
+	public static BlockEntityType<PipeBlockEntity> blockEntityType;
 
 	@Config(description = "How long it takes for an item to cross a pipe. Bigger = slower.") 
 	private static int pipeSpeed = 5;
@@ -31,23 +31,23 @@ public class PipesModule extends QuarkModule {
 	
 	@Config(description = "When items eject or are absorbed by pipes, should they make sounds?")
 	public static boolean doPipesWhoosh = true;
-    
+	
 	public static Block pipe;
 	
 	public static int effectivePipeSpeed;
 	
-    @Override
-    public void register() {
-    	pipe = new PipeBlock(this);
-    	
-    	blockEntityType = BlockEntityType.Builder.of(PipeBlockEntity::new, pipe).build(null);
+	@Override
+	public void register() {
+		pipe = new PipeBlock(this);
+		
+		blockEntityType = BlockEntityType.Builder.of(PipeBlockEntity::new, pipe).build(null);
 		RegistryHelper.register(blockEntityType, "pipe");
-    }
-    
-    @Override
-    public void configChanged() {
-    	effectivePipeSpeed = pipeSpeed * 2;
-    }
+	}
+	
+	@Override
+	public void configChanged() {
+		effectivePipeSpeed = pipeSpeed * 2;
+	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
@@ -55,10 +55,10 @@ public class PipesModule extends QuarkModule {
 		BlockEntityRenderers.register(blockEntityType, PipeRenderer::new);
 	}
 
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public void modelRegistry() {
-    	ForgeModelBakery.addSpecialModel(new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, "pipe_flare"), "inventory"));
-    }
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void modelRegistry() {
+		ForgeModelBakery.addSpecialModel(new ModelResourceLocation(new ResourceLocation(Quark.MOD_ID, "pipe_flare"), "inventory"));
+	}
 	
 }

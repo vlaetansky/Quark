@@ -15,12 +15,12 @@ import vazkii.quark.content.automation.block.ObsidianPressurePlateBlock;
  */
 @LoadModule(category = ModuleCategory.AUTOMATION)
 public class ObsidianPlateModule extends QuarkModule {
-    @Override
-    public void register() {
-        new ObsidianPressurePlateBlock("obsidian_pressure_plate", this, CreativeModeTab.TAB_REDSTONE,
-                Block.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK)
-                		.requiresCorrectToolForDrops()
-                        .noCollission()
-                        .strength(2F, 1200.0F));
-    }
+	@Override
+	public void register() {
+		new ObsidianPressurePlateBlock("obsidian_pressure_plate", this, CreativeModeTab.TAB_REDSTONE,
+				Block.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK)
+						.requiresCorrectToolForDrops()
+						.noCollission()
+						.strength(2F, 1200.0F));
+	}
 }

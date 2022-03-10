@@ -22,7 +22,7 @@ import vazkii.quark.content.building.entity.Stool;
 @LoadModule(category = ModuleCategory.BUILDING, hasSubscriptions = true)
 public class StoolsModule extends QuarkModule {
 
-    public static EntityType<Stool> stoolEntity;
+	public static EntityType<Stool> stoolEntity;
 	
 	@Override
 	public void register() {
@@ -30,13 +30,13 @@ public class StoolsModule extends QuarkModule {
 			new StoolBlock(this, dye);
 		
 		stoolEntity = EntityType.Builder.<Stool>of(Stool::new, MobCategory.MISC)
-                .sized(6F / 16F, 0.5F)
-                .clientTrackingRange(3)
-                .updateInterval(Integer.MAX_VALUE) // update interval
-                .setShouldReceiveVelocityUpdates(false)
-                .setCustomClientFactory((spawnEntity, world) -> new Stool(stoolEntity, world))
-                .build("stool");
-        RegistryHelper.register(stoolEntity, "stool");
+				.sized(6F / 16F, 0.5F)
+				.clientTrackingRange(3)
+				.updateInterval(Integer.MAX_VALUE) // update interval
+				.setShouldReceiveVelocityUpdates(false)
+				.setCustomClientFactory((spawnEntity, world) -> new Stool(stoolEntity, world))
+				.build("stool");
+		RegistryHelper.register(stoolEntity, "stool");
 	}
 	
 	@SubscribeEvent
@@ -48,10 +48,10 @@ public class StoolsModule extends QuarkModule {
 		}
 	}
 	
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public void clientSetup() {
-    	EntityRenderers.register(stoolEntity, StoolEntityRenderer::new);
-    }
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void clientSetup() {
+		EntityRenderers.register(stoolEntity, StoolEntityRenderer::new);
+	}
 
 }

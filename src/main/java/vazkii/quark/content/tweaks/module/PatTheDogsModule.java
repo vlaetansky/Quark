@@ -38,115 +38,115 @@ import java.util.List;
  */
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
 public class PatTheDogsModule extends QuarkModule {
-    @Config(description = "How many ticks it takes for a dog to want affection after being pet/tamed; leave -1 to disable")
-    public static int dogsWantLove = -1;
-    @Config(description = "Whether you can pet all mobs")
-    public static boolean petAllMobs = false;
-    @Config(description = "If `petAllMobs` is set, these mobs still can't be pet")
-    public static List<String> pettableDenylist = Lists.newArrayList("minecraft:ender_dragon", "minecraft:wither", "minecraft:armor_stand");
+	@Config(description = "How many ticks it takes for a dog to want affection after being pet/tamed; leave -1 to disable")
+	public static int dogsWantLove = -1;
+	@Config(description = "Whether you can pet all mobs")
+	public static boolean petAllMobs = false;
+	@Config(description = "If `petAllMobs` is set, these mobs still can't be pet")
+	public static List<String> pettableDenylist = Lists.newArrayList("minecraft:ender_dragon", "minecraft:wither", "minecraft:armor_stand");
 
-    @SubscribeEvent
-    public void onWolfAppear(EntityJoinWorldEvent event) {
-        if (dogsWantLove > 0 && event.getEntity() instanceof Wolf wolf) {
-            boolean alreadySetUp = wolf.goalSelector.getAvailableGoals().stream().anyMatch((goal) -> goal.getGoal() instanceof WantLoveGoal);
+	@SubscribeEvent
+	public void onWolfAppear(EntityJoinWorldEvent event) {
+		if (dogsWantLove > 0 && event.getEntity() instanceof Wolf wolf) {
+			boolean alreadySetUp = wolf.goalSelector.getAvailableGoals().stream().anyMatch((goal) -> goal.getGoal() instanceof WantLoveGoal);
 
-            if (!alreadySetUp) {
-                wolf.goalSelector.addGoal(4, new NuzzleGoal(wolf, 0.5F, 16, 2, SoundEvents.WOLF_WHINE));
-                wolf.goalSelector.addGoal(5, new WantLoveGoal(wolf, 0.2F));
-            }
-        }
-    }
+			if (!alreadySetUp) {
+				wolf.goalSelector.addGoal(4, new NuzzleGoal(wolf, 0.5F, 16, 2, SoundEvents.WOLF_WHINE));
+				wolf.goalSelector.addGoal(5, new WantLoveGoal(wolf, 0.2F));
+			}
+		}
+	}
 
-    @SubscribeEvent
-    public void onInteract(PlayerInteractEvent.EntityInteract event) {
-        var player = event.getPlayer();
+	@SubscribeEvent
+	public void onInteract(PlayerInteractEvent.EntityInteract event) {
+		var player = event.getPlayer();
 
-        if (player.isDiscrete() && player.getMainHandItem().isEmpty()) {
-            if (event.getTarget() instanceof Wolf wolf) {
-                if (event.getHand() == InteractionHand.MAIN_HAND && WantLoveGoal.canPet(wolf)) {
-                    if (player.level instanceof ServerLevel serverLevel) {
-                        var pos = wolf.position();
-                        serverLevel.sendParticles(ParticleTypes.HEART, pos.x, pos.y + 0.5, pos.z, 1, 0, 0, 0, 0.1);
-                        wolf.playSound(SoundEvents.WOLF_WHINE, 1F, 0.5F + (float) Math.random() * 0.5F);
-                    } else player.swing(InteractionHand.MAIN_HAND);
+		if (player.isDiscrete() && player.getMainHandItem().isEmpty()) {
+			if (event.getTarget() instanceof Wolf wolf) {
+				if (event.getHand() == InteractionHand.MAIN_HAND && WantLoveGoal.canPet(wolf)) {
+					if (player.level instanceof ServerLevel serverLevel) {
+						var pos = wolf.position();
+						serverLevel.sendParticles(ParticleTypes.HEART, pos.x, pos.y + 0.5, pos.z, 1, 0, 0, 0, 0.1);
+						wolf.playSound(SoundEvents.WOLF_WHINE, 1F, 0.5F + (float) Math.random() * 0.5F);
+					} else player.swing(InteractionHand.MAIN_HAND);
 
-                    WantLoveGoal.setPetTime(wolf);
+					WantLoveGoal.setPetTime(wolf);
 
-                    if (wolf instanceof Foxhound && !player.isInWater() && !player.hasEffect(
-                        MobEffects.FIRE_RESISTANCE) && !player.isCreative())
-                        player.setSecondsOnFire(5);
-                }
+					if (wolf instanceof Foxhound && !player.isInWater() && !player.hasEffect(
+						MobEffects.FIRE_RESISTANCE) && !player.isCreative())
+						player.setSecondsOnFire(5);
+				}
 
-                event.setCanceled(true);
-            } else if (petAllMobs && event.getTarget() instanceof LivingEntity living && !pettableDenylist.contains(living.getEncodeId())) {
-                if (event.getHand() == InteractionHand.MAIN_HAND) {
-                    if (player.level instanceof ServerLevel serverLevel) {
-                        var pos = living.getEyePosition();
-                        serverLevel.sendParticles(ParticleTypes.HEART, pos.x, pos.y + 0.5, pos.z, 1, 0, 0, 0, 0.1);
+				event.setCanceled(true);
+			} else if (petAllMobs && event.getTarget() instanceof LivingEntity living && !pettableDenylist.contains(living.getEncodeId())) {
+				if (event.getHand() == InteractionHand.MAIN_HAND) {
+					if (player.level instanceof ServerLevel serverLevel) {
+						var pos = living.getEyePosition();
+						serverLevel.sendParticles(ParticleTypes.HEART, pos.x, pos.y + 0.5, pos.z, 1, 0, 0, 0, 0.1);
 
-                        SoundEvent sound = null;
-                        float pitchCenter = 1f;
-                        if (living instanceof Axolotl) {
-                            sound = SoundEvents.AXOLOTL_SPLASH;
-                        } else if (living instanceof Cat || living instanceof Ocelot) {
-                            sound = SoundEvents.CAT_PURREOW;
-                        } else if (living instanceof Chicken) {
-                            sound = SoundEvents.CHICKEN_AMBIENT;
-                        } else if (living instanceof Cow) {
-                            sound = SoundEvents.COW_AMBIENT;
-                            pitchCenter = 1.2f;
-                        } else if (living instanceof AbstractHorse) {
-                            sound = SoundEvents.HORSE_AMBIENT;
-                        } else if (living instanceof AbstractFish) {
-                            sound = SoundEvents.FISH_SWIM;
-                        } else if (living instanceof Fox) {
-                            sound = SoundEvents.FOX_SLEEP;
-                        } else if (living instanceof Squid) {
-                            sound = (living instanceof GlowSquid) ?
-                                SoundEvents.GLOW_SQUID_SQUIRT : SoundEvents.SQUID_SQUIRT;
-                            pitchCenter = 1.2f;
-                        } else if (living instanceof Parrot) {
-                            sound = SoundEvents.PARROT_AMBIENT;
-                        } else if (living instanceof Pig) {
-                            sound = SoundEvents.PIG_AMBIENT;
-                        } else if (living instanceof Rabbit) {
-                            sound = SoundEvents.RABBIT_AMBIENT;
-                        } else if (living instanceof Sheep) {
-                            sound = SoundEvents.SHEEP_AMBIENT;
-                        } else if (living instanceof Strider) {
-                            sound = SoundEvents.STRIDER_HAPPY;
-                        } else if (living instanceof Turtle) {
-                            sound = SoundEvents.TURTLE_AMBIENT_LAND;
-                        }  else if (living instanceof Player pettee) {
-                            var uuid = pettee.getStringUUID();
-                            if (uuid.equals("a2ce9382-2518-4752-87b2-c6a5c97f173e")) {
-                                // petra_the_kat
-                                sound = SoundEvents.NOTE_BLOCK_BIT;
-                                pitchCenter = 1.5f;
-                            } else if (uuid.equals("29a10dc6-a201-4993-80d8-c847212bc92b") || uuid.equals("d30d8e38-6f93-4d96-968d-dd6ec5596941")) {
-                                // MacyMacerator and Falkory220
-                                sound = SoundEvents.CAT_PURR;
-                                pitchCenter = 1.4f;
-                            }
-                        }
-                        if (sound != null) {
-                            living.playSound(sound, 1F, pitchCenter + (float) (Math.random() - 0.5) * 0.5F);
-                        }
-                    } else player.swing(InteractionHand.MAIN_HAND);
-                }
+						SoundEvent sound = null;
+						float pitchCenter = 1f;
+						if (living instanceof Axolotl) {
+							sound = SoundEvents.AXOLOTL_SPLASH;
+						} else if (living instanceof Cat || living instanceof Ocelot) {
+							sound = SoundEvents.CAT_PURREOW;
+						} else if (living instanceof Chicken) {
+							sound = SoundEvents.CHICKEN_AMBIENT;
+						} else if (living instanceof Cow) {
+							sound = SoundEvents.COW_AMBIENT;
+							pitchCenter = 1.2f;
+						} else if (living instanceof AbstractHorse) {
+							sound = SoundEvents.HORSE_AMBIENT;
+						} else if (living instanceof AbstractFish) {
+							sound = SoundEvents.FISH_SWIM;
+						} else if (living instanceof Fox) {
+							sound = SoundEvents.FOX_SLEEP;
+						} else if (living instanceof Squid) {
+							sound = (living instanceof GlowSquid) ?
+								SoundEvents.GLOW_SQUID_SQUIRT : SoundEvents.SQUID_SQUIRT;
+							pitchCenter = 1.2f;
+						} else if (living instanceof Parrot) {
+							sound = SoundEvents.PARROT_AMBIENT;
+						} else if (living instanceof Pig) {
+							sound = SoundEvents.PIG_AMBIENT;
+						} else if (living instanceof Rabbit) {
+							sound = SoundEvents.RABBIT_AMBIENT;
+						} else if (living instanceof Sheep) {
+							sound = SoundEvents.SHEEP_AMBIENT;
+						} else if (living instanceof Strider) {
+							sound = SoundEvents.STRIDER_HAPPY;
+						} else if (living instanceof Turtle) {
+							sound = SoundEvents.TURTLE_AMBIENT_LAND;
+						}  else if (living instanceof Player pettee) {
+							var uuid = pettee.getStringUUID();
+							if (uuid.equals("a2ce9382-2518-4752-87b2-c6a5c97f173e")) {
+								// petra_the_kat
+								sound = SoundEvents.NOTE_BLOCK_BIT;
+								pitchCenter = 1.5f;
+							} else if (uuid.equals("29a10dc6-a201-4993-80d8-c847212bc92b") || uuid.equals("d30d8e38-6f93-4d96-968d-dd6ec5596941")) {
+								// MacyMacerator and Falkory220
+								sound = SoundEvents.CAT_PURR;
+								pitchCenter = 1.4f;
+							}
+						}
+						if (sound != null) {
+							living.playSound(sound, 1F, pitchCenter + (float) (Math.random() - 0.5) * 0.5F);
+						}
+					} else player.swing(InteractionHand.MAIN_HAND);
+				}
 
-                event.setCanceled(true);
-            }
-        }
-    }
+				event.setCanceled(true);
+			}
+		}
+	}
 
 
 
-    @SubscribeEvent
-    public void onTame(AnimalTameEvent event) {
-        if(event.getAnimal() instanceof Wolf wolf) {
-            WantLoveGoal.setPetTime(wolf);
-        }
-    }
+	@SubscribeEvent
+	public void onTame(AnimalTameEvent event) {
+		if(event.getAnimal() instanceof Wolf wolf) {
+			WantLoveGoal.setPetTime(wolf);
+		}
+	}
 
 }

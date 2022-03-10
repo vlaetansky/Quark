@@ -18,39 +18,39 @@ import vazkii.quark.base.module.QuarkModule;
  */
 public class QuarkPressurePlateBlock extends PressurePlateBlock implements IQuarkBlock {
 
-    private final QuarkModule module;
-    private BooleanSupplier enabledSupplier = () -> true;
+	private final QuarkModule module;
+	private BooleanSupplier enabledSupplier = () -> true;
 
-    public QuarkPressurePlateBlock(Sensitivity sensitivity, String regname, QuarkModule module, CreativeModeTab creativeTab, Properties properties) {
-        super(sensitivity, properties);
-        this.module = module;
+	public QuarkPressurePlateBlock(Sensitivity sensitivity, String regname, QuarkModule module, CreativeModeTab creativeTab, Properties properties) {
+		super(sensitivity, properties);
+		this.module = module;
 
-        RegistryHelper.registerBlock(this, regname);
-        if(creativeTab != null)
-            RegistryHelper.setCreativeTab(this, creativeTab);
-    }
+		RegistryHelper.registerBlock(this, regname);
+		if(creativeTab != null)
+			RegistryHelper.setCreativeTab(this, creativeTab);
+	}
 
-    @Override
-    public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
-        if(isEnabled() || (group == CreativeModeTab.TAB_SEARCH && appearInSearch()))
-            super.fillItemCategory(group, items);
-    }
+	@Override
+	public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
+		if(isEnabled() || (group == CreativeModeTab.TAB_SEARCH && appearInSearch()))
+			super.fillItemCategory(group, items);
+	}
 
-    @Override
-    public QuarkPressurePlateBlock setCondition(BooleanSupplier enabledSupplier) {
-        this.enabledSupplier = enabledSupplier;
-        return this;
-    }
+	@Override
+	public QuarkPressurePlateBlock setCondition(BooleanSupplier enabledSupplier) {
+		this.enabledSupplier = enabledSupplier;
+		return this;
+	}
 
-    @Override
-    public boolean doesConditionApply() {
-        return enabledSupplier.getAsBoolean();
-    }
+	@Override
+	public boolean doesConditionApply() {
+		return enabledSupplier.getAsBoolean();
+	}
 
-    @Nullable
-    @Override
-    public QuarkModule getModule() {
-        return module;
-    }
+	@Nullable
+	@Override
+	public QuarkModule getModule() {
+		return module;
+	}
 
 }

@@ -126,11 +126,11 @@ public class Frog extends Animal implements IEntityAdditionalSpawnData, IForgeSh
 	}
 
 	public static AttributeSupplier.Builder prepareAttributes() {
-        return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 10.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.25D)
+		return Mob.createMobAttributes()
+				.add(Attributes.MAX_HEALTH, 10.0D)
+				.add(Attributes.MOVEMENT_SPEED, 0.25D)
 				.add(ForgeMod.ENTITY_GRAVITY.get());
-    }
+	}
 
 	@Nonnull
 	@Override

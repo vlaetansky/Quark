@@ -14,7 +14,7 @@ public class QuarkWoodenButtonBlock extends QuarkButtonBlock {
 	}
 
 	@Nonnull
-    @Override
+	@Override
 	protected SoundEvent getSound(boolean powered) {
 		return powered ? SoundEvents.WOODEN_BUTTON_CLICK_ON : SoundEvents.WOODEN_BUTTON_CLICK_OFF;
 	}

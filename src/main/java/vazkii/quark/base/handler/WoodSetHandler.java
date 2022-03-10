@@ -72,10 +72,10 @@ public class WoodSetHandler {
 		quarkBoatEntityType = EntityType.Builder.<QuarkBoat>of(QuarkBoat::new, MobCategory.MISC)
 				.sized(1.375F, 0.5625F)
 				.clientTrackingRange(10)
-                .setCustomClientFactory((spawnEntity, world) -> new QuarkBoat(quarkBoatEntityType, world))
-                .build("quark_boat");
+				.setCustomClientFactory((spawnEntity, world) -> new QuarkBoat(quarkBoatEntityType, world))
+				.build("quark_boat");
 		
-        RegistryHelper.register(quarkBoatEntityType, "quark_boat");
+		RegistryHelper.register(quarkBoatEntityType, "quark_boat");
 	}
 	
 	public static void setup(FMLCommonSetupEvent event) {
@@ -86,9 +86,9 @@ public class WoodSetHandler {
 		});
 	}
 	
-    @OnlyIn(Dist.CLIENT)
-    public static void clientSetup(FMLClientSetupEvent event) {
-        EntityRenderers.register(quarkBoatEntityType, QuarkBoatRenderer::new);
+	@OnlyIn(Dist.CLIENT)
+	public static void clientSetup(FMLClientSetupEvent event) {
+		EntityRenderers.register(quarkBoatEntityType, QuarkBoatRenderer::new);
 
 		event.enqueueWork(() -> {
 			for (WoodSet set : woodSets) {

@@ -20,7 +20,7 @@ import vazkii.quark.base.module.config.Config;
 @LoadModule(category = ModuleCategory.ODDITIES)
 public class CrateModule extends QuarkModule {
 
-    public static BlockEntityType<CrateBlockEntity> blockEntityType;
+	public static BlockEntityType<CrateBlockEntity> blockEntityType;
 	public static MenuType<CrateMenu> menuType;
 	
 	public static Block crate;

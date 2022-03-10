@@ -17,19 +17,19 @@ import vazkii.quark.base.module.QuarkModule;
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
 public class VillagersFollowEmeraldsModule extends QuarkModule {
 
-    @SubscribeEvent
-    public void onVillagerAppear(EntityJoinWorldEvent event) {
-        if(event.getEntity() instanceof Villager) {
-            Villager villager = (Villager) event.getEntity();
-            boolean alreadySetUp = villager.goalSelector.getAvailableGoals().stream().anyMatch((goal) -> goal.getGoal() instanceof TemptGoal);
+	@SubscribeEvent
+	public void onVillagerAppear(EntityJoinWorldEvent event) {
+		if(event.getEntity() instanceof Villager) {
+			Villager villager = (Villager) event.getEntity();
+			boolean alreadySetUp = villager.goalSelector.getAvailableGoals().stream().anyMatch((goal) -> goal.getGoal() instanceof TemptGoal);
 
-            if (!alreadySetUp)
-            	try {
-            		villager.goalSelector.addGoal(2, new TemptGoal(villager, 0.6, Ingredient.of(Items.EMERALD_BLOCK), false));
-            	} catch(IllegalArgumentException e) {
-            		// This appears to be a weird bug that happens when a villager is riding something and its chunk unloads
-            	}
-                
-        }
-    }
+			if (!alreadySetUp)
+				try {
+					villager.goalSelector.addGoal(2, new TemptGoal(villager, 0.6, Ingredient.of(Items.EMERALD_BLOCK), false));
+				} catch(IllegalArgumentException e) {
+					// This appears to be a weird bug that happens when a villager is riding something and its chunk unloads
+				}
+
+		}
+	}
 }

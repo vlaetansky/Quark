@@ -16,8 +16,8 @@ import vazkii.quark.content.automation.block.RedstoneRandomizerBlock;
 @LoadModule(category = ModuleCategory.AUTOMATION)
 public class RedstoneRandomizerModule extends QuarkModule {
 
-    @Override
-    public void register() {
-        new RedstoneRandomizerBlock("redstone_randomizer", this, CreativeModeTab.TAB_REDSTONE, Block.Properties.of(Material.DECORATION).strength(0).sound(SoundType.WOOD));
-    }
+	@Override
+	public void register() {
+		new RedstoneRandomizerBlock("redstone_randomizer", this, CreativeModeTab.TAB_REDSTONE, Block.Properties.of(Material.DECORATION).strength(0).sound(SoundType.WOOD));
+	}
 }

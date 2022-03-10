@@ -11,12 +11,12 @@ import javax.annotation.Nonnull;
  * Created at 10:12 AM on 8/26/19.
  */
 public enum RandomizerPowerState implements StringRepresentable {
-    OFF, LEFT, RIGHT;
+	OFF, LEFT, RIGHT;
 
 
-    @Nonnull
-    @Override
-    public String getSerializedName() {
-        return name().toLowerCase(Locale.ROOT);
-    }
+	@Nonnull
+	@Override
+	public String getSerializedName() {
+		return name().toLowerCase(Locale.ROOT);
+	}
 }

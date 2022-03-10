@@ -15,23 +15,23 @@ import net.minecraft.world.level.levelgen.WorldgenRandom;
  */
 public class CombinedGenerator implements IGenerator {
 
-    private List<? extends IGenerator> children;
+	private List<? extends IGenerator> children;
 
-    public CombinedGenerator(List<? extends IGenerator> children) {
-        this.children = children;
-    }
+	public CombinedGenerator(List<? extends IGenerator> children) {
+		this.children = children;
+	}
 
-    @Override
-    public int generate(int seedIncrement, long seed, GenerationStep.Decoration stage, WorldGenRegion worldIn, ChunkGenerator generator, WorldgenRandom rand, BlockPos pos) {
-        for (IGenerator child : children) {
-            if (child.canGenerate(worldIn))
-                seedIncrement = child.generate(seedIncrement, seed, stage, worldIn, generator, rand, pos);
-        }
-        return seedIncrement;
-    }
+	@Override
+	public int generate(int seedIncrement, long seed, GenerationStep.Decoration stage, WorldGenRegion worldIn, ChunkGenerator generator, WorldgenRandom rand, BlockPos pos) {
+		for (IGenerator child : children) {
+			if (child.canGenerate(worldIn))
+				seedIncrement = child.generate(seedIncrement, seed, stage, worldIn, generator, rand, pos);
+		}
+		return seedIncrement;
+	}
 
-    @Override
-    public boolean canGenerate(ServerLevelAccessor world) {
-        return children.stream().anyMatch((it) -> it.canGenerate(world));
-    }
+	@Override
+	public boolean canGenerate(ServerLevelAccessor world) {
+		return children.stream().anyMatch((it) -> it.canGenerate(world));
+	}
 }

@@ -62,17 +62,17 @@ public class QuarkMusicDiscItem extends RecordItem implements IQuarkItem {
 	@OnlyIn(Dist.CLIENT)
 	public boolean playAmbientSound(BlockPos pos) {
 		if(isAmbient) {
-	        Minecraft mc = Minecraft.getInstance();
-	        SoundManager soundEngine = mc.getSoundManager();
-	        LevelRenderer render = mc.levelRenderer;
+			Minecraft mc = Minecraft.getInstance();
+			SoundManager soundEngine = mc.getSoundManager();
+			LevelRenderer render = mc.levelRenderer;
 
 			SimpleSoundInstance simplesound = new SimpleSoundInstance(soundSupplier.get().getLocation(), SoundSource.RECORDS, 4.0F, 1.0F, true, 0, SoundInstance.Attenuation.LINEAR, pos.getX(), pos.getY(), pos.getZ(), false);
 
 			render.playingRecords.put(pos, simplesound);
-	        soundEngine.play(simplesound);
+			soundEngine.play(simplesound);
 
-	        if(mc.level != null)
-	        	mc.level.addParticle(ParticleTypes.NOTE,pos.getX() + Math.random(), pos.getY() + 1.1, pos.getZ() + Math.random(), Math.random(), 0, 0);
+			if(mc.level != null)
+				mc.level.addParticle(ParticleTypes.NOTE,pos.getX() + Math.random(), pos.getY() + 1.1, pos.getZ() + Math.random(), Math.random(), 0, 0);
 
 			return true;
 		}

@@ -34,9 +34,9 @@ public class SkullPikesModule extends QuarkModule {
 
 	public static EntityType<SkullPike> skullPikeType;
 
-    public static TagKey<Block> pikeTrophiesTag;
-    
-    @Config public static double pikeRange = 5;
+	public static TagKey<Block> pikeTrophiesTag;
+	
+	@Config public static double pikeRange = 5;
 	
 	@Override
 	public void register() {
@@ -50,10 +50,10 @@ public class SkullPikesModule extends QuarkModule {
 		RegistryHelper.register(skullPikeType, "skull_pike");
 	}
 	
-    @Override
-    public void setup() {
-    	pikeTrophiesTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "pike_trophies"));
-    }
+	@Override
+	public void setup() {
+		pikeTrophiesTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "pike_trophies"));
+	}
 	
 	@Override
 	@OnlyIn(Dist.CLIENT)
@@ -83,15 +83,15 @@ public class SkullPikesModule extends QuarkModule {
 		}
 	}
 	
-    @SubscribeEvent
-    public void onMonsterAppear(EntityJoinWorldEvent event) {
-    	Entity e = event.getEntity();
-        if(e instanceof Monster && !(e instanceof PatrollingMonster) && e.canChangeDimensions()) {
-        	Monster monster = (Monster) e;
-            boolean alreadySetUp = monster.goalSelector.getAvailableGoals().stream().anyMatch((goal) -> goal.getGoal() instanceof RunAwayFromPikesGoal);
+	@SubscribeEvent
+	public void onMonsterAppear(EntityJoinWorldEvent event) {
+		Entity e = event.getEntity();
+		if(e instanceof Monster && !(e instanceof PatrollingMonster) && e.canChangeDimensions()) {
+			Monster monster = (Monster) e;
+			boolean alreadySetUp = monster.goalSelector.getAvailableGoals().stream().anyMatch((goal) -> goal.getGoal() instanceof RunAwayFromPikesGoal);
 
-            if (!alreadySetUp)
-            	monster.goalSelector.addGoal(3, new RunAwayFromPikesGoal(monster, (float) pikeRange, 1.0D, 1.2D));
-        }
-    }
+			if (!alreadySetUp)
+				monster.goalSelector.addGoal(3, new RunAwayFromPikesGoal(monster, (float) pikeRange, 1.0D, 1.2D));
+		}
+	}
 }
