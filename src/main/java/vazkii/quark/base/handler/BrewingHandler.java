@@ -1,15 +1,6 @@
 package vazkii.quark.base.handler;
 
-import java.util.List;
-import java.util.function.Supplier;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.tuple.ImmutableTriple;
-import org.apache.commons.lang3.tuple.Triple;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -20,10 +11,16 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
+import org.apache.commons.lang3.tuple.ImmutableTriple;
+import org.apache.commons.lang3.tuple.Triple;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.recipe.ingredient.FlagIngredient;
 import vazkii.quark.base.util.PotionReflection;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * @author WireSegal
@@ -37,18 +34,18 @@ public class BrewingHandler {
 	}
 
 	public static void addPotionMix(String flag, Supplier<Ingredient> reagent, MobEffect effect,
-													 int normalTime, int longTime, int strongTime) {
+									int normalTime, int longTime, int strongTime) {
 		addPotionMix(flag, reagent, effect, null, normalTime, longTime, strongTime);
 	}
 
 	public static void addPotionMix(String flag, Supplier<Ingredient> reagent, MobEffect effect,
-													 @Nullable MobEffect negation) {
+									@Nullable MobEffect negation) {
 		addPotionMix(flag, reagent, effect, negation, 3600, 9600, 1800);
 	}
 
 
 	public static void addPotionMix(String flag, Supplier<Ingredient> reagent, MobEffect effect,
-													 @Nullable MobEffect negation, int normalTime, int longTime, int strongTime) {
+									@Nullable MobEffect negation, int normalTime, int longTime, int strongTime) {
 		ResourceLocation loc = effect.getRegistryName();
 		if (loc != null) {
 			String baseName = loc.getPath();
