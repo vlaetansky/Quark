@@ -131,6 +131,10 @@ public class AncientTomesModule extends QuarkModule {
 		initialized = true;
 	}
 
+	public static boolean isInitialized() {
+		return initialized;
+	}
+
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onAnvilUpdate(AnvilUpdateEvent event) {
 		ItemStack left = event.getLeft();

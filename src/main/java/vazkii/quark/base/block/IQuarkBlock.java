@@ -32,7 +32,7 @@ public interface IQuarkBlock extends IForgeBlock {
 	}
 
 	default boolean appearInSearch() {
-		return this instanceof Block block && !RequiredModTooltipHandler.isEnabled(block.asItem());
+		return this instanceof Block block && RequiredModTooltipHandler.isEnabled(block.asItem());
 	}
 
 	default boolean isEnabled() {
