@@ -44,7 +44,7 @@ public class RequiredModTooltipHandler {
 	}
 
 	public static boolean isEnabled(Item item) {
-		return item != null && !ITEMS.containsKey(item) || ModList.get().isLoaded(ITEMS.get(item));
+		return item != null && (!ITEMS.containsKey(item) || ModList.get().isLoaded(ITEMS.get(item)));
 	}
 
 }
