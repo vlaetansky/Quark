@@ -19,11 +19,11 @@ public class RenderLayerHandler {
 	private static Map<RenderTypeSkeleton, RenderType> renderTypes;
 
 	public static void setRenderType(Block block, RenderTypeSkeleton skeleton) {
-		DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> setRenderTypeClient(block, skeleton));
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> setRenderTypeClient(block, skeleton));
 	}
 
 	public static void setInherited(Block block, Block parent) {
-		DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> setInheritedClient(block, parent));
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> setInheritedClient(block, parent));
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -51,7 +51,6 @@ public class RenderLayerHandler {
 	private static void setInheritedClient(Block block, Block parent) {
 		resolveRenderTypes();
 		inheritances.put(block, parent);
-
 	}
 
 	@OnlyIn(Dist.CLIENT)
