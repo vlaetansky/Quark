@@ -10,12 +10,9 @@
  */
 package vazkii.quark.content.management.module;
 
-import java.util.List;
-
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.GuiMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -25,13 +22,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.network.chat.ChatType;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.server.players.PlayerList;
@@ -56,6 +47,8 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.LinkItemMessage;
+
+import java.util.List;
 
 @LoadModule(category = ModuleCategory.MANAGEMENT, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class ItemSharingModule extends QuarkModule {
@@ -171,7 +164,7 @@ public class ItemSharingModule extends QuarkModule {
 				int captureIndex = idx;
 				lineProperties.accept((counter_, style, character) -> {
 					String sofar = before.toString();
-					if (sofar.endsWith("	")) {
+					if (sofar.endsWith("    ")) {
 						render(mc, event.getMatrixStack(), chatGui, updateCounter, sofar.substring(0, sofar.length() - 3), line, captureIndex - shift, style);
 						return false;
 					}
@@ -210,13 +203,13 @@ public class ItemSharingModule extends QuarkModule {
 					alphaValue = alpha; // TODO LOW PRIO blocks dont fade out properly
 
 					PoseStack modelviewPose = RenderSystem.getModelViewStack();
-					
+
 					modelviewPose.pushPose();
 					modelviewPose.translate(x - 2, y - 2, 0);
 					modelviewPose.scale(0.65f, 0.65f, 0.65f);
 					mc.getItemRenderer().renderGuiItem(stack, 0, 0);
 					modelviewPose.popPose();
-					
+
 					RenderSystem.applyModelViewMatrix();
 
 					alphaValue = 1F;
