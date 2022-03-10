@@ -44,7 +44,7 @@ public class NuzzleGoal extends Goal {
 		this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK, Flag.TARGET));
 
 		if (!(creature.getNavigation() instanceof GroundPathNavigation) && !(creature.getNavigation() instanceof FlyingPathNavigation))
-			throw new IllegalArgumentException("Unsupported mob type for FollowOwnerGoal");
+			throw new IllegalArgumentException("Unsupported mob type for NuzzleOwnerGoal");
 	}
 
 	@Override
