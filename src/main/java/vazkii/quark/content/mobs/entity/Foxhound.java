@@ -10,12 +10,6 @@
  */
 package vazkii.quark.content.mobs.entity;
 
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-
-import javax.annotation.Nonnull;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
@@ -34,23 +28,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.BegGoal;
-import net.minecraft.world.entity.ai.goal.BreedGoal;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
-import net.minecraft.world.entity.ai.goal.LeapAtTargetGoal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NonTameRandomTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
@@ -79,6 +59,12 @@ import vazkii.quark.content.mobs.ai.FindPlaceToSleepGoal;
 import vazkii.quark.content.mobs.ai.SleepGoal;
 import vazkii.quark.content.mobs.module.FoxhoundModule;
 import vazkii.quark.content.tweaks.ai.WantLoveGoal;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
 
 public class Foxhound extends Wolf implements Enemy {
 
@@ -168,6 +154,13 @@ public class Foxhound extends Wolf implements Enemy {
 		//		}
 
 		if(isSleeping()) {
+			Optional<BlockPos> sleepPos = getSleepingPos();
+			if (sleepPos.isPresent()) {
+				BlockPos pos = sleepPos.get();
+				if (distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) > 1)
+					stopSleeping();
+			}
+
 			AABB aabb = getBoundingBox();
 			if(aabb.getYsize() < 0.21)
 				setBoundingBox(new AABB(aabb.minX - 0.2, aabb.minY, aabb.minZ - 0.2, aabb.maxX + 0.2, aabb.maxY + 0.5, aabb.maxZ + 0.2));
@@ -304,7 +297,7 @@ public class Foxhound extends Wolf implements Enemy {
 		}
 
 		InteractionResult res = super.mobInteract(player, hand);
-		if(res == InteractionResult.PASS && !level.isClientSide)
+		if(res == InteractionResult.SUCCESS && !level.isClientSide)
 			setWoke();
 
 		return res;
