@@ -1,14 +1,8 @@
 package vazkii.quark.content.tools.item;
 
-import java.util.HashMap;
-import java.util.HashSet;
-
-import javax.annotation.Nonnull;
-
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -35,6 +29,10 @@ import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.tools.entity.Pickarang;
 import vazkii.quark.content.tools.module.PickarangModule;
+
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class PickarangItem extends QuarkItem {
 
@@ -63,9 +61,12 @@ public class PickarangItem extends QuarkItem {
 			case 2 -> Items.IRON_PICKAXE.isCorrectToolForDrops(blockIn) ||
 					Items.IRON_AXE.isCorrectToolForDrops(blockIn) ||
 					Items.IRON_SHOVEL.isCorrectToolForDrops(blockIn);
-			default -> Items.DIAMOND_PICKAXE.isCorrectToolForDrops(blockIn) ||
+			case 3 -> Items.DIAMOND_PICKAXE.isCorrectToolForDrops(blockIn) ||
 					Items.DIAMOND_AXE.isCorrectToolForDrops(blockIn) ||
 					Items.DIAMOND_SHOVEL.isCorrectToolForDrops(blockIn);
+			default -> Items.NETHERITE_PICKAXE.isCorrectToolForDrops(blockIn) ||
+					Items.NETHERITE_AXE.isCorrectToolForDrops(blockIn) ||
+					Items.NETHERITE_SHOVEL.isCorrectToolForDrops(blockIn);
 		};
 	}
 
@@ -115,7 +116,7 @@ public class PickarangItem extends QuarkItem {
 		Multimap<Attribute, AttributeModifier> multimap = Multimaps.newSetMultimap(new HashMap<>(), HashSet::new);
 
 		if (slot == EquipmentSlot.MAINHAND) {
-			multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 2, AttributeModifier.Operation.ADDITION));
+			multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", isNetherite ? 3 : 2, AttributeModifier.Operation.ADDITION));
 			multimap.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -2.8, AttributeModifier.Operation.ADDITION));
 		}
 
