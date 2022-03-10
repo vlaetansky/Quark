@@ -1,8 +1,5 @@
 package vazkii.quark.content.world.block;
 
-import java.util.Random;
-import java.util.function.BooleanSupplier;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -22,6 +19,8 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.world.module.GlimmeringWealdModule;
 
 import javax.annotation.Nonnull;
+import java.util.Random;
+import java.util.function.BooleanSupplier;
 
 public class HugeGlowShroomBlock extends HugeMushroomBlock implements IQuarkBlock {
 
@@ -112,11 +111,6 @@ public class HugeGlowShroomBlock extends HugeMushroomBlock implements IQuarkBloc
 
 			return true;
 		}
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return module != null && module.enabled;
 	}
 
 	@Override

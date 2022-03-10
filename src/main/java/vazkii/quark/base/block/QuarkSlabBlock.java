@@ -1,11 +1,5 @@
 package vazkii.quark.base.block;
 
-import java.util.Objects;
-import java.util.function.BooleanSupplier;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.core.BlockPos;
@@ -24,6 +18,11 @@ import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.QuarkModule;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Objects;
+import java.util.function.BooleanSupplier;
+
 public class QuarkSlabBlock extends SlabBlock implements IQuarkBlock, IBlockColorProvider {
 
 	public final IQuarkBlock parent;
@@ -41,7 +40,7 @@ public class QuarkSlabBlock extends SlabBlock implements IQuarkBlock, IBlockColo
 
 	@Override
 	public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
-		if(group == CreativeModeTab.TAB_SEARCH || parent.isEnabled())
+		if(parent.isEnabled() || (group == CreativeModeTab.TAB_SEARCH && appearInSearch()))
 			super.fillItemCategory(group, items);
 	}
 

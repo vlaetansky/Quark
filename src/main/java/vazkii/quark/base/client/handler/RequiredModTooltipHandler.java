@@ -1,8 +1,5 @@
 package vazkii.quark.base.client.handler;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.Item;
@@ -15,6 +12,9 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import vazkii.quark.base.Quark;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @EventBusSubscriber(modid = Quark.MOD_ID, value = Dist.CLIENT)
 public class RequiredModTooltipHandler {
 
@@ -24,11 +24,11 @@ public class RequiredModTooltipHandler {
 	public static void map(Item item, String mod) {
 		ITEMS.put(item, mod);
 	}
-	
+
 	public static void map(Block block, String mod) {
 		BLOCKS.put(block, mod);
 	}
-	
+
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void onTooltip(ItemTooltipEvent event) {
@@ -37,13 +37,14 @@ public class RequiredModTooltipHandler {
 				ITEMS.put(b.asItem(), BLOCKS.get(b));
 			BLOCKS.clear();
 		}
-		
+
 		Item item = event.getItemStack().getItem();
-		if(ITEMS.containsKey(item)) {
-			String mod = ITEMS.get(item);
-			if(!ModList.get().isLoaded(mod))
-				event.getToolTip().add(new TranslatableComponent("quark.misc.mod_disabled", mod).withStyle(ChatFormatting.GRAY));
-		}
+		if(!isEnabled(item))
+			event.getToolTip().add(new TranslatableComponent("quark.misc.mod_disabled", ITEMS.get(item)).withStyle(ChatFormatting.GRAY));
 	}
-	
+
+	public static boolean isEnabled(Item item) {
+		return item != null && !ITEMS.containsKey(item) || ModList.get().isLoaded(ITEMS.get(item));
+	}
+
 }

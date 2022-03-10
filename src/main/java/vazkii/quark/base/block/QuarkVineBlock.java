@@ -1,11 +1,5 @@
 package vazkii.quark.base.block;
 
-import java.util.Random;
-import java.util.function.BooleanSupplier;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -22,6 +16,11 @@ import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Random;
+import java.util.function.BooleanSupplier;
 
 public class QuarkVineBlock extends VineBlock implements IQuarkBlock {
 
@@ -56,7 +55,7 @@ public class QuarkVineBlock extends VineBlock implements IQuarkBlock {
 
 	@Override
 	public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
-		if(isEnabled() || group == CreativeModeTab.TAB_SEARCH)
+		if(isEnabled() || (group == CreativeModeTab.TAB_SEARCH && appearInSearch()))
 			super.fillItemCategory(group, items);
 	}
 

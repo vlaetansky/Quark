@@ -1,14 +1,8 @@
 package vazkii.quark.content.mobs.item;
 
-import java.util.UUID;
-import java.util.function.Consumer;
-
-import javax.annotation.Nonnull;
-
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Multimap;
-
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.Entity;
@@ -17,12 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterials;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IItemRenderProperties;
@@ -33,6 +22,10 @@ import vazkii.quark.base.client.handler.ModelHandler;
 import vazkii.quark.base.item.IQuarkItem;
 import vazkii.quark.base.module.QuarkModule;
 
+import javax.annotation.Nonnull;
+import java.util.UUID;
+import java.util.function.Consumer;
+
 public class ForgottenHatItem extends ArmorItem implements IQuarkItem {
 
 	private static final String TEXTURE = Quark.MOD_ID + ":textures/misc/forgotten_hat_worn.png";
@@ -41,7 +34,7 @@ public class ForgottenHatItem extends ArmorItem implements IQuarkItem {
 	private Multimap<Attribute, AttributeModifier> attributes;
 
 	public ForgottenHatItem(QuarkModule module) {
-		super(ArmorMaterials.LEATHER, EquipmentSlot.HEAD, 
+		super(ArmorMaterials.LEATHER, EquipmentSlot.HEAD,
 				new Item.Properties()
 				.stacksTo(1)
 				.durability(0)
@@ -66,15 +59,15 @@ public class ForgottenHatItem extends ArmorItem implements IQuarkItem {
 	@OnlyIn(Dist.CLIENT)
 	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
 		consumer.accept(new IItemRenderProperties() {
-			
+
 			@Override
 			public HumanoidModel<?> getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot,  HumanoidModel<?> _default) {
 				return ModelHandler.armorModel(ModelHandler.forgotten_hat, armorSlot);
 			}
-		
-		});	
+
+		});
 	}
-	
+
 	@Override
 	public boolean isEnchantable(@Nonnull ItemStack stack) {
 		return false;
@@ -98,13 +91,8 @@ public class ForgottenHatItem extends ArmorItem implements IQuarkItem {
 
 	@Override
 	public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
-		if(isEnabled() || group == CreativeModeTab.TAB_SEARCH)
+		if(isEnabled() || (group == CreativeModeTab.TAB_SEARCH && appearInSearch()))
 			super.fillItemCategory(group, items);
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return module != null && module.enabled;
 	}
 
 }

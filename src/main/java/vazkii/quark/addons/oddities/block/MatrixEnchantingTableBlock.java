@@ -1,13 +1,6 @@
 package vazkii.quark.addons.oddities.block;
 
-import java.util.Random;
-import java.util.function.BooleanSupplier;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.mojang.math.Vector3f;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -42,6 +35,11 @@ import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Random;
+import java.util.function.BooleanSupplier;
+
 public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements IQuarkBlock {
 
 	private final QuarkModule module;
@@ -63,7 +61,7 @@ public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements
 
 	@Override
 	public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
-		if(isEnabled() || group == CreativeModeTab.TAB_SEARCH)
+		if(isEnabled() || (group == CreativeModeTab.TAB_SEARCH && appearInSearch()))
 			super.fillItemCategory(group, items);
 	}
 

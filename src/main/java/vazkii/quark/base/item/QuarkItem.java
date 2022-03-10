@@ -1,15 +1,14 @@
 package vazkii.quark.base.item;
 
-import java.util.function.BooleanSupplier;
-
-import javax.annotation.Nonnull;
-
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import vazkii.arl.item.BasicItem;
 import vazkii.quark.base.client.handler.RequiredModTooltipHandler;
 import vazkii.quark.base.module.QuarkModule;
+
+import javax.annotation.Nonnull;
+import java.util.function.BooleanSupplier;
 
 public class QuarkItem extends BasicItem implements IQuarkItem {
 
@@ -19,14 +18,14 @@ public class QuarkItem extends BasicItem implements IQuarkItem {
 	public QuarkItem(String regname, QuarkModule module, Properties properties) {
 		super(regname, properties);
 		this.module = module;
-		
+
 		if(module.category.isAddon())
 			RequiredModTooltipHandler.map(this, module.category.requiredMod);
 	}
 
 	@Override
 	public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
-		if(isEnabled() || group == CreativeModeTab.TAB_SEARCH)
+		if(isEnabled() || (group == CreativeModeTab.TAB_SEARCH && appearInSearch()))
 			super.fillItemCategory(group, items);
 	}
 

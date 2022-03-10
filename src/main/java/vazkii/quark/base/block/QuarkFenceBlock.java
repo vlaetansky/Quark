@@ -28,7 +28,7 @@ public class QuarkFenceBlock extends FenceBlock implements IQuarkBlock {
 
     @Override
     public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
-        if(isEnabled() || group == CreativeModeTab.TAB_SEARCH)
+        if(isEnabled() || (group == CreativeModeTab.TAB_SEARCH && appearInSearch()))
             super.fillItemCategory(group, items);
     }
 

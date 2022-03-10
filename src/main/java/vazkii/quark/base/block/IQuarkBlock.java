@@ -1,9 +1,5 @@
 package vazkii.quark.base.block;
 
-import java.util.function.BooleanSupplier;
-
-import javax.annotation.Nullable;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -12,7 +8,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.common.extensions.IForgeBlock;
+import vazkii.quark.base.client.handler.RequiredModTooltipHandler;
 import vazkii.quark.base.module.QuarkModule;
+
+import javax.annotation.Nullable;
+import java.util.function.BooleanSupplier;
 
 /**
  * @author WireSegal
@@ -30,7 +30,11 @@ public interface IQuarkBlock extends IForgeBlock {
     default Block getBlock() {
     	return (Block) this;
     }
-    
+
+    default boolean appearInSearch() {
+        return this instanceof Block block && !RequiredModTooltipHandler.isEnabled(block.asItem());
+    }
+
     default boolean isEnabled() {
         QuarkModule module = getModule();
         return module != null && module.enabled && doesConditionApply();

@@ -1,7 +1,5 @@
 package vazkii.quark.content.building.block;
 
-import java.util.function.BooleanSupplier;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -19,6 +17,7 @@ import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nonnull;
+import java.util.function.BooleanSupplier;
 
 public class VariantLadderBlock extends LadderBlock implements IQuarkBlock {
 
@@ -52,13 +51,8 @@ public class VariantLadderBlock extends LadderBlock implements IQuarkBlock {
 
 	@Override
 	public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
-		if(isEnabled() || group == CreativeModeTab.TAB_SEARCH)
+		if(isEnabled() || (group == CreativeModeTab.TAB_SEARCH && appearInSearch()))
 			super.fillItemCategory(group, items);
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return module.enabled && doesConditionApply();
 	}
 
 	@Override
