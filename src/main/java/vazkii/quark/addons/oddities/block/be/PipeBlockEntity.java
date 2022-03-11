@@ -126,10 +126,12 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 				if(item.tick(this)) {
 					itemItr.remove();
 
-					if (item.valid)
-						passOut(item);
-					else {
-						dropItem(item.stack, lastFacing, true);
+					if (!level.isClientSide) {
+						if (item.valid)
+							passOut(item);
+						else {
+							dropItem(item.stack, lastFacing, true);
+						}
 					}
 				}
 			}
