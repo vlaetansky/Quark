@@ -66,7 +66,7 @@ public class IronRodBlock extends EndRodBlock implements ICollateralMover, IQuar
 
 	@Override
 	public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
-		if(isEnabled() || (group == CreativeModeTab.TAB_SEARCH && appearInSearch()))
+		if(isEnabled() || group == CreativeModeTab.TAB_SEARCH)
 			super.fillItemCategory(group, items);
 	}
 

@@ -40,7 +40,7 @@ public class QuarkSlabBlock extends SlabBlock implements IQuarkBlock, IBlockColo
 
 	@Override
 	public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
-		if(parent.isEnabled() || (group == CreativeModeTab.TAB_SEARCH && appearInSearch()))
+		if(parent.isEnabled() || group == CreativeModeTab.TAB_SEARCH)
 			super.fillItemCategory(group, items);
 	}
 

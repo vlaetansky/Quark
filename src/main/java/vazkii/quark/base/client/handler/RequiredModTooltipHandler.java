@@ -39,12 +39,11 @@ public class RequiredModTooltipHandler {
 		}
 
 		Item item = event.getItemStack().getItem();
-		if(!isEnabled(item))
-			event.getToolTip().add(new TranslatableComponent("quark.misc.mod_disabled", ITEMS.get(item)).withStyle(ChatFormatting.GRAY));
+		if(ITEMS.containsKey(item)) {
+			String mod = ITEMS.get(item);
+			if (ModList.get().isLoaded(mod)) {
+				event.getToolTip().add(new TranslatableComponent("quark.misc.mod_disabled", mod).withStyle(ChatFormatting.GRAY));
+			}
+		}
 	}
-
-	public static boolean isEnabled(Item item) {
-		return item != null && (!ITEMS.containsKey(item) || ModList.get().isLoaded(ITEMS.get(item)));
-	}
-
 }

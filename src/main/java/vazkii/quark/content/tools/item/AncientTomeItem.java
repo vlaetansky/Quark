@@ -54,7 +54,7 @@ public class AncientTomeItem extends QuarkItem {
 
 	@Override
 	public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
-		if (isEnabled() || (group == CreativeModeTab.TAB_SEARCH && appearInSearch())) {
+		if (isEnabled() || group == CreativeModeTab.TAB_SEARCH) {
 			if (group == CreativeModeTab.TAB_SEARCH || group.getEnchantmentCategories().length != 0) {
 				Registry.ENCHANTMENT.forEach(ench -> {
 					if (!AncientTomesModule.isInitialized() || AncientTomesModule.validEnchants.contains(ench)) {

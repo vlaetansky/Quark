@@ -1,7 +1,5 @@
 package vazkii.quark.base.item;
 
-import net.minecraft.world.item.Item;
-import vazkii.quark.base.client.handler.RequiredModTooltipHandler;
 import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nullable;
@@ -18,10 +16,6 @@ public interface IQuarkItem {
 
 	default boolean doesConditionApply() {
 		return true;
-	}
-
-	default boolean appearInSearch() {
-		return this instanceof Item item && RequiredModTooltipHandler.isEnabled(item);
 	}
 
 	default boolean isEnabled() {
