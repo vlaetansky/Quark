@@ -1,0 +1,386 @@
+{
+  "name": "quark:big_dungeon/rooms",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "quark:big_dungeon/rooms/4room_plain",
+        "processors": [
+          {
+            "processor_type": "quark:big_dungeon_chest"
+          },
+          {
+            "processor_type": "quark:big_dungeon_water"
+          },
+          {
+            "processor_type": "quark:big_dungeon_spawner"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "quark:big_dungeon/rooms/4room_trapped",
+        "processors": [
+          {
+            "processor_type": "quark:big_dungeon_chest"
+          },
+          {
+            "processor_type": "quark:big_dungeon_water"
+          },
+          {
+            "processor_type": "quark:big_dungeon_spawner"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "quark:big_dungeon/rooms/ascend_intersection",
+        "processors": [
+          {
+            "processor_type": "quark:big_dungeon_chest"
+          },
+          {
+            "processor_type": "quark:big_dungeon_water"
+          },
+          {
+            "processor_type": "quark:big_dungeon_spawner"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "quark:big_dungeon/rooms/ascend_ruined",
+        "processors": [
+          {
+            "processor_type": "quark:big_dungeon_chest"
+          },
+          {
+            "processor_type": "quark:big_dungeon_water"
+          },
+          {
+            "processor_type": "quark:big_dungeon_spawner"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "quark:big_dungeon/rooms/ascend_plain",
+        "processors": [
+          {
+            "processor_type": "quark:big_dungeon_chest"
+          },
+          {
+            "processor_type": "quark:big_dungeon_water"
+          },
+          {
+            "processor_type": "quark:big_dungeon_spawner"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "quark:big_dungeon/rooms/climb_parkour",
+        "processors": [
+          {
+            "processor_type": "quark:big_dungeon_chest"
+          },
+          {
+            "processor_type": "quark:big_dungeon_water"
+          },
+          {
+            "processor_type": "quark:big_dungeon_spawner"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "quark:big_dungeon/rooms/climb_redstone",
+        "processors": [
+          {
+            "processor_type": "quark:big_dungeon_chest"
+          },
+          {
+            "processor_type": "quark:big_dungeon_water"
+          },
+          {
+            "processor_type": "quark:big_dungeon_spawner"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "quark:big_dungeon/rooms/climb_plain",
+        "processors": [
+          {
+            "processor_type": "quark:big_dungeon_chest"
+          },
+          {
+            "processor_type": "quark:big_dungeon_water"
+          },
+          {
+            "processor_type": "quark:big_dungeon_spawner"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "quark:big_dungeon/rooms/double_hall_plain",
+        "processors": [
+          {
+            "processor_type": "quark:big_dungeon_chest"
+          },
+          {
+            "processor_type": "quark:big_dungeon_water"
+          },
+          {
+            "processor_type": "quark:big_dungeon_spawner"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "quark:big_dungeon/rooms/double_hall_silverfish",
+        "processors": [
+          {
+            "processor_type": "quark:big_dungeon_chest"
+          },
+          {
+            "processor_type": "quark:big_dungeon_water"
+          },
+          {
+            "processor_type": "quark:big_dungeon_spawner"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "quark:big_dungeon/rooms/laddered_bridge",
+        "processors": [
+          {
+            "processor_type": "quark:big_dungeon_chest"
+          },
+          {
+            "processor_type": "quark:big_dungeon_water"
+          },
+          {
+            "processor_type": "quark:big_dungeon_spawner"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "quark:big_dungeon/rooms/laddered_tnt",
+        "processors": [
+          {
+            "processor_type": "quark:big_dungeon_chest"
+          },
+          {
+            "processor_type": "quark:big_dungeon_water"
+          },
+          {
+            "processor_type": "quark:big_dungeon_spawner"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "quark:big_dungeon/rooms/laddered_plain",
+        "processors": [
+          {
+            "processor_type": "quark:big_dungeon_chest"
+          },
+          {
+            "processor_type": "quark:big_dungeon_water"
+          },
+          {
+            "processor_type": "quark:big_dungeon_spawner"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "quark:big_dungeon/rooms/triple_library",
+        "processors": [
+          {
+            "processor_type": "quark:big_dungeon_chest"
+          },
+          {
+            "processor_type": "quark:big_dungeon_water"
+          },
+          {
+            "processor_type": "quark:big_dungeon_spawner"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "quark:big_dungeon/rooms/triple_plain",
+        "processors": [
+          {
+            "processor_type": "quark:big_dungeon_chest"
+          },
+          {
+            "processor_type": "quark:big_dungeon_water"
+          },
+          {
+            "processor_type": "quark:big_dungeon_spawner"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "quark:big_dungeon/rooms/connector_base",
+        "processors": [
+          {
+            "processor_type": "quark:big_dungeon_chest"
+          },
+          {
+            "processor_type": "quark:big_dungeon_water"
+          },
+          {
+            "processor_type": "quark:big_dungeon_spawner"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "quark:big_dungeon/rooms/connector_bush",
+        "processors": [
+          {
+            "processor_type": "quark:big_dungeon_chest"
+          },
+          {
+            "processor_type": "quark:big_dungeon_water"
+          },
+          {
+            "processor_type": "quark:big_dungeon_spawner"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "quark:big_dungeon/rooms/connector_fountain",
+        "processors": [
+          {
+            "processor_type": "quark:big_dungeon_chest"
+          },
+          {
+            "processor_type": "quark:big_dungeon_water"
+          },
+          {
+            "processor_type": "quark:big_dungeon_spawner"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "quark:big_dungeon/rooms/connector_melon",
+        "processors": [
+          {
+            "processor_type": "quark:big_dungeon_chest"
+          },
+          {
+            "processor_type": "quark:big_dungeon_water"
+          },
+          {
+            "processor_type": "quark:big_dungeon_spawner"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "quark:big_dungeon/rooms/connector_room",
+        "processors": [
+          {
+            "processor_type": "quark:big_dungeon_chest"
+          },
+          {
+            "processor_type": "quark:big_dungeon_water"
+          },
+          {
+            "processor_type": "quark:big_dungeon_spawner"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}
