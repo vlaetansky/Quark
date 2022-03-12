@@ -159,7 +159,7 @@ public class ItemSharingModule extends QuarkModule {
 			int shift = mc.font.width(before);
 
 			if (a > 0) {
-				alphaValue = a;
+				alphaValue = a; // TODO LOW PRIO blocks dont fade out properly
 
 				PoseStack poseStack = RenderSystem.getModelViewStack();
 
@@ -167,8 +167,8 @@ public class ItemSharingModule extends QuarkModule {
 
 				poseStack.mulPoseMatrix(pose.last().pose());
 
-				poseStack.translate(shift + x - 2, y - 2, 0);
-				poseStack.scale(0.65f, 0.65f, 0.65f);
+				poseStack.translate(shift + x, y, 0);
+				poseStack.scale(0.5f, 0.5f, 0.5f);
 				mc.getItemRenderer().renderGuiItem(stack, 0, 0);
 				poseStack.popPose();
 
