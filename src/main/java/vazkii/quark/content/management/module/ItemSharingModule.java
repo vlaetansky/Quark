@@ -39,6 +39,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ServerChatEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -137,7 +138,7 @@ public class ItemSharingModule extends QuarkModule {
 		chatY = event.getPosY();
 	}
 
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.LOW)
 	@OnlyIn(Dist.CLIENT)
 	public void renderSymbols(RenderGameOverlayEvent.Post event) {
 		if (!renderItemsInChat)
