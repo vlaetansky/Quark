@@ -24,7 +24,7 @@ public interface IBiomeConfig extends IConfigType {
 
 		Optional<ResourceKey<Biome>> optRk = either.left();
 		if(optRk.isPresent())
-			return canSpawn(optRk.get().getRegistryName());
+			return canSpawn(optRk.get().location());
 
 		Optional<Biome> optBm = either.right();
 		return optBm.filter(this::canSpawn).isPresent();
