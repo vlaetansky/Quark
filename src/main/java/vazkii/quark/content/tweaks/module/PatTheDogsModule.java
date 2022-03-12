@@ -9,19 +9,16 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.GlowSquid;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
-import net.minecraft.world.entity.animal.horse.Horse;
-import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.monster.Strider;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.AnimalTameEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
@@ -119,15 +116,16 @@ public class PatTheDogsModule extends QuarkModule {
 							sound = SoundEvents.TURTLE_AMBIENT_LAND;
 						}  else if (living instanceof Player pettee) {
 							var uuid = pettee.getStringUUID();
-							if (uuid.equals("a2ce9382-2518-4752-87b2-c6a5c97f173e")) {
-								// petra_the_kat
-								sound = SoundEvents.NOTE_BLOCK_BIT;
-								pitchCenter = 1.5f;
-							} else if (uuid.equals("29a10dc6-a201-4993-80d8-c847212bc92b") || uuid.equals("d30d8e38-6f93-4d96-968d-dd6ec5596941")) {
-								// MacyMacerator and Falkory220
-								sound = SoundEvents.CAT_PURR;
-								pitchCenter = 1.4f;
-							}
+							sound = switch (uuid) {
+								case "a2ce9382-2518-4752-87b2-c6a5c97f173e" -> // petra_the_kat
+										QuarkSounds.PET_DEVICE;
+								case "29a10dc6-a201-4993-80d8-c847212bc92b", // MacyMacerator
+										"d30d8e38-6f93-4d96-968d-dd6ec5596941" -> // Falkory220
+										QuarkSounds.PET_NEKO;
+								case "458391f5-6303-4649-b416-e4c0d18f837a" -> // yrsegal
+										QuarkSounds.PET_WIRE;
+								default -> null;
+							};
 						}
 						if (sound != null) {
 							living.playSound(sound, 1F, pitchCenter + (float) (Math.random() - 0.5) * 0.5F);
