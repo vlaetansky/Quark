@@ -3,6 +3,7 @@ package vazkii.quark.base.client.handler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -13,6 +14,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import vazkii.quark.base.Quark;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @EventBusSubscriber(modid = Quark.MOD_ID, value = Dist.CLIENT)
@@ -27,6 +29,13 @@ public class RequiredModTooltipHandler {
 
 	public static void map(Block block, String mod) {
 		BLOCKS.put(block, mod);
+	}
+
+	public static List<ItemStack> disabledItems() {
+		return ITEMS.entrySet().stream()
+				.filter((entry) -> !ModList.get().isLoaded(entry.getValue()))
+				.map((entry) -> new ItemStack(entry.getKey()))
+				.toList();
 	}
 
 	@SubscribeEvent
