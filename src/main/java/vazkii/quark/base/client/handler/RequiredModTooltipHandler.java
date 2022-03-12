@@ -41,7 +41,7 @@ public class RequiredModTooltipHandler {
 		Item item = event.getItemStack().getItem();
 		if(ITEMS.containsKey(item)) {
 			String mod = ITEMS.get(item);
-			if (ModList.get().isLoaded(mod)) {
+			if (!ModList.get().isLoaded(mod)) {
 				event.getToolTip().add(new TranslatableComponent("quark.misc.mod_disabled", mod).withStyle(ChatFormatting.GRAY));
 			}
 		}
