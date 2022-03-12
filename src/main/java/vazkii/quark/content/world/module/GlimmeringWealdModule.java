@@ -32,6 +32,7 @@ import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.base.handler.UndergroundBiomeHandler;
+import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.ModuleLoader;
@@ -71,6 +72,9 @@ public class GlimmeringWealdModule extends QuarkModule {
 		glow_shroom_block = new HugeGlowShroomBlock("glow_shroom_block", this, true);
 		glow_shroom_stem = new HugeGlowShroomBlock("glow_shroom_stem", this, false);
 		glow_shroom_ring = new GlowShroomRingBlock(this);
+
+		VariantHandler.addFlowerPot(glow_lichen_growth, "glow_lichen_growth", prop -> prop.lightLevel((state) -> 8));
+		VariantHandler.addFlowerPot(glow_shroom, "glow_shroom", prop -> prop.lightLevel((state) -> 10));
 
 		makeFeatures();
 
