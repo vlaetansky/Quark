@@ -182,7 +182,8 @@ public class EnhancedLaddersModule extends QuarkModule {
 			return;
 
 		Player player = event.getPlayer();
-		if(player.onClimbable() && player.level.getBlockState(player.blockPosition()).getBlock() != Blocks.SCAFFOLDING
+		if(player.onClimbable() && !player.getAbilities().flying &&
+				player.level.getBlockState(player.blockPosition()).getBlock() != Blocks.SCAFFOLDING
 				&& Minecraft.getInstance().screen != null && !(player.zza == 0 && player.getXRot() > 70)) {
 			Input input = event.getInput();
 			if(input != null)
