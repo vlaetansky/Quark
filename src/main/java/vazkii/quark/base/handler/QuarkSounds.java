@@ -1,13 +1,12 @@
 package vazkii.quark.base.handler;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.registries.GameData;
 import vazkii.arl.util.RegistryHelper;
+
+import java.util.List;
 
 /**
  * @author WireSegal
@@ -24,12 +23,12 @@ public class QuarkSounds {
 	public static final SoundEvent ENTITY_STONELING_DIE = register("entity.stoneling.die");
 	public static final SoundEvent ENTITY_STONELING_CRY = register("entity.stoneling.cry");
 	public static final SoundEvent ENTITY_STONELING_MICHAEL = register("entity.stoneling.michael");
-	
+
 	public static final SoundEvent ENTITY_PICKARANG_THROW = register("entity.pickarang.throw");
 	public static final SoundEvent ENTITY_PICKARANG_CLANK = register("entity.pickarang.clank");
 	public static final SoundEvent ENTITY_PICKARANG_SPARK = register("entity.pickarang.spark");
 	public static final SoundEvent ENTITY_PICKARANG_PICKUP = register("entity.pickarang.pickup");
-	
+
 	public static final SoundEvent ENTITY_FOXHOUND_IDLE = register("entity.foxhound.ambient");
 	public static final SoundEvent ENTITY_FOXHOUND_DIE = register("entity.foxhound.death");
 	public static final SoundEvent ENTITY_FOXHOUND_GROWL = register("entity.foxhound.growl");
@@ -42,12 +41,12 @@ public class QuarkSounds {
 	public static final SoundEvent ENTITY_FROG_DIE = register("entity.frog.die");
 	public static final SoundEvent ENTITY_FROG_HURT = register("entity.frog.hurt");
 	public static final SoundEvent ENTITY_FROG_IDLE = register("entity.frog.idle");
-	
+
 	public static final SoundEvent ENTITY_FROG_SHEAR = register("entity.frog.shear");
 	public static final SoundEvent ENTITY_CRAB_DIE = register("entity.crab.die");
 	public static final SoundEvent ENTITY_CRAB_HURT = register("entity.crab.hurt");
 	public static final SoundEvent ENTITY_CRAB_IDLE = register("entity.crab.idle");
-	
+
 	public static final SoundEvent ENTITY_TORETOISE_DIE = register("entity.toretoise.die");
 	public static final SoundEvent ENTITY_TORETOISE_HURT = register("entity.toretoise.hurt");
 	public static final SoundEvent ENTITY_TORETOISE_IDLE = register("entity.toretoise.idle");
@@ -57,7 +56,7 @@ public class QuarkSounds {
 	public static final SoundEvent ENTITY_TORETOISE_REGROW = register("entity.toretoise.regrow");
 	public static final SoundEvent ENTITY_SOUL_BEAD_IDLE = register("entity.soul_bead.idle");
 	public static final SoundEvent BLOCK_MONSTER_BOX_GROWL = register("block.monster_box.growl");
-	
+
 	public static final SoundEvent BLOCK_PIPE_SHOOT = register("block.pipe.shoot");
 	public static final SoundEvent BLOCK_PIPE_PICKUP = register("block.pipe.pickup");
 	public static final SoundEvent BLOCK_PIPE_SHOOT_LENNY = register("block.pipe.shoot.lenny");
@@ -65,6 +64,10 @@ public class QuarkSounds {
 
 	public static final SoundEvent ITEM_CAMERA_SHUTTER = register("item.camera.shutter");
 	public static final SoundEvent ITEM_SOUL_POWDER_SPAWN = register("item.soul_powder.spawn");
+
+	public static final SoundEvent PET_DEVICE = register("pet.device");
+	public static final SoundEvent PET_NEKO = register("pet.neko");
+	public static final SoundEvent PET_WIRE = register("pet.wire");
 
 	public static final SoundEvent AMBIENT_DRIPS = register("ambient.drips");
 	public static final SoundEvent AMBIENT_OCEAN = register("ambient.ocean");
@@ -74,7 +77,7 @@ public class QuarkSounds {
 	public static final SoundEvent AMBIENT_CLOCK = register("ambient.clock");
 	public static final SoundEvent AMBIENT_CRICKETS = register("ambient.crickets");
 	public static final SoundEvent AMBIENT_CHATTER = register("ambient.chatter");
-	
+
 	public static final SoundEvent MUSIC_ENDERMOSH = register("music.endermosh");
 	public static final SoundEvent MUSIC_GLIMMERING_WEALD = register("music.glimmering_weald");
 
