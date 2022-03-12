@@ -66,6 +66,8 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
+import static vazkii.quark.content.mobs.ai.FindPlaceToSleepGoal.Target.*;
+
 public class Foxhound extends Wolf implements Enemy {
 
 	public static final ResourceLocation FOXHOUND_LOOT_TABLE = new ResourceLocation("quark", "entities/foxhound");
@@ -221,12 +223,13 @@ public class Foxhound extends Wolf implements Enemy {
 		this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.0D, true));
 		this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
 		this.goalSelector.addGoal(7, new BreedGoal(this, 1.0D));
-		this.goalSelector.addGoal(8, new FindPlaceToSleepGoal(this, 0.8D, true));
-		this.goalSelector.addGoal(9, new FindPlaceToSleepGoal(this, 0.8D, false));
-		this.goalSelector.addGoal(10, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-		this.goalSelector.addGoal(11, new BegGoal(this, 8.0F));
-		this.goalSelector.addGoal(12, new LookAtPlayerGoal(this, Player.class, 8.0F));
-		this.goalSelector.addGoal(12, new RandomLookAroundGoal(this));
+		this.goalSelector.addGoal(8, new FindPlaceToSleepGoal(this, 0.8D, LIT_FURNACE));
+		this.goalSelector.addGoal(9, new FindPlaceToSleepGoal(this, 0.8D, FURNACE));
+		this.goalSelector.addGoal(10, new FindPlaceToSleepGoal(this, 0.8D, GLOWING));
+		this.goalSelector.addGoal(11, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+		this.goalSelector.addGoal(12, new BegGoal(this, 8.0F));
+		this.goalSelector.addGoal(13, new LookAtPlayerGoal(this, Player.class, 8.0F));
+		this.goalSelector.addGoal(14, new RandomLookAroundGoal(this));
 		this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
 		this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
 		this.targetSelector.addGoal(3, new HurtByTargetGoal(this).setAlertOthers());

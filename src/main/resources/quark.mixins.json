@@ -32,6 +32,7 @@
     "TrapDoorBlockMixin"
   ],
   "client": [
+    "client.AbstractCandleBlockMixin",
     "client.BannerItemMixin",
     "client.BeaconTileEntityRendererMixin",
     "client.ContainerScreenMixin",
@@ -46,7 +47,7 @@
     "client.RenderBuffersMixin",
     "client.ScreenMixin",
     "client.ThrownTridentRendererMixin",
-    "client.AbstractCandleBlockMixin"
+    "client.ChatComponentMixin"
   ],
   "injectors": {
     "defaultRequire": 1

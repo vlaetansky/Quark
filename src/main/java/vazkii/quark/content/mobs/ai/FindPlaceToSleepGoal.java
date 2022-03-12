@@ -10,8 +10,6 @@
  */
 package vazkii.quark.content.mobs.ai;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.world.level.LevelReader;
@@ -21,17 +19,19 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import vazkii.quark.content.mobs.entity.Foxhound;
 
+import javax.annotation.Nonnull;
+
 public class FindPlaceToSleepGoal extends MoveToBlockGoal {
 	private final Foxhound foxhound;
 
-	private final boolean furnaceOnly;
+	private final Target target;
 
 	private boolean hadSlept = false;
 
-	public FindPlaceToSleepGoal(Foxhound foxhound, double speed, boolean furnaceOnly) {
+	public FindPlaceToSleepGoal(Foxhound foxhound, double speed, Target target) {
 		super(foxhound, speed, 8);
 		this.foxhound = foxhound;
-		this.furnaceOnly = furnaceOnly;
+		this.target = target;
 	}
 
 	@Override
@@ -89,10 +89,17 @@ public class FindPlaceToSleepGoal extends MoveToBlockGoal {
 			BlockState state = world.getBlockState(pos);
 			BlockEntity tileentity = world.getBlockEntity(pos);
 
-			if(furnaceOnly)
-				return tileentity instanceof FurnaceBlockEntity;
-
-			return state.getLightEmission(world, pos) > 2;
+			return switch (target) {
+				case LIT_FURNACE -> tileentity instanceof FurnaceBlockEntity && state.getLightEmission(world, pos) > 2;
+				case FURNACE -> tileentity instanceof FurnaceBlockEntity && state.getLightEmission(world, pos) <= 2;
+				case GLOWING -> state.getLightEmission(world, pos) > 2;
+			};
 		}
+	}
+
+	public enum Target {
+		LIT_FURNACE,
+		FURNACE,
+		GLOWING
 	}
 }

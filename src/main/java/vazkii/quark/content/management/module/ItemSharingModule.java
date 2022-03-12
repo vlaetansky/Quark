@@ -13,11 +13,8 @@ package vazkii.quark.content.management.module;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.GuiMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
@@ -27,7 +24,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.FormattedCharSequence;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -35,11 +31,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ClientChatEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ServerChatEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -56,6 +50,26 @@ public class ItemSharingModule extends QuarkModule {
 
 	@Config
 	public static boolean renderItemsInChat = true;
+
+	@OnlyIn(Dist.CLIENT)
+	public static void renderItemForMessage(PoseStack poseStack, FormattedCharSequence sequence, float x, float y, int color) {
+		if (!ModuleLoader.INSTANCE.isModuleEnabled(ItemSharingModule.class) || !renderItemsInChat)
+			return;
+
+		Minecraft mc = Minecraft.getInstance();
+
+		StringBuilder before = new StringBuilder();
+
+		sequence.accept((counter_, style, character) -> {
+			String sofar = before.toString();
+			if (sofar.endsWith("    ")) {
+				render(mc, poseStack, sofar.substring(0, sofar.length() - 3), x, y, style, color);
+				return false;
+			}
+			before.append((char) character);
+			return true;
+		});
+	}
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
@@ -112,8 +126,6 @@ public class ItemSharingModule extends QuarkModule {
 
 	}
 
-	private static int chatX, chatY;
-
 	public static MutableComponent createStackComponent(ItemStack stack, MutableComponent component) {
 		if (!ModuleLoader.INSTANCE.isModuleEnabled(ItemSharingModule.class) || !renderItemsInChat)
 			return component;
@@ -132,52 +144,9 @@ public class ItemSharingModule extends QuarkModule {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	@SubscribeEvent
-	public void getChatPos(RenderGameOverlayEvent.Chat event) {
-		chatX = event.getPosX();
-		chatY = event.getPosY();
-	}
+	private static void render(Minecraft mc, PoseStack pose, String before, float x, float y, Style style, int color) {
+		float a = (color >> 24 & 255) / 255.0F;
 
-	@SubscribeEvent(priority = EventPriority.LOW)
-	@OnlyIn(Dist.CLIENT)
-	public void renderSymbols(RenderGameOverlayEvent.Post event) {
-		if (!renderItemsInChat)
-			return;
-
-		Minecraft mc = Minecraft.getInstance();
-		Gui gameGui = mc.gui;
-		ChatComponent chatGui = gameGui.getChat();
-		if (event.getType() == RenderGameOverlayEvent.ElementType.CHAT) {
-			int updateCounter = gameGui.getGuiTicks();
-			List<GuiMessage<FormattedCharSequence>> lines = chatGui.trimmedMessages;
-			int shift = chatGui.chatScrollbarPos;
-
-			int idx = shift;
-
-			while (idx < lines.size() && (idx - shift) < chatGui.getLinesPerPage()) {
-				GuiMessage<FormattedCharSequence> line = lines.get(idx);
-				StringBuilder before = new StringBuilder();
-
-				FormattedCharSequence lineProperties = line.getMessage();
-
-				int captureIndex = idx;
-				lineProperties.accept((counter_, style, character) -> {
-					String sofar = before.toString();
-					if (sofar.endsWith("    ")) {
-						render(mc, event.getMatrixStack(), chatGui, updateCounter, sofar.substring(0, sofar.length() - 3), line, captureIndex - shift, style);
-						return false;
-					}
-					before.append((char) character);
-					return true;
-				});
-
-				idx++;
-			}
-		}
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	private static void render(Minecraft mc, PoseStack pose, ChatComponent chatGui, int updateCounter, String before, GuiMessage<FormattedCharSequence> line, int lineHeight, Style style) {
 		HoverEvent hoverEvent = style.getHoverEvent();
 		if (hoverEvent != null && hoverEvent.getAction() == HoverEvent.Action.SHOW_ITEM) {
 			HoverEvent.ItemStackInfo contents = hoverEvent.getValue(HoverEvent.Action.SHOW_ITEM);
@@ -187,35 +156,29 @@ public class ItemSharingModule extends QuarkModule {
 			if (stack.isEmpty())
 				stack = new ItemStack(Blocks.BARRIER); // for invalid icon
 
-			int timeSinceCreation = updateCounter - line.getAddedTime();
-			if (chatGui.isChatFocused()) timeSinceCreation = 0;
+			int shift = mc.font.width(before);
 
-			if (timeSinceCreation < 200) {
-				float chatOpacity = (float) mc.options.chatOpacity * 0.9f + 0.1f;
-				float fadeOut = Mth.clamp((1 - timeSinceCreation / 200f) * 10, 0, 1);
-				float alpha = fadeOut * fadeOut * chatOpacity;
+			if (a > 0) {
+				alphaValue = a;
 
-				int x = chatX + 3 + mc.font.width(before);
-				int y = chatY - mc.font.lineHeight * lineHeight;
+				PoseStack poseStack = RenderSystem.getModelViewStack();
 
-				if (alpha > 0) {
-					alphaValue = alpha; // TODO LOW PRIO blocks dont fade out properly
+				poseStack.pushPose();
 
-					PoseStack modelviewPose = RenderSystem.getModelViewStack();
+				poseStack.mulPoseMatrix(pose.last().pose());
 
-					modelviewPose.pushPose();
-					modelviewPose.translate(x - 2, y - 2, 0);
-					modelviewPose.scale(0.65f, 0.65f, 0.65f);
-					mc.getItemRenderer().renderGuiItem(stack, 0, 0);
-					modelviewPose.popPose();
+				poseStack.translate(shift + x - 2, y - 2, 0);
+				poseStack.scale(0.65f, 0.65f, 0.65f);
+				mc.getItemRenderer().renderGuiItem(stack, 0, 0);
+				poseStack.popPose();
 
-					RenderSystem.applyModelViewMatrix();
+				RenderSystem.applyModelViewMatrix();
 
-					alphaValue = 1F;
-				}
+				alphaValue = 1F;
 			}
 		}
 	}
+
 
 	// used in a mixin because rendering overrides are cursed by necessity hahayes
 	public static float alphaValue = 1F;
