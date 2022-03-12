@@ -955,7 +955,6 @@
 	"block.quark.tuff_wall": "Tuff Wall",
 	"block.quark.tuff_bricks_wall": "Polished Tuff Brick Wall",
 	"block.quark.iron_pillar": "Iron Pillar",
-	"block.quark.iron_ladder": "Iron Ladder",
 	"block.quark.deepslate_furnace": "Deepslate Furnace",
 	"block.quark.blackstone_furnace": "Blackstone Furnace",
 	"block.quark.glow_lichen_growth": "Glow Lichen Growth",
@@ -1063,5 +1062,7 @@
 	"block.quark.potted_vine": "Potted Vines",
 	"block.quark.potted_weeping_vines": "Potted Weeping Vines",
 	"block.quark.potted_wheat": "Potted Wheat",
-	"block.quark.potted_yellow_blossom_sapling": "Potted Sunny Blossom Sapling"
+	"block.quark.potted_yellow_blossom_sapling": "Potted Sunny Blossom Sapling",
+
+	"biome.quark.glimmering_weald": "Glimmering Weald"
 }
