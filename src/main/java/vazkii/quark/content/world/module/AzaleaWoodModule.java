@@ -1,9 +1,6 @@
 package vazkii.quark.content.world.module;
 
-import com.mojang.datafixers.util.Either;
-
 import net.minecraft.data.worldgen.features.TreeFeatures;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
@@ -27,11 +24,16 @@ public class AzaleaWoodModule extends QuarkModule {
 
 	@Override
 	public void enabledStatusChanged(boolean firstLoad, boolean oldStatus, boolean newStatus) { // TODO does this work
-		Either<ResourceKey<ConfiguredFeature<TreeConfiguration, ?>>, ConfiguredFeature<TreeConfiguration, ?>> either = TreeFeatures.AZALEA_TREE.unwrap();
-		if(either.right().isPresent()) {
-			ConfiguredFeature<TreeConfiguration, ?> configured = either.right().get();
+		ConfiguredFeature<TreeConfiguration, ?> configured = null;
+		try {
+			configured = TreeFeatures.AZALEA_TREE.value();
+		} catch(IllegalStateException e) {
+			e.printStackTrace();
+		}
+		
+		if(configured != null) {
 			TreeConfiguration config = configured.config();
-
+	
 			if(newStatus)
 				config.trunkProvider = BlockStateProvider.simple(woodSet.log);
 			else if(!firstLoad)
