@@ -15,14 +15,31 @@ public class GeneralConfig {
 			"com.progwml6.ironchest.client.screen.IronChestScreen",
 			"vazkii.quark.addons.oddities.client.screen.CrateScreen",
 			"vazkii.quark.addons.oddities.client.screen.BackpackInventoryScreen"
-	);
-	
+			);
+
+	private static final List<String> STATIC_DENIED_SCREENS = Lists.newArrayList(
+			"blusunrize.immersiveengineering.client.gui.CraftingTableScreen",
+			"com.tfar.craftingstation.client.CraftingStationScreen",
+			"com.refinedmods.refinedstorage.screen.grid.GridScreen", 
+			"appeng.client.gui.me.items.CraftingTermScreen", 
+			"appeng.client.gui.me.items.PatternTermScreen",
+			"com.blakebr0.extendedcrafting.client.screen.EliteTableScreen",
+			"com.blakebr0.extendedcrafting.client.screen.EliteAutoTableScreen",
+			"com.blakebr0.extendedcrafting.client.screen.UltimateTableScreen",
+			"com.blakebr0.extendedcrafting.client.screen.UltimateAutoTableScreen",
+			"me.desht.modularrouters.client.gui.filter.GuiFilterScreen",
+			"com.resourcefulbees.resourcefulbees.client.gui.screen.CentrifugeScreen",
+			"com.resourcefulbees.resourcefulbees.client.gui.screen.MechanicalCentrifugeScreen",
+			"com.resourcefulbees.resourcefulbees.client.gui.screen.CentrifugeMultiblockScreen",
+			"com.refinedmods.refinedstorage.screen.FilterScreen"
+			);
+
 	@Config(name = "Enable 'q' Button")
 	public static boolean enableQButton = true;
 
 	@Config(name = "'q' Button on the Right")
 	public static boolean qButtonOnRight = false;
-	
+
 	@Config
 	public static boolean disableQMenuEffects = false;
 
@@ -36,7 +53,7 @@ public class GeneralConfig {
 	@Config	
 	@Config.Min(value = 0, exclusive = true)
 	public static int pistonPushLimit = 12;
-	
+
 	@Config(description =  "How many advancements deep you can see in the advancement screen. Vanilla is 2.")
 	@Config.Min(value = 0, exclusive = true)
 	public static int advancementVisibilityDepth = 2;
@@ -55,23 +72,31 @@ public class GeneralConfig {
 
 	@Config(description = "A list of screens that can accept quark's buttons. Use \"Print Screen Classnames\" to find the names of any others you'd want to add.")
 	private static List<String> allowedScreens = Lists.newArrayList();
+	
+	@Config(description = "If set to true, the 'Allowed Screens' option will work as a Blacklist rather than a Whitelist. WARNING: Use at your own risk as some mods may not support this.")
+	private static boolean useScreenListBlacklist = false;
 
 	@Config(description = "Set to true to make the quark big worldgen features such as stone clusters generate as spheres rather than unique shapes. It's faster, but won't look as cool")
 	public static boolean useFastWorldgen = false;
-	
+
 	@Config(description = "Enables quark network profiling features. Do not enable this unless requested to.")
 	public static boolean enableNetworkProfiling = false;
 
 	private GeneralConfig() {
 		// NO-OP
 	}
-	
+
 	public static boolean isScreenAllowed(Object screen) {
 		String clazz = screen.getClass().getName();
 		if(clazz.startsWith("net.minecraft."))
 			return true;
+
+		if(STATIC_ALLOWED_SCREENS.contains(clazz))
+			return true;
+		if(STATIC_DENIED_SCREENS.contains(clazz))
+			return false;
 		
-		return STATIC_ALLOWED_SCREENS.contains(clazz) || allowedScreens.contains(clazz);
+		return allowedScreens.contains(clazz) != useScreenListBlacklist;
 	}
 
 }
