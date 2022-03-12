@@ -54,10 +54,6 @@ public class BigDungeonStructure extends StructureFeature<JigsawConfiguration> {
 		ChunkPos chunkpos = context.chunkPos();
         int i = chunkpos.getMiddleBlockX();
         int j = chunkpos.getMiddleBlockZ();
-//        int k = 0;
-//        Holder<Biome> holder = context.chunkGenerator().getNoiseBiome(QuartPos.fromBlock(i), QuartPos.fromBlock(k), QuartPos.fromBlock(j));
-//		if(!BigDungeonModule.biomeConfig.canSpawn(holder))
-//			return false;
 		
 		WorldgenRandom worldgenrandom = new WorldgenRandom(new LegacyRandomSource(0L));
 		worldgenrandom.setSeed((long)(i ^ j << 4) ^ context.seed());
@@ -87,7 +83,7 @@ public class BigDungeonStructure extends StructureFeature<JigsawConfiguration> {
 				context.chunkPos(),
 				newConfig,
 				context.heightAccessor(),
-				context.validBiome(),
+				BigDungeonModule.biomeConfig::canSpawn,
 				context.structureManager(),
 				context.registryAccess()
 				);
