@@ -13,6 +13,7 @@ import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.Climate.ParameterPoint;
 import net.minecraft.world.level.biome.OverworldBiomeBuilder;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 import terrablender.api.Region;
 import terrablender.api.RegionType;
 import terrablender.api.Regions;
@@ -40,16 +41,16 @@ public class TerraBlenderIntegration implements Supplier<UndergroundBiomeHandler
 		}
 
 		@Override
-	    public void addBiomes(Registry<Biome> registry, Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> mapper) {
+		public void addBiomes(Registry<Biome> registry, Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> mapper) {
 			boolean didAnything = false;
-			
+
 			for(UndergroundBiomeSkeleton skeleton : proxy.skeletons)
 				if(skeleton.module().enabled) {
 					ResourceKey<Biome> resourceKey = ResourceKey.create(Registry.BIOME_REGISTRY, skeleton.biome());
 					mapper.accept(Pair.of(skeleton.climate(), resourceKey));
 					didAnything = true;
 				}
-			
+
 			if(didAnything)
 				addModifiedVanillaOverworldBiomes(mapper, b -> {});
 		}
@@ -59,9 +60,13 @@ public class TerraBlenderIntegration implements Supplier<UndergroundBiomeHandler
 	class TBProxy extends UndergroundBiomeHandler.Proxy {
 
 		@Override
-		public void init(FMLCommonSetupEvent event) {
+		public void init(ParallelDispatchEvent event) {
 			event.enqueueWork(() -> {
-				Regions.register(new QuarkRegion());
+				for(UndergroundBiomeSkeleton skeleton : skeletons)
+					if(skeleton.module().enabled) {
+						Regions.register(new QuarkRegion());
+						return;
+					}
 			});
 		}
 

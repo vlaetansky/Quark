@@ -14,14 +14,14 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.OverworldBiomeBuilder;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 import vazkii.quark.base.module.QuarkModule;
 
 public final class UndergroundBiomeHandler {
 
 	private static Proxy proxy = null;
 
-	public static void init(FMLCommonSetupEvent event) {
+	public static void init(ParallelDispatchEvent event) {
 		proxy().init(event);
 	}
 
@@ -58,7 +58,7 @@ public final class UndergroundBiomeHandler {
 
 		public List<UndergroundBiomeSkeleton> skeletons = new ArrayList<>();
 
-		public void init(FMLCommonSetupEvent event) {
+		public void init(ParallelDispatchEvent event) {
 			// NO-OP
 		}
 

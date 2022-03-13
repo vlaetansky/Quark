@@ -66,7 +66,6 @@ public class CommonProxy {
 		initContributorRewards();
 
 		WoodSetHandler.setup(event);
-		UndergroundBiomeHandler.init(event);
 	}
 	
 	public void loadComplete(FMLLoadCompleteEvent event) {
@@ -74,6 +73,7 @@ public class CommonProxy {
 		
 		WorldGenHandler.loadComplete(event);
 		FuelHandler.addAllWoods();
+		UndergroundBiomeHandler.init(event);
 	}
 	
 	public void configChanged(ModConfigEvent event) {
