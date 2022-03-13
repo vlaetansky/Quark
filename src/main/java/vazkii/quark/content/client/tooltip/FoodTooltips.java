@@ -30,6 +30,15 @@ import java.util.List;
 
 public class FoodTooltips {
 
+	private static boolean isPoison(FoodProperties food) {
+		for (Pair<MobEffectInstance, Float> effect : food.getEffects()) {
+			if (effect.getFirst() != null && effect.getFirst().getEffect() != null && effect.getFirst().getEffect().getCategory() == MobEffectCategory.HARMFUL) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	@OnlyIn(Dist.CLIENT)
 	public static void makeTooltip(RenderTooltipEvent.GatherComponents event, boolean showFood, boolean showSaturation) {
 		ItemStack stack = event.getItemStack();
@@ -57,7 +66,9 @@ public class FoodTooltips {
 						saturationSimplified = 4;
 				}
 
-				Component saturationText = new TranslatableComponent("quark.misc.saturation" + saturationSimplified).withStyle(ChatFormatting.GRAY);
+				String prefix = isPoison(food) ? "quark.misc.bad_saturation" : "quark.misc.saturation";
+
+				Component saturationText = new TranslatableComponent(prefix + saturationSimplified).withStyle(ChatFormatting.GRAY);
 				List<Either<FormattedText, TooltipComponent>> tooltip = event.getTooltipElements();
 
 				if (tooltip.isEmpty()) {
@@ -96,13 +107,7 @@ public class FoodTooltips {
 					if (pips == 0)
 						return;
 
-					boolean poison = false;
-					for (Pair<MobEffectInstance, Float> effect : food.getEffects()) {
-						if (effect.getFirst() != null && effect.getFirst().getEffect() != null && effect.getFirst().getEffect().getCategory() == MobEffectCategory.HARMFUL) {
-							poison = true;
-							break;
-						}
-					}
+					boolean poison = isPoison(food);
 
 					int count = (int) Math.ceil((double) pips / ImprovedTooltipsModule.foodDivisor);
 					boolean fract = pips % 2 != 0;
