@@ -1,7 +1,12 @@
 package vazkii.quark.content.management.module;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -9,18 +14,18 @@ import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ElytraItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -32,12 +37,17 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 
-@LoadModule(category = ModuleCategory.MANAGEMENT)
+import java.util.List;
+
+@LoadModule(category = ModuleCategory.MANAGEMENT, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class ExpandedItemInteractionsModule extends QuarkModule {
 
-	@Config public static boolean enableArmorInteraction = true;
-	@Config public static boolean enableShulkerBoxInteraction = true;
-	@Config public static boolean enableLavaInteraction = true;
+	@Config
+	public static boolean enableArmorInteraction = true;
+	@Config
+	public static boolean enableShulkerBoxInteraction = true;
+	@Config
+	public static boolean enableLavaInteraction = true;
 
 	private static boolean staticEnabled = false;
 
@@ -47,11 +57,11 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 	}
 
 	public static boolean overrideStackedOnOther(ItemStack stack, Slot slot, ClickAction action, Player player) {
-		if(!staticEnabled || action == ClickAction.PRIMARY)
+		if (!staticEnabled || action == ClickAction.PRIMARY)
 			return false;
 
 		ItemStack stackAt = slot.getItem();
-		if(enableShulkerBoxInteraction && shulkerOverride(stack, stackAt, slot, action, player, false)) {
+		if (enableShulkerBoxInteraction && shulkerOverride(stack, stackAt, slot, action, player, false)) {
 			if (player.containerMenu != null)
 				player.containerMenu.slotsChanged(slot.container);
 			return true;
@@ -61,34 +71,55 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 	}
 
 	public static boolean overrideOtherStackedOnMe(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player, SlotAccess accessor) {
-		if(!staticEnabled || action == ClickAction.PRIMARY)
+		if (!staticEnabled || action == ClickAction.PRIMARY)
 			return false;
 
-		if(enableLavaInteraction && lavaBucketOverride(stack, incoming, slot, action, player))
+		if (enableLavaInteraction && lavaBucketOverride(stack, incoming, slot, action, player))
 			return true;
 
-		if(enableArmorInteraction && armorOverride(stack, incoming, slot, action, player))
+		if (enableArmorInteraction && armorOverride(stack, incoming, slot, action, player))
 			return true;
 
 		return enableShulkerBoxInteraction && shulkerOverride(stack, incoming, slot, action, player, true);
 	}
 
+	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
+	public void onDrawScreen(ScreenEvent.DrawScreenEvent.Post event) {
+		Minecraft mc = Minecraft.getInstance();
+		Screen gui = mc.screen;
+		if (mc.player != null && gui instanceof AbstractContainerScreen<?> containerGui) {
+			ItemStack held = mc.player.inventoryMenu.getCarried();
+			if (!held.isEmpty()) {
+				Slot under = containerGui.getSlotUnderMouse();
+
+				if (under != null && canTrashItem(under.getItem(), held, under, mc.player)) {
+					int x = event.getMouseX();
+					int y = event.getMouseY();
+					gui.renderComponentTooltip(event.getPoseStack(), List.of(new TranslatableComponent("quark.misc.trash_item").withStyle(ChatFormatting.RED)), x, y);
+				}
+
+			}
+		}
+	}
+
+
 	private static boolean armorOverride(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player) {
-		if(incoming.isEmpty()) {
+		if (incoming.isEmpty()) {
 			EquipmentSlot equipSlot = null;
 
-			if(stack.getItem() instanceof ArmorItem armor) {
+			if (stack.getItem() instanceof ArmorItem armor) {
 				equipSlot = armor.getSlot();
-			} else if(stack.getItem() instanceof ElytraItem)
+			} else if (stack.getItem() instanceof ElytraItem)
 				equipSlot = EquipmentSlot.CHEST;
 
-			if(equipSlot != null) {
+			if (equipSlot != null) {
 				ItemStack currArmor = player.getItemBySlot(equipSlot);
 
-				if(slot.mayPickup(player) && slot.mayPlace(currArmor))
-					if(currArmor.isEmpty() || (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BINDING_CURSE, currArmor) == 0 && currArmor != stack)) {
+				if (slot.mayPickup(player) && slot.mayPlace(currArmor))
+					if (currArmor.isEmpty() || (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BINDING_CURSE, currArmor) == 0 && currArmor != stack)) {
 						int index = slot.getSlotIndex();
-						if(index < slot.container.getContainerSize()) {
+						if (index < slot.container.getContainerSize()) {
 							player.setItemSlot(equipSlot, stack.copy());
 
 							slot.container.setItem(index, currArmor.copy());
@@ -102,17 +133,21 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 		return false;
 	}
 
-	public static boolean lavaBucketOverride(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player) {
-		if(stack.getItem() == Items.LAVA_BUCKET
+	private static boolean canTrashItem(ItemStack stack, ItemStack incoming, Slot slot, Player player) {
+		return stack.getItem() == Items.LAVA_BUCKET
 				&& !incoming.isEmpty()
 				&& !player.isCreative()
 				&& slot.allowModification(player)
 				&& slot.mayPlace(stack)
 				&& !incoming.getItem().isFireResistant()
-				&& !SimilarBlockTypeHandler.isShulkerBox(incoming)) {
+				&& !SimilarBlockTypeHandler.isShulkerBox(incoming);
+	}
+
+	public static boolean lavaBucketOverride(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player) {
+		if (canTrashItem(stack, incoming, slot, player)) {
 
 			incoming.setCount(0);
-			if(!player.level.isClientSide)
+			if (!player.level.isClientSide)
 				player.level.playSound(null, player.blockPosition(), SoundEvents.LAVA_EXTINGUISH, SoundSource.PLAYERS, 0.25F, 2F + (float) Math.random());
 
 			return true;
@@ -122,11 +157,11 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 	}
 
 	private static boolean shulkerOverride(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player, boolean setSlot) {
-		if(!incoming.isEmpty() && tryAddToShulkerBox(player, stack, incoming, slot, true, setSlot) != null) {
+		if (!incoming.isEmpty() && tryAddToShulkerBox(player, stack, incoming, slot, true, setSlot) != null) {
 			ItemStack finished = tryAddToShulkerBox(player, stack, incoming, slot, false, setSlot);
 
-			if(finished != null) {
-				if(setSlot)
+			if (finished != null) {
+				if (setSlot)
 					slot.set(finished);
 				return true;
 			}
@@ -140,7 +175,7 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 			return null;
 
 		CompoundTag cmp = ItemNBTHelper.getCompound(shulkerBox, "BlockEntityTag", false);
-		if(cmp.contains("LootTable"))
+		if (cmp.contains("LootTable"))
 			return null;
 
 		if (cmp != null) {
@@ -165,13 +200,13 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 
 					if (did) {
 						ItemStack workStack = useCopy ? shulkerBox.copy() : shulkerBox;
-						if(!simulate)
+						if (!simulate)
 							stack.setCount(result.getCount());
 
 						cmp = te.saveWithFullMetadata();
 						ItemNBTHelper.setCompound(workStack, "BlockEntityTag", cmp);
 
-						if(slot.mayPlace(workStack))
+						if (slot.mayPlace(workStack))
 							return workStack;
 					}
 				}
