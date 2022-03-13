@@ -35,10 +35,12 @@
     "client.AbstractCandleBlockMixin",
     "client.BannerItemMixin",
     "client.BeaconTileEntityRendererMixin",
+    "client.ChatComponentMixin",
     "client.ContainerScreenMixin",
     "client.ElytraLayerMixin",
     "client.HumanoidArmorLayerMixin",
     "client.HumanoidModelMixin",
+    "client.ItemBlockRenderTypesMixin",
     "client.ItemRendererMixin",
     "client.JukeboxBlockEntityMixin",
     "client.LevelRendererMixin",
@@ -46,8 +48,7 @@
     "client.PistonTileEntityRendererMixin",
     "client.RenderBuffersMixin",
     "client.ScreenMixin",
-    "client.ThrownTridentRendererMixin",
-    "client.ChatComponentMixin"
+    "client.ThrownTridentRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
