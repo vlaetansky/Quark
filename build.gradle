@@ -89,7 +89,7 @@ dependencies {
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
-    //implementation fg.deobf("com.github.glitchfiend:TerraBlender-forge:${config.tb_version}")
+    implementation fg.deobf("com.github.glitchfiend:TerraBlender-forge:${config.tb_version}")
 
     compileOnly fg.deobf("vazkii.autoreglib:AutoRegLib:${config.arl_version}")
     runtimeOnly fg.deobf("vazkii.autoreglib:AutoRegLib:${config.arl_version}")
