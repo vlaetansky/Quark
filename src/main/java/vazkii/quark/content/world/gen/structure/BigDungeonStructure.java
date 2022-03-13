@@ -6,11 +6,9 @@ import com.mojang.serialization.Codec;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.QuartPos;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.minecraft.world.level.levelgen.WorldgenRandom;
@@ -45,11 +43,8 @@ public class BigDungeonStructure extends StructureFeature<JigsawConfiguration> {
 	}
 
 	private static boolean checkLocation(PieceGeneratorSupplier.Context<JigsawConfiguration> context) {
-//		if(!ModuleLoader.INSTANCE.isModuleEnabled(BigDungeonModule.class)) TODO add back
-//			return false;
-		
-//		if(!BigDungeonModule.dimensionConfig.canSpawnHere(holder))
-//			return false;
+		if(!ModuleLoader.INSTANCE.isModuleEnabled(BigDungeonModule.class))
+			return false;
 		
 		ChunkPos chunkpos = context.chunkPos();
         int i = chunkpos.getMiddleBlockX();

@@ -12,6 +12,8 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -40,16 +42,13 @@ public class BigDungeonModule extends QuarkModule {
 	public static String lootTable = "minecraft:chests/simple_dungeon";
 
 	@Config public static int maxRooms = 10;
-	@Config public static int minStartY = -10;
-	@Config public static int maxStartY = 10;
+	@Config public static int minStartY = -40;
+	@Config public static int maxStartY = -20;
 	@Config public static double chestChance = 0.5;
 
 	@Config
 	public static CompoundBiomeConfig biomeConfig = CompoundBiomeConfig.fromBiomeTypes(true, BiomeDictionary.Type.OCEAN, BiomeDictionary.Type.BEACH, BiomeDictionary.Type.NETHER, BiomeDictionary.Type.END);
 
-	@Config
-	public static DimensionConfig dimensionConfig = DimensionConfig.overworld(false);
-	
 	private static BigDungeonChestProcessor CHEST_PROCESSOR = new BigDungeonChestProcessor();
 	private static BigDungeonSpawnerProcessor SPAWN_PROCESSOR = new BigDungeonSpawnerProcessor();
 	private static BigDungeonWaterProcessor WATER_PROCESSOR = new BigDungeonWaterProcessor();
@@ -62,6 +61,12 @@ public class BigDungeonModule extends QuarkModule {
 	public static final RegistryObject<StructureFeature<JigsawConfiguration>> STRUCTURE = DEFERRED_REGISTRY_STRUCTURE.register("mega_dungeon", () -> (new BigDungeonStructure(JigsawConfiguration.CODEC)));
 
 	@Override
+	public void construct() {
+		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+		DEFERRED_REGISTRY_STRUCTURE.register(modEventBus);
+	}
+
+	@Override
 	public void setup() {
 		enqueue(this::setupStructures);
 	}
@@ -71,7 +76,7 @@ public class BigDungeonModule extends QuarkModule {
 		registerProcessor("big_dungeon_spawner", SPAWN_PROCESSOR, SPAWN_PROCESSOR_TYPE);
 		registerProcessor("big_dungeon_water", WATER_PROCESSOR, WATER_PROCESSOR_TYPE);
 	}
-	
+
 	private static <T extends StructureProcessor> void registerProcessor(String name, T processor, StructureProcessorType<T> type) {
 		ResourceLocation res = new ResourceLocation(Quark.MOD_ID, name);
 		Registry.register(Registry.STRUCTURE_PROCESSOR, res, type);

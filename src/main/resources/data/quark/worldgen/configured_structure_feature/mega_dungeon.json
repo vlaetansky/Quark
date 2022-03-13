@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:village",
+  "type": "quark:mega_dungeon",
   "config": {
     "start_pool": "quark:big_dungeon/starts",
     "size": 1
