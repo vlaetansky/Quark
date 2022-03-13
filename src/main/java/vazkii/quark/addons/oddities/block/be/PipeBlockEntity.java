@@ -126,12 +126,10 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 				if(item.tick(this)) {
 					itemItr.remove();
 
-					if (!level.isClientSide) {
-						if (item.valid)
-							passOut(item);
-						else {
-							dropItem(item.stack, lastFacing, true);
-						}
+					if (item.valid)
+						passOut(item);
+					else if (!level.isClientSide) {
+						dropItem(item.stack, lastFacing, true);
 					}
 				}
 			}
@@ -178,7 +176,7 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 		boolean did = false;
 
 		BlockPos targetPos = getBlockPos().relative(item.outgoingFace);
-		if(level.getBlockState(targetPos).getBlock() instanceof WorldlyContainerHolder holder) {
+		if(level.getBlockState(targetPos).getBlock() instanceof WorldlyContainerHolder) {
 			ItemStack result = MiscUtil.putIntoInv(item.stack, level, targetPos, null, item.outgoingFace.getOpposite(), false, false);
 			if(result.getCount() != item.stack.getCount()) {
 				did = true;
@@ -190,7 +188,7 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 			if(tile != null) {
 				if(tile instanceof PipeBlockEntity)
 					did = ((PipeBlockEntity) tile).passIn(item.stack, item.outgoingFace.getOpposite(), null, item.rngSeed, item.timeInWorld);
-				else {
+				else if (!level.isClientSide) {
 					ItemStack result = MiscUtil.putIntoInv(item.stack, level, targetPos, tile, item.outgoingFace.getOpposite(), false, false);
 					if(result.getCount() != item.stack.getCount()) {
 						did = true;
