@@ -44,8 +44,6 @@ public record TinyPotatoRenderInfo(int runeColor, boolean enchanted, String name
         int color = -1;
 
         if (enchanted) {
-            string = removeFromFront(string, "enchanted");
-
             for (DyeColor dyeColor : DyeColor.values()) {
                 String key = dyeColor.getSerializedName().replace("_", " ");
                 if (matches(string, key)) {
