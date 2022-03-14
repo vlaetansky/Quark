@@ -7,6 +7,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ConfigGuiHandler.ConfigGuiFactory;
+import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -57,6 +58,7 @@ public class ClientProxy extends CommonProxy {
 
 		bus.addListener(this::clientSetup);
 		bus.addListener(this::modelRegistry);
+		bus.addListener(this::modelBake);
 		bus.addListener(this::textureStitch);
 		bus.addListener(this::postTextureStitch);
 	}
@@ -70,6 +72,10 @@ public class ClientProxy extends CommonProxy {
 
 	public void modelRegistry(ModelRegistryEvent event) {
 		ModuleLoader.INSTANCE.modelRegistry();
+	}
+
+	public void modelBake(ModelBakeEvent event) {
+		ModuleLoader.INSTANCE.modelBake(event);
 	}
 
 	public void textureStitch(TextureStitchEvent.Pre event) {

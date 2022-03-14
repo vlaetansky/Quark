@@ -22,6 +22,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -54,6 +55,8 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
+import vazkii.arl.util.ItemNBTHelper;
+import vazkii.quark.addons.oddities.module.TinyPotatoModule;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.content.mobs.ai.FindPlaceToSleepGoal;
 import vazkii.quark.content.mobs.ai.SleepGoal;
@@ -113,11 +116,6 @@ public class Foxhound extends Wolf implements Enemy {
 		return !isTame();
 	}
 
-//	@Override
-//	public boolean isEntityInsideOpaqueBlock() {
-//		return MiscUtil.isEntityInsideOpaqueBlock(this);
-//	}
-
 	@Override
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, @Nonnull DifficultyInstance difficultyIn, @Nonnull MobSpawnType reason, SpawnGroupData spawnDataIn, CompoundTag dataTag) {
 		Holder<Biome> biome = worldIn.getBiome(new BlockPos(position()));
@@ -143,17 +141,14 @@ public class Foxhound extends Wolf implements Enemy {
 			return;
 		}
 
-		//		if (!world.isRemote && TinyPotato.tiny_potato != null) {
-		//			if (timeUntilPotatoEmerges == 1) {
-		//				timeUntilPotatoEmerges = 0;
-		//				ItemStack stack = new ItemStack(TinyPotato.tiny_potato);
-		//				ItemNBTHelper.setBoolean(stack, "angery", true);
-		//				entityDropItem(stack, 0f);
-		//				playSound(SoundEvents.ENTITY_GENERIC_HURT, 1f, 1f);
-		//			} else if (timeUntilPotatoEmerges > 1) {
-		//				timeUntilPotatoEmerges--;
-		//			}
-		//		}
+		if (!level.isClientSide && timeUntilPotatoEmerges > 0) {
+			if (--timeUntilPotatoEmerges == 0) {
+				ItemStack stack = new ItemStack(TinyPotatoModule.tiny_potato);
+				ItemNBTHelper.setBoolean(stack, "angery", true);
+				spawnAtLocation(stack);
+				playSound(SoundEvents.GENERIC_HURT, 1f, 1f);
+			}
+		}
 
 		if(isSleeping()) {
 			Optional<BlockPos> sleepPos = getSleepingPos();
@@ -280,22 +275,33 @@ public class Foxhound extends Wolf implements Enemy {
 		if(itemstack.getItem() == Items.BONE && !isTame())
 			return InteractionResult.PASS;
 
-		if (!this.isTame() && !itemstack.isEmpty()) {
-			if (itemstack.getItem() == Items.COAL && (level.getDifficulty() == Difficulty.PEACEFUL || player.isCreative() || player.getEffect(MobEffects.FIRE_RESISTANCE) != null) && !level.isClientSide) {
-				if (random.nextDouble() < FoxhoundModule.tameChance) {
-					this.tame(player);
-					this.navigation.stop();
-					this.setTarget(null);
-					this.setOrderedToSit(true);
-					this.setHealth(20.0F);
-					this.level.broadcastEntityEvent(this, (byte)7);
-				} else {
-					this.level.broadcastEntityEvent(this, (byte)6);
-				}
+		if (this.isTame()) {
+			if (itemstack.is(TinyPotatoModule.tiny_potato.asItem())) {
+				timeUntilPotatoEmerges = 600;
 
+				playSound(QuarkSounds.ENTITY_FOXHOUND_EAT, 1f, 1f);
 				if (!player.isCreative())
 					itemstack.shrink(1);
 				return InteractionResult.SUCCESS;
+			}
+		} else {
+			if (!itemstack.isEmpty()) {
+				if (itemstack.getItem() == Items.COAL && (level.getDifficulty() == Difficulty.PEACEFUL || player.isCreative() || player.getEffect(MobEffects.FIRE_RESISTANCE) != null) && !level.isClientSide) {
+					if (random.nextDouble() < FoxhoundModule.tameChance) {
+						this.tame(player);
+						this.navigation.stop();
+						this.setTarget(null);
+						this.setOrderedToSit(true);
+						this.setHealth(20.0F);
+						this.level.broadcastEntityEvent(this, (byte) 7);
+					} else {
+						this.level.broadcastEntityEvent(this, (byte) 6);
+					}
+
+					if (!player.isCreative())
+						itemstack.shrink(1);
+					return InteractionResult.SUCCESS;
+				}
 			}
 		}
 

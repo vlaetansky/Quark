@@ -136,6 +136,14 @@
     ],
     "subtitle": "quark.subtitles.foxhound_ambient"
   },
+  "entity.foxhound.eat": {
+    "sounds": [
+      { "name": "mob/fox/eat1", "volume": 0.65 },
+      { "name": "mob/fox/eat2", "volume": 0.65 },
+      { "name": "mob/fox/eat3", "volume": 0.65 }
+    ],
+    "subtitle": "quark.subtitles.foxhound_eat"
+  },
   "entity.frog.wednesday": {
     "subtitle": "quark.subtitles.hump_day",
     "sounds": [
@@ -302,6 +310,12 @@
     "subtitle": "quark.subtitles.pipe_pickup_lenny",
     "sounds": [
       "quark:block/pipe/pickup"
+    ]
+  },
+  "block.potato.do_it": {
+    "subtitle": "quark.subtitles.do_it",
+    "sounds": [
+      "quark:block/do_it"
     ]
   },
   "item.camera.shutter": {

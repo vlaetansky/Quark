@@ -6,6 +6,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
@@ -27,7 +28,7 @@ public final class ModuleLoader {
 
 	private enum Step {
 		CONSTRUCT, CONSTRUCT_CLIENT, REGISTER, POST_REGISTER, CONFIG_CHANGED, CONFIG_CHANGED_CLIENT, SETUP, SETUP_CLIENT,
-		MODEL_REGISTRY, TEXTURE_STITCH, POST_TEXTURE_STITCH, LOAD_COMPLETE, FIRST_CLIENT_TICK
+		MODEL_REGISTRY, MODEL_BAKE, TEXTURE_STITCH, POST_TEXTURE_STITCH, LOAD_COMPLETE, FIRST_CLIENT_TICK
 	}
 
 	public static final ModuleLoader INSTANCE = new ModuleLoader();
@@ -101,6 +102,11 @@ public final class ModuleLoader {
 	@OnlyIn(Dist.CLIENT)
 	public void modelRegistry() {
 		dispatch(Step.MODEL_REGISTRY, QuarkModule::modelRegistry);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public void modelBake(ModelBakeEvent event) {
+		dispatch(Step.MODEL_BAKE, m -> m.modelBake(event));
 	}
 
 	@OnlyIn(Dist.CLIENT)

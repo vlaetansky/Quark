@@ -28,6 +28,7 @@ import vazkii.quark.base.module.config.Config;
 import vazkii.quark.content.tools.client.render.GlintRenderTypes;
 import vazkii.quark.content.tools.item.RuneItem;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -46,6 +47,8 @@ public class ColorRunesModule extends QuarkModule {
 
 	private static final ThreadLocal<ItemStack> targetStack = new ThreadLocal<>();
 	public static TagKey<Item> runesTag, runesLootableTag;
+	public static List<RuneItem> runes;
+	public static Item rainbow_rune;
 	public static Item blank_rune;
 
 	@Config public static int dungeonWeight = 10;
@@ -120,9 +123,9 @@ public class ColorRunesModule extends QuarkModule {
 
 	@Override
 	public void register() {
-		for(DyeColor color : DyeColor.values())
-			new RuneItem(color.getSerializedName() + "_rune", this, color.getId(), true);
-		new RuneItem("rainbow_rune", this, 16, true);
+		runes = Arrays.stream(DyeColor.values()).map(color -> new RuneItem(color.getSerializedName() + "_rune", this, color.getId(), true)).toList();
+
+		rainbow_rune = new RuneItem("rainbow_rune", this, 16, true);
 		blank_rune =  new RuneItem("blank_rune", this, 17, false);
 	}
 
