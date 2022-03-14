@@ -9,7 +9,7 @@ import java.util.Locale;
 
 public record TinyPotatoRenderInfo(int runeColor, boolean enchanted, String name) {
 
-    private static final List<String> RAINBOW_NAMES = List.of("rainbow", "lgbt", "gay");
+    private static final List<String> RAINBOW_NAMES = List.of("rainbow", "lgbt", "lgbtq", "lgbtq+", "gay");
     private static final List<String> ENCHANTMENT_NAMES = List.of("enchanted", "glowy");
 
     private static boolean matches(String name, String match) {
