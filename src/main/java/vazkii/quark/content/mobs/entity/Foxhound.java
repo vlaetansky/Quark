@@ -276,7 +276,7 @@ public class Foxhound extends Wolf implements Enemy {
 			return InteractionResult.PASS;
 
 		if (this.isTame()) {
-			if (itemstack.is(TinyPotatoModule.tiny_potato.asItem())) {
+			if (timeUntilPotatoEmerges <= 0 && itemstack.is(TinyPotatoModule.tiny_potato.asItem())) {
 				timeUntilPotatoEmerges = 600;
 
 				playSound(QuarkSounds.ENTITY_FOXHOUND_EAT, 1f, 1f);
