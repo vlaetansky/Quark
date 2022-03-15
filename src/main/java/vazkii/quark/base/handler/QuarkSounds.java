@@ -73,6 +73,7 @@ public class QuarkSounds {
 
 	public static final SoundEvent PET_DEVICE = register("pet.device");
 	public static final SoundEvent PET_NEKO = register("pet.neko");
+	public static final SoundEvent PET_SLIME = register("pet.slime");
 	public static final SoundEvent PET_WIRE = register("pet.wire");
 
 	public static final SoundEvent AMBIENT_DRIPS = register("ambient.drips");

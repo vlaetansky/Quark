@@ -359,6 +359,16 @@
       }
     ]
   },
+  "pet.slime": {
+    "subtitle": "quark.subtitles.pet.slime",
+    "sounds": [
+      "mob/slime/small1",
+      "mob/slime/small2",
+      "mob/slime/small3",
+      "mob/slime/small4",
+      "mob/slime/small5"
+    ]
+  },
   "pet.wire": {
     "subtitle": "quark.subtitles.pet.wire",
     "sounds": [
