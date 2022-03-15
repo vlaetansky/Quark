@@ -22,7 +22,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -150,7 +149,7 @@ public class Foxhound extends Wolf implements Enemy {
 				ItemStack stack = new ItemStack(TinyPotatoModule.tiny_potato);
 				ItemNBTHelper.setBoolean(stack, TinyPotatoBlock.ANGRY, true);
 				spawnAtLocation(stack);
-				playSound(SoundEvents.GENERIC_HURT, 1f, 1f);
+				playSound(QuarkSounds.BLOCK_POTATO_HURT, 1f, 1f);
 			} else if (!isTatering())
 				setTatering(true);
 		}

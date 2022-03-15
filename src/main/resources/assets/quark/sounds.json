@@ -328,6 +328,14 @@
       "quark:block/do_it"
     ]
   },
+  "block.potato.hurt": {
+    "subtitle": "quark.subtitles.potato_hurt",
+    "sounds": [
+      "damage/hit1",
+      "damage/hit2",
+      "damage/hit3"
+    ]
+  },
   "item.camera.shutter": {
     "subtitle": "quark.subtitles.camera_shutter",
     "sounds": [
