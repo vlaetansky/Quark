@@ -33,6 +33,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import vazkii.arl.interf.IBlockItemProvider;
@@ -85,6 +86,20 @@ public class TinyPotatoBlock extends QuarkBlock implements SimpleWaterloggedBloc
 			}
 			super.onRemove(state, world, pos, newState, isMoving);
 		}
+	}
+
+	@Override
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
+		ItemStack stack = super.getCloneItemStack(state, target, level, pos, player);
+		BlockEntity be = level.getBlockEntity(pos);
+		if (be instanceof TinyPotatoBlockEntity tater) {
+			if (tater.hasCustomName())
+				stack.setHoverName(tater.getCustomName());
+
+			if (tater.angry)
+				ItemNBTHelper.setBoolean(stack, ANGRY, true);
+		}
+		return stack;
 	}
 
 	@Nonnull

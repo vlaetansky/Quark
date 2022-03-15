@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -47,13 +48,16 @@ public class TinyPotatoBlockItem extends BlockItem implements IRuneColorProvider
 		return super.getDescriptionId(stack);
 	}
 
-	@Override
-	public void inventoryTick(@Nonnull ItemStack stack, @Nonnull Level world, @Nonnull Entity holder, int itemSlot, boolean isSelected) {
+	private void updateData(ItemStack stack) {
 		if (ItemNBTHelper.verifyExistence(stack, "BlockEntityTag")) {
 			CompoundTag cmp = ItemNBTHelper.getCompound(stack, "BlockEntityTag", true);
 			if (cmp != null) {
 				if (cmp.contains(TinyPotatoBlockEntity.TAG_ANGRY, Tag.TAG_ANY_NUMERIC)) {
-					ItemNBTHelper.setBoolean(stack, TinyPotatoBlock.ANGRY, cmp.getBoolean(TinyPotatoBlockEntity.TAG_ANGRY));
+					boolean angry = cmp.getBoolean(TinyPotatoBlockEntity.TAG_ANGRY);
+					if (angry)
+						ItemNBTHelper.setBoolean(stack, TinyPotatoBlock.ANGRY, true);
+					else if (TinyPotatoBlock.isAngry(stack))
+						ItemNBTHelper.getNBT(stack).remove(TinyPotatoBlock.ANGRY);
 					cmp.remove(TinyPotatoBlockEntity.TAG_ANGRY);
 				}
 
@@ -64,6 +68,20 @@ public class TinyPotatoBlockItem extends BlockItem implements IRuneColorProvider
 			}
 		}
 
+		if (ItemNBTHelper.getBoolean(stack, TinyPotatoBlock.ANGRY, true))
+			ItemNBTHelper.getNBT(stack).remove(TinyPotatoBlock.ANGRY);
+	}
+
+	@Override
+	public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
+		updateData(stack);
+		return super.onEntityItemUpdate(stack, entity);
+	}
+
+	@Override
+	public void inventoryTick(@Nonnull ItemStack stack, @Nonnull Level world, @Nonnull Entity holder, int itemSlot, boolean isSelected) {
+		updateData(stack);
+
 		if (!world.isClientSide && holder instanceof Player player && holder.tickCount % 30 == 0 && TYPOS.contains(ChatFormatting.stripFormatting(stack.getDisplayName().getString()))) {
 			int ticks = ItemNBTHelper.getInt(stack, TICKS, 0);
 			if (ticks < NOT_MY_NAME) {
@@ -71,14 +89,6 @@ public class TinyPotatoBlockItem extends BlockItem implements IRuneColorProvider
 				ItemNBTHelper.setInt(stack, TICKS, ticks + 1);
 			}
 		}
-	}
-
-	@Nonnull
-	@Override
-	public Component getName(@Nonnull ItemStack stack) {
-
-
-		return super.getName(stack);
 	}
 
 	@Override
