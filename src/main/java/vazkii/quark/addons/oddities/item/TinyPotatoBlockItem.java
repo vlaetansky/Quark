@@ -68,7 +68,7 @@ public class TinyPotatoBlockItem extends BlockItem implements IRuneColorProvider
 			}
 		}
 
-		if (ItemNBTHelper.getBoolean(stack, TinyPotatoBlock.ANGRY, true))
+		if (!ItemNBTHelper.getBoolean(stack, TinyPotatoBlock.ANGRY, false))
 			ItemNBTHelper.getNBT(stack).remove(TinyPotatoBlock.ANGRY);
 	}
 
