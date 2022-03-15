@@ -20,9 +20,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -33,6 +31,8 @@ import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.ToolActions;
 import vazkii.quark.base.handler.MiscUtil;
@@ -191,28 +191,30 @@ public class Toretoise extends Animal {
 			}
 		}
 
-		int ore = getOreType();
-		if(ore != 0) breakOre: {
-			AABB ourBoundingBox = getBoundingBox();
-			BlockPos min = new BlockPos(Math.round(ourBoundingBox.minX), Math.round(ourBoundingBox.minY), Math.round(ourBoundingBox.minZ));
-			BlockPos max = new BlockPos(Math.round(ourBoundingBox.maxX), Math.round(ourBoundingBox.maxY), Math.round(ourBoundingBox.maxZ));
+		if (level instanceof ServerLevel serverLevel) {
+			int ore = getOreType();
+			if (ore != 0) breakOre:{
+				AABB ourBoundingBox = getBoundingBox();
+				BlockPos min = new BlockPos(Math.round(ourBoundingBox.minX), Math.round(ourBoundingBox.minY), Math.round(ourBoundingBox.minZ));
+				BlockPos max = new BlockPos(Math.round(ourBoundingBox.maxX), Math.round(ourBoundingBox.maxY), Math.round(ourBoundingBox.maxZ));
 
-			for(int ix = min.getX(); ix <= max.getX(); ix++)
-				for(int iy = min.getY(); iy <= max.getY(); iy++)
-					for(int iz = min.getZ(); iz <= max.getZ(); iz++) {
-						BlockPos test = new BlockPos(ix, iy, iz);
-						BlockState state = level.getBlockState(test);
-						if(state.getBlock() == Blocks.MOVING_PISTON) {
-							BlockEntity tile = level.getBlockEntity(test);
-							if(tile instanceof PistonMovingBlockEntity piston) {
-								BlockState pistonState = piston.getMovedState();
-								if(pistonState.getBlock() == IronRodModule.iron_rod) {
-									dropOre(ore);
-									break breakOre;
+				for (int ix = min.getX(); ix <= max.getX(); ix++)
+					for (int iy = min.getY(); iy <= max.getY(); iy++)
+						for (int iz = min.getZ(); iz <= max.getZ(); iz++) {
+							BlockPos test = new BlockPos(ix, iy, iz);
+							BlockState state = level.getBlockState(test);
+							if (state.getBlock() == Blocks.MOVING_PISTON) {
+								BlockEntity tile = level.getBlockEntity(test);
+								if (tile instanceof PistonMovingBlockEntity piston) {
+									BlockState pistonState = piston.getMovedState();
+									if (pistonState.getBlock() == IronRodModule.iron_rod) {
+										dropOre(ore, new LootContext.Builder(serverLevel));
+										break breakOre;
+									}
 								}
 							}
 						}
-					}
+			}
 		}
 	}
 
@@ -225,11 +227,15 @@ public class Toretoise extends Animal {
 			ItemStack held = living.getMainHandItem();
 
 			if(ore != 0 && held.getItem().canPerformAction(held, ToolActions.PICKAXE_DIG)) {
-				if(!level.isClientSide) {
+				if(level instanceof ServerLevel serverLevel) {
 					if(held.isDamageableItem() && e instanceof Player)
 						MiscUtil.damageStack((Player) e, InteractionHand.MAIN_HAND, held, 1);
 
-					dropOre(ore);
+					LootContext.Builder lootBuilder = new LootContext.Builder(serverLevel)
+							.withParameter(LootContextParams.TOOL, held);
+					if (living instanceof Player player)
+						lootBuilder.withLuck(player.getLuck());
+					dropOre(ore, lootBuilder);
 				}
 
 				return false;
@@ -244,32 +250,23 @@ public class Toretoise extends Animal {
 		return super.hurt(source, amount);
 	}
 
-	public void dropOre(int ore) {
-		playSound(QuarkSounds.ENTITY_TORETOISE_HARVEST, 1F, 0.6F);
+	public void dropOre(int ore, LootContext.Builder lootContext) {
+		lootContext.withParameter(LootContextParams.ORIGIN, position());
 
-		Item drop = null;
-		int countMult = 1;
+		BlockState dropState = null;
 		switch (ore) {
-			case 1 -> drop = Items.COAL;
-			case 2 -> drop = Items.RAW_IRON;
-			case 3 -> {
-				drop = Items.REDSTONE;
-				countMult *= 3;
-			}
-			case 4 -> {
-				drop = Items.LAPIS_LAZULI;
-				countMult *= 2;
-			}
-			case 5 -> drop = Items.RAW_COPPER;
+			case 1 -> dropState = Blocks.COAL_ORE.defaultBlockState();
+			case 2 -> dropState = Blocks.IRON_ORE.defaultBlockState();
+			case 3 -> dropState = Blocks.REDSTONE_ORE.defaultBlockState();
+			case 4 -> dropState = Blocks.LAPIS_ORE.defaultBlockState();
+			case 5 -> dropState = Blocks.COPPER_ORE.defaultBlockState();
 		}
 
-		if(drop != null) {
-			int count = 1;
-			while(random.nextBoolean())
-				count++;
-			count *= countMult;
+		if(dropState != null) {
+			playSound(QuarkSounds.ENTITY_TORETOISE_HARVEST, 1F, 0.6F);
 
-			spawnAtLocation(new ItemStack(drop, count), 1.2F);
+			List<ItemStack> drops = dropState.getDrops(lootContext);
+			for (ItemStack drop : drops) spawnAtLocation(drop, 1.2F);
 		}
 
 		entityData.set(ORE_TYPE, 0);

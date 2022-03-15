@@ -1,13 +1,6 @@
 package vazkii.quark.content.tools.entity;
 
-import java.util.List;
-import java.util.UUID;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.google.common.collect.Multimap;
-
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -24,17 +17,9 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.IndirectEntityDamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ExperienceOrb;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeMap;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier.Builder;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -47,6 +32,8 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -58,6 +45,11 @@ import net.minecraftforge.network.NetworkHooks;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.content.mobs.entity.Toretoise;
 import vazkii.quark.content.tools.module.PickarangModule;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.UUID;
 
 public class Pickarang extends Projectile {
 
@@ -252,7 +244,13 @@ public class Pickarang extends Projectile {
 
 								if(ore != 0) {
 									addHit(toretoise);
-									toretoise.dropOre(ore);
+									if (level instanceof ServerLevel serverLevel) {
+										LootContext.Builder lootBuilder = new LootContext.Builder(serverLevel)
+												.withParameter(LootContextParams.TOOL, pickarang);
+										if (owner instanceof Player player)
+											lootBuilder.withLuck(player.getLuck());
+										toretoise.dropOre(ore, lootBuilder);
+									}
 									break hitEntity;
 								}
 							}
@@ -425,7 +423,7 @@ public class Pickarang extends Projectile {
 					continue;
 				item.startRiding(this);
 
-				item.setPickUpDelay(2);
+				item.setPickUpDelay(5);
 			}
 
 			for(ExperienceOrb xpOrb : xp) {

@@ -78,141 +78,143 @@ public class VariantChestsModule extends QuarkModule {
 	private static final List<Block> allChests = new LinkedList<>();
 	private static final Map<String, Block> chestMappings = new HashMap<>();
 
-	@Config private static boolean replaceWorldgenChests = true;
-	@Config(flag = "chest_reversion") private static boolean enableRevertingWoodenChests = true;
+	@Config
+	private static boolean replaceWorldgenChests = true;
+	@Config(flag = "chest_reversion")
+	private static boolean enableRevertingWoodenChests = true;
 
 	private static boolean staticEnabled = false;
 
-	@Config(description =  "Chests to put in each structure. The format per entry is \"structure=chest\", where \"structure\" is a structure ID, and \"chest\" is a block ID, which must correspond to a standard chest block.")
+	@Config(description = "Chests to put in each structure. The format per entry is \"structure=chest\", where \"structure\" is a structure ID, and \"chest\" is a block ID, which must correspond to a standard chest block.")
 	public static List<String> structureChests = Arrays.asList(
-			 "minecraft:village_plains=quark:oak_chest",
-			 "minecraft:igloo=quark:spruce_chest",
-			 "minecraft:village_snowy=quark:spruce_chest",
-			 "minecraft:village_taiga=quark:spruce_chest",
-			 "minecraft:desert_pyramid=quark:birch_chest",
-			 "minecraft:jungle_pyramid=quark:jungle_chest",
-			 "minecraft:village_desert=quark:jungle_chest",
-			 "minecraft:village_savanna=quark:acacia_chest",
-			 "minecraft:mansion=quark:dark_oak_chest",
-			 "minecraft:pillager_outpost=quark:dark_oak_chest",
-			 "minecraft:ruined_portal=quark:crimson_chest",
-			 "minecraft:bastion_remnant=quark:crimson_chest",
-			 "minecraft:fortress=quark:nether_brick_chest",
-			 "minecraft:endcity=quark:purpur_chest");
+			"minecraft:village_plains=quark:oak_chest",
+			"minecraft:igloo=quark:spruce_chest",
+			"minecraft:village_snowy=quark:spruce_chest",
+			"minecraft:village_taiga=quark:spruce_chest",
+			"minecraft:desert_pyramid=quark:birch_chest",
+			"minecraft:jungle_pyramid=quark:jungle_chest",
+			"minecraft:village_desert=quark:jungle_chest",
+			"minecraft:village_savanna=quark:acacia_chest",
+			"minecraft:mansion=quark:dark_oak_chest",
+			"minecraft:pillager_outpost=quark:dark_oak_chest",
+			"minecraft:ruined_portal=quark:crimson_chest",
+			"minecraft:bastion_remnant=quark:crimson_chest",
+			"minecraft:fortress=quark:nether_brick_chest",
+			"minecraft:endcity=quark:purpur_chest");
 
 	private static final List<String> BUILT_IN_MOD_STRUCTURES = Arrays.asList(
 			"bettermineshafts:mineshaft=quark:oak_chest",
-			 "betterstrongholds:stronghold=quark:oak_chest",
-			 "cobbler:shulker_factory=quark:purpur_chest",
-			 "conjurer_illager:theatre=quark:dark_oak_chest",
-			 "dungeoncrawl:dungeon=quark:oak_chest",
-			 "dungeons_plus:bigger_dungeon=quark:oak_chest",
-			 "dungeons_plus:end_ruins=quark:purpur_chest",
-			 "dungeons_plus:leviathan=quark:jungle_chest",
-			 "dungeons_plus:snowy_temple=quark:spruce_chest",
-			 "dungeons_plus:soul_prison=quark:warped_chest",
-			 "dungeons_plus:tower=quark:oak_chest",
-			 "dungeons_plus:warped_garden=quark:warped_chest",
-			 "hunterillager:hunterhouse=quark:spruce_chest",
-			 "iceandfire:gorgon_temple=quark:jungle_chest",
-			 "illagers_plus:illager_archer_tower=quark:dark_oak_chest",
-			 "illagers_plus:illager_centre=quark:dark_oak_chest",
-			 "illagers_plus:illager_fort=quark:dark_oak_chest",
-			 "illagers_plus:illager_tower=quark:dark_oak_chest",
-			 "infernalexp:bastion_outpost=quark:crimson_chest",
-			 "infernalexp:glowstone_canyon_ruin=quark:crimson_chest",
-			 "infernalexp:strider_altar=quark:crimson_chest",
-			 "pandoras_creatures:end_prison=quark:purpur_chest",
-			 "mowziesmobs:barakoa_village=quark:acacia_chest",
-			 "endreborn:end_crypt=quark:purpur_chest",
-			 "endreborn:end_shipwreck=quark:purpur_chest",
-			 "majruszs_difficulty:flying_end_ship=quark:purpur_chest",
-			 "majruszs_difficulty:flying_phantom_structure=quark:purpur_chest",
-			 "outer_end:catacombs=quark:purpur_chest",
-			 "outer_end:end_tower=quark:purpur_chest",
-			 "stoneholm:underground_village=quark:spruce_chest",
-			 "repurposed_structures:bastion_underground=quark:dark_oak_chest",
-			 "repurposed_structures:city_nether=quark:nether_brick_chest",
-			 "repurposed_structures:fortress_jungle=quark:jungle_chest",
-			 "repurposed_structures:igloo_grassy=quark:oak_chest",
-			 "repurposed_structures:igloo_stone=quark:spruce_chest",
-			 "repurposed_structures:mansion_birch=quark:birch_chest",
-			 "repurposed_structures:mansion_desert=quark:jungle_chest",
-			 "repurposed_structures:mansion_jungle=quark:jungle_chest",
-			 "repurposed_structures:mansion_oak=quark:oak_chest",
-			 "repurposed_structures:mansion_savanna=quark:acacia_chest",
-			 "repurposed_structures:mansion_snowy=quark:spruce_chest",
-			 "repurposed_structures:mansion_taiga=quark:spruce_chest",
-			 "repurposed_structures:mineshaft_birch=quark:birch_chest",
-			 "repurposed_structures:mineshaft_crimson=quark:crimson_chest",
-			 "repurposed_structures:mineshaft_desert=quark:jungle_chest",
-			 "repurposed_structures:mineshaft_end=quark:purpur_chest",
-		 	 "repurposed_structures:mineshaft_icy=quark:spruce_chest",
-			 "repurposed_structures:mineshaft_jungle=quark:jungle_chest",
-			 "repurposed_structures:mineshaft_nether=quark:nether_brick_chest",
-			 "repurposed_structures:mineshaft_ocean=quark:prismarine_chest",
-			 "repurposed_structures:mineshaft_savanna=quark:acacia_chest",
-			 "repurposed_structures:mineshaft_stone=quark:spruce_chest",
-			 "repurposed_structures:mineshaft_swamp=quark:dark_oak_chest",
-			 "repurposed_structures:mineshaft_dark_forest=quark:dark_oak_chest",
-			 "repurposed_structures:mineshaft_taiga=quark:spruce_chest",
-			 "repurposed_structures:mineshaft_warped=quark:warped_chest",
-			 "repurposed_structures:outpost_badlands=quark:dark_oak_chest",
-			 "repurposed_structures:outpost_birch=quark:birch_chest",
-			 "repurposed_structures:outpost_crimson=quark:crimson_chest",
-			 "repurposed_structures:outpost_desert=quark:jungle_chest",
-			 "repurposed_structures:outpost_giant_tree_taiga=quark:spruce_chest",
-			 "repurposed_structures:outpost_icy=quark:spruce_chest",
-			 "repurposed_structures:outpost_jungle=quark:jungle_chest",
-			 "repurposed_structures:outpost_nether_brick=quark:nether_brick_chest",
-			 "repurposed_structures:outpost_oak=quark:oak_chest",
-			 "repurposed_structures:outpost_snowy=quark:spruce_chest",
-			 "repurposed_structures:outpost_taiga=quark:spruce_chest",
-			 "repurposed_structures:outpost_warped=quark:warped_chest",
-			 "repurposed_structures:pyramid_badlands=quark:dark_oak_trapped_chest",
-			 "repurposed_structures:pyramid_end=quark:purpur_chest",
-			 "repurposed_structures:pyramid_flower_forest=quark:oak_chest",
-			 "repurposed_structures:pyramid_giant_tree_taiga=quark:spruce_chest",
-			 "repurposed_structures:pyramid_icy=quark:spruce_chest",
-			 "repurposed_structures:pyramid_jungle=quark:jungle_chest",
-			 "repurposed_structures:pyramid_nether=quark:nether_brick_trapped_chest",
-			 "repurposed_structures:pyramid_ocean=quark:prismarine_chest",
-			 "repurposed_structures:pyramid_snowy=quark:spruce_chest",
-			 "repurposed_structures:ruined_portal_end=quark:purpur_chest",
-			 "repurposed_structures:ruins_land_hot=quark:jungle_chest",
-			 "repurposed_structures:ruins_land_warm=quark:oak_chest",
-			 "repurposed_structures:ruins_nether=quark:nether_brick_chest",
-			 "repurposed_structures:shipwreck_crimson=quark:crimson_chest",
-			 "repurposed_structures:shipwreck_end=quark:purpur_chest",
-			 "repurposed_structures:shipwreck_nether_bricks=quark:nether_brick_chest",
- 		 	 "repurposed_structures:shipwreck_warped=quark:warped_chest",
-  		 	 "repurposed_structures:stronghold_nether=quark:nether_brick_chest",
-			 "repurposed_structures:temple_nether_basalt=quark:nether_brick_chest",
-			 "repurposed_structures:temple_nether_crimson=quark:crimson_chest",
-			 "repurposed_structures:temple_nether_soul=quark:warped_chest",
- 		 	 "repurposed_structures:temple_nether_warped=quark:warped_trapped_chest",
-			 "repurposed_structures:temple_nether_wasteland=quark:nether_brick_chest",
-			 "repurposed_structures:village_badlands=quark:dark_oak_chest",
-			 "repurposed_structures:village_birch=quark:birch_chest",
-			 "repurposed_structures:village_crimson=quark:crimson_chest",
-			 "repurposed_structures:village_dark_oak=quark:dark_oak_chest",
-			 "repurposed_structures:village_giant_taiga=quark:spruce_chest",
-			 "repurposed_structures:village_jungle=quark:jungle_chest",
-			 "repurposed_structures:village_mountains=quark:spruce_chest",
-			 "repurposed_structures:village_oak=quark:oak_chest",
-			 "repurposed_structures:village_swamp=quark:oak_chest",
-			 "repurposed_structures:village_warped=quark:warped_chest",
-			 "valhelsia_structures:big_tree=quark:oak_chest",
-			 "valhelsia_structures:castle=quark:spruce_chest",
-			 "valhelsia_structures:castle_ruin=quark:oak_chest",
-			 "valhelsia_structures:desert_house=quark:spruce_chest",
-			 "valhelsia_structures:forge=quark:spruce_chest",
-			 "valhelsia_structures:player_house=quark:oak_chest",
-			 "valhelsia_structures:small_castle=quark:oak_chest",
-			 "valhelsia_structures:small_dungeon=quark:oak_chest",
-			 "valhelsia_structures:spawner_dungeon=quark:oak_chest",
-			 "valhelsia_structures:tower_ruin=quark:spruce_chest",
-			 "valhelsia_structures:witch_hut=quark:spruce_chest");
+			"betterstrongholds:stronghold=quark:oak_chest",
+			"cobbler:shulker_factory=quark:purpur_chest",
+			"conjurer_illager:theatre=quark:dark_oak_chest",
+			"dungeoncrawl:dungeon=quark:oak_chest",
+			"dungeons_plus:bigger_dungeon=quark:oak_chest",
+			"dungeons_plus:end_ruins=quark:purpur_chest",
+			"dungeons_plus:leviathan=quark:jungle_chest",
+			"dungeons_plus:snowy_temple=quark:spruce_chest",
+			"dungeons_plus:soul_prison=quark:warped_chest",
+			"dungeons_plus:tower=quark:oak_chest",
+			"dungeons_plus:warped_garden=quark:warped_chest",
+			"hunterillager:hunterhouse=quark:spruce_chest",
+			"iceandfire:gorgon_temple=quark:jungle_chest",
+			"illagers_plus:illager_archer_tower=quark:dark_oak_chest",
+			"illagers_plus:illager_centre=quark:dark_oak_chest",
+			"illagers_plus:illager_fort=quark:dark_oak_chest",
+			"illagers_plus:illager_tower=quark:dark_oak_chest",
+			"infernalexp:bastion_outpost=quark:crimson_chest",
+			"infernalexp:glowstone_canyon_ruin=quark:crimson_chest",
+			"infernalexp:strider_altar=quark:crimson_chest",
+			"pandoras_creatures:end_prison=quark:purpur_chest",
+			"mowziesmobs:barakoa_village=quark:acacia_chest",
+			"endreborn:end_crypt=quark:purpur_chest",
+			"endreborn:end_shipwreck=quark:purpur_chest",
+			"majruszs_difficulty:flying_end_ship=quark:purpur_chest",
+			"majruszs_difficulty:flying_phantom_structure=quark:purpur_chest",
+			"outer_end:catacombs=quark:purpur_chest",
+			"outer_end:end_tower=quark:purpur_chest",
+			"stoneholm:underground_village=quark:spruce_chest",
+			"repurposed_structures:bastion_underground=quark:dark_oak_chest",
+			"repurposed_structures:city_nether=quark:nether_brick_chest",
+			"repurposed_structures:fortress_jungle=quark:jungle_chest",
+			"repurposed_structures:igloo_grassy=quark:oak_chest",
+			"repurposed_structures:igloo_stone=quark:spruce_chest",
+			"repurposed_structures:mansion_birch=quark:birch_chest",
+			"repurposed_structures:mansion_desert=quark:jungle_chest",
+			"repurposed_structures:mansion_jungle=quark:jungle_chest",
+			"repurposed_structures:mansion_oak=quark:oak_chest",
+			"repurposed_structures:mansion_savanna=quark:acacia_chest",
+			"repurposed_structures:mansion_snowy=quark:spruce_chest",
+			"repurposed_structures:mansion_taiga=quark:spruce_chest",
+			"repurposed_structures:mineshaft_birch=quark:birch_chest",
+			"repurposed_structures:mineshaft_crimson=quark:crimson_chest",
+			"repurposed_structures:mineshaft_desert=quark:jungle_chest",
+			"repurposed_structures:mineshaft_end=quark:purpur_chest",
+			"repurposed_structures:mineshaft_icy=quark:spruce_chest",
+			"repurposed_structures:mineshaft_jungle=quark:jungle_chest",
+			"repurposed_structures:mineshaft_nether=quark:nether_brick_chest",
+			"repurposed_structures:mineshaft_ocean=quark:prismarine_chest",
+			"repurposed_structures:mineshaft_savanna=quark:acacia_chest",
+			"repurposed_structures:mineshaft_stone=quark:spruce_chest",
+			"repurposed_structures:mineshaft_swamp=quark:dark_oak_chest",
+			"repurposed_structures:mineshaft_dark_forest=quark:dark_oak_chest",
+			"repurposed_structures:mineshaft_taiga=quark:spruce_chest",
+			"repurposed_structures:mineshaft_warped=quark:warped_chest",
+			"repurposed_structures:outpost_badlands=quark:dark_oak_chest",
+			"repurposed_structures:outpost_birch=quark:birch_chest",
+			"repurposed_structures:outpost_crimson=quark:crimson_chest",
+			"repurposed_structures:outpost_desert=quark:jungle_chest",
+			"repurposed_structures:outpost_giant_tree_taiga=quark:spruce_chest",
+			"repurposed_structures:outpost_icy=quark:spruce_chest",
+			"repurposed_structures:outpost_jungle=quark:jungle_chest",
+			"repurposed_structures:outpost_nether_brick=quark:nether_brick_chest",
+			"repurposed_structures:outpost_oak=quark:oak_chest",
+			"repurposed_structures:outpost_snowy=quark:spruce_chest",
+			"repurposed_structures:outpost_taiga=quark:spruce_chest",
+			"repurposed_structures:outpost_warped=quark:warped_chest",
+			"repurposed_structures:pyramid_badlands=quark:dark_oak_trapped_chest",
+			"repurposed_structures:pyramid_end=quark:purpur_chest",
+			"repurposed_structures:pyramid_flower_forest=quark:oak_chest",
+			"repurposed_structures:pyramid_giant_tree_taiga=quark:spruce_chest",
+			"repurposed_structures:pyramid_icy=quark:spruce_chest",
+			"repurposed_structures:pyramid_jungle=quark:jungle_chest",
+			"repurposed_structures:pyramid_nether=quark:nether_brick_trapped_chest",
+			"repurposed_structures:pyramid_ocean=quark:prismarine_chest",
+			"repurposed_structures:pyramid_snowy=quark:spruce_chest",
+			"repurposed_structures:ruined_portal_end=quark:purpur_chest",
+			"repurposed_structures:ruins_land_hot=quark:jungle_chest",
+			"repurposed_structures:ruins_land_warm=quark:oak_chest",
+			"repurposed_structures:ruins_nether=quark:nether_brick_chest",
+			"repurposed_structures:shipwreck_crimson=quark:crimson_chest",
+			"repurposed_structures:shipwreck_end=quark:purpur_chest",
+			"repurposed_structures:shipwreck_nether_bricks=quark:nether_brick_chest",
+			"repurposed_structures:shipwreck_warped=quark:warped_chest",
+			"repurposed_structures:stronghold_nether=quark:nether_brick_chest",
+			"repurposed_structures:temple_nether_basalt=quark:nether_brick_chest",
+			"repurposed_structures:temple_nether_crimson=quark:crimson_chest",
+			"repurposed_structures:temple_nether_soul=quark:warped_chest",
+			"repurposed_structures:temple_nether_warped=quark:warped_trapped_chest",
+			"repurposed_structures:temple_nether_wasteland=quark:nether_brick_chest",
+			"repurposed_structures:village_badlands=quark:dark_oak_chest",
+			"repurposed_structures:village_birch=quark:birch_chest",
+			"repurposed_structures:village_crimson=quark:crimson_chest",
+			"repurposed_structures:village_dark_oak=quark:dark_oak_chest",
+			"repurposed_structures:village_giant_taiga=quark:spruce_chest",
+			"repurposed_structures:village_jungle=quark:jungle_chest",
+			"repurposed_structures:village_mountains=quark:spruce_chest",
+			"repurposed_structures:village_oak=quark:oak_chest",
+			"repurposed_structures:village_swamp=quark:oak_chest",
+			"repurposed_structures:village_warped=quark:warped_chest",
+			"valhelsia_structures:big_tree=quark:oak_chest",
+			"valhelsia_structures:castle=quark:spruce_chest",
+			"valhelsia_structures:castle_ruin=quark:oak_chest",
+			"valhelsia_structures:desert_house=quark:spruce_chest",
+			"valhelsia_structures:forge=quark:spruce_chest",
+			"valhelsia_structures:player_house=quark:oak_chest",
+			"valhelsia_structures:small_castle=quark:oak_chest",
+			"valhelsia_structures:small_dungeon=quark:oak_chest",
+			"valhelsia_structures:spawner_dungeon=quark:oak_chest",
+			"valhelsia_structures:tower_ruin=quark:spruce_chest",
+			"valhelsia_structures:witch_hut=quark:spruce_chest");
 
 	private static final Method CHEST_EQUIP = ObfuscationReflectionHelper.findMethod(AbstractChestedHorse.class, "m_7609_");
 
@@ -257,9 +259,9 @@ public class VariantChestsModule extends QuarkModule {
 		List<String> chestsClone = new ArrayList<>(BUILT_IN_MOD_STRUCTURES);
 		chestsClone.addAll(structureChests);
 
-		for(String s : chestsClone) {
+		for (String s : chestsClone) {
 			String[] toks = s.split("=");
-			if(toks.length == 2) {
+			if (toks.length == 2) {
 				String left = toks[0];
 				String right = toks[1];
 
@@ -273,26 +275,26 @@ public class VariantChestsModule extends QuarkModule {
 	}
 
 	private static BlockState getGenerationChestBlockState(BlockState current, StructureHolder structure) {
-		if(staticEnabled && replaceWorldgenChests && current.getBlock() == Blocks.CHEST) {
+		if (staticEnabled && replaceWorldgenChests && current.getBlock() == Blocks.CHEST) {
 			ResourceLocation res = structure.currentStructure.getRegistryName();
-			if(res == null)
+			if (res == null)
 				return null; // no change
 			String name = res.toString();
 
-			if("minecraft:village".equals(name)) {
-				if(structure.currentComponents != null && structure.currentComponents.size() > 0) {
+			if ("minecraft:village".equals(name)) {
+				if (structure.currentComponents != null && structure.currentComponents.size() > 0) {
 					StructurePiece first = structure.currentComponents.get(0);
-					if(first instanceof PoolElementStructurePiece avp) {
+					if (first instanceof PoolElementStructurePiece avp) {
 						StructurePoolElement jigsaw = avp.getElement();
-						if(jigsaw instanceof LegacySinglePoolElement legacyJigsaw) {
+						if (jigsaw instanceof LegacySinglePoolElement legacyJigsaw) {
 							String type = legacyJigsaw.toString();
 							Matcher match = VILLAGE_PIECE_PATTERN.matcher(type);
-							if(match.matches()) {
+							if (match.matches()) {
 								String namespace = match.group(1);
 								String villageType = match.group(2);
 
 								name += "_" + villageType;
-								if(!namespace.equals("minecraft"))
+								if (!namespace.equals("minecraft"))
 									name = name.replace("minecraft\\:", namespace);
 							}
 
@@ -301,10 +303,10 @@ public class VariantChestsModule extends QuarkModule {
 				}
 			}
 
-			if(chestMappings.containsKey(name)) {
+			if (chestMappings.containsKey(name)) {
 				Block block = chestMappings.get(name);
 				BlockState placeState = block.defaultBlockState();
-				if(placeState.getProperties().contains(ChestBlock.TYPE)) {
+				if (placeState.getProperties().contains(ChestBlock.TYPE)) {
 					placeState = placeState.setValue(ChestBlock.FACING, current.getValue(ChestBlock.FACING)).setValue(ChestBlock.TYPE, current.getValue(ChestBlock.TYPE)).setValue(ChestBlock.WATERLOGGED, current.getValue(ChestBlock.WATERLOGGED));
 					return placeState;
 				}
@@ -314,7 +316,7 @@ public class VariantChestsModule extends QuarkModule {
 		return null; // no change
 	}
 
-	 void addChest(String name, Block from) {
+	void addChest(String name, Block from) {
 		addChest(name, Block.Properties.copy(from));
 	}
 
@@ -349,8 +351,8 @@ public class VariantChestsModule extends QuarkModule {
 
 	@Override
 	public void textureStitch(TextureStitchEvent.Pre event) {
-		if(event.getAtlas().location().toString().equals("minecraft:textures/atlas/chest.png")) {
-			for(Block b : allChests)
+		if (event.getAtlas().location().toString().equals("minecraft:textures/atlas/chest.png")) {
+			for (Block b : allChests)
 				VariantChestRenderer.accept(event, b);
 		}
 	}
@@ -413,6 +415,7 @@ public class VariantChestsModule extends QuarkModule {
 
 	public interface IChestTextureProvider {
 		String getChestTexturePath();
+
 		boolean isTrap();
 	}
 

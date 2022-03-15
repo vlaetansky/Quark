@@ -84,7 +84,7 @@ public class CrateMenu extends AbstractContainerMenu {
 				crate.setChanged();
 			} else {
 				if(MiscUtil.canPutIntoInv(itemstack, crate.getLevel(), crate.getBlockPos(), crate, Direction.UP, true)) {
-					MiscUtil.putIntoInv(itemstack,  crate.getLevel(), crate.getBlockPos(),crate, Direction.UP, false, false);
+					MiscUtil.putIntoInv(itemstack, crate.getLevel(), crate.getBlockPos(),crate, Direction.UP, false, false);
 					itemstack1.setCount(0);
 					empty = true;
 				} else return ItemStack.EMPTY;

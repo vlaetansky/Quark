@@ -208,7 +208,7 @@ public class UsageTickerModule extends QuarkModule {
 			int count = getStackCount(player, stack);
 			ItemStack displayStack = getDisplayedStack(stack, count).copy();
 			if(displayStack != stack)
-				count = getStackCount(player,  displayStack);
+				count = getStackCount(player, displayStack);
 			displayStack.setCount(count);
 
 			return displayStack;

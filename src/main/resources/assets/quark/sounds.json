@@ -136,6 +136,24 @@
     ],
     "subtitle": "quark.subtitles.foxhound_ambient"
   },
+  "entity.foxhound.eat": {
+    "sounds": [
+      { "name": "mob/fox/eat1", "volume": 0.65 },
+      { "name": "mob/fox/eat2", "volume": 0.65 },
+      { "name": "mob/fox/eat3", "volume": 0.65 }
+    ],
+    "subtitle": "quark.subtitles.foxhound_eat"
+  },
+  "entity.foxhound.crackle": {
+    "sounds": [
+      "block/furnace/fire_crackle1",
+      "block/furnace/fire_crackle2",
+      "block/furnace/fire_crackle3",
+      "block/furnace/fire_crackle4",
+      "block/furnace/fire_crackle5"
+    ],
+    "subtitle": "quark.subtitles.foxhound_crackle"
+  },
   "entity.frog.wednesday": {
     "subtitle": "quark.subtitles.hump_day",
     "sounds": [
@@ -304,6 +322,20 @@
       "quark:block/pipe/pickup"
     ]
   },
+  "block.potato.do_it": {
+    "subtitle": "quark.subtitles.do_it",
+    "sounds": [
+      "quark:block/do_it"
+    ]
+  },
+  "block.potato.hurt": {
+    "subtitle": "quark.subtitles.potato_hurt",
+    "sounds": [
+      "damage/hit1",
+      "damage/hit2",
+      "damage/hit3"
+    ]
+  },
   "item.camera.shutter": {
     "subtitle": "quark.subtitles.camera_shutter",
     "sounds": [
@@ -343,6 +375,16 @@
         "pitch": 1.4,
         "volume": 0.7
       }
+    ]
+  },
+  "pet.slime": {
+    "subtitle": "quark.subtitles.pet.slime",
+    "sounds": [
+      "mob/slime/small1",
+      "mob/slime/small2",
+      "mob/slime/small3",
+      "mob/slime/small4",
+      "mob/slime/small5"
     ]
   },
   "pet.wire": {

@@ -36,7 +36,7 @@ import vazkii.quark.base.module.QuarkModule;
 import java.util.*;
 import java.util.function.BooleanSupplier;
 
-@LoadModule(category =  ModuleCategory.CLIENT, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
+@LoadModule(category = ModuleCategory.CLIENT, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class MicrocraftingHelperModule extends QuarkModule {
 
 	@OnlyIn(Dist.CLIENT)

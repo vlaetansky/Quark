@@ -20,23 +20,23 @@ import vazkii.quark.content.tweaks.client.item.CompassAngleGetter;
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
 public class CompassesWorkEverywhereModule extends QuarkModule {
 
-	@Config public static boolean enableCompassNerf =  true;
-	@Config public static boolean enableClockNerf =  true;
-	
-	@Config public static boolean enableNether =  true;
-	@Config public static boolean enableEnd =  true;
-	
+	@Config public static boolean enableCompassNerf = true;
+	@Config public static boolean enableClockNerf = true;
+
+	@Config public static boolean enableNether = true;
+	@Config public static boolean enableEnd = true;
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
 		// register = addPropertyOverride
 		if(enabled && (enableCompassNerf || enableNether || enableEnd))
 			enqueue(() -> ItemProperties.register(Items.COMPASS, new ResourceLocation("angle"), new CompassAngleGetter.Impl()));
-		
+
 		if(enabled && enableClockNerf)
 			enqueue(() -> ItemProperties.register(Items.CLOCK, new ResourceLocation("time"), new ClockTimeGetter.Impl()));
 	}
-	
+
 	@SubscribeEvent
 	public void onUpdate(PlayerTickEvent event) {
 		if(event.phase == Phase.START) {
@@ -50,5 +50,5 @@ public class CompassesWorkEverywhereModule extends QuarkModule {
 			}
 		}
 	}
-	
+
 }

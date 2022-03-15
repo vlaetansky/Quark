@@ -1,16 +1,6 @@
 package vazkii.quark.content.mobs.entity;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.List;
-import java.util.UUID;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -28,24 +18,13 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.JumpControl;
 import net.minecraft.world.entity.ai.control.MoveControl;
-import net.minecraft.world.entity.ai.goal.BreedGoal;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.FollowParentGoal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.PanicGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.TemptGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -68,6 +47,14 @@ import vazkii.quark.base.proxy.CommonProxy;
 import vazkii.quark.content.mobs.ai.FavorBlockGoal;
 import vazkii.quark.content.mobs.ai.PassivePassengerGoal;
 import vazkii.quark.content.mobs.module.FrogsModule;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.List;
+import java.util.UUID;
 
 public class Frog extends Animal implements IEntityAdditionalSpawnData, IForgeShearable {
 	public static final ResourceLocation FROG_LOOT_TABLE = new ResourceLocation("quark", "entities/frog");
@@ -351,7 +338,7 @@ public class Frog extends Animal implements IEntityAdditionalSpawnData, IForgeSh
 
 	private Ingredient getTemptationItems(boolean nice) {
 		if(temptationItems == null)
-			temptationItems =  new Ingredient[] {
+			temptationItems = new Ingredient[] {
 					Ingredient.merge(Lists.newArrayList(
 							Ingredient.of(Items.SPIDER_EYE),
 							Ingredient.of(ItemTags.FISHES)

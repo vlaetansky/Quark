@@ -114,7 +114,7 @@ public class PatTheDogsModule extends QuarkModule {
 							sound = SoundEvents.STRIDER_HAPPY;
 						} else if (living instanceof Turtle) {
 							sound = SoundEvents.TURTLE_AMBIENT_LAND;
-						}  else if (living instanceof Player pettee) {
+						} else if (living instanceof Player pettee) {
 							var uuid = pettee.getStringUUID();
 							sound = switch (uuid) {
 								case "a2ce9382-2518-4752-87b2-c6a5c97f173e" -> // petra_the_kat
@@ -122,6 +122,8 @@ public class PatTheDogsModule extends QuarkModule {
 								case "29a10dc6-a201-4993-80d8-c847212bc92b", // MacyMacerator
 										"d30d8e38-6f93-4d96-968d-dd6ec5596941" -> // Falkory220
 										QuarkSounds.PET_NEKO;
+								case "d475af59-d73c-42be-90ed-f1a78f10d452" -> // DaniCherryJam
+										QuarkSounds.PET_SLIME;
 								case "458391f5-6303-4649-b416-e4c0d18f837a" -> // yrsegal
 										QuarkSounds.PET_WIRE;
 								default -> null;

@@ -177,7 +177,7 @@ public class ReacharoundPlacingModule extends QuarkModule {
 		HitResult normalRes = RayTraceHandler.rayTrace(player, world, rayPos, ray, Block.OUTLINE, Fluid.NONE);
 
 		if (normalRes.getType() == HitResult.Type.MISS) {
-			ReacharoundTarget  target = getPlayerVerticalReacharoundTarget(player, hand, world, rayPos, ray);
+			ReacharoundTarget target = getPlayerVerticalReacharoundTarget(player, hand, world, rayPos, ray);
 			if(target != null)
 				return target;
 

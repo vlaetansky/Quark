@@ -1,9 +1,6 @@
 package vazkii.quark.content.world.gen.structure;
 
-import java.util.Optional;
-
 import com.mojang.serialization.Codec;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -23,6 +20,8 @@ import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.world.module.BigDungeonModule;
+
+import java.util.Optional;
 
 public class BigDungeonStructure extends StructureFeature<JigsawConfiguration> {
 
@@ -45,11 +44,11 @@ public class BigDungeonStructure extends StructureFeature<JigsawConfiguration> {
 	private static boolean checkLocation(PieceGeneratorSupplier.Context<JigsawConfiguration> context) {
 		if(!ModuleLoader.INSTANCE.isModuleEnabled(BigDungeonModule.class))
 			return false;
-		
+
 		ChunkPos chunkpos = context.chunkPos();
-        int i = chunkpos.getMiddleBlockX();
-        int j = chunkpos.getMiddleBlockZ();
-		
+		int i = chunkpos.getMiddleBlockX();
+		int j = chunkpos.getMiddleBlockZ();
+
 		WorldgenRandom worldgenrandom = new WorldgenRandom(new LegacyRandomSource(0L));
 		worldgenrandom.setSeed((long)(i ^ j << 4) ^ context.seed());
 		worldgenrandom.nextInt();
@@ -66,7 +65,7 @@ public class BigDungeonStructure extends StructureFeature<JigsawConfiguration> {
 		WorldgenRandom worldgenrandom = new WorldgenRandom(new LegacyRandomSource(0L));
 		worldgenrandom.setSeed((long)(i ^ j << 4) ^ context.seed());
 		worldgenrandom.nextInt();
-		int y = BigDungeonModule.minStartY + worldgenrandom.nextInt(BigDungeonModule.maxStartY - BigDungeonModule.minStartY); 
+		int y = BigDungeonModule.minStartY + worldgenrandom.nextInt(BigDungeonModule.maxStartY - BigDungeonModule.minStartY);
 
 		BlockPos blockpos = context.chunkPos().getMiddleBlockPosition(y);
 		JigsawConfiguration newConfig = new JigsawConfiguration(Holder.direct(context.registryAccess().ownedRegistryOrThrow(Registry.TEMPLATE_POOL_REGISTRY) .get(new ResourceLocation(Quark.MOD_ID, NAMESPACE + "/starts"))), BigDungeonModule.maxRooms);

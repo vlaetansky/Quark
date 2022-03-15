@@ -21,22 +21,22 @@ public class WoodenPostsModule extends QuarkModule {
 
 	@Override
 	public void register() {
-		ImmutableList.of(Blocks.OAK_FENCE, Blocks.SPRUCE_FENCE, Blocks.BIRCH_FENCE, 
-				Blocks.JUNGLE_FENCE, Blocks.ACACIA_FENCE, Blocks.DARK_OAK_FENCE, 
+		ImmutableList.of(Blocks.OAK_FENCE, Blocks.SPRUCE_FENCE, Blocks.BIRCH_FENCE,
+				Blocks.JUNGLE_FENCE, Blocks.ACACIA_FENCE, Blocks.DARK_OAK_FENCE,
 				Blocks.CRIMSON_FENCE, Blocks.WARPED_FENCE)
 		.forEach(b -> {
 			boolean nether = b.defaultBlockState().getMaterial() == Material.NETHER_WOOD;
-			WoodPostBlock post = new WoodPostBlock(this, b, "",  nether);
+			WoodPostBlock post = new WoodPostBlock(this, b, "", nether);
 			WoodPostBlock stripped = new WoodPostBlock(this, b, "stripped_", nether);
 			ToolInteractionHandler.registerInteraction(ToolActions.AXE_STRIP, post, stripped);
 		});
 	}
-	
+
 	public static boolean canLanternConnect(BlockState state, LevelReader worldIn, BlockPos pos, boolean prev) {
-		return prev || 
-				(ModuleLoader.INSTANCE.isModuleEnabled(WoodenPostsModule.class) 
-						&& state.getValue(LanternBlock.HANGING) 
+		return prev ||
+				(ModuleLoader.INSTANCE.isModuleEnabled(WoodenPostsModule.class)
+						&& state.getValue(LanternBlock.HANGING)
 						&& worldIn.getBlockState(pos.above()).getBlock() instanceof WoodPostBlock);
 	}
-	
+
 }

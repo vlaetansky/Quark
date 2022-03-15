@@ -1,11 +1,8 @@
 package vazkii.quark.content.mobs.client.model;
 
-import java.util.Random;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -17,6 +14,7 @@ import net.minecraft.client.renderer.RenderType;
 import vazkii.quark.content.mobs.entity.Wraith;
 
 import javax.annotation.Nonnull;
+import java.util.Random;
 
 public class WraithModel extends EntityModel<Wraith> {
 
@@ -74,7 +72,7 @@ public class WraithModel extends EntityModel<Wraith> {
 
 		wraith = entity;
 		offset = Math.sin(time / 16) * 0.1 + 0.15;
-		alphaMult = 0.5F + (float) Math.sin(time / 20)  * 0.3F;
+		alphaMult = 0.5F + (float) Math.sin(time / 20) * 0.3F;
 	}
 
 	@Override

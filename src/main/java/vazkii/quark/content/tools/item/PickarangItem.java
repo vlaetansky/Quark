@@ -91,7 +91,7 @@ public class PickarangItem extends QuarkItem {
 		Vec3 pos = playerIn.position();
 		worldIn.playSound(null, pos.x, pos.y, pos.z, QuarkSounds.ENTITY_PICKARANG_THROW, SoundSource.NEUTRAL, 0.5F + eff * 0.14F, 0.4F / (worldIn.random.nextFloat() * 0.4F + 0.8F));
 
-		if(!worldIn.isClientSide)  {
+		if(!worldIn.isClientSide) {
 			Inventory inventory = playerIn.getInventory();
 			int slot = handIn == InteractionHand.OFF_HAND ? inventory.getContainerSize() - 1 : inventory.selected;
 			Pickarang entity = new Pickarang(worldIn, playerIn);

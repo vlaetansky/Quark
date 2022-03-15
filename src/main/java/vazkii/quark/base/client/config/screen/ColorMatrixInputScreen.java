@@ -116,7 +116,7 @@ public class ColorMatrixInputScreen extends AbstractInputScreen<ColorMatrixConfi
 
 			font.draw(mstack, name, cx + 2, cy + 2, 0x55000000);
 
-			minecraft.getItemRenderer().renderGuiItem(new ItemStack(Items.OAK_SAPLING), cx + size - 18, cy + size  - 16);
+			minecraft.getItemRenderer().renderGuiItem(new ItemStack(Items.OAK_SAPLING), cx + size - 18, cy + size - 16);
 			mstack.pushPose();
 			mstack.translate(0, 0, 999);
 			fill(mstack, cx + size / 2, cy + size / 2, cx + size, cy + size, convolvedFolliage & 0x55FFFFFF);

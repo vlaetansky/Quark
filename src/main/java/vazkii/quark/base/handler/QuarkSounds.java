@@ -36,13 +36,16 @@ public class QuarkSounds {
 	public static final SoundEvent ENTITY_FOXHOUND_PANT = register("entity.foxhound.pant");
 	public static final SoundEvent ENTITY_FOXHOUND_SHAKE = register("entity.foxhound.shake");
 	public static final SoundEvent ENTITY_FOXHOUND_WHINE = register("entity.foxhound.whine");
+	public static final SoundEvent ENTITY_FOXHOUND_EAT = register("entity.foxhound.eat");
+	public static final SoundEvent ENTITY_FOXHOUND_CRACKLE = register("entity.foxhound.crackle");
+
 	public static final SoundEvent ENTITY_FROG_WEDNESDAY = register("entity.frog.wednesday");
 	public static final SoundEvent ENTITY_FROG_JUMP = register("entity.frog.jump");
 	public static final SoundEvent ENTITY_FROG_DIE = register("entity.frog.die");
 	public static final SoundEvent ENTITY_FROG_HURT = register("entity.frog.hurt");
 	public static final SoundEvent ENTITY_FROG_IDLE = register("entity.frog.idle");
-
 	public static final SoundEvent ENTITY_FROG_SHEAR = register("entity.frog.shear");
+
 	public static final SoundEvent ENTITY_CRAB_DIE = register("entity.crab.die");
 	public static final SoundEvent ENTITY_CRAB_HURT = register("entity.crab.hurt");
 	public static final SoundEvent ENTITY_CRAB_IDLE = register("entity.crab.idle");
@@ -54,7 +57,9 @@ public class QuarkSounds {
 	public static final SoundEvent ENTITY_TORETOISE_HARVEST = register("entity.toretoise.harvest");
 	public static final SoundEvent ENTITY_TORETOISE_EAT = register("entity.toretoise.eat");
 	public static final SoundEvent ENTITY_TORETOISE_REGROW = register("entity.toretoise.regrow");
+
 	public static final SoundEvent ENTITY_SOUL_BEAD_IDLE = register("entity.soul_bead.idle");
+
 	public static final SoundEvent BLOCK_MONSTER_BOX_GROWL = register("block.monster_box.growl");
 
 	public static final SoundEvent BLOCK_PIPE_SHOOT = register("block.pipe.shoot");
@@ -62,11 +67,15 @@ public class QuarkSounds {
 	public static final SoundEvent BLOCK_PIPE_SHOOT_LENNY = register("block.pipe.shoot.lenny");
 	public static final SoundEvent BLOCK_PIPE_PICKUP_LENNY = register("block.pipe.pickup.lenny");
 
+	public static final SoundEvent BLOCK_POTATO_DO_IT = register("block.potato.do_it");
+	public static final SoundEvent BLOCK_POTATO_HURT = register("block.potato.hurt");
+
 	public static final SoundEvent ITEM_CAMERA_SHUTTER = register("item.camera.shutter");
 	public static final SoundEvent ITEM_SOUL_POWDER_SPAWN = register("item.soul_powder.spawn");
 
 	public static final SoundEvent PET_DEVICE = register("pet.device");
 	public static final SoundEvent PET_NEKO = register("pet.neko");
+	public static final SoundEvent PET_SLIME = register("pet.slime");
 	public static final SoundEvent PET_WIRE = register("pet.wire");
 
 	public static final SoundEvent AMBIENT_DRIPS = register("ambient.drips");

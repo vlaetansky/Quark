@@ -18,7 +18,7 @@ import vazkii.quark.content.tools.module.ColorRunesModule;
 @Mixin(ElytraLayer.class)
 public class ElytraLayerMixin<T extends LivingEntity, M extends EntityModel<T>> {
 
-	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;pushPose()V"), locals = LocalCapture.CAPTURE_FAILHARD)
+	@Inject(method = "render*", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;pushPose()V"), locals = LocalCapture.CAPTURE_FAILHARD)
 	private void setColorRuneTargetStack(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo callbackInfo, ItemStack itemstack) {
 		ColorRunesModule.setTargetStack(itemstack);
 	}

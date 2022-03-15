@@ -42,7 +42,7 @@ public class WraithModule extends QuarkModule {
 	public static EntityType<SoulBead> soulBeadType;
 
 	@Config(description = "List of sound sets to use with wraiths.\nThree sounds must be provided per entry, separated by | (in the format idle|hurt|death). Leave blank for no sound (i.e. if a mob has no ambient noise)")
-	private static List<String> wraithSounds  = Lists.newArrayList(
+	private static List<String> wraithSounds = Lists.newArrayList(
 			"entity.sheep.ambient|entity.sheep.hurt|entity.sheep.death",
 			"entity.cow.ambient|entity.cow.hurt|entity.cow.death",
 			"entity.pig.ambient|entity.pig.hurt|entity.pig.death",

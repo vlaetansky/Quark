@@ -45,6 +45,7 @@
     "client.JukeboxBlockEntityMixin",
     "client.LevelRendererMixin",
     "client.LoomScreenMixin",
+    "client.ModelManagerMixin",
     "client.PistonTileEntityRendererMixin",
     "client.RenderBuffersMixin",
     "client.ScreenMixin",

@@ -1,7 +1,5 @@
 package vazkii.quark.content.building.block;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -11,21 +9,22 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.Material;
@@ -45,13 +44,18 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 import vazkii.quark.content.building.module.RopeModule;
 
-public class RopeBlock extends QuarkBlock implements IBlockItemProvider {
+import javax.annotation.Nonnull;
+
+public class RopeBlock extends QuarkBlock implements IBlockItemProvider, SimpleWaterloggedBlock {
 
 	private static final VoxelShape SHAPE = box(6, 0, 6, 10, 16, 10);
+
+	public static BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
 	public RopeBlock(String regname, QuarkModule module, CreativeModeTab creativeTab, Properties properties) {
 		super(regname, module, creativeTab, properties);
 
+		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
 	}
 
@@ -69,6 +73,27 @@ public class RopeBlock extends QuarkBlock implements IBlockItemProvider {
 	@Override
 	public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
 		return Shapes.empty();
+	}
+
+	@Nonnull
+	@Override
+	public FluidState getFluidState(BlockState state) {
+		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+	}
+
+	@Override
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		return defaultBlockState().setValue(WATERLOGGED, context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER);
+	}
+
+	@Override
+	public boolean propagatesSkylightDown(BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos) {
+		return !state.getValue(WATERLOGGED);
+	}
+
+	@Override
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		builder.add(WATERLOGGED);
 	}
 
 	@Nonnull
@@ -136,7 +161,7 @@ public class RopeBlock extends QuarkBlock implements IBlockItemProvider {
 		if(ropePos.equals(basePos))
 			return false;
 
-		world.setBlockAndUpdate(ropePos, Blocks.AIR.defaultBlockState());
+		world.setBlockAndUpdate(ropePos, world.getBlockState(pos).getFluidState().createLegacyBlock());
 		moveBlock(world, pos, ropePos);
 
 		return true;
@@ -174,7 +199,7 @@ public class RopeBlock extends QuarkBlock implements IBlockItemProvider {
 			BlockState ropePosState = world.getBlockState(ropePos);
 
 			if(world.isEmptyBlock(ropePos) || ropePosState.getMaterial().isReplaceable()) {
-				world.setBlockAndUpdate(ropePos, defaultBlockState());
+				world.setBlockAndUpdate(ropePos, defaultBlockState().setValue(WATERLOGGED, ropePosState.getFluidState().getType() == Fluids.WATER));
 				return true;
 			}
 		}
@@ -203,7 +228,7 @@ public class RopeBlock extends QuarkBlock implements IBlockItemProvider {
 		BlockState state = world.getBlockState(srcPos);
 		Block block = state.getBlock();
 
-		if(state.getDestroySpeed(world, srcPos) == -1 || !state.canSurvive(world, dstPos) || state.isAir() ||
+		if(state.getDestroySpeed(world, srcPos) == -1 || !state.canSurvive(world, dstPos) || state.isAir() || state.getBlock() instanceof LiquidBlock ||
 				state.getPistonPushReaction() != PushReaction.NORMAL || isIllegalBlock(block))
 			return;
 

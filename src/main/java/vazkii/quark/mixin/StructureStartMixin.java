@@ -27,7 +27,7 @@ public class StructureStartMixin {
 
 	@Shadow
 	@Final
-	private ConfiguredStructureFeature<?, ?>  feature;
+	private ConfiguredStructureFeature<?, ?> feature;
 
 	@Inject(method = "placeInChunk", at = @At("HEAD"))
 	public void injectReference(WorldGenLevel level, StructureFeatureManager manager, ChunkGenerator generator, Random random, BoundingBox bounds, ChunkPos pos, CallbackInfo callback) {

@@ -30,7 +30,7 @@ public class QuarkBoatItem extends QuarkItem {
 	public final String type;
 
 	public QuarkBoatItem(String type, QuarkModule module) {
-		super(type + "_boat", module,  (new Item.Properties()).stacksTo(1).tab(CreativeModeTab.TAB_TRANSPORTATION));
+		super(type + "_boat", module, (new Item.Properties()).stacksTo(1).tab(CreativeModeTab.TAB_TRANSPORTATION));
 
 		this.type = type;
 	}

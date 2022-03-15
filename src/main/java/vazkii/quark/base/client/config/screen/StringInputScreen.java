@@ -27,7 +27,7 @@ public class StringInputScreen<T> extends AbstractInputScreen<T> {
 		super.render(mstack, mouseX, mouseY, partialTicks);
 
 		drawCenteredString(mstack, font, new TextComponent(object.getGuiDisplayName()).withStyle(ChatFormatting.BOLD), width / 2, 20, 0xFFFFFF);
-		drawCenteredString(mstack, font, I18n.get("quark.gui.config.defaultvalue", object.defaultObj),  width / 2, 30, 0xFFFFFF);
+		drawCenteredString(mstack, font, I18n.get("quark.gui.config.defaultvalue", object.defaultObj), width / 2, 30, 0xFFFFFF);
 
 		input.render(mstack, mouseX, mouseY, partialTicks);
 	}

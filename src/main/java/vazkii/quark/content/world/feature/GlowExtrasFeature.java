@@ -1,9 +1,5 @@
 package vazkii.quark.content.world.feature;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
@@ -17,12 +13,12 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
-import net.minecraft.world.level.levelgen.placement.BiomeFilter;
-import net.minecraft.world.level.levelgen.placement.CountPlacement;
-import net.minecraft.world.level.levelgen.placement.InSquarePlacement;
-import net.minecraft.world.level.levelgen.placement.PlacementModifier;
-import net.minecraft.world.level.levelgen.placement.RandomOffsetPlacement;
+import net.minecraft.world.level.levelgen.placement.*;
 import vazkii.quark.content.world.module.GlimmeringWealdModule;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public class GlowExtrasFeature extends Feature<NoneFeatureConfiguration> {
 
@@ -31,9 +27,9 @@ public class GlowExtrasFeature extends Feature<NoneFeatureConfiguration> {
 	}
 
 	public static List<PlacementModifier> placed() {
-		return  Arrays.asList(CountPlacement.of(200), 
-				InSquarePlacement.spread(), 
-				PlacementUtils.RANGE_BOTTOM_TO_MAX_TERRAIN_HEIGHT, 
+		return Arrays.asList(CountPlacement.of(200),
+				InSquarePlacement.spread(),
+				PlacementUtils.RANGE_BOTTOM_TO_MAX_TERRAIN_HEIGHT,
 				RandomOffsetPlacement.vertical(ConstantInt.of(1)), BiomeFilter.biome());
 	}
 
@@ -58,7 +54,7 @@ public class GlowExtrasFeature extends Feature<NoneFeatureConfiguration> {
 						if(res > 0.85) { // try to place shrub
 							if(worldgenlevel.isStateAtPosition(setPos.below(), s -> s.getBlock() == Blocks.DEEPSLATE))
 								worldgenlevel.setBlock(setPos, GlimmeringWealdModule.glow_lichen_growth.defaultBlockState(), 2);
-						} 
+						}
 
 						else if(res > 0.35) { // try to place lichen
 							for(Direction dir : Direction.values()) {
