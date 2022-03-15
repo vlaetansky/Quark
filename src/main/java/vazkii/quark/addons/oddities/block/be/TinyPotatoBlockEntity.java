@@ -158,6 +158,11 @@ public class TinyPotatoBlockEntity extends SimpleInventoryBlockEntity implements
 		return 1;
 	}
 
+	@Override
+	public boolean canPlaceItem(int slot, @Nonnull ItemStack itemstack) {
+		return this.getItem(slot).isEmpty();
+	}
+
 	@Nonnull
 	@Override
 	public Component getName() {
