@@ -144,6 +144,16 @@
     ],
     "subtitle": "quark.subtitles.foxhound_eat"
   },
+  "entity.foxhound.crackle": {
+    "sounds": [
+      "block/furnace/fire_crackle1",
+      "block/furnace/fire_crackle2",
+      "block/furnace/fire_crackle3",
+      "block/furnace/fire_crackle4",
+      "block/furnace/fire_crackle5"
+    ],
+    "subtitle": "quark.subtitles.foxhound_crackle"
+  },
   "entity.frog.wednesday": {
     "subtitle": "quark.subtitles.hump_day",
     "sounds": [

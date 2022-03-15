@@ -78,6 +78,7 @@ public class Foxhound extends Wolf implements Enemy {
 
 	private static final EntityDataAccessor<Boolean> TEMPTATION = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> IS_BLUE = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> TATERING = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.BOOLEAN);
 
 	private int timeUntilPotatoEmerges = 0;
 
@@ -95,6 +96,7 @@ public class Foxhound extends Wolf implements Enemy {
 		setCollarColor(DyeColor.ORANGE);
 		entityData.define(TEMPTATION, false);
 		entityData.define(IS_BLUE, false);
+		entityData.define(TATERING, false);
 	}
 
 	@Override
@@ -144,11 +146,13 @@ public class Foxhound extends Wolf implements Enemy {
 
 		if (!level.isClientSide && timeUntilPotatoEmerges > 0) {
 			if (--timeUntilPotatoEmerges == 0) {
+				setTatering(false);
 				ItemStack stack = new ItemStack(TinyPotatoModule.tiny_potato);
 				ItemNBTHelper.setBoolean(stack, TinyPotatoBlock.ANGRY, true);
 				spawnAtLocation(stack);
 				playSound(SoundEvents.GENERIC_HURT, 1f, 1f);
-			}
+			} else if (!isTatering())
+				setTatering(true);
 		}
 
 		if(isSleeping()) {
@@ -171,14 +175,21 @@ public class Foxhound extends Wolf implements Enemy {
 		}
 
 		Vec3 pos = position();
-		if(this.level.isClientSide) {
+		if(level.isClientSide) {
 			SimpleParticleType particle = ParticleTypes.FLAME;
 			if(isSleeping())
 				particle = ParticleTypes.SMOKE;
 			else if(isBlue())
 				particle = ParticleTypes.SOUL_FIRE_FLAME;
 
-			this.level.addParticle(particle, pos.x + (this.random.nextDouble() - 0.5D) * this.getBbWidth(), pos.y + (this.random.nextDouble() - 0.5D) * this.getBbHeight(), pos.z + (this.random.nextDouble() - 0.5D) * this.getBbWidth(), 0.0D, 0.0D, 0.0D);
+			level.addParticle(particle, pos.x + (this.random.nextDouble() - 0.5D) * this.getBbWidth(), pos.y + (this.random.nextDouble() - 0.5D) * this.getBbHeight(), pos.z + (this.random.nextDouble() - 0.5D) * this.getBbWidth(), 0.0D, 0.0D, 0.0D);
+
+			if (isTatering() && random.nextDouble() < 0.1) {
+				level.addParticle(ParticleTypes.LARGE_SMOKE, pos.x + (this.random.nextDouble() - 0.5D) * this.getBbWidth(), pos.y + (this.random.nextDouble() - 0.5D) * this.getBbHeight(), pos.z + (this.random.nextDouble() - 0.5D) * this.getBbWidth(), 0.0D, 0.0D, 0.0D);
+
+				level.playLocalSound(pos.x, pos.y, pos.z, QuarkSounds.ENTITY_FOXHOUND_CRACKLE, getSoundSource(), 1.0F, 1.0F, false);
+			}
+
 		}
 
 		if(isTame()) {
@@ -382,6 +393,14 @@ public class Foxhound extends Wolf implements Enemy {
 
 	public void setBlue(boolean blue) {
 		entityData.set(IS_BLUE, blue);
+	}
+
+	public boolean isTatering() {
+		return entityData.get(TATERING);
+	}
+
+	public void setTatering(boolean tatering) {
+		entityData.set(TATERING, tatering);
 	}
 
 //	public static boolean canSpawnHere(IServerWorld world, BlockPos pos, Random rand) {
