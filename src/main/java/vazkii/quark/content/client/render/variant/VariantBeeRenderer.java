@@ -1,12 +1,6 @@
 package vazkii.quark.content.client.render.variant;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
-import java.util.UUID;
-
 import com.google.common.collect.ImmutableList;
-
 import net.minecraft.client.renderer.entity.BeeRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -16,6 +10,10 @@ import vazkii.quark.base.Quark;
 import vazkii.quark.content.client.module.VariantAnimalTexturesModule;
 
 import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
+import java.util.UUID;
 
 public class VariantBeeRenderer extends BeeRenderer {
 
@@ -42,7 +40,7 @@ public class VariantBeeRenderer extends BeeRenderer {
 
 		// From https://news.gallup.com/poll/329708/lgbt-identification-rises-latest-estimate.aspx
 		final double lgbtChance = 0.056;
-		boolean lgbt = VariantAnimalTexturesModule.everyBeeIsLGBT ||  (new Random(most)).nextDouble() < lgbtChance;
+		boolean lgbt = VariantAnimalTexturesModule.everyBeeIsLGBT || (new Random(most)).nextDouble() < lgbtChance;
 
 		if(entity.hasCustomName() || lgbt) {
 			String custName = entity.hasCustomName() ? entity.getCustomName().getString().trim() : "";

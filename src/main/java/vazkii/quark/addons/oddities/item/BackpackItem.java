@@ -80,7 +80,7 @@ public class BackpackItem extends DyeableArmorItem implements IQuarkItem, IItemC
 	}
 
 	public static boolean doesBackpackHaveItems(ItemStack stack) {
-		LazyOptional<IItemHandler> handlerOpt  = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+		LazyOptional<IItemHandler> handlerOpt = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 
 		if (!handlerOpt.isPresent())
 			return false;
@@ -122,7 +122,7 @@ public class BackpackItem extends DyeableArmorItem implements IQuarkItem, IItemC
 				}
 
 				if(BackpackModule.itemsInBackpackTick) {
-					LazyOptional<IItemHandler> handlerOpt  = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+					LazyOptional<IItemHandler> handlerOpt = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 					IItemHandler handler = handlerOpt.orElse(new ItemStackHandler());
 					for(int i = 0; i < handler.getSlots(); i++) {
 						ItemStack inStack = handler.getStackInSlot(i);
@@ -152,7 +152,7 @@ public class BackpackItem extends DyeableArmorItem implements IQuarkItem, IItemC
 		if (!ItemNBTHelper.detectNBT(stack))
 			return false;
 
-		LazyOptional<IItemHandler> handlerOpt  = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+		LazyOptional<IItemHandler> handlerOpt = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 
 		if(!handlerOpt.isPresent())
 			return false;

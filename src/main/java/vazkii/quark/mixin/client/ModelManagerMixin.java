@@ -11,6 +11,6 @@ import java.util.Map;
 @Mixin(ModelManager.class)
 public interface ModelManagerMixin {
 
-    @Accessor
-    Map<ResourceLocation, BakedModel> getBakedRegistry();
+	@Accessor
+	Map<ResourceLocation, BakedModel> getBakedRegistry();
 }

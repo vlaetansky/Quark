@@ -126,7 +126,7 @@ public class ColorRunesModule extends QuarkModule {
 		runes = Arrays.stream(DyeColor.values()).map(color -> new RuneItem(color.getSerializedName() + "_rune", this, color.getId(), true)).toList();
 
 		rainbow_rune = new RuneItem("rainbow_rune", this, 16, true);
-		blank_rune =  new RuneItem("blank_rune", this, 17, false);
+		blank_rune = new RuneItem("blank_rune", this, 17, false);
 	}
 
 	@Override

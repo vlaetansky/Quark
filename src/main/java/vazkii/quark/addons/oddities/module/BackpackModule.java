@@ -47,7 +47,7 @@ import vazkii.quark.base.network.message.oddities.HandleBackpackMessage;
 @LoadModule(category = ModuleCategory.ODDITIES, hasSubscriptions = true)
 public class BackpackModule extends QuarkModule {
 
-	@Config(description =  "Set this to true to allow the backpacks to be unequipped even with items in them")
+	@Config(description = "Set this to true to allow the backpacks to be unequipped even with items in them")
 	public static boolean superOpMode = false;
 
 	@Config(flag = "ravager_hide")

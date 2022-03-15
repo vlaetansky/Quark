@@ -83,7 +83,7 @@ public class MatrixEnchantingMenu extends AbstractContainerMenu {
 		if(player instanceof ServerPlayer)
 			CriteriaTriggers.ENCHANTED_ITEM.trigger((ServerPlayer) player, stack, 1);
 
-		player.level.playSound(null, enchanter.getBlockPos(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 1.0F,  player.level.random.nextFloat() * 0.1F + 0.9F);
+		player.level.playSound(null, enchanter.getBlockPos(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 1.0F, player.level.random.nextFloat() * 0.1F + 0.9F);
 	}
 
 	@Override

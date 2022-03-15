@@ -1,10 +1,9 @@
 package vazkii.quark.base.handler;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
 import vazkii.quark.base.module.config.Config;
+
+import java.util.List;
 
 public class GeneralConfig {
 
@@ -20,8 +19,8 @@ public class GeneralConfig {
 	private static final List<String> STATIC_DENIED_SCREENS = Lists.newArrayList(
 			"blusunrize.immersiveengineering.client.gui.CraftingTableScreen",
 			"com.tfar.craftingstation.client.CraftingStationScreen",
-			"com.refinedmods.refinedstorage.screen.grid.GridScreen", 
-			"appeng.client.gui.me.items.CraftingTermScreen", 
+			"com.refinedmods.refinedstorage.screen.grid.GridScreen",
+			"appeng.client.gui.me.items.CraftingTermScreen",
 			"appeng.client.gui.me.items.PatternTermScreen",
 			"com.blakebr0.extendedcrafting.client.screen.EliteTableScreen",
 			"com.blakebr0.extendedcrafting.client.screen.EliteAutoTableScreen",
@@ -50,11 +49,11 @@ public class GeneralConfig {
 			description = "Quark replaces the Piston logic to allow for its piston features to work. If you're having troubles, try turning this off.")
 	public static boolean usePistonLogicRepl = true;
 
-	@Config	
+	@Config
 	@Config.Min(value = 0, exclusive = true)
 	public static int pistonPushLimit = 12;
 
-	@Config(description =  "How many advancements deep you can see in the advancement screen. Vanilla is 2.")
+	@Config(description = "How many advancements deep you can see in the advancement screen. Vanilla is 2.")
 	@Config.Min(value = 0, exclusive = true)
 	public static int advancementVisibilityDepth = 2;
 
@@ -72,7 +71,7 @@ public class GeneralConfig {
 
 	@Config(description = "A list of screens that can accept quark's buttons. Use \"Print Screen Classnames\" to find the names of any others you'd want to add.")
 	private static List<String> allowedScreens = Lists.newArrayList();
-	
+
 	@Config(description = "If set to true, the 'Allowed Screens' option will work as a Blacklist rather than a Whitelist. WARNING: Use at your own risk as some mods may not support this.")
 	private static boolean useScreenListBlacklist = false;
 
@@ -95,7 +94,7 @@ public class GeneralConfig {
 			return true;
 		if(STATIC_DENIED_SCREENS.contains(clazz))
 			return false;
-		
+
 		return allowedScreens.contains(clazz) != useScreenListBlacklist;
 	}
 

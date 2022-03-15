@@ -20,51 +20,51 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public class TinyPotatoBlockItem extends BlockItem implements IRuneColorProvider {
-    private static final int NOT_MY_NAME = 17;
-    private static final List<String> TYPOS = List.of("vaskii", "vazki", "voskii", "vazkkii", "vazkki", "vazzki", "vaskki", "vozkii", "vazkil", "vaskil", "vazkill", "vaskill", "vaski");
+	private static final int NOT_MY_NAME = 17;
+	private static final List<String> TYPOS = List.of("vaskii", "vazki", "voskii", "vazkkii", "vazkki", "vazzki", "vaskki", "vozkii", "vazkil", "vaskil", "vazkill", "vaskill", "vaski");
 
-    private static final String TICKS = "notMyNameTicks";
+	private static final String TICKS = "notMyNameTicks";
 
-    public TinyPotatoBlockItem(Block block, Properties properties) {
-        super(block, properties);
-    }
+	public TinyPotatoBlockItem(Block block, Properties properties) {
+		super(block, properties);
+	}
 
-    @Override
-    public boolean canEquip(ItemStack stack, EquipmentSlot armorType, Entity entity) {
-        return super.canEquip(stack, armorType, entity) ||
-                (entity instanceof Player player && ContributorRewardHandler.getTier(player) > 0);
-    }
+	@Override
+	public boolean canEquip(ItemStack stack, EquipmentSlot armorType, Entity entity) {
+		return super.canEquip(stack, armorType, entity) ||
+				(entity instanceof Player player && ContributorRewardHandler.getTier(player) > 0);
+	}
 
-    @Nonnull
-    @Override
-    public String getDescriptionId(@Nonnull ItemStack stack) {
-        if (TinyPotatoBlock.isAngry(stack))
-            return super.getDescriptionId(stack) + ".angry";
-        return super.getDescriptionId(stack);
-    }
+	@Nonnull
+	@Override
+	public String getDescriptionId(@Nonnull ItemStack stack) {
+		if (TinyPotatoBlock.isAngry(stack))
+			return super.getDescriptionId(stack) + ".angry";
+		return super.getDescriptionId(stack);
+	}
 
-    @Override
-    public void inventoryTick(@Nonnull ItemStack stack, @Nonnull Level world, @Nonnull Entity holder, int itemSlot, boolean isSelected) {
-        if (!world.isClientSide && holder instanceof Player player && holder.tickCount % 30 == 0 && TYPOS.contains(ChatFormatting.stripFormatting(stack.getDisplayName().getString()))) {
-            int ticks = ItemNBTHelper.getInt(stack, TICKS, 0);
-            if (ticks < NOT_MY_NAME) {
-                player.sendMessage(new TranslatableComponent("quark.misc.you_came_to_the_wrong_neighborhood." + ticks).withStyle(ChatFormatting.RED), Util.NIL_UUID);
-                ItemNBTHelper.setInt(stack, TICKS, ticks + 1);
-            }
-        }
-    }
+	@Override
+	public void inventoryTick(@Nonnull ItemStack stack, @Nonnull Level world, @Nonnull Entity holder, int itemSlot, boolean isSelected) {
+		if (!world.isClientSide && holder instanceof Player player && holder.tickCount % 30 == 0 && TYPOS.contains(ChatFormatting.stripFormatting(stack.getDisplayName().getString()))) {
+			int ticks = ItemNBTHelper.getInt(stack, TICKS, 0);
+			if (ticks < NOT_MY_NAME) {
+				player.sendMessage(new TranslatableComponent("quark.misc.you_came_to_the_wrong_neighborhood." + ticks).withStyle(ChatFormatting.RED), Util.NIL_UUID);
+				ItemNBTHelper.setInt(stack, TICKS, ticks + 1);
+			}
+		}
+	}
 
-    @Override
-    public boolean isFoil(@Nonnull ItemStack stack) {
-        if (stack.hasCustomHoverName() && TinyPotatoRenderInfo.fromComponent(stack.getHoverName()).enchanted())
-            return true;
-        return super.isFoil(stack);
-    }
+	@Override
+	public boolean isFoil(@Nonnull ItemStack stack) {
+		if (stack.hasCustomHoverName() && TinyPotatoRenderInfo.fromComponent(stack.getHoverName()).enchanted())
+			return true;
+		return super.isFoil(stack);
+	}
 
-    @Override
-    public int getRuneColor(ItemStack stack) {
-        if (stack.hasCustomHoverName())
-            return TinyPotatoRenderInfo.fromComponent(stack.getHoverName()).runeColor();
-        return -1;
-    }
+	@Override
+	public int getRuneColor(ItemStack stack) {
+		if (stack.hasCustomHoverName())
+			return TinyPotatoRenderInfo.fromComponent(stack.getHoverName()).runeColor();
+		return -1;
+	}
 }

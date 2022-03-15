@@ -1,13 +1,6 @@
 package vazkii.quark.addons.oddities.module;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
@@ -41,6 +34,8 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
+
+import java.util.*;
 
 @LoadModule(category = ModuleCategory.ODDITIES, hasSubscriptions = true)
 public class MatrixEnchantingModule extends QuarkModule {
@@ -92,7 +87,7 @@ public class MatrixEnchantingModule extends QuarkModule {
 
 	@Config(description = "By default, enchantment rarities are fuzzed a bit to feel better with the new system. Set this to false to override this behaviour.")
 	public static boolean normalizeRarity = true;
-	
+
 	@Config(description = "Matrix Enchanting can be done with water instead of air around the enchanting table. Set this to false to disable this behaviour.")
 	public static boolean allowUnderwaterEnchanting = true;
 
@@ -105,9 +100,9 @@ public class MatrixEnchantingModule extends QuarkModule {
 			"minecraft:fire_protection", // Orange
 			"minecraft:knockback,minecraft:punch", // Magenta
 			"minecraft:feather_falling", // Light Blue
-			"minecraft:looting,minecraft:fortune,minecraft:luck_of_the_sea", // Yellow 
+			"minecraft:looting,minecraft:fortune,minecraft:luck_of_the_sea", // Yellow
 			"minecraft:blast_protection", // Lime
-			"minecraft:silk_touch,minecraft:channeling", // Pink 
+			"minecraft:silk_touch,minecraft:channeling", // Pink
 			"minecraft:bane_of_arthropods", // Gray
 			"minecraft:protection", // Light Gray
 			"minecraft:respiration,minecraft:loyalty,minecraft:infinity", // Cyan
@@ -115,7 +110,7 @@ public class MatrixEnchantingModule extends QuarkModule {
 			"minecraft:efficiency,minecraft:sharpness,minecraft:lure,minecraft:power,minecraft:impaling,minecraft:quick_charge", // Blue
 			"minecraft:aqua_affinity,minecraft:depth_strider,minecraft:riptide", //Brown
 			"minecraft:thorns,minecraft:piercing", // Green
-			"minecraft:fire_aspect,minecraft:flame",  // Red
+			"minecraft:fire_aspect,minecraft:flame", // Red
 			"minecraft:smite,minecraft:projectile_protection" // Black
 			);
 
@@ -130,11 +125,11 @@ public class MatrixEnchantingModule extends QuarkModule {
 
 	@Config(description = "If you set this to false, the vanilla Enchanting Table will no longer automatically convert to the Matrix Enchanting table. You'll have to add a recipe for the Matrix Enchanting Table to make use of this.")
 	public static boolean automaticallyConvert = true;
-	
+
 	public static Map<DyeColor, List<Enchantment>> candleInfluences;
 
 	public static Block matrixEnchanter;
-	
+
 	@Override
 	public void register() {
 		matrixEnchanter = new MatrixEnchantingTableBlock(this);
@@ -150,7 +145,7 @@ public class MatrixEnchantingModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
 		MenuScreens.register(menuType, MatrixEnchantingScreen::new);
-		BlockEntityRenderers.register(blockEntityType, MatrixEnchantingTableRenderer::new);	
+		BlockEntityRenderers.register(blockEntityType, MatrixEnchantingTableRenderer::new);
 	}
 
 	@SubscribeEvent
@@ -160,22 +155,22 @@ public class MatrixEnchantingModule extends QuarkModule {
 		if(showTooltip && ItemNBTHelper.verifyExistence(stack, MatrixEnchantingTableBlockEntity.TAG_STACK_MATRIX))
 			event.getToolTip().add(new TranslatableComponent("quark.gui.enchanting.pending").withStyle(ChatFormatting.AQUA));
 	}
-	
+
 	@SubscribeEvent
 	public void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
 		if(event.getPlacedBlock().getBlock().equals(Blocks.ENCHANTING_TABLE) && automaticallyConvert)
 			event.getWorld().setBlock(event.getPos(), matrixEnchanter.defaultBlockState(), 3);
 	}
-	
+
 	@SubscribeEvent
 	public void onRightClick(PlayerInteractEvent.RightClickBlock event) {
 		if(event.getPlayer() instanceof FakePlayer)
 			return;
-		
+
 		if(event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.ENCHANTING_TABLE && automaticallyConvert)
 			event.getWorld().setBlock(event.getPos(), matrixEnchanter.defaultBlockState(), 3);
 	}
-	
+
 	@Override
 	public void configChanged() {
 		parseInfluences();
@@ -199,7 +194,7 @@ public class MatrixEnchantingModule extends QuarkModule {
 
 			for (String enchStr : tokens) {
 				enchStr = enchStr.trim();
-				
+
 				Optional<Enchantment> ench = Registry.ENCHANTMENT.getOptional(new ResourceLocation(enchStr));
 				if (ench.isPresent()) {
 					list.add(ench.get());

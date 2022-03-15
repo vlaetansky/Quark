@@ -23,55 +23,55 @@ import java.util.Random;
 @OnlyIn(Dist.CLIENT)
 public record TinyPotatoModel(BakedModel originalModel) implements BakedModel {
 
-    @Override
-    public boolean useAmbientOcclusion() {
-        return originalModel.useAmbientOcclusion();
-    }
+	@Override
+	public boolean useAmbientOcclusion() {
+		return originalModel.useAmbientOcclusion();
+	}
 
-    @Override
-    public boolean isGui3d() {
-        return originalModel.isGui3d();
-    }
+	@Override
+	public boolean isGui3d() {
+		return originalModel.isGui3d();
+	}
 
-    @Override
-    public boolean usesBlockLight() {
-        return originalModel.usesBlockLight();
-    }
+	@Override
+	public boolean usesBlockLight() {
+		return originalModel.usesBlockLight();
+	}
 
-    @Override
-    public boolean isCustomRenderer() {
-        return originalModel.isCustomRenderer();
-    }
+	@Override
+	public boolean isCustomRenderer() {
+		return originalModel.isCustomRenderer();
+	}
 
-    @Nonnull
-    @Override
-    public TextureAtlasSprite getParticleIcon() {
-        return originalModel.getParticleIcon();
-    }
+	@Nonnull
+	@Override
+	public TextureAtlasSprite getParticleIcon() {
+		return originalModel.getParticleIcon();
+	}
 
-    @Nonnull
-    @Override
-    public ItemTransforms getTransforms() {
-        return originalModel.getTransforms();
-    }
+	@Nonnull
+	@Override
+	public ItemTransforms getTransforms() {
+		return originalModel.getTransforms();
+	}
 
-    @Nonnull
-    @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand) {
-        return List.of();
-    }
+	@Nonnull
+	@Override
+	public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand) {
+		return List.of();
+	}
 
-    @Nonnull
-    @Override
-    public ItemOverrides getOverrides() {
-        return new ItemOverrides() {
-            @Override
-            public BakedModel resolve(@Nonnull BakedModel model, @Nonnull ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity livingEntity, int seed) {
-                if (stack.hasCustomHoverName() || TinyPotatoBlock.isAngry(stack)) {
-                    return TinyPotatoRenderer.getModelFromDisplayName(stack.getHoverName(), TinyPotatoBlock.isAngry(stack));
-                }
-                return originalModel;
-            }
-        };
-    }
+	@Nonnull
+	@Override
+	public ItemOverrides getOverrides() {
+		return new ItemOverrides() {
+			@Override
+			public BakedModel resolve(@Nonnull BakedModel model, @Nonnull ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity livingEntity, int seed) {
+				if (stack.hasCustomHoverName() || TinyPotatoBlock.isAngry(stack)) {
+					return TinyPotatoRenderer.getModelFromDisplayName(stack.getHoverName(), TinyPotatoBlock.isAngry(stack));
+				}
+				return originalModel;
+			}
+		};
+	}
 }

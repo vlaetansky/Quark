@@ -1,7 +1,5 @@
 package vazkii.quark.content.world.gen;
 
-import java.util.Random;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.WorldGenRegion;
@@ -12,6 +10,8 @@ import net.minecraft.world.level.material.Material;
 import vazkii.quark.base.module.config.type.DimensionConfig;
 import vazkii.quark.base.world.generator.Generator;
 import vazkii.quark.content.world.module.MonsterBoxModule;
+
+import java.util.Random;
 
 public class MonsterBoxGenerator extends Generator {
 
@@ -24,7 +24,7 @@ public class MonsterBoxGenerator extends Generator {
 		if(generator instanceof FlatLevelSource)
 			return;
 
-		double chance =  MonsterBoxModule.chancePerChunk;
+		double chance = MonsterBoxModule.chancePerChunk;
 
 		while(rand.nextDouble() <= chance) {
 			BlockPos pos = chunkCorner.offset(rand.nextInt(16), MonsterBoxModule.minY + rand.nextInt(MonsterBoxModule.maxY - MonsterBoxModule.minY + 1), rand.nextInt(16));

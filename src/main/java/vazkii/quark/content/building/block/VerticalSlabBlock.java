@@ -1,8 +1,5 @@
 package vazkii.quark.content.building.block;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.core.BlockPos;
@@ -17,11 +14,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -42,6 +35,9 @@ import vazkii.arl.interf.IItemColorProvider;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.block.QuarkSlabBlock;
 import vazkii.quark.base.module.QuarkModule;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class VerticalSlabBlock extends QuarkBlock implements SimpleWaterloggedBlock, IBlockColorProvider {
 
@@ -135,7 +131,7 @@ public class VerticalSlabBlock extends QuarkBlock implements SimpleWaterloggedBl
 	public boolean canBeReplaced(BlockState state, @Nonnull BlockPlaceContext useContext) {
 		ItemStack itemstack = useContext.getItemInHand();
 		VerticalSlabType slabtype = state.getValue(TYPE);
-		return slabtype != VerticalSlabType.DOUBLE && itemstack.getItem() == this.asItem()  &&
+		return slabtype != VerticalSlabType.DOUBLE && itemstack.getItem() == this.asItem() &&
 			(useContext.replacingClickedOnBlock() && (useContext.getClickedFace() == slabtype.direction && getDirectionForPlacement(useContext) == slabtype.direction)
 					|| (!useContext.replacingClickedOnBlock() && useContext.getClickedFace().getAxis() != slabtype.direction.getAxis()));
 	}

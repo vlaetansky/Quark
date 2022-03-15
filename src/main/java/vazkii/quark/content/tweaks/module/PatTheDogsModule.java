@@ -114,7 +114,7 @@ public class PatTheDogsModule extends QuarkModule {
 							sound = SoundEvents.STRIDER_HAPPY;
 						} else if (living instanceof Turtle) {
 							sound = SoundEvents.TURTLE_AMBIENT_LAND;
-						}  else if (living instanceof Player pettee) {
+						} else if (living instanceof Player pettee) {
 							var uuid = pettee.getStringUUID();
 							sound = switch (uuid) {
 								case "a2ce9382-2518-4752-87b2-c6a5c97f173e" -> // petra_the_kat

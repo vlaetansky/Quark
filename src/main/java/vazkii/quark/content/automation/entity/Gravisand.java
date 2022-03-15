@@ -55,7 +55,7 @@ public class Gravisand extends FallingBlockEntity {
 	public void tick() {
 		super.tick();
 
-		//  vanilla copy for falling upwards stuff
+		// vanilla copy for falling upwards stuff
 		BlockPos blockpos1 = this.blockPosition();
 		boolean aboveHasCollision = !level.getBlockState(blockpos1.above()).getCollisionShape(level, blockpos1.above()).isEmpty();
 		if (!this.level.isClientSide && getFallDirection() > 0 && !isRemoved() && aboveHasCollision) {

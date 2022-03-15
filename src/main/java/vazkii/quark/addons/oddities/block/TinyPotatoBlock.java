@@ -52,110 +52,110 @@ import javax.annotation.Nullable;
  */
 public class TinyPotatoBlock extends QuarkBlock implements SimpleWaterloggedBlock, EntityBlock, IBlockItemProvider {
 
-    public static final DirectionProperty HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+	public static final DirectionProperty HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
+	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    private static final VoxelShape SHAPE = box(6, 0, 6, 10, 6, 10);
+	private static final VoxelShape SHAPE = box(6, 0, 6, 10, 6, 10);
 
-    private static final String ANGRY = "angery";
+	private static final String ANGRY = "angery";
 
-    public static boolean isAngry(ItemStack stack) {
-        return ItemNBTHelper.getBoolean(stack, ANGRY, false);
-    }
+	public static boolean isAngry(ItemStack stack) {
+		return ItemNBTHelper.getBoolean(stack, ANGRY, false);
+	}
 
-    public TinyPotatoBlock(QuarkModule module) {
-        super("tiny_potato", module, CreativeModeTab.TAB_DECORATIONS,
-                BlockBehaviour.Properties.of(Material.WOOL).strength(0.25F));
-        registerDefaultState(defaultBlockState()
-                .setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH));
-    }
+	public TinyPotatoBlock(QuarkModule module) {
+		super("tiny_potato", module, CreativeModeTab.TAB_DECORATIONS,
+				BlockBehaviour.Properties.of(Material.WOOL).strength(0.25F));
+		registerDefaultState(defaultBlockState()
+				.setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH));
+	}
 
-    @Override
-    protected void createBlockStateDefinition(@Nonnull StateDefinition.Builder<Block, BlockState> builder) {
-        super.createBlockStateDefinition(builder);
-        builder.add(HORIZONTAL_FACING, WATERLOGGED);
-    }
+	@Override
+	protected void createBlockStateDefinition(@Nonnull StateDefinition.Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
+		builder.add(HORIZONTAL_FACING, WATERLOGGED);
+	}
 
-    @Override
-    public void onRemove(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
-        if (!state.is(newState.getBlock())) {
-            BlockEntity be = world.getBlockEntity(pos);
-            if (be instanceof TinyPotatoBlockEntity inventory) {
-                Containers.dropContents(world, pos, inventory);
-            }
-            super.onRemove(state, world, pos, newState, isMoving);
-        }
-    }
+	@Override
+	public void onRemove(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
+		if (!state.is(newState.getBlock())) {
+			BlockEntity be = world.getBlockEntity(pos);
+			if (be instanceof TinyPotatoBlockEntity inventory) {
+				Containers.dropContents(world, pos, inventory);
+			}
+			super.onRemove(state, world, pos, newState, isMoving);
+		}
+	}
 
-    @Nonnull
-    @Override
-    public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nonnull CollisionContext ctx) {
-        return SHAPE;
-    }
+	@Nonnull
+	@Override
+	public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nonnull CollisionContext ctx) {
+		return SHAPE;
+	}
 
-    @Nonnull
-    @Override
-    public InteractionResult use(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
-        BlockEntity be = world.getBlockEntity(pos);
-        if (be instanceof TinyPotatoBlockEntity tater) {
-            tater.interact(player, hand, player.getItemInHand(hand), hit.getDirection());
-            if (!world.isClientSide) {
-                AABB box = SHAPE.bounds();
-                ((ServerLevel) world).sendParticles(ParticleTypes.HEART, pos.getX() + box.minX + Math.random() * (box.maxX - box.minX), pos.getY() + box.maxY, pos.getZ() + box.minZ + Math.random() * (box.maxZ - box.minZ), 1, 0, 0, 0, 0);
-            }
-        }
-        return InteractionResult.SUCCESS;
-    }
+	@Nonnull
+	@Override
+	public InteractionResult use(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
+		BlockEntity be = world.getBlockEntity(pos);
+		if (be instanceof TinyPotatoBlockEntity tater) {
+			tater.interact(player, hand, player.getItemInHand(hand), hit.getDirection());
+			if (!world.isClientSide) {
+				AABB box = SHAPE.bounds();
+				((ServerLevel) world).sendParticles(ParticleTypes.HEART, pos.getX() + box.minX + Math.random() * (box.maxX - box.minX), pos.getY() + box.maxY, pos.getZ() + box.minZ + Math.random() * (box.maxZ - box.minZ), 1, 0, 0, 0, 0);
+			}
+		}
+		return InteractionResult.SUCCESS;
+	}
 
-    @Nonnull
-    @Override
-    public BlockState getStateForPlacement(@Nonnull BlockPlaceContext ctx) {
-        return defaultBlockState()
-                .setValue(HORIZONTAL_FACING, ctx.getHorizontalDirection().getOpposite())
-                .setValue(WATERLOGGED, ctx.getLevel().getFluidState(ctx.getClickedPos()).getType() == Fluids.WATER);
-    }
+	@Nonnull
+	@Override
+	public BlockState getStateForPlacement(@Nonnull BlockPlaceContext ctx) {
+		return defaultBlockState()
+				.setValue(HORIZONTAL_FACING, ctx.getHorizontalDirection().getOpposite())
+				.setValue(WATERLOGGED, ctx.getLevel().getFluidState(ctx.getClickedPos()).getType() == Fluids.WATER);
+	}
 
-    @Override
-    public void setPlacedBy(@Nonnull Level world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable LivingEntity living, ItemStack stack) {
-        boolean hasCustomName = stack.hasCustomHoverName();
-        boolean isAngry = isAngry(stack);
-        if (hasCustomName || isAngry) {
-            BlockEntity be = world.getBlockEntity(pos);
-            if (be instanceof TinyPotatoBlockEntity tater) {
-                if (hasCustomName)
-                    tater.name = stack.getHoverName();
-                tater.angry = isAngry(stack);
-            }
-        }
-    }
+	@Override
+	public void setPlacedBy(@Nonnull Level world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable LivingEntity living, ItemStack stack) {
+		boolean hasCustomName = stack.hasCustomHoverName();
+		boolean isAngry = isAngry(stack);
+		if (hasCustomName || isAngry) {
+			BlockEntity be = world.getBlockEntity(pos);
+			if (be instanceof TinyPotatoBlockEntity tater) {
+				if (hasCustomName)
+					tater.name = stack.getHoverName();
+				tater.angry = isAngry(stack);
+			}
+		}
+	}
 
-    @Override
-    public boolean triggerEvent(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, int id, int param) {
-        super.triggerEvent(state, world, pos, id, param);
-        BlockEntity tile = world.getBlockEntity(pos);
-        return tile != null && tile.triggerEvent(id, param);
-    }
+	@Override
+	public boolean triggerEvent(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, int id, int param) {
+		super.triggerEvent(state, world, pos, id, param);
+		BlockEntity tile = world.getBlockEntity(pos);
+		return tile != null && tile.triggerEvent(id, param);
+	}
 
-    @Override
-    public BlockItem provideItemBlock(Block block, Item.Properties properties) {
-        return new TinyPotatoBlockItem(block, properties);
-    }
+	@Override
+	public BlockItem provideItemBlock(Block block, Item.Properties properties) {
+		return new TinyPotatoBlockItem(block, properties);
+	}
 
-    @Nonnull
-    @Override
-    public RenderShape getRenderShape(@Nonnull BlockState state) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
-    }
+	@Nonnull
+	@Override
+	public RenderShape getRenderShape(@Nonnull BlockState state) {
+		return RenderShape.ENTITYBLOCK_ANIMATED;
+	}
 
-    @Nonnull
-    @Override
-    public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
-        return new TinyPotatoBlockEntity(pos, state);
-    }
+	@Nonnull
+	@Override
+	public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
+		return new TinyPotatoBlockEntity(pos, state);
+	}
 
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
-        return createTickerHelper(type, TinyPotatoModule.blockEntityType, TinyPotatoBlockEntity::commonTick);
-    }
+	@Nullable
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
+		return createTickerHelper(type, TinyPotatoModule.blockEntityType, TinyPotatoBlockEntity::commonTick);
+	}
 }

@@ -51,18 +51,18 @@ public class UtilityRecipesModule extends QuarkModule {
 
 	@Config(description = "Can torches can be used as fuel in furnaces?")
 	public static boolean torchesBurn = true;
-	
+
 	@Config(description = "Can bones be smelted down to bone meal?", flag = "bone_meal_utility")
 	public static boolean boneMealUtility = true;
 
 	private boolean needsChange = false;
-	
+
 	@Override
 	public void configChanged() {
 		// This has to be defered to a safer thread, making these changes in this thread can result in concurrency errors
 		needsChange = true;
 	}
-   
+
 	@SubscribeEvent
 	public void worldTick(WorldTickEvent event) {
 		if(needsChange) {
@@ -78,7 +78,7 @@ public class UtilityRecipesModule extends QuarkModule {
 				ComposterBlock.COMPOSTABLES.removeFloat(Items.POISONOUS_POTATO);
 				ComposterBlock.COMPOSTABLES.removeFloat(Items.ROTTEN_FLESH);
 			}
-			
+
 			needsChange = false;
 		}
 	}

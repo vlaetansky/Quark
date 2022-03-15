@@ -28,155 +28,155 @@ import javax.annotation.Nullable;
 import java.util.Locale;
 
 public class TinyPotatoBlockEntity extends SimpleInventoryBlockEntity implements Nameable {
-    private static final String TAG_NAME = "name";
-    private static final String TAG_ANGRY = "angery";
-    private static final int JUMP_EVENT = 0;
+	private static final String TAG_NAME = "name";
+	private static final String TAG_ANGRY = "angery";
+	private static final int JUMP_EVENT = 0;
 
-    public int jumpTicks = 0;
-    public Component name = new TextComponent("");
-    private int nextDoIt = 0;
-    public boolean angry = false;
+	public int jumpTicks = 0;
+	public Component name = new TextComponent("");
+	private int nextDoIt = 0;
+	public boolean angry = false;
 
-    public TinyPotatoBlockEntity(BlockPos pos, BlockState state) {
-        super(TinyPotatoModule.blockEntityType, pos, state);
-    }
+	public TinyPotatoBlockEntity(BlockPos pos, BlockState state) {
+		super(TinyPotatoModule.blockEntityType, pos, state);
+	}
 
-    public void interact(Player player, InteractionHand hand, ItemStack stack, Direction side) {
-        int index = side.get3DDataValue();
-        if (index >= 0) {
-            ItemStack stackAt = getItem(index);
-            if (!stackAt.isEmpty() && stack.isEmpty()) {
-                player.setItemInHand(hand, stackAt);
-                setItem(index, ItemStack.EMPTY);
-            } else if (!stack.isEmpty()) {
-                ItemStack copy = stack.split(1);
+	public void interact(Player player, InteractionHand hand, ItemStack stack, Direction side) {
+		int index = side.get3DDataValue();
+		if (index >= 0) {
+			ItemStack stackAt = getItem(index);
+			if (!stackAt.isEmpty() && stack.isEmpty()) {
+				player.setItemInHand(hand, stackAt);
+				setItem(index, ItemStack.EMPTY);
+			} else if (!stack.isEmpty()) {
+				ItemStack copy = stack.split(1);
 
-                if (stack.isEmpty()) {
-                    player.setItemInHand(hand, stackAt);
-                } else if (!stackAt.isEmpty()) {
-                    player.getInventory().placeItemBackInInventory(stackAt);
-                }
+				if (stack.isEmpty()) {
+					player.setItemInHand(hand, stackAt);
+				} else if (!stackAt.isEmpty()) {
+					player.getInventory().placeItemBackInInventory(stackAt);
+				}
 
-                setItem(index, copy);
-            }
-        }
+				setItem(index, copy);
+			}
+		}
 
-        if (level != null && !level.isClientSide) {
-            jump();
+		if (level != null && !level.isClientSide) {
+			jump();
 
-            if (name.getString().toLowerCase(Locale.ROOT).trim().endsWith("shia labeouf") && nextDoIt == 0) {
-                nextDoIt = 40;
-                level.playSound(null, worldPosition, QuarkSounds.BLOCK_POTATO_DO_IT, SoundSource.BLOCKS, 1F, 1F);
-            }
+			if (name.getString().toLowerCase(Locale.ROOT).trim().endsWith("shia labeouf") && nextDoIt == 0) {
+				nextDoIt = 40;
+				level.playSound(null, worldPosition, QuarkSounds.BLOCK_POTATO_DO_IT, SoundSource.BLOCKS, 1F, 1F);
+			}
 
-            for (int i = 0; i < getContainerSize(); i++) {
-                ItemStack stackAt = getItem(i);
-                if (!stackAt.isEmpty() && stackAt.is(TinyPotatoModule.tiny_potato.asItem())) {
-                    player.sendMessage(new TranslatableComponent("quark.misc.my_son"), Util.NIL_UUID);
-                    return;
-                }
-            }
-        }
-    }
+			for (int i = 0; i < getContainerSize(); i++) {
+				ItemStack stackAt = getItem(i);
+				if (!stackAt.isEmpty() && stackAt.is(TinyPotatoModule.tiny_potato.asItem())) {
+					player.sendMessage(new TranslatableComponent("quark.misc.my_son"), Util.NIL_UUID);
+					return;
+				}
+			}
+		}
+	}
 
-    private void jump() {
-        if (level != null && jumpTicks == 0) {
-            level.blockEvent(getBlockPos(), getBlockState().getBlock(), JUMP_EVENT, 20);
-        }
-    }
+	private void jump() {
+		if (level != null && jumpTicks == 0) {
+			level.blockEvent(getBlockPos(), getBlockState().getBlock(), JUMP_EVENT, 20);
+		}
+	}
 
-    @Override
-    public boolean triggerEvent(int id, int param) {
-        if (id == JUMP_EVENT) {
-            jumpTicks = param;
-            return true;
-        } else {
-            return super.triggerEvent(id, param);
-        }
-    }
+	@Override
+	public boolean triggerEvent(int id, int param) {
+		if (id == JUMP_EVENT) {
+			jumpTicks = param;
+			return true;
+		} else {
+			return super.triggerEvent(id, param);
+		}
+	}
 
-    public static void commonTick(Level level, BlockPos pos, BlockState state, TinyPotatoBlockEntity self) {
-        if (self.jumpTicks > 0) {
-            self.jumpTicks--;
-        }
+	public static void commonTick(Level level, BlockPos pos, BlockState state, TinyPotatoBlockEntity self) {
+		if (self.jumpTicks > 0) {
+			self.jumpTicks--;
+		}
 
-        if (!level.isClientSide) {
-            if (level.random.nextInt(100) == 0) {
-                self.jump();
-            }
-            if (self.nextDoIt > 0) {
-                self.nextDoIt--;
-            }
-        }
-    }
+		if (!level.isClientSide) {
+			if (level.random.nextInt(100) == 0) {
+				self.jump();
+			}
+			if (self.nextDoIt > 0) {
+				self.nextDoIt--;
+			}
+		}
+	}
 
-    @Override
-    public void inventoryChanged(int i) {
-        sync();
-    }
+	@Override
+	public void inventoryChanged(int i) {
+		sync();
+	}
 
-    @Override
-    public void setChanged() {
-        super.setChanged();
-        if (level != null && !level.isClientSide) {
-            sync();
-        }
-    }
+	@Override
+	public void setChanged() {
+		super.setChanged();
+		if (level != null && !level.isClientSide) {
+			sync();
+		}
+	}
 
-    @Override
-    public void sync() {
-        MiscUtil.syncTE(this);
-    }
+	@Override
+	public void sync() {
+		MiscUtil.syncTE(this);
+	}
 
-    @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
+	@Override
+	public Packet<ClientGamePacketListener> getUpdatePacket() {
+		return ClientboundBlockEntityDataPacket.create(this);
+	}
 
-    @Override
-    public void readSharedNBT(CompoundTag cmp) {
-        super.readSharedNBT(cmp);
-        name = Component.Serializer.fromJson(cmp.getString(TAG_NAME));
-        angry = cmp.getBoolean(TAG_ANGRY);
-    }
+	@Override
+	public void readSharedNBT(CompoundTag cmp) {
+		super.readSharedNBT(cmp);
+		name = Component.Serializer.fromJson(cmp.getString(TAG_NAME));
+		angry = cmp.getBoolean(TAG_ANGRY);
+	}
 
-    @Override
-    public void writeSharedNBT(CompoundTag cmp) {
-        super.writeSharedNBT(cmp);
-        cmp.putString(TAG_NAME, Component.Serializer.toJson(name));
-        cmp.putBoolean(TAG_ANGRY, angry);
-    }
+	@Override
+	public void writeSharedNBT(CompoundTag cmp) {
+		super.writeSharedNBT(cmp);
+		cmp.putString(TAG_NAME, Component.Serializer.toJson(name));
+		cmp.putBoolean(TAG_ANGRY, angry);
+	}
 
-    @Override
-    public int getContainerSize() {
-        return 6;
-    }
+	@Override
+	public int getContainerSize() {
+		return 6;
+	}
 
-    @Override
-    public int getMaxStackSize() {
-        return 1;
-    }
+	@Override
+	public int getMaxStackSize() {
+		return 1;
+	}
 
-    @Nonnull
-    @Override
-    public Component getName() {
-        return new TranslatableComponent(TinyPotatoModule.tiny_potato.getDescriptionId());
-    }
+	@Nonnull
+	@Override
+	public Component getName() {
+		return new TranslatableComponent(TinyPotatoModule.tiny_potato.getDescriptionId());
+	}
 
-    @Nullable
-    @Override
-    public Component getCustomName() {
-        return name.getString().isEmpty() ? null : name;
-    }
+	@Nullable
+	@Override
+	public Component getCustomName() {
+		return name.getString().isEmpty() ? null : name;
+	}
 
-    @Nonnull
-    @Override
-    public Component getDisplayName() {
-        if (hasCustomName()) {
-            Component customName = getCustomName();
-            if (customName != null)
-                return customName;
-        }
-        return getName();
-    }
+	@Nonnull
+	@Override
+	public Component getDisplayName() {
+		if (hasCustomName()) {
+			Component customName = getCustomName();
+			if (customName != null)
+				return customName;
+		}
+		return getName();
+	}
 }

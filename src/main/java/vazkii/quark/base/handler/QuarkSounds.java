@@ -13,7 +13,7 @@ import java.util.List;
  * Created at 12:40 PM on 9/9/19.
  */
 public class QuarkSounds {
-    private static final List<SoundEvent> REGISTRY_DEFERENCE = Lists.newArrayList();
+	private static final List<SoundEvent> REGISTRY_DEFERENCE = Lists.newArrayList();
 
 	public static final SoundEvent ENTITY_STONELING_MEEP = register("entity.stoneling.meep");
 	public static final SoundEvent ENTITY_STONELING_PURR = register("entity.stoneling.purr");
