@@ -57,7 +57,7 @@ public class TinyPotatoBlock extends QuarkBlock implements SimpleWaterloggedBloc
 
 	private static final VoxelShape SHAPE = box(6, 0, 6, 10, 6, 10);
 
-	private static final String ANGRY = "angery";
+	public static final String ANGRY = "angery";
 
 	public static boolean isAngry(ItemStack stack) {
 		return ItemNBTHelper.getBoolean(stack, ANGRY, false);

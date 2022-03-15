@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import vazkii.arl.block.be.SimpleInventoryBlockEntity;
+import vazkii.quark.addons.oddities.block.TinyPotatoBlock;
 import vazkii.quark.addons.oddities.module.TinyPotatoModule;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.handler.QuarkSounds;
@@ -28,8 +29,8 @@ import javax.annotation.Nullable;
 import java.util.Locale;
 
 public class TinyPotatoBlockEntity extends SimpleInventoryBlockEntity implements Nameable {
-	private static final String TAG_NAME = "name";
-	private static final String TAG_ANGRY = "angery";
+	public static final String TAG_NAME = "name";
+	public static final String TAG_ANGRY = TinyPotatoBlock.ANGRY;
 	private static final int JUMP_EVENT = 0;
 
 	public int jumpTicks = 0;

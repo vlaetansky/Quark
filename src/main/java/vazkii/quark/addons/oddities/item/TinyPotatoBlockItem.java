@@ -2,6 +2,9 @@ package vazkii.quark.addons.oddities.item;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -12,6 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.addons.oddities.block.TinyPotatoBlock;
+import vazkii.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
 import vazkii.quark.addons.oddities.util.TinyPotatoRenderInfo;
 import vazkii.quark.api.IRuneColorProvider;
 import vazkii.quark.base.handler.ContributorRewardHandler;
@@ -45,6 +49,21 @@ public class TinyPotatoBlockItem extends BlockItem implements IRuneColorProvider
 
 	@Override
 	public void inventoryTick(@Nonnull ItemStack stack, @Nonnull Level world, @Nonnull Entity holder, int itemSlot, boolean isSelected) {
+		if (ItemNBTHelper.verifyExistence(stack, "BlockEntityTag")) {
+			CompoundTag cmp = ItemNBTHelper.getCompound(stack, "BlockEntityTag", true);
+			if (cmp != null) {
+				if (cmp.contains(TinyPotatoBlockEntity.TAG_ANGRY, Tag.TAG_ANY_NUMERIC)) {
+					ItemNBTHelper.setBoolean(stack, TinyPotatoBlock.ANGRY, cmp.getBoolean(TinyPotatoBlockEntity.TAG_ANGRY));
+					cmp.remove(TinyPotatoBlockEntity.TAG_ANGRY);
+				}
+
+				if (cmp.contains(TinyPotatoBlockEntity.TAG_NAME, Tag.TAG_STRING)) {
+					stack.setHoverName(Component.Serializer.fromJson(cmp.getString(TinyPotatoBlockEntity.TAG_NAME)));
+					cmp.remove(TinyPotatoBlockEntity.TAG_NAME);
+				}
+			}
+		}
+
 		if (!world.isClientSide && holder instanceof Player player && holder.tickCount % 30 == 0 && TYPOS.contains(ChatFormatting.stripFormatting(stack.getDisplayName().getString()))) {
 			int ticks = ItemNBTHelper.getInt(stack, TICKS, 0);
 			if (ticks < NOT_MY_NAME) {
@@ -52,6 +71,14 @@ public class TinyPotatoBlockItem extends BlockItem implements IRuneColorProvider
 				ItemNBTHelper.setInt(stack, TICKS, ticks + 1);
 			}
 		}
+	}
+
+	@Nonnull
+	@Override
+	public Component getName(@Nonnull ItemStack stack) {
+
+
+		return super.getName(stack);
 	}
 
 	@Override

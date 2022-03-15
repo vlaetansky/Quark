@@ -56,6 +56,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import vazkii.arl.util.ItemNBTHelper;
+import vazkii.quark.addons.oddities.block.TinyPotatoBlock;
 import vazkii.quark.addons.oddities.module.TinyPotatoModule;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.content.mobs.ai.FindPlaceToSleepGoal;
@@ -144,7 +145,7 @@ public class Foxhound extends Wolf implements Enemy {
 		if (!level.isClientSide && timeUntilPotatoEmerges > 0) {
 			if (--timeUntilPotatoEmerges == 0) {
 				ItemStack stack = new ItemStack(TinyPotatoModule.tiny_potato);
-				ItemNBTHelper.setBoolean(stack, "angery", true);
+				ItemNBTHelper.setBoolean(stack, TinyPotatoBlock.ANGRY, true);
 				spawnAtLocation(stack);
 				playSound(SoundEvents.GENERIC_HURT, 1f, 1f);
 			}
