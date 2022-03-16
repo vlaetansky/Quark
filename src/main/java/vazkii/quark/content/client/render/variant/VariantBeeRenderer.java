@@ -20,8 +20,12 @@ import java.util.UUID;
 
 public class VariantBeeRenderer extends BeeRenderer {
 
-	public static EntityRendererProvider<Bee> OLD_BEE_RENDER_FACTORY = null;
-	private EntityRenderer<? super Bee> OLD_BEE_RENDER = null;
+	public static void setOldRenderFactory(EntityRendererProvider<Bee> provider) {
+		OLD_RENDER_FACTORY = provider;
+	}
+
+	private static EntityRendererProvider<Bee> OLD_RENDER_FACTORY = null;
+	private EntityRenderer<? super Bee> OLD_RENDERER = null;
 
 	private static final List<String> VARIANTS = ImmutableList.of(
 			"acebee", "agenbee", "arobee", "beefluid", "beesexual",
@@ -31,22 +35,22 @@ public class VariantBeeRenderer extends BeeRenderer {
 	public VariantBeeRenderer(EntityRendererProvider.Context context) {
 		super(context);
 
-		if(OLD_BEE_RENDER_FACTORY != null)
-			OLD_BEE_RENDER = OLD_BEE_RENDER_FACTORY.create(context);
+		if(OLD_RENDER_FACTORY != null)
+			OLD_RENDERER = OLD_RENDER_FACTORY.create(context);
 	}
 
 	@Override
 	public boolean shouldRender(@Nonnull Bee bee, @Nonnull Frustum frustum, double viewX, double viewY, double viewZ) {
-		if (OLD_BEE_RENDER != null)
-			return OLD_BEE_RENDER.shouldRender(bee, frustum, viewX, viewY, viewZ);
+		if (OLD_RENDERER != null)
+			return OLD_RENDERER.shouldRender(bee, frustum, viewX, viewY, viewZ);
 		else
 			return super.shouldRender(bee, frustum, viewX, viewY, viewZ);
 	}
 
 	@Override
 	public void render(@Nonnull Bee bee, float yaw, float partialTicks, @Nonnull PoseStack matrix, @Nonnull MultiBufferSource buffer, int light) {
-		if (OLD_BEE_RENDER != null)
-			OLD_BEE_RENDER.render(bee, yaw, partialTicks, matrix, buffer, light);
+		if (OLD_RENDERER != null)
+			OLD_RENDERER.render(bee, yaw, partialTicks, matrix, buffer, light);
 		else
 			super.render(bee, yaw, partialTicks, matrix, buffer, light);
 	}
@@ -87,8 +91,8 @@ public class VariantBeeRenderer extends BeeRenderer {
 			}
 		}
 
-		if(OLD_BEE_RENDER != null) {
-			return OLD_BEE_RENDER.getTextureLocation(entity);
+		if(OLD_RENDERER != null) {
+			return OLD_RENDERER.getTextureLocation(entity);
 		}
 
 		return super.getTextureLocation(entity);

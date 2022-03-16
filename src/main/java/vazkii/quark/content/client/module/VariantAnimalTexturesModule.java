@@ -9,7 +9,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -23,6 +22,7 @@ import vazkii.quark.base.module.config.Config;
 import vazkii.quark.content.client.render.variant.*;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @LoadModule(category = ModuleCategory.CLIENT, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
@@ -68,19 +68,19 @@ public class VariantAnimalTexturesModule extends QuarkModule {
 		registerShiny(VariantTextureType.DOLPHIN);
 
 		if(enableCow)
-			EntityRenderers.register(EntityType.COW, VariantCowRenderer::new);
+			registerAndStackRenderer(EntityType.COW, VariantCowRenderer::new, VariantCowRenderer::setOldRenderFactory);
 		if(enablePig)
-			EntityRenderers.register(EntityType.PIG, VariantPigRenderer::new);
+			registerAndStackRenderer(EntityType.PIG, VariantPigRenderer::new, VariantPigRenderer::setOldRenderFactory);
 		if(enableChicken)
-			EntityRenderers.register(EntityType.CHICKEN, VariantChickenRenderer::new);
+			registerAndStackRenderer(EntityType.CHICKEN, VariantChickenRenderer::new, VariantChickenRenderer::setOldRenderFactory);
 		if(enableShinyRabbit)
-			EntityRenderers.register(EntityType.RABBIT, VariantRabbitRenderer::new);
+			registerAndStackRenderer(EntityType.RABBIT, VariantRabbitRenderer::new, VariantRabbitRenderer::setOldRenderFactory);
 		if(enableShinyLlama)
-			EntityRenderers.register(EntityType.LLAMA, VariantLlamaRenderer::new);
+			registerAndStackRenderer(EntityType.LLAMA, VariantLlamaRenderer::new, VariantLlamaRenderer::setOldRenderFactory);
 		if(enableLGBTBees)
-			registerAndStackBeeRenderers();
+			registerAndStackRenderer(EntityType.BEE, VariantBeeRenderer::new, VariantBeeRenderer::setOldRenderFactory);
 		if(enableShinyDolphin)
-			EntityRenderers.register(EntityType.DOLPHIN, VariantDolphinRenderer::new);
+			registerAndStackRenderer(EntityType.DOLPHIN, VariantDolphinRenderer::new, VariantDolphinRenderer::setOldRenderFactory);
 
 	}
 
@@ -103,6 +103,8 @@ public class VariantAnimalTexturesModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
 	public void doShinySparkles(LivingEvent.LivingUpdateEvent event) {
+		if (!shinySparkles)
+			return;
 		LivingEntity entity = event.getEntityLiving();
 		Level level = entity.getLevel();
 		if (level.isClientSide() && level.getGameTime() % 10 == 0) {
@@ -118,9 +120,9 @@ public class VariantAnimalTexturesModule extends QuarkModule {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void registerAndStackBeeRenderers() {
-		VariantBeeRenderer.OLD_BEE_RENDER_FACTORY = (EntityRendererProvider<Bee>) EntityRenderers.PROVIDERS.get(EntityType.BEE);
-		EntityRenderers.register(EntityType.BEE, VariantBeeRenderer::new);
+	private <T extends Entity> void registerAndStackRenderer(EntityType<T> entityType, EntityRendererProvider<T> provider, Consumer<EntityRendererProvider<T>> consumer) {
+		consumer.accept((EntityRendererProvider<T>) EntityRenderers.PROVIDERS.get(entityType));
+		EntityRenderers.register(entityType, provider);
 	}
 
 	@OnlyIn(Dist.CLIENT)
