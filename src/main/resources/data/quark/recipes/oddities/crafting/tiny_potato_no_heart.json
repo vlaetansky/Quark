@@ -5,9 +5,10 @@
     "P"
   ],
   "key": {
-    "D": {
-      "tag": "forge:gems/diamond"
-    },
+    "D": [
+      { "tag": "forge:gems/diamond" },
+      { "tag": "forge:gems/emerald" }
+    ],
     "P": {
       "item": "minecraft:potato"
     }
