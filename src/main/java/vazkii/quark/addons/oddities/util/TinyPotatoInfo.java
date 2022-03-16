@@ -7,7 +7,7 @@ import net.minecraft.world.item.DyeColor;
 import java.util.List;
 import java.util.Locale;
 
-public record TinyPotatoRenderInfo(int runeColor, boolean enchanted, String name) {
+public record TinyPotatoInfo(int runeColor, boolean enchanted, String name) {
 
 	private static final List<String> RAINBOW_NAMES = List.of("gay homosexual", "rainbow", "lgbt", "lgbtq", "lgbtq+", "gay");
 	private static final List<String> ENCHANTMENT_NAMES = List.of("enchanted", "glowy", "shiny", "gay");
@@ -20,15 +20,15 @@ public record TinyPotatoRenderInfo(int runeColor, boolean enchanted, String name
 		return name.substring(match.length()).trim();
 	}
 
-	public static TinyPotatoRenderInfo fromComponent(Component component) {
+	public static TinyPotatoInfo fromComponent(Component component) {
 		return fromString(component.getString());
 	}
 
-	public static TinyPotatoRenderInfo fromString(String string) {
+	public static TinyPotatoInfo fromString(String string) {
 		string = ChatFormatting.stripFormatting(string);
 
 		if (string == null)
-			return new TinyPotatoRenderInfo(-1, false, "");
+			return new TinyPotatoInfo(-1, false, "");
 
 		string = string.trim().toLowerCase(Locale.ROOT);
 
@@ -63,6 +63,6 @@ public record TinyPotatoRenderInfo(int runeColor, boolean enchanted, String name
 			}
 		}
 
-		return new TinyPotatoRenderInfo(color, enchanted, string);
+		return new TinyPotatoInfo(color, enchanted, string);
 	}
 }

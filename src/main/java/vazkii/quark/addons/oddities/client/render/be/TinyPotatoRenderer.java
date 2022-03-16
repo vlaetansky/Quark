@@ -29,7 +29,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import vazkii.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
 import vazkii.quark.addons.oddities.module.TinyPotatoModule;
-import vazkii.quark.addons.oddities.util.TinyPotatoRenderInfo;
+import vazkii.quark.addons.oddities.util.TinyPotatoInfo;
 import vazkii.quark.content.tools.item.RuneItem;
 import vazkii.quark.content.tools.module.ColorRunesModule;
 import vazkii.quark.mixin.client.ModelManagerMixin;
@@ -62,7 +62,7 @@ public class TinyPotatoRenderer implements BlockEntityRenderer<TinyPotatoBlockEn
 	}
 
 	public static BakedModel getModelFromDisplayName(Component displayName, boolean angry) {
-		TinyPotatoRenderInfo info = TinyPotatoRenderInfo.fromComponent(displayName);
+		TinyPotatoInfo info = TinyPotatoInfo.fromComponent(displayName);
 		return getModel(info.name(), angry);
 	}
 
@@ -105,7 +105,7 @@ public class TinyPotatoRenderer implements BlockEntityRenderer<TinyPotatoBlockEn
 
 		ms.pushPose();
 
-		TinyPotatoRenderInfo info = TinyPotatoRenderInfo.fromComponent(potato.name);
+		TinyPotatoInfo info = TinyPotatoInfo.fromComponent(potato.name);
 		RenderType layer = Sheets.translucentCullBlockSheet();
 		BakedModel model = getModel(info.name(), potato.angry);
 

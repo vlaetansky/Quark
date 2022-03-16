@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.Block;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.addons.oddities.block.TinyPotatoBlock;
 import vazkii.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
-import vazkii.quark.addons.oddities.util.TinyPotatoRenderInfo;
+import vazkii.quark.addons.oddities.util.TinyPotatoInfo;
 import vazkii.quark.api.IRuneColorProvider;
 import vazkii.quark.base.handler.ContributorRewardHandler;
 
@@ -93,7 +93,7 @@ public class TinyPotatoBlockItem extends BlockItem implements IRuneColorProvider
 
 	@Override
 	public boolean isFoil(@Nonnull ItemStack stack) {
-		if (stack.hasCustomHoverName() && TinyPotatoRenderInfo.fromComponent(stack.getHoverName()).enchanted())
+		if (stack.hasCustomHoverName() && TinyPotatoInfo.fromComponent(stack.getHoverName()).enchanted())
 			return true;
 		return super.isFoil(stack);
 	}
@@ -101,7 +101,7 @@ public class TinyPotatoBlockItem extends BlockItem implements IRuneColorProvider
 	@Override
 	public int getRuneColor(ItemStack stack) {
 		if (stack.hasCustomHoverName())
-			return TinyPotatoRenderInfo.fromComponent(stack.getHoverName()).runeColor();
+			return TinyPotatoInfo.fromComponent(stack.getHoverName()).runeColor();
 		return -1;
 	}
 }

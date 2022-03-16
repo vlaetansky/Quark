@@ -21,12 +21,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import vazkii.arl.block.be.SimpleInventoryBlockEntity;
 import vazkii.quark.addons.oddities.block.TinyPotatoBlock;
 import vazkii.quark.addons.oddities.module.TinyPotatoModule;
+import vazkii.quark.addons.oddities.util.TinyPotatoInfo;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.handler.QuarkSounds;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Locale;
 
 public class TinyPotatoBlockEntity extends SimpleInventoryBlockEntity implements Nameable {
 	public static final String TAG_NAME = "name";
@@ -65,9 +65,13 @@ public class TinyPotatoBlockEntity extends SimpleInventoryBlockEntity implements
 		if (level != null && !level.isClientSide) {
 			jump();
 
-			if (name.getString().toLowerCase(Locale.ROOT).trim().endsWith("shia labeouf") && nextDoIt == 0) {
-				nextDoIt = 40;
-				level.playSound(null, worldPosition, QuarkSounds.BLOCK_POTATO_DO_IT, SoundSource.BLOCKS, 1F, 1F);
+			if (hasCustomName()) {
+				TinyPotatoInfo info = TinyPotatoInfo.fromComponent(name);
+
+				if (info.name().equals("shia labeouf") && nextDoIt == 0) {
+					nextDoIt = 40;
+					level.playSound(null, worldPosition, QuarkSounds.BLOCK_POTATO_DO_IT, SoundSource.BLOCKS, 1F, 1F);
+				}
 			}
 
 			for (int i = 0; i < getContainerSize(); i++) {
