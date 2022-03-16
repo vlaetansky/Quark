@@ -20,6 +20,7 @@ import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -85,6 +86,15 @@ public class GlimmeringWealdModule extends QuarkModule {
 	@Override
 	public void setup() {
 		glowShroomFeedablesTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "glow_shroom_feedables"));
+
+		enqueue(() -> {
+			ComposterBlock.COMPOSTABLES.put(glow_shroom.asItem(), 0.65F);
+			ComposterBlock.COMPOSTABLES.put(glow_shroom_block.asItem(), 0.65F);
+			ComposterBlock.COMPOSTABLES.put(glow_shroom_stem.asItem(), 0.65F);
+			ComposterBlock.COMPOSTABLES.put(glow_shroom_ring.asItem(), 0.65F);
+
+			ComposterBlock.COMPOSTABLES.put(glow_lichen_growth.asItem(), 0.5F);
+		});
 	}
 
 	private static void makeFeatures() {
