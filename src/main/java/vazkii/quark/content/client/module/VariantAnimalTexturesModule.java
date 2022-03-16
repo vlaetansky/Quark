@@ -2,13 +2,14 @@ package vazkii.quark.content.client.module;
 
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.*;
+import net.minecraft.world.entity.animal.horse.Llama;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -17,12 +18,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
+import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.content.client.render.variant.*;
 
+import javax.annotation.Nullable;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @LoadModule(category = ModuleCategory.CLIENT, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
@@ -66,22 +67,107 @@ public class VariantAnimalTexturesModule extends QuarkModule {
 		registerShiny(VariantTextureType.RABBIT);
 		registerShiny(VariantTextureType.LLAMA);
 		registerShiny(VariantTextureType.DOLPHIN);
+	}
 
-		if(enableCow)
-			registerAndStackRenderer(EntityType.COW, VariantCowRenderer::new, VariantCowRenderer::setOldRenderFactory);
-		if(enablePig)
-			registerAndStackRenderer(EntityType.PIG, VariantPigRenderer::new, VariantPigRenderer::setOldRenderFactory);
-		if(enableChicken)
-			registerAndStackRenderer(EntityType.CHICKEN, VariantChickenRenderer::new, VariantChickenRenderer::setOldRenderFactory);
-		if(enableShinyRabbit)
-			registerAndStackRenderer(EntityType.RABBIT, VariantRabbitRenderer::new, VariantRabbitRenderer::setOldRenderFactory);
-		if(enableShinyLlama)
-			registerAndStackRenderer(EntityType.LLAMA, VariantLlamaRenderer::new, VariantLlamaRenderer::setOldRenderFactory);
-		if(enableLGBTBees)
-			registerAndStackRenderer(EntityType.BEE, VariantBeeRenderer::new, VariantBeeRenderer::setOldRenderFactory);
-		if(enableShinyDolphin)
-			registerAndStackRenderer(EntityType.DOLPHIN, VariantDolphinRenderer::new, VariantDolphinRenderer::setOldRenderFactory);
+	@Nullable
+	@OnlyIn(Dist.CLIENT)
+	public static ResourceLocation getCowTexture(Cow entity) {
+		if (!ModuleLoader.INSTANCE.isModuleEnabled(VariantAnimalTexturesModule.class) || !enableCow)
+			return null;
+		return VariantAnimalTexturesModule.getTextureOrShiny(entity, VariantTextureType.COW);
+	}
 
+	@Nullable
+	@OnlyIn(Dist.CLIENT)
+	public static ResourceLocation getPigTexture(Pig entity) {
+		if (!ModuleLoader.INSTANCE.isModuleEnabled(VariantAnimalTexturesModule.class) || !enablePig)
+			return null;
+		return VariantAnimalTexturesModule.getTextureOrShiny(entity, VariantTextureType.PIG);
+	}
+
+	@Nullable
+	@OnlyIn(Dist.CLIENT)
+	public static ResourceLocation getChickenTexture(Chicken entity) {
+		if (!ModuleLoader.INSTANCE.isModuleEnabled(VariantAnimalTexturesModule.class) || !enableChicken)
+			return null;
+		return VariantAnimalTexturesModule.getTextureOrShiny(entity, VariantTextureType.CHICKEN);
+	}
+
+	@Nullable
+	@OnlyIn(Dist.CLIENT)
+	public static ResourceLocation getRabbitTexture(Rabbit entity) {
+		if (!ModuleLoader.INSTANCE.isModuleEnabled(VariantAnimalTexturesModule.class) || !enableShinyRabbit)
+			return null;
+		return VariantAnimalTexturesModule.getTextureOrShiny(entity, VariantTextureType.RABBIT, () -> null);
+	}
+
+	@Nullable
+	@OnlyIn(Dist.CLIENT)
+	public static ResourceLocation getLlamaTexture(Llama entity) {
+		if (!ModuleLoader.INSTANCE.isModuleEnabled(VariantAnimalTexturesModule.class) || !enableShinyLlama)
+			return null;
+		return VariantAnimalTexturesModule.getTextureOrShiny(entity, VariantTextureType.LLAMA, () -> null);
+	}
+
+	@Nullable
+	@OnlyIn(Dist.CLIENT)
+	public static ResourceLocation getDolphinTexture(Dolphin entity) {
+		if (!ModuleLoader.INSTANCE.isModuleEnabled(VariantAnimalTexturesModule.class) || !enableShinyDolphin)
+			return null;
+		return VariantAnimalTexturesModule.getTextureOrShiny(entity, VariantTextureType.DOLPHIN, () -> null);
+	}
+
+	private static final List<String> BEE_VARIANTS = List.of(
+			"acebee", "agenbee", "arobee", "beefluid", "beesexual",
+			"beequeer", "enbee", "gaybee", "interbee", "lesbeean",
+			"panbee", "polysexbee", "transbee", "helen");
+
+	@Nullable
+	@OnlyIn(Dist.CLIENT)
+	public static ResourceLocation getBeeTexture(Bee entity) {
+		if (!ModuleLoader.INSTANCE.isModuleEnabled(VariantAnimalTexturesModule.class) || !enableLGBTBees)
+			return null;
+
+		UUID id = entity.getUUID();
+		long most = id.getMostSignificantBits();
+
+		// From https://news.gallup.com/poll/329708/lgbt-identification-rises-latest-estimate.aspx
+		final double lgbtChance = 0.056;
+		boolean lgbt = VariantAnimalTexturesModule.everyBeeIsLGBT || (new Random(most)).nextDouble() < lgbtChance;
+
+		if(entity.hasCustomName() || lgbt) {
+			String custName = "";
+			if (entity.hasCustomName()) {
+				Component name = entity.getCustomName();
+				if (name != null)
+					custName = name.getString();
+			}
+
+			String name = custName.toLowerCase(Locale.ROOT);
+
+			if(!BEE_VARIANTS.contains(name)) {
+				if(custName.matches("wire(se|bee)gal"))
+					name = "enbee";
+				else if(lgbt)
+					name = BEE_VARIANTS.get(Math.abs((int) (most % (BEE_VARIANTS.size() - 1)))); // -1 to not spawn helen bee naturally
+			}
+
+			if(BEE_VARIANTS.contains(name)) {
+				String type = "normal";
+				boolean angery = entity.hasStung();
+				boolean nectar = entity.hasNectar();
+
+				if(angery)
+					type = nectar ? "angry_nectar" : "angry";
+				else if(nectar)
+					type = "nectar";
+
+				String path = String.format("textures/model/entity/variants/bees/%s/%s.png", name, type);
+				return new ResourceLocation(Quark.MOD_ID, path);
+			}
+		}
+
+		return null;
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -119,15 +205,9 @@ public class VariantAnimalTexturesModule extends QuarkModule {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private <T extends Entity> void registerAndStackRenderer(EntityType<T> entityType, EntityRendererProvider<T> provider, Consumer<EntityRendererProvider<T>> consumer) {
-		consumer.accept((EntityRendererProvider<T>) EntityRenderers.PROVIDERS.get(entityType));
-		EntityRenderers.register(entityType, provider);
-	}
-
 	@OnlyIn(Dist.CLIENT)
-	public static ResourceLocation getTextureOrShiny(Entity e, VariantTextureType type, boolean enabled) {
-		return getTextureOrShiny(e, type, () -> getRandomTexture(e, type, enabled));
+	public static ResourceLocation getTextureOrShiny(Entity e, VariantTextureType type) {
+		return getTextureOrShiny(e, type, () -> getRandomTexture(e, type));
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -141,10 +221,8 @@ public class VariantAnimalTexturesModule extends QuarkModule {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private static ResourceLocation getRandomTexture(Entity e, VariantTextureType type, boolean enabled) {
+	private static ResourceLocation getRandomTexture(Entity e, VariantTextureType type) {
 		List<ResourceLocation> styles = textures.get(type);
-		if(!enabled)
-			return styles.get(styles.size() - 1);
 
 		UUID id = e.getUUID();
 		long most = id.getMostSignificantBits();

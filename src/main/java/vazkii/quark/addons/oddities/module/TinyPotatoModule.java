@@ -60,6 +60,9 @@ public class TinyPotatoModule extends QuarkModule {
 			for (ResourceLocation model : rm.listResources("models/tiny_potato", s -> s.endsWith(".json"))) {
 				if ("quark".equals(model.getNamespace())) {
 					String path = model.getPath();
+					if ("models/tiny_potato/base.json".equals(path))
+						continue;
+
 					path = path.substring("models/".length(), path.length() - ".json".length());
 					ForgeModelBakery.addSpecialModel(new ResourceLocation("quark", path));
 				}

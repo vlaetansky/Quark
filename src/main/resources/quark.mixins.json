@@ -49,7 +49,14 @@
     "client.PistonTileEntityRendererMixin",
     "client.RenderBuffersMixin",
     "client.ScreenMixin",
-    "client.ThrownTridentRendererMixin"
+    "client.ThrownTridentRendererMixin",
+    "client.variants.BeeRendererMixin",
+    "client.variants.ChickenRendererMixin",
+    "client.variants.CowRendererMixin",
+    "client.variants.DolphinRendererMixin",
+    "client.variants.LlamaRendererMixin",
+    "client.variants.PigRendererMixin",
+    "client.variants.RabbitRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
