@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -68,17 +69,20 @@ public class ChestSearchingModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
 		InventoryButtonHandler.addButtonProvider(this, ButtonTargetType.CONTAINER_INVENTORY, 1, (parent, x, y) ->
-		new MiniInventoryButton(parent, 3, x, y, "quark.gui.button.filter", (b) -> {
-			searchEnabled = !searchEnabled;
-			updateSearchStatus();
-			searchBar.setFocus(true);
-		}).setTextureShift(() -> searchEnabled));
+				new MiniInventoryButton(parent, 3, x, y, "quark.gui.button.filter", (b) -> {
+					searchEnabled = !searchEnabled;
+					updateSearchStatus();
+					searchBar.setFocus(true);
+				}).setTextureShift(() -> searchEnabled));
 	}
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public void initGui(ScreenEvent.InitScreenEvent.Post event) {
 		Screen gui = event.getScreen();
+		if(gui instanceof InventoryScreen)
+			return;
+
 		if(gui instanceof AbstractContainerScreen<?> chest && (gui instanceof IQuarkButtonAllowed || GeneralConfig.isScreenAllowed(gui))) {
 			Minecraft mc = gui.getMinecraft();
 			if(InventoryTransferHandler.accepts(chest.getMenu(), mc.player)) {
