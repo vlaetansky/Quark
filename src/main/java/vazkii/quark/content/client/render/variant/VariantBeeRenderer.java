@@ -1,6 +1,9 @@
 package vazkii.quark.content.client.render.variant;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.BeeRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -30,6 +33,22 @@ public class VariantBeeRenderer extends BeeRenderer {
 
 		if(OLD_BEE_RENDER_FACTORY != null)
 			OLD_BEE_RENDER = OLD_BEE_RENDER_FACTORY.create(context);
+	}
+
+	@Override
+	public boolean shouldRender(@Nonnull Bee bee, @Nonnull Frustum frustum, double viewX, double viewY, double viewZ) {
+		if (OLD_BEE_RENDER != null)
+			return OLD_BEE_RENDER.shouldRender(bee, frustum, viewX, viewY, viewZ);
+		else
+			return super.shouldRender(bee, frustum, viewX, viewY, viewZ);
+	}
+
+	@Override
+	public void render(@Nonnull Bee bee, float yaw, float partialTicks, @Nonnull PoseStack matrix, @Nonnull MultiBufferSource buffer, int light) {
+		if (OLD_BEE_RENDER != null)
+			OLD_BEE_RENDER.render(bee, yaw, partialTicks, matrix, buffer, light);
+		else
+			super.render(bee, yaw, partialTicks, matrix, buffer, light);
 	}
 
 	@Nonnull
