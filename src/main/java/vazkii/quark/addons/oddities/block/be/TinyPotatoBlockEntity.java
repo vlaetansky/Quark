@@ -5,12 +5,14 @@ import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.Nameable;
@@ -77,7 +79,8 @@ public class TinyPotatoBlockEntity extends SimpleInventoryBlockEntity implements
 			for (int i = 0; i < getContainerSize(); i++) {
 				ItemStack stackAt = getItem(i);
 				if (!stackAt.isEmpty() && stackAt.is(TinyPotatoModule.tiny_potato.asItem())) {
-					player.sendMessage(new TranslatableComponent("quark.misc.my_son"), Util.NIL_UUID);
+					if (player instanceof ServerPlayer serverPlayer)
+						serverPlayer.sendMessage(new TranslatableComponent("quark.misc.my_son"), ChatType.GAME_INFO, Util.NIL_UUID);
 					return;
 				}
 			}
