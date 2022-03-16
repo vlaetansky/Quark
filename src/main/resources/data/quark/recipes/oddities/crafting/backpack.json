@@ -25,8 +25,17 @@
   },
   "conditions": [
     {
-      "type": "quark:flag",
-      "flag": "ravager_hide"
+      "type": "forge:and",
+      "values": [
+        {
+          "type": "quark:flag",
+          "flag": "ravager_hide"
+        },
+        {
+          "type": "quark:flag",
+          "flag": "backpack"
+        }
+      ]
     }
   ]
 }
