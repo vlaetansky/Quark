@@ -44,7 +44,7 @@ public class BottledCloudItem extends QuarkItem {
 
 				stack.shrink(1);
 
-				if(!player.isCreative()) {
+				if(!player.getAbilities().instabuild) {
 					ItemStack returnStack = new ItemStack(Items.GLASS_BOTTLE);
 					if(stack.isEmpty())
 						stack = returnStack;

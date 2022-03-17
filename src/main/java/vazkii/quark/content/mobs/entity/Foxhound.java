@@ -169,7 +169,7 @@ public class Foxhound extends Wolf implements Enemy {
 
 		if (WantLoveGoal.needsPets(this)) {
 			Entity owner = getOwner();
-			if (owner != null && owner.distanceToSqr(this) < 1 && !owner.isInWater() && !owner.fireImmune() && (!(owner instanceof Player) || !((Player) owner).isCreative()))
+			if (owner != null && owner.distanceToSqr(this) < 1 && !owner.isInWater() && !owner.fireImmune() && (!(owner instanceof Player) || !((Player) owner).getAbilities().invulnerable))
 				owner.setSecondsOnFire(5);
 		}
 
@@ -291,13 +291,13 @@ public class Foxhound extends Wolf implements Enemy {
 				timeUntilPotatoEmerges = 600;
 
 				playSound(QuarkSounds.ENTITY_FOXHOUND_EAT, 1f, 1f);
-				if (!player.isCreative())
+				if (!player.getAbilities().instabuild)
 					itemstack.shrink(1);
 				return InteractionResult.SUCCESS;
 			}
 		} else {
 			if (!itemstack.isEmpty()) {
-				if (itemstack.getItem() == Items.COAL && (level.getDifficulty() == Difficulty.PEACEFUL || player.isCreative() || player.getEffect(MobEffects.FIRE_RESISTANCE) != null) && !level.isClientSide) {
+				if (itemstack.getItem() == Items.COAL && (level.getDifficulty() == Difficulty.PEACEFUL || player.getAbilities().invulnerable || player.getEffect(MobEffects.FIRE_RESISTANCE) != null) && !level.isClientSide) {
 					if (random.nextDouble() < FoxhoundModule.tameChance) {
 						this.tame(player);
 						this.navigation.stop();
@@ -309,7 +309,7 @@ public class Foxhound extends Wolf implements Enemy {
 						this.level.broadcastEntityEvent(this, (byte) 6);
 					}
 
-					if (!player.isCreative())
+					if (!player.getAbilities().instabuild)
 						itemstack.shrink(1);
 					return InteractionResult.SUCCESS;
 				}

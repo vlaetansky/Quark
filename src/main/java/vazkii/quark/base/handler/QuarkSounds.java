@@ -58,6 +58,8 @@ public class QuarkSounds {
 	public static final SoundEvent ENTITY_TORETOISE_EAT = register("entity.toretoise.eat");
 	public static final SoundEvent ENTITY_TORETOISE_REGROW = register("entity.toretoise.regrow");
 
+	public static final SoundEvent ENTITY_PARROT_EGG = register("entity.parrot.egg");
+
 	public static final SoundEvent ENTITY_SOUL_BEAD_IDLE = register("entity.soul_bead.idle");
 
 	public static final SoundEvent BLOCK_MONSTER_BOX_GROWL = register("block.monster_box.growl");

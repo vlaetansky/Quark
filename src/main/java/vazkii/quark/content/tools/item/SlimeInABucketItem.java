@@ -1,7 +1,5 @@
 package vazkii.quark.content.tools.item;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -30,6 +28,8 @@ import net.minecraft.world.phys.Vec3;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.QuarkModule;
+
+import javax.annotation.Nonnull;
 
 public class SlimeInABucketItem extends QuarkItem {
 
@@ -90,7 +90,7 @@ public class SlimeInABucketItem extends QuarkItem {
 
 		worldIn.playSound(playerIn, pos, SoundEvents.BUCKET_EMPTY, SoundSource.NEUTRAL, 1.0F, 1.0F);
 
-		if(!playerIn.isCreative())
+		if(!playerIn.getAbilities().instabuild)
 			playerIn.setItemInHand(hand, new ItemStack(Items.BUCKET));
 
 		return InteractionResult.SUCCESS;

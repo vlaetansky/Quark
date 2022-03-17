@@ -46,6 +46,7 @@
     "client.LevelRendererMixin",
     "client.LoomScreenMixin",
     "client.ModelManagerMixin",
+    "client.ParrotRendererMixin",
     "client.PistonTileEntityRendererMixin",
     "client.RenderBuffersMixin",
     "client.ScreenMixin",

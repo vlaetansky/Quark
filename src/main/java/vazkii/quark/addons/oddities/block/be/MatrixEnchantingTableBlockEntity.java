@@ -119,7 +119,7 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 
 	private boolean generateAndPay(EnchantmentMatrix matrix, Player player) {
 		if(matrix.canGeneratePiece(bookshelfPower, enchantability) && matrix.validateXp(player, bookshelfPower)) {
-			boolean creative = player.isCreative();
+			boolean creative = player.getAbilities().instabuild;
 			int cost = matrix.getNewPiecePrice();
 			if(charge > 0 || creative) {
 				if (matrix.generatePiece(influences, bookshelfPower)) {

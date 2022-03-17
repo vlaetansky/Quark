@@ -114,7 +114,7 @@ public class BackpackModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void onOpenGUI(ScreenOpenEvent event) {
 		Player player = Minecraft.getInstance().player;
-		if(player != null && isInventoryGUI(event.getScreen()) && !player.isCreative() && isEntityWearingBackpack(player)) {
+		if(player != null && isInventoryGUI(event.getScreen()) && !player.getAbilities().instabuild && isEntityWearingBackpack(player)) {
 			requestBackpack();
 			event.setCanceled(true);
 		}

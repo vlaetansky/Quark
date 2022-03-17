@@ -73,7 +73,7 @@ public class TotemOfHoldingEntity extends Entity {
 	public boolean skipAttackInteraction(@Nonnull Entity e) {
 		if(!level.isClientSide && e instanceof Player player) {
 
-			if(!TotemOfHoldingModule.allowAnyoneToCollect && !player.isCreative()) {
+			if(!TotemOfHoldingModule.allowAnyoneToCollect && !player.getAbilities().instabuild) {
 				Player owner = getOwnerEntity();
 				if(e != owner)
 					return false;

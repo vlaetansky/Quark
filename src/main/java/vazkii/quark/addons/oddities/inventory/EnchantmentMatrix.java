@@ -73,7 +73,7 @@ public class EnchantmentMatrix {
 	}
 
 	public boolean validateXp(Player player, int bookshelfPower) {
-		return player.isCreative() || (player.experienceLevel >= getMinXpLevel(bookshelfPower) && player.experienceLevel >= getNewPiecePrice());
+		return player.getAbilities().instabuild || (player.experienceLevel >= getMinXpLevel(bookshelfPower) && player.experienceLevel >= getNewPiecePrice());
 	}
 
 	public int getMinXpLevel(int bookshelfPower) {

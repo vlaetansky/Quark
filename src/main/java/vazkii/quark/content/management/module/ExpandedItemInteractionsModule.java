@@ -136,7 +136,7 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 	private static boolean canTrashItem(ItemStack stack, ItemStack incoming, Slot slot, Player player) {
 		return stack.getItem() == Items.LAVA_BUCKET
 				&& !incoming.isEmpty()
-				&& !player.isCreative()
+				&& !player.getAbilities().instabuild
 				&& slot.allowModification(player)
 				&& slot.mayPlace(stack)
 				&& !incoming.getItem().isFireResistant()

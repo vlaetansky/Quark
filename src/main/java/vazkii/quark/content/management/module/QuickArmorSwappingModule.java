@@ -23,13 +23,13 @@ public class QuickArmorSwappingModule extends QuarkModule {
 	public void onEntityInteractSpecific(PlayerInteractEvent.EntityInteractSpecific event) {
 		Player player = event.getPlayer();
 
-		if(player.isSpectator() || player.isCreative() || !(event.getTarget() instanceof ArmorStand))
+		if(player.isSpectator() || player.getAbilities().instabuild || !(event.getTarget() instanceof ArmorStand))
 			return;
 
 		if(player.isCrouching()) {
 			event.setCanceled(true);
 			event.setCancellationResult(InteractionResult.SUCCESS);
-			
+
 			ArmorStand armorStand = (ArmorStand) event.getTarget();
 
 			swapSlot(player, armorStand, EquipmentSlot.HEAD);
@@ -44,18 +44,18 @@ public class QuickArmorSwappingModule extends QuarkModule {
 	private void swapSlot(Player player, ArmorStand armorStand, EquipmentSlot slot) {
 		ItemStack playerItem = player.getItemBySlot(slot);
 		ItemStack armorStandItem = armorStand.getItemBySlot(slot);
-		
+
 		if(EnchantmentHelper.hasBindingCurse(playerItem))
 			return; // lol no
-		
+
 		ItemStack held = player.getItemInHand(InteractionHand.MAIN_HAND);
-		
+
 		if(armorStandItem.isEmpty() && !held.isEmpty() && Player.getEquipmentSlotForItem(held) == slot) {
 			ItemStack copy = held.copy();
 			player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
 			armorStandItem = copy;
 		}
-		
+
 		player.setItemSlot(slot, armorStandItem);
 		armorStand.setItemSlot(slot, playerItem);
 	}

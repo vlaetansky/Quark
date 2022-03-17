@@ -1,11 +1,7 @@
 package vazkii.quark.addons.oddities.client.screen;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -31,6 +27,8 @@ import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.oddities.MatrixEnchanterOperationMessage;
 
 import javax.annotation.Nonnull;
+import java.util.LinkedList;
+import java.util.List;
 
 public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchantingMenu> {
 
@@ -102,7 +100,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 
 		pieceList.render(stack, mouseX, mouseY, partialTicks);
 
-		if(enchanter.matrix != null && enchanter.matrix.canGeneratePiece(enchanter.bookshelfPower, enchanter.enchantability) && !mc.player.isCreative()) {
+		if(enchanter.matrix != null && enchanter.matrix.canGeneratePiece(enchanter.bookshelfPower, enchanter.enchantability) && !mc.player.getAbilities().instabuild) {
 			int x = i + 74;
 			int y = j + 58;
 			int xpCost = enchanter.matrix.getNewPiecePrice();
@@ -321,7 +319,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 
 	private void updateButtonStatus() {
 		plusButton.active = (enchanter.matrix != null
-				&& (getMinecraft().player.isCreative() || enchanter.charge > 0)
+				&& (getMinecraft().player.getAbilities().instabuild || enchanter.charge > 0)
 				&& enchanter.matrix.validateXp(getMinecraft().player, enchanter.bookshelfPower)
 				&& enchanter.matrix.canGeneratePiece(enchanter.bookshelfPower, enchanter.enchantability));
 	}

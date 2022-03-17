@@ -70,7 +70,7 @@ public class PatTheDogsModule extends QuarkModule {
 					WantLoveGoal.setPetTime(wolf);
 
 					if (wolf instanceof Foxhound && !player.isInWater() && !player.hasEffect(
-						MobEffects.FIRE_RESISTANCE) && !player.isCreative())
+						MobEffects.FIRE_RESISTANCE) && !player.getAbilities().invulnerable)
 						player.setSecondsOnFire(5);
 				}
 

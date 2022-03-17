@@ -1,7 +1,5 @@
 package vazkii.quark.content.management.module;
 
-import java.util.List;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.entity.EntityRenderers;
@@ -35,13 +33,15 @@ import vazkii.quark.base.network.message.OpenBoatChestMessage;
 import vazkii.quark.content.management.client.render.entity.ChestPassengerRenderer;
 import vazkii.quark.content.management.entity.ChestPassenger;
 
+import java.util.List;
+
 @LoadModule(category = ModuleCategory.MANAGEMENT, hasSubscriptions = true)
 public class ChestsInBoatsModule extends QuarkModule {
 
 	public static EntityType<ChestPassenger> chestPassengerEntityType;
 
 	private static TagKey<Item> boatableChestsTag;
-	
+
 	@Override
 	public void register() {
 		chestPassengerEntityType = EntityType.Builder.<ChestPassenger>of(ChestPassenger::new, MobCategory.MISC)
@@ -51,7 +51,7 @@ public class ChestsInBoatsModule extends QuarkModule {
 				.build("chest_passenger");
 		RegistryHelper.register(chestPassengerEntityType, "chest_passenger");
 	}
-	
+
 	@Override
 	public void setup() {
 		boatableChestsTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "boatable_chests"));
@@ -78,11 +78,11 @@ public class ChestsInBoatsModule extends QuarkModule {
 
 			if(isChest(stack)) {
 				Level world = event.getWorld();
-				
+
 				if(!event.getWorld().isClientSide) {
 					ItemStack chestStack = stack.copy();
 					chestStack.setCount(1);
-					if (!player.isCreative())
+					if (!player.getAbilities().instabuild)
 						stack.shrink(1);
 
 					ChestPassenger passenger = new ChestPassenger(world, chestStack);
@@ -92,7 +92,7 @@ public class ChestsInBoatsModule extends QuarkModule {
 					passenger.startRiding(target, true);
 					world.addFreshEntity(passenger);
 				}
-				
+
 				player.swing(hand);
 				event.setCancellationResult(InteractionResult.SUCCESS);
 				event.setCanceled(true);
@@ -117,7 +117,7 @@ public class ChestsInBoatsModule extends QuarkModule {
 			}
 		}
 	}
-	
+
 	private boolean isChest(ItemStack stack) {
 		return !stack.isEmpty() && stack.is(boatableChestsTag);
 	}

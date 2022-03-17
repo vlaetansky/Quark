@@ -18,7 +18,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
-import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 
@@ -46,12 +45,13 @@ public class VariantAnimalTexturesModule extends QuarkModule {
 
 	@Config public static boolean everyBeeIsLGBT = false;
 
-
 	@Config(description = "The chance for an animal to have a special \"Shiny\" skin, like a shiny pokemon. This is 1 in X. Set to 0 to disable.")
 	public static int shinyAnimalChance = 2048;
 
 	@Config(description = "If a shiny animal should emit occasional sparkles.")
 	public static boolean shinySparkles = true;
+
+	private static boolean isEnabled;
 
 	@Override
 	public void clientSetup() {
@@ -69,10 +69,16 @@ public class VariantAnimalTexturesModule extends QuarkModule {
 		registerShiny(VariantTextureType.DOLPHIN);
 	}
 
+	@Override
+	public void configChanged() {
+		// Pass over to a static reference for easier computing the coremod hook
+		isEnabled = this.enabled;
+	}
+
 	@Nullable
 	@OnlyIn(Dist.CLIENT)
 	public static ResourceLocation getCowTexture(Cow entity) {
-		if (!ModuleLoader.INSTANCE.isModuleEnabled(VariantAnimalTexturesModule.class) || !enableCow)
+		if (!isEnabled || !enableCow)
 			return null;
 		return VariantAnimalTexturesModule.getTextureOrShiny(entity, VariantTextureType.COW);
 	}
@@ -80,7 +86,7 @@ public class VariantAnimalTexturesModule extends QuarkModule {
 	@Nullable
 	@OnlyIn(Dist.CLIENT)
 	public static ResourceLocation getPigTexture(Pig entity) {
-		if (!ModuleLoader.INSTANCE.isModuleEnabled(VariantAnimalTexturesModule.class) || !enablePig)
+		if (!isEnabled || !enablePig)
 			return null;
 		return VariantAnimalTexturesModule.getTextureOrShiny(entity, VariantTextureType.PIG);
 	}
@@ -88,7 +94,7 @@ public class VariantAnimalTexturesModule extends QuarkModule {
 	@Nullable
 	@OnlyIn(Dist.CLIENT)
 	public static ResourceLocation getChickenTexture(Chicken entity) {
-		if (!ModuleLoader.INSTANCE.isModuleEnabled(VariantAnimalTexturesModule.class) || !enableChicken)
+		if (!isEnabled || !enableChicken)
 			return null;
 		return VariantAnimalTexturesModule.getTextureOrShiny(entity, VariantTextureType.CHICKEN);
 	}
@@ -96,7 +102,7 @@ public class VariantAnimalTexturesModule extends QuarkModule {
 	@Nullable
 	@OnlyIn(Dist.CLIENT)
 	public static ResourceLocation getRabbitTexture(Rabbit entity) {
-		if (!ModuleLoader.INSTANCE.isModuleEnabled(VariantAnimalTexturesModule.class) || !enableShinyRabbit)
+		if (!isEnabled || !enableShinyRabbit)
 			return null;
 		return VariantAnimalTexturesModule.getTextureOrShiny(entity, VariantTextureType.RABBIT, () -> null);
 	}
@@ -104,7 +110,7 @@ public class VariantAnimalTexturesModule extends QuarkModule {
 	@Nullable
 	@OnlyIn(Dist.CLIENT)
 	public static ResourceLocation getLlamaTexture(Llama entity) {
-		if (!ModuleLoader.INSTANCE.isModuleEnabled(VariantAnimalTexturesModule.class) || !enableShinyLlama)
+		if (!isEnabled || !enableShinyLlama)
 			return null;
 		return VariantAnimalTexturesModule.getTextureOrShiny(entity, VariantTextureType.LLAMA, () -> null);
 	}
@@ -112,7 +118,7 @@ public class VariantAnimalTexturesModule extends QuarkModule {
 	@Nullable
 	@OnlyIn(Dist.CLIENT)
 	public static ResourceLocation getDolphinTexture(Dolphin entity) {
-		if (!ModuleLoader.INSTANCE.isModuleEnabled(VariantAnimalTexturesModule.class) || !enableShinyDolphin)
+		if (!isEnabled || !enableShinyDolphin)
 			return null;
 		return VariantAnimalTexturesModule.getTextureOrShiny(entity, VariantTextureType.DOLPHIN, () -> null);
 	}
@@ -125,7 +131,7 @@ public class VariantAnimalTexturesModule extends QuarkModule {
 	@Nullable
 	@OnlyIn(Dist.CLIENT)
 	public static ResourceLocation getBeeTexture(Bee entity) {
-		if (!ModuleLoader.INSTANCE.isModuleEnabled(VariantAnimalTexturesModule.class) || !enableLGBTBees)
+		if (!isEnabled || !enableLGBTBees)
 			return null;
 
 		UUID id = entity.getUUID();

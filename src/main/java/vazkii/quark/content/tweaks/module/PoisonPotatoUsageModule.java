@@ -42,7 +42,7 @@ public class PoisonPotatoUsageModule extends QuarkModule {
 						ageable.level.addParticle(ParticleTypes.SMOKE, pos.x, pos.y, pos.z, 0, 0.1, 0);
 					}
 
-					if (!event.getPlayer().isCreative())
+					if (!event.getPlayer().getAbilities().instabuild)
 						event.getItemStack().shrink(1);
 
 				} else event.getPlayer().swing(event.getHand());

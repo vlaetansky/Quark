@@ -151,7 +151,7 @@ public class ReacharoundPlacingModule extends QuarkModule {
 
 				}
 
-				if(player.isCreative() && stack.getCount() < count && !remote)
+				if(player.getAbilities().instabuild && stack.getCount() < count && !remote)
 					stack.setCount(count);
 			}
 		}

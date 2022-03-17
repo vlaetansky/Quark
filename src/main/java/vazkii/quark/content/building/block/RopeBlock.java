@@ -103,7 +103,7 @@ public class RopeBlock extends QuarkBlock implements IBlockItemProvider, SimpleW
 			ItemStack stack = player.getItemInHand(hand);
 			if(stack.getItem() == asItem() && !player.isDiscrete()) {
 				if(pullDown(worldIn, pos)) {
-					if(!player.isCreative())
+					if(!player.getAbilities().instabuild)
 						stack.shrink(1);
 
 					worldIn.playSound(null, pos, soundType.getPlaceSound(), SoundSource.BLOCKS, 0.5F, 1F);
@@ -133,7 +133,7 @@ public class RopeBlock extends QuarkBlock implements IBlockItemProvider, SimpleW
 				return InteractionResult.PASS;
 			} else {
 				if(pullUp(worldIn, pos)) {
-					if(!player.isCreative()) {
+					if(!player.getAbilities().instabuild) {
 						if(!player.addItem(new ItemStack(this)))
 							player.drop(new ItemStack(this), false);
 					}

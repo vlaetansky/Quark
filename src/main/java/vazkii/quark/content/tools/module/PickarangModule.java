@@ -61,11 +61,11 @@ public class PickarangModule extends QuarkModule {
 				.build("pickarang");
 		RegistryHelper.register(pickarangType, "pickarang");
 
-		pickarang = new PickarangItem("pickarang", this, propertiesFor(harvestLevel, durability, false), false);
-		flamerang = new PickarangItem("flamerang", this, propertiesFor(netheriteHarvestLevel, netheriteDurability, true), true);
+		pickarang = new PickarangItem("pickarang", this, propertiesFor(durability, false), false);
+		flamerang = new PickarangItem("flamerang", this, propertiesFor(netheriteDurability, true), true);
 	}
 
-	private static Item.Properties propertiesFor(int level, int durability, boolean netherite) {
+	private static Item.Properties propertiesFor(int durability, boolean netherite) {
 		Item.Properties properties = new Item.Properties()
 				.stacksTo(1)
 				.tab(CreativeModeTab.TAB_TOOLS);

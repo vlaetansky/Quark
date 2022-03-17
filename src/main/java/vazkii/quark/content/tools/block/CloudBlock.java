@@ -71,7 +71,7 @@ public class CloudBlock extends QuarkBlock implements EntityBlock {
 				world.setBlockAndUpdate(pos, stateToPlace);
 				world.playSound(player, pos, stateToPlace.getSoundType().getPlaceSound(), SoundSource.BLOCKS, 1F, 1F);
 
-				if(!player.isCreative()) {
+				if(!player.getAbilities().instabuild) {
 					stack.shrink(1);
 					fillBottle(player, 0);
 				}

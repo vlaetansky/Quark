@@ -66,7 +66,7 @@ public class ReplaceScaffoldingModule extends QuarkModule {
 
 						world.playSound(player, last, stateToPlace.getSoundType().getPlaceSound(), SoundSource.BLOCKS, 1F, 1F);
 
-						if(!player.isCreative()) {
+						if(!player.getAbilities().instabuild) {
 							stack.shrink(1);
 
 							ItemStack giveStack = new ItemStack(Items.SCAFFOLDING);

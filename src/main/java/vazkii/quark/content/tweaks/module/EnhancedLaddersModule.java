@@ -132,7 +132,7 @@ public class EnhancedLaddersModule extends QuarkModule {
 							if(world.isClientSide)
 								player.swing(hand);
 
-							if(!player.isCreative()) {
+							if(!player.getAbilities().instabuild) {
 								stack.shrink(1);
 
 								if(stack.getCount() <= 0)

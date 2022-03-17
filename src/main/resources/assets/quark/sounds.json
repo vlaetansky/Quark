@@ -64,7 +64,7 @@
   "entity.pickarang.throw": {
     "subtitle": "quark.subtitles.throw_pickarang",
     "sounds": [
-      { "name": "quark:entity/pickarang/throw", "pitch": 1.2, "volume": 2 }
+      { "name": "quark:entity/pickarang/throw", "pitch": 1.2 }
     ]
   },
   "entity.pickarang.clank": {
@@ -89,70 +89,70 @@
     ]
   },
   "entity.foxhound.ambient": {
+    "subtitle": "quark.subtitles.foxhound_ambient",
     "sounds": [
       "mob/wolf/bark1",
       "mob/wolf/bark2",
       "mob/wolf/bark3"
-    ],
-    "subtitle": "quark.subtitles.foxhound_ambient"
+    ]
   },
   "entity.foxhound.death": {
+    "subtitle": "quark.subtitles.foxhound_death",
     "sounds": [
       "mob/wolf/death"
-    ],
-    "subtitle": "quark.subtitles.foxhound_death"
+    ]
   },
   "entity.foxhound.growl": {
+    "subtitle": "quark.subtitles.foxhound_growl",
     "sounds": [
       "mob/wolf/growl1",
       "mob/wolf/growl2",
       "mob/wolf/growl3"
-    ],
-    "subtitle": "quark.subtitles.foxhound_growl"
+    ]
   },
   "entity.foxhound.hurt": {
+    "subtitle": "quark.subtitles.foxhound_hurt",
     "sounds": [
       "mob/wolf/hurt1",
       "mob/wolf/hurt2",
       "mob/wolf/hurt3"
-    ],
-    "subtitle": "quark.subtitles.foxhound_hurt"
+    ]
   },
   "entity.foxhound.pant": {
+    "subtitle": "quark.subtitles.foxhound_ambient",
     "sounds": [
       "mob/wolf/panting"
-    ],
-    "subtitle": "quark.subtitles.foxhound_ambient"
+    ]
   },
   "entity.foxhound.shake": {
+    "subtitle": "quark.subtitles.foxhound_shake",
     "sounds": [
       "mob/wolf/shake"
-    ],
-    "subtitle": "quark.subtitles.foxhound_shake"
+    ]
   },
   "entity.foxhound.whine": {
+    "subtitle": "quark.subtitles.foxhound_ambient",
     "sounds": [
       "mob/wolf/whine"
-    ],
-    "subtitle": "quark.subtitles.foxhound_ambient"
+    ]
   },
   "entity.foxhound.eat": {
+    "subtitle": "quark.subtitles.foxhound_eat",
     "sounds": [
       { "name": "mob/fox/eat1", "volume": 0.65 },
       { "name": "mob/fox/eat2", "volume": 0.65 },
       { "name": "mob/fox/eat3", "volume": 0.65 }
-    ],
-    "subtitle": "quark.subtitles.foxhound_eat"
+    ]
   },
   "entity.foxhound.crackle": {
+    "subtitle": "quark.subtitles.foxhound_crackle",
     "sounds": [
       "block/furnace/fire_crackle1",
       "block/furnace/fire_crackle2",
       "block/furnace/fire_crackle3",
       "block/furnace/fire_crackle4",
       "block/furnace/fire_crackle5"
-    ],
-    "subtitle": "quark.subtitles.foxhound_crackle"
+    ]
   },
   "entity.frog.wednesday": {
     "subtitle": "quark.subtitles.hump_day",
@@ -232,18 +232,9 @@
   "entity.toretoise.idle": {
     "subtitle": "quark.subtitles.toretoise_idle",
     "sounds": [
-      {
-        "name": "mob/turtle/idle1",
-        "volume": 0.8
-      },
-      {
-        "name": "mob/turtle/idle2",
-        "volume": 0.7
-      },
-      {
-        "name": "mob/turtle/idle3",
-        "volume": 0.8
-      }
+      { "name": "mob/turtle/idle1", "volume": 0.8 },
+      { "name": "mob/turtle/idle2", "volume": 0.7 },
+      { "name": "mob/turtle/idle3", "volume": 0.8 }
     ]
   },
   "entity.toretoise.angry": {
@@ -264,7 +255,7 @@
     ]
   },
   "entity.toretoise.eat": {
-    "subtitle": "subtitles.entity.generic.eat",
+    "subtitle": "quark.subtitles.toretoise_eat",
     "sounds": [
       "random/eat1",
       "random/eat2",
@@ -278,6 +269,12 @@
       "dig/stone2",
       "dig/stone3",
       "dig/stone4"
+    ]
+  },
+  "entity.parrot.egg": {
+    "subtitle": "quark.subtitles.parrot_egg",
+    "sounds": [
+      "mob/chicken/plop"
     ]
   },
   "entity.soul_bead.idle": {
@@ -351,30 +348,15 @@
   "pet.device": {
     "subtitle": "quark.subtitles.pet.device",
     "sounds": [
-      {
-        "name": "minecraft:note/bit",
-        "pitch": 1.5
-      }
+      { "name": "minecraft:note/bit", "pitch": 1.5 }
     ]
   },
   "pet.neko": {
     "subtitle": "quark.subtitles.pet.neko",
     "sounds": [
-      {
-        "name": "minecraft:mob/cat/purr1",
-        "pitch": 1.4,
-        "volume": 0.7
-      },
-      {
-        "name": "minecraft:mob/cat/purr2",
-        "pitch": 1.4,
-        "volume": 0.7
-      },
-      {
-        "name": "minecraft:mob/cat/purr3",
-        "pitch": 1.4,
-        "volume": 0.7
-      }
+      { "name": "minecraft:mob/cat/purr1", "pitch": 1.4, "volume": 0.7 },
+      { "name": "minecraft:mob/cat/purr2", "pitch": 1.4, "volume": 0.7 },
+      { "name": "minecraft:mob/cat/purr3", "pitch": 1.4, "volume": 0.7 }
     ]
   },
   "pet.slime": {
@@ -390,98 +372,65 @@
   "pet.wire": {
     "subtitle": "quark.subtitles.pet.wire",
     "sounds": [
-      {
-        "name": "minecraft:mob/villager/idle2",
-        "pitch": 1.5
-      }
+      { "name": "minecraft:mob/villager/idle2", "pitch": 1.5 }
     ]
   },
   "ambient.drips": {
     "subtitle": "quark.subtitles.ambient.drips",
     "sounds": [
-      {
-        "name": "quark:ambient/drips",
-        "stream": true
-      }
+      { "name": "quark:ambient/drips", "stream": true }
     ]
   },
   "ambient.ocean": {
     "subtitle": "quark.subtitles.ambient.ocean",
     "sounds": [
-      {
-        "name": "quark:ambient/ocean",
-        "stream": true
-      }
+      { "name": "quark:ambient/ocean", "stream": true }
     ]
   },
   "ambient.rain": {
     "subtitle": "quark.subtitles.ambient.rain",
     "sounds": [
-      {
-        "name": "quark:ambient/rain",
-        "stream": true
-      }
+      { "name": "quark:ambient/rain", "stream": true }
     ]
   },
   "ambient.wind": {
     "subtitle": "quark.subtitles.ambient.wind",
     "sounds": [
-      {
-        "name": "quark:ambient/wind",
-        "stream": true
-      }
+      { "name": "quark:ambient/wind", "stream": true }
     ]
   },
   "ambient.fire": {
     "subtitle": "quark.subtitles.ambient.fire",
     "sounds": [
-      {
-        "name": "quark:ambient/fire",
-        "stream": true
-      }
+      { "name": "quark:ambient/fire", "stream": true }
     ]
   },
   "ambient.clock": {
     "subtitle": "quark.subtitles.ambient.clock",
     "sounds": [
-      {
-        "name": "quark:ambient/clock",
-        "stream": true
-      }
+      { "name": "quark:ambient/clock", "stream": true }
     ]
   },
   "ambient.crickets": {
     "subtitle": "quark.subtitles.ambient.crickets",
     "sounds": [
-      {
-        "name": "quark:ambient/crickets",
-        "stream": true
-      }
+      { "name": "quark:ambient/crickets", "stream": true }
     ]
   },
   "ambient.chatter": {
     "subtitle": "quark.subtitles.ambient.chatter",
     "sounds": [
-      {
-        "name": "quark:ambient/chatter",
-        "stream": true
-      }
+      { "name": "quark:ambient/chatter", "stream": true }
     ]
   },
   "music.endermosh": {
     "sounds": [
-      {
-        "name": "quark:music/endermosh",
-        "stream": true
-      }
+      { "name": "quark:music/endermosh", "stream": true }
     ]
   },
   "music.glimmering_weald": {
     "sounds": [
-      {
-        "name": "quark:music/glimmering_weald",
-        "stream": true
-      }
+      { "name": "quark:music/glimmering_weald", "stream": true }
     ]
   }
 }
