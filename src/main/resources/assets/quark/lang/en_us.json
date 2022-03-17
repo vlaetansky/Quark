@@ -277,6 +277,9 @@
 	"quark.misc.opened_screen": "Opened Screen %s",
 	"quark.misc.trash_item": "Right-Click to Trash Item",
 	"quark.misc.my_son": "Don't talk to me or my son ever again.",
+	"quark.misc.my_daughter": "Don't talk to me or my daughter ever again.",
+	"quark.misc.my_child": "Don't talk to me or my child ever again.",
+	"quark.misc.my_children": "Don't talk to me or my children ever again.",
 
 	"quark.misc.you_came_to_the_wrong_neighborhood.0": "Six letter word just to get me along",
 	"quark.misc.you_came_to_the_wrong_neighborhood.1": "It's a intricacy and I'm coding on my mod and I,",

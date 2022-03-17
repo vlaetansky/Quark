@@ -29,6 +29,8 @@ import vazkii.quark.base.handler.QuarkSounds;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TinyPotatoBlockEntity extends SimpleInventoryBlockEntity implements Nameable {
 	public static final String TAG_NAME = "name";
@@ -39,6 +41,35 @@ public class TinyPotatoBlockEntity extends SimpleInventoryBlockEntity implements
 	public Component name = new TextComponent("");
 	private int nextDoIt = 0;
 	public boolean angry = false;
+
+	private static final Map<String, String> GENDER = new HashMap<>();
+
+	static {
+		GENDER.put("girlstater", "daughter");
+		GENDER.put("lesbiabtater", "daughter");
+		GENDER.put("lesbiamtater", "daughter");
+		GENDER.put("lesbiantater", "daughter");
+		GENDER.put("lesbitater", "daughter");
+		GENDER.put("lessbientater", "daughter");
+
+		GENDER.put("agendertater", "child");
+		GENDER.put("enbytater", "child");
+		GENDER.put("nbtater", "child");
+		GENDER.put("nonbinarytater", "child");
+		GENDER.put("robotater", "child");
+		GENDER.put("wiretater", "child");
+
+		GENDER.put("genderfluidtater", "child");
+		GENDER.put("tategg", "child");
+		GENDER.put("taterfluid", "child");
+		GENDER.put("transtater", "child");
+
+		GENDER.put("manytater", "children");
+		GENDER.put("pluraltater", "children");
+		GENDER.put("snorps", "children");
+		GENDER.put("systater", "children");
+		GENDER.put("systemtater", "children");
+	}
 
 	public TinyPotatoBlockEntity(BlockPos pos, BlockState state) {
 		super(TinyPotatoModule.blockEntityType, pos, state);
@@ -76,13 +107,27 @@ public class TinyPotatoBlockEntity extends SimpleInventoryBlockEntity implements
 				}
 			}
 
+			ItemStack tater = ItemStack.EMPTY;
+			boolean manyTater = false;
 			for (int i = 0; i < getContainerSize(); i++) {
 				ItemStack stackAt = getItem(i);
 				if (!stackAt.isEmpty() && stackAt.is(TinyPotatoModule.tiny_potato.asItem())) {
-					if (player instanceof ServerPlayer serverPlayer)
-						serverPlayer.sendMessage(new TranslatableComponent("quark.misc.my_son"), ChatType.GAME_INFO, Util.NIL_UUID);
-					return;
+					if (tater.isEmpty())
+						tater = stackAt;
+					else {
+						manyTater = true;
+						break;
+					}
 				}
+			}
+			if (!tater.isEmpty()) {
+				String taterGender = manyTater ? "children" : "son";
+				if (tater.hasCustomHoverName()) {
+					TinyPotatoInfo info = TinyPotatoInfo.fromComponent(tater.getHoverName());
+					taterGender = GENDER.getOrDefault(info.name(), taterGender);
+				}
+				if (player instanceof ServerPlayer serverPlayer)
+					serverPlayer.sendMessage(new TranslatableComponent("quark.misc.my_" + taterGender), ChatType.GAME_INFO, Util.NIL_UUID);
 			}
 		}
 	}
