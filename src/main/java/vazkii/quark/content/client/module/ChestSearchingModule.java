@@ -61,7 +61,7 @@ import java.util.regex.Pattern;
 public class ChestSearchingModule extends QuarkModule {
 
 	@Config
-	public static ColorConfig overlayColor = new ColorConfig(0, 0, 0, 0.67);
+	public ColorConfig overlayColor = new ColorConfig(0, 0, 0, 0.67);
 
 	@OnlyIn(Dist.CLIENT)
 	private static EditBox searchBar;

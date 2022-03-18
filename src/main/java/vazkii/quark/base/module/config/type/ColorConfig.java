@@ -26,6 +26,7 @@ public class ColorConfig extends AbstractConfigType implements IWidgetProvider {
 		this.r = r;
 		this.g = g;
 		this.b = b;
+		this.a = a;
 
 		color = calculateColor(r, g, b, a);
 	}
