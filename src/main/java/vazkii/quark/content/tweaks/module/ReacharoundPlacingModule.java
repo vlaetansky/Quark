@@ -57,6 +57,9 @@ public class ReacharoundPlacingModule extends QuarkModule {
 	public List<String> whitelist = Lists.newArrayList();
 
 	@Config
+	public List<String> blacklist = Lists.newArrayList();
+
+	@Config
 	public String display = "[  ]";
 
 	@Config
@@ -224,7 +227,10 @@ public class ReacharoundPlacingModule extends QuarkModule {
 
 	private boolean validateReacharoundStack(ItemStack stack) {
 		Item item = stack.getItem();
-		return item instanceof BlockItem || stack.is(reacharoundTag) || whitelist.contains(Objects.toString(item.getRegistryName()));
+		String name = Objects.toString(item.getRegistryName());
+		if (blacklist.contains(name))
+			return false;
+		return item instanceof BlockItem || stack.is(reacharoundTag) || whitelist.contains(name);
 	}
 
 	private record ReacharoundTarget(BlockPos pos, Direction dir,
