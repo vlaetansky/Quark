@@ -25,29 +25,38 @@ public class PickarangModule extends QuarkModule {
 
 	public static EntityType<Pickarang> pickarangType;
 
-	@Config(description = "How long it takes before the pickarang starts returning to the player if it doesn't hit anything.")
+	@Config(description = "How long it takes before the Pickarang starts returning to the player if it doesn't hit anything.")
 	public static int timeout = 20;
-	@Config(description = "2 is Iron, 3 is Diamond, 4 is Netherite.")
+	@Config(description = "How long it takes before the Flamarang starts returning to the player if it doesn't hit anything.")
+	public static int netheriteTimeout = 20;
+
+	@Config(description = "Pickarang harvest level. 2 is Iron, 3 is Diamond, 4 is Netherite.")
 	public static int harvestLevel = 3;
-	@Config(description = "2 is Iron, 3 is Diamond, 4 is Netherite.")
+	@Config(description = "Flamarang harvest level. 2 is Iron, 3 is Diamond, 4 is Netherite.")
 	public static int netheriteHarvestLevel = 4;
 
-	@Config(description = "Set to -1 to have the Pickarang be unbreakable.")
+	@Config(description = "Pickarang durability. Set to -1 to have the Pickarang be unbreakable.")
 	public static int durability = 800;
 
-	@Config(description = "Set to -1 to have the Flamerang be unbreakable.")
+	@Config(description = "Flamarang durability. Set to -1 to have the Flamarang be unbreakable.")
 	public static int netheriteDurability = 1040;
 
-	@Config(description = "22.5 is ender chests, 25.0 is monster boxes, 50 is obsidian. Most things are below 5.")
+	@Config(description = "Pickarang max hardness breakable. 22.5 is ender chests, 25.0 is monster boxes, 50 is obsidian. Most things are below 5.")
 	public static double maxHardness = 20.0;
+
+	@Config(description = "Flamarang max hardness breakable. 22.5 is ender chests, 25.0 is monster boxes, 50 is obsidian. Most things are below 5.")
+	public static double netheriteMaxHardness = 20.0;
 
 	@Config(description = "Set this to true to use the recipe without the Heart of Diamond, even if the Heart of Diamond is enabled.", flag = "pickarang_never_uses_heart")
 	public static boolean neverUseHeartOfDiamond = false;
-	@Config(description = "Set this to true to disable the short cooldown between throwing pickarangs.")
+
+	@Config(description = "Set this to true to disable the short cooldown between throwing Pickarangs.")
 	public static boolean noCooldown = false;
+	@Config(description = "Set this to true to disable the short cooldown between throwing Flamarangs.")
+	public static boolean netheriteNoCooldown = false;
 
 	public static Item pickarang;
-	public static Item flamerang;
+	public static Item flamarang;
 
 	private static boolean isEnabled;
 
@@ -62,7 +71,7 @@ public class PickarangModule extends QuarkModule {
 		RegistryHelper.register(pickarangType, "pickarang");
 
 		pickarang = new PickarangItem("pickarang", this, propertiesFor(durability, false), false);
-		flamerang = new PickarangItem("flamerang", this, propertiesFor(netheriteDurability, true), true);
+		flamarang = new PickarangItem("flamerang", this, propertiesFor(netheriteDurability, true), true);
 	}
 
 	private static Item.Properties propertiesFor(int durability, boolean netherite) {

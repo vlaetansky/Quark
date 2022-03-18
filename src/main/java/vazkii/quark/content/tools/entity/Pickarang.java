@@ -199,7 +199,7 @@ public class Pickarang extends Projectile {
 				return;
 
 			float hardness = state.getDestroySpeed(level, hit);
-			if (hardness <= PickarangModule.maxHardness && hardness >= 0) {
+			if (hardness <= (netherite ? PickarangModule.netheriteMaxHardness : PickarangModule.maxHardness) && hardness >= 0) {
 				ItemStack prev = player.getMainHandItem();
 				player.setItemInHand(InteractionHand.MAIN_HAND, getStack());
 
@@ -405,7 +405,7 @@ public class Pickarang extends Projectile {
 		}
 
 		if(!returning) {
-			if(liveTime > PickarangModule.timeout)
+			if(liveTime > (netherite ? PickarangModule.netheriteTimeout : PickarangModule.timeout))
 				setReturning();
 			if (!level.getWorldBorder().isWithinBounds(getBoundingBox()))
 				spark();

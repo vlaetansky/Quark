@@ -100,7 +100,7 @@ public class PickarangItem extends QuarkItem {
 			worldIn.addFreshEntity(entity);
 		}
 
-		if(!playerIn.getAbilities().instabuild && !PickarangModule.noCooldown) {
+		if(!playerIn.getAbilities().instabuild && (isNetherite ? PickarangModule.netheriteNoCooldown : PickarangModule.noCooldown)) {
 			int cooldown = 10 - eff;
 			if (cooldown > 0)
 				playerIn.getCooldowns().addCooldown(this, cooldown);
