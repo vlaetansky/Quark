@@ -139,7 +139,7 @@ public class AncientTomesModule extends QuarkModule {
 		ItemStack right = event.getRight();
 
 		if(!left.isEmpty() && !right.isEmpty() ) {
-			if(right.getItem() == ancient_tome) {
+			if(right.is(ancient_tome)) {
 				Enchantment ench = getTomeEnchantment(right);
 				Map<Enchantment, Integer> enchants = EnchantmentHelper.getEnchantments(left);
 
@@ -155,7 +155,7 @@ public class AncientTomesModule extends QuarkModule {
 				}
 			}
 
-			else if(right.getItem() == Items.ENCHANTED_BOOK) {
+			else if(right.is(Items.ENCHANTED_BOOK)) {
 				Map<Enchantment, Integer> enchants = EnchantmentHelper.getEnchantments(right);
 				Map<Enchantment, Integer> currentEnchants = EnchantmentHelper.getEnchantments(left);
 				boolean hasOverLevel = false;
@@ -168,7 +168,7 @@ public class AncientTomesModule extends QuarkModule {
 					int level = entry.getValue();
 					if (level > enchantment.getMaxLevel()) {
 						hasOverLevel = true;
-						if (enchantment.canEnchant(left)) {
+						if (enchantment.canEnchant(left) || left.is(Items.ENCHANTED_BOOK)) {
 							hasMatching = true;
 							//remove incompatible enchantments
 							for (Iterator<Enchantment> iterator = currentEnchants.keySet().iterator(); iterator.hasNext(); ) {
