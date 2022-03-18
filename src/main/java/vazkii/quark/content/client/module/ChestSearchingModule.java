@@ -26,6 +26,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.ContainerScreenEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.client.event.ScreenEvent.KeyboardCharTypedEvent;
 import net.minecraftforge.client.event.ScreenEvent.KeyboardKeyPressedEvent;
@@ -146,23 +147,20 @@ public class ChestSearchingModule extends QuarkModule {
 		}
 	}
 
-	@SubscribeEvent // TODO LOW PRIO stuff renders above tooltip
-	public void onRender(ScreenEvent.DrawScreenEvent.Post event) {
-		if(searchBar != null && searchEnabled)
-			renderElements(event.getPoseStack(), event.getScreen());
-	}
+	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
+	public void renderBackground(ContainerScreenEvent.DrawBackground event) {
+		if(searchBar != null && searchEnabled) {
+			PoseStack matrix = event.getPoseStack();
+			AbstractContainerScreen<?> gui = event.getContainerScreen();
 
-	private void renderElements(PoseStack matrix, Screen gui) {
-		matrix.pushPose();
-		drawBackground(matrix, gui, searchBar.x - 11, searchBar.y - 3);
+			matrix.pushPose();
 
-		if(!text.isEmpty()) {
-			if(gui instanceof AbstractContainerScreen<?> guiContainer) {
-				AbstractContainerMenu container = guiContainer.getMenu();
+			int guiLeft = gui.getGuiLeft();
+			int guiTop = gui.getGuiTop();
 
-				int guiLeft = guiContainer.getGuiLeft();
-				int guiTop = guiContainer.getGuiTop();
-
+			if(!text.isEmpty()) {
+				AbstractContainerMenu container = gui.getMenu();
 				matched = 0;
 				for(Slot s : container.slots) {
 					ItemStack stack = s.getItem();
@@ -170,18 +168,37 @@ public class ChestSearchingModule extends QuarkModule {
 						int x = guiLeft + s.x;
 						int y = guiTop + s.y;
 
-						Screen.fill(matrix, x, y, x + 16, y + 16, 0xAA000000);
+						Screen.fill(matrix, x, y, x + 16, y + 16, 0x40000000);
 					} else matched++;
 				}
 			}
+			matrix.popPose();
 		}
+	}
 
-		if(matched == 0 && !text.isEmpty())
-			searchBar.setTextColor(0xFF5555);
-		else searchBar.setTextColor(0xFFFFFF);
+	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
+	public void renderForeground(ContainerScreenEvent.DrawForeground event) {
+		if(searchBar != null && searchEnabled) {
+			PoseStack matrix = event.getPoseStack();
+			AbstractContainerScreen<?> gui = event.getContainerScreen();
 
-		searchBar.render(matrix, 0, 0, 0);
-		matrix.popPose();
+			matrix.pushPose();
+
+			int guiLeft = gui.getGuiLeft();
+			int guiTop = gui.getGuiTop();
+
+			matrix.translate(-guiLeft, -guiTop, 0);
+
+			drawBackground(matrix, gui, searchBar.x - 11, searchBar.y - 3);
+
+			if(matched == 0 && !text.isEmpty())
+				searchBar.setTextColor(0xFF5555);
+			else searchBar.setTextColor(0xFFFFFF);
+
+			searchBar.render(matrix, 0, 0, 0);
+			matrix.popPose();
+		}
 	}
 
 	private void drawBackground(PoseStack matrix, Screen gui, int x, int y) {
