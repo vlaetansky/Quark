@@ -84,6 +84,9 @@ public class ReacharoundPlacingModule extends QuarkModule {
 		Minecraft mc = Minecraft.getInstance();
 		Player player = mc.player;
 
+		if (mc.options.hideGui)
+			return;
+
 		if(player != null && currentTarget != null) {
 			Window res = event.getWindow();
 			PoseStack matrix = event.getMatrixStack();
