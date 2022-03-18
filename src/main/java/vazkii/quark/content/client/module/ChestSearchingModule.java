@@ -49,6 +49,8 @@ import vazkii.quark.base.handler.SimilarBlockTypeHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
+import vazkii.quark.base.module.config.Config;
+import vazkii.quark.base.module.config.type.ColorConfig;
 import vazkii.quark.content.management.client.screen.widgets.MiniInventoryButton;
 
 import java.util.*;
@@ -57,6 +59,9 @@ import java.util.regex.Pattern;
 
 @LoadModule(category = ModuleCategory.CLIENT, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class ChestSearchingModule extends QuarkModule {
+
+	@Config
+	public static ColorConfig overlayColor = new ColorConfig(0, 0, 0, 0.67);
 
 	@OnlyIn(Dist.CLIENT)
 	private static EditBox searchBar;
@@ -149,35 +154,6 @@ public class ChestSearchingModule extends QuarkModule {
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public void renderBackground(ContainerScreenEvent.DrawBackground event) {
-		if(searchBar != null && searchEnabled) {
-			PoseStack matrix = event.getPoseStack();
-			AbstractContainerScreen<?> gui = event.getContainerScreen();
-
-			matrix.pushPose();
-
-			int guiLeft = gui.getGuiLeft();
-			int guiTop = gui.getGuiTop();
-
-			if(!text.isEmpty()) {
-				AbstractContainerMenu container = gui.getMenu();
-				matched = 0;
-				for(Slot s : container.slots) {
-					ItemStack stack = s.getItem();
-					if(!namesMatch(stack, text)) {
-						int x = guiLeft + s.x;
-						int y = guiTop + s.y;
-
-						Screen.fill(matrix, x, y, x + 16, y + 16, 0x40000000);
-					} else matched++;
-				}
-			}
-			matrix.popPose();
-		}
-	}
-
-	@SubscribeEvent
-	@OnlyIn(Dist.CLIENT)
 	public void renderForeground(ContainerScreenEvent.DrawForeground event) {
 		if(searchBar != null && searchEnabled) {
 			PoseStack matrix = event.getPoseStack();
@@ -191,6 +167,20 @@ public class ChestSearchingModule extends QuarkModule {
 			matrix.translate(-guiLeft, -guiTop, 0);
 
 			drawBackground(matrix, gui, searchBar.x - 11, searchBar.y - 3);
+
+			if(!text.isEmpty()) {
+				AbstractContainerMenu container = gui.getMenu();
+				matched = 0;
+				for(Slot s : container.slots) {
+					ItemStack stack = s.getItem();
+					if(!namesMatch(stack, text)) {
+						int x = guiLeft + s.x;
+						int y = guiTop + s.y;
+
+						Screen.fill(matrix, x, y, x + 16, y + 16, overlayColor.getColor());
+					} else matched++;
+				}
+			}
 
 			if(matched == 0 && !text.isEmpty())
 				searchBar.setTextColor(0xFF5555);

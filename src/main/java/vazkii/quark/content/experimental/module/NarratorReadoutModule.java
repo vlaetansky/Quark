@@ -41,7 +41,7 @@ public class NarratorReadoutModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	private KeyMapping keybindFull;
 
-	float last;
+	private float last;
 
 	@Override
 	@OnlyIn(Dist.CLIENT)

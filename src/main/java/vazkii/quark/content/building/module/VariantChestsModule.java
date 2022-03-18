@@ -316,7 +316,7 @@ public class VariantChestsModule extends QuarkModule {
 		return null; // no change
 	}
 
-	void addChest(String name, Block from) {
+	private void addChest(String name, Block from) {
 		addChest(name, Block.Properties.copy(from));
 	}
 

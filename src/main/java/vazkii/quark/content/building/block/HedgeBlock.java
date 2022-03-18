@@ -1,7 +1,5 @@
 package vazkii.quark.content.building.block;
 
-import java.util.function.BooleanSupplier;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.block.BlockColors;
@@ -35,11 +33,12 @@ import vazkii.quark.content.building.module.HedgesModule;
 import vazkii.quark.content.world.block.BlossomLeavesBlock;
 
 import javax.annotation.Nonnull;
+import java.util.function.BooleanSupplier;
 
 public class HedgeBlock extends FenceBlock implements IQuarkBlock, IBlockColorProvider {
 
 	private final QuarkModule module;
-	final Block leaf;
+	private final Block leaf;
 	private BooleanSupplier enabledSupplier = () -> true;
 
 	public static final BooleanProperty EXTEND = BooleanProperty.create("extend");

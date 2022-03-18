@@ -25,13 +25,13 @@ public class MixedExclusionRecipe implements CraftingRecipe, IShapedRecipe<Craft
 
 	public static final Serializer SERIALIZER = new Serializer();
 
-	final ResourceLocation res;
-	NonNullList<Ingredient> ingredients;
+	private final ResourceLocation res;
+	private NonNullList<Ingredient> ingredients;
 
-	final String type;
-	final ItemStack output;
-	final TagKey<Item> tag;
-	final ItemStack placeholder;
+	private final String type;
+	private final ItemStack output;
+	private final TagKey<Item> tag;
+	private final ItemStack placeholder;
 
 	public MixedExclusionRecipe(ResourceLocation res, String type, ItemStack output, TagKey<Item> tag, ItemStack placeholder) {
 		this.res = res;

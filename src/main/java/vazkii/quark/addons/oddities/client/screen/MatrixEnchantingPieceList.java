@@ -90,8 +90,8 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 
 	protected class PieceEntry extends ObjectSelectionList.Entry<PieceEntry> {
 
-		final Piece piece;
-		final int index;
+		private final Piece piece;
+		private final int index;
 
 		PieceEntry(Piece piece, int index) {
 			this.piece = piece;

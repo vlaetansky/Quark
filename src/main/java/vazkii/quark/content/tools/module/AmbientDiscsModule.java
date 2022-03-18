@@ -1,8 +1,5 @@
 package vazkii.quark.content.tools.module;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.resources.sounds.SoundInstance;
@@ -26,13 +23,16 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true)
 public class AmbientDiscsModule extends QuarkModule {
 
 	@Config public static boolean dropOnSpiderKill = true;
-	
-	List<Item> discs = new ArrayList<>();
-	
+
+	private final List<Item> discs = new ArrayList<>();
+
 	@Override
 	public void register() {
 		disc(QuarkSounds.AMBIENT_DRIPS);
@@ -44,12 +44,12 @@ public class AmbientDiscsModule extends QuarkModule {
 		disc(QuarkSounds.AMBIENT_CRICKETS);
 		disc(QuarkSounds.AMBIENT_CHATTER);
 	}
-	
-	void disc(SoundEvent sound) {
+
+	private void disc(SoundEvent sound) {
 		String name = sound.getRegistryName().getPath().replaceAll(".+\\.", "");
 		discs.add(new QuarkMusicDiscItem(15, () -> sound, name, this, true));
 	}
-	
+
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onMobDeath(LivingDeathEvent event) {
 		if(dropOnSpiderKill && event.getEntity() instanceof Spider && event.getSource().getEntity() instanceof Skeleton) {
@@ -57,13 +57,13 @@ public class AmbientDiscsModule extends QuarkModule {
 			event.getEntity().spawnAtLocation(item, 0);
 		}
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public static void onJukeboxLoad(JukeboxBlockEntity tile) {
 		Minecraft mc = Minecraft.getInstance();
 		LevelRenderer render = mc.levelRenderer;
 		BlockPos pos = tile.getBlockPos();
-		
+
 		SoundInstance sound = render.playingRecords.get(pos);
 		SoundManager soundEngine = mc.getSoundManager();
 		if(sound == null || !soundEngine.isActive(sound)) {
@@ -76,5 +76,5 @@ public class AmbientDiscsModule extends QuarkModule {
 			}
 		}
 	}
-	
+
 }

@@ -24,14 +24,13 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Quark.MOD_ID, "textures/gui/crate.png");
 
-	final int inventoryRows;
-	List<Rect2i> extraAreas;
+	private List<Rect2i> extraAreas;
 
 	public CrateScreen(CrateMenu container, Inventory inv, Component component) {
 		super(container, inv, component);
 
-		inventoryRows = CrateMenu.numRows;
-		imageHeight = 114 + this.inventoryRows * 18;
+		int inventoryRows = CrateMenu.numRows;
+		imageHeight = 114 + inventoryRows * 18;
 		inventoryLabelY = imageHeight - 94;
 	}
 

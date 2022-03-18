@@ -1,21 +1,20 @@
 package vazkii.quark.base.client.config.external;
 
-import java.io.PrintStream;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.function.Consumer;
-
 import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.api.config.IExternalCategory;
 import vazkii.quark.base.client.config.ConfigCategory;
 
 import javax.annotation.Nonnull;
+import java.io.PrintStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.function.Consumer;
 
 public class ExternalCategory extends ConfigCategory implements IExternalCategory {
 
-	private Map<String, IConfigCategory> topLevelCategories = new LinkedHashMap<>();
+	private final Map<String, IConfigCategory> topLevelCategories = new LinkedHashMap<>();
 
-	final Consumer<IExternalCategory> onChangedCallback;
+	private final Consumer<IExternalCategory> onChangedCallback;
 
 	public ExternalCategory(String name, Consumer<IExternalCategory> onChangedCallback, IConfigCategory parent) {
 		super(name, "", parent, null);

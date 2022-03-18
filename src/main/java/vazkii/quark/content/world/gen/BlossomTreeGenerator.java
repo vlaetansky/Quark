@@ -1,8 +1,5 @@
 package vazkii.quark.content.world.gen;
 
-import java.util.Optional;
-import java.util.Random;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.WorldGenRegion;
@@ -20,11 +17,14 @@ import vazkii.quark.base.world.generator.Generator;
 import vazkii.quark.content.world.block.BlossomSaplingBlock.BlossomTree;
 import vazkii.quark.content.world.config.BlossomTreeConfig;
 
+import java.util.Optional;
+import java.util.Random;
+
 public class BlossomTreeGenerator extends Generator {
 
-	BlossomTreeConfig config;
-	BlossomTree tree;
-	
+	private BlossomTreeConfig config;
+	private BlossomTree tree;
+
 	public BlossomTreeGenerator(BlossomTreeConfig config, BlossomTree tree) {
 		super(config.dimensions);
 		this.config = config;
@@ -43,7 +43,7 @@ public class BlossomTreeGenerator extends Generator {
 				BlockState upState = worldIn.getBlockState(up);
 				if(upState.canBeReplaced(Fluids.WATER))
 					worldIn.setBlock(up, Blocks.AIR.defaultBlockState(), 0);
-				
+
 				FeaturePlaceContext<TreeConfiguration> context = new FeaturePlaceContext<>(Optional.of(new ConfiguredFeature<>(Feature.TREE, tree.config)), worldIn, generator, rand, up, tree.config);
 				Feature.TREE.place(context);
 			}

@@ -1,8 +1,5 @@
 package vazkii.quark.content.mobs.ai;
 
-import java.lang.reflect.Method;
-import java.util.EnumSet;
-
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -11,12 +8,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import vazkii.quark.content.mobs.entity.Shiba;
 
+import java.lang.reflect.Method;
+import java.util.EnumSet;
+
 public class FetchArrowGoal extends Goal {
 
-	final Shiba shiba;
+	private final Shiba shiba;
 	private int timeToRecalcPath;
 	private final PathNavigation navigator;
-	int timeTilNextJump = 20;
+	private int timeTilNextJump = 20;
 
 	public FetchArrowGoal(Shiba shiba) {
 		this.shiba = shiba;

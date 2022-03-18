@@ -32,7 +32,7 @@ public abstract class EmoteBase {
 	private final HumanoidModel<?> armorLegsModel;
 	private final EmoteState state;
 	private final Player player;
-	
+
 	public float timeDone, totalTime, animatedTime;
 	private long lastMs;
 
@@ -41,11 +41,11 @@ public abstract class EmoteBase {
 		emoteManager = new TweenManager();
 		state = new EmoteState(this);
 		this.model = model;
-		this.armorModel = armorModel;	
+		this.armorModel = armorModel;
 		this.armorLegsModel = armorLegsModel;
 		this.player = player;
 	}
-	
+
 	public void startAllTimelines() {
 		startTimeline(player, model);
 		startTimeline(player, armorModel);
@@ -53,7 +53,7 @@ public abstract class EmoteBase {
 		lastMs = System.currentTimeMillis();
 	}
 
-	void startTimeline(Player player, HumanoidModel<?> model) {
+	private void startTimeline(Player player, HumanoidModel<?> model) {
 		Timeline timeline = getTimeline(player, model).start(emoteManager);
 		totalTime = timeline.getFullDuration();
 	}
@@ -70,17 +70,17 @@ public abstract class EmoteBase {
 		state.load(model);
 		state.load(armorModel);
 		state.load(armorLegsModel);
-		
+
 		long currTime = System.currentTimeMillis();
 		long timeDiff = currTime - lastMs;
 		animatedTime += timeDiff;
 		emoteManager.update(timeDiff);
 		state.save(model);
-		
+
 		lastMs = currTime;
 		timeDone += timeDiff;
 	}
-	
+
 	public boolean isDone() {
 		return timeDone >= totalTime || player.attackAnim > 0 || player.hurtTime > 0;
 	}

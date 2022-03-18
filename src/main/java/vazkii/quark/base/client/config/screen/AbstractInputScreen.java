@@ -10,10 +10,10 @@ import javax.annotation.Nonnull;
 
 public abstract class AbstractInputScreen<T> extends AbstractQScreen {
 
-	Button resetButton, doneButton;
-	boolean errored = false;
+	protected Button resetButton, doneButton;
+	protected boolean errored = false;
 
-	T val;
+	protected T val;
 
 	public AbstractInputScreen(Screen parent) {
 		super(parent);
@@ -43,13 +43,13 @@ public abstract class AbstractInputScreen<T> extends AbstractQScreen {
 		update();
 	}
 
-	abstract void onInit();
-	abstract T compute();
-	abstract void setDefault();
-	abstract void reset();
-	abstract boolean isErrored();
-	abstract boolean isDirty();
-	abstract void commit();
+	protected abstract void onInit();
+	protected abstract T compute();
+	protected abstract void setDefault();
+	protected abstract void reset();
+	protected abstract boolean isErrored();
+	protected abstract boolean isDirty();
+	protected abstract void commit();
 
 	@Override
 	public boolean keyPressed(int key, int mouseX, int mouseY) {
@@ -67,26 +67,26 @@ public abstract class AbstractInputScreen<T> extends AbstractQScreen {
 		return super.keyPressed(key, mouseX, mouseY);
 	}
 
-	final void setDefault(Button button) {
+	protected final void setDefault(Button button) {
 		setDefault();
 		update();
 		save(button);
 	}
 
-	final void reset(Button button) {
+	protected final void reset(Button button) {
 		reset();
 		update();
 		save(button);
 	}
 
-	final void save(Button button) {
+	protected final void save(Button button) {
 		if(!errored) {
 			commit();
 			returnToParent(button);
 		}
 	}
 
-	void update() {
+	protected void update() {
 		val = compute();
 		errored = val == null || isErrored();
 

@@ -33,7 +33,7 @@ public class StringInputScreen<T> extends AbstractInputScreen<T> {
 	}
 
 	@Override
-	void onInit() {
+	protected void onInit() {
 		input = new EditBox(font, width / 2 - 100, 60, 200, 20, new TextComponent(""));
 		input.setFilter(object::isStringValid);
 		input.setMaxLength(object.getMaxStringLength());
@@ -56,17 +56,17 @@ public class StringInputScreen<T> extends AbstractInputScreen<T> {
 	}
 
 	@Override
-	void setDefault() {
+	protected void setDefault() {
 		object.reset(true);
 	}
 
 	@Override
-	void reset() {
+	protected void reset() {
 		object.reset(false);
 	}
 
 	@Override
-	void update() {
+	protected void update() {
 		input.setValue(object.getCurrentObj().toString());
 		super.update();
 	}
@@ -77,22 +77,22 @@ public class StringInputScreen<T> extends AbstractInputScreen<T> {
 	}
 
 	@Override
-	T compute() {
+	protected T compute() {
 		return object.fromString(input.getValue());
 	}
 
 	@Override
-	boolean isErrored() {
+	protected boolean isErrored() {
 		return object.restriction != null && !object.restriction.test(val);
 	}
 
 	@Override
-	boolean isDirty() {
+	protected boolean isDirty() {
 		return object.wouldBeDirty(val);
 	}
 
 	@Override
-	void commit() {
+	protected void commit() {
 		object.setCurrentObj(object.fromString(input.getValue()));
 	}
 

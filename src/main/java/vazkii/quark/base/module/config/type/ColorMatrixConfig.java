@@ -1,9 +1,5 @@
 package vazkii.quark.base.module.config.type;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -15,11 +11,15 @@ import vazkii.quark.base.client.config.screen.widgets.PencilButton;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.ConfigFlagManager;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ColorMatrixConfig extends AbstractConfigType implements IWidgetProvider {
 
-	@Config List<Double> r; 
-	@Config List<Double> g;
-	@Config List<Double> b;
+	@Config public List<Double> r;
+	@Config public List<Double> g;
+	@Config public List<Double> b;
 
 	public final double[] defaultMatrix;
 	public double[] colorMatrix;
@@ -88,10 +88,10 @@ public class ColorMatrixConfig extends AbstractConfigType implements IWidgetProv
 	public boolean equals(Object obj) {
 		return obj == this || (obj instanceof ColorMatrixConfig && Arrays.equals(((ColorMatrixConfig) obj).colorMatrix, colorMatrix));
 	}
-	
+
 	@Override
 	public int hashCode() {
-		return colorMatrix.hashCode();
+		return Arrays.hashCode(colorMatrix);
 	}
 
 	@Override

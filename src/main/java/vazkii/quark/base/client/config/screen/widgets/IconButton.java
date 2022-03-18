@@ -10,13 +10,12 @@ import net.minecraft.world.item.ItemStack;
 import vazkii.quark.base.client.handler.TopLayerTooltipHandler;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.List;
 
 public class IconButton extends Button {
 
 	private final ItemStack icon;
-	final Component text;
+	private final Component text;
 
 	public IconButton(int x, int y, int w, int h, Component text, ItemStack icon, OnPress onClick) {
 		super(x, y, w, h, new TextComponent(""), onClick);

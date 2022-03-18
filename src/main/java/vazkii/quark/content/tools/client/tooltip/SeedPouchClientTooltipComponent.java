@@ -15,8 +15,8 @@ import javax.annotation.Nonnull;
 
 public class SeedPouchClientTooltipComponent implements ClientTooltipComponent {
 
-	final ItemStack stack;
-	int width;
+	private final ItemStack stack;
+	private int width;
 
 	public SeedPouchClientTooltipComponent(ItemStack stack) {
 		this.stack = stack;

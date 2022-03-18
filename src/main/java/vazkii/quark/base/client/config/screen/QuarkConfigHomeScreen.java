@@ -34,7 +34,7 @@ public class QuarkConfigHomeScreen extends AbstractQScreen {
 
 	private static final CubeMap CUBE_MAP = new CubeMap(new ResourceLocation(Quark.MOD_ID, "textures/misc/panorama/panorama"));
 	private static final PanoramaRenderer PANORAMA = new PanoramaRenderer(CUBE_MAP);
-	float time;
+	private float time;
 
 	public QuarkConfigHomeScreen(Screen parent) {
 		super(parent);

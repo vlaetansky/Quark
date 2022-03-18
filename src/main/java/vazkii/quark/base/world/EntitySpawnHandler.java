@@ -89,7 +89,7 @@ public class EntitySpawnHandler {
 			refresh();
 		}
 
-		void refresh() {
+		private void refresh() {
 			entry = new MobSpawnSettings.SpawnerData(entityType, config.spawnWeight, Math.min(config.minGroupSize, config.maxGroupSize), Math.max(config.minGroupSize, config.maxGroupSize));
 		}
 

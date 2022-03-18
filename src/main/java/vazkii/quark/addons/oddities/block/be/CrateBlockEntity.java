@@ -44,7 +44,7 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 	private final LazyOptional<SidedInvWrapper> wrapper = LazyOptional.of(() -> new SidedInvWrapper(this, Direction.UP));
 
 	private int[] visibleSlots = new int[0];
-	boolean needsUpdate = false;
+	private boolean needsUpdate = false;
 
 	protected final ContainerData crateData = new ContainerData() {
 		@Override

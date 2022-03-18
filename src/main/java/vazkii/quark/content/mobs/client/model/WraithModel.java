@@ -22,9 +22,8 @@ public class WraithModel extends EntityModel<Wraith> {
 	public final ModelPart rightArm;
 	public final ModelPart leftArm;
 
-	Wraith wraith;
-	double offset;
-	float alphaMult;
+	private double offset;
+	private float alphaMult;
 
 	public WraithModel(ModelPart root) {
 		super(RenderType::entityTranslucent);
@@ -70,7 +69,6 @@ public class WraithModel extends EntityModel<Wraith> {
 		leftArm.zRot = (float) Math.toRadians(-110F + (float) Math.cos(time / (8 + rng.nextInt(2))) * (8F + rng.nextFloat() * 8F));
 		rightArm.zRot = (float) Math.toRadians(110F + (float) Math.cos((time + 300) / (8 + rng.nextInt(2))) * (8F + rng.nextFloat() * 8F));
 
-		wraith = entity;
 		offset = Math.sin(time / 16) * 0.1 + 0.15;
 		alphaMult = 0.5F + (float) Math.sin(time / 20) * 0.3F;
 	}

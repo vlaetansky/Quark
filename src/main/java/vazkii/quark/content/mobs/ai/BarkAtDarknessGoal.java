@@ -1,7 +1,5 @@
 package vazkii.quark.content.mobs.ai;
 
-import java.util.EnumSet;
-
 import net.minecraft.commands.arguments.EntityAnchorArgument.Anchor;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -10,9 +8,11 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.phys.Vec3;
 import vazkii.quark.content.mobs.entity.Shiba;
 
+import java.util.EnumSet;
+
 public class BarkAtDarknessGoal extends Goal {
 
-	final Shiba shiba;
+	private final Shiba shiba;
 	private final PathNavigation navigator;
 
 	public BarkAtDarknessGoal(Shiba shiba) {

@@ -18,9 +18,9 @@ import java.util.Arrays;
 
 public class ColorMatrixInputScreen extends AbstractInputScreen<ColorMatrixConfig> {
 
-	final ColorMatrixConfig color;
-	final ColorMatrixConfig mutable;
-	final ConfigCategory category;
+	private final ColorMatrixConfig color;
+	private final ColorMatrixConfig mutable;
+	private final ConfigCategory category;
 
 	public ColorMatrixInputScreen(Screen parent, ColorMatrixConfig colorMatrix, ConfigCategory category) {
 		super(parent);
@@ -31,7 +31,7 @@ public class ColorMatrixInputScreen extends AbstractInputScreen<ColorMatrixConfi
 	}
 
 	@Override
-	void onInit() {
+	protected void onInit() {
 		int w = 70;
 		int p = 12;
 		int x = width / 2 - 33;
@@ -144,11 +144,11 @@ public class ColorMatrixInputScreen extends AbstractInputScreen<ColorMatrixConfi
 	}
 
 	@Override
-	ColorMatrixConfig compute() {
+	protected ColorMatrixConfig compute() {
 		return mutable;
 	}
 
-	void onSlide(Button button) {
+	private void onSlide(Button button) {
 		String name = button.getMessage().getString();
 		double[][] matrices = {
 				{
@@ -186,27 +186,27 @@ public class ColorMatrixInputScreen extends AbstractInputScreen<ColorMatrixConfi
 	}
 
 	@Override
-	void setDefault() {
+	protected void setDefault() {
 		mutable.colorMatrix = Arrays.copyOf(color.defaultMatrix, color.defaultMatrix.length);
 	}
 
 	@Override
-	void reset() {
+	protected void reset() {
 		mutable.colorMatrix = Arrays.copyOf(mutable.defaultMatrix, mutable.defaultMatrix.length);
 	}
 
 	@Override
-	boolean isErrored() {
+	protected boolean isErrored() {
 		return false;
 	}
 
 	@Override
-	boolean isDirty() {
+	protected boolean isDirty() {
 		return !color.equals(mutable);
 	}
 
 	@Override
-	void commit() {
+	protected void commit() {
 		color.inherit(mutable);
 	}
 

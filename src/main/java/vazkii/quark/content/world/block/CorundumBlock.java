@@ -1,12 +1,6 @@
 package vazkii.quark.content.world.block;
 
-import java.util.Random;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.mojang.math.Vector3f;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -28,6 +22,10 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.world.module.CorundumModule;
 import vazkii.quark.content.world.module.SpiralSpiresModule;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Random;
+
 /**
  * @author WireSegal
  * Created at 12:31 PM on 9/19/19.
@@ -35,7 +33,7 @@ import vazkii.quark.content.world.module.SpiralSpiresModule;
 public class CorundumBlock extends QuarkGlassBlock {
 
 	public final float[] colorComponents;
-	final boolean waxed;
+	public final boolean waxed;
 
 	public CorundumClusterBlock cluster;
 
