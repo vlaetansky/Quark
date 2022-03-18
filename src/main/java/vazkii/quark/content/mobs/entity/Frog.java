@@ -247,7 +247,9 @@ public class Frog extends Animal implements IEntityAdditionalSpawnData, IForgeSh
 				stack = stack.copy();
 				stack.shrink(copy.getCount());
 
-				super.spawnAtLocation(copy, offsetY);
+				ItemEntity spawned = super.spawnAtLocation(copy, offsetY);
+				if (stack.isEmpty())
+					return spawned;
 			}
 		}
 
