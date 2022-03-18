@@ -224,7 +224,7 @@ public class TinyPotatoRenderer implements BlockEntityRenderer<TinyPotatoBlockEn
 			switch (side) {
 				case UP -> {
 					if (mySon) {
-						ms.translate(0F, 0.6F, 0.5F);
+						ms.translate(0F, -0.375F, 0.5F);
 					} else if (block) {
 						ms.translate(0F, 0.3F, 0.5F);
 					}
@@ -233,7 +233,7 @@ public class TinyPotatoRenderer implements BlockEntityRenderer<TinyPotatoBlockEn
 				case DOWN -> {
 					ms.translate(0, -2.3F, -0.88F);
 					if (mySon) {
-						ms.translate(0, .65F, 0.6F);
+						ms.translate(0, 1.25F, 0.5F);
 					} else if (block) {
 						ms.translate(0, 1, 0.6F);
 					}
@@ -241,7 +241,7 @@ public class TinyPotatoRenderer implements BlockEntityRenderer<TinyPotatoBlockEn
 				case NORTH -> {
 					ms.translate(0, -1.9F, 0.02F);
 					if (mySon) {
-						ms.translate(0, 1, 0.6F);
+						ms.translate(0, -0.29F, 0.6F);
 					} else if (block) {
 						ms.translate(0, 1, 0.6F);
 					}
@@ -249,14 +249,14 @@ public class TinyPotatoRenderer implements BlockEntityRenderer<TinyPotatoBlockEn
 				case SOUTH -> {
 					ms.translate(0, -1.6F, -0.89F);
 					if (mySon) {
-						ms.translate(0, 1.4F, 0.5F);
+						ms.translate(0, -0.59F, 0.26F);
 					} else if (block) {
 						ms.translate(0, 1.0F, 0.5F);
 					}
 				}
 				case EAST -> {
 					if (mySon) {
-						ms.translate(-0.4F, 0.65F, 0F);
+						ms.translate(-0.35F, -0.29F, -0.06F);
 					} else if (block) {
 						ms.translate(-0.4F, 0.8F, 0F);
 					} else {
@@ -266,7 +266,7 @@ public class TinyPotatoRenderer implements BlockEntityRenderer<TinyPotatoBlockEn
 				}
 				case WEST -> {
 					if (mySon) {
-						ms.translate(1F, 0.65F, 1F);
+						ms.translate(0.95F, -0.29F, 0.9F);
 					} else if (block) {
 						ms.translate(1F, 0.8F, 1F);
 					} else {
