@@ -59,6 +59,8 @@ public class AttributeTooltips {
 	private static final Attribute ARMOR_TOUGHNESS = Attributes.ARMOR_TOUGHNESS;
 	private static final Attribute LUCK = Attributes.LUCK;
 	private static final Attribute REACH_DISTANCE = ForgeMod.REACH_DISTANCE.get();
+	private static final Attribute SWIM_SPEED = ForgeMod.SWIM_SPEED.get();
+	private static final Attribute ENTITY_GRAVITY = ForgeMod.ENTITY_GRAVITY.get();
 
 	public static final ImmutableSet<Attribute> VALID_ATTRIBUTES = ImmutableSet.of(
 			ATTACK_DAMAGE,
@@ -69,10 +71,14 @@ public class AttributeTooltips {
 			KNOCKBACK_RESISTANCE,
 			MAX_HEALTH,
 			MOVEMENT_SPEED,
-			LUCK);
+			LUCK,
+			SWIM_SPEED,
+			ENTITY_GRAVITY);
 
 	private static final ImmutableSet<Attribute> MULTIPLIER_ATTRIBUTES = ImmutableSet.of(
-			MOVEMENT_SPEED);
+			MOVEMENT_SPEED,
+			SWIM_SPEED,
+			ENTITY_GRAVITY);
 
 	private static final ImmutableSet<Attribute> POTION_MULTIPLIER_ATTRIBUTES = ImmutableSet.of(
 			ATTACK_SPEED);
@@ -112,22 +118,28 @@ public class AttributeTooltips {
 
 	private static int renderPosition(Attribute attribute) {
 		if(attribute == ATTACK_DAMAGE)
-			return 238;
+			return 1;
 		else if(attribute == ATTACK_SPEED)
-			return 247;
+			return 2;
 		else if(attribute == REACH_DISTANCE)
-			return 193;
+			return 3;
 		else if(attribute == ARMOR)
-			return 229;
+			return 4;
 		else if(attribute == ARMOR_TOUGHNESS)
-			return 220;
+			return 5;
 		else if(attribute == KNOCKBACK_RESISTANCE)
-			return 175;
+			return 6;
 		else if(attribute == MOVEMENT_SPEED)
-			return 184;
+			return 7;
 		else if(attribute == LUCK)
-			return 202;
-		return 211;
+			return 8;
+		else if(attribute == SWIM_SPEED)
+			return 9;
+		else if(attribute == ENTITY_GRAVITY)
+			return 10;
+		else if(attribute == MAX_HEALTH)
+			return 11;
+		return 0;
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -330,8 +342,11 @@ public class AttributeTooltips {
 		if (value != 0) {
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-			RenderSystem.setShaderTexture(0, MiscUtil.GENERAL_ICONS);
-			GuiComponent.blit(matrix, x, y, renderPosition(attribute), 0, 9, 9, 256, 256);
+			RenderSystem.setShaderTexture(0, MiscUtil.ATTRIBUTE_ICONS);
+			int renderPosition = renderPosition(attribute);
+			int renderX = renderPosition % 28;
+			int renderY = renderPosition / 28;
+			GuiComponent.blit(matrix, x, y, renderX * 9, renderY * 9, 9, 9, 256, 256);
 
 			String valueStr = format(attribute, value, slot);
 

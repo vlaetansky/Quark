@@ -62,6 +62,7 @@ import java.util.stream.Collectors;
 public class MiscUtil {
 
 	public static final ResourceLocation GENERAL_ICONS = new ResourceLocation(Quark.MOD_ID, "textures/gui/general_icons.png");
+	public static final ResourceLocation ATTRIBUTE_ICONS = new ResourceLocation(Quark.MOD_ID, "textures/gui/attribute_icons.png");
 
 	public static final int BASIC_GUI_TEXT_COLOR = 0x404040;
 

@@ -1,9 +1,6 @@
 package vazkii.quark.addons.oddities.module;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -20,18 +17,20 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 
+import java.util.List;
+
 @LoadModule(category = ModuleCategory.ODDITIES)
 public class MagnetsModule extends QuarkModule {
-	
+
 	public static BlockEntityType<MagnetBlockEntity> magnetType;
 	public static BlockEntityType<MagnetizedBlockBlockEntity> magnetizedBlockType;
-	
-	@Config(description = "Any items you place in this list will be derived so that any block made of it will become magnetizable") 
-	public static List<String> magneticDerivationList = Lists.newArrayList("minecraft:iron_ingot", "minecraft:copper_ingot", "minecraft:exposed_copper", "minecraft:weathered_copper", "minecraft:oxidized_copper");
-	
+
+	@Config(description = "Any items you place in this list will be derived so that any block made of it will become magnetizable")
+	public static List<String> magneticDerivationList = Lists.newArrayList("minecraft:iron_ingot", "minecraft:copper_ingot", "minecraft:exposed_copper", "minecraft:weathered_copper", "minecraft:oxidized_copper", "minecraft:raw_iron", "minecraft:raw_copper", "minecraft:iron_ore", "minecraft:deepslate_iron_ore", "minecraft:copper_ore", "minecraft:deepslate_copper_ore");
+
 	@Config public static List<String> magneticWhitelist = Lists.newArrayList("minecraft:chipped_anvil", "minecraft:damaged_anvil");
 	@Config public static List<String> magneticBlacklist = Lists.newArrayList("minecraft:tripwire_hook");
-	
+
 	public static Block magnet;
 	public static Block magnetized_block;
 
@@ -39,18 +38,18 @@ public class MagnetsModule extends QuarkModule {
 	public void register() {
 		magnet = new MagnetBlock(this);
 		magnetized_block = new MovingMagnetizedBlock(this);
-		
+
 		magnetType = BlockEntityType.Builder.of(MagnetBlockEntity::new, magnet).build(null);
 		RegistryHelper.register(magnetType, "magnet");
 
 		magnetizedBlockType = BlockEntityType.Builder.of(MagnetizedBlockBlockEntity::new, magnetized_block).build(null);
 		RegistryHelper.register(magnetizedBlockType, "magnetized_block");
 	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
 		BlockEntityRenderers.register(magnetizedBlockType, MagnetizedBlockRenderer::new);
 	}
-	
+
 }
