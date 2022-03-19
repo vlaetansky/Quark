@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -11,6 +12,7 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -244,14 +246,23 @@ public class MagnetizedBlockBlockEntity extends BlockEntity {
 			this.setRemoved();
 			if (this.level.getBlockState(this.worldPosition).getBlock() == MagnetsModule.magnetized_block) {
 				BlockState blockstate = Block.updateFromNeighbourShapes(this.magnetState, this.level, this.worldPosition);
-
-				this.level.setBlock(this.worldPosition, blockstate, 3);
-				this.level.neighborChanged(this.worldPosition, blockstate.getBlock(), this.worldPosition);
-
-				finalizeContents(blockstate);
+				setAndUpdateBlock(blockstate, 3);
 			}
 		}
 
+	}
+
+	private void setAndUpdateBlock(BlockState blockstate, int flag) {
+		if (this.level == null)
+			return;
+		this.level.setBlock(this.worldPosition, blockstate, flag);
+		this.level.neighborChanged(this.worldPosition, blockstate.getBlock(), this.worldPosition);
+		if (blockstate.getBlock() instanceof ButtonBlock && this.level instanceof ServerLevel serverLevel) {
+			blockstate.tick(serverLevel, this.worldPosition, serverLevel.random);
+			blockstate = this.level.getBlockState(this.worldPosition);
+		}
+
+		finalizeContents(blockstate);
 	}
 
 	public static void tick(Level level, BlockPos pos, BlockState state, MagnetizedBlockBlockEntity be) {
@@ -276,10 +287,7 @@ public class MagnetizedBlockBlockEntity extends BlockEntity {
 						blockstate = blockstate.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE);
 					}
 
-					this.level.setBlock(this.worldPosition, blockstate, 67);
-					this.level.neighborChanged(this.worldPosition, blockstate.getBlock(), this.worldPosition);
-
-					finalizeContents(blockstate);
+					setAndUpdateBlock(blockstate, 67);
 				}
 			}
 
