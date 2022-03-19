@@ -123,18 +123,20 @@ public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements
 					for(int k = 0; k <= 1; ++k) {
 						BlockPos blockpos = pos.offset(i, k, j);
 						BlockState state = worldIn.getBlockState(blockpos);
-						if(state.getEnchantPowerBonus(worldIn, blockpos) > 0) {
-							BlockPos test = pos.offset(i / 2, 0, j / 2);
-							if(!(worldIn.isEmptyBlock(test) || (allowUnderwater && worldIn.getBlockState(test).getBlock() == Blocks.WATER)))
-								break;
+						BlockPos test = pos.offset(i / 2, 0, j / 2);
+						if(!(worldIn.isEmptyBlock(test) || (allowUnderwater && worldIn.getBlockState(test).getBlock() == Blocks.WATER)))
+							break;
 
-							if(showInfluences && state.getBlock() instanceof IEnchantmentInfluencer influencer) {
+						if(showInfluences) {
+							IEnchantmentInfluencer influencer = MatrixEnchantingTableBlockEntity.getInfluencerFromBlock(state.getBlock());
+
+							if (influencer != null) {
 								DyeColor color = influencer.getEnchantmentInfluenceColor(worldIn, blockpos, state);
 
-								if(color != null) {
+								if (color != null) {
 									float[] comp = color.getTextureDiffuseColors();
 
-									if(influencer instanceof IModifiableEnchantmentInfluencer modifiableInfluencer) {
+									if (influencer instanceof IModifiableEnchantmentInfluencer modifiableInfluencer) {
 										comp = modifiableInfluencer.getModifiedColorComponents(worldIn, blockpos, state, comp);
 									}
 
@@ -143,8 +145,8 @@ public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements
 									double dy = (double) (pos.getY() - blockpos.getY()) / steps;
 									double dz = (double) (pos.getZ() - blockpos.getZ()) / steps;
 
-									for(int p = 0; p < steps; p++) {
-										if(rand.nextDouble() < 0.5)
+									for (int p = 0; p < steps; p++) {
+										if (rand.nextDouble() < 0.5)
 											continue;
 
 										double px = blockpos.getX() + 0.5 + dx * p + rand.nextDouble() * 0.2 - 0.1;
@@ -155,7 +157,9 @@ public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements
 									}
 								}
 							}
+						}
 
+						if(state.getEnchantPowerBonus(worldIn, blockpos) > 0) {
 							worldIn.addParticle(ParticleTypes.ENCHANT, pos.getX() + 0.5, pos.getY() + 2.0, pos.getZ() + 0.5, i + rand.nextFloat() - 0.5, k - rand.nextFloat() - 1.0, j + rand.nextFloat() - 0.5);
 						}
 					}

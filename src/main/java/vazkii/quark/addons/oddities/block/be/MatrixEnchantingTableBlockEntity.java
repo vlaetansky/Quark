@@ -30,6 +30,7 @@ import vazkii.quark.api.IEnchantmentInfluencer;
 import vazkii.quark.api.IModifiableEnchantmentInfluencer;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
@@ -259,10 +260,7 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 		if(MatrixEnchantingModule.allowInfluencing) {
 			Block block = state.getBlock();
 
-			IEnchantmentInfluencer influencer;
-			if(block instanceof IEnchantmentInfluencer)
-				influencer = (IEnchantmentInfluencer) block;
-			else influencer = CandleInfluencer.forBlock(block);
+			IEnchantmentInfluencer influencer = getInfluencerFromBlock(block);
 
 			if(influencer != null) {
 				DyeColor ord = influencer.getEnchantmentInfluenceColor(world, pos, state);
@@ -338,11 +336,19 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 		return getName();
 	}
 
+	@Nullable
+	public static IEnchantmentInfluencer getInfluencerFromBlock(Block block) {
+		if (block instanceof IEnchantmentInfluencer influencer)
+			return influencer;
+		return CandleInfluencer.forBlock(block);
+	}
+
 	private static class CandleInfluencer implements IEnchantmentInfluencer {
 
 		private static final List<Block> CANDLES = Lists.newArrayList(Blocks.WHITE_CANDLE, Blocks.ORANGE_CANDLE, Blocks.MAGENTA_CANDLE, Blocks.LIGHT_BLUE_CANDLE, Blocks.YELLOW_CANDLE, Blocks.LIME_CANDLE, Blocks.PINK_CANDLE, Blocks.GRAY_CANDLE, Blocks.LIGHT_GRAY_CANDLE, Blocks.CYAN_CANDLE, Blocks.PURPLE_CANDLE, Blocks.BLUE_CANDLE, Blocks.BROWN_CANDLE, Blocks.GREEN_CANDLE, Blocks.RED_CANDLE, Blocks.BLACK_CANDLE);
 		private static final CandleInfluencer INSTANCE = new CandleInfluencer();
 
+		@Nullable
 		public static CandleInfluencer forBlock(Block block) {
 			if(CANDLES.contains(block))
 				return INSTANCE;

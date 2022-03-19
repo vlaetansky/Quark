@@ -114,7 +114,7 @@ public class MatrixEnchantingModule extends QuarkModule {
 			"minecraft:smite,minecraft:projectile_protection" // Black
 			);
 
-	@Config(description = "Set to false to disable the ability to influence enchantment outcomes with candles (requires the Tallow and Candles module enabled)")
+	@Config(description = "Set to false to disable the ability to influence enchantment outcomes with candles")
 	public static boolean allowInfluencing = true;
 
 	@Config(description = "The max amount of candles that can influence a single enchantment")
