@@ -358,6 +358,9 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 
 		@Override
 		public DyeColor getEnchantmentInfluenceColor(BlockGetter world, BlockPos pos, BlockState state) {
+			if (!state.getValue(CandleBlock.LIT))
+				return null;
+
 			int index = CANDLES.indexOf(state.getBlock());
 			return index >= 0 ? DyeColor.values()[index] : null;
 		}
