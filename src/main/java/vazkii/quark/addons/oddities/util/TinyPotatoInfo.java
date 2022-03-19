@@ -50,6 +50,13 @@ public record TinyPotatoInfo(int runeColor, boolean enchanted, String name) {
 					color = dyeColor.getId();
 					string = removeFromFront(string, key);
 					break;
+				} else if (key.contains("gray")) {
+					key = key.replace("gray", "grey");
+					if (matches(string, key)) {
+						color = dyeColor.getId();
+						string = removeFromFront(string, key);
+						break;
+					}
 				}
 			}
 			if (color == -1) {
