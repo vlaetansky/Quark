@@ -33,6 +33,7 @@ import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.TippedArrowItem;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderTooltipEvent;
@@ -58,6 +59,7 @@ public class AttributeTooltips {
 	private static final Attribute ARMOR = Attributes.ARMOR;
 	private static final Attribute ARMOR_TOUGHNESS = Attributes.ARMOR_TOUGHNESS;
 	private static final Attribute LUCK = Attributes.LUCK;
+	private static final Attribute ATTACK_KNOCKBACK = Attributes.ATTACK_KNOCKBACK;
 	private static final Attribute REACH_DISTANCE = ForgeMod.REACH_DISTANCE.get();
 	private static final Attribute SWIM_SPEED = ForgeMod.SWIM_SPEED.get();
 	private static final Attribute ENTITY_GRAVITY = ForgeMod.ENTITY_GRAVITY.get();
@@ -73,7 +75,8 @@ public class AttributeTooltips {
 			MOVEMENT_SPEED,
 			LUCK,
 			SWIM_SPEED,
-			ENTITY_GRAVITY);
+			ENTITY_GRAVITY,
+			ATTACK_KNOCKBACK);
 
 	private static final ImmutableSet<Attribute> MULTIPLIER_ATTRIBUTES = ImmutableSet.of(
 			MOVEMENT_SPEED,
@@ -93,7 +96,8 @@ public class AttributeTooltips {
 
 	private static final ImmutableSet<Attribute> NONMAIN_DIFFERENCE_ATTRIBUTES = ImmutableSet.of(
 			ATTACK_DAMAGE,
-			ATTACK_SPEED);
+			ATTACK_SPEED,
+			ATTACK_KNOCKBACK);
 
 	private static String format(Attribute attribute, double value, EquipmentSlot slot) {
 		if (PERCENT_ATTRIBUTES.contains(attribute))
@@ -139,6 +143,8 @@ public class AttributeTooltips {
 			return 10;
 		else if(attribute == MAX_HEALTH)
 			return 11;
+		else if(attribute == ATTACK_KNOCKBACK)
+			return 12;
 		return 0;
 	}
 
@@ -190,7 +196,7 @@ public class AttributeTooltips {
 						tooltipRaw.remove(index - 1); // Remove actual line
 					}
 
-					onlyInvalid = extractAttributeValues(event, stack, tooltipRaw, attributeTooltips, onlyInvalid, slot, slotAttributes);
+					onlyInvalid = extractAttributeValues(stack, tooltipRaw, attributeTooltips, onlyInvalid, slot, slotAttributes);
 				}
 			}
 
@@ -231,13 +237,13 @@ public class AttributeTooltips {
 			List<MobEffectInstance> potions = PotionUtils.getMobEffects(stack);
 			Multimap<Attribute, AttributeModifier> out = HashMultimap.create();
 
-			for (MobEffectInstance potioneffect : potions) {
-				MobEffect potion = potioneffect.getEffect();
+			for (MobEffectInstance effect : potions) {
+				MobEffect potion = effect.getEffect();
 				Map<Attribute, AttributeModifier> map = potion.getAttributeModifiers();
 
 				for (Attribute attribute : map.keySet()) {
 					AttributeModifier baseModifier = map.get(attribute);
-					AttributeModifier amplified = new AttributeModifier(baseModifier.getName(), potion.getAttributeModifierValue(potioneffect.getAmplifier(), baseModifier), baseModifier.getOperation());
+					AttributeModifier amplified = new AttributeModifier(baseModifier.getName(), potion.getAttributeModifierValue(effect.getAmplifier(), baseModifier), baseModifier.getOperation());
 					out.put(attribute, amplified);
 				}
 			}
@@ -254,6 +260,9 @@ public class AttributeTooltips {
 			if (EnchantmentHelper.getDamageBonus(stack, MobType.UNDEFINED) > 0)
 				out.put(ATTACK_DAMAGE, DUMMY_MODIFIER);
 
+			if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.KNOCKBACK, stack) > 0)
+				out.put(ATTACK_KNOCKBACK, DUMMY_MODIFIER);
+
 			if (out.containsKey(ATTACK_DAMAGE) && !out.containsKey(ATTACK_SPEED))
 				out.put(ATTACK_SPEED, DUMMY_MODIFIER);
 			else if (out.containsKey(ATTACK_SPEED) && !out.containsKey(ATTACK_DAMAGE))
@@ -263,7 +272,7 @@ public class AttributeTooltips {
 		return out;
 	}
 
-	public static boolean extractAttributeValues(RenderTooltipEvent.GatherComponents event, ItemStack stack, List<Either<FormattedText, TooltipComponent>> tooltip, Map<EquipmentSlot, StringBuilder> attributeTooltips, boolean onlyInvalid, EquipmentSlot slot, Multimap<Attribute, AttributeModifier> slotAttributes) {
+	public static boolean extractAttributeValues(ItemStack stack, List<Either<FormattedText, TooltipComponent>> tooltip, Map<EquipmentSlot, StringBuilder> attributeTooltips, boolean onlyInvalid, EquipmentSlot slot, Multimap<Attribute, AttributeModifier> slotAttributes) {
 		boolean anyInvalid = false;
 		for(Attribute attr : slotAttributes.keySet()) {
 			if(VALID_ATTRIBUTES.contains(attr)) {
@@ -413,6 +422,8 @@ public class AttributeTooltips {
 
 		if (key.equals(ATTACK_DAMAGE) && slot == EquipmentSlot.MAINHAND)
 			value += EnchantmentHelper.getDamageBonus(stack, MobType.UNDEFINED);
+		if (key.equals(ATTACK_KNOCKBACK) && slot == EquipmentSlot.MAINHAND)
+			value += EnchantmentHelper.getItemEnchantmentLevel(Enchantments.KNOCKBACK, stack);
 
 		if (DIFFERENCE_ATTRIBUTES.contains(key) || (slot != EquipmentSlot.MAINHAND && NONMAIN_DIFFERENCE_ATTRIBUTES.contains(key))) {
 			if (slot != null || !key.equals(ATTACK_DAMAGE)) {
