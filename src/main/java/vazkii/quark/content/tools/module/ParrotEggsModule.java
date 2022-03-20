@@ -80,13 +80,18 @@ public class ParrotEggsModule extends QuarkModule {
 
 		parrotEggs = new ArrayList<>();
 		for (int i = 0; i < ParrotEgg.VARIANTS; i++) {
-			Item parrotEgg = new ParrotEggItem(NAMES.get(i), i, this);
+			int variant = i;
+
+			Item parrotEgg = new ParrotEggItem(NAMES.get(variant), variant, this);
 			parrotEggs.add(parrotEgg);
 
 			DispenserBlock.registerBehavior(parrotEgg, new AbstractProjectileDispenseBehavior() {
 				@Nonnull
 				protected Projectile getProjectile(@Nonnull Level world, @Nonnull Position pos, @Nonnull ItemStack stack) {
-					return Util.make(new ParrotEgg(world, pos.x(), pos.y(), pos.z()), (parrotEgg) -> parrotEgg.setItem(stack));
+					return Util.make(new ParrotEgg(world, pos.x(), pos.y(), pos.z()), (parrotEgg) -> {
+						parrotEgg.setItem(stack);
+						parrotEgg.setVariant(variant);
+					});
 				}
 			});
 
