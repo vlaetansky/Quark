@@ -1,7 +1,10 @@
 package vazkii.quark.content.tools.module;
 
+import net.minecraft.Util;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.core.Position;
+import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -15,8 +18,11 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
@@ -32,6 +38,7 @@ import vazkii.quark.base.module.config.Config;
 import vazkii.quark.content.tools.entity.ParrotEgg;
 import vazkii.quark.content.tools.item.ParrotEggItem;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,8 +79,18 @@ public class ParrotEggsModule extends QuarkModule {
 		RegistryHelper.register(parrotEggType, "parrot_egg");
 
 		parrotEggs = new ArrayList<>();
-		for (int i = 0; i < ParrotEgg.VARIANTS; i++)
-			parrotEggs.add(new ParrotEggItem(NAMES.get(i), i, this));
+		for (int i = 0; i < ParrotEgg.VARIANTS; i++) {
+			Item parrotEgg = new ParrotEggItem(NAMES.get(i), i, this);
+			parrotEggs.add(parrotEgg);
+
+			DispenserBlock.registerBehavior(parrotEgg, new AbstractProjectileDispenseBehavior() {
+				@Nonnull
+				protected Projectile getProjectile(@Nonnull Level world, @Nonnull Position pos, @Nonnull ItemStack stack) {
+					return Util.make(new ParrotEgg(world, pos.x(), pos.y(), pos.z()), (parrotEgg) -> parrotEgg.setItem(stack));
+				}
+			});
+
+		}
 	}
 
 	@Override
