@@ -11,14 +11,14 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.client.gui.widget.Slider;
+import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.api.config.IConfigElement;
-import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.module.config.type.inputtable.RGBAColorConfig;
 import vazkii.quark.base.module.config.type.inputtable.RGBColorConfig;
 
 public class RGBColorInputScreen extends AbstractInputtableConfigTypeScreen<RGBColorConfig> {
 
-	public RGBColorInputScreen(Screen parent, RGBColorConfig original, IConfigElement element, ConfigCategory category) {
+	public RGBColorInputScreen(Screen parent, RGBColorConfig original, IConfigElement element, IConfigCategory category) {
 		super(parent, original, element, category);
 	}
 

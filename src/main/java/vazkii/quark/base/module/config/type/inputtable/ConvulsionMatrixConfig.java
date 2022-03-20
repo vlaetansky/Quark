@@ -106,8 +106,7 @@ public class ConvulsionMatrixConfig extends AbstractConfigType implements IInput
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addWidgets(CategoryScreen parent, IConfigElement element, List<WidgetWrapper> widgets) {
-		Minecraft minecraft = Minecraft.getInstance();
-		widgets.add(new WidgetWrapper(new PencilButton(230, 3, b -> minecraft.setScreen(new ConvulsionMatrixInputScreen(parent, this, element, category)))));
+		IInputtableConfigType.addPencil(parent, element, widgets, () -> new ConvulsionMatrixInputScreen(parent, this, element, parent.category));
 	}
 
 	@Override

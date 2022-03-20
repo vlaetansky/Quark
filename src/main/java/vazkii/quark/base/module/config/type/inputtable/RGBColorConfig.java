@@ -3,7 +3,6 @@ package vazkii.quark.base.module.config.type.inputtable;
 import java.util.List;
 import java.util.Objects;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -12,7 +11,6 @@ import vazkii.quark.base.client.config.screen.CategoryScreen;
 import vazkii.quark.base.client.config.screen.WidgetWrapper;
 import vazkii.quark.base.client.config.screen.inputtable.IInputtableConfigType;
 import vazkii.quark.base.client.config.screen.inputtable.RGBColorInputScreen;
-import vazkii.quark.base.client.config.screen.widgets.PencilButton;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.ConfigFlagManager;
 import vazkii.quark.base.module.config.type.AbstractConfigType;
@@ -141,8 +139,7 @@ public class RGBColorConfig extends AbstractConfigType implements IInputtableCon
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addWidgets(CategoryScreen parent, IConfigElement element, List<WidgetWrapper> widgets) {
-		Minecraft minecraft = Minecraft.getInstance();
-		widgets.add(new WidgetWrapper(new PencilButton(230, 3, b -> minecraft.setScreen(new RGBColorInputScreen(parent, this, element, category)))));
+		IInputtableConfigType.addPencil(parent, element, widgets, () -> new RGBColorInputScreen(parent, this, element, parent.category));
 	}
 
 	@Override

@@ -15,13 +15,13 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.client.gui.widget.Slider;
+import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.api.config.IConfigElement;
-import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.module.config.type.inputtable.ConvulsionMatrixConfig;
 
 public class ConvulsionMatrixInputScreen extends AbstractInputtableConfigTypeScreen<ConvulsionMatrixConfig> {
 
-	public ConvulsionMatrixInputScreen(Screen parent, ConvulsionMatrixConfig original, IConfigElement element, ConfigCategory category) {
+	public ConvulsionMatrixInputScreen(Screen parent, ConvulsionMatrixConfig original, IConfigElement element, IConfigCategory category) {
 		super(parent, original, element, category);
 	}
 
