@@ -32,12 +32,15 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
+import vazkii.quark.base.module.config.Config;
+import vazkii.quark.base.module.config.type.inputtable.RGBAColorConfig;
 import vazkii.quark.content.tools.item.AbacusItem;
 
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class AbacusModule extends QuarkModule {
 
 	public static Item abacus;
+	@Config RGBAColorConfig highlightColor = RGBAColorConfig.forColor(0, 0, 0, 0.4);
 
 	@Override
 	public void register() {
@@ -126,10 +129,10 @@ public class AbacusModule extends QuarkModule {
 						double zIn = -view.z;
 						
 						for(int j = 0; j < list.size(); ++j) {
-							float r = 0F;
-							float g = 0F;
-							float b = 0F;
-							float a = 0.4F;
+							float r = (float) highlightColor.getElement(0);
+							float g = (float) highlightColor.getElement(1);
+							float b = (float) highlightColor.getElement(2);
+							float a = (float) highlightColor.getElement(3);
 							
 							AABB axisalignedbb = list.get(j);
 

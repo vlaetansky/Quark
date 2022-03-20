@@ -8,7 +8,7 @@ import vazkii.quark.base.module.config.Config;
 
 public class RGBAColorConfig extends RGBColorConfig {
 
-	@Config public double a;
+	@Config double a;
 
 	private RGBAColorConfig(double r, double g, double b, double a) {
 		super(r, g, b, a);
@@ -24,6 +24,11 @@ public class RGBAColorConfig extends RGBColorConfig {
 	@Override
 	public double getAlphaComponent() {
 		return a;
+	}
+	
+	@Override
+	void setAlphaComponent(double c) {
+		a = c;
 	}
 	
 	@Override

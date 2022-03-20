@@ -1,6 +1,7 @@
 package vazkii.quark.base.client.config.screen.inputtable;
 
 import net.minecraft.client.gui.screens.Screen;
+import vazkii.quark.api.config.IConfigElement;
 import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.client.config.screen.AbstractInputScreen;
 
@@ -8,13 +9,15 @@ public abstract class AbstractInputtableConfigTypeScreen<T extends IInputtableCo
 
 	final T original;
 	final T mutable;
+	final IConfigElement element;
 	final ConfigCategory category;
 
-	public AbstractInputtableConfigTypeScreen(Screen parent, T original, ConfigCategory category) {
+	public AbstractInputtableConfigTypeScreen(Screen parent, T original, IConfigElement element, ConfigCategory category) {
 		super(parent);
 
 		this.original = original;
 		this.mutable = original.copy();
+		this.element = element;
 		this.category = category;
 	}
 	

@@ -5,6 +5,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
+import vazkii.quark.api.config.IConfigElement;
 import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.client.config.ConfigObject;
 import vazkii.quark.base.client.config.screen.CategoryScreen;
@@ -18,7 +19,7 @@ public class BooleanObject extends ConfigObject<Boolean> {
 	}
 
 	@Override
-	public void addWidgets(CategoryScreen parent, List<WidgetWrapper> widgets) {
+	public void addWidgets(CategoryScreen parent, IConfigElement element, List<WidgetWrapper> widgets) {
 		widgets.add(new WidgetWrapper(new CheckboxButton(230, 3, this)));		
 	}
 	

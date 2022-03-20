@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import javax.annotation.Nullable;
 
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
+import vazkii.quark.api.config.IConfigElement;
 import vazkii.quark.base.client.config.ConfigCategory;
 import vazkii.quark.base.client.config.ConfigObject;
 import vazkii.quark.base.client.config.screen.CategoryScreen;
@@ -20,7 +21,7 @@ public abstract class AbstractStringInputObject<T> extends ConfigObject<T> {
 	}
 
 	@Override
-	public void addWidgets(CategoryScreen parent, List<WidgetWrapper> widgets) {
+	public void addWidgets(CategoryScreen parent, IConfigElement element, List<WidgetWrapper> widgets) {
 		widgets.add(new WidgetWrapper(new PencilButton(230, 3, parent.stringInput(this))));
 	}
 	

@@ -1,8 +1,14 @@
 package vazkii.quark.content.tweaks.module;
 
+import java.util.List;
+import java.util.Objects;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -34,16 +40,13 @@ import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.apache.commons.lang3.tuple.Pair;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.RayTraceHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-
-import java.util.List;
-import java.util.Objects;
+import vazkii.quark.base.module.config.type.inputtable.RGBColorConfig;
 
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
 public class ReacharoundPlacingModule extends QuarkModule {
@@ -53,17 +56,11 @@ public class ReacharoundPlacingModule extends QuarkModule {
 	@Config.Max(1)
 	public double leniency = 0.5;
 
-	@Config
-	public List<String> whitelist = Lists.newArrayList();
-
-	@Config
-	public List<String> blacklist = Lists.newArrayList();
-
-	@Config
-	public String display = "[  ]";
-
-	@Config
-	public String displayHorizontal = "<  >";
+	@Config public List<String> whitelist = Lists.newArrayList();
+	@Config public List<String> blacklist = Lists.newArrayList();
+	@Config public String display = "[  ]";
+	@Config public String displayHorizontal = "<  >";
+	@Config public RGBColorConfig color = RGBColorConfig.forColor(1, 1, 1);
 
 	private ReacharoundTarget currentTarget;
 	private int ticksDisplayed;
@@ -101,7 +98,7 @@ public class ReacharoundPlacingModule extends QuarkModule {
 
 			matrix.scale(scale, 1F, 1F);
 			matrix.translate(-mc.font.width(text) / 2f, 0, 0);
-			mc.font.draw(matrix, text, 0, 0, 0xFFFFFF | opacity);
+			mc.font.draw(matrix, text, 0, 0, color.getColor() | opacity);
 			matrix.popPose();
 		}
 	}

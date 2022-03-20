@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import vazkii.quark.api.config.IConfigElement;
 import vazkii.quark.base.client.config.screen.CategoryScreen;
 import vazkii.quark.base.client.config.screen.WidgetWrapper;
 import vazkii.quark.base.client.config.screen.inputtable.ConvulsionMatrixInputScreen;
@@ -99,9 +100,9 @@ public class ConvulsionMatrixConfig extends AbstractConfigType implements IInput
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addWidgets(CategoryScreen parent, List<WidgetWrapper> widgets) {
+	public void addWidgets(CategoryScreen parent, IConfigElement element, List<WidgetWrapper> widgets) {
 		Minecraft minecraft = Minecraft.getInstance();
-		widgets.add(new WidgetWrapper(new PencilButton(230, 3, b -> minecraft.setScreen(new ConvulsionMatrixInputScreen(parent, this, category)))));
+		widgets.add(new WidgetWrapper(new PencilButton(230, 3, b -> minecraft.setScreen(new ConvulsionMatrixInputScreen(parent, this, element, category)))));
 	}
 
 	@Override

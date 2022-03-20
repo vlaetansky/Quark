@@ -138,9 +138,9 @@ public class ConfigCategory extends AbstractConfigElement implements IConfigCate
 	}
 
 	@Override
-	public void addWidgets(CategoryScreen parent, List<WidgetWrapper> widgets) {
+	public void addWidgets(CategoryScreen parent, IConfigElement element, List<WidgetWrapper> widgets) {
 		if(holderObject != null && holderObject instanceof IWidgetProvider)
-			((IWidgetProvider) holderObject).addWidgets(parent, widgets);
+			((IWidgetProvider) holderObject).addWidgets(parent, element, widgets);
 		else widgets.add(new WidgetWrapper(new PencilButton(230, 3, parent.categoryLink(this))));
 	}
 

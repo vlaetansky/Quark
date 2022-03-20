@@ -50,7 +50,7 @@ public class ConfigElementList<T extends IConfigElement & IWidgetProvider> exten
 			this.element = element;
 
 			if(element != null)
-				element.addWidgets(parent, children);
+				element.addWidgets(parent, element, children);
 		}
 
 		@Override
