@@ -19,7 +19,7 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.base.module.config.type.ColorMatrixConfig;
+import vazkii.quark.base.module.config.type.widget.ConvulsionMatrixConfig;
 
 @LoadModule(category = ModuleCategory.CLIENT)
 public class GreenerGrassModule extends QuarkModule {
@@ -52,7 +52,7 @@ public class GreenerGrassModule extends QuarkModule {
 			"environmental:hanging_willow_leaves",
 			"minecraft:vine");
 	
-	@Config public static ColorMatrixConfig colorMatrix = new ColorMatrixConfig(new double[] {
+	@Config public static ConvulsionMatrixConfig colorMatrix = new ConvulsionMatrixConfig(new double[] {
 			0.89, 0.00, 0.00,
 			0.00, 1.11, 0.00,
 			0.00, 0.00, 0.89

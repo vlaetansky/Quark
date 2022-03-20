@@ -1,4 +1,4 @@
-package vazkii.quark.base.module.config.type;
+package vazkii.quark.base.module.config.type.widget;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
@@ -10,12 +10,13 @@ import vazkii.quark.base.client.config.screen.widgets.IWidgetProvider;
 import vazkii.quark.base.client.config.screen.widgets.PencilButton;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.ConfigFlagManager;
+import vazkii.quark.base.module.config.type.AbstractConfigType;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ColorMatrixConfig extends AbstractConfigType implements IWidgetProvider {
+public class ConvulsionMatrixConfig extends AbstractConfigType implements IWidgetProvider {
 
 	@Config public List<Double> r;
 	@Config public List<Double> g;
@@ -24,7 +25,7 @@ public class ColorMatrixConfig extends AbstractConfigType implements IWidgetProv
 	public final double[] defaultMatrix;
 	public double[] colorMatrix;
 
-	public ColorMatrixConfig(double[] defaultMatrix) {
+	public ConvulsionMatrixConfig(double[] defaultMatrix) {
 		assert defaultMatrix.length == 9;
 
 		this.defaultMatrix = defaultMatrix;
@@ -49,7 +50,7 @@ public class ColorMatrixConfig extends AbstractConfigType implements IWidgetProv
 		}
 	}
 
-	public void inherit(ColorMatrixConfig other) {
+	public void inherit(ConvulsionMatrixConfig other) {
 		r = other.r;
 		g = other.g;
 		b = other.b;
@@ -61,8 +62,8 @@ public class ColorMatrixConfig extends AbstractConfigType implements IWidgetProv
 		}
 	}
 
-	public ColorMatrixConfig copy() {
-		ColorMatrixConfig newMatrix = new ColorMatrixConfig(colorMatrix);
+	public ConvulsionMatrixConfig copy() {
+		ConvulsionMatrixConfig newMatrix = new ConvulsionMatrixConfig(colorMatrix);
 		newMatrix.inherit(this);
 		return newMatrix;
 	}
@@ -86,7 +87,7 @@ public class ColorMatrixConfig extends AbstractConfigType implements IWidgetProv
 
 	@Override
 	public boolean equals(Object obj) {
-		return obj == this || (obj instanceof ColorMatrixConfig && Arrays.equals(((ColorMatrixConfig) obj).colorMatrix, colorMatrix));
+		return obj == this || (obj instanceof ConvulsionMatrixConfig && Arrays.equals(((ConvulsionMatrixConfig) obj).colorMatrix, colorMatrix));
 	}
 
 	@Override

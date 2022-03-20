@@ -1,7 +1,16 @@
 package vazkii.quark.content.client.module;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.BiPredicate;
+import java.util.regex.Pattern;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
@@ -50,18 +59,14 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.base.module.config.type.ColorConfig;
+import vazkii.quark.base.module.config.type.widget.RGBAColorConfig;
 import vazkii.quark.content.management.client.screen.widgets.MiniInventoryButton;
-
-import java.util.*;
-import java.util.function.BiPredicate;
-import java.util.regex.Pattern;
 
 @LoadModule(category = ModuleCategory.CLIENT, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class ChestSearchingModule extends QuarkModule {
 
 	@Config
-	public ColorConfig overlayColor = new ColorConfig(0, 0, 0, 0.67);
+	public RGBAColorConfig overlayColor = RGBAColorConfig.forColor(0, 0, 0, 0.67);
 
 	@OnlyIn(Dist.CLIENT)
 	private static EditBox searchBar;

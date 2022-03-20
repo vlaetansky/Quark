@@ -11,18 +11,18 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.client.gui.widget.Slider;
 import vazkii.quark.base.client.config.ConfigCategory;
-import vazkii.quark.base.module.config.type.ColorMatrixConfig;
+import vazkii.quark.base.module.config.type.widget.ConvulsionMatrixConfig;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 
-public class ColorMatrixInputScreen extends AbstractInputScreen<ColorMatrixConfig> {
+public class ColorMatrixInputScreen extends AbstractInputScreen<ConvulsionMatrixConfig> {
 
-	private final ColorMatrixConfig color;
-	private final ColorMatrixConfig mutable;
+	private final ConvulsionMatrixConfig color;
+	private final ConvulsionMatrixConfig mutable;
 	private final ConfigCategory category;
 
-	public ColorMatrixInputScreen(Screen parent, ColorMatrixConfig colorMatrix, ConfigCategory category) {
+	public ColorMatrixInputScreen(Screen parent, ConvulsionMatrixConfig colorMatrix, ConfigCategory category) {
 		super(parent);
 
 		this.color = colorMatrix;
@@ -144,7 +144,7 @@ public class ColorMatrixInputScreen extends AbstractInputScreen<ColorMatrixConfi
 	}
 
 	@Override
-	protected ColorMatrixConfig compute() {
+	protected ConvulsionMatrixConfig compute() {
 		return mutable;
 	}
 

@@ -1,4 +1,4 @@
-package vazkii.quark.base.module.config.type;
+package vazkii.quark.base.module.config.type.widget;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
@@ -9,26 +9,33 @@ import vazkii.quark.base.client.config.screen.WidgetWrapper;
 import vazkii.quark.base.client.config.screen.widgets.IWidgetProvider;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.ConfigFlagManager;
+import vazkii.quark.base.module.config.type.AbstractConfigType;
 
 import java.util.List;
 import java.util.Objects;
 
-public class ColorConfig extends AbstractConfigType implements IWidgetProvider {
+public class RGBColorConfig extends AbstractConfigType implements IWidgetProvider {
 
 	@Config public double r;
 	@Config public double g;
 	@Config public double b;
-	@Config public double a;
 
 	private int color;
+	
+	private RGBColorConfig(double r, double g, double b) {
+		this(r, g, b, 1);
+	}
 
-	public ColorConfig(double r, double g, double b, double a) {
+	RGBColorConfig(double r, double g, double b, double a) {
 		this.r = r;
 		this.g = g;
 		this.b = b;
-		this.a = a;
-
-		color = calculateColor(r, g, b, a);
+	}
+	
+	public static RGBColorConfig forColor(double r, double g, double b) {
+		RGBColorConfig config = new RGBColorConfig(r, g, b);
+		config.calculateColor();
+		return config;
 	}
 
 	public int getColor() {
@@ -37,10 +44,22 @@ public class ColorConfig extends AbstractConfigType implements IWidgetProvider {
 
 	@Override
 	public void onReload(ConfigFlagManager flagManager) {
-		color = calculateColor(r, g, b, a);
+		color = calculateColor();
+	}
+	
+	int calculateColor() {
+		int rComponent = clamp(r * 255);
+		int gComponent = clamp(g * 255) << 8;
+		int bComponent = clamp(b * 255) << 16;
+		int aComponent = clamp(getAlphaComponent() * 255) << 24;
+		return aComponent | bComponent | gComponent | rComponent;
 	}
 
-	public void inherit(ColorConfig other) {
+	public double getAlphaComponent() {
+		return 1.0;
+	}
+	
+	public void inherit(RGBColorConfig other) {
 		r = other.r;
 		g = other.g;
 		b = other.b;
@@ -52,8 +71,8 @@ public class ColorConfig extends AbstractConfigType implements IWidgetProvider {
 		}
 	}
 
-	public ColorConfig copy() {
-		ColorConfig newMatrix = new ColorConfig(r, g, b, a);
+	public RGBColorConfig copy() {
+		RGBColorConfig newMatrix = new RGBColorConfig(r, g, b);
 		newMatrix.inherit(this);
 		return newMatrix;
 	}
@@ -62,13 +81,13 @@ public class ColorConfig extends AbstractConfigType implements IWidgetProvider {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		ColorConfig that = (ColorConfig) o;
-		return Double.compare(that.r, r) == 0 && Double.compare(that.g, g) == 0 && Double.compare(that.b, b) == 0 && Double.compare(that.a, a) == 0;
+		RGBColorConfig that = (RGBColorConfig) o;
+		return Double.compare(that.r, r) == 0 && Double.compare(that.g, g) == 0 && Double.compare(that.b, b) == 0;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(r, g, b, a);
+		return Objects.hash(r, g, b);
 	}
 
 	@Override
@@ -82,18 +101,9 @@ public class ColorConfig extends AbstractConfigType implements IWidgetProvider {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public String getSubtitle() {
-		return String.format("[%.1f, %.1f, %.1f, %.1f]", r, g, b, a);
+		return String.format("[%.1f, %.1f, %.1f]", r, g, b);
 	}
-
-
-	public static int calculateColor(double r, double g, double b, double a) {
-		int rComponent = clamp(r * 255);
-		int gComponent = clamp(g * 255) << 8;
-		int bComponent = clamp(b * 255) << 16;
-		int aComponent = clamp(a * 255) << 24;
-		return aComponent | bComponent | gComponent | rComponent;
-	}
-
+	
 	private static int clamp(double val) {
 		return clamp((int) val);
 	}
