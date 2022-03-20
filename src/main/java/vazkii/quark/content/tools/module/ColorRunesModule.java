@@ -1,6 +1,7 @@
 package vazkii.quark.content.tools.module;
 
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -168,7 +169,16 @@ public class ColorRunesModule extends QuarkModule {
 			ItemNBTHelper.setBoolean(out, TAG_RUNE_ATTACHED, true);
 			ItemNBTHelper.setCompound(out, TAG_RUNE_COLOR, right.serializeNBT());
 			event.setOutput(out);
-			event.setCost(Math.max(1, applyCost));
+
+			String name = event.getName();
+			int cost = Math.max(1, applyCost);
+
+			if(name != null && !name.isEmpty() && (!out.hasCustomHoverName() || !out.getHoverName().getString().equals(name))) {
+				out.setHoverName(new TextComponent(name));
+				cost++;
+			}
+
+			event.setCost(cost);
 			event.setMaterialCost(1);
 		}
 	}

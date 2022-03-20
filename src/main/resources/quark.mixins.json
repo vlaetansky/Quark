@@ -5,6 +5,7 @@
   "refmap": "quark.mixins.refmap.json",
   "package": "vazkii.quark.mixin",
   "mixins": [
+    "AnimalMixin",
     "ArrowPiercingEnchantmentMixin",
     "BeaconBlockEntityMixin",
     "BlockItemMixin",
@@ -21,6 +22,7 @@
     "LanternBlockMixin",
     "LoomMenuMixin",
     "OverworldBiomeBuilderMixin",
+    "PigMixin",
     "PistonBaseBlockMixin",
     "PistonMovingBlockEntityMixin",
     "PlayerAdvancementsMixin",
