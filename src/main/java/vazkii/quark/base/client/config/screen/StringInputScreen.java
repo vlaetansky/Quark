@@ -1,5 +1,7 @@
 package vazkii.quark.base.client.config.screen;
 
+import javax.annotation.Nonnull;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.ChatFormatting;
@@ -8,8 +10,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.TextComponent;
 import vazkii.quark.base.client.config.obj.AbstractStringInputObject;
-
-import javax.annotation.Nonnull;
 
 public class StringInputScreen<T> extends AbstractInputScreen<T> {
 

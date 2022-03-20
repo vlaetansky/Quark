@@ -1,6 +1,11 @@
-package vazkii.quark.base.client.config.screen;
+package vazkii.quark.base.client.config.screen.inputtable;
+
+import java.util.Arrays;
+
+import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Widget;
@@ -11,23 +16,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.client.gui.widget.Slider;
 import vazkii.quark.base.client.config.ConfigCategory;
-import vazkii.quark.base.module.config.type.widget.ConvulsionMatrixConfig;
+import vazkii.quark.base.module.config.type.inputtable.ConvulsionMatrixConfig;
 
-import javax.annotation.Nonnull;
-import java.util.Arrays;
+public class ConvulsionMatrixInputScreen extends AbstractInputtableConfigTypeScreen<ConvulsionMatrixConfig> {
 
-public class ColorMatrixInputScreen extends AbstractInputScreen<ConvulsionMatrixConfig> {
-
-	private final ConvulsionMatrixConfig color;
-	private final ConvulsionMatrixConfig mutable;
-	private final ConfigCategory category;
-
-	public ColorMatrixInputScreen(Screen parent, ConvulsionMatrixConfig colorMatrix, ConfigCategory category) {
-		super(parent);
-
-		this.color = colorMatrix;
-		this.mutable = colorMatrix.copy();
-		this.category = category;
+	public ConvulsionMatrixInputScreen(Screen parent, ConvulsionMatrixConfig original, ConfigCategory category) {
+		super(parent, original, category);
 	}
 
 	@Override
@@ -41,7 +35,7 @@ public class ColorMatrixInputScreen extends AbstractInputScreen<ConvulsionMatrix
 		Component suffix = new TextComponent("");
 
 		for(int i = 0; i < 9; i++)
-			addRenderableWidget(new Slider(x + w * (i % 3), y + 25 * (i / 3), w - p, 20, prefix, suffix, 0f, 2f, color.colorMatrix[i], false, false, this::onSlide));
+			addRenderableWidget(new Slider(x + w * (i % 3), y + 25 * (i / 3), w - p, 20, prefix, suffix, 0f, 2f, original.colorMatrix[i], false, false, this::onSlide));
 
 		addRenderableWidget(new Button(x, y + 115, w - p, 20, new TextComponent("Identity"), this::onSlide));
 		addRenderableWidget(new Button(x + w, y + 115, w - p, 20, new TextComponent("Dreary"), this::onSlide));
@@ -143,11 +137,6 @@ public class ColorMatrixInputScreen extends AbstractInputScreen<ConvulsionMatrix
 		return val;
 	}
 
-	@Override
-	protected ConvulsionMatrixConfig compute() {
-		return mutable;
-	}
-
 	private void onSlide(Button button) {
 		String name = button.getMessage().getString();
 		double[][] matrices = {
@@ -187,27 +176,12 @@ public class ColorMatrixInputScreen extends AbstractInputScreen<ConvulsionMatrix
 
 	@Override
 	protected void setDefault() {
-		mutable.colorMatrix = Arrays.copyOf(color.defaultMatrix, color.defaultMatrix.length);
+		mutable.colorMatrix = Arrays.copyOf(original.defaultMatrix, original.defaultMatrix.length);
 	}
 
 	@Override
 	protected void reset() {
 		mutable.colorMatrix = Arrays.copyOf(mutable.defaultMatrix, mutable.defaultMatrix.length);
-	}
-
-	@Override
-	protected boolean isErrored() {
-		return false;
-	}
-
-	@Override
-	protected boolean isDirty() {
-		return !color.equals(mutable);
-	}
-
-	@Override
-	protected void commit() {
-		color.inherit(mutable);
 	}
 
 }

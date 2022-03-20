@@ -19,7 +19,7 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.base.module.config.type.widget.ConvulsionMatrixConfig;
+import vazkii.quark.base.module.config.type.inputtable.ConvulsionMatrixConfig;
 
 @LoadModule(category = ModuleCategory.CLIENT)
 public class GreenerGrassModule extends QuarkModule {

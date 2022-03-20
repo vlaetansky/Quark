@@ -1,22 +1,22 @@
-package vazkii.quark.base.module.config.type.widget;
-
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import vazkii.quark.base.client.config.screen.CategoryScreen;
-import vazkii.quark.base.client.config.screen.ColorMatrixInputScreen;
-import vazkii.quark.base.client.config.screen.WidgetWrapper;
-import vazkii.quark.base.client.config.screen.widgets.IWidgetProvider;
-import vazkii.quark.base.client.config.screen.widgets.PencilButton;
-import vazkii.quark.base.module.config.Config;
-import vazkii.quark.base.module.config.ConfigFlagManager;
-import vazkii.quark.base.module.config.type.AbstractConfigType;
+package vazkii.quark.base.module.config.type.inputtable;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ConvulsionMatrixConfig extends AbstractConfigType implements IWidgetProvider {
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import vazkii.quark.base.client.config.screen.CategoryScreen;
+import vazkii.quark.base.client.config.screen.WidgetWrapper;
+import vazkii.quark.base.client.config.screen.inputtable.ConvulsionMatrixInputScreen;
+import vazkii.quark.base.client.config.screen.inputtable.IInputtableConfigType;
+import vazkii.quark.base.client.config.screen.widgets.PencilButton;
+import vazkii.quark.base.module.config.Config;
+import vazkii.quark.base.module.config.ConfigFlagManager;
+import vazkii.quark.base.module.config.type.AbstractConfigType;
+
+public class ConvulsionMatrixConfig extends AbstractConfigType implements IInputtableConfigType<ConvulsionMatrixConfig> {
 
 	@Config public List<Double> r;
 	@Config public List<Double> g;
@@ -50,6 +50,7 @@ public class ConvulsionMatrixConfig extends AbstractConfigType implements IWidge
 		}
 	}
 
+	@Override
 	public void inherit(ConvulsionMatrixConfig other) {
 		r = other.r;
 		g = other.g;
@@ -62,6 +63,7 @@ public class ConvulsionMatrixConfig extends AbstractConfigType implements IWidge
 		}
 	}
 
+	@Override
 	public ConvulsionMatrixConfig copy() {
 		ConvulsionMatrixConfig newMatrix = new ConvulsionMatrixConfig(colorMatrix);
 		newMatrix.inherit(this);
@@ -99,7 +101,7 @@ public class ConvulsionMatrixConfig extends AbstractConfigType implements IWidge
 	@OnlyIn(Dist.CLIENT)
 	public void addWidgets(CategoryScreen parent, List<WidgetWrapper> widgets) {
 		Minecraft minecraft = Minecraft.getInstance();
-		widgets.add(new WidgetWrapper(new PencilButton(230, 3, b -> minecraft.setScreen(new ColorMatrixInputScreen(parent, this, category)))));
+		widgets.add(new WidgetWrapper(new PencilButton(230, 3, b -> minecraft.setScreen(new ConvulsionMatrixInputScreen(parent, this, category)))));
 	}
 
 	@Override

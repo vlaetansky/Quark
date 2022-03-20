@@ -1,4 +1,7 @@
-package vazkii.quark.base.module.config.type.widget;
+package vazkii.quark.base.module.config.type.inputtable;
+
+import java.util.List;
+import java.util.Objects;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
@@ -6,15 +9,14 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.base.client.config.screen.CategoryScreen;
 import vazkii.quark.base.client.config.screen.WidgetWrapper;
-import vazkii.quark.base.client.config.screen.widgets.IWidgetProvider;
+import vazkii.quark.base.client.config.screen.inputtable.IInputtableConfigType;
+import vazkii.quark.base.client.config.screen.inputtable.RGBColorInputScreen;
+import vazkii.quark.base.client.config.screen.widgets.PencilButton;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.ConfigFlagManager;
 import vazkii.quark.base.module.config.type.AbstractConfigType;
 
-import java.util.List;
-import java.util.Objects;
-
-public class RGBColorConfig extends AbstractConfigType implements IWidgetProvider {
+public class RGBColorConfig extends AbstractConfigType implements IInputtableConfigType<RGBColorConfig> {
 
 	@Config public double r;
 	@Config public double g;
@@ -59,6 +61,7 @@ public class RGBColorConfig extends AbstractConfigType implements IWidgetProvide
 		return 1.0;
 	}
 	
+	@Override
 	public void inherit(RGBColorConfig other) {
 		r = other.r;
 		g = other.g;
@@ -71,6 +74,7 @@ public class RGBColorConfig extends AbstractConfigType implements IWidgetProvide
 		}
 	}
 
+	@Override
 	public RGBColorConfig copy() {
 		RGBColorConfig newMatrix = new RGBColorConfig(r, g, b);
 		newMatrix.inherit(this);
@@ -93,9 +97,8 @@ public class RGBColorConfig extends AbstractConfigType implements IWidgetProvide
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addWidgets(CategoryScreen parent, List<WidgetWrapper> widgets) {
-		// TODO give config screens
 		Minecraft minecraft = Minecraft.getInstance();
-//		widgets.add(new WidgetWrapper(new PencilButton(230, 3, b -> minecraft.setScreen(new ColorInputScreen(parent, this, category)))));
+		widgets.add(new WidgetWrapper(new PencilButton(230, 3, b -> minecraft.setScreen(new RGBColorInputScreen(parent, this, category)))));
 	}
 
 	@Override

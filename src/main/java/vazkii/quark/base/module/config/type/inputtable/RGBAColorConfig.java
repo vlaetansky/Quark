@@ -1,4 +1,4 @@
-package vazkii.quark.base.module.config.type.widget;
+package vazkii.quark.base.module.config.type.inputtable;
 
 import java.util.Objects;
 
