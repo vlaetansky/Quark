@@ -52,22 +52,27 @@ public class ConvulsionMatrixConfig extends AbstractConfigType implements IInput
 	}
 
 	@Override
-	public void inherit(ConvulsionMatrixConfig other) {
+	public void inherit(ConvulsionMatrixConfig other, boolean committing) {
 		r = other.r;
 		g = other.g;
 		b = other.b;
 		colorMatrix = Arrays.copyOf(other.colorMatrix, other.colorMatrix.length);
 
-		if(category != null) {
+		if(committing && category != null) {
 			category.refresh();
 			category.updateDirty();
 		}
+	}
+	
+	@Override
+	public void inheritDefaults(ConvulsionMatrixConfig other) {
+		colorMatrix = Arrays.copyOf(other.defaultMatrix, other.defaultMatrix.length);
 	}
 
 	@Override
 	public ConvulsionMatrixConfig copy() {
 		ConvulsionMatrixConfig newMatrix = new ConvulsionMatrixConfig(colorMatrix);
-		newMatrix.inherit(this);
+		newMatrix.inherit(this, false);
 		return newMatrix;
 	}
 

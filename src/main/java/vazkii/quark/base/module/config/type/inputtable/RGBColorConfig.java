@@ -22,8 +22,9 @@ public class RGBColorConfig extends AbstractConfigType implements IInputtableCon
 	@Config double r;
 	@Config double g;
 	@Config double b;
-
-	private int color;
+	
+	double dr, dg, db;
+	int color;
 	
 	private RGBColorConfig(double r, double g, double b) {
 		this(r, g, b, 1);
@@ -38,6 +39,10 @@ public class RGBColorConfig extends AbstractConfigType implements IInputtableCon
 	public static RGBColorConfig forColor(double r, double g, double b) {
 		RGBColorConfig config = new RGBColorConfig(r, g, b);
 		config.color = config.calculateColor();
+		config.dr = r;
+		config.dg = g;
+		config.db = b;
+		
 		return config;
 	}
 
@@ -65,6 +70,14 @@ public class RGBColorConfig extends AbstractConfigType implements IInputtableCon
 		
 		color = calculateColor();
 	}
+	
+	@Override
+	public void inheritDefaults(RGBColorConfig target) {
+		r = target.dr;
+		g = target.dg;
+		b = target.db;
+		color = calculateColor();
+	}
 
 	@Override
 	public void onReload(ConfigFlagManager flagManager) {
@@ -88,13 +101,18 @@ public class RGBColorConfig extends AbstractConfigType implements IInputtableCon
 	}
 	
 	@Override
-	public void inherit(RGBColorConfig other) {
+	public void inherit(RGBColorConfig other, boolean committing) {
 		r = other.r;
 		g = other.g;
 		b = other.b;
 		color = other.color;
 
-		if(category != null) {
+		if(!committing) {
+			dr = other.r;
+			dg = other.g;
+			db = other.b;	
+		}
+		else if(category != null) {
 			category.refresh();
 			category.updateDirty();
 		}
@@ -103,7 +121,7 @@ public class RGBColorConfig extends AbstractConfigType implements IInputtableCon
 	@Override
 	public RGBColorConfig copy() {
 		RGBColorConfig newMatrix = new RGBColorConfig(r, g, b);
-		newMatrix.inherit(this);
+		newMatrix.inherit(this, false);
 		return newMatrix;
 	}
 

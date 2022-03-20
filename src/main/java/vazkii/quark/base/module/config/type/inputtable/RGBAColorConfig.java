@@ -9,6 +9,8 @@ import vazkii.quark.base.module.config.Config;
 public class RGBAColorConfig extends RGBColorConfig {
 
 	@Config double a;
+	
+	private double da;
 
 	private RGBAColorConfig(double r, double g, double b, double a) {
 		super(r, g, b, a);
@@ -17,7 +19,12 @@ public class RGBAColorConfig extends RGBColorConfig {
 	
 	public static RGBAColorConfig forColor(double r, double g, double b, double a) {
 		RGBAColorConfig config = new RGBAColorConfig(r, g, b, a);
-		config.calculateColor();
+		config.color = config.calculateColor();
+		config.dr = r;
+		config.dg = g;
+		config.db = b;
+		config.da = a;
+		
 		return config;
 	}
 
@@ -32,17 +39,28 @@ public class RGBAColorConfig extends RGBColorConfig {
 	}
 	
 	@Override
-	public void inherit(RGBColorConfig other) {
-		if(other instanceof RGBAColorConfig rgba)
+	public void inherit(RGBColorConfig other, boolean committing) {
+		if(other instanceof RGBAColorConfig rgba) {
 			a = rgba.a;
+			
+			if(!committing)
+				da = rgba.a;
+		}
 		
-		super.inherit(other);
+		super.inherit(other, committing);
 	}
 
 	@Override
+	public void inheritDefaults(RGBColorConfig target) {
+		double ta = (target instanceof RGBAColorConfig rgba) ? rgba.da : 1F;
+		a = ta;
+		super.inheritDefaults(target);
+	}
+	
+	@Override
 	public RGBAColorConfig copy() {
 		RGBAColorConfig newMatrix = new RGBAColorConfig(r, g, b, a);
-		newMatrix.inherit(this);
+		newMatrix.inherit(this, false);
 		return newMatrix;
 	}
 

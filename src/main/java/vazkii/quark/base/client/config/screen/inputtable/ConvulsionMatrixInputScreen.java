@@ -175,14 +175,4 @@ public class ConvulsionMatrixInputScreen extends AbstractInputtableConfigTypeScr
 		update();
 	}
 
-	@Override
-	protected void setDefault() {
-		mutable.colorMatrix = Arrays.copyOf(original.defaultMatrix, original.defaultMatrix.length);
-	}
-
-	@Override
-	protected void reset() {
-		mutable.colorMatrix = Arrays.copyOf(mutable.defaultMatrix, mutable.defaultMatrix.length);
-	}
-
 }

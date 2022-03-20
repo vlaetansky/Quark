@@ -6,6 +6,7 @@ import vazkii.quark.base.module.config.type.IConfigType;
 public interface IInputtableConfigType<T extends IInputtableConfigType<T>> extends IWidgetProvider, IConfigType {
 	
 	T copy();
-	void inherit(T other);
+	void inherit(T other, boolean committing);
+	void inheritDefaults(T other);
 	
 }

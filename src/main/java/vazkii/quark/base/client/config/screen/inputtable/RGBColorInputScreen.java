@@ -5,7 +5,7 @@ import javax.annotation.Nonnull;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.components.Button.OnPress;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -35,7 +35,7 @@ public class RGBColorInputScreen extends AbstractInputtableConfigTypeScreen<RGBC
 		int cnt = (original instanceof RGBAColorConfig ? 4 : 3);
 		for(int i = 0; i < cnt; i++) {
 			double curr = original.getElement(i);
-			addRenderableWidget(new Slider(x , y + 25 * i, w - p, 20, prefix, suffix, 0f, 1f, curr, false, false, onSlide(i)));
+			addRenderableWidget(new Slider(x , y + 25 * i, w - p, 20, prefix, suffix, 0f, 1f, curr, false, false, this::onSlide));
 		}
 	}
 
@@ -111,19 +111,7 @@ public class RGBColorInputScreen extends AbstractInputtableConfigTypeScreen<RGBC
 		return val;
 	}
 
-	private OnPress onSlide(final int idx) {
-		return button -> {
-			update();
-		};
-	}
-
-	@Override
-	protected void setDefault() {
-		// TODO
-	}
-
-	@Override
-	protected void reset() {
-		// TODO
+	private void onSlide(Button btn) {
+		update();
 	}
 }
