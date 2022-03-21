@@ -34,6 +34,7 @@ public class CommonProxy {
 	private int lastConfigChange = -11;
 	public static boolean jingleTheBells = false;
 	private boolean registerDone = false;
+	private boolean configGuiSaving = false;
 	
 	public void start() {
 		ForgeRegistries.RECIPE_SERIALIZERS.register(ExclusionRecipe.SERIALIZER);
@@ -77,10 +78,17 @@ public class CommonProxy {
 	}
 	
 	public void configChanged(ModConfigEvent event) {
-		if(event.getConfig().getModId().equals(Quark.MOD_ID) && ClientTicker.ticksInGame - lastConfigChange > 10) { 
+		if(event.getConfig().getModId().equals(Quark.MOD_ID)
+				&& ClientTicker.ticksInGame - lastConfigChange > 10
+				&& !configGuiSaving) {
 			lastConfigChange = ClientTicker.ticksInGame;
 			handleQuarkConfigChange();
 		}
+	}
+
+	public void setConfigGuiSaving(boolean saving) {
+		configGuiSaving = saving;
+		lastConfigChange = ClientTicker.ticksInGame;
 	}
 	
 	public void registerCapabilities(RegisterCapabilitiesEvent event) {

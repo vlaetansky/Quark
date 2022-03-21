@@ -6,6 +6,7 @@ import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.api.config.IConfigElement;
 import vazkii.quark.api.config.IConfigObject;
+import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.config.external.ExternalConfigHandler;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.IConfigCallback;
@@ -64,8 +65,14 @@ public final class IngameConfigHandler implements IConfigCallback {
 	}
 
 	public void commit() {
-		commit(topLevelCategories);
-		ExternalConfigHandler.instance.commit();
+		Quark.proxy.setConfigGuiSaving(true);
+		try {
+			commit(topLevelCategories);
+			ExternalConfigHandler.instance.commit();
+			Quark.proxy.handleQuarkConfigChange();
+		} finally {
+			Quark.proxy.setConfigGuiSaving(true);
+		}
 	}
 
 	public static <T extends IConfigCategory> void commit(Map<String, T> map) {
