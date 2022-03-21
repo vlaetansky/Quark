@@ -17,6 +17,7 @@ import vazkii.quark.api.IConditionalSticky;
 import vazkii.quark.api.IIndirectConnector;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -64,7 +65,7 @@ public class QuarkPistonStructureResolver extends PistonStructureResolver {
 		else if(!addBlockLine(blockToMove, moveDirection))
 			return false;
 		else {
-			for (BlockPos blockpos : toMove) {
+			for (BlockPos blockpos : new ArrayList<>(toMove)) {
 				if (addBranchingBlocks(world, blockpos, isBlockBranching(world, blockpos)) == MoveResult.PREVENT)
 					return false;
 			}
