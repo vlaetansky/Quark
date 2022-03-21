@@ -2,6 +2,7 @@ package vazkii.quark.content.building.block;
 
 import it.unimi.dsi.fastutil.floats.Float2ObjectArrayMap;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
@@ -15,6 +16,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
@@ -137,7 +139,8 @@ public class GrateBlock extends QuarkBlock implements SimpleFluidloggedBlock {
 	}
 
 	@Override
-	public void neighborChanged(@Nonnull BlockState state, Level level, @Nonnull BlockPos pos, @Nonnull Block updatedBlock, @Nonnull BlockPos neighbor, boolean isMoving) {
+	public void neighborChanged(@Nonnull BlockState state, @Nonnull Level level, @Nonnull BlockPos pos, @Nonnull Block updatedBlock, @Nonnull BlockPos neighbor, boolean isMoving) {
+		super.neighborChanged(state, level, pos, updatedBlock, neighbor, isMoving);
 		BlockState neighborState = level.getBlockState(neighbor);
 		if (neighborState.getFluidState().is(FluidTags.WATER) &&
 				fluidContained(state).isSame(Fluids.LAVA)) {
@@ -145,6 +148,16 @@ public class GrateBlock extends QuarkBlock implements SimpleFluidloggedBlock {
 			level.setBlock(pos, ForgeEventFactory.fireFluidPlaceBlockEvent(level, pos, neighbor, Blocks.OBSIDIAN.defaultBlockState()), 3);
 			level.levelEvent(1501, pos, 0); // lava fizz
 		}
+	}
+
+	@Nonnull
+	@Override
+	public BlockState updateShape(@Nonnull BlockState state, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull LevelAccessor level, @Nonnull BlockPos pos, @Nonnull BlockPos facingPos) {
+		Fluid fluid = fluidContained(state);
+		if (fluid != Fluids.EMPTY)
+			level.scheduleTick(pos, fluid, fluid.getTickDelay(level));
+
+		return super.updateShape(state, facing, facingState, level, pos, facingPos);
 	}
 
 	@Override

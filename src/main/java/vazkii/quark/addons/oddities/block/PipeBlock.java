@@ -1,10 +1,5 @@
 package vazkii.quark.addons.oddities.block;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -16,6 +11,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -40,6 +36,10 @@ import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
+
+import javax.annotation.Nonnull;
+import java.util.HashSet;
+import java.util.Set;
 
 public class PipeBlock extends QuarkBlock implements SimpleWaterloggedBlock, EntityBlock {
 
@@ -140,6 +140,16 @@ public class PipeBlock extends QuarkBlock implements SimpleWaterloggedBlock, Ent
 		BlockState targetState = getTargetState(worldIn, pos, state.getValue(WATERLOGGED));
 		if(!targetState.equals(state))
 			worldIn.setBlock(pos, targetState, 2 | 4);
+	}
+
+	@Nonnull
+	@Override
+	public BlockState updateShape(BlockState state, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull LevelAccessor level, @Nonnull BlockPos pos, @Nonnull BlockPos facingPos) {
+		if (state.getValue(WATERLOGGED)) {
+			level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+		}
+
+		return super.updateShape(state, facing, facingState, level, pos, facingPos);
 	}
 
 	@Override

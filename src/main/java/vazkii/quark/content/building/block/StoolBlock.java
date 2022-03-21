@@ -1,8 +1,7 @@
 package vazkii.quark.content.building.block;
 
-import java.util.Random;
-
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -15,6 +14,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -38,6 +38,7 @@ import vazkii.quark.content.building.entity.Stool;
 import vazkii.quark.content.building.module.StoolsModule;
 
 import javax.annotation.Nonnull;
+import java.util.Random;
 
 public class StoolBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 
@@ -144,6 +145,16 @@ public class StoolBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		return getStateFor(context.getLevel(), context.getClickedPos());
+	}
+
+	@Nonnull
+	@Override
+	public BlockState updateShape(BlockState state, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull LevelAccessor level, @Nonnull BlockPos pos, @Nonnull BlockPos facingPos) {
+		if (state.getValue(WATERLOGGED)) {
+			level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+		}
+
+		return super.updateShape(state, facing, facingState, level, pos, facingPos);
 	}
 
 	@Override
