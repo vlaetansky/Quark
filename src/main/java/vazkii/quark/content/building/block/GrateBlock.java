@@ -101,7 +101,7 @@ public class GrateBlock extends QuarkBlock implements SimpleFluidloggedBlock {
 	@Override
 	public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter world, BlockPos pos, @Nullable Mob entity) {
 		if (entity instanceof Animal)
-			return BlockPathTypes.UNPASSABLE_RAIL;
+			return BlockPathTypes.DAMAGE_OTHER;
 		return null;
 	}
 
