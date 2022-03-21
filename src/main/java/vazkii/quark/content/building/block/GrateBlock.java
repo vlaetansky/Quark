@@ -1,10 +1,8 @@
 package vazkii.quark.content.building.block;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import it.unimi.dsi.fastutil.floats.Float2ObjectArrayMap;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ExperienceOrb;
@@ -16,12 +14,11 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.Material;
@@ -32,15 +29,20 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import vazkii.quark.base.block.QuarkBlock;
+import vazkii.quark.base.block.SimpleFluidloggedBlock;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
 
-public class GrateBlock extends QuarkBlock implements SimpleWaterloggedBlock {
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.function.Supplier;
+
+public class GrateBlock extends QuarkBlock implements SimpleFluidloggedBlock {
 	private static final VoxelShape TRUE_SHAPE = box(0, 15, 0, 16, 16, 16);
 	private static final Float2ObjectArrayMap<VoxelShape> WALK_BLOCK_CACHE = new Float2ObjectArrayMap<>();
 
-	public static BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+	public static final EnumProperty<GrateFluid> FLUID = EnumProperty.create("fluid", GrateFluid.class);
 
 	public GrateBlock(QuarkModule module) {
 		super("grate", module, CreativeModeTab.TAB_DECORATIONS,
@@ -49,7 +51,7 @@ public class GrateBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 						.sound(SoundType.METAL)
 						.noOcclusion());
 
-		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
+		registerDefaultState(defaultBlockState().setValue(FLUID, GrateFluid.AIR));
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
 	}
 
@@ -99,19 +101,15 @@ public class GrateBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 	@Override
 	public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter world, BlockPos pos, @Nullable Mob entity) {
 		if (entity instanceof Animal)
-			return BlockPathTypes.DAMAGE_OTHER;
+			return BlockPathTypes.UNPASSABLE_RAIL;
 		return null;
-	}
-
-	@Nonnull
-	@Override
-	public FluidState getFluidState(BlockState state) {
-		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return defaultBlockState().setValue(WATERLOGGED, context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER);
+		Fluid fluidAt = context.getLevel().getFluidState(context.getClickedPos()).getType();
+		BlockState state = defaultBlockState();
+		return acceptsFluid(fluidAt) ? withFluid(state, fluidAt) : state;
 	}
 
 	@Override
@@ -120,8 +118,8 @@ public class GrateBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos) {
-		return !state.getValue(WATERLOGGED);
+	public boolean propagatesSkylightDown(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos) {
+		return fluidContained(state) == Fluids.EMPTY;
 	}
 
 	@Override
@@ -136,6 +134,59 @@ public class GrateBlock extends QuarkBlock implements SimpleWaterloggedBlock {
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		builder.add(WATERLOGGED);
+		builder.add(FLUID);
+	}
+
+	@Nonnull
+	@Override
+	public FluidState getFluidState(@Nonnull BlockState state) {
+		return fluidContained(state).defaultFluidState();
+	}
+
+	@Override
+	public boolean acceptsFluid(@Nonnull Fluid fluid) {
+		return fluid == Fluids.WATER || fluid == Fluids.LAVA;
+	}
+
+	@Nonnull
+	@Override
+	public BlockState withFluid(@Nonnull BlockState state, @Nonnull Fluid fluid) {
+		return state.setValue(FLUID, GrateFluid.fromFluid(fluid));
+	}
+
+	@Nonnull
+	@Override
+	public Fluid fluidContained(@Nonnull BlockState state) {
+		return state.getValue(FLUID).getFluid();
+	}
+
+	public enum GrateFluid implements StringRepresentable {
+		AIR("air", () -> Fluids.EMPTY), WATER("water", () -> Fluids.WATER), LAVA("lava", () -> Fluids.LAVA);
+
+		private final String name;
+		private final Supplier<Fluid> fluidSupplier;
+
+		GrateFluid(String name, Supplier<Fluid> fluid) {
+			this.name = name;
+			fluidSupplier = fluid;
+		}
+
+		public Fluid getFluid() {
+			return fluidSupplier.get();
+		}
+
+		@Nonnull
+		@Override
+		public String getSerializedName() {
+			return name;
+		}
+
+		public static GrateFluid fromFluid(Fluid fluid) {
+			if (fluid == Fluids.WATER)
+				return WATER;
+			else if (fluid == Fluids.LAVA)
+				return LAVA;
+			return AIR;
+		}
 	}
 }
