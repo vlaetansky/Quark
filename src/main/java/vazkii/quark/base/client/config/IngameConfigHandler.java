@@ -71,7 +71,7 @@ public final class IngameConfigHandler implements IConfigCallback {
 			ExternalConfigHandler.instance.commit();
 			Quark.proxy.handleQuarkConfigChange();
 		} finally {
-			Quark.proxy.setConfigGuiSaving(true);
+			Quark.proxy.setConfigGuiSaving(false);
 		}
 	}
 
