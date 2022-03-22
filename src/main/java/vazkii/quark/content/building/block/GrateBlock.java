@@ -4,7 +4,6 @@ import it.unimi.dsi.fastutil.floats.Float2ObjectArrayMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ExperienceOrb;
@@ -22,7 +21,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
@@ -42,13 +42,13 @@ import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.function.Supplier;
 
 public class GrateBlock extends QuarkBlock implements SimpleFluidloggedBlock {
 	private static final VoxelShape TRUE_SHAPE = box(0, 15, 0, 16, 16, 16);
 	private static final Float2ObjectArrayMap<VoxelShape> WALK_BLOCK_CACHE = new Float2ObjectArrayMap<>();
 
-	public static final EnumProperty<GrateFluid> FLUID = EnumProperty.create("fluid", GrateFluid.class);
+	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+	public static final BooleanProperty LAVALOGGED = BooleanProperty.create("lavalogged");
 
 	public GrateBlock(QuarkModule module) {
 		super("grate", module, CreativeModeTab.TAB_DECORATIONS,
@@ -57,7 +57,7 @@ public class GrateBlock extends QuarkBlock implements SimpleFluidloggedBlock {
 						.sound(SoundType.METAL)
 						.noOcclusion());
 
-		registerDefaultState(defaultBlockState().setValue(FLUID, GrateFluid.AIR));
+		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false).setValue(LAVALOGGED, false));
 		RenderLayerHandler.setRenderType(this, RenderTypeSkeleton.CUTOUT);
 	}
 
@@ -160,6 +160,9 @@ public class GrateBlock extends QuarkBlock implements SimpleFluidloggedBlock {
 	@Nonnull
 	@Override
 	public BlockState updateShape(@Nonnull BlockState state, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull LevelAccessor level, @Nonnull BlockPos pos, @Nonnull BlockPos facingPos) {
+		if (state.getValue(LAVALOGGED) && state.getValue(WATERLOGGED))
+			state = withFluid(state, Fluids.WATER);
+
 		Fluid fluid = fluidContained(state);
 		if (fluid != Fluids.EMPTY)
 			level.scheduleTick(pos, fluid, fluid.getTickDelay(level));
@@ -169,7 +172,7 @@ public class GrateBlock extends QuarkBlock implements SimpleFluidloggedBlock {
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		builder.add(FLUID);
+		builder.add(WATERLOGGED, LAVALOGGED);
 	}
 
 	@Nonnull
@@ -186,42 +189,19 @@ public class GrateBlock extends QuarkBlock implements SimpleFluidloggedBlock {
 	@Nonnull
 	@Override
 	public BlockState withFluid(@Nonnull BlockState state, @Nonnull Fluid fluid) {
-		return state.setValue(FLUID, GrateFluid.fromFluid(fluid));
+		return state
+				.setValue(LAVALOGGED, fluid == Fluids.WATER)
+				.setValue(WATERLOGGED, fluid == Fluids.LAVA);
 	}
 
 	@Nonnull
 	@Override
 	public Fluid fluidContained(@Nonnull BlockState state) {
-		return state.getValue(FLUID).getFluid();
-	}
-
-	public enum GrateFluid implements StringRepresentable {
-		AIR("air", () -> Fluids.EMPTY), WATER("water", () -> Fluids.WATER), LAVA("lava", () -> Fluids.LAVA);
-
-		private final String name;
-		private final Supplier<Fluid> fluidSupplier;
-
-		GrateFluid(String name, Supplier<Fluid> fluid) {
-			this.name = name;
-			fluidSupplier = fluid;
-		}
-
-		public Fluid getFluid() {
-			return fluidSupplier.get();
-		}
-
-		@Nonnull
-		@Override
-		public String getSerializedName() {
-			return name;
-		}
-
-		public static GrateFluid fromFluid(Fluid fluid) {
-			if (fluid == Fluids.WATER)
-				return WATER;
-			else if (fluid == Fluids.LAVA)
-				return LAVA;
-			return AIR;
-		}
+		if (state.getValue(WATERLOGGED))
+			return Fluids.WATER;
+		else if (state.getValue(LAVALOGGED))
+			return Fluids.LAVA;
+		else
+			return Fluids.EMPTY;
 	}
 }
