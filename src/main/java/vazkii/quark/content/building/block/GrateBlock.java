@@ -124,6 +124,11 @@ public class GrateBlock extends QuarkBlock implements SimpleFluidloggedBlock {
 	}
 
 	@Override
+	public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
+		return fluidContained(state).getAttributes().getLuminosity();
+	}
+
+	@Override
 	public boolean propagatesSkylightDown(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos) {
 		return fluidContained(state) == Fluids.EMPTY;
 	}
