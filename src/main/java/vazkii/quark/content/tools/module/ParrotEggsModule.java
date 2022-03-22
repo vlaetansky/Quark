@@ -87,6 +87,7 @@ public class ParrotEggsModule extends QuarkModule {
 
 			DispenserBlock.registerBehavior(parrotEgg, new AbstractProjectileDispenseBehavior() {
 				@Nonnull
+				@Override
 				protected Projectile getProjectile(@Nonnull Level world, @Nonnull Position pos, @Nonnull ItemStack stack) {
 					return Util.make(new ParrotEgg(world, pos.x(), pos.y(), pos.z()), (parrotEgg) -> {
 						parrotEgg.setItem(stack);

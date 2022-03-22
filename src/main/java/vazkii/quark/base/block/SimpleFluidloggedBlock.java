@@ -17,10 +17,13 @@ import javax.annotation.Nonnull;
 import java.util.Optional;
 
 public interface SimpleFluidloggedBlock extends BucketPickup, LiquidBlockContainer {
+	
+	@Override
 	default boolean canPlaceLiquid(@Nonnull BlockGetter level, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull Fluid fluid) {
 		return fluidContained(state) == Fluids.EMPTY && acceptsFluid(fluid);
 	}
 
+	@Override
 	default boolean placeLiquid(@Nonnull LevelAccessor level, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull FluidState fluid) {
 		if (canPlaceLiquid(level, pos, state, fluid.getType())) {
 			if (!level.isClientSide()) {
@@ -34,6 +37,7 @@ public interface SimpleFluidloggedBlock extends BucketPickup, LiquidBlockContain
 	}
 
 	@Nonnull
+	@Override
 	default ItemStack pickupBlock(@Nonnull LevelAccessor level, @Nonnull BlockPos pos, @Nonnull BlockState state) {
 		Fluid fluid = fluidContained(state);
 		if (fluid != Fluids.EMPTY && fluid.getBucket() != Items.AIR) {
