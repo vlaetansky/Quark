@@ -1,22 +1,22 @@
 package vazkii.quark.base.module.config.type.inputtable;
 
-import java.util.Objects;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.base.module.config.Config;
 
+import java.util.Objects;
+
 public class RGBAColorConfig extends RGBColorConfig {
 
-	@Config double a;
-	
-	private double da;
+	@Config public double a;
+
+	protected double da;
 
 	private RGBAColorConfig(double r, double g, double b, double a) {
 		super(r, g, b, a);
 		this.a = a;
 	}
-	
+
 	public static RGBAColorConfig forColor(double r, double g, double b, double a) {
 		RGBAColorConfig config = new RGBAColorConfig(r, g, b, a);
 		config.color = config.calculateColor();
@@ -24,7 +24,7 @@ public class RGBAColorConfig extends RGBColorConfig {
 		config.dg = g;
 		config.db = b;
 		config.da = a;
-		
+
 		return config;
 	}
 
@@ -32,31 +32,30 @@ public class RGBAColorConfig extends RGBColorConfig {
 	public double getAlphaComponent() {
 		return a;
 	}
-	
+
 	@Override
 	void setAlphaComponent(double c) {
 		a = c;
 	}
-	
+
 	@Override
 	public void inherit(RGBColorConfig other, boolean committing) {
 		if(other instanceof RGBAColorConfig rgba) {
 			a = rgba.a;
-			
+
 			if(!committing)
 				da = rgba.a;
 		}
-		
+
 		super.inherit(other, committing);
 	}
 
 	@Override
 	public void inheritDefaults(RGBColorConfig target) {
-		double ta = (target instanceof RGBAColorConfig rgba) ? rgba.da : 1F;
-		a = ta;
+		a = (target instanceof RGBAColorConfig rgba) ? rgba.da : 1F;
 		super.inheritDefaults(target);
 	}
-	
+
 	@Override
 	public RGBAColorConfig copy() {
 		RGBAColorConfig newMatrix = new RGBAColorConfig(r, g, b, a);

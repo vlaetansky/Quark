@@ -1,8 +1,5 @@
 package vazkii.quark.base.module.config.type.inputtable;
 
-import java.util.List;
-import java.util.Objects;
-
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -15,15 +12,18 @@ import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.ConfigFlagManager;
 import vazkii.quark.base.module.config.type.AbstractConfigType;
 
+import java.util.List;
+import java.util.Objects;
+
 public class RGBColorConfig extends AbstractConfigType implements IInputtableConfigType<RGBColorConfig> {
 
-	@Config double r;
-	@Config double g;
-	@Config double b;
-	
-	double dr, dg, db;
-	int color;
-	
+	@Config public double r;
+	@Config public double g;
+	@Config public double b;
+
+	protected double dr, dg, db;
+	protected int color;
+
 	private RGBColorConfig(double r, double g, double b) {
 		this(r, g, b, 1);
 	}
@@ -33,21 +33,21 @@ public class RGBColorConfig extends AbstractConfigType implements IInputtableCon
 		this.g = g;
 		this.b = b;
 	}
-	
+
 	public static RGBColorConfig forColor(double r, double g, double b) {
 		RGBColorConfig config = new RGBColorConfig(r, g, b);
 		config.color = config.calculateColor();
 		config.dr = r;
 		config.dg = g;
 		config.db = b;
-		
+
 		return config;
 	}
 
 	public int getColor() {
 		return color;
 	}
-	
+
 	public double getElement(int idx) {
 		return switch(idx) {
 		case 0 -> r;
@@ -57,7 +57,7 @@ public class RGBColorConfig extends AbstractConfigType implements IInputtableCon
 		default -> 0f;
 		};
 	}
-	
+
 	public void setElement(int idx, double c) {
 		switch(idx) {
 		case 0 -> r = c;
@@ -65,10 +65,10 @@ public class RGBColorConfig extends AbstractConfigType implements IInputtableCon
 		case 2 -> b = c;
 		case 3 -> setAlphaComponent(c);
 		};
-		
+
 		color = calculateColor();
 	}
-	
+
 	@Override
 	public void inheritDefaults(RGBColorConfig target) {
 		r = target.dr;
@@ -81,7 +81,7 @@ public class RGBColorConfig extends AbstractConfigType implements IInputtableCon
 	public void onReload(ConfigFlagManager flagManager) {
 		color = calculateColor();
 	}
-	
+
 	int calculateColor() {
 		int rComponent = clamp(r * 255) << 16;
 		int gComponent = clamp(g * 255) << 8;
@@ -93,11 +93,11 @@ public class RGBColorConfig extends AbstractConfigType implements IInputtableCon
 	double getAlphaComponent() {
 		return 1.0;
 	}
-	
+
 	void setAlphaComponent(double c) {
 		// NO-OP
 	}
-	
+
 	@Override
 	public void inherit(RGBColorConfig other, boolean committing) {
 		r = other.r;
@@ -108,7 +108,7 @@ public class RGBColorConfig extends AbstractConfigType implements IInputtableCon
 		if(!committing) {
 			dr = other.r;
 			dg = other.g;
-			db = other.b;	
+			db = other.b;
 		}
 		else if(category != null) {
 			category.refresh();
@@ -147,7 +147,7 @@ public class RGBColorConfig extends AbstractConfigType implements IInputtableCon
 	public String getSubtitle() {
 		return String.format("[%.1f, %.1f, %.1f]", r, g, b);
 	}
-	
+
 	private static int clamp(double val) {
 		return clamp((int) val);
 	}
