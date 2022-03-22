@@ -141,12 +141,14 @@ public class GrateBlock extends QuarkBlock implements SimpleFluidloggedBlock {
 	@Override
 	public void neighborChanged(@Nonnull BlockState state, @Nonnull Level level, @Nonnull BlockPos pos, @Nonnull Block updatedBlock, @Nonnull BlockPos neighbor, boolean isMoving) {
 		super.neighborChanged(state, level, pos, updatedBlock, neighbor, isMoving);
-		BlockState neighborState = level.getBlockState(neighbor);
-		if (neighborState.getFluidState().is(FluidTags.WATER) &&
-				fluidContained(state).isSame(Fluids.LAVA)) {
-			level.destroyBlock(pos, true);
-			level.setBlock(pos, ForgeEventFactory.fireFluidPlaceBlockEvent(level, pos, neighbor, Blocks.OBSIDIAN.defaultBlockState()), 3);
-			level.levelEvent(1501, pos, 0); // lava fizz
+		if (!pos.below().equals(neighbor)) {
+			BlockState neighborState = level.getBlockState(neighbor);
+			if (neighborState.getFluidState().is(FluidTags.WATER) &&
+					fluidContained(state).isSame(Fluids.LAVA)) {
+				level.destroyBlock(pos, true);
+				level.setBlock(pos, ForgeEventFactory.fireFluidPlaceBlockEvent(level, pos, neighbor, Blocks.OBSIDIAN.defaultBlockState()), 3);
+				level.levelEvent(1501, pos, 0); // lava fizz
+			}
 		}
 	}
 
