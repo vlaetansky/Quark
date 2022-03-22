@@ -282,7 +282,7 @@ public class Toretoise extends Animal {
 		if(level.isClientSide)
 			return;
 
-		playSound(QuarkSounds.ENTITY_TORETOISE_EAT, 0.5F + 0.5F * level.random.nextInt(2), (level.random.nextFloat() - level.random.nextFloat()) * 0.2F + 1.0F);
+		playSound(eatCooldown == 0 ? QuarkSounds.ENTITY_TORETOISE_EAT : QuarkSounds.ENTITY_TORETOISE_EAT_SATIATED, 0.5F + 0.5F * level.random.nextInt(2), (level.random.nextFloat() - level.random.nextFloat()) * 0.2F + 1.0F);
 		heal(8);
 
 		if(!isTamed) {

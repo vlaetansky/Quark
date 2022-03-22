@@ -55,6 +55,7 @@ public class QuarkSounds {
 	public static final SoundEvent ENTITY_TORETOISE_IDLE = register("entity.toretoise.idle");
 	public static final SoundEvent ENTITY_TORETOISE_ANGRY = register("entity.toretoise.angry");
 	public static final SoundEvent ENTITY_TORETOISE_HARVEST = register("entity.toretoise.harvest");
+	public static final SoundEvent ENTITY_TORETOISE_EAT_SATIATED = register("entity.toretoise.eat_satiated");
 	public static final SoundEvent ENTITY_TORETOISE_EAT = register("entity.toretoise.eat");
 	public static final SoundEvent ENTITY_TORETOISE_REGROW = register("entity.toretoise.regrow");
 
