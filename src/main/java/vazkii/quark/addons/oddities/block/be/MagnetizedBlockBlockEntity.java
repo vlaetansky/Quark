@@ -11,9 +11,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ButtonBlock;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -257,7 +255,8 @@ public class MagnetizedBlockBlockEntity extends BlockEntity {
 			return;
 		this.level.setBlock(this.worldPosition, blockstate, flag);
 		this.level.neighborChanged(this.worldPosition, blockstate.getBlock(), this.worldPosition);
-		if (blockstate.getBlock() instanceof ButtonBlock && this.level instanceof ServerLevel serverLevel) {
+		if ((blockstate.getBlock() instanceof ButtonBlock || blockstate.getBlock() instanceof BasePressurePlateBlock) &&
+				this.level instanceof ServerLevel serverLevel) {
 			blockstate.tick(serverLevel, this.worldPosition, serverLevel.random);
 			blockstate = this.level.getBlockState(this.worldPosition);
 		}
