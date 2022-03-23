@@ -190,8 +190,8 @@ public class GrateBlock extends QuarkBlock implements SimpleFluidloggedBlock {
 	@Override
 	public BlockState withFluid(@Nonnull BlockState state, @Nonnull Fluid fluid) {
 		return state
-				.setValue(LAVALOGGED, fluid == Fluids.WATER)
-				.setValue(WATERLOGGED, fluid == Fluids.LAVA);
+				.setValue(WATERLOGGED, fluid == Fluids.WATER)
+				.setValue(LAVALOGGED, fluid == Fluids.LAVA);
 	}
 
 	@Nonnull
