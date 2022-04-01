@@ -10,15 +10,10 @@
  */
 package vazkii.quark.content.tweaks.module;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -47,6 +42,10 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.HarvestMessage;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
 public class SimpleHarvestModule extends QuarkModule {
@@ -98,7 +97,7 @@ public class SimpleHarvestModule extends QuarkModule {
 				crops.put(initial, result);
 		}
 	}
-	
+
 	private int last(Collection<Integer> vals) {
 		return vals.stream().max(Integer::compare).orElse(0);
 	}
@@ -157,7 +156,7 @@ public class SimpleHarvestModule extends QuarkModule {
 			.forEach((stack) -> {
 				if(stack.getItem() == blockItem)
 					stack.shrink(1);
-				
+
 				if(!stack.isEmpty())
 					Block.popResource(world, pos, stack);
 			});
@@ -201,6 +200,14 @@ public class SimpleHarvestModule extends QuarkModule {
 				if (crops.containsKey(worldBlock)) {
 					harvestAndReplant(player.level, shiftPos, worldBlock, player);
 					hasHarvested = true;
+				} else if (worldBlock.is(Blocks.FARMLAND)) {
+					shiftPos = shiftPos.above();
+
+					worldBlock = player.level.getBlockState(shiftPos);
+					if (crops.containsKey(worldBlock)) {
+						harvestAndReplant(player.level, shiftPos, worldBlock, player);
+						hasHarvested = true;
+					}
 				}
 			}
 
