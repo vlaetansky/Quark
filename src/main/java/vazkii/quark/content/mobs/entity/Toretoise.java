@@ -21,6 +21,7 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -208,7 +209,8 @@ public class Toretoise extends Animal {
 								if (tile instanceof PistonMovingBlockEntity piston) {
 									BlockState pistonState = piston.getMovedState();
 									if (pistonState.getBlock() == IronRodModule.iron_rod) {
-										dropOre(ore, new LootContext.Builder(serverLevel));
+										dropOre(ore, new LootContext.Builder(serverLevel)
+												.withParameter(LootContextParams.TOOL, new ItemStack(Items.IRON_PICKAXE)));
 										break breakOre;
 									}
 								}
