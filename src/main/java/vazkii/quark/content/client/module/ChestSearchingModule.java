@@ -1,16 +1,7 @@
 package vazkii.quark.content.client.module;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.BiPredicate;
-import java.util.regex.Pattern;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
@@ -62,6 +53,10 @@ import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.type.inputtable.RGBAColorConfig;
 import vazkii.quark.content.management.client.screen.widgets.MiniInventoryButton;
 
+import java.util.*;
+import java.util.function.BiPredicate;
+import java.util.regex.Pattern;
+
 @LoadModule(category = ModuleCategory.CLIENT, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class ChestSearchingModule extends QuarkModule {
 
@@ -91,10 +86,9 @@ public class ChestSearchingModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void initGui(ScreenEvent.InitScreenEvent.Post event) {
 		Screen gui = event.getScreen();
-		if(gui instanceof InventoryScreen)
-			return;
-
-		if(gui instanceof AbstractContainerScreen<?> chest && (gui instanceof IQuarkButtonAllowed || GeneralConfig.isScreenAllowed(gui))) {
+		if(!(gui instanceof InventoryScreen) &&
+				gui instanceof AbstractContainerScreen<?> chest &&
+				(gui instanceof IQuarkButtonAllowed || GeneralConfig.isScreenAllowed(gui))) {
 			Minecraft mc = gui.getMinecraft();
 			if(InventoryTransferHandler.accepts(chest.getMenu(), mc.player)) {
 				searchBar = new EditBox(mc.font, chest.getGuiLeft() + 18, chest.getGuiTop() + 6, 117, 10, new TextComponent(text));
