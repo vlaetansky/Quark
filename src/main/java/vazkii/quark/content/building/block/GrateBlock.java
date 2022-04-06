@@ -10,6 +10,7 @@ import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.SpawnPlacements.Type;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -89,11 +90,13 @@ public class GrateBlock extends QuarkBlock implements SimpleFluidloggedBlock {
 			if (entity instanceof ItemEntity || entity instanceof ExperienceOrb)
 				return Shapes.empty();
 
-			boolean animal = entity instanceof Animal;
-			boolean leashed = animal && ((Animal) entity).getLeashHolder() != null;
+			boolean preventedType = entity instanceof Animal || entity instanceof WaterAnimal;
+			boolean leashed = (entity instanceof Animal animal && animal.getLeashHolder() != null) ||
+					(entity instanceof WaterAnimal waterAnimal && waterAnimal.getLeashHolder() != null);
+
 			boolean onGrate = world.getBlockState(entity.blockPosition().offset(0, -1, 0)).getBlock() instanceof GrateBlock;
 
-			if (animal && !leashed && !onGrate) {
+			if (preventedType && !leashed && !onGrate) {
 				return getCachedShape(entity.maxUpStep);
 			}
 
@@ -106,7 +109,7 @@ public class GrateBlock extends QuarkBlock implements SimpleFluidloggedBlock {
 	@Nullable
 	@Override
 	public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter world, BlockPos pos, @Nullable Mob entity) {
-		if (entity instanceof Animal)
+		if (entity instanceof Animal || entity instanceof WaterAnimal)
 			return BlockPathTypes.DAMAGE_OTHER;
 		return null;
 	}
