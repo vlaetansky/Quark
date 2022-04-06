@@ -41,6 +41,7 @@
     "client.ChatComponentMixin",
     "client.ContainerScreenMixin",
     "client.ElytraLayerMixin",
+    "client.GuiMixin",
     "client.HumanoidArmorLayerMixin",
     "client.HumanoidModelMixin",
     "client.ItemBlockRenderTypesMixin",
