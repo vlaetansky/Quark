@@ -42,6 +42,7 @@ import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.IForgeShearable;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.network.NetworkHooks;
+import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.base.proxy.CommonProxy;
 import vazkii.quark.content.mobs.ai.FavorBlockGoal;
@@ -241,8 +242,7 @@ public class Frog extends Animal implements IEntityAdditionalSpawnData, IForgeSh
 			if (stack.getCount() > count) {
 				ItemStack copy = stack.copy();
 				copy.shrink(count);
-				copy.getOrCreateTagElement("display")
-						.putString("LocName", "item.quark.frog_maybe_leg.name");
+				ItemNBTHelper.setBoolean(stack, "sus", true);
 
 				stack = stack.copy();
 				stack.shrink(copy.getCount());

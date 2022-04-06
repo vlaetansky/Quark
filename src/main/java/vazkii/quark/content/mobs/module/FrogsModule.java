@@ -8,10 +8,12 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraftforge.common.BiomeDictionary;
+import vazkii.arl.util.ItemNBTHelper;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.BrewingHandler;
 import vazkii.quark.base.handler.EntityAttributeHandler;
@@ -27,6 +29,8 @@ import vazkii.quark.base.world.EntitySpawnHandler;
 import vazkii.quark.content.mobs.client.render.entity.FrogRenderer;
 import vazkii.quark.content.mobs.entity.Frog;
 
+import javax.annotation.Nonnull;
+
 @LoadModule(category = ModuleCategory.MOBS, hasSubscriptions = true)
 public class FrogsModule extends QuarkModule {
 
@@ -35,11 +39,11 @@ public class FrogsModule extends QuarkModule {
 	@Config
 	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(40, 1, 3, CompoundBiomeConfig.fromBiomeTypes(false, BiomeDictionary.Type.SWAMP));
 
-	@Config(flag = "frog_brewing") 
+	@Config(flag = "frog_brewing")
 	public static boolean enableBrewing = true;
-	
+
 	@Config public static boolean enableBigFunny = false;
-	
+
 	@Override
 	public void register() {
 		new QuarkItem("frog_leg", this, new Item.Properties()
@@ -48,7 +52,16 @@ public class FrogsModule extends QuarkModule {
 						.meat()
 						.nutrition(2)
 						.saturationMod(0.3F)
-						.build()));
+						.build())) {
+			@Nonnull
+			@Override
+			public String getDescriptionId(@Nonnull ItemStack stack) {
+				String id = super.getDescriptionId(stack);
+				if (ItemNBTHelper.getBoolean(stack, "sus", false))
+					return id + "_maybe";
+				return id;
+			}
+		};
 
 		new QuarkItem("cooked_frog_leg", this, new Item.Properties()
 				.tab(CreativeModeTab.TAB_FOOD)
@@ -66,24 +79,24 @@ public class FrogsModule extends QuarkModule {
 						.saturationMod(2.5F)
 						.build()))
 				.setCondition(() -> enableBrewing);
-		
+
 		BrewingHandler.addPotionMix("frog_brewing",
 				() -> new FlagIngredient(Ingredient.of(goldenLeg), "frogs"),
 				Potions.LEAPING, Potions.LONG_LEAPING, Potions.STRONG_LEAPING);
-		
+
 		frogType = EntityType.Builder.<Frog>of(Frog::new, MobCategory.CREATURE)
 				.sized(0.65F, 0.5F)
 				.clientTrackingRange(8)
 				.setCustomClientFactory((spawnEntity, world) -> new Frog(frogType, world))
 				.build("frog");
 		RegistryHelper.register(frogType, "frog");
-		
+
 		EntitySpawnHandler.registerSpawn(this, frogType, MobCategory.CREATURE, Type.ON_GROUND, Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules, spawnConfig);
 		EntitySpawnHandler.addEgg(frogType, 0xbc9869, 0xffe6ad, spawnConfig);
-		
+
 		EntityAttributeHandler.put(frogType, Frog::prepareAttributes);
 	}
-	
+
 	@Override
 	public void clientSetup() {
 		EntityRenderers.register(frogType, FrogRenderer::new);

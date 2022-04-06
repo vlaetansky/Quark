@@ -89,7 +89,7 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 		Minecraft mc = Minecraft.getInstance();
 		Screen gui = mc.screen;
 		if (mc.player != null && gui instanceof AbstractContainerScreen<?> containerGui) {
-			ItemStack held = mc.player.inventoryMenu.getCarried();
+			ItemStack held = containerGui.getMenu().getCarried();
 			if (!held.isEmpty()) {
 				Slot under = containerGui.getSlotUnderMouse();
 
