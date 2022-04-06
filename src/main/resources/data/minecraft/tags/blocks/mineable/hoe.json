@@ -26,6 +26,15 @@
     "quark:thatch_vertical_slab",
     "quark:thatch_stairs",
     "quark:bamboo_mat",
-    "quark:bamboo_mat_carpet"
+    "quark:bamboo_mat_carpet",
+    "quark:sugar_cane_block",
+    "quark:bamboo_block",
+    "quark:cactus_block",
+    "quark:chorus_fruit_block",
+    "quark:cocoa_beans_sack",
+    "quark:nether_wart_sack",
+    "quark:gunpowder_sack",
+    "quark:berry_sack",
+    "quark:glowberry_sack"
   ]
 }
