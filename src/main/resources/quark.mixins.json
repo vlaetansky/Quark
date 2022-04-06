@@ -31,7 +31,8 @@
     "StructureStartMixin",
     "StructureTemplateMixin",
     "TemptGoalMixin",
-    "TrapDoorBlockMixin"
+    "TrapDoorBlockMixin",
+    "WeatheringCopperMixin"
   ],
   "client": [
     "client.AbstractCandleBlockMixin",

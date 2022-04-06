@@ -46,12 +46,20 @@ public class VerticalSlabsModule extends QuarkModule {
 			ToolInteractionHandler.registerWaxedBlock(cleanSlab, waxedSlab);
 		});
 
-		for(int i = 1; i < copperVerticalSlabs.size(); i++) {
-			WeatheringCopperVerticalSlabBlock prev = copperVerticalSlabs.get(i - 1);
-			WeatheringCopperVerticalSlabBlock next = copperVerticalSlabs.get(i);
-			ToolInteractionHandler.registerInteraction(ToolActions.AXE_SCRAPE, next, prev);
+		WeatheringCopperVerticalSlabBlock first = copperVerticalSlabs.get(0);
 
-			prev.next = next;
+		int max = copperVerticalSlabs.size();
+		for(int i = 0; i < max; i++) {
+			WeatheringCopperVerticalSlabBlock prev = i > 0 ? copperVerticalSlabs.get(i - 1) : null;
+			WeatheringCopperVerticalSlabBlock current = copperVerticalSlabs.get(i);
+			WeatheringCopperVerticalSlabBlock next = i < max - 1 ? copperVerticalSlabs.get(i + 1) : null;
+			if (prev != null) {
+				ToolInteractionHandler.registerInteraction(ToolActions.AXE_SCRAPE, current, prev);
+				current.prev = prev;
+			}
+			if (next != null)
+				current.next = next;
+			current.first = first;
 		}
 
 		VariantHandler.SLABS.forEach(b -> {

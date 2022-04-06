@@ -5,14 +5,17 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.state.BlockState;
+import vazkii.quark.base.block.CustomWeatheringCopper;
 import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.Random;
 
-public class WeatheringCopperVerticalSlabBlock extends VerticalSlabBlock implements WeatheringCopper {
+public class WeatheringCopperVerticalSlabBlock extends VerticalSlabBlock implements CustomWeatheringCopper {
 	private final WeatheringCopper.WeatherState weatherState;
+	public WeatheringCopperVerticalSlabBlock first;
+	public WeatheringCopperVerticalSlabBlock prev;
 	public WeatheringCopperVerticalSlabBlock next;
 
 	public WeatheringCopperVerticalSlabBlock(Block parent, QuarkModule module) {
@@ -34,6 +37,18 @@ public class WeatheringCopperVerticalSlabBlock extends VerticalSlabBlock impleme
 	@Override
 	public Optional<BlockState> getNext(@Nonnull BlockState state) {
 		return next == null ? Optional.empty() : Optional.of(next.withPropertiesOf(state));
+	}
+
+	@Nonnull
+	@Override
+	public Optional<BlockState> getPrevious(@Nonnull BlockState state) {
+		return prev == null ? Optional.empty() : Optional.of(prev.withPropertiesOf(state));
+	}
+
+	@Nonnull
+	@Override
+	public BlockState getFirst(@Nonnull BlockState state) {
+		return first.withPropertiesOf(state);
 	}
 
 	@Nonnull
