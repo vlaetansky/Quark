@@ -3,14 +3,12 @@ package vazkii.quark.addons.oddities.block.be;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
-import net.minecraft.world.Containers;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -21,35 +19,28 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.wrapper.SidedInvWrapper;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.EmptyHandler;
 import vazkii.quark.addons.oddities.block.CrateBlock;
+import vazkii.quark.addons.oddities.capability.CrateItemHandler;
 import vazkii.quark.addons.oddities.inventory.CrateMenu;
 import vazkii.quark.addons.oddities.module.CrateModule;
-import vazkii.quark.base.handler.SortingHandler;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class CrateBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer {
 
-	private int totalItems = 0;
 	private int numPlayersUsing;
-	private List<ItemStack> stacks = new ArrayList<>();
-
-	private final LazyOptional<SidedInvWrapper> wrapper = LazyOptional.of(() -> new SidedInvWrapper(this, Direction.UP));
 
 	private int[] visibleSlots = new int[0];
-	private boolean needsUpdate = false;
 
 	protected final ContainerData crateData = new ContainerData() {
 		@Override
 		public int get(int index) {
-			return index == 0 ? totalItems : stacks.size();
+			CrateItemHandler handler = itemHandler();
+			return index == 0 ? handler.displayTotal : handler.displaySlots;
 		}
 
 		@Override
@@ -68,11 +59,7 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 	}
 
 	public void spillTheTea() {
-		SortingHandler.mergeStacks(stacks);
-
-		for(ItemStack stack : stacks)
-			if(!stack.isEmpty())
-				Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), stack);
+		itemHandler().spill(level, worldPosition);
 	}
 
 	public static void tick(Level level, BlockPos pos, BlockState state, CrateBlockEntity be) {
@@ -80,109 +67,69 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 	}
 
 	public void tick() {
-		if(needsUpdate) {
-			stacks.removeIf(ItemStack::isEmpty);
-			needsUpdate = false;
-		}
+		itemHandler().recalculate();
 	}
 
 	@Override
 	protected void saveAdditional(@Nonnull CompoundTag compound) {
 		super.saveAdditional(compound);
 
-		compound.putInt("totalItems", totalItems);
-
-		ListTag list = new ListTag();
-		for(ItemStack stack : stacks) {
-			CompoundTag stackCmp = new CompoundTag();
-			stack.save(stackCmp);
-			list.add(stackCmp);
-		}
-		compound.put("stacks", list);
+		compound.merge(itemHandler().serializeNBT());
 	}
 
 	@Override
 	public void load(@Nonnull CompoundTag nbt) {
 		super.load(nbt);
 
-		totalItems = nbt.getInt("totalItems");
+		itemHandler().deserializeNBT(nbt);
+	}
 
-		ListTag list = nbt.getList("stacks", 10);
-		stacks = new ArrayList<>(list.size());
-		for(int i = 0; i < list.size(); i++)
-			stacks.add(ItemStack.of(list.getCompound(i)));
+	public CrateItemHandler itemHandler() {
+		LazyOptional<IItemHandler> handler = getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+		if (handler.isPresent() && handler.orElse(new EmptyHandler()) instanceof CrateItemHandler crateHandler)
+			return crateHandler;
+
+		// Should never happen, but just to prevent null-pointers
+		return new CrateItemHandler();
 	}
 
 	@Nonnull
 	@Override
 	public ItemStack getItem(int slot) {
-		return slot < stacks.size() ? stacks.get(slot) : ItemStack.EMPTY;
+		return itemHandler().getStackInSlot(slot);
 	}
 
 	@Nonnull
 	@Override
 	public ItemStack removeItemNoUpdate(int slot) {
-		if(slot < stacks.size()) {
-			ItemStack stack = getItem(slot);
-			totalItems -= stack.getCount();
-			needsUpdate = true;
-
-			return stack;
-		}
-
-		return ItemStack.EMPTY;
+		return itemHandler().extractItem(slot, 64, true);
 	}
 
 	@Override
 	public void setItem(int slot, @Nonnull ItemStack stack) {
-		ItemStack stackAt = getItem(slot);
-
-		if(slot >= stacks.size()) {
-			stacks.add(stack);
-			totalItems += stack.getCount();
-		} else {
-			int sizeDiff = stack.getCount() - stackAt.getCount();
-			totalItems += sizeDiff;
-			stacks.set(slot, stack);
-		}
+		itemHandler().setStackInSlot(slot, stack);
 	}
 
 	@Nonnull
 	@Override
 	public ItemStack removeItem(int slot, int count) {
-		ItemStack stack = getItem(slot);
-		ItemStack retstack = stack.split(count);
-		totalItems -= count;
-
-		if(stack.isEmpty())
-			needsUpdate = true;
-
-		return retstack;
+		return itemHandler().extractItem(slot, 64, true);
 	}
 
-	@Override
-	public void setChanged() {
-		super.setChanged();
-
-		totalItems = 0;
-		for(ItemStack stack : stacks)
-			totalItems += stack.getCount();
-	}
 
 	@Override
 	public int getContainerSize() {
-		return Math.min(CrateModule.maxItems, stacks.size() + 1);
+		return itemHandler().getSlots();
 	}
 
 	@Override
 	public void clearContent() {
-		stacks.clear();
-		totalItems = 0;
+		itemHandler().clear();
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return totalItems == 0;
+		return itemHandler().isEmpty();
 	}
 
 	@Override
@@ -191,19 +138,18 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 	}
 
 	@Override
-	public boolean canPlaceItemThroughFace(int index, ItemStack stack, Direction dir) {
-		return (totalItems + stack.getCount()) <= CrateModule.maxItems;
+	public boolean canPlaceItemThroughFace(int index, @Nonnull ItemStack stack, Direction dir) {
+		return true;
 	}
 
 	@Nonnull
 	@Override
-	public int[] getSlotsForFace(@Nonnull Direction arg0) {
-		if(visibleSlots.length != (stacks.size() + 1)) {
-			visibleSlots = new int[stacks.size() + 1];
-			for(int i = 0; i < visibleSlots.length; i++)
-				visibleSlots[i] = i;
+	public int[] getSlotsForFace(@Nonnull Direction dir) {
+		int slotCount = itemHandler().getSlots();
+		if (visibleSlots.length != slotCount) {
+			visibleSlots = new int[slotCount];
+			for (int i = 0; i < slotCount; i++) visibleSlots[i] = i;
 		}
-
 		return visibleSlots;
 	}
 
@@ -221,11 +167,8 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 
 	@Nonnull
 	@Override
-	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
-		if(!remove && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return wrapper.cast();
-
-		return super.getCapability(capability, facing);
+	protected IItemHandler createUnSidedHandler() {
+		return new CrateItemHandler();
 	}
 
 	// Vaniller copy =========================

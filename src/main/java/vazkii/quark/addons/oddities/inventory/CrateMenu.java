@@ -1,7 +1,6 @@
 package vazkii.quark.addons.oddities.inventory;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -10,10 +9,11 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 import vazkii.quark.addons.oddities.block.be.CrateBlockEntity;
+import vazkii.quark.addons.oddities.capability.CrateItemHandler;
 import vazkii.quark.addons.oddities.module.CrateModule;
-import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.oddities.ScrollCrateMessage;
 
@@ -27,6 +27,7 @@ public class CrateMenu extends AbstractContainerMenu {
 	public static final int numRows = 6;
 	public static final int numCols = 9;
 	public static final int displayedSlots = numCols * numRows;
+	public final int totalSlots;
 
 	public int scroll = 0;
 	private final ContainerData crateData;
@@ -45,15 +46,17 @@ public class CrateMenu extends AbstractContainerMenu {
 
 		int i = (numRows - 4) * 18;
 
-		for(int j = 0; j < numRows; ++j)
-			for(int k = 0; k < numCols; ++k)
-				addSlot(new CrateSlot(k + j * numCols, 8 + k * 18, 18 + j * 18));
+		CrateItemHandler handler = crate.itemHandler();
+		totalSlots = handler.getSlots();
 
-		for(int l = 0; l < 3; ++l)
-			for(int j1 = 0; j1 < 9; ++j1)
+		for (int j = 0; j < totalSlots; ++j)
+			addSlot(new CrateSlot(handler, j, 8 + (j % numCols) * 18, 18 + (j / numCols) * 18));
+
+		for (int l = 0; l < 3; ++l)
+			for (int j1 = 0; j1 < 9; ++j1)
 				addSlot(new Slot(inv, j1 + l * 9 + 9, 8 + j1 * 18, 103 + l * 18 + i));
 
-		for(int i1 = 0; i1 < 9; ++i1)
+		for (int i1 = 0; i1 < 9; ++i1)
 			addSlot(new Slot(inv, i1, 8 + i1 * 18, 161 + i));
 
 		addDataSlots(crateData);
@@ -70,42 +73,26 @@ public class CrateMenu extends AbstractContainerMenu {
 	@Nonnull
 	@Override
 	public ItemStack quickMoveStack(@Nonnull Player playerIn, int index) {
-		ItemStack itemstack = ItemStack.EMPTY;
+		ItemStack activeStack = ItemStack.EMPTY;
 		Slot slot = this.slots.get(index);
 
-		if(slot != null && slot.hasItem()) {
-			ItemStack itemstack1 = slot.getItem();
-			itemstack = itemstack1.copy();
-			boolean empty = false;
+		if (slot != null && slot.hasItem()) {
+			ItemStack stackInSlot = slot.getItem();
+			activeStack = stackInSlot.copy();
 
-			if (index < displayedSlots) {
-				if(!this.moveItemStackTo(itemstack1, displayedSlots, slots.size(), true))
-					empty = true;
-				crate.setChanged();
-			} else {
-				if(MiscUtil.canPutIntoInv(itemstack, crate.getLevel(), crate.getBlockPos(), crate, Direction.UP, true)) {
-					MiscUtil.putIntoInv(itemstack, crate.getLevel(), crate.getBlockPos(),crate, Direction.UP, false, false);
-					itemstack1.setCount(0);
-					empty = true;
-				} else return ItemStack.EMPTY;
-			}
-
-			if(itemstack1.isEmpty()) {
-				if(slot instanceof CrateSlot cslot) {
-					int target = cslot.getTarget();
-					crate.removeItemNoUpdate(target);
-				}
-				else slot.set(ItemStack.EMPTY);
-			} else if(!empty) {
-				slot.setChanged();
-				forceSync();
-			}
-
-			if(empty)
+			if (index < totalSlots) {
+				if (!this.moveItemStackTo(stackInSlot, totalSlots, slots.size(), true))
+					return ItemStack.EMPTY;
+			} else if (!this.moveItemStackTo(stackInSlot, 0, totalSlots, false))
 				return ItemStack.EMPTY;
+
+			if (!stackInSlot.isEmpty())
+				slot.set(ItemStack.EMPTY);
+			else
+				slot.setChanged();
 		}
 
-		return itemstack;
+		return activeStack;
 	}
 
 	public static CrateMenu fromNetwork(int windowId, Inventory playerInventory, FriendlyByteBuf buf) {
@@ -125,82 +112,56 @@ public class CrateMenu extends AbstractContainerMenu {
 		crate.stopOpen(playerIn);
 	}
 
-	private void forceSync() {
-//		broadcastFullState();
-	}
-
 	public void scroll(boolean down, boolean packet) {
 		boolean did = false;
 
-		if(down) {
+		if (down) {
 			int maxScroll = (getStackCount() / numCols) * numCols;
 
 			int target = scroll + numCols;
-			if(target <= maxScroll) {
+			if (target <= maxScroll) {
 				scroll = target;
 				did = true;
+
+				for (Slot slot : slots)
+					if (slot instanceof CrateSlot)
+						slot.y -= 18;
 			}
 		} else {
 			int target = scroll - numCols;
-			if(target >= 0) {
+			if (target >= 0) {
 				scroll = target;
 				did = true;
+
+				for (Slot slot : slots)
+					if (slot instanceof CrateSlot)
+						slot.y += 18;
 			}
 		}
 
-		if(did) {
+
+		if (did) {
 			broadcastChanges();
 
-			if(packet)
+			if (packet)
 				QuarkNetwork.sendToServer(new ScrollCrateMessage(down));
 		}
 	}
 
-	private class CrateSlot extends Slot {
-
-		private final int index;
-
-		public CrateSlot(int index, int xPosition, int yPosition) {
-			super(crate, index, xPosition, yPosition);
-
-			this.index = index;
-		}
-
-		private int getTarget() {
-			Level world = crate.getLevel();
-			return (world.isClientSide ? index : (index + scroll));
-		}
-
-		@Nonnull
-		@Override
-		public ItemStack getItem() {
-			int targetIndex = getTarget();
-			int size = crate.getContainerSize();
-			if(targetIndex >= size)
-				return ItemStack.EMPTY;
-
-			return crate.getItem(targetIndex);
+	private class CrateSlot extends SlotItemHandler {
+		public CrateSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
+			super(itemHandler, index, xPosition, yPosition);
 		}
 
 		@Override
-		public void set(@Nonnull ItemStack stack) {
-			int targetIndex = getTarget();
-			container.setItem(targetIndex, stack);
-
-			setChanged();
-			forceSync();
-		}
-
-		@Nonnull
-		@Override
-		public ItemStack remove(int amount) {
-			return container.removeItem(getTarget(), amount);
+		public void setChanged() {
+			crate.itemHandler().onContentsChanged(getSlotIndex());
 		}
 
 		@Override
-		public boolean mayPlace(ItemStack stack) {
-			return stack.getCount() + getTotal() <= CrateModule.maxItems;
+		public boolean isActive() {
+			int index = getSlotIndex();
+			return index >= scroll && index < scroll + displayedSlots;
 		}
-
 	}
 }

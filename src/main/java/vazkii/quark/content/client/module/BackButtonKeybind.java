@@ -1,10 +1,7 @@
 package vazkii.quark.content.client.module;
 
-import java.util.List;
-
 import com.google.common.collect.ImmutableSet;
 import com.mojang.blaze3d.platform.InputConstants.Type;
-
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -21,6 +18,8 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 
+import java.util.List;
+
 @LoadModule(category = ModuleCategory.CLIENT, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class BackButtonKeybind extends QuarkModule {
 
@@ -32,7 +31,7 @@ public class BackButtonKeybind extends QuarkModule {
 
 	@Override
 	public void clientSetup() {
-		backKey = ModKeybindHandler.initMouse("back", 4, ModKeybindHandler.MISC_GROUP);
+		backKey = ModKeybindHandler.initMouse("back", 4, ModKeybindHandler.MISC_GROUP, (modifier, key) -> key.getType() != Type.MOUSE || key.getValue() != 0);
 	}
 
 	@SubscribeEvent

@@ -32,6 +32,7 @@
     "StructureTemplateMixin",
     "TemptGoalMixin",
     "TrapDoorBlockMixin",
+    ,
     "WeatheringCopperMixin"
   ],
   "client": [

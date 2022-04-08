@@ -37,7 +37,7 @@ import java.util.concurrent.*;
 public class WorldGenHandler {
 
 	private static final Map<GenerationStep.Decoration, Feature<NoneFeatureConfiguration>> defersBaseFeature = new HashMap<>();
-	private static final Map<GenerationStep.Decoration, PlacedFeature> defers = new HashMap<>();
+	private static final Map<GenerationStep.Decoration, Holder<PlacedFeature>> defers = new HashMap<>();
 	private static final Map<GenerationStep.Decoration, SortedSet<WeightedGenerator>> generators = new HashMap<>();
 
 	public static PlacementModifierType<ChunkCornerPlacement> CHUNK_CORNER_PLACEMENT_TYPE = () -> ChunkCornerPlacement.CODEC;
@@ -65,12 +65,12 @@ public class WorldGenHandler {
 				ConfiguredFeature<?, ?> feature = new ConfiguredFeature<>(defersBaseFeature.get(stage), FeatureConfiguration.NONE);
 
 				ResourceLocation resloc = new ResourceLocation(Quark.MOD_ID, "deferred_feature_" + stage.name().toLowerCase(Locale.ROOT));
-				Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, resloc, feature);
+				Holder<ConfiguredFeature<?, ?>> featureHolder = BuiltinRegistries.register(BuiltinRegistries.CONFIGURED_FEATURE, resloc, feature);
 
-				PlacedFeature placed = new PlacedFeature(Holder.direct(feature), List.of(CHUNK_CORNER_PLACEMENT));
-				Registry.register(BuiltinRegistries.PLACED_FEATURE, resloc, placed);
+				PlacedFeature placed = new PlacedFeature(featureHolder, List.of(CHUNK_CORNER_PLACEMENT));
+				Holder<PlacedFeature> placedHolder = BuiltinRegistries.register(BuiltinRegistries.PLACED_FEATURE, resloc, placed);
 
-				defers.put(stage, placed);
+				defers.put(stage, placedHolder);
 			}
 
 			Registry.register(Registry.PLACEMENT_MODIFIERS, new ResourceLocation(Quark.MOD_ID, "chunk_corner"), CHUNK_CORNER_PLACEMENT_TYPE);
@@ -83,7 +83,7 @@ public class WorldGenHandler {
 
 		for(GenerationStep.Decoration stage : GenerationStep.Decoration.values()) {
 			List<Holder<PlacedFeature>> features = settings.getFeatures(stage);
-			features.add(Holder.direct(defers.get(stage)));
+			features.add(defers.get(stage));
 		}
 	}
 
