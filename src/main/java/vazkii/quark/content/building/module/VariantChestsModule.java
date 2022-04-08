@@ -1,7 +1,20 @@
 package vazkii.quark.content.building.module;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BooleanSupplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableSet;
+
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -35,7 +48,6 @@ import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
-import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.handler.StructureBlockReplacementHandler;
 import vazkii.quark.base.handler.StructureBlockReplacementHandler.StructureHolder;
 import vazkii.quark.base.module.LoadModule;
@@ -43,19 +55,14 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
+import vazkii.quark.base.util.WoodTypes;
+import vazkii.quark.base.util.WoodTypes.Wood;
 import vazkii.quark.content.building.block.VariantChestBlock;
 import vazkii.quark.content.building.block.VariantTrappedChestBlock;
 import vazkii.quark.content.building.block.be.VariantChestBlockEntity;
 import vazkii.quark.content.building.block.be.VariantTrappedChestBlockEntity;
 import vazkii.quark.content.building.client.render.be.VariantChestRenderer;
 import vazkii.quark.content.building.recipe.MixedExclusionRecipe;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.*;
-import java.util.function.BooleanSupplier;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @LoadModule(category = ModuleCategory.BUILDING, hasSubscriptions = true)
 public class VariantChestsModule extends QuarkModule {
@@ -64,9 +71,7 @@ public class VariantChestsModule extends QuarkModule {
 
 	private static final String DONK_CHEST = "Quark:DonkChest";
 
-	private static final ImmutableSet<String> OVERWORLD_WOODS = ImmutableSet.copyOf(MiscUtil.OVERWORLD_WOOD_TYPES);
-	private static final ImmutableSet<String> NETHER_WOODS = ImmutableSet.copyOf(MiscUtil.NETHER_WOOD_TYPES);
-
+	private static final ImmutableSet<Wood> VANILLA_WOODS = ImmutableSet.copyOf(WoodTypes.VANILLA);
 	private static final ImmutableSet<String> MOD_WOODS = ImmutableSet.of();
 
 	public static BlockEntityType<VariantChestBlockEntity> chestTEType;
@@ -222,8 +227,7 @@ public class VariantChestsModule extends QuarkModule {
 	public void register() {
 		ForgeRegistries.RECIPE_SERIALIZERS.register(MixedExclusionRecipe.SERIALIZER);
 
-		OVERWORLD_WOODS.forEach(s -> addChest(s, Blocks.CHEST));
-		NETHER_WOODS.forEach(s -> addChest(s, Blocks.CHEST));
+		VANILLA_WOODS.forEach(s -> addChest(s.name(), Blocks.CHEST));
 		MOD_WOODS.forEach(s -> addModChest(s, Blocks.CHEST));
 
 		addChest("nether_brick", Blocks.NETHER_BRICKS);

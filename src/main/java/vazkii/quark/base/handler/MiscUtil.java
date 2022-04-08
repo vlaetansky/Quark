@@ -73,42 +73,6 @@ public class MiscUtil {
 			Direction.EAST
 	};
 
-	public static final String[] OVERWORLD_VARIANT_WOOD_TYPES = new String[] {
-			"spruce",
-			"birch",
-			"jungle",
-			"acacia",
-			"dark_oak"
-	};
-
-	public static final String[] OVERWORLD_WOOD_TYPES = new String[] {
-			"oak",
-			"spruce",
-			"birch",
-			"jungle",
-			"acacia",
-			"dark_oak"
-	};
-
-	public static final String[] NETHER_WOOD_TYPES = new String[] {
-			"crimson",
-			"warped"
-	};
-
-	public static final Block[] OVERWORLD_WOOD_OBJECTS = new Block[] {
-			Blocks.OAK_PLANKS,
-			Blocks.SPRUCE_PLANKS,
-			Blocks.BIRCH_PLANKS,
-			Blocks.JUNGLE_PLANKS,
-			Blocks.ACACIA_PLANKS,
-			Blocks.DARK_OAK_PLANKS
-	};
-
-	public static final Block[] NETHER_WOOD_OBJECTS = new Block[] {
-			Blocks.CRIMSON_PLANKS,
-			Blocks.WARPED_PLANKS
-	};
-
 	public static void addToLootTable(LootTable table, LootPoolEntryContainer entry) {
 		List<LootPool> pools = ObfuscationReflectionHelper.getPrivateValue(LootTable.class, table, "f_79109_"); // Can't AT
 		if (pools != null && !pools.isEmpty()) {

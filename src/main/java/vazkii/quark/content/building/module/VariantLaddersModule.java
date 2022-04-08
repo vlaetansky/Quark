@@ -12,11 +12,12 @@ import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import vazkii.quark.base.handler.FuelHandler;
 import vazkii.quark.base.handler.ItemOverrideHandler;
-import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
+import vazkii.quark.base.util.WoodTypes;
+import vazkii.quark.base.util.WoodTypes.Wood;
 import vazkii.quark.content.building.block.VariantLadderBlock;
 
 @LoadModule(category = ModuleCategory.BUILDING)
@@ -30,10 +31,8 @@ public class VariantLaddersModule extends QuarkModule {
 
 	@Override
 	public void register() {
-		for(String type : MiscUtil.OVERWORLD_VARIANT_WOOD_TYPES)
-			variantLadders.add(new VariantLadderBlock(type, this, true));
-		for(String type : MiscUtil.NETHER_WOOD_TYPES)
-			variantLadders.add(new VariantLadderBlock(type, this, false));
+		for(Wood type : WoodTypes.VANILLA_NON_OAK)
+			variantLadders.add(new VariantLadderBlock(type.name(), this, !type.nether()));
 	}
 
 	@Override
