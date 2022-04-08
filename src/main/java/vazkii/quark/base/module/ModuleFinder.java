@@ -1,16 +1,24 @@
 package vazkii.quark.base.module;
 
+import java.util.Comparator;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.lang3.text.WordUtils;
+import org.objectweb.asm.Type;
+
 import com.google.common.collect.Lists;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.moddiscovery.ModAnnotation;
 import net.minecraftforge.forgespi.language.ModFileScanData;
 import net.minecraftforge.forgespi.language.ModFileScanData.AnnotationData;
-import org.apache.commons.lang3.text.WordUtils;
-import org.objectweb.asm.Type;
 import vazkii.quark.base.Quark;
-
-import java.util.*;
 
 public final class ModuleFinder {
 
@@ -31,6 +39,8 @@ public final class ModuleFinder {
 		try {
 			Type type = target.clazz();
 			Class<?> clazz = Class.forName(type.getClassName(), false, Quark.class.getClassLoader());
+			Quark.LOG.info("Found Quark module class " + type.getClassName());
+			
 			QuarkModule moduleObj = (QuarkModule) clazz.getDeclaredConstructor().newInstance();
 
 			Map<String, Object> vals = target.annotationData();

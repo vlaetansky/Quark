@@ -14,6 +14,8 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.animal.Chicken;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -92,7 +94,8 @@ public class GrabChickensModule extends QuarkModule {
 	private boolean canPlayerHostChicken(Player player) {
 		return !needsNoHelmet || player.getItemBySlot(EquipmentSlot.HEAD).isEmpty();
 	}
-	
+
+	@OnlyIn(Dist.CLIENT)
 	public static void setRenderChickenFeetStatus(Chicken entity, ChickenModel<Chicken> model) {
 		if(!staticEnabled)
 			return;

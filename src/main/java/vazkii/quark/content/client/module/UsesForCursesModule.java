@@ -6,6 +6,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent.AddLayers;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -30,11 +32,13 @@ public class UsesForCursesModule extends QuarkModule {
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public void modelLayers(AddLayers event) {
 		ArmorStandRenderer render = event.getRenderer(EntityType.ARMOR_STAND);
 		render.addLayer(new ArmorStandFakePlayerLayer<>(render, event.getEntityModels()));
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	public static boolean shouldHidePumpkinOverlay(ItemStack stack) {
 		return staticEnabled && vanishPumpkinOverlay &&
 				stack.is(Blocks.CARVED_PUMPKIN.asItem()) &&
