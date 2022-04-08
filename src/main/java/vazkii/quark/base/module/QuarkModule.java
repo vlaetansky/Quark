@@ -31,6 +31,7 @@ public class QuarkModule {
 
 	private boolean firstLoad = true;
 	public boolean enabled = false;
+	public boolean disabledByOverlap = false;
 	public boolean configEnabled = false;
 	public boolean ignoreAntiOverlap = false;
 
@@ -126,12 +127,14 @@ public class QuarkModule {
 			MinecraftForge.EVENT_BUS.post(new ModuleLoadedEvent(lowercaseName));
 		}
 
+		disabledByOverlap = false;
 		if(missingDep)
 			enabled = false;
 		else if(!ignoreAntiOverlap && antiOverlap != null) {
 			ModList list = ModList.get();
 			for(String s : antiOverlap)
 				if(list.isLoaded(s)) {
+					disabledByOverlap = true;
 					enabled = false;
 					break;
 				}

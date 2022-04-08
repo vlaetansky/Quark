@@ -12,7 +12,7 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 
-@LoadModule(category = ModuleCategory.WORLD)
+@LoadModule(category = ModuleCategory.WORLD, antiOverlap = { "caverns_and_chasms" })
 public class AzaleaWoodModule extends QuarkModule {
 
 	public static WoodSet woodSet;
@@ -23,7 +23,7 @@ public class AzaleaWoodModule extends QuarkModule {
 	}
 
 	@Override
-	public void enabledStatusChanged(boolean firstLoad, boolean oldStatus, boolean newStatus) { // TODO does this work
+	public void enabledStatusChanged(boolean firstLoad, boolean oldStatus, boolean newStatus) {
 		ConfiguredFeature<TreeConfiguration, ?> configured = null;
 		try {
 			configured = TreeFeatures.AZALEA_TREE.value();

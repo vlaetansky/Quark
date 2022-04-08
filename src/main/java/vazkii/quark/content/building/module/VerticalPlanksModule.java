@@ -9,7 +9,7 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.util.VanillaWoods;
 import vazkii.quark.base.util.VanillaWoods.Wood;
 
-@LoadModule(category = ModuleCategory.BUILDING)
+@LoadModule(category = ModuleCategory.BUILDING, antiOverlap = { "woodworks" })
 public class VerticalPlanksModule extends QuarkModule {
 
 	@Override

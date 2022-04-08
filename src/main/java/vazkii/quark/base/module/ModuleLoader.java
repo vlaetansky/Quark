@@ -156,6 +156,11 @@ public final class ModuleLoader {
 		return module != null && module.enabled;
 	}
 
+	public boolean isModuleEnabledOrOverlapping(Class<? extends QuarkModule> moduleClazz) {
+		QuarkModule module = getModuleInstance(moduleClazz);
+		return module != null && (module.enabled || module.disabledByOverlap);
+	}
+	
 	public QuarkModule getModuleInstance(Class<? extends QuarkModule> moduleClazz) {
 		return foundModules.get(moduleClazz);
 	}

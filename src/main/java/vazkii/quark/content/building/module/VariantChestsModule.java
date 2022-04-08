@@ -64,7 +64,7 @@ import vazkii.quark.content.building.block.be.VariantTrappedChestBlockEntity;
 import vazkii.quark.content.building.client.render.be.VariantChestRenderer;
 import vazkii.quark.content.building.recipe.MixedExclusionRecipe;
 
-@LoadModule(category = ModuleCategory.BUILDING, hasSubscriptions = true)
+@LoadModule(category = ModuleCategory.BUILDING, hasSubscriptions = true, antiOverlap = { "woodworks" })
 public class VariantChestsModule extends QuarkModule {
 
 	private static final Pattern VILLAGE_PIECE_PATTERN = Pattern.compile("\\w+\\[\\w+\\[([a-z_]+):village/(.+?)/.+]]");

@@ -14,7 +14,7 @@ import vazkii.quark.content.world.module.BlossomTreesModule;
 import java.util.LinkedList;
 import java.util.List;
 
-@LoadModule(category = ModuleCategory.BUILDING)
+@LoadModule(category = ModuleCategory.BUILDING, antiOverlap = { "woodworks" })
 public class LeafCarpetModule extends QuarkModule {
 
 	public static List<LeafCarpetBlock> carpets = new LinkedList<>();
