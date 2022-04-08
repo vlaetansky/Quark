@@ -257,11 +257,11 @@ public class Toretoise extends Animal {
 
 		BlockState dropState = null;
 		switch (ore) {
-			case 1 -> dropState = Blocks.COAL_ORE.defaultBlockState();
-			case 2 -> dropState = Blocks.IRON_ORE.defaultBlockState();
-			case 3 -> dropState = Blocks.REDSTONE_ORE.defaultBlockState();
-			case 4 -> dropState = Blocks.LAPIS_ORE.defaultBlockState();
-			case 5 -> dropState = Blocks.COPPER_ORE.defaultBlockState();
+			case 1 -> dropState = Blocks.DEEPSLATE_COAL_ORE.defaultBlockState();
+			case 2 -> dropState = Blocks.DEEPSLATE_IRON_ORE.defaultBlockState();
+			case 3 -> dropState = Blocks.DEEPSLATE_REDSTONE_ORE.defaultBlockState();
+			case 4 -> dropState = Blocks.DEEPSLATE_LAPIS_ORE.defaultBlockState();
+			case 5 -> dropState = Blocks.DEEPSLATE_COPPER_ORE.defaultBlockState();
 		}
 
 		if(dropState != null) {

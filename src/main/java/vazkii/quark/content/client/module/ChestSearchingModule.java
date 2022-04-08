@@ -91,7 +91,7 @@ public class ChestSearchingModule extends QuarkModule {
 				(gui instanceof IQuarkButtonAllowed || GeneralConfig.isScreenAllowed(gui))) {
 			Minecraft mc = gui.getMinecraft();
 			if(InventoryTransferHandler.accepts(chest.getMenu(), mc.player)) {
-				searchBar = new EditBox(mc.font, chest.getGuiLeft() + 18, chest.getGuiTop() + 6, 117, 10, new TextComponent(text));
+				searchBar = new EditBox(mc.font, 18, 6, 117, 10, new TextComponent(text));
 
 				searchBar.setValue(text);
 				searchBar.setMaxLength(50);
@@ -162,8 +162,6 @@ public class ChestSearchingModule extends QuarkModule {
 
 			int guiLeft = gui.getGuiLeft();
 			int guiTop = gui.getGuiTop();
-
-			matrix.translate(-guiLeft, -guiTop, 0);
 
 			drawBackground(matrix, gui, searchBar.x - 11, searchBar.y - 3);
 
