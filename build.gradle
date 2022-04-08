@@ -27,7 +27,7 @@ version = "${config.version}-${config.build_number}"
 group = "vazkii.${config.mod_id}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = config.mod_name
 
-compileJava.options.compilerArgs << "-Xlint:all,-classfile,-processing,-deprecation" << "-Werror"
+compileJava.options.compilerArgs << "-Xlint:all,-classfile,-processing,-deprecation"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
@@ -39,7 +39,7 @@ if (System.getenv('BUILD_NUMBER') != null) {
 minecraft {
     mappings channel: "${config.mapping_channel}", version: "${config.mapping_version}"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
-    
+
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     // Default run configurations.
@@ -155,7 +155,7 @@ task sortArtifacts(type: Copy) {
         if (matcher.matches())
         {
             def classifier = matcher.group('classifier')
-            /* Set the relative path to change the destination, since 
+            /* Set the relative path to change the destination, since
              * Gradle doesn't seem to like the absolute path being set*/
             it.relativePath = it.relativePath.parent.append(false, classifier, it.name)
         }
