@@ -14,8 +14,8 @@ public class VanillaWoods {
 	public static Wood ACACIA = new Wood("acacia", Blocks.ACACIA_PLANKS, false);
 	public static Wood DARK_OAK = new Wood("dark_oak", Blocks.DARK_OAK_PLANKS, false);
 	
-	public static Wood CRIMSON = new Wood("crimson", Blocks.CRIMSON_PLANKS, false);
-	public static Wood WARPED = new Wood("warped", Blocks.WARPED_PLANKS, false);
+	public static Wood CRIMSON = new Wood("crimson", Blocks.CRIMSON_PLANKS, true);
+	public static Wood WARPED = new Wood("warped", Blocks.WARPED_PLANKS, true);
 
 	public static final Wood[] OVERWORLD_NON_OAK = new Wood[] {
 			SPRUCE, BIRCH, JUNGLE, ACACIA, DARK_OAK
