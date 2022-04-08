@@ -1,4 +1,4 @@
-package vazkii.quark.content.tweaks.module;
+package vazkii.quark.content.client.module;
 
 import net.minecraft.client.renderer.entity.ArmorStandRenderer;
 import net.minecraft.world.entity.EntityType;
@@ -13,7 +13,7 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.content.tweaks.client.layer.ArmorStandFakePlayerLayer;
 
-@LoadModule(category = ModuleCategory.TWEAKS)
+@LoadModule(category = ModuleCategory.CLIENT)
 public class UsesForCursesModule extends QuarkModule {
 
 	public static boolean staticEnabled;

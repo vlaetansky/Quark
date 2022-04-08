@@ -29,7 +29,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.SkullBlock;
 import vazkii.arl.util.ItemNBTHelper;
-import vazkii.quark.content.tweaks.module.UsesForCursesModule;
+import vazkii.quark.content.client.module.UsesForCursesModule;
 
 public class ArmorStandFakePlayerLayer<M extends EntityModel<ArmorStand>> extends RenderLayer<ArmorStand, M> {
 
