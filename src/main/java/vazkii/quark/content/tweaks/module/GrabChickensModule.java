@@ -1,4 +1,4 @@
-package vazkii.quark.content.experimental.module;
+package vazkii.quark.content.tweaks.module;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 
-@LoadModule(category = ModuleCategory.EXPERIMENTAL, enabledByDefault = false, hasSubscriptions = true)
+@LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
 public class GrabChickensModule extends QuarkModule {
 	
 	@Config

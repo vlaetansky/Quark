@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.ChickenRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.Chicken;
 import vazkii.quark.content.client.module.VariantAnimalTexturesModule;
-import vazkii.quark.content.experimental.module.GrabChickensModule;
+import vazkii.quark.content.tweaks.module.GrabChickensModule;
 
 @Mixin(ChickenRenderer.class)
 public class ChickenRendererMixin {
