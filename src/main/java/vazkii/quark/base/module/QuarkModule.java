@@ -1,8 +1,12 @@
 package vazkii.quark.base.module;
 
+import java.util.List;
+
 import com.google.common.collect.Lists;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -12,8 +16,6 @@ import vazkii.quark.api.event.ModuleLoadedEvent;
 import vazkii.quark.api.event.ModuleStateChangedEvent;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.config.ConfigFlagManager;
-
-import java.util.List;
 
 public class QuarkModule {
 
@@ -84,7 +86,12 @@ public class QuarkModule {
 	public void modelBake(ModelBakeEvent event) {
 		// NO-OP
 	}
-
+	
+	@OnlyIn(Dist.CLIENT)
+	public void modelLayers(EntityRenderersEvent.AddLayers event) {
+		// NO-OP
+	}
+	
 	@OnlyIn(Dist.CLIENT)
 	public void textureStitch(TextureStitchEvent.Pre event) {
 		// NO-OP

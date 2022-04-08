@@ -1,5 +1,12 @@
 package vazkii.quark.base.proxy;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.Month;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -7,6 +14,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ConfigGuiHandler.ConfigGuiFactory;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -22,13 +30,6 @@ import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.WoodSetHandler;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.config.IConfigCallback;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.time.LocalDateTime;
-import java.time.Month;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientProxy extends CommonProxy {
@@ -59,6 +60,7 @@ public class ClientProxy extends CommonProxy {
 		bus.addListener(this::clientSetup);
 		bus.addListener(this::modelRegistry);
 		bus.addListener(this::modelBake);
+		bus.addListener(this::modelLayers);
 		bus.addListener(this::textureStitch);
 		bus.addListener(this::postTextureStitch);
 	}
@@ -76,6 +78,10 @@ public class ClientProxy extends CommonProxy {
 
 	public void modelBake(ModelBakeEvent event) {
 		ModuleLoader.INSTANCE.modelBake(event);
+	}
+	
+	public void modelLayers(EntityRenderersEvent.AddLayers event) {
+		ModuleLoader.INSTANCE.modelLayers(event);
 	}
 
 	public void textureStitch(TextureStitchEvent.Pre event) {

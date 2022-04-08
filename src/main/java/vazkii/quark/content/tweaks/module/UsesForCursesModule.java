@@ -1,44 +1,42 @@
 package vazkii.quark.content.tweaks.module;
 
+import net.minecraft.client.renderer.entity.ArmorStandRenderer;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.client.event.EntityRenderersEvent.AddLayers;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
+import vazkii.quark.content.tweaks.client.layer.ArmorStandFakePlayerLayer;
 
-@LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
+@LoadModule(category = ModuleCategory.TWEAKS)
 public class UsesForCursesModule extends QuarkModule {
 
-	private static boolean isEnabled;
+	public static boolean staticEnabled;
 
 	@Config
 	public static boolean vanishPumpkinOverlay = true;
 
-//	@Config
-//	public static boolean bindArmorStandsWithPlayerHeads = true;
-
+	@Config
+	public static boolean bindArmorStandsWithPlayerHeads = true;
 
 	@Override
 	public void configChanged() {
-		// Pass over to a static reference for easier computing the coremod hook
-		isEnabled = this.enabled;
+		staticEnabled = enabled;
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	@SubscribeEvent
-	public void addArmorStandLayer(EntityRenderersEvent.AddLayers event) {
-		// TODO: 4/6/22 armor stands rendering player model - not sure how to
+	@Override
+	public void modelLayers(AddLayers event) {
+		ArmorStandRenderer render = event.getRenderer(EntityType.ARMOR_STAND);
+		render.addLayer(new ArmorStandFakePlayerLayer<>(render, event.getEntityModels()));
 	}
 
 	public static boolean shouldHidePumpkinOverlay(ItemStack stack) {
-		return isEnabled && vanishPumpkinOverlay &&
+		return staticEnabled && vanishPumpkinOverlay &&
 				stack.is(Blocks.CARVED_PUMPKIN.asItem()) &&
 				EnchantmentHelper.getItemEnchantmentLevel(Enchantments.VANISHING_CURSE, stack) > 0;
 	}

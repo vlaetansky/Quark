@@ -1,11 +1,19 @@
 package vazkii.quark.base.module;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+
 import com.google.common.base.Preconditions;
+
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -18,17 +26,11 @@ import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.item.IQuarkItem;
 import vazkii.quark.base.module.config.ConfigResolver;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-
 public final class ModuleLoader {
 
 	private enum Step {
 		CONSTRUCT, CONSTRUCT_CLIENT, REGISTER, POST_REGISTER, CONFIG_CHANGED, CONFIG_CHANGED_CLIENT, SETUP, SETUP_CLIENT,
-		MODEL_REGISTRY, MODEL_BAKE, TEXTURE_STITCH, POST_TEXTURE_STITCH, LOAD_COMPLETE, FIRST_CLIENT_TICK
+		MODEL_REGISTRY, MODEL_BAKE, MODEL_LAYERS, TEXTURE_STITCH, POST_TEXTURE_STITCH, LOAD_COMPLETE, FIRST_CLIENT_TICK
 	}
 
 	public static final ModuleLoader INSTANCE = new ModuleLoader();
@@ -107,6 +109,11 @@ public final class ModuleLoader {
 	@OnlyIn(Dist.CLIENT)
 	public void modelBake(ModelBakeEvent event) {
 		dispatch(Step.MODEL_BAKE, m -> m.modelBake(event));
+	}
+	
+	@OnlyIn(Dist.CLIENT)
+	public void modelLayers(EntityRenderersEvent.AddLayers event) {
+		dispatch(Step.MODEL_LAYERS, m -> m.modelLayers(event));
 	}
 
 	@OnlyIn(Dist.CLIENT)
