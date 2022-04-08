@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[38,)"
+loaderVersion="[40,)"
 issueTrackerURL="https://github.com/Vazkii/Quark"
 license="https://github.com/Vazkii/Quark/blob/master/LICENSE.md"
 
@@ -20,6 +20,6 @@ description='''Small things, improving Minecraft bit by bit.'''
 [[dependencies.quark]]
     modId="forge"
     mandatory=true
-    versionRange="[38.0.0,)"
+    versionRange="[40.0.0,)"
     ordering="AFTER"
     side="BOTH"
