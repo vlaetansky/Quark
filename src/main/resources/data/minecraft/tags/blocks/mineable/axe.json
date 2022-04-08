@@ -120,6 +120,16 @@
         "quark:blossom_chest",
         "quark:blossom_trapped_chest",
         "quark:blossom_button",
-        "quark:blossom_pressure_plate"
+        "quark:blossom_pressure_plate",
+        "quark:vertical_oak_planks",
+        "quark:vertical_spruce_planks",
+        "quark:vertical_birch_planks",
+        "quark:vertical_jungle_planks",
+        "quark:vertical_acacia_planks",
+        "quark:vertical_dark_oak_planks",
+        "quark:vertical_warped_planks",
+        "quark:vertical_crimson_planks",
+        "quark:vertical_azalea_planks",
+        "quark:vertical_blossom_planks"
     ]
 }
