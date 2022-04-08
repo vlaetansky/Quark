@@ -3,7 +3,7 @@ package vazkii.quark.base.util;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
-public class WoodTypes {
+public class VanillaWoods {
 
 	public static record Wood(String name, Block planks, boolean nether) { }
 	
@@ -29,11 +29,11 @@ public class WoodTypes {
 			CRIMSON, WARPED
 	};
 	
-	public static final Wood[] VANILLA = new Wood[] {
+	public static final Wood[] ALL = new Wood[] {
 			OAK, SPRUCE, BIRCH, JUNGLE, ACACIA, DARK_OAK, CRIMSON, WARPED
 	};
 	
-	public static final Wood[] VANILLA_NON_OAK = new Wood[] {
+	public static final Wood[] NON_OAK = new Wood[] {
 			SPRUCE, BIRCH, JUNGLE, ACACIA, DARK_OAK, CRIMSON, WARPED
 	};
 }

@@ -1,6 +1,13 @@
 package vazkii.quark.base.handler;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.google.common.collect.ImmutableSet;
+
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.core.Direction;
@@ -9,8 +16,12 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.PressurePlateBlock.Sensitivity;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
@@ -24,7 +35,17 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
-import vazkii.quark.base.block.*;
+import vazkii.quark.base.block.IQuarkBlock;
+import vazkii.quark.base.block.QuarkBlock;
+import vazkii.quark.base.block.QuarkDoorBlock;
+import vazkii.quark.base.block.QuarkFenceBlock;
+import vazkii.quark.base.block.QuarkFenceGateBlock;
+import vazkii.quark.base.block.QuarkPillarBlock;
+import vazkii.quark.base.block.QuarkPressurePlateBlock;
+import vazkii.quark.base.block.QuarkStandingSignBlock;
+import vazkii.quark.base.block.QuarkTrapdoorBlock;
+import vazkii.quark.base.block.QuarkWallSignBlock;
+import vazkii.quark.base.block.QuarkWoodenButtonBlock;
 import vazkii.quark.base.client.render.QuarkBoatRenderer;
 import vazkii.quark.base.item.QuarkSignItem;
 import vazkii.quark.base.item.boat.QuarkBoat;
@@ -39,9 +60,8 @@ import vazkii.quark.content.building.block.WoodPostBlock;
 import vazkii.quark.content.building.module.VariantBookshelvesModule;
 import vazkii.quark.content.building.module.VariantChestsModule;
 import vazkii.quark.content.building.module.VariantLaddersModule;
+import vazkii.quark.content.building.module.VerticalPlanksModule;
 import vazkii.quark.content.building.module.WoodenPostsModule;
-
-import java.util.*;
 
 public class WoodSetHandler {
 
@@ -105,8 +125,9 @@ public class WoodSetHandler {
 		set.bookshelf = new VariantBookshelfBlock(name, module, true).setCondition(() -> ModuleLoader.INSTANCE.isModuleEnabled(VariantBookshelvesModule.class));
 		set.ladder = new VariantLadderBlock(name, module, true).setCondition(() -> ModuleLoader.INSTANCE.isModuleEnabled(VariantLaddersModule.class));
 		set.post = new WoodPostBlock(module, set.fence, "", false).setCondition(() -> ModuleLoader.INSTANCE.isModuleEnabled(WoodenPostsModule.class));
-		set.strippedPost = new WoodPostBlock(module, set.fence, "stripped_", false).setCondition(() -> ModuleLoader.INSTANCE.isModuleEnabled(WoodenPostsModule.class));
-
+		set.strippedPost = new WoodPostBlock(module, set.fence, "stripped_", false).setCondition(() -> ModuleLoader.INSTANCE.isModuleEnabled(WoodenPostsModule.class));	
+		set.verticalPlanks = VerticalPlanksModule.add(name, set.planks, module).setCondition(() -> ModuleLoader.INSTANCE.isModuleEnabled(VerticalPlanksModule.class));
+		
 		VariantChestsModule.addChest(name, module, Block.Properties.copy(Blocks.CHEST), true);
 
 		set.signItem = new QuarkSignItem(module, set.sign, set.wallSign);
@@ -144,14 +165,14 @@ public class WoodSetHandler {
 
 	public static class WoodSet {
 
-		private final String name;
-		private final WoodType type;
+		public final String name;
+		public final WoodType type;
 		public final QuarkModule module;
 
 		public Block log, wood, planks, strippedLog, strippedWood,
 		slab, stairs, fence, fenceGate,
 		door, trapdoor, button, pressurePlate, sign, wallSign,
-		bookshelf, ladder, post, strippedPost;
+		bookshelf, ladder, post, strippedPost, verticalPlanks;
 
 		public Item signItem, boatItem;
 

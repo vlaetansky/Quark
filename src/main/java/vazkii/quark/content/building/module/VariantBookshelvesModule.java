@@ -6,8 +6,8 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.base.util.WoodTypes;
-import vazkii.quark.base.util.WoodTypes.Wood;
+import vazkii.quark.base.util.VanillaWoods;
+import vazkii.quark.base.util.VanillaWoods.Wood;
 import vazkii.quark.content.building.block.VariantBookshelfBlock;
 
 @LoadModule(category = ModuleCategory.BUILDING)
@@ -17,7 +17,7 @@ public class VariantBookshelvesModule extends QuarkModule {
 
 	@Override
 	public void register() {
-		for(Wood type : WoodTypes.VANILLA_NON_OAK)
+		for(Wood type : VanillaWoods.NON_OAK)
 			new VariantBookshelfBlock(type.name(), this, !type.nether());
 	}
 

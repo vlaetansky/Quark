@@ -55,8 +55,8 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
-import vazkii.quark.base.util.WoodTypes;
-import vazkii.quark.base.util.WoodTypes.Wood;
+import vazkii.quark.base.util.VanillaWoods;
+import vazkii.quark.base.util.VanillaWoods.Wood;
 import vazkii.quark.content.building.block.VariantChestBlock;
 import vazkii.quark.content.building.block.VariantTrappedChestBlock;
 import vazkii.quark.content.building.block.be.VariantChestBlockEntity;
@@ -71,7 +71,7 @@ public class VariantChestsModule extends QuarkModule {
 
 	private static final String DONK_CHEST = "Quark:DonkChest";
 
-	private static final ImmutableSet<Wood> VANILLA_WOODS = ImmutableSet.copyOf(WoodTypes.VANILLA);
+	private static final ImmutableSet<Wood> VANILLA_WOODS = ImmutableSet.copyOf(VanillaWoods.ALL);
 	private static final ImmutableSet<String> MOD_WOODS = ImmutableSet.of();
 
 	public static BlockEntityType<VariantChestBlockEntity> chestTEType;
