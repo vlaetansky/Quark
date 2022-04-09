@@ -13,6 +13,9 @@ import net.minecraftforge.items.ItemStackHandler;
 import vazkii.quark.addons.oddities.module.CrateModule;
 import vazkii.quark.base.handler.SortingHandler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author WireSegal
  * Created at 8:53 AM on 4/8/22.
@@ -73,6 +76,7 @@ public class CrateItemHandler extends ItemStackHandler {
 	}
 
 	public void spill(Level level, BlockPos worldPosition) {
+		List<ItemStack> stacks = new ArrayList<>(this.stacks);
 		SortingHandler.mergeStacks(stacks);
 
 		for(ItemStack stack : stacks)
@@ -105,7 +109,7 @@ public class CrateItemHandler extends ItemStackHandler {
 				items.add(stack.save(new CompoundTag()));
 		}
 		CompoundTag nbt = new CompoundTag();
-		nbt.put("Items", items);
+		nbt.put("stacks", items);
 		return nbt;
 	}
 
@@ -113,7 +117,7 @@ public class CrateItemHandler extends ItemStackHandler {
 	public void deserializeNBT(CompoundTag nbt) {
 		stacks = NonNullList.withSize(maxItems, ItemStack.EMPTY);
 
-		ListTag items = nbt.getList("Items", Tag.TAG_COMPOUND);
+		ListTag items = nbt.getList("stacks", Tag.TAG_COMPOUND);
 		for (int i = 0; i < items.size(); i++)
 			stacks.set(i, ItemStack.of(items.getCompound(i)));
 		onLoad();
