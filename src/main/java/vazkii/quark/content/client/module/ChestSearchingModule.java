@@ -160,9 +160,6 @@ public class ChestSearchingModule extends QuarkModule {
 
 			matrix.pushPose();
 
-			int guiLeft = gui.getGuiLeft();
-			int guiTop = gui.getGuiTop();
-
 			drawBackground(matrix, gui, searchBar.x - 11, searchBar.y - 3);
 
 			if(!text.isEmpty()) {
@@ -171,8 +168,8 @@ public class ChestSearchingModule extends QuarkModule {
 				for(Slot s : container.slots) {
 					ItemStack stack = s.getItem();
 					if(!namesMatch(stack, text)) {
-						int x = guiLeft + s.x;
-						int y = guiTop + s.y;
+						int x = s.x;
+						int y = s.y;
 
 						Screen.fill(matrix, x, y, x + 16, y + 16, overlayColor.getColor());
 					} else matched++;
