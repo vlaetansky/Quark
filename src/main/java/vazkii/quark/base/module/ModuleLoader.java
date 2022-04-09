@@ -1,13 +1,6 @@
 package vazkii.quark.base.module;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-
 import com.google.common.base.Preconditions;
-
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -26,6 +19,12 @@ import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.item.IQuarkItem;
 import vazkii.quark.base.module.config.ConfigResolver;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+
 public final class ModuleLoader {
 
 	private enum Step {
@@ -39,6 +38,7 @@ public final class ModuleLoader {
 	private final List<Step> stepsHandled = new ArrayList<>();
 
 	private ConfigResolver config;
+	private Runnable onConfigReloadJEI;
 	private boolean clientTicked = false;
 	private ParallelDispatchEvent event;
 
@@ -77,6 +77,8 @@ public final class ModuleLoader {
 		if(!stepsHandled.contains(Step.POST_REGISTER))
 			return; // We don't want to mess with changing config values before objects are registered
 
+		if (onConfigReloadJEI != null)
+			onConfigReloadJEI.run();
 		config.configChanged();
 		dispatch(Step.CONFIG_CHANGED, QuarkModule::configChanged);
 	}
@@ -110,7 +112,7 @@ public final class ModuleLoader {
 	public void modelBake(ModelBakeEvent event) {
 		dispatch(Step.MODEL_BAKE, m -> m.modelBake(event));
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public void modelLayers(EntityRenderersEvent.AddLayers event) {
 		dispatch(Step.MODEL_LAYERS, m -> m.modelLayers(event));
@@ -160,7 +162,7 @@ public final class ModuleLoader {
 		QuarkModule module = getModuleInstance(moduleClazz);
 		return module != null && (module.enabled || module.disabledByOverlap);
 	}
-	
+
 	public QuarkModule getModuleInstance(Class<? extends QuarkModule> moduleClazz) {
 		return foundModules.get(moduleClazz);
 	}
@@ -177,6 +179,13 @@ public final class ModuleLoader {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Meant only to be called internally.
+	 */
+	public void initJEICompat(Runnable jeiRunnable) {
+		onConfigReloadJEI = jeiRunnable;
 	}
 
 }

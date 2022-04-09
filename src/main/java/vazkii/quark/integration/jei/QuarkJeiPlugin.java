@@ -10,22 +10,23 @@ import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
 import mezz.jei.api.registration.*;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.core.NonNullList;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.EnchantedBookItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.addons.oddities.client.screen.CrateScreen;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.client.handler.RequiredModTooltipHandler;
 import vazkii.quark.base.handler.MiscUtil;
+import vazkii.quark.base.item.IQuarkItem;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.building.module.VariantFurnacesModule;
 import vazkii.quark.content.tools.item.AncientTomeItem;
@@ -59,6 +60,20 @@ public class QuarkJeiPlugin implements IModPlugin {
 		List<ItemStack> disabledItems = RequiredModTooltipHandler.disabledItems();
 		if (!disabledItems.isEmpty())
 			jeiRuntime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM, disabledItems);
+
+		ModuleLoader.INSTANCE.initJEICompat(() -> {
+			for (Item item : ForgeRegistries.ITEMS.getValues()) {
+				ResourceLocation loc = item.getRegistryName();
+				if (loc != null && loc.getNamespace().equals("quark")) {
+					if ((item instanceof IQuarkItem quarkItem && !quarkItem.isEnabled()) ||
+							(item instanceof BlockItem blockItem && blockItem.getBlock() instanceof IQuarkBlock quarkBlock && !quarkBlock.isEnabled())) {
+						var stacks = NonNullList.of(ItemStack.EMPTY);
+						item.fillItemCategory(CreativeModeTab.TAB_SEARCH, stacks);
+						jeiRuntime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM, stacks);
+					}
+				}
+			}
+		});
 	}
 
 	@Override
