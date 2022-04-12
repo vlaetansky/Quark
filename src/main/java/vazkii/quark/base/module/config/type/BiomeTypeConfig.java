@@ -22,7 +22,7 @@ public class BiomeTypeConfig extends AbstractConfigType implements IBiomeConfig 
 		"coniferous", "jungle", "spooky", "dead", "lush", "mushroom", "magical", "rare", 
 		"plateau", "modified", "ocean", "river", "water", "mesa", "forest", "plains", 
 		"mountain", "hills", "swamp", "sandy", "snowy", "wasteland", "beach", "void", 
-		"overworld", "nether", "end"})
+		"overworld", "nether", "end", "underground"})
 	private List<String> biomeTypeStrings;
 
 	@Config
