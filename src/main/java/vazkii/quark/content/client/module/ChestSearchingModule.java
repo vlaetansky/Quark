@@ -137,8 +137,8 @@ public class ChestSearchingModule extends QuarkModule {
 
 	@SubscribeEvent
 	public void onClick(MouseClickedEvent.Pre event) {
-		if(searchBar != null && searchEnabled) {
-			searchBar.mouseClicked(event.getMouseX(), event.getMouseY(), event.getButton());
+		if(searchBar != null && searchEnabled && event.getScreen() instanceof AbstractContainerScreen<?> containerScreen) {
+			searchBar.mouseClicked(event.getMouseX() - containerScreen.getGuiLeft(), event.getMouseY() - containerScreen.getGuiTop(), event.getButton());
 
 			long time = System.currentTimeMillis();
 			long delta = time - lastClick;
@@ -166,13 +166,15 @@ public class ChestSearchingModule extends QuarkModule {
 				AbstractContainerMenu container = gui.getMenu();
 				matched = 0;
 				for(Slot s : container.slots) {
-					ItemStack stack = s.getItem();
-					if(!namesMatch(stack, text)) {
-						int x = s.x;
-						int y = s.y;
+					if (s.isActive()) {
+						ItemStack stack = s.getItem();
+						if (!namesMatch(stack, text)) {
+							int x = s.x;
+							int y = s.y;
 
-						Screen.fill(matrix, x, y, x + 16, y + 16, overlayColor.getColor());
-					} else matched++;
+							Screen.fill(matrix, x, y, x + 16, y + 16, overlayColor.getColor());
+						} else matched++;
+					}
 				}
 			}
 
