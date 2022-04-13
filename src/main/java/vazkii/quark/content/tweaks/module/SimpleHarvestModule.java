@@ -140,8 +140,7 @@ public class SimpleHarvestModule extends QuarkModule {
 
 		ItemStack mainHand = player.getMainHandItem();
 
-		int fortune = HoeHarvestingModule.canFortuneApply(Enchantments.BLOCK_FORTUNE, mainHand) ?
-				EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, mainHand) : 0;
+		int fortune = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, mainHand);
 
 		ItemStack copy = mainHand.copy();
 		if (copy.isEmpty())

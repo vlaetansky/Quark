@@ -12,8 +12,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -31,13 +29,9 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
-import vazkii.quark.base.module.config.Config;
 
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
 public class HoeHarvestingModule extends QuarkModule {
-
-	@Config
-	public static boolean hoesCanHaveFortune = true;
 
 	public static TagKey<Item> bigHarvestingHoesTag;
 
@@ -55,10 +49,6 @@ public class HoeHarvestingModule extends QuarkModule {
 
 	public static boolean isHoe(ItemStack itemStack) {
 		return !itemStack.isEmpty() && itemStack.getItem() instanceof HoeItem;
-	}
-
-	public static boolean canFortuneApply(Enchantment enchantment, ItemStack stack) {
-		return enchantment == Enchantments.BLOCK_FORTUNE && hoesCanHaveFortune && isHoe(stack);
 	}
 
 	@Override
