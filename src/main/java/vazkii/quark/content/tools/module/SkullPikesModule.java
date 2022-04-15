@@ -85,7 +85,7 @@ public class SkullPikesModule extends QuarkModule {
 	@SubscribeEvent
 	public void onMonsterAppear(EntityJoinWorldEvent event) {
 		Entity e = event.getEntity();
-		if(e instanceof Monster monster && !(e instanceof PatrollingMonster) && e.canChangeDimensions()) {
+		if(e instanceof Monster monster && !(e instanceof PatrollingMonster) && e.canChangeDimensions() && e.isAlive()) {
 			boolean alreadySetUp = monster.goalSelector.getAvailableGoals().stream().anyMatch((goal) -> goal.getGoal() instanceof RunAwayFromPikesGoal);
 
 			if (!alreadySetUp)
