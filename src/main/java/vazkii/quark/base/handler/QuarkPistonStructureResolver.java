@@ -65,7 +65,8 @@ public class QuarkPistonStructureResolver extends PistonStructureResolver {
 		else if(!addBlockLine(blockToMove, moveDirection))
 			return false;
 		else {
-			for (BlockPos blockpos : new ArrayList<>(toMove)) {
+			for(int i = 0; i < toMove.size(); ++i) {
+				BlockPos blockpos = toMove.get(i);
 				if (addBranchingBlocks(world, blockpos, isBlockBranching(world, blockpos)) == MoveResult.PREVENT)
 					return false;
 			}
