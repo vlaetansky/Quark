@@ -48,7 +48,7 @@ public class SpawnerReplacerModule extends QuarkModule {
 	}
 
 	public static void spawnerUpdate(Level level, BlockPos pos, BlockState state, SpawnerBlockEntity be) {
-		if (!staticEnabled)
+		if (!staticEnabled || level.isClientSide())
 			return;
 
 		BaseSpawner spawner = be.getSpawner();
