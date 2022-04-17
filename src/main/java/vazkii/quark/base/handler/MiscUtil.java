@@ -26,8 +26,6 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
@@ -55,7 +53,10 @@ import vazkii.quark.base.client.config.screen.AbstractQScreen;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @EventBusSubscriber(modid = Quark.MOD_ID)
@@ -195,7 +196,8 @@ public class MiscUtil {
 	}
 
 	public static <T> List<T> getTagValues(RegistryAccess access, TagKey<T> tag) {
-		HolderSet<T> holderSet = access.registryOrThrow(tag.registry()).getTag(tag).orElseThrow();
+		Registry<T> registry = access.registryOrThrow(tag.registry());
+		HolderSet<T> holderSet = registry.getTag(tag).orElse(new HolderSet.Named<>(registry, tag));
 
 		return holderSet.stream().map(Holder::value).toList();
 	}
