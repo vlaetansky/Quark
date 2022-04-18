@@ -214,6 +214,9 @@ public class LockRotationModule extends QuarkModule {
 
 			if(clientProfile.half > -1)
 				Screen.blit(matrix, x + 16, y, clientProfile.half * 16, 79, 16, 16, 256, 256);
+
+			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
 		}
 	}
 
