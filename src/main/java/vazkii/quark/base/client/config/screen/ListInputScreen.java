@@ -1,10 +1,6 @@
 package vazkii.quark.base.client.config.screen;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -14,6 +10,8 @@ import vazkii.quark.base.client.config.screen.widgets.ScrollableWidgetList;
 import vazkii.quark.base.client.config.screen.widgets.StringElementList;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ListInputScreen extends AbstractScrollingWidgetScreen {
 
@@ -43,7 +41,8 @@ public class ListInputScreen extends AbstractScrollingWidgetScreen {
 	}
 
 	public void remove(int index) {
-		list.remove(index);
+		if (list.size() > index)
+			list.remove(index);
 		refresh();
 	}
 
