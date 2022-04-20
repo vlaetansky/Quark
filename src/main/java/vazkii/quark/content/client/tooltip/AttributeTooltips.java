@@ -260,9 +260,6 @@ public class AttributeTooltips {
 			if (EnchantmentHelper.getDamageBonus(stack, MobType.UNDEFINED) > 0)
 				out.put(ATTACK_DAMAGE, DUMMY_MODIFIER);
 
-			if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.KNOCKBACK, stack) > 0)
-				out.put(ATTACK_KNOCKBACK, DUMMY_MODIFIER);
-
 			if (out.containsKey(ATTACK_DAMAGE) && !out.containsKey(ATTACK_SPEED))
 				out.put(ATTACK_SPEED, DUMMY_MODIFIER);
 			else if (out.containsKey(ATTACK_SPEED) && !out.containsKey(ATTACK_DAMAGE))
