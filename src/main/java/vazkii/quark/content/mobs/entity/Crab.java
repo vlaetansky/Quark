@@ -231,6 +231,11 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData {
 	}
 
 	@Override
+	public boolean fireImmune() {
+		return super.fireImmune() || getSizeModifier() > 1;
+	}
+
+	@Override
 	public void thunderHit(@Nonnull ServerLevel sworld, @Nonnull LightningBolt lightningBolt) { // onStruckByLightning
 		if (lightningCooldown > 0 || level.isClientSide)
 			return;
