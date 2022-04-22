@@ -67,7 +67,7 @@ public class QuarkJeiPlugin implements IModPlugin {
 				if (loc != null && loc.getNamespace().equals("quark")) {
 					if ((item instanceof IQuarkItem quarkItem && !quarkItem.isEnabled()) ||
 							(item instanceof BlockItem blockItem && blockItem.getBlock() instanceof IQuarkBlock quarkBlock && !quarkBlock.isEnabled())) {
-						var stacks = NonNullList.of(ItemStack.EMPTY);
+						var stacks = NonNullList.withSize(0, ItemStack.EMPTY);
 						item.fillItemCategory(CreativeModeTab.TAB_SEARCH, stacks);
 						jeiRuntime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM, stacks);
 					}
