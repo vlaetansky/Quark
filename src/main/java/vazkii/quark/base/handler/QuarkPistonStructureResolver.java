@@ -5,7 +5,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,7 +16,6 @@ import vazkii.quark.api.IConditionalSticky;
 import vazkii.quark.api.IIndirectConnector;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -290,15 +288,16 @@ public class QuarkPistonStructureResolver extends PistonStructureResolver {
 
 	private IConditionalSticky getStickCondition(BlockState state) {
 		Block block = state.getBlock();
-		if(block == Blocks.HONEY_BLOCK)
-			return HoneyStickCondition.INSTANCE;
 
 		if(block instanceof IConditionalSticky)
 			return (IConditionalSticky) block;
 
 		IIndirectConnector indirect = getIndirectStickiness(state);
-		if(indirect != null && indirect.isEnabled())
-			return indirect.getStickyCondition();
+		if(indirect != null)
+			return indirect.isEnabled() ? indirect.getStickyCondition() : null;
+
+		if (state.isStickyBlock())
+			return DefaultStickCondition.INSTANCE;
 
 		return null;
 	}
@@ -337,17 +336,13 @@ public class QuarkPistonStructureResolver extends PistonStructureResolver {
 		return indirect != null && indirect.isEnabled();
 	}
 
-	private static class HoneyStickCondition implements IConditionalSticky {
+	private static class DefaultStickCondition implements IConditionalSticky {
 
-		private static final HoneyStickCondition INSTANCE = new HoneyStickCondition();
+		private static final DefaultStickCondition INSTANCE = new DefaultStickCondition();
 
 		@Override
 		public boolean canStickToBlock(Level world, BlockPos pistonPos, BlockPos pos, BlockPos slimePos, BlockState state, BlockState slimeState, Direction direction) {
-			Block block = state.getBlock();
-			Block slime = slimeState.getBlock();
-
-			// specifically utilize the vanilla sticky definition as to not break honey connections with blocks like chains
-			return !slime.isStickyBlock(slimeState) || block == slime;
+			return slimeState.canStickTo(state);
 		}
 
 	}
