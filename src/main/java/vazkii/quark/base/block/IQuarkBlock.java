@@ -2,6 +2,7 @@ package vazkii.quark.base.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,8 +42,11 @@ public interface IQuarkBlock extends IForgeBlock {
 			return 0;
 
 		Material material = state.getMaterial();
-		if (material == Material.WOOL)
+		if (material == Material.WOOL || material == Material.LEAVES)
 			return 60;
+		ResourceLocation loc = state.getBlock().getRegistryName();
+		if (loc != null && (loc.getPath().endsWith("_log") || loc.getPath().endsWith("_wood")) && state.getMaterial().isFlammable())
+			return 5;
 		return state.getMaterial().isFlammable() ? 20 : 0;
 	}
 
@@ -52,7 +56,7 @@ public interface IQuarkBlock extends IForgeBlock {
 			return 0;
 
 		Material material = state.getMaterial();
-		if (material == Material.WOOL)
+		if (material == Material.WOOL || material == Material.LEAVES)
 			return 30;
 		return state.getMaterial().isFlammable() ? 5 : 0;
 	}
