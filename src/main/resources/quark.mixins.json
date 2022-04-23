@@ -29,6 +29,7 @@
     "PlayerAdvancementsMixin",
     "ServerAdvancementManagerMixin",
     "SpawnerBlockEntityMixin",
+    "SpringFeatureMixin",
     "StructurePieceMixin",
     "StructureStartMixin",
     "StructureTemplateMixin",
