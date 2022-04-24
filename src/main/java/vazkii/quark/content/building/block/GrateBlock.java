@@ -81,6 +81,14 @@ public class GrateBlock extends QuarkBlock implements SimpleFluidloggedBlock {
 		return WALK_BLOCK_CACHE.computeIfAbsent(stepHeight, GrateBlock::createNewBox);
 	}
 
+	@Override
+	public boolean collisionExtendsVertically(BlockState state, BlockGetter level, BlockPos pos, Entity collidingEntity) {
+		if (collidingEntity instanceof Animal || collidingEntity instanceof WaterAnimal)
+			if (!(collidingEntity instanceof Animal animal && animal.getLeashHolder() != null))
+				return !(collidingEntity instanceof WaterAnimal waterAnimal && waterAnimal.getLeashHolder() != null);
+		return false;
+	}
+
 	@Nonnull
 	@Override
 	public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
