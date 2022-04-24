@@ -41,16 +41,31 @@ public class CrateBlock extends QuarkBlock implements EntityBlock {
 		registerDefaultState(stateDefinition.any().setValue(PROPERTY_OPEN, false));
 	}
 
+	@Override
+	public boolean hasAnalogOutputSignal(@Nonnull BlockState state) {
+		return true;
+	}
+
+	@Override
+	public int getAnalogOutputSignal(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos) {
+		BlockEntity be = world.getBlockEntity(pos);
+		if(be instanceof CrateBlockEntity crate) {
+			var crateHandler = crate.itemHandler();
+			return (int) Math.ceil((crateHandler.displayTotal * 15.0) / crateHandler.getSlots());
+		}
+		return 0;
+	}
+
 	@Nonnull
 	@Override
 	public InteractionResult use(@Nonnull BlockState state, Level worldIn, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand handIn, @Nonnull BlockHitResult hit) {
 		if(worldIn.isClientSide) {
 			return InteractionResult.SUCCESS;
 		} else {
-			BlockEntity tileentity = worldIn.getBlockEntity(pos);
-			if(tileentity instanceof CrateBlockEntity) {
-				if(player instanceof ServerPlayer)
-					NetworkHooks.openGui((ServerPlayer) player, (CrateBlockEntity) worldIn.getBlockEntity(pos), pos);
+			BlockEntity be = worldIn.getBlockEntity(pos);
+			if(be instanceof CrateBlockEntity crate) {
+				if(player instanceof ServerPlayer serverPlayer)
+					NetworkHooks.openGui(serverPlayer, crate, pos);
 
 				PiglinAi.angerNearbyPiglins(player, true);
 			}
