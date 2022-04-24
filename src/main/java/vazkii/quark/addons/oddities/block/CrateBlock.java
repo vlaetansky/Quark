@@ -51,7 +51,7 @@ public class CrateBlock extends QuarkBlock implements EntityBlock {
 		BlockEntity be = world.getBlockEntity(pos);
 		if(be instanceof CrateBlockEntity crate) {
 			var crateHandler = crate.itemHandler();
-			return (int) Math.ceil((crateHandler.displayTotal * 15.0) / crateHandler.getSlots());
+			return (int) (Math.floor((crateHandler.displayTotal * 14.0) / crateHandler.getSlots()) + (crateHandler.displayTotal > 0 ? 1 : 0));
 		}
 		return 0;
 	}
