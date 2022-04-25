@@ -1,5 +1,8 @@
 {
-  "type": "minecraft:smelting",
+  "type": "quark:maintaining_smelting",
+  "copy_data_from": {
+    "item": "quark:frog_leg"
+  },
   "ingredient": {
     "item": "quark:frog_leg"
   },

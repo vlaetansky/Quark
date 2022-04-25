@@ -1,8 +1,5 @@
 package vazkii.quark.base.proxy;
 
-import java.time.LocalDateTime;
-import java.time.Month;
-
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -16,18 +13,16 @@ import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.arl.util.ClientTicker;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.capability.CapabilityHandler;
-import vazkii.quark.base.handler.BrewingHandler;
-import vazkii.quark.base.handler.ContributorRewardHandler;
-import vazkii.quark.base.handler.FuelHandler;
-import vazkii.quark.base.handler.QuarkSounds;
-import vazkii.quark.base.handler.UndergroundBiomeHandler;
-import vazkii.quark.base.handler.WoodSetHandler;
+import vazkii.quark.base.handler.*;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.config.IConfigCallback;
 import vazkii.quark.base.network.QuarkNetwork;
-import vazkii.quark.base.recipe.ExclusionRecipe;
+import vazkii.quark.base.recipe.*;
 import vazkii.quark.base.world.EntitySpawnHandler;
 import vazkii.quark.base.world.WorldGenHandler;
+
+import java.time.LocalDateTime;
+import java.time.Month;
 
 public class CommonProxy {
 
@@ -35,14 +30,18 @@ public class CommonProxy {
 	public static boolean jingleTheBells = false;
 	private boolean registerDone = false;
 	private boolean configGuiSaving = false;
-	
+
 	public void start() {
 		ForgeRegistries.RECIPE_SERIALIZERS.register(ExclusionRecipe.SERIALIZER);
+		ForgeRegistries.RECIPE_SERIALIZERS.register(DataMaintainingRecipe.SERIALIZER);
+		ForgeRegistries.RECIPE_SERIALIZERS.register(DataMaintainingSmeltingRecipe.SERIALIZER);
+		ForgeRegistries.RECIPE_SERIALIZERS.register(DataMaintainingCampfireRecipe.SERIALIZER);
+		ForgeRegistries.RECIPE_SERIALIZERS.register(DataMaintainingSmokingRecipe.SERIALIZER);
 
 		QuarkSounds.start();
 		ModuleLoader.INSTANCE.start();
 		WorldGenHandler.start();
-		
+
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		registerListeners(bus);
 
@@ -50,16 +49,16 @@ public class CommonProxy {
 		if (now.getMonth() == Month.DECEMBER && now.getDayOfMonth() >= 16 || now.getMonth() == Month.JANUARY && now.getDayOfMonth() <= 2)
 			jingleTheBells = true;
 	}
-	
+
 	public void registerListeners(IEventBus bus) {
 		bus.addListener(this::setup);
 		bus.addListener(this::loadComplete);
 		bus.addListener(this::configChanged);
 		bus.addListener(this::registerCapabilities);
-		
+
 		bus.register(RegistryListener.class);
 	}
-	
+
 	public void setup(FMLCommonSetupEvent event) {
 		QuarkNetwork.setup();
 		BrewingHandler.setup();
@@ -68,15 +67,15 @@ public class CommonProxy {
 
 		WoodSetHandler.setup(event);
 	}
-	
+
 	public void loadComplete(FMLLoadCompleteEvent event) {
 		ModuleLoader.INSTANCE.loadComplete(event);
-		
+
 		WorldGenHandler.loadComplete(event);
 		FuelHandler.addAllWoods();
 		UndergroundBiomeHandler.init(event);
 	}
-	
+
 	public void configChanged(ModConfigEvent event) {
 		if(event.getConfig().getModId().equals(Quark.MOD_ID)
 				&& ClientTicker.ticksInGame - lastConfigChange > 10
@@ -90,38 +89,38 @@ public class CommonProxy {
 		configGuiSaving = saving;
 		lastConfigChange = ClientTicker.ticksInGame;
 	}
-	
+
 	public void registerCapabilities(RegisterCapabilitiesEvent event) {
 		CapabilityHandler.registerCapabilities(event);
 	}
-	
+
 	public void handleQuarkConfigChange() {
 		ModuleLoader.INSTANCE.configChanged();
 		EntitySpawnHandler.refresh();
 	}
-	
+
 	protected void initContributorRewards() {
 		ContributorRewardHandler.init();
 	}
-	
+
 	public IConfigCallback getConfigCallback() {
 		return new IConfigCallback.Dummy();
 	}
-	
+
 	public static final class RegistryListener {
 
 		private static boolean registerDone;
-		
+
 		@SubscribeEvent(priority = EventPriority.HIGHEST)
 		public static void registerContent(RegistryEvent.Register<?> event) {
 			if(registerDone)
 				return;
 			registerDone = true;
-			
+
 			ModuleLoader.INSTANCE.register();
 			WoodSetHandler.register();
 		}
-		
+
 	}
 
 }

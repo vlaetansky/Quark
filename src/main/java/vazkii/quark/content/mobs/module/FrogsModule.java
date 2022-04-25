@@ -8,16 +8,13 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraftforge.common.BiomeDictionary;
-import vazkii.arl.util.ItemNBTHelper;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.handler.BrewingHandler;
 import vazkii.quark.base.handler.EntityAttributeHandler;
-import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
@@ -28,8 +25,7 @@ import vazkii.quark.base.recipe.ingredient.FlagIngredient;
 import vazkii.quark.base.world.EntitySpawnHandler;
 import vazkii.quark.content.mobs.client.render.entity.FrogRenderer;
 import vazkii.quark.content.mobs.entity.Frog;
-
-import javax.annotation.Nonnull;
+import vazkii.quark.content.mobs.item.FrogLegItem;
 
 @LoadModule(category = ModuleCategory.MOBS, hasSubscriptions = true)
 public class FrogsModule extends QuarkModule {
@@ -44,26 +40,20 @@ public class FrogsModule extends QuarkModule {
 
 	@Config public static boolean enableBigFunny = false;
 
+	public static Item frogLeg;
+	public static Item cookedFrogLeg;
+
 	@Override
 	public void register() {
-		new QuarkItem("frog_leg", this, new Item.Properties()
+		frogLeg = new FrogLegItem("frog_leg", this, new Item.Properties()
 				.tab(CreativeModeTab.TAB_FOOD)
 				.food(new FoodProperties.Builder()
 						.meat()
 						.nutrition(2)
 						.saturationMod(0.3F)
-						.build())) {
-			@Nonnull
-			@Override
-			public String getDescriptionId(@Nonnull ItemStack stack) {
-				String id = super.getDescriptionId(stack);
-				if (ItemNBTHelper.getBoolean(stack, "sus", false))
-					return id + "_maybe";
-				return id;
-			}
-		};
+						.build()));
 
-		new QuarkItem("cooked_frog_leg", this, new Item.Properties()
+		cookedFrogLeg = new FrogLegItem("cooked_frog_leg", this, new Item.Properties()
 				.tab(CreativeModeTab.TAB_FOOD)
 				.food(new FoodProperties.Builder()
 						.meat()
@@ -71,7 +61,7 @@ public class FrogsModule extends QuarkModule {
 						.saturationMod(1.25F)
 						.build()));
 
-		Item goldenLeg = new QuarkItem("golden_frog_leg", this, new Item.Properties()
+		Item goldenLeg = new FrogLegItem("golden_frog_leg", this, new Item.Properties()
 				.tab(CreativeModeTab.TAB_BREWING)
 				.food(new FoodProperties.Builder()
 						.meat()

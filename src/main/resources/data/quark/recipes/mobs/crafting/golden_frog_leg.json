@@ -1,5 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "quark:maintaining",
+  "true_type": "minecraft:crafting_shaped",
+  "copy_data_from": {
+    "item": "quark:frog_leg"
+  },
   "pattern": [
     "###",
     "#L#",
@@ -31,4 +35,4 @@
       ]
     }
   ]
-} 
+}

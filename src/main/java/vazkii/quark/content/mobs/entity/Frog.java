@@ -176,7 +176,7 @@ public class Frog extends Animal implements IEntityAdditionalSpawnData, IForgeSh
 			this.setJumping(false);
 		}
 
-		if (!isVoid() && hasCustomName() && getY() <= 0) {
+		if (!isVoid() && hasCustomName() && getY() <= level.getMinBuildHeight()) {
 			Component name = getCustomName();
 			if (name != null && name.getContents().equals("Jack")) {
 				setVoid(true);
@@ -235,14 +235,14 @@ public class Frog extends Animal implements IEntityAdditionalSpawnData, IForgeSh
 	@Nullable
 	@Override
 	public ItemEntity spawnAtLocation(@Nonnull ItemStack stack, float offsetY) {
-		if (droppedLegs >= 0) {
+		if (droppedLegs >= 0 && (stack.is(FrogsModule.frogLeg) || stack.is(FrogsModule.frogLeg))) {
 			int count = Math.max(4 - droppedLegs, 0);
 			droppedLegs += stack.getCount();
 
 			if (stack.getCount() > count) {
 				ItemStack copy = stack.copy();
 				copy.shrink(count);
-				ItemNBTHelper.setBoolean(stack, "sus", true);
+				ItemNBTHelper.setBoolean(copy, "sus", true);
 
 				stack = stack.copy();
 				stack.shrink(copy.getCount());
