@@ -110,7 +110,8 @@ public class Shiba extends TamableAnimal {
 							if(hasLineOfSight(test.above(), searchRange)
 									&& level.getBlockState(test).isAir()
 									&& level.getBlockState(test.below()).isSolidRender(level, test.below())
-									&& level.getBrightness(LightLayer.BLOCK, test) == 0) {
+									&& level.getBrightness(LightLayer.BLOCK, test) == 0
+									&& !(ShibaModule.ignoreAreasWithSkylight && level.canSeeSky(test))) {
 
 								currentHyperfocus = test;
 							}

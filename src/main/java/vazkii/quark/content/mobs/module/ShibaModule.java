@@ -30,6 +30,8 @@ public class ShibaModule extends QuarkModule {
 	@Config
 	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(40, 1, 3, CompoundBiomeConfig.fromBiomeTypes(false, BiomeDictionary.Type.MOUNTAIN));
 
+	@Config public static boolean ignoreAreasWithSkylight = false;
+	
 	@Override
 	public void register() {
 		shibaType = EntityType.Builder.of(Shiba::new, MobCategory.CREATURE)
