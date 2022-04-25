@@ -28,6 +28,7 @@ public class AbacusItem extends QuarkItem {
 	public static final String TAG_POS_Z = "boundPosZ";
 
 	public static int MAX_COUNT = 48;
+	private static final int DEFAULT_Y = -999;
 
 	public AbacusItem(QuarkModule module) {
 		super("abacus", module, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS).stacksTo(1));
@@ -47,7 +48,7 @@ public class AbacusItem extends QuarkItem {
 
 	public static void setBlockPos(ItemStack stack, BlockPos pos) {
 		if(pos == null)
-			ItemNBTHelper.setInt(stack, TAG_POS_Y, -1);
+			ItemNBTHelper.setInt(stack, TAG_POS_Y, DEFAULT_Y);
 		else {
 			ItemNBTHelper.setInt(stack, TAG_POS_X, pos.getX());
 			ItemNBTHelper.setInt(stack, TAG_POS_Y, pos.getY());
@@ -56,8 +57,8 @@ public class AbacusItem extends QuarkItem {
 	}
 
 	public static BlockPos getBlockPos(ItemStack stack) {
-		int y = ItemNBTHelper.getInt(stack, TAG_POS_Y, -1);
-		if(y == -1)
+		int y = ItemNBTHelper.getInt(stack, TAG_POS_Y, DEFAULT_Y);
+		if(y == DEFAULT_Y)
 			return null;
 
 		int x = ItemNBTHelper.getInt(stack, TAG_POS_X, 0);
