@@ -50,10 +50,10 @@ public class CrabsModule extends QuarkModule {
 	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(5, 1, 3, CompoundBiomeConfig.fromBiomeTypes(false, BiomeDictionary.Type.BEACH));
 
 	public static TagKey<Block> crabSpawnableTag;
-	
+
 	@Config(flag = "crab_brewing")
 	public static boolean enableBrewing = true;
-	
+
 	@Override
 	public void register() {
 		new QuarkItem("crab_leg", this, new Item.Properties()
@@ -79,7 +79,7 @@ public class CrabsModule extends QuarkModule {
 		resilience.addAttributeModifier(Attributes.KNOCKBACK_RESISTANCE, "2ddf3f0a-f386-47b6-aeb0-6bd32851f215", 0.5, AttributeModifier.Operation.ADDITION);
 
 		BrewingHandler.addPotionMix("crab_brewing",
-				() -> new FlagIngredient(Ingredient.of(shell), "crabs"), resilience);
+				() -> new FlagIngredient(Ingredient.of(shell), "crab_brewing"), resilience);
 
 		crabType = EntityType.Builder.<Crab>of(Crab::new, MobCategory.CREATURE)
 				.sized(0.9F, 0.5F)
@@ -90,7 +90,7 @@ public class CrabsModule extends QuarkModule {
 
 		EntitySpawnHandler.registerSpawn(this, crabType, MobCategory.CREATURE, Type.ON_GROUND, Types.MOTION_BLOCKING_NO_LEAVES, Crab::spawnPredicate, spawnConfig);
 		EntitySpawnHandler.addEgg(crabType, 0x893c22, 0x916548, spawnConfig);
-		
+
 		EntityAttributeHandler.put(crabType, Crab::prepareAttributes);
 	}
 
