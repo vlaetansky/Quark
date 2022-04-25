@@ -150,9 +150,9 @@ public class DataMaintainingSmokingRecipe extends SmokingRecipe {
 		public DataMaintainingSmokingRecipe fromNetwork(@Nonnull ResourceLocation recipeId, @Nonnull FriendlyByteBuf buffer) {
 			Ingredient pullFrom = Ingredient.fromNetwork(buffer);
 
-			String trueType = buffer.readUtf(32767);
+			String trueType = "minecraft:smoking";
 
-			RecipeSerializer<?> serializer = ForgeRegistries.RECIPE_SERIALIZERS.getValue(new ResourceLocation("minecraft:smoking"));
+			RecipeSerializer<?> serializer = ForgeRegistries.RECIPE_SERIALIZERS.getValue(new ResourceLocation(trueType));
 			if (serializer == null)
 				throw new IllegalArgumentException("Invalid or unsupported recipe type '" + trueType + "'");
 			Recipe<?> parent = serializer.fromNetwork(recipeId, buffer);

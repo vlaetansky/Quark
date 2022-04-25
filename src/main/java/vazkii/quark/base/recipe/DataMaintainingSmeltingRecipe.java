@@ -150,9 +150,9 @@ public class DataMaintainingSmeltingRecipe extends SmeltingRecipe {
 		public DataMaintainingSmeltingRecipe fromNetwork(@Nonnull ResourceLocation recipeId, @Nonnull FriendlyByteBuf buffer) {
 			Ingredient pullFrom = Ingredient.fromNetwork(buffer);
 
-			String trueType = buffer.readUtf(32767);
+			String trueType = "minecraft:smelting";
 
-			RecipeSerializer<?> serializer = ForgeRegistries.RECIPE_SERIALIZERS.getValue(new ResourceLocation("minecraft:smelting"));
+			RecipeSerializer<?> serializer = ForgeRegistries.RECIPE_SERIALIZERS.getValue(new ResourceLocation(trueType));
 			if (serializer == null)
 				throw new IllegalArgumentException("Invalid or unsupported recipe type '" + trueType + "'");
 			Recipe<?> parent = serializer.fromNetwork(recipeId, buffer);
