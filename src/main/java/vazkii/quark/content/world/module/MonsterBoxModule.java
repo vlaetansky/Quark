@@ -26,6 +26,8 @@ import vazkii.quark.content.world.block.be.MonsterBoxBlockEntity;
 import vazkii.quark.content.world.gen.MonsterBoxGenerator;
 import vazkii.quark.mixin.LivingEntityAccessor;
 
+import java.util.ArrayList;
+
 @LoadModule(category = ModuleCategory.WORLD, hasSubscriptions = true)
 public class MonsterBoxModule extends QuarkModule {
 
@@ -71,8 +73,10 @@ public class MonsterBoxModule extends QuarkModule {
 				&& ((LivingEntityAccessor) entity).quark$lastHurtByPlayerTime() > 0) {
 			LootTable loot = ((ServerLevel) entity.getCommandSenderWorld()).getServer().getLootTables().get(MONSTER_BOX_LOOT_TABLE);
 			var generatedLoot = loot.getRandomItems(((LivingEntityAccessor) entity).quark$createLootContext(true, event.getSource()).create(LootContextParamSets.ENTITY));
+			entity.captureDrops(new ArrayList<>());
 			for (ItemStack stack : generatedLoot)
-				event.getDrops().add(entity.spawnAtLocation(stack));
+				entity.spawnAtLocation(stack);
+			event.getDrops().addAll(entity.captureDrops(null));
 		}
 	}
 

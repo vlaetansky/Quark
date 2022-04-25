@@ -21,6 +21,7 @@ public record FlagRecipeCondition(ConfigFlagManager manager, String flag,
 	}
 
 	@Override
+	@SuppressWarnings("removal")
 	public boolean test() {
 		if (flag.contains("%"))
 			throw new RuntimeException("Illegal flag: " + flag);
