@@ -53,7 +53,7 @@ public class BackpackInventoryScreen extends InventoryScreen {
 		super.init();
 
 		for(Widget widget : renderables)
-			if(widget instanceof ImageButton) {
+			if(widget instanceof ImageButton || widget.getClass().getName().contains("GuiButtonInventoryBook")) { // class check for Patchouli
 				((ImageButton) widget).y -= 29;
 				buttonYs.put((ImageButton) widget, ((ImageButton) widget).y);
 			}
