@@ -157,7 +157,7 @@ public class EnhancedLaddersModule extends QuarkModule {
 				BlockPos playerPos = player.blockPosition();
 				BlockPos downPos = playerPos.below();
 
-				boolean scaffold = player.level.getBlockState(playerPos).getBlock() == Blocks.SCAFFOLDING;
+				boolean scaffold = player.level.getBlockState(playerPos).isScaffolding(player);
 				if(player.isCrouching() == scaffold &&
 						player.zza == 0 &&
 						player.yya <= 0 &&
@@ -183,8 +183,8 @@ public class EnhancedLaddersModule extends QuarkModule {
 
 		Player player = event.getPlayer();
 		if(player.onClimbable() && !player.getAbilities().flying &&
-				player.level.getBlockState(player.blockPosition()).getBlock() != Blocks.SCAFFOLDING
-				&& Minecraft.getInstance().screen != null && !(player.zza == 0 && player.getXRot() > 70)) {
+				player.level.getBlockState(player.blockPosition()).isScaffolding(player)
+				&& Minecraft.getInstance().screen != null && !(player.zza == 0 && player.getXRot() > 70) && !player.isOnGround()) {
 			Input input = event.getInput();
 			if(input != null)
 				input.shiftKeyDown = true; // sneaking

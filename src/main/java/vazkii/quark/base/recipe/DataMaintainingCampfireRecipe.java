@@ -156,7 +156,7 @@ public class DataMaintainingCampfireRecipe extends CampfireCookingRecipe {
 			if (serializer == null)
 				throw new IllegalArgumentException("Invalid or unsupported recipe type '" + trueType + "'");
 			Recipe<?> parent = serializer.fromNetwork(recipeId, buffer);
-			if (!(parent instanceof CraftingRecipe))
+			if (!(parent instanceof AbstractCookingRecipe))
 				throw new IllegalArgumentException("Type '" + trueType + "' is not a cooking recipe");
 
 			return new DataMaintainingCampfireRecipe((AbstractCookingRecipe) parent, pullFrom);
