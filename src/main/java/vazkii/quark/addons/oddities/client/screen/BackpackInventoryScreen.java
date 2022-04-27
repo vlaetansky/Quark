@@ -52,16 +52,21 @@ public class BackpackInventoryScreen extends InventoryScreen {
 		imageHeight = 224;
 		super.init();
 
-		for(Widget widget : renderables)
-			if(widget instanceof ImageButton || widget.getClass().getName().contains("GuiButtonInventoryBook")) { // class check for Patchouli
-				((ImageButton) widget).y -= 29;
-				buttonYs.put((ImageButton) widget, ((ImageButton) widget).y);
-			}
+		buttonYs.clear();
 	}
 
 	@Override
 	public void containerTick() {
 		super.containerTick();
+
+		for(Widget widget : renderables)
+			if(widget instanceof Button b)
+				if(b instanceof ImageButton || b.getClass().getName().contains("GuiButtonInventoryBook")) { // class check for Patchouli
+					if(!buttonYs.containsKey(b)) {
+						b.y -= 29;
+						buttonYs.put(b, b.y);
+					}
+				}
 
 		buttonYs.forEach((button, y) -> button.y = y);
 
