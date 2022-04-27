@@ -1229,6 +1229,10 @@
 	"block.quark.potted_weeping_vines": "Vignes pleureuses en pot",
 	"block.quark.potted_wheat": "Blé en pot",
 	"block.quark.potted_yellow_blossom_sapling": "Jeune pousse de fleurs ensoleillées en pot",
+        "block.quark.potted_glow_lichen_growth": "Lichen Lumineuse En Pot",
+	"block.quark.potted_glow_shroom": "Champignon lumineux en pot",
+	"block.quark.tiny_potato": "Petite patate",
+	"block.quark.tiny_potato.angry": "Patate énervé",
 
 	"generator.quark.realistic": "Réaliste",
 	"generator.quark.realistic_large_biomes": "Grand biomes réalistes"
