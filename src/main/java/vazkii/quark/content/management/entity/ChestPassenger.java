@@ -1,10 +1,10 @@
 package vazkii.quark.content.management.entity;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -12,9 +12,13 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.Containers;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -22,7 +26,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.NetworkHooks;
 import vazkii.quark.content.management.module.ChestsInBoatsModule;
 
-public class ChestPassenger extends Entity implements Container {
+import javax.annotation.Nonnull;
+
+public class ChestPassenger extends Entity implements Container, MenuProvider {
 
 	private final NonNullList<ItemStack> items = NonNullList.withSize(27, ItemStack.EMPTY);
 
@@ -140,6 +146,18 @@ public class ChestPassenger extends Entity implements Container {
 	@Override
 	public void stopOpen(@Nonnull Player player) {
 		// NO-OP
+	}
+
+	@Nonnull
+	@Override
+	public Component getDisplayName() {
+		return new TranslatableComponent("container.chest");
+	}
+
+	@Nonnull
+	@Override
+	public AbstractContainerMenu createMenu(int id, @Nonnull Inventory inventory, @Nonnull Player player) {
+		return ChestMenu.threeRows(id, inventory, this);
 	}
 
 	@Override
