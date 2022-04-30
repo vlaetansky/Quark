@@ -1,7 +1,9 @@
 package vazkii.quark.content.client.module;
 
 import net.minecraft.client.renderer.entity.ArmorStandRenderer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -17,6 +19,8 @@ import vazkii.quark.content.tweaks.client.layer.ArmorStandFakePlayerLayer;
 
 @LoadModule(category = ModuleCategory.CLIENT)
 public class UsesForCursesModule extends QuarkModule {
+
+	private static final ResourceLocation PUMPKIN_OVERLAY = new ResourceLocation("textures/misc/pumpkinblur.png");
 
 	public static boolean staticEnabled;
 
@@ -39,9 +43,11 @@ public class UsesForCursesModule extends QuarkModule {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public static boolean shouldHidePumpkinOverlay(ItemStack stack) {
-		return staticEnabled && vanishPumpkinOverlay &&
-				stack.is(Blocks.CARVED_PUMPKIN.asItem()) &&
+	public static boolean shouldHidePumpkinOverlay(ResourceLocation location, Player player) {
+		if(!staticEnabled || !vanishPumpkinOverlay || !location.equals(PUMPKIN_OVERLAY))
+			return false;
+		ItemStack stack = player.getInventory().getArmor(3);
+		return stack.is(Blocks.CARVED_PUMPKIN.asItem()) &&
 				EnchantmentHelper.getItemEnchantmentLevel(Enchantments.VANISHING_CURSE, stack) > 0;
 	}
 
