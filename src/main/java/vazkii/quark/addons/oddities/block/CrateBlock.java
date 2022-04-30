@@ -5,6 +5,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
@@ -55,6 +56,14 @@ public class CrateBlock extends QuarkBlock implements EntityBlock {
 		}
 		return 0;
 	}
+
+	@Nullable
+	@Override
+	public MenuProvider getMenuProvider(@Nonnull BlockState state, Level level, @Nonnull BlockPos pos) {
+		BlockEntity be = level.getBlockEntity(pos);
+		return be instanceof MenuProvider provider ? provider : null;
+	}
+
 
 	@Nonnull
 	@Override
