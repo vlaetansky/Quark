@@ -31,6 +31,8 @@ import net.minecraft.world.level.block.SkullBlock;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.content.client.module.UsesForCursesModule;
 
+import javax.annotation.Nonnull;
+
 public class ArmorStandFakePlayerLayer<M extends EntityModel<ArmorStand>> extends RenderLayer<ArmorStand, M> {
 
 	private final PlayerModel<?> playerModel;
@@ -44,7 +46,7 @@ public class ArmorStandFakePlayerLayer<M extends EntityModel<ArmorStand>> extend
 	}
 
 	@Override
-	public void render(PoseStack pose, MultiBufferSource buffer, int p_117351_, ArmorStand armor, float p_117353_, float p_117354_, float p_117355_, float p_117356_, float p_117357_, float p_117358_) {
+	public void render(@Nonnull PoseStack pose, @Nonnull MultiBufferSource buffer, int light, @Nonnull ArmorStand armor, float p_117353_, float p_117354_, float p_117355_, float p_117356_, float p_117357_, float p_117358_) {
 		if(!UsesForCursesModule.staticEnabled || !UsesForCursesModule.bindArmorStandsWithPlayerHeads)
 			return;
 
@@ -63,13 +65,13 @@ public class ArmorStandFakePlayerLayer<M extends EntityModel<ArmorStand>> extend
 						slim = "slim".equals(modelMeta);
 					}
 				}
-				
+
 				float s = 2F;
 				pose.pushPose();
 				pose.translate(0F, -1.5F, 0F);
 				pose.scale(s, s, s);
 
-				PlayerModel<?> model = slim ? playerModelSlim : playerModel; 
+				PlayerModel<?> model = slim ? playerModelSlim : playerModel;
 
 				model.head.visible = false;
 				model.hat.visible = false;
@@ -84,7 +86,7 @@ public class ArmorStandFakePlayerLayer<M extends EntityModel<ArmorStand>> extend
 				rotateModel(model.leftPants, armor.getLeftLegPose());
 				rotateModel(model.rightPants, armor.getRightLegPose());
 
-				model.renderToBuffer(pose, buffer.getBuffer(rendertype), p_117351_, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+				model.renderToBuffer(pose, buffer.getBuffer(rendertype), light, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
 
 				pose.popPose();
 			}

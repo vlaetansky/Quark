@@ -39,6 +39,7 @@
   ],
   "client": [
     "client.AbstractCandleBlockMixin",
+    "client.ArmorStandModelMixin",
     "client.BannerItemMixin",
     "client.BeaconTileEntityRendererMixin",
     "client.ChatComponentMixin",

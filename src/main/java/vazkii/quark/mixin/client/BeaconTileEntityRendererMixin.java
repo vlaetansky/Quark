@@ -15,7 +15,7 @@ import vazkii.quark.content.tools.client.render.QuarkBeaconBlockEntityRenderer;
 @Mixin(BeaconRenderer.class)
 public class BeaconTileEntityRendererMixin {
 
-	@Inject(method = "render", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "render(Lnet/minecraft/world/level/block/entity/BeaconBlockEntity;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;II)V", at = @At("HEAD"), cancellable = true)
 	public void render(BeaconBlockEntity tileEntityIn, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn, CallbackInfo callbackInfo) {
 		if(QuarkBeaconBlockEntityRenderer.render(tileEntityIn, partialTicks, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn))
 			callbackInfo.cancel();

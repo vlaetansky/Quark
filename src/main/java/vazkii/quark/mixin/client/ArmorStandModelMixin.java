@@ -1,0 +1,61 @@
+package vazkii.quark.mixin.client;
+
+import net.minecraft.client.model.ArmorStandModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@Mixin(ArmorStandModel.class)
+public class ArmorStandModelMixin {
+
+	@Shadow
+	@Final
+	private ModelPart rightBodyStick;
+
+	@Shadow
+	@Final
+	private ModelPart leftBodyStick;
+
+	@Shadow
+	@Final
+	private ModelPart shoulderStick;
+
+	@Inject(method = "setupAnim(Lnet/minecraft/world/entity/decoration/ArmorStand;FFFFF)V", at = @At("HEAD"))
+	public void resetModelPartVisibility(ArmorStand armorStand, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo ci) {
+		ArmorStandModel model = (ArmorStandModel) (Object) this;
+
+		model.rightLeg.visible = true;
+		model.leftLeg.visible = true;
+		rightBodyStick.visible = true;
+		leftBodyStick.visible = true;
+		shoulderStick.visible = true;
+		model.head.visible = true;
+		model.body.visible = true;
+	}
+
+	@Inject(method = "setupAnim(Lnet/minecraft/world/entity/decoration/ArmorStand;FFFFF)V", at = @At("RETURN"))
+	public void setModelPartsVisible(ArmorStand armorStand, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo ci) {
+		ArmorStandModel model = (ArmorStandModel) (Object) this;
+
+		ItemStack head = armorStand.getItemBySlot(EquipmentSlot.HEAD);
+		if(head.is(Items.PLAYER_HEAD) && EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BINDING_CURSE, head) > 0) {
+			model.rightLeg.visible = false;
+			model.leftLeg.visible = false;
+			rightBodyStick.visible = false;
+			leftBodyStick.visible = false;
+			shoulderStick.visible = false;
+			model.head.visible = false;
+			model.body.visible = false;
+		}
+	}
+}
