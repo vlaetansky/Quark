@@ -266,7 +266,16 @@ public class SeedPouchItem extends QuarkItem implements IUsageTickerOverride, IT
 	}
 
 	private InteractionResult placeSeed(UseOnContext context, ItemStack target, BlockPos pos, int total) {
+		Player player = context.getPlayer();
+		ItemStack restore = target;
+		if (player != null) {
+			restore = player.getItemInHand(context.getHand());
+			player.setItemInHand(context.getHand(), target);
+		}
 		InteractionResult res = target.getItem().useOn(new PouchItemUseContext(context, target, pos));
+		if (player != null) {
+			player.setItemInHand(context.getHand(), restore);
+		}
 		int diff = res == InteractionResult.CONSUME ? 1 : 0;
 		if(diff > 0 && (context.getPlayer() == null || !context.getPlayer().getAbilities().instabuild))
 			setCount(context.getItemInHand(), total - diff);

@@ -77,8 +77,18 @@ public class TrowelItem extends QuarkItem implements IUsageTickerOverride {
 	private InteractionResult placeBlock(ItemStack itemstack, UseOnContext context) {
 		if(isValidTarget(itemstack)) {
 			Item item = itemstack.getItem();
-			BlockPlaceContext newContext = new TrowelBlockItemUseContext(context, itemstack);
-			return item.useOn(newContext);
+
+			Player player = context.getPlayer();
+			ItemStack restore = itemstack;
+			if (player != null) {
+				restore = player.getItemInHand(context.getHand());
+				player.setItemInHand(context.getHand(), itemstack);
+			}
+			InteractionResult res = item.useOn(new TrowelBlockItemUseContext(context, itemstack));
+			if (player != null) {
+				player.setItemInHand(context.getHand(), restore);
+			}
+			return res;
 		}
 
 		return InteractionResult.PASS;
