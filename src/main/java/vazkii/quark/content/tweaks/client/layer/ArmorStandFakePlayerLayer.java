@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.PlayerModel;
@@ -26,7 +25,6 @@ import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.SkullBlock;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.content.client.module.UsesForCursesModule;
@@ -51,7 +49,7 @@ public class ArmorStandFakePlayerLayer<M extends EntityModel<ArmorStand>> extend
 			return;
 
 		ItemStack head = armor.getItemBySlot(EquipmentSlot.HEAD);
-		if(head.is(Items.PLAYER_HEAD) && EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BINDING_CURSE, head) > 0) {
+		if(head.is(Items.PLAYER_HEAD) && EnchantmentHelper.hasBindingCurse(head)) {
 			CompoundTag skullOwner = ItemNBTHelper.getCompound(head, "SkullOwner", true);
 			GameProfile profile = skullOwner != null ? NbtUtils.readGameProfile(skullOwner) : null;
 			RenderType rendertype = SkullBlockRenderer.getRenderType(SkullBlock.Types.PLAYER, profile);

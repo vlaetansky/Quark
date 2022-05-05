@@ -16,7 +16,6 @@ import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -117,7 +116,7 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 				ItemStack currArmor = player.getItemBySlot(equipSlot);
 
 				if (slot.mayPickup(player) && slot.mayPlace(currArmor))
-					if (currArmor.isEmpty() || (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BINDING_CURSE, currArmor) == 0 && currArmor != stack)) {
+					if (currArmor.isEmpty() || (!EnchantmentHelper.hasBindingCurse(currArmor) && currArmor != stack)) {
 						int index = slot.getSlotIndex();
 						if (index < slot.container.getContainerSize()) {
 							player.setItemSlot(equipSlot, stack.copy());

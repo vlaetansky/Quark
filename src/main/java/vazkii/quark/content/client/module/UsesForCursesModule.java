@@ -5,8 +5,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -43,12 +43,19 @@ public class UsesForCursesModule extends QuarkModule {
 	}
 
 	@OnlyIn(Dist.CLIENT)
+	public static boolean shouldHideArmorStandModel(ItemStack stack) {
+		if(!staticEnabled || !bindArmorStandsWithPlayerHeads || !stack.is(Items.PLAYER_HEAD))
+			return false;
+		return EnchantmentHelper.hasBindingCurse(stack);
+	}
+
+	@OnlyIn(Dist.CLIENT)
 	public static boolean shouldHidePumpkinOverlay(ResourceLocation location, Player player) {
 		if(!staticEnabled || !vanishPumpkinOverlay || !location.equals(PUMPKIN_OVERLAY))
 			return false;
 		ItemStack stack = player.getInventory().getArmor(3);
 		return stack.is(Blocks.CARVED_PUMPKIN.asItem()) &&
-				EnchantmentHelper.getItemEnchantmentLevel(Enchantments.VANISHING_CURSE, stack) > 0;
+				EnchantmentHelper.hasVanishingCurse(stack);
 	}
 
 }

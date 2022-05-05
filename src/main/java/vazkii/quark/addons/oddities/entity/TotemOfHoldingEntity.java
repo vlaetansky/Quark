@@ -16,7 +16,6 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkHooks;
 import vazkii.quark.addons.oddities.module.TotemOfHoldingModule;
@@ -91,7 +90,7 @@ public class TotemOfHoldingEntity extends Entity {
 					if(curr.isEmpty()) {
 						player.setItemSlot(slot, stack);
 						stack = null;
-					} else if(EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BINDING_CURSE, curr) == 0 && EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BINDING_CURSE, stack) == 0) {
+					} else if(!EnchantmentHelper.hasBindingCurse(curr) && !EnchantmentHelper.hasBindingCurse(stack)) {
 						player.setItemSlot(slot, stack);
 						stack = curr;
 					}
