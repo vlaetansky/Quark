@@ -19,20 +19,23 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.phys.Vec3;
+import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.content.tools.module.PathfinderMapsModule;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-public class BiomeMapFunction extends LootItemConditionalFunction {
+public class PathfinderMapFunction extends LootItemConditionalFunction {
 
 	private final TagKey<Biome> destination;
 	private final boolean underground;
+	private final int color;
 
-	public BiomeMapFunction(LootItemCondition[] conditions, TagKey<Biome> destination, boolean underground) {
+	public PathfinderMapFunction(LootItemCondition[] conditions, TagKey<Biome> destination, boolean underground, int color) {
 		super(conditions);
 		this.destination = destination;
 		this.underground = underground;
+		this.color = color;
 	}
 
 	@Override
@@ -48,7 +51,7 @@ public class BiomeMapFunction extends LootItemConditionalFunction {
 			Vec3 vec = context.getParam(LootContextParams.ORIGIN);
 			if (underground)
 				vec = vec.subtract(0, vec.y + 1, 0);
-			return PathfinderMapsModule.createMap(context.getLevel(), new BlockPos(vec), (it) -> it.is(destination));
+			return PathfinderMapsModule.createMap(context.getLevel(), new BlockPos(vec), (it) -> it.is(destination), color);
 
 		}
 		return stack;
@@ -60,22 +63,27 @@ public class BiomeMapFunction extends LootItemConditionalFunction {
 		return ImmutableSet.of(LootContextParams.ORIGIN);
 	}
 
-	public static class Serializer extends LootItemConditionalFunction.Serializer<BiomeMapFunction> {
+	public static class Serializer extends LootItemConditionalFunction.Serializer<PathfinderMapFunction> {
 		@Override
-		public void serialize(@Nonnull JsonObject object, @Nonnull BiomeMapFunction function, @Nonnull JsonSerializationContext serializationContext) {
+		public void serialize(@Nonnull JsonObject object, @Nonnull PathfinderMapFunction function, @Nonnull JsonSerializationContext serializationContext) {
 			object.addProperty("destination", function.destination.location().toString());
 			object.addProperty("underground", function.underground);
+			object.addProperty("color", MiscUtil.toColorString(function.color));
 		}
 
 		@Override
 		@Nonnull
-		public BiomeMapFunction deserialize(@Nonnull JsonObject object, @Nonnull JsonDeserializationContext deserializationContext, @Nonnull LootItemCondition[] conditionsIn) {
+		public PathfinderMapFunction deserialize(@Nonnull JsonObject object, @Nonnull JsonDeserializationContext deserializationContext, @Nonnull LootItemCondition[] conditionsIn) {
 			String key = GsonHelper.getAsString(object, "destination");
 			TagKey<Biome> destination = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(key));
 
 			boolean underground = GsonHelper.getAsBoolean(object, "underground");
 
-			return new BiomeMapFunction(conditionsIn, destination, underground);
+			int color = MiscUtil.getAsColor(object, "color");
+
+			return new PathfinderMapFunction(conditionsIn, destination, underground, color);
 		}
+
+
 	}
 }

@@ -36,7 +36,7 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.type.AbstractConfigType;
-import vazkii.quark.content.tools.loot.BiomeMapFunction;
+import vazkii.quark.content.tools.loot.PathfinderMapFunction;
 import vazkii.quark.content.tools.loot.InBiomeCondition;
 
 import javax.annotation.Nonnull;
@@ -97,7 +97,7 @@ public class PathfinderMapsModule extends QuarkModule {
 		loadTradeInfo(Biomes.MUSHROOM_FIELDS, true, 5, 20, 26, 0x4D4273);
 		loadTradeInfo(Biomes.ICE_SPIKES, true, 5, 20, 26, 0x1EC0C9);
 
-		pathfinderMapType = new LootItemFunctionType(new BiomeMapFunction.Serializer());
+		pathfinderMapType = new LootItemFunctionType(new PathfinderMapFunction.Serializer());
 		Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(Quark.MOD_ID, "pathfinder_map"), pathfinderMapType);
 		inBiomeConditionType = new LootItemConditionType(new InBiomeCondition.InBiomeSerializer());
 		Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation(Quark.MOD_ID, "in_biome"), inBiomeConditionType);
@@ -159,7 +159,7 @@ public class PathfinderMapsModule extends QuarkModule {
 			}
 	}
 
-	public static ItemStack createMap(Level world, BlockPos pos, Predicate<Holder<Biome>> predicate) {
+	public static ItemStack createMap(Level world, BlockPos pos, Predicate<Holder<Biome>> predicate, int color) {
 		if(!(world instanceof ServerLevel serverLevel))
 			return ItemStack.EMPTY;
 
@@ -183,6 +183,8 @@ public class PathfinderMapsModule extends QuarkModule {
 		MapItemSavedData.addTargetDecoration(stack, biomePos, "+", Type.RED_X);
 		stack.setHoverName(new TranslatableComponent("item.quark.biome_map", biomeComponent));
 
+		stack.getOrCreateTagElement("display").putInt("MapColor", color);
+
 		return stack;
 	}
 
@@ -195,11 +197,9 @@ public class PathfinderMapsModule extends QuarkModule {
 
 			int i = random.nextInt(info.maxPrice - info.minPrice + 1) + info.minPrice;
 
-			ItemStack itemstack = createMap(entity.level, entity.blockPosition(), info);
+			ItemStack itemstack = createMap(entity.level, entity.blockPosition(), info, info.color);
 			if (itemstack.isEmpty())
 				return null;
-
-			itemstack.getOrCreateTagElement("display").putInt("MapColor", info.color);
 
 			return new MerchantOffer(new ItemStack(Items.EMERALD, i), new ItemStack(Items.COMPASS), itemstack, 12, xpFromTrade * Math.max(1, (info.level - 1)), 0.2F);
 		}

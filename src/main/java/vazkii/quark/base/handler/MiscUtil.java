@@ -1,6 +1,9 @@
 package vazkii.quark.base.handler;
 
-import com.mojang.datafixers.util.Pair;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSyntaxException;
 import net.minecraft.Util;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.*;
@@ -10,6 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.WorldlyContainer;
@@ -25,7 +29,6 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
@@ -47,6 +50,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
+import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.config.screen.AbstractQScreen;
 
@@ -114,7 +118,9 @@ public class MiscUtil {
 	public static void initializeEnchantmentList(Iterable<String> enchantNames, List<Enchantment> enchants) {
 		enchants.clear();
 		for(String s : enchantNames) {
-			Registry.ENCHANTMENT.getOptional(new ResourceLocation(s)).ifPresent(enchants::add);
+			Enchantment enchant = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(s));
+			if (enchant != null)
+				enchants.add(enchant);
 		}
 	}
 
@@ -165,11 +171,6 @@ public class MiscUtil {
 		}
 	}
 
-	public static BlockPos locateBiome(ServerLevel world, ResourceLocation biomeToFind, BlockPos start, int searchRadius, int searchIncrement) {
-		Pair<BlockPos, Holder<Biome>> pair = world.findNearestBiome(h -> h.is(biomeToFind), start, searchRadius, searchIncrement);
-		return pair == null ? null : pair.getFirst();
-	}
-
 	public static ItemStack putIntoInv(ItemStack stack, LevelAccessor level, BlockPos blockPos, BlockEntity tile, Direction face, boolean simulate, boolean doSimulation) {
 		IItemHandler handler = null;
 
@@ -200,6 +201,42 @@ public class MiscUtil {
 		HolderSet<T> holderSet = registry.getTag(tag).orElse(new HolderSet.Named<>(registry, tag));
 
 		return holderSet.stream().map(Holder::value).toList();
+	}
+
+	public static String toColorString(int color) {
+		String colorString = Integer.toHexString(color);
+		int targetLength = colorString.length() > 6 ? 8 : 6;
+		String zeroes = colorString.length() < targetLength ? "0".repeat(targetLength - colorString.length()) : "";
+		return "#" + zeroes + colorString;
+	}
+
+	public static int getAsColor(JsonObject object, String key) {
+		if (object.has(key)) {
+			return convertToColor(object.get(key), key);
+		} else {
+			throw new JsonSyntaxException("Missing " + key + ", expected to find an item");
+		}
+	}
+
+	public static int convertToColor(JsonElement element, String key) {
+		if (element.isJsonPrimitive()) {
+			JsonPrimitive primitive = element.getAsJsonPrimitive();
+			if (primitive.isNumber())
+				return primitive.getAsInt();
+			else if (primitive.isString()) {
+				String s = element.getAsString();
+				if (s.matches("#[0-9a-f]{6}")) {
+					try {
+						return Integer.parseInt(s.substring(1), 16);
+					} catch (NumberFormatException e) {
+						// NO-OP, should be impossible to reach, but fall through to below if so
+					}
+				}
+			}
+
+		}
+
+		throw new JsonSyntaxException("Expected " + key + " to be a color, was " + GsonHelper.getType(element));
 	}
 
 	@OnlyIn(Dist.CLIENT)

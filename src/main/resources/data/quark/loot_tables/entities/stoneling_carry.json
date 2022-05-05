@@ -146,11 +146,8 @@
             {
               "function": "quark:pathfinder_map",
               "destination": "quark:stoneling_pathfinding",
+              "color": "#317546",
               "underground": true
-            },
-            {
-              "function": "minecraft:set_nbt",
-              "tag": "{display:{MapColor:3241286}}"
             }
           ],
           "conditions": [
