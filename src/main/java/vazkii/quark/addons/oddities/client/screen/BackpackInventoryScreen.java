@@ -63,11 +63,12 @@ public class BackpackInventoryScreen extends InventoryScreen {
 					}
 				}
 
-		buttonYs.forEach((button, y) -> button.y = y);
 	}
 
 	@Override
 	public void containerTick() {
+		buttonYs.forEach((button, y) -> button.y = y);
+
 		super.containerTick();
 
 		if(!BackpackModule.isEntityWearingBackpack(player)) {
