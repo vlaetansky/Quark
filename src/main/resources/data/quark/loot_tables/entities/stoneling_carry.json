@@ -5,17 +5,17 @@
       "rolls": 1,
       "entries": [
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 100,
           "name": "minecraft:diamond"
         },
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 200,
           "name": "minecraft:ender_pearl"
         },
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 300,
           "name": "minecraft:redstone",
           "functions": [
@@ -29,7 +29,7 @@
           ]
         },
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 300,
           "name": "minecraft:gold_ingot",
           "functions": [
@@ -43,7 +43,7 @@
           ]
         },
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 300,
           "name": "minecraft:iron_ingot",
           "functions": [
@@ -57,7 +57,7 @@
           ]
         },
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 200,
           "name": "minecraft:emerald",
           "functions": [
@@ -71,7 +71,7 @@
           ]
         },
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 300,
           "name": "minecraft:coal",
           "functions": [
@@ -85,17 +85,17 @@
           ]
         },
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 250,
           "name": "minecraft:zombie_head"
         },
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 250,
           "name": "minecraft:creeper_head"
         },
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 200,
           "name": "minecraft:lapis_lazuli",
           "functions": [
@@ -109,34 +109,67 @@
           ]
         },
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 50,
           "name": "minecraft:golden_apple"
         },
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 50,
           "name": "minecraft:saddle"
         },
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 50,
           "name": "minecraft:iron_horse_armor"
         },
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 40,
           "name": "minecraft:golden_horse_armor"
         },
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 30,
           "name": "minecraft:diamond_horse_armor"
         },
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 100,
           "name": "minecraft:name_tag"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 10,
+          "name": "minecraft:map",
+          "functions": [
+            {
+              "function": "quark:pathfinder_map",
+              "destination": "quark:stoneling_pathfinding",
+              "underground": true
+            },
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{display:{MapColor:3241286}}"
+            }
+          ],
+          "conditions": [
+            {
+              "condition": "quark:flag",
+              "flag": "pathfinder_maps"
+            },
+            {
+              "condition": "quark:flag",
+              "flag": "stoneling_weald_pathfinder"
+            },
+            {
+              "condition": "minecraft:inverted",
+              "term": {
+                "condition": "quark:in_biome",
+                "target": "quark:stoneling_pathfinding"
+              }
+            }
+          ]
         }
       ]
     }

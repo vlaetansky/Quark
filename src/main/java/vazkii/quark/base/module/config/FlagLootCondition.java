@@ -30,13 +30,7 @@ public record FlagLootCondition(ConfigFlagManager manager,
 	}
 
 
-	public static class FlagSerializer implements Serializer<FlagLootCondition> {
-
-		private final ConfigFlagManager manager;
-
-		public FlagSerializer(ConfigFlagManager manager) {
-			this.manager = manager;
-		}
+	public record FlagSerializer(ConfigFlagManager manager) implements Serializer<FlagLootCondition> {
 
 		@Override
 		public void serialize(@Nonnull JsonObject json, @Nonnull FlagLootCondition value, @Nonnull JsonSerializationContext context) {

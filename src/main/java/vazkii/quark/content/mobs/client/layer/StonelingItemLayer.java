@@ -43,7 +43,7 @@ public class StonelingItemLayer extends RenderLayer<Stoneling, StonelingModel> {
 
 			matrix.pushPose();
 
-			matrix.translate(0F, 0.5F, 0F);
+			matrix.translate(0F, 0.515F, 0F);
 
 			if(!isBlock) {
 				matrix.mulPose(Vector3f.YP.rotationDegrees(stoneling.getItemAngle() + 180));

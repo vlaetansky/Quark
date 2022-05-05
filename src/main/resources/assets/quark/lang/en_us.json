@@ -405,6 +405,10 @@
 	"item.minecraft.lingering_potion.effect.quark.resistance": "Lingering Potion of Fortitude",
 	"item.minecraft.tipped_arrow.effect.quark.resistance": "Arrow of Fortitude",
 
+	"item.quark.biome_map": "%s Pathfinder Map",
+	"item.quark.biome_map.unknown": "Unknown Biome",
+
+	"_biome_map_comment": "The following translation keys are only relevant to maps generated before Quark 354.",
 	"item.quark.biome_map.snowy_plains": "Snowy Plains Pathfinder Map",
 	"item.quark.biome_map.windswept_hills": "Windswept Hills Pathfinder Map",
 	"item.quark.biome_map.dark_forest": "Dark Forest Pathfinder Map",

@@ -1,7 +1,14 @@
 package vazkii.quark.content.tools.module;
 
+import com.mojang.datafixers.util.Either;
+import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -18,20 +25,26 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.saveddata.maps.MapDecoration.Type;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.Quark;
-import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.type.AbstractConfigType;
+import vazkii.quark.content.tools.loot.BiomeMapFunction;
+import vazkii.quark.content.tools.loot.InBiomeCondition;
 
 import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
+import java.util.function.Predicate;
 
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true)
 public class PathfinderMapsModule extends QuarkModule {
@@ -54,22 +67,18 @@ public class PathfinderMapsModule extends QuarkModule {
 			 - <min_price> being the cheapest (in Emeralds) the map can be
 			 - <max_price> being the most expensive (in Emeralds) the map can be
 			 - <color> being a hex color (without the #) for the map to display. You can generate one here - https://htmlcolorcodes.com/
-			 - <name> being the display name of the map
 
 			Here's an example of a map to locate Ice Mountains:
-			minecraft:ice_mountains,2,8,14,7FE4FF,Ice Mountains Pathfinder Map""")
+			minecraft:ice_mountains,2,8,14,7FE4FF""")
 	private List<String> customs = new LinkedList<>();
+
+	public static LootItemFunctionType pathfinderMapType;
+	public static LootItemConditionType inBiomeConditionType;
+
 
 	@Config public static int searchRadius = 6400;
 	@Config public static int searchDistanceIncrement = 8;
 	@Config public static int xpFromTrade = 5;
-
-	private static String getBiomeDescriptor(ResourceLocation rl) {
-		if(rl == null)
-			return "unknown";
-
-		return rl.getPath();
-	}
 
 	@Override
 	public void register() {
@@ -81,12 +90,17 @@ public class PathfinderMapsModule extends QuarkModule {
 		loadTradeInfo(Biomes.SWAMP, true, 4, 12, 18, 0x22370F);
 		loadTradeInfo(Biomes.OLD_GROWTH_PINE_TAIGA, true, 4, 12, 18, 0x5B421F);
 
-		loadTradeInfo(Biomes.FLOWER_FOREST, true, 5, 12, 18, 0xDC7BEA);
+		loadTradeInfo(Biomes.FLOWER_FOREST, true, 5, 12, 18, 0xCE46E2);
 		loadTradeInfo(Biomes.JUNGLE, true, 5, 16, 22, 0x22B600);
 		loadTradeInfo(Biomes.BAMBOO_JUNGLE, true, 5, 16, 22, 0x3DE217);
 		loadTradeInfo(Biomes.BADLANDS, true, 5, 16, 22, 0xC67F22);
 		loadTradeInfo(Biomes.MUSHROOM_FIELDS, true, 5, 20, 26, 0x4D4273);
-		loadTradeInfo(Biomes.ICE_SPIKES, true, 5, 20, 26, 0x41D6C9);
+		loadTradeInfo(Biomes.ICE_SPIKES, true, 5, 20, 26, 0x1EC0C9);
+
+		pathfinderMapType = new LootItemFunctionType(new BiomeMapFunction.Serializer());
+		Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(Quark.MOD_ID, "pathfinder_map"), pathfinderMapType);
+		inBiomeConditionType = new LootItemConditionType(new InBiomeCondition.InBiomeSerializer());
+		Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation(Quark.MOD_ID, "in_biome"), inBiomeConditionType);
 	}
 
 	@SubscribeEvent
@@ -117,23 +131,22 @@ public class PathfinderMapsModule extends QuarkModule {
 		builtinTrades.add(new TradeInfo(biome.location(), enabled, level, minPrice, maxPrice, color));
 	}
 
-	private void loadCustomTradeInfo(ResourceLocation biome, boolean enabled, int level, int minPrice, int maxPrice, int color, String name) {
-		customTrades.add(new TradeInfo(biome, enabled, level, minPrice, maxPrice, color, name));
+	private void loadCustomTradeInfo(ResourceLocation biome, boolean enabled, int level, int minPrice, int maxPrice, int color) {
+		customTrades.add(new TradeInfo(biome, enabled, level, minPrice, maxPrice, color));
 	}
 
 	private void loadCustomTradeInfo(String line) throws IllegalArgumentException {
 		String[] tokens = line.split(",");
-		if(tokens.length != 6)
-			throw new IllegalArgumentException("Wrong number of parameters " + tokens.length + " (expected 6)");
+		if(tokens.length != 5 && tokens.length != 6) // Silently ignore old name format
+			throw new IllegalArgumentException("Wrong number of parameters " + tokens.length + " (expected 5)");
 
 		ResourceLocation biomeName = new ResourceLocation(tokens[0]);
 		int level = Integer.parseInt(tokens[1]);
 		int minPrice = Integer.parseInt(tokens[2]);
 		int maxPrice = Integer.parseInt(tokens[3]);
 		int color = Integer.parseInt(tokens[4], 16);
-		String name = tokens[5];
 
-		loadCustomTradeInfo(biomeName, true, level, minPrice, maxPrice, color, name);
+		loadCustomTradeInfo(biomeName, true, level, minPrice, maxPrice, color);
 	}
 
 	private void loadCustomMaps(Iterable<String> lines) {
@@ -146,20 +159,29 @@ public class PathfinderMapsModule extends QuarkModule {
 			}
 	}
 
-	public static ItemStack createMap(Level world, BlockPos pos, TradeInfo info) {
-		if(!(world instanceof ServerLevel))
+	public static ItemStack createMap(Level world, BlockPos pos, Predicate<Holder<Biome>> predicate) {
+		if(!(world instanceof ServerLevel serverLevel))
 			return ItemStack.EMPTY;
 
-		BlockPos biomePos = MiscUtil.locateBiome((ServerLevel) world, info.biome, pos, searchRadius, searchDistanceIncrement);
+		Pair<BlockPos, Holder<Biome>> biomeInfo = serverLevel.findNearestBiome(predicate, pos, searchRadius, searchDistanceIncrement);
 
-		if(biomePos == null)
+		if(biomeInfo == null)
 			return ItemStack.EMPTY;
+
+		BlockPos biomePos = biomeInfo.getFirst();
+		Either<ResourceKey<Biome>, Biome> biome = biomeInfo.getSecond().unwrap();
+		Optional<ResourceKey<Biome>> key = biome.map(Optional::of, ForgeRegistries.BIOMES::getResourceKey);
+
+		Component biomeComponent = key
+				.map(ResourceKey::location)
+				.<MutableComponent>map((it) -> new TranslatableComponent("biome." + it.getNamespace() + "." + it.getPath()))
+				.orElse(new TranslatableComponent("item.quark.biome_map.unknown").withStyle(ChatFormatting.RED));
 
 		ItemStack stack = MapItem.create(world, biomePos.getX(), biomePos.getZ(), (byte) 2, true, true);
 		// fillExplorationMap
-		MapItem.renderBiomePreviewMap((ServerLevel) world, stack);
+		MapItem.renderBiomePreviewMap(serverLevel, stack);
 		MapItemSavedData.addTargetDecoration(stack, biomePos, "+", Type.RED_X);
-		stack.setHoverName(new TranslatableComponent(info.name));
+		stack.setHoverName(new TranslatableComponent("item.quark.biome_map", biomeComponent));
 
 		return stack;
 	}
@@ -177,15 +199,16 @@ public class PathfinderMapsModule extends QuarkModule {
 			if (itemstack.isEmpty())
 				return null;
 
+			itemstack.getOrCreateTagElement("display").putInt("MapColor", info.color);
+
 			return new MerchantOffer(new ItemStack(Items.EMERALD, i), new ItemStack(Items.COMPASS), itemstack, 12, xpFromTrade * Math.max(1, (info.level - 1)), 0.2F);
 		}
 	}
 
-	public static class TradeInfo extends AbstractConfigType {
+	public static class TradeInfo extends AbstractConfigType implements Predicate<Holder<Biome>> {
 
 		public final ResourceLocation biome;
 		public final int color;
-		public final String name;
 
 		@Config public boolean enabled;
 		@Config public final int level;
@@ -193,10 +216,6 @@ public class PathfinderMapsModule extends QuarkModule {
 		@Config public final int maxPrice;
 
 		TradeInfo(ResourceLocation biome, boolean enabled, int level, int minPrice, int maxPrice, int color) {
-			this(biome, enabled, level, minPrice, maxPrice, color, "item.quark.biome_map." + getBiomeDescriptor(biome));
-		}
-
-		TradeInfo(ResourceLocation biome, boolean enabled, int level, int minPrice, int maxPrice, int color, String name) {
 			this.biome = biome;
 
 			this.enabled = enabled;
@@ -204,9 +223,12 @@ public class PathfinderMapsModule extends QuarkModule {
 			this.minPrice = minPrice;
 			this.maxPrice = maxPrice;
 			this.color = color;
-			this.name = name;
 		}
 
+		@Override
+		public boolean test(Holder<Biome> biomeHolder) {
+			return biomeHolder.is(biome);
+		}
 	}
 
 }

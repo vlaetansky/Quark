@@ -26,6 +26,7 @@ import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -38,6 +39,7 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -52,6 +54,7 @@ import vazkii.quark.content.mobs.ai.ActWaryGoal;
 import vazkii.quark.content.mobs.ai.FavorBlockGoal;
 import vazkii.quark.content.mobs.ai.RunAndPoofGoal;
 import vazkii.quark.content.mobs.module.StonelingsModule;
+import vazkii.quark.content.tools.entity.Pickarang;
 import vazkii.quark.content.world.module.GlimmeringWealdModule;
 
 import javax.annotation.Nonnull;
@@ -258,7 +261,9 @@ public class Stoneling extends PathfinderMob {
 
 		if(!isTame && !world.isClientSide()) {
 			List<ItemStack> items = world.getServer().getLootTables()
-					.get(CARRY_LOOT_TABLE).getRandomItems(new LootContext.Builder((ServerLevel) world).create(LootContextParamSets.EMPTY));
+					.get(CARRY_LOOT_TABLE).getRandomItems(new LootContext.Builder((ServerLevel) world)
+							.withParameter(LootContextParams.ORIGIN, position())
+							.create(LootContextParamSets.CHEST));
 			if (!items.isEmpty())
 				entityData.set(CARRYING_ITEM, items.get(0));
 		}
@@ -266,10 +271,24 @@ public class Stoneling extends PathfinderMob {
 		return super.finalizeSpawn(world, difficulty, spawnReason, data, compound);
 	}
 
-
 	@Override
 	public boolean isInvulnerableTo(@Nonnull DamageSource source) {
-		return source == DamageSource.CACTUS || source.isProjectile() || super.isInvulnerableTo(source);
+		return source == DamageSource.CACTUS ||
+				isProjectileWithoutPiercing(source) ||
+				super.isInvulnerableTo(source);
+	}
+
+	private static boolean isProjectileWithoutPiercing(DamageSource source) {
+		if (!source.isProjectile())
+			return false;
+
+		Entity sourceEntity = source.getDirectEntity();
+
+		if (sourceEntity instanceof Pickarang pickarang)
+			return pickarang.getPiercingModifier() <= 0;
+		else if (sourceEntity instanceof AbstractArrow arrow)
+			return arrow.getPierceLevel() <= 0;
+		return true;
 	}
 
 	@Override
