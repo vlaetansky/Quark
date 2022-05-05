@@ -21,6 +21,7 @@ import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.arl.util.ItemNBTHelper;
+import vazkii.quark.addons.oddities.client.screen.BackpackInventoryScreen;
 import vazkii.quark.addons.oddities.client.screen.CrateScreen;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.block.IQuarkBlock;
@@ -106,7 +107,14 @@ public class QuarkJeiPlugin implements IModPlugin {
 	@Override
 	public void registerGuiHandlers(@Nonnull IGuiHandlerRegistration registration) {
 		registration.addGuiContainerHandler(CrateScreen.class, new CrateGuiHandler());
+		registration.addRecipeClickArea(BackpackInventoryScreen.class, 137, 29, 10, 13, RecipeTypes.CRAFTING);
 	}
+
+	// Waiting on new JEI api exposes
+//	@Override
+//	public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
+//		registration.addRecipeTransferHandler(new BackpackRecipeTransferHandler(stackHelper, transferHelper), RecipeTypes.CRAFTING);
+//	}
 
 	private void registerAncientTomeAnvilRecipes(@Nonnull IRecipeRegistration registration, @Nonnull IVanillaRecipeFactory factory) {
 		List<IJeiAnvilRecipe> recipes = new ArrayList<>();

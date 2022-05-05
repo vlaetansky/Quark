@@ -123,15 +123,25 @@ public final class SortingHandler {
 			int j = i - iStart;
 			ItemStack stack = j >= stacks.size() ? ItemStack.EMPTY : stacks.get(j);
 
+			ItemStack stackInSlot = inventory.getStackInSlot(i);
+			if (!stackInSlot.isEmpty()) {
+				ItemStack extractTest = inventory.extractItem(i, inventory.getSlotLimit(i), true);
+				if (extractTest.isEmpty() || extractTest.getCount() != stackInSlot.getCount())
+					return InteractionResult.PASS;
+			}
+
 			if (!stack.isEmpty() && !inventory.isItemValid(i, stack))
 				return InteractionResult.PASS;
+		}
+
+		for (int i = iStart; i < iEnd; i++) {
+			inventory.extractItem(i, inventory.getSlotLimit(i), false);
 		}
 
 		for (int i = iStart; i < iEnd; i++) {
 			int j = i - iStart;
 			ItemStack stack = j >= stacks.size() ? ItemStack.EMPTY : stacks.get(j);
 
-			inventory.extractItem(i, inventory.getSlotLimit(i), false);
 			if (!stack.isEmpty())
 				if (!inventory.insertItem(i, stack, false).isEmpty())
 					return InteractionResult.FAIL;

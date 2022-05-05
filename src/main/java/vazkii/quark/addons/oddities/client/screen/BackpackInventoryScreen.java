@@ -53,15 +53,10 @@ public class BackpackInventoryScreen extends InventoryScreen {
 		super.init();
 
 		buttonYs.clear();
-	}
-
-	@Override
-	public void containerTick() {
-		super.containerTick();
 
 		for(Widget widget : renderables)
 			if(widget instanceof Button b)
-				if(b instanceof ImageButton || b.getClass().getName().contains("GuiButtonInventoryBook")) { // class check for Patchouli
+				if(b.getClass().getName().contains("GuiButtonInventoryBook")) { // class check for Patchouli
 					if(!buttonYs.containsKey(b)) {
 						b.y -= 29;
 						buttonYs.put(b, b.y);
@@ -69,6 +64,11 @@ public class BackpackInventoryScreen extends InventoryScreen {
 				}
 
 		buttonYs.forEach((button, y) -> button.y = y);
+	}
+
+	@Override
+	public void containerTick() {
+		super.containerTick();
 
 		if(!BackpackModule.isEntityWearingBackpack(player)) {
 			ItemStack curr = player.containerMenu.getCarried();

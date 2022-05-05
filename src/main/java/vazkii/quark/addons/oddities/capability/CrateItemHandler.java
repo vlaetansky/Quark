@@ -86,8 +86,9 @@ public class CrateItemHandler extends ItemStackHandler {
 
 	@Override
 	public int getSlotLimit(int slot) {
+		ItemStack stackInSlot = getStackInSlot(slot);
 		int total = getTotal();
-		return Mth.clamp(maxItems - total, 0, 64);
+		return Mth.clamp(stackInSlot.getCount() + maxItems - total, 0, 64);
 	}
 
 	@Override

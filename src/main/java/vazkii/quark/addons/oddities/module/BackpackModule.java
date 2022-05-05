@@ -114,7 +114,7 @@ public class BackpackModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void onOpenGUI(ScreenOpenEvent event) {
 		Player player = Minecraft.getInstance().player;
-		if(player != null && isInventoryGUI(event.getScreen()) && !player.getAbilities().instabuild && isEntityWearingBackpack(player)) {
+		if(player != null && isInventoryGUI(event.getScreen()) && !player.getAbilities().instabuild && isEntityWearingBackpack(player) && !player.isInsidePortal) {
 			requestBackpack();
 			event.setCanceled(true);
 		}
@@ -124,7 +124,7 @@ public class BackpackModule extends QuarkModule {
 	@OnlyIn(Dist.CLIENT)
 	public void clientTick(ClientTickEvent event) {
 		Minecraft mc = Minecraft.getInstance();
-		if(isInventoryGUI(mc.screen) && !backpackRequested && isEntityWearingBackpack(mc.player)) {
+		if(isInventoryGUI(mc.screen) && !backpackRequested && isEntityWearingBackpack(mc.player) && !mc.player.isInsidePortal) {
 			requestBackpack();
 			mc.player.inventoryMenu.setCarried(mc.player.getItemBySlot(EquipmentSlot.CHEST));
 			backpackRequested = true;
