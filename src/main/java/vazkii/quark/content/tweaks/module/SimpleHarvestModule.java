@@ -205,7 +205,7 @@ public class SimpleHarvestModule extends QuarkModule {
 		isHarvesting = false;
 	}
 
-	private static boolean handle(Player player, InteractionHand hand, BlockPos pos, boolean doRightClick) {
+	private static boolean handle(Player player, InteractionHand hand, BlockPos pos) {
 		if (!player.level.mayInteract(player, pos))
 			return false;
 
@@ -213,7 +213,7 @@ public class SimpleHarvestModule extends QuarkModule {
 		if (crops.containsKey(worldBlock)) {
 			harvestAndReplant(player.level, pos, worldBlock, player);
 			return true;
-		} else if (doRightClick && rightClickCrops.contains(worldBlock.getBlock())) {
+		} else if (rightClickCrops.contains(worldBlock.getBlock())) {
 			return Quark.proxy.useItemSided(player, player.level, hand,
 					new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, true)).consumesAction();
 		}
@@ -239,12 +239,10 @@ public class SimpleHarvestModule extends QuarkModule {
 			for (int z = 1 - range; z < range; z++) {
 				BlockPos shiftPos = pos.offset(x, 0, z);
 
-				boolean doRightClick = x != 0 || z != 0;
-
-				if (!handle(player, hand, shiftPos, doRightClick)) {
+				if (!handle(player, hand, shiftPos)) {
 					shiftPos = shiftPos.above();
 
-					if (handle(player, hand, shiftPos, doRightClick))
+					if (handle(player, hand, shiftPos))
 						hasHarvested = true;
 				} else {
 					hasHarvested = true;
