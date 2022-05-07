@@ -12,10 +12,12 @@ package vazkii.quark.content.tweaks.module;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -28,14 +30,15 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistryEntry;
+import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
@@ -46,6 +49,7 @@ import vazkii.quark.base.network.message.HarvestMessage;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
 public class SimpleHarvestModule extends QuarkModule {
@@ -70,18 +74,30 @@ public class SimpleHarvestModule extends QuarkModule {
 			"minecraft:cocoa[age=2,facing=east],minecraft:cocoa[age=0,facing=east]",
 			"minecraft:cocoa[age=2,facing=west],minecraft:cocoa[age=0,facing=west]");
 
+	@Config(description = "Which blocks should right click harvesting simulate a click on instead of breaking?\n" +
+			"This is for blocks like sweet berry bushes, which have right click harvesting built in.")
+	public static List<String> rightClickableBlocks = Lists.newArrayList(
+			"minecraft:sweet_berry_bush",
+			"minecraft:cave_vines");
+
 	public static final Map<BlockState, BlockState> crops = Maps.newHashMap();
+	public static final Set<Block> rightClickCrops = Sets.newHashSet();
 
 
 	@Override
 	public void configChanged() {
 		crops.clear();
+		rightClickCrops.clear();
 
 		if (doHarvestingSearch) {
 			ForgeRegistries.BLOCKS.getValues().stream()
 					.filter(b -> !isVanilla(b) && b instanceof CropBlock)
 					.map(b -> (CropBlock) b)
 					.forEach(b -> crops.put(b.defaultBlockState().setValue(b.getAgeProperty(), last(b.getAgeProperty().getPossibleValues())), b.defaultBlockState()));
+
+			ForgeRegistries.BLOCKS.getValues().stream()
+					.filter(b -> !isVanilla(b) && (b instanceof BushBlock || b instanceof GrowingPlantBlock) && b instanceof BonemealableBlock)
+					.forEach(rightClickCrops::add);
 		}
 
 		for (String harvestKey : harvestableBlocks) {
@@ -95,6 +111,12 @@ public class SimpleHarvestModule extends QuarkModule {
 
 			if (initial.getBlock() != Blocks.AIR)
 				crops.put(initial, result);
+		}
+
+		for (String blockName : rightClickableBlocks) {
+			Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(blockName));
+			if (block != null)
+				rightClickCrops.add(block);
 		}
 	}
 
@@ -169,15 +191,37 @@ public class SimpleHarvestModule extends QuarkModule {
 		}
 	}
 
+	private boolean isHarvesting = false;
+
 	@SubscribeEvent
 	public void onClick(PlayerInteractEvent.RightClickBlock event) {
-		if (click(event.getPlayer(), event.getPos())) {
+		if (isHarvesting)
+			return;
+		isHarvesting = true;
+		if (click(event.getPlayer(), event.getHand(), event.getPos())) {
 			event.setCanceled(true);
 			event.setCancellationResult(InteractionResult.SUCCESS);
 		}
+		isHarvesting = false;
 	}
 
-	public static boolean click(Player player, BlockPos pos) {
+	private static boolean handle(Player player, InteractionHand hand, BlockPos pos, boolean doRightClick) {
+		if (!player.level.mayInteract(player, pos))
+			return false;
+
+		BlockState worldBlock = player.level.getBlockState(pos);
+		if (crops.containsKey(worldBlock)) {
+			harvestAndReplant(player.level, pos, worldBlock, player);
+			return true;
+		} else if (doRightClick && rightClickCrops.contains(worldBlock.getBlock())) {
+			return Quark.proxy.useItemSided(player, player.level, hand,
+					new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, true)).consumesAction();
+		}
+
+		return false;
+	}
+
+	public static boolean click(Player player, InteractionHand hand, BlockPos pos) {
 		if (player == null)
 			return false;
 
@@ -195,18 +239,15 @@ public class SimpleHarvestModule extends QuarkModule {
 			for (int z = 1 - range; z < range; z++) {
 				BlockPos shiftPos = pos.offset(x, 0, z);
 
-				BlockState worldBlock = player.level.getBlockState(shiftPos);
-				if (crops.containsKey(worldBlock)) {
-					harvestAndReplant(player.level, shiftPos, worldBlock, player);
-					hasHarvested = true;
-				} else {
+				boolean doRightClick = x != 0 || z != 0;
+
+				if (!handle(player, hand, shiftPos, doRightClick)) {
 					shiftPos = shiftPos.above();
 
-					worldBlock = player.level.getBlockState(shiftPos);
-					if (crops.containsKey(worldBlock)) {
-						harvestAndReplant(player.level, shiftPos, worldBlock, player);
+					if (handle(player, hand, shiftPos, doRightClick))
 						hasHarvested = true;
-					}
+				} else {
+					hasHarvested = true;
 				}
 			}
 
@@ -215,7 +256,7 @@ public class SimpleHarvestModule extends QuarkModule {
 
 		if (player.level.isClientSide) {
 			if (mainHand.isEmpty())
-				QuarkNetwork.sendToServer(new HarvestMessage(pos));
+				QuarkNetwork.sendToServer(new HarvestMessage(pos, hand));
 		} else {
 			if (harvestingCostsDurability && isHoe)
 				mainHand.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(InteractionHand.MAIN_HAND));

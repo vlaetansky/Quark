@@ -1,6 +1,7 @@
 package vazkii.quark.base.network.message;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
 import net.minecraftforge.network.NetworkEvent;
 import vazkii.arl.network.IMessage;
 import vazkii.quark.content.tweaks.module.SimpleHarvestModule;
@@ -13,16 +14,18 @@ public class HarvestMessage implements IMessage {
 	private static final long serialVersionUID = -51788488328591145L;
 
 	public BlockPos pos;
+	public InteractionHand hand;
 
 	public HarvestMessage() { }
 
-	public HarvestMessage(BlockPos pos) {
+	public HarvestMessage(BlockPos pos, InteractionHand hand) {
 		this.pos = pos;
+		this.hand = hand;
 	}
 
 	@Override
 	public boolean receive(NetworkEvent.Context context) {
-		context.enqueueWork(() -> SimpleHarvestModule.click(context.getSender(), pos));
+		context.enqueueWork(() -> SimpleHarvestModule.click(context.getSender(), hand, pos));
 		return true;
 	}
 

@@ -1,5 +1,11 @@
 package vazkii.quark.base.proxy;
 
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -97,6 +103,12 @@ public class CommonProxy {
 	public void handleQuarkConfigChange() {
 		ModuleLoader.INSTANCE.configChanged();
 		EntitySpawnHandler.refresh();
+	}
+
+	public InteractionResult useItemSided(Player player, Level level, InteractionHand hand, BlockHitResult hit) {
+		if (player instanceof ServerPlayer sPlayer)
+			return sPlayer.gameMode.useItemOn(sPlayer, level, player.getItemInHand(hand), hand, hit);
+		return InteractionResult.PASS;
 	}
 
 	protected void initContributorRewards() {
