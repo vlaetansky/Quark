@@ -199,7 +199,7 @@ public class SimpleHarvestModule extends QuarkModule {
 				if (crops.containsKey(worldBlock)) {
 					harvestAndReplant(player.level, shiftPos, worldBlock, player);
 					hasHarvested = true;
-				} else if (worldBlock.is(Blocks.FARMLAND)) {
+				} else {
 					shiftPos = shiftPos.above();
 
 					worldBlock = player.level.getBlockState(shiftPos);
