@@ -1,12 +1,8 @@
 package vazkii.quark.base.client.config.screen.inputtable;
 
-import java.util.Arrays;
-
-import javax.annotation.Nonnull;
-
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.Screen;
@@ -14,10 +10,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.client.gui.widget.Slider;
+import net.minecraftforge.client.gui.widget.ForgeSlider;
 import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.api.config.IConfigElement;
 import vazkii.quark.base.module.config.type.inputtable.ConvulsionMatrixConfig;
+
+import javax.annotation.Nonnull;
+import java.util.Arrays;
 
 public class ConvulsionMatrixInputScreen extends AbstractInputtableConfigTypeScreen<ConvulsionMatrixConfig> {
 
@@ -36,7 +35,12 @@ public class ConvulsionMatrixInputScreen extends AbstractInputtableConfigTypeScr
 		Component suffix = new TextComponent("");
 
 		for(int i = 0; i < 9; i++)
-			addRenderableWidget(new Slider(x + w * (i % 3), y + 25 * (i / 3), w - p, 20, prefix, suffix, 0f, 2f, original.colorMatrix[i], false, false, this::onSlide));
+			addRenderableWidget(new ForgeSlider(x + w * (i % 3), y + 25 * (i / 3), w - p, 20, prefix, suffix, 0f, 2f, original.colorMatrix[i], 0, 1, false) {
+				@Override
+				protected void applyValue() {
+					onSlide(this);
+				}
+			});
 
 		addRenderableWidget(new Button(x, y + 115, w - p, 20, new TextComponent("Identity"), this::onSlide));
 		addRenderableWidget(new Button(x + w, y + 115, w - p, 20, new TextComponent("Dreary"), this::onSlide));
@@ -58,10 +62,7 @@ public class ConvulsionMatrixInputScreen extends AbstractInputtableConfigTypeScr
 		int sliders = 0;
 		boolean needsUpdate = false;
 		for(Widget w : renderables)
-			if(w instanceof Slider s) {
-				if(mouseX < s.x || mouseY < s.y || mouseX >= s.x + s.getWidth() || mouseY >= s.y + s.getHeight())
-					s.dragging = false;
-
+			if(w instanceof ForgeSlider s) {
 				double val = correct(s);
 				double curr = mutable.colorMatrix[sliders];
 				if(curr != val) {
@@ -122,7 +123,7 @@ public class ConvulsionMatrixInputScreen extends AbstractInputtableConfigTypeScr
 			update();
 	}
 
-	private double correct(Slider s) {
+	private double correct(ForgeSlider s) {
 		double val = s.getValue();
 		val = correct(val, 1.0, s);
 		val = correct(val, 0.5, s);
@@ -130,7 +131,7 @@ public class ConvulsionMatrixInputScreen extends AbstractInputtableConfigTypeScr
 		return val;
 	}
 
-	private double correct(double val, double correct, Slider s) {
+	private double correct(double val, double correct, ForgeSlider s) {
 		if(Math.abs(val - correct) < 0.02) {
 			s.setValue(correct);
 			return correct;
@@ -138,8 +139,8 @@ public class ConvulsionMatrixInputScreen extends AbstractInputtableConfigTypeScr
 		return val;
 	}
 
-	private void onSlide(Button button) {
-		String name = button.getMessage().getString();
+	private void onSlide(AbstractWidget widget) {
+		String name = widget.getMessage().getString();
 		double[][] matrices = {
 				{
 					1, 0, 0,
@@ -168,7 +169,7 @@ public class ConvulsionMatrixInputScreen extends AbstractInputtableConfigTypeScr
 		mutable.colorMatrix = Arrays.copyOf(matrices[idx], matrices[idx].length);
 
 		for(Widget w : renderables)
-			if(w instanceof Slider s) {
+			if(w instanceof ForgeSlider s) {
 				s.setValue(matrices[idx][sliders]);
 				sliders++;
 			}

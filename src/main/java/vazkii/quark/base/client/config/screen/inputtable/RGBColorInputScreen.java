@@ -1,20 +1,18 @@
 package vazkii.quark.base.client.config.screen.inputtable;
 
-import javax.annotation.Nonnull;
-
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraftforge.client.gui.widget.Slider;
+import net.minecraftforge.client.gui.widget.ForgeSlider;
 import vazkii.quark.api.config.IConfigCategory;
 import vazkii.quark.api.config.IConfigElement;
 import vazkii.quark.base.module.config.type.inputtable.RGBAColorConfig;
 import vazkii.quark.base.module.config.type.inputtable.RGBColorConfig;
+
+import javax.annotation.Nonnull;
 
 public class RGBColorInputScreen extends AbstractInputtableConfigTypeScreen<RGBColorConfig> {
 
@@ -35,7 +33,12 @@ public class RGBColorInputScreen extends AbstractInputtableConfigTypeScreen<RGBC
 		int cnt = (original instanceof RGBAColorConfig ? 4 : 3);
 		for(int i = 0; i < cnt; i++) {
 			double curr = original.getElement(i);
-			addRenderableWidget(new Slider(x , y + 25 * i, w - p, 20, prefix, suffix, 0f, 1f, curr, false, false, this::onSlide));
+			addRenderableWidget(new ForgeSlider(x , y + 25 * i, w - p, 20, prefix, suffix, 0f, 1f, curr, 0, 1, false) {
+				@Override
+				protected void applyValue() {
+					update();
+				}
+			});
 		}
 	}
 
@@ -50,10 +53,7 @@ public class RGBColorInputScreen extends AbstractInputtableConfigTypeScreen<RGBC
 		int sliders = 0;
 		boolean needsUpdate = false;
 		for(Widget w : renderables)
-			if(w instanceof Slider s) {
-				if(mouseX < s.x || mouseY < s.y || mouseX >= s.x + s.getWidth() || mouseY >= s.y + s.getHeight())
-					s.dragging = false;
-
+			if(w instanceof ForgeSlider s) {
 				double val = correct(s);
 				double curr = mutable.getElement(sliders);
 				if(curr != val) {
@@ -93,7 +93,7 @@ public class RGBColorInputScreen extends AbstractInputtableConfigTypeScreen<RGBC
 			update();
 	}
 
-	private double correct(Slider s) {
+	private double correct(ForgeSlider s) {
 		double val = s.getValue();
 		val = correct(val, 0.0, s);
 		val = correct(val, 0.25, s);
@@ -103,15 +103,11 @@ public class RGBColorInputScreen extends AbstractInputtableConfigTypeScreen<RGBC
 		return val;
 	}
 
-	private double correct(double val, double correct, Slider s) {
+	private double correct(double val, double correct, ForgeSlider s) {
 		if(Math.abs(val - correct) < 0.02) {
 			s.setValue(correct);
 			return correct;
 		}
 		return val;
-	}
-
-	private void onSlide(Button btn) {
-		update();
 	}
 }
