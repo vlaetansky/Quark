@@ -214,7 +214,7 @@ public class SimpleHarvestModule extends QuarkModule {
 			harvestAndReplant(player.level, pos, worldBlock, player);
 			return true;
 		} else if (rightClickCrops.contains(worldBlock.getBlock())) {
-			return Quark.proxy.useItemSided(player, player.level, hand,
+			return Quark.proxy.clientUseItem(player, player.level, hand,
 					new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, true)).consumesAction();
 		}
 
@@ -225,13 +225,13 @@ public class SimpleHarvestModule extends QuarkModule {
 		if (player == null)
 			return false;
 
-		ItemStack mainHand = player.getMainHandItem();
-		boolean isHoe = HoeHarvestingModule.isHoe(mainHand);
+		ItemStack inHand = player.getItemInHand(hand);
+		boolean isHoe = HoeHarvestingModule.isHoe(inHand);
 
 		if (!emptyHandHarvest && !isHoe)
 			return false;
 
-		int range = HoeHarvestingModule.getRange(mainHand);
+		int range = HoeHarvestingModule.getRange(inHand);
 
 		boolean hasHarvested = false;
 
@@ -253,11 +253,11 @@ public class SimpleHarvestModule extends QuarkModule {
 			return false;
 
 		if (player.level.isClientSide) {
-			if (mainHand.isEmpty())
+			if (inHand.isEmpty())
 				QuarkNetwork.sendToServer(new HarvestMessage(pos, hand));
 		} else {
 			if (harvestingCostsDurability && isHoe)
-				mainHand.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(InteractionHand.MAIN_HAND));
+				inHand.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(InteractionHand.MAIN_HAND));
 		}
 
 		return true;

@@ -1,6 +1,5 @@
 package vazkii.quark.base.proxy;
 
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -105,9 +104,7 @@ public class CommonProxy {
 		EntitySpawnHandler.refresh();
 	}
 
-	public InteractionResult useItemSided(Player player, Level level, InteractionHand hand, BlockHitResult hit) {
-		if (player instanceof ServerPlayer sPlayer)
-			return sPlayer.gameMode.useItemOn(sPlayer, level, player.getItemInHand(hand), hand, hit);
+	public InteractionResult clientUseItem(Player player, Level level, InteractionHand hand, BlockHitResult hit) {
 		return InteractionResult.PASS;
 	}
 

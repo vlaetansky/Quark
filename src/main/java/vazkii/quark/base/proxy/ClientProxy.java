@@ -114,13 +114,13 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public InteractionResult useItemSided(Player player, Level level, InteractionHand hand, BlockHitResult hit) {
+	public InteractionResult clientUseItem(Player player, Level level, InteractionHand hand, BlockHitResult hit) {
 		if (player instanceof LocalPlayer lPlayer) {
 			var mc = Minecraft.getInstance();
 			if (mc.gameMode != null && mc.level != null)
 				return mc.gameMode.useItemOn(lPlayer, mc.level, hand, hit);
 		}
-		return super.useItemSided(player, level, hand, hit);
+		return InteractionResult.PASS;
 	}
 
 	@Override
