@@ -5,7 +5,6 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -14,12 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
@@ -29,7 +23,6 @@ import net.minecraftforge.client.event.ScreenOpenEvent;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.addons.oddities.client.screen.BackpackInventoryScreen;
@@ -141,17 +134,6 @@ public class BackpackModule extends QuarkModule {
 	private void requestBackpack() {
 		heldStack = Minecraft.getInstance().player.inventoryMenu.getCarried();
 		QuarkNetwork.sendToServer(new HandleBackpackMessage(true));
-	}
-
-	@SubscribeEvent
-	@OnlyIn(Dist.CLIENT)
-	public void removeCurseTooltip(ItemTooltipEvent event) {
-		if(!superOpMode && event.getItemStack().getItem() instanceof BackpackItem)
-			for(Component s : event.getToolTip())
-				if(s.getString().equals(Enchantments.BINDING_CURSE.getFullname(1).getString())) {
-					event.getToolTip().remove(s);
-					return;
-				}
 	}
 
 	@OnlyIn(Dist.CLIENT)

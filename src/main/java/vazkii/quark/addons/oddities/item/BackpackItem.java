@@ -75,6 +75,11 @@ public class BackpackItem extends DyeableArmorItem implements IQuarkItem, IItemC
 	}
 
 	@Override
+	public int getDefaultTooltipHideFlags(@Nonnull ItemStack stack) {
+		return stack.isEnchanted() ? ItemStack.TooltipPart.ENCHANTMENTS.getMask() : 0;
+	}
+
+	@Override
 	public QuarkModule getModule() {
 		return module;
 	}
