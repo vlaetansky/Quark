@@ -200,7 +200,7 @@ public class SimpleHarvestModule extends QuarkModule {
 		isHarvesting = true;
 		if (click(event.getPlayer(), event.getHand(), event.getPos())) {
 			event.setCanceled(true);
-			event.setCancellationResult(InteractionResult.SUCCESS);
+			event.setCancellationResult(InteractionResult.sidedSuccess(event.getWorld().isClientSide));
 		}
 		isHarvesting = false;
 	}
@@ -214,6 +214,8 @@ public class SimpleHarvestModule extends QuarkModule {
 			harvestAndReplant(player.level, pos, worldBlock, player);
 			return true;
 		} else if (doRightClick && rightClickCrops.contains(worldBlock.getBlock())) {
+			if (!player.level.isClientSide)
+				return true;
 			return Quark.proxy.clientUseItem(player, player.level, hand,
 					new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, true)).consumesAction();
 		}
