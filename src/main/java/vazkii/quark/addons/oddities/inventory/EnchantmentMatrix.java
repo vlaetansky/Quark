@@ -11,7 +11,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.addons.oddities.module.MatrixEnchantingModule;
+import vazkii.quark.content.experimental.module.EnchantmentsBegoneModule;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -128,8 +130,9 @@ public class EnchantmentMatrix {
 		List<Piece> marked = pieces.values().stream().filter(p -> p.marked).collect(Collectors.toList());
 
 		List<EnchantmentDataWrapper> validEnchants = new ArrayList<>();
-		Registry.ENCHANTMENT.forEach(enchantment -> {
+		ForgeRegistries.ENCHANTMENTS.forEach(enchantment -> {
 			if ((!enchantment.isTreasureOnly() || MatrixEnchantingModule.allowTreasures)
+					&& !EnchantmentsBegoneModule.shouldBegone(enchantment)
 					&& !MatrixEnchantingModule.disallowedEnchantments.contains(Objects.toString(enchantment.getRegistryName()))
 					&& (enchantment.canApplyAtEnchantingTable(target) || (book && enchantment.isAllowedOnBooks()))) {
 				int enchantLevel = 1;

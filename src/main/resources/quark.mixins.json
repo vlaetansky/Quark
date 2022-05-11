@@ -13,6 +13,7 @@
     "DamageEnchantmentMixin",
     "DamageSourceMixin",
     "EnchantBookForEmeraldsMixin",
+    "EnchantedBookItemMixin",
     "EnchantmentHelperMixin",
     "EnchantmentMixin",
     "EntityMixin",

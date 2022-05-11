@@ -8,7 +8,7 @@ import vazkii.quark.content.experimental.module.EnchantmentsBegoneModule;
 
 import java.util.List;
 
-@Mixin(targets = "net.minecraft.world.entity.npc.VillagerTrades.EnchantBookForEmeralds")
+@Mixin(targets = "net.minecraft.world.entity.npc.VillagerTrades$EnchantBookForEmeralds")
 public class EnchantBookForEmeraldsMixin {
 
 	@ModifyVariable(method = "getOffer", at = @At("STORE"))

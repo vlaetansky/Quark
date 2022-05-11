@@ -186,6 +186,7 @@ public final class ModuleLoader {
 	 */
 	public void initJEICompat(Runnable jeiRunnable) {
 		onConfigReloadJEI = jeiRunnable;
+		onConfigReloadJEI.run();
 	}
 
 }

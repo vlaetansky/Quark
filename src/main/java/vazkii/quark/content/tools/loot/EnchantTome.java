@@ -1,12 +1,7 @@
 package vazkii.quark.content.tools.loot;
 
-import static vazkii.quark.content.tools.module.AncientTomesModule.validEnchants;
-
-import javax.annotation.Nonnull;
-
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -16,6 +11,10 @@ import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunct
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import vazkii.quark.content.tools.module.AncientTomesModule;
+
+import javax.annotation.Nonnull;
+
+import static vazkii.quark.content.tools.module.AncientTomesModule.validEnchants;
 
 /**
  * @author WireSegal

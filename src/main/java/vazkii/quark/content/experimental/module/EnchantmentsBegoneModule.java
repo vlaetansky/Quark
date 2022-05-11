@@ -1,8 +1,12 @@
 package vazkii.quark.content.experimental.module;
 
 import com.google.common.collect.Lists;
+import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.module.LoadModule;
@@ -11,6 +15,9 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @LoadModule(category = ModuleCategory.EXPERIMENTAL, enabledByDefault = false)
 public class EnchantmentsBegoneModule extends QuarkModule {
@@ -35,17 +42,38 @@ public class EnchantmentsBegoneModule extends QuarkModule {
 		}
 	}
 
+	public static void begoneItems(NonNullList<ItemStack> stacks) {
+		if (!staticEnabled)
+			return;
+
+		stacks.removeIf((it) -> {
+			if (it.is(Items.ENCHANTED_BOOK)) {
+				Map<Enchantment, Integer> enchants = EnchantmentHelper.getEnchantments(it);
+				for (Enchantment key : enchants.keySet()) {
+					if (enchantments.contains(key)) {
+						return true;
+					}
+				}
+			}
+			return false;
+		});
+	}
+
+	public static boolean shouldBegone(Enchantment enchantment) {
+		return staticEnabled && enchantments.contains(enchantment);
+	}
+
 	public static List<Enchantment> begoneEnchantments(List<Enchantment> list) {
 		if (!staticEnabled)
 			return list;
 
-		return list.stream().filter(enchantments::contains).toList();
+		return list.stream().filter(Predicate.not(enchantments::contains)).collect(Collectors.toList());
 	}
 
 	public static List<EnchantmentInstance> begoneEnchantmentInstances(List<EnchantmentInstance> list) {
 		if (!staticEnabled)
 			return list;
 
-		return list.stream().filter(it -> enchantments.contains(it.enchantment)).toList();
+		return list.stream().filter(it -> !enchantments.contains(it.enchantment)).collect(Collectors.toList());
 	}
 }

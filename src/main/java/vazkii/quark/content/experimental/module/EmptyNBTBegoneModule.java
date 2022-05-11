@@ -6,7 +6,7 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 
-@LoadModule(category = ModuleCategory.EXPERIMENTAL, enabledByDefault = false)
+@LoadModule(name = "Empty NBT Begone", category = ModuleCategory.EXPERIMENTAL, enabledByDefault = false)
 public class EmptyNBTBegoneModule extends QuarkModule {
 	private static boolean staticEnabled;
 

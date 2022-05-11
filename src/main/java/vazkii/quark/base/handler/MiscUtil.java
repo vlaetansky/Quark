@@ -53,6 +53,7 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.config.screen.AbstractQScreen;
+import vazkii.quark.content.experimental.module.EnchantmentsBegoneModule;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
@@ -119,7 +120,7 @@ public class MiscUtil {
 		enchants.clear();
 		for(String s : enchantNames) {
 			Enchantment enchant = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(s));
-			if (enchant != null)
+			if (enchant != null && !EnchantmentsBegoneModule.shouldBegone(enchant))
 				enchants.add(enchant);
 		}
 	}
