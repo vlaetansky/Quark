@@ -64,17 +64,19 @@ public class QuarkJeiPlugin implements IModPlugin {
 			jeiRuntime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM, disabledItems);
 
 		ModuleLoader.INSTANCE.initJEICompat(() -> {
+			NonNullList<ItemStack> stacks = NonNullList.create();
 			for (Item item : ForgeRegistries.ITEMS.getValues()) {
 				ResourceLocation loc = item.getRegistryName();
 				if (loc != null && loc.getNamespace().equals("quark")) {
 					if ((item instanceof IQuarkItem quarkItem && !quarkItem.isEnabled()) ||
 							(item instanceof BlockItem blockItem && blockItem.getBlock() instanceof IQuarkBlock quarkBlock && !quarkBlock.isEnabled())) {
-						NonNullList<ItemStack> stacks = NonNullList.create();
 						item.fillItemCategory(CreativeModeTab.TAB_SEARCH, stacks);
-						Minecraft.getInstance().submitAsync(() -> jeiRuntime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM, stacks));
 					}
 				}
 			}
+
+			if (!stacks.isEmpty())
+				Minecraft.getInstance().submitAsync(() -> jeiRuntime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM, stacks));
 		});
 	}
 
