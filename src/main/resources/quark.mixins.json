@@ -12,6 +12,7 @@
     "BoatMixin",
     "DamageEnchantmentMixin",
     "DamageSourceMixin",
+    "EnchantBookForEmeraldsMixin",
     "EnchantmentHelperMixin",
     "EnchantmentMixin",
     "EntityMixin",
