@@ -16,6 +16,7 @@
     "EnchantedBookItemMixin",
     "EnchantmentHelperMixin",
     "EnchantmentMixin",
+    "EnchantRandomlyFunctionMixin",
     "EntityMixin",
     "ItemMixin",
     "ItemsMixin",
