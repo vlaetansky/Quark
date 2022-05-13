@@ -116,7 +116,6 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 		return itemHandler().extractItem(slot, 64, true);
 	}
 
-
 	@Override
 	public int getContainerSize() {
 		return itemHandler().getSlots();
@@ -139,7 +138,7 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 
 	@Override
 	public boolean canPlaceItemThroughFace(int index, @Nonnull ItemStack stack, Direction dir) {
-		return true;
+		return itemHandler().getSlotLimit(index) > 0;
 	}
 
 	@Nonnull
