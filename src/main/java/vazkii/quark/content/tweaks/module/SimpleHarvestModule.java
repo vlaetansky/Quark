@@ -96,7 +96,7 @@ public class SimpleHarvestModule extends QuarkModule {
 					.forEach(b -> crops.put(b.defaultBlockState().setValue(b.getAgeProperty(), last(b.getAgeProperty().getPossibleValues())), b.defaultBlockState()));
 
 			ForgeRegistries.BLOCKS.getValues().stream()
-					.filter(b -> !isVanilla(b) && (b instanceof BushBlock || b instanceof GrowingPlantBlock) && b instanceof BonemealableBlock)
+					.filter(b -> !isVanilla(b) && (b instanceof BushBlock || b instanceof GrowingPlantBlock) && b instanceof BonemealableBlock && !(b instanceof CropBlock))
 					.forEach(rightClickCrops::add);
 		}
 
@@ -157,7 +157,7 @@ public class SimpleHarvestModule extends QuarkModule {
 	}
 
 	private static void harvestAndReplant(Level world, BlockPos pos, BlockState inWorld, Player player) {
-		if (!(world instanceof ServerLevel))
+		if (!(world instanceof ServerLevel serverLevel))
 			return;
 
 		ItemStack mainHand = player.getMainHandItem();
@@ -173,7 +173,7 @@ public class SimpleHarvestModule extends QuarkModule {
 		EnchantmentHelper.setEnchantments(enchMap, copy);
 
 		Item blockItem = inWorld.getBlock().asItem();
-		Block.getDrops(inWorld, (ServerLevel) world, pos, world.getBlockEntity(pos), player, copy)
+		Block.getDrops(inWorld, serverLevel, pos, world.getBlockEntity(pos), player, copy)
 			.forEach((stack) -> {
 				if(stack.getItem() == blockItem)
 					stack.shrink(1);
@@ -181,7 +181,7 @@ public class SimpleHarvestModule extends QuarkModule {
 				if(!stack.isEmpty())
 					Block.popResource(world, pos, stack);
 			});
-		inWorld.spawnAfterBreak((ServerLevel) world, pos, copy);
+		inWorld.spawnAfterBreak(serverLevel, pos, copy);
 
 		// ServerLevel sets this to `false` in the constructor, do we really need this check?
 		if (!world.isClientSide) {
@@ -224,7 +224,7 @@ public class SimpleHarvestModule extends QuarkModule {
 	}
 
 	public static boolean click(Player player, InteractionHand hand, BlockPos pos) {
-		if (player == null)
+		if (player == null || hand == null)
 			return false;
 
 		ItemStack inHand = player.getItemInHand(hand);
