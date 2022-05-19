@@ -1,5 +1,8 @@
 package vazkii.quark.content.tools.module;
 
+import com.google.common.collect.Lists;
+import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -45,26 +48,23 @@ import java.util.*;
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true)
 public class AncientTomesModule extends QuarkModule {
 
-	@Config(description = "Set to 0 to not generate in Dungeons")
-	public static int dungeonWeight = 20;
+	private static String loot(ResourceLocation lootLoc, int defaultWeight) {
+		return lootLoc.toString() + "," + defaultWeight;
+	}
 
-	@Config(description = "Set to 0 to not generate in Stronghold Libraries")
-	public static int libraryWeight = 30;
+	@Config(description = "Format is lootTable,weight. i.e. \"minecraft:chests/stronghold_library,30\"")
+	public static List<String> lootTables = Lists.newArrayList(
+			loot(BuiltInLootTables.STRONGHOLD_LIBRARY, 30),
+			loot(BuiltInLootTables.SIMPLE_DUNGEON, 20),
+			loot(BuiltInLootTables.BASTION_TREASURE, 25),
+			loot(BuiltInLootTables.WOODLAND_MANSION, 15),
+			loot(BuiltInLootTables.NETHER_BRIDGE, 0),
+			loot(BuiltInLootTables.UNDERWATER_RUIN_BIG, 0),
+			loot(BuiltInLootTables.UNDERWATER_RUIN_SMALL, 0),
+			loot(MonsterBoxModule.MONSTER_BOX_LOOT_TABLE, 5)
+	);
 
-	@Config(description = "Set to 0 to not generate in Bastions")
-	public static int bastionWeight = 25;
-
-	@Config(description = "Set to 0 to not generate in Woodland Mansions")
-	public static int woodlandMansionWeight = 15;
-
-	@Config(description = "Set to 0 to not generate in Nether Fortresses")
-	public static int netherFortressWeight = 0;
-
-	@Config(description = "Set to 0 to not generate in Underwater Ruins")
-	public static int underwaterRuinWeight = 0;
-
-	@Config(description = "Set to 0 to not generate in Monster Boxes")
-	public static int monsterBoxWeight = 5;
+	private static final Object2IntMap<ResourceLocation> lootTableWeights = new Object2IntArrayMap<>();
 
 	@Config public static int itemQuality = 2;
 
@@ -83,37 +83,6 @@ public class AncientTomesModule extends QuarkModule {
 	public static final List<Enchantment> validEnchants = new ArrayList<>();
 	private static boolean initialized = false;
 
-	@SubscribeEvent
-	public void onLootTableLoad(LootTableLoadEvent event) {
-		int weight = 0;
-		ResourceLocation res = event.getName();
-		if(res.equals(BuiltInLootTables.STRONGHOLD_LIBRARY))
-			weight = libraryWeight;
-		else if(res.equals(BuiltInLootTables.SIMPLE_DUNGEON))
-			weight = dungeonWeight;
-		else if(res.equals(BuiltInLootTables.NETHER_BRIDGE))
-			weight = netherFortressWeight;
-		else if(res.equals(BuiltInLootTables.WOODLAND_MANSION))
-			weight = woodlandMansionWeight;
-		else if(res.equals(BuiltInLootTables.UNDERWATER_RUIN_BIG) || res.equals(BuiltInLootTables.UNDERWATER_RUIN_SMALL))
-			weight = underwaterRuinWeight;
-		else if(res.equals(BuiltInLootTables.BASTION_TREASURE))
-			weight = bastionWeight;
-
-		else if(res.equals(MonsterBoxModule.MONSTER_BOX_LOOT_TABLE))
-			weight = monsterBoxWeight;
-
-		if(weight > 0) {
-			LootPoolEntryContainer entry = LootItem.lootTableItem(ancient_tome)
-					.setWeight(weight)
-					.setQuality(itemQuality)
-					.apply(() -> new EnchantTome(new LootItemCondition[0]))
-					.build();
-
-			MiscUtil.addToLootTable(event.getTable(), entry);
-		}
-	}
-
 	@Override
 	public void register() {
 		ancient_tome = new AncientTomeItem(this);
@@ -124,9 +93,47 @@ public class AncientTomesModule extends QuarkModule {
 	}
 
 	@Override
+	public void configChanged() {
+		lootTableWeights.clear();
+		for (String table : lootTables) {
+			String[] split = table.split(",");
+			if (split.length == 2) {
+				int weight;
+				ResourceLocation loc = new ResourceLocation(split[0]);
+				try {
+					weight = Integer.parseInt(split[1]);
+				} catch (NumberFormatException e) {
+					continue;
+				}
+				if (weight > 0)
+					lootTableWeights.put(loc, weight);
+			}
+		}
+
+		if(initialized)
+			setupEnchantList();
+	}
+
+	@Override
 	public void setup() {
 		setupEnchantList();
 		initialized = true;
+	}
+
+	@SubscribeEvent
+	public void onLootTableLoad(LootTableLoadEvent event) {
+		ResourceLocation res = event.getName();
+		int weight = lootTableWeights.getOrDefault(res, 0);
+
+		if(weight > 0) {
+			LootPoolEntryContainer entry = LootItem.lootTableItem(ancient_tome)
+					.setWeight(weight)
+					.setQuality(itemQuality)
+					.apply(() -> new EnchantTome(new LootItemCondition[0]))
+					.build();
+
+			MiscUtil.addToLootTable(event.getTable(), entry);
+		}
 	}
 
 	public static boolean isInitialized() {
@@ -302,12 +309,6 @@ public class AncientTomesModule extends QuarkModule {
 				strings.add(e.getRegistryName().toString());
 
 		return strings;
-	}
-
-	@Override
-	public void configChanged() {
-		if(initialized)
-			setupEnchantList();
 	}
 
 	private void setupEnchantList() {
