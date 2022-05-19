@@ -12,7 +12,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -30,7 +29,6 @@ import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.addons.oddities.block.be.MatrixEnchantingTableBlockEntity;
 import vazkii.quark.addons.oddities.module.MatrixEnchantingModule;
 import vazkii.quark.api.IEnchantmentInfluencer;
-import vazkii.quark.api.IModifiableEnchantmentInfluencer;
 import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
@@ -128,18 +126,12 @@ public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements
 							break;
 
 						if(showInfluences) {
-							IEnchantmentInfluencer influencer = MatrixEnchantingTableBlockEntity.getInfluencerFromBlock(state.getBlock());
+							IEnchantmentInfluencer influencer = MatrixEnchantingTableBlockEntity.getInfluencerFromBlock(state);
 
 							if (influencer != null) {
-								DyeColor color = influencer.getEnchantmentInfluenceColor(worldIn, blockpos, state);
+								float[] comp = influencer.getEnchantmentInfluenceColor(worldIn, blockpos, state);
 
-								if (color != null) {
-									float[] comp = color.getTextureDiffuseColors();
-
-									if (influencer instanceof IModifiableEnchantmentInfluencer modifiableInfluencer) {
-										comp = modifiableInfluencer.getModifiedColorComponents(worldIn, blockpos, state, comp);
-									}
-
+								if (comp != null) {
 									int steps = 20;
 									double dx = (double) (pos.getX() - blockpos.getX()) / steps;
 									double dy = (double) (pos.getY() - blockpos.getY()) / steps;

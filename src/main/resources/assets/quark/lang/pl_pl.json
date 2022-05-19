@@ -2,7 +2,7 @@
     "____comment": "Colors are in #RRGGBB format",
     "quark.gui.color.crate_count": "#404040",
 	"quark.gui.color.matrix_enchanting": "#404040",
-    
+
 	"quark.gui.button.sort": "Segreguj",
 	"quark.gui.button.sort_inventory": "Segreguj ekwipunek",
 	"quark.gui.button.sort_container": "Segreguj pojemnik",
@@ -15,6 +15,7 @@
 
 	"quark.gui.enchanting.min": "Min: %d",
 	"quark.gui.enchanting.influence": "Wpływ świec: +%d%%",
+	"quark.gui.enchanting.dampen": "Wpływ świec: %d%%",
 	"quark.gui.enchanting.upgrade": "Ulepsz: %d/%d",
 	"quark.gui.enchanting.left_click": "Lewy przycisk myszy by wybrać",
 	"quark.gui.enchanting.right_click": "Prawy przycisk myszy by obrócić",
@@ -25,7 +26,7 @@
 	"quark.gui.keygroup.inv": "Quark - ekwipunek",
 	"quark.gui.keygroup.emote": "Quark - emotikony",
     "quark.gui.keygroup.accessibility": "Quark - dostępność",
-	
+
 	"quark.gui.config.save": "Zapisz zmiany",
 	"quark.gui.config.social.website": "Quark - strona",
 	"quark.gui.config.social.discord": "Discord",
@@ -45,7 +46,7 @@
 	"quark.gui.config.missingaddon": "Brakuje Ci niezbędnego dodatku do tej kategorii",
 
 	"quark.category.general": "Ustawienia główne",
-	"quark.category.friends": "Konfiguracje przyjaciół",	
+	"quark.category.friends": "Konfiguracje przyjaciół",
 	"quark.category.automation": "Automatyzacja",
 	"quark.category.building": "Budownictwo",
 	"quark.category.management": "Zarządzanie",
@@ -58,7 +59,7 @@
 	"quark.category.experimental": "Eksperymentalne",
 
 	"quark.camera.filter": "Filtr: ",
-	"quark.camera.filter.none": "Bez filtra",	
+	"quark.camera.filter.none": "Bez filtra",
 	"quark.camera.filter.grayscale": "Skala szarości",
 	"quark.camera.filter.monochrome": "Monochromia",
 	"quark.camera.filter.sepia": "Sepia",
@@ -115,7 +116,7 @@
 
 	"quark.jei.makes_copy": "Tworzy kopię",
     "quark.jei.any_enchanted": "Dowolny zaklęty przedmiot",
-	
+
 	"quark.keybind.change_hotbar": "Podmiana pasków narzędzi",
 	"quark.keybind.lock_rotation": "Blokada obrotu bloków",
 	"quark.keybind.sort_container": "Segreguj zawartość pojemnika",
@@ -134,7 +135,7 @@
 	"quark.keybind.narrator_full_readout": "Pełne odczytywanie przez narratora",
 	"quark.keybind.shift_lock": "Zablokuj Shift",
 	"quark.keybind.autorun": "Idź automatycznie",
-    
+
     "quark.readout.not_ingame": "Nie w grze",
 	"quark.readout.looking": "Patrzysz na %s",
 	"quark.readout.holding": "Trzymasz %dx %s",
@@ -223,7 +224,7 @@
 	"quark.misc.repaired": "(Naprawiono)",
 	"quark.misc.celebration": "Świętujemy 10 lat modów Vazkii'ego (2021)",
 	"quark.misc.ancient_tome_tooltip": "+I %s (Max. %s)",
-    
+
     "quark.misc.reloaded0": "Twoja konfiguracja quarka została przeładowana.",
 	"quark.misc.reloaded1": "- Jeżeli zostały zmienione ustawienia zmieniające receptury, wpisz komendę /reload.",
 	"quark.misc.reloaded2": "- Jeżeli nie widzisz zmian w grze, spróbuj uruchomić ją ponownie.",
@@ -310,7 +311,7 @@
 	"item.quark.forgotten_hat": "Czapka zapomnianego",
 	"item.quark.soul_bead": "Koralik duszy",
 	"item.quark.abacus": "Liczydło",
-    
+
     "item.quark.music_disc_tedium": "Płyta muzyczna",
 	"item.quark.music_disc_tedium.desc": "Kain Vinosec - Tedium",
 	"item.quark.music_disc_drips": "Płyta nastrojowa",
@@ -342,7 +343,7 @@
 	"item.minecraft.splash_potion.effect.quark.resistance": "Miotana mikstura hartu",
 	"item.minecraft.lingering_potion.effect.quark.resistance": "Trwała mikstura hartu",
 	"item.minecraft.tipped_arrow.effect.quark.resistance": "Strzała hartu",
-	
+
 	"item.quark.biome_map.snowy_tundra": "Mapa badacza zaśnieżonej tundry",
 	"item.quark.biome_map.mountains": "Mapa badacza gór",
 	"item.quark.biome_map.dark_forest": "Mapa badacza puszczy",
@@ -356,7 +357,7 @@
 	"item.quark.biome_map.badlands": "Mapa badacza badlandów",
 	"item.quark.biome_map.mushroom_fields": "Mapa badacza grzybowych pól",
 	"item.quark.biome_map.ice_spikes": "Mapa badacza zamarzniętego oceanu",
-	
+
 	"block.quark.charcoal_block": "Blok węgla drzewnego",
 	"block.quark.black_quilted_wool": "Czarna pikowana wełna",
 	"block.quark.blue_quilted_wool": "Niebieska pikowana wełna",
@@ -1200,7 +1201,7 @@
 	"entity.quark.wraith": "Widmo",
 	"entity.quark.soul_bead": "Koralik duszy",
 	"entity.quark.shiba": "Shiba inu",
-	
+
 	"block.quark.magnetized_block": "Zmagnetyzowany blok",
 	"block.quark.potted_beetroot": "Burak w doniczce",
 	"block.quark.potted_berries": "Krzak słodkich jagód w doniczce",
@@ -1231,7 +1232,7 @@
 	"block.quark.potted_weeping_vines": "Lamentorośl w doniczce",
 	"block.quark.potted_wheat": "Pszenica w doniczce",
 	"block.quark.potted_yellow_blossom_sapling": "Słoneczna kwitnąca sadzonka w doniczce",
-	
+
     "generator.quark.realistic": "Realistyczny",
 	"generator.quark.realistic_large_biomes": "Real. w. biomy"
 }

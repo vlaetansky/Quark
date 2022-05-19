@@ -150,6 +150,8 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 
 			if(hoveredPiece.influence > 0)
 				tooltip.add(new TranslatableComponent("quark.gui.enchanting.influence", (int) (hoveredPiece.influence * MatrixEnchantingModule.influencePower * 100)).withStyle(ChatFormatting.GRAY));
+			else if (hoveredPiece.influence < 0)
+				tooltip.add(new TranslatableComponent("quark.gui.enchanting.dampen", (int) (hoveredPiece.influence * MatrixEnchantingModule.influencePower * 100)).withStyle(ChatFormatting.GRAY));
 
 			int max = hoveredPiece.getMaxXP();
 			if(max > 0)

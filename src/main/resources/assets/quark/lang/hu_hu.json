@@ -10,6 +10,7 @@
 
 	"quark.gui.enchanting.min": "Min: %d",
 	"quark.gui.enchanting.influence": "Gyertya Befolyása: +%d%%",
+	"quark.gui.enchanting.dampen": "Gyertya Befolyása: %d%%",
 	"quark.gui.enchanting.upgrade": "Javítás: %d/%d",
 	"quark.gui.enchanting.left_click": "Bal Kattintás a Kiválasztásért",
 	"quark.gui.enchanting.right_click": "Jobb Kattintás a Fordításért",

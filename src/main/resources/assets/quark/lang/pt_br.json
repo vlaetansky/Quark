@@ -2,7 +2,7 @@
 	"____comment": "Colors are in #RRGGBB format",
 	"quark.gui.color.crate_count": "#404040",
 	"quark.gui.color.matrix_enchanting": "#404040",
-	
+
 	"quark.gui.button.sort": "Organizar",
 	"quark.gui.button.sort_inventory": "Organizar inventário",
 	"quark.gui.button.sort_container": "Organizar contêiner",
@@ -17,6 +17,7 @@
 
 	"quark.gui.enchanting.min": "Mínimo: %d",
 	"quark.gui.enchanting.influence": "Influência de vela: +%d%%",
+	"quark.gui.enchanting.dampen": "Influência de vela: %d%%",
 	"quark.gui.enchanting.upgrade": "Melhorar: %d/%d",
 	"quark.gui.enchanting.left_click": "Botão esq. para selecionar",
 	"quark.gui.enchanting.right_click": "Botão dir. para girar",
@@ -27,7 +28,7 @@
 	"quark.gui.keygroup.inv": "Inventário do Quark",
 	"quark.gui.keygroup.emote": "Emojis do Quark",
 	"quark.gui.keygroup.accessibility": "Acessibilidade do Quark",
-			
+
 	"quark.gui.config.save": "Salvar alterações",
 	"quark.gui.config.social.website": "Site do Quark",
 	"quark.gui.config.social.discord": "Discord",
@@ -94,7 +95,7 @@
 	"quark.category.experimental": "Experimental",
 
 	"quark.camera.filter": "Filtro: ",
-	"quark.camera.filter.none": "Nenhum",	
+	"quark.camera.filter.none": "Nenhum",
 	"quark.camera.filter.grayscale": "Escala cinza",
 	"quark.camera.filter.monochrome": "Monocromático",
 	"quark.camera.filter.sepia": "Sépia",
@@ -149,7 +150,7 @@
 
 	"quark.jei.makes_copy": "Faz cópia",
 	"quark.jei.any_enchanted": "Qualquer item encantado",
-	
+
 	"quark.keybind.change_hotbar": "Trocador de barra rápida",
 	"quark.keybind.lock_rotation": "Trava de rotação",
 	"quark.keybind.sort_container": "Organizar inventário do alvo",
@@ -168,7 +169,7 @@
 	"quark.keybind.narrator_full_readout": "Leitura completa do narrador",
 	"quark.keybind.shift_lock": "Shift travado",
 	"quark.keybind.autorun": "Andar automaticamente",
-	
+
 	"quark.readout.not_ingame": "Não está no jogo",
 	"quark.readout.looking": "Olhando para %s",
 	"quark.readout.holding": "Segurando %dx %s",
@@ -346,7 +347,7 @@
 	"item.quark.music_disc_crickets.desc": "Melodia dos grilos",
 	"item.quark.music_disc_chatter": "Disco de ambientação",
 	"item.quark.music_disc_chatter.desc": "Local lotado",
-	
+
 	"item.minecraft.potion.effect.quark.resilience": "Poção de estabilidade",
 	"item.minecraft.splash_potion.effect.quark.resilience": "Poção arremessável de estabilidade",
 	"item.minecraft.lingering_potion.effect.quark.resilience": "Poção prolongada de estabilidade",
@@ -355,7 +356,7 @@
 	"item.minecraft.splash_potion.effect.quark.resistance": "Poção arremessável de fortitude",
 	"item.minecraft.lingering_potion.effect.quark.resistance": "Poção prolongada de fortitude",
 	"item.minecraft.tipped_arrow.effect.quark.resistance": "Flecha de fortitude",
-	
+
 	"item.quark.biome_map.snowy_tundra": "Mapa de caminho para a tundra nevada",
 	"item.quark.biome_map.mountains": "Mapa de caminho para as montanhas",
 	"item.quark.biome_map.dark_forest": "Mapa de caminho para a floresta escura",
@@ -369,7 +370,7 @@
 	"item.quark.biome_map.badlands": "Mapa de caminho para as terras áridas",
 	"item.quark.biome_map.mushroom_fields": "Mapa de caminho para os campos de cogumelo",
 	"item.quark.biome_map.ice_spikes": "Mapa de caminho para os picos de gelo",
-	
+
 	"block.quark.charcoal_block": "Bloco de carvão vegetal",
 	"block.quark.thatch": "Colmo de feno",
 	"block.quark.thatch_slab": "Laje de colmo de feno",
@@ -980,7 +981,7 @@
 	"entity.quark.wraith": "Espectro",
 	"entity.quark.soul_bead": "Gota das almas",
 	"entity.quark.shiba": "Shiba inu",
-	
+
 	"block.quark.magnetized_block": "Bloco magnetizado",
 	"block.quark.potted_beetroot": "Beterrabas envasadas",
 	"block.quark.potted_berries": "Arbusto de bagas doces envasado",

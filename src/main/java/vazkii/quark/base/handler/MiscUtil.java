@@ -4,8 +4,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.Util;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.*;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -29,6 +32,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
@@ -238,6 +242,16 @@ public class MiscUtil {
 		}
 
 		throw new JsonSyntaxException("Expected " + key + " to be a color, was " + GsonHelper.getType(element));
+	}
+
+	public static BlockState fromString(String key) {
+		try {
+			BlockStateParser parser = new BlockStateParser(new StringReader(key), false).parse(false);
+			BlockState state = parser.getState();
+			return state == null ? Blocks.AIR.defaultBlockState() : state;
+		} catch (CommandSyntaxException e) {
+			return Blocks.AIR.defaultBlockState();
+		}
 	}
 
 	@OnlyIn(Dist.CLIENT)

@@ -17,6 +17,7 @@
 
 	"quark.gui.enchanting.min": "Mín: %d",
 	"quark.gui.enchanting.influence": "Influencia de vela: +%d%%",
+	"quark.gui.enchanting.dampen": "Influencia de vela: %d%%",
 	"quark.gui.enchanting.upgrade": "Mejora: %d/%d",
 	"quark.gui.enchanting.left_click": "Clic izquierdo para seleccionar",
 	"quark.gui.enchanting.right_click": "Clic derecho para rotar",

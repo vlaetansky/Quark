@@ -17,6 +17,7 @@
 
 	"quark.gui.enchanting.min": "Min: %d",
 	"quark.gui.enchanting.influence": "Candle Influence: +%d%%",
+	"quark.gui.enchanting.dampen": "Candle Influence: %d%%",
 	"quark.gui.enchanting.upgrade": "Upgrade: %d/%d",
 	"quark.gui.enchanting.left_click": "Left Click to Select",
 	"quark.gui.enchanting.right_click": "Right Click to Rotate",

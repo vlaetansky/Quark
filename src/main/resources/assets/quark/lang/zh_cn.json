@@ -17,6 +17,7 @@
 
 	"quark.gui.enchanting.min": "最低：%d",
 	"quark.gui.enchanting.influence": "蜡烛影响值：+%d%%",
+	"quark.gui.enchanting.dampen": "蜡烛影响值：%d%%",
 	"quark.gui.enchanting.upgrade": "升级：%d/%d",
 	"quark.gui.enchanting.left_click": "左击选择",
 	"quark.gui.enchanting.right_click": "右击旋转",

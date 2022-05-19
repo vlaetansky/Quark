@@ -13,9 +13,6 @@ package vazkii.quark.content.tweaks.module;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -39,6 +36,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
@@ -103,9 +101,9 @@ public class SimpleHarvestModule extends QuarkModule {
 		for (String harvestKey : harvestableBlocks) {
 			BlockState initial, result;
 			String[] split = tokenize(harvestKey);
-			initial = fromString(split[0]);
+			initial = MiscUtil.fromString(split[0]);
 			if (split.length > 1)
-				result = fromString(split[1]);
+				result = MiscUtil.fromString(split[1]);
 			else
 				result = initial.getBlock().defaultBlockState();
 
@@ -144,16 +142,6 @@ public class SimpleHarvestModule extends QuarkModule {
 			return true; // Just in case
 
 		return loc.getNamespace().equals("minecraft");
-	}
-
-	private BlockState fromString(String key) {
-		try {
-			BlockStateParser parser = new BlockStateParser(new StringReader(key), false).parse(false);
-			BlockState state = parser.getState();
-			return state == null ? Blocks.AIR.defaultBlockState() : state;
-		} catch (CommandSyntaxException e) {
-			return Blocks.AIR.defaultBlockState();
-		}
 	}
 
 	private static void harvestAndReplant(Level world, BlockPos pos, BlockState inWorld, Player player) {

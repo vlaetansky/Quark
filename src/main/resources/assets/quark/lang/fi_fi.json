@@ -11,6 +11,7 @@
 
 	"quark.gui.enchanting.min": "Minimi: %d",
 	"quark.gui.enchanting.influence": "Kynttilöiden vaikutus: +%d%%",
+	"quark.gui.enchanting.dampen": "Kynttilöiden vaikutus: %d%%",
 	"quark.gui.enchanting.upgrade": "Päivitys: %d/%d",
 	"quark.gui.enchanting.left_click": "Valitse hiiren vasemmalla painikkeella",
 	"quark.gui.enchanting.right_click": "Pyöritä hiiren oikealla painikkeella",
@@ -21,7 +22,7 @@
 	"quark.gui.keygroup.inv": "Quark tavaraluettelo",
 	"quark.gui.keygroup.emote": "Quark emotet",
 	"quark.gui.keygroup.accessibility": "Quark helppokäyttöisyys",
-	
+
 	"quark.gui.config.save": "Säästä muutokset",
 	"quark.gui.config.social.website": "Quark-nettisivu",
 	"quark.gui.config.social.discord": "Discord",
@@ -41,7 +42,7 @@
 	"quark.gui.config.missingaddon": "Tämän kategorian vaatima addon puuttuu",
 
 	"quark.category.general": "Yleiset asetukset",
-	"quark.category.friends": "Ystäväasetukset",	
+	"quark.category.friends": "Ystäväasetukset",
 	"quark.category.automation": "Automaatio",
 	"quark.category.building": "Rakennus",
 	"quark.category.management": "Käsittely",
@@ -54,7 +55,7 @@
 	"quark.category.experimental": "Kokeelliset",
 
 	"quark.camera.filter": "Suodin: ",
-	"quark.camera.filter.none": "Ei mitään",	
+	"quark.camera.filter.none": "Ei mitään",
 	"quark.camera.filter.grayscale": "Mustavalkoinen",
 	"quark.camera.filter.monochrome": "Yksivärinen",
 	"quark.camera.filter.sepia": "Seepia",
@@ -109,7 +110,7 @@
 
 	"quark.jei.makes_copy": "Tekee kopion",
 	"quark.jei.any_enchanted": "Jokin lumottu esine",
-	
+
 	"quark.keybind.change_hotbar": "Hotbarin vaihtaja",
 	"quark.keybind.lock_rotation": "Kiertämislukko",
 	"quark.keybind.sort_container": "Lajittele kohteen tavaraluettelo",
@@ -313,7 +314,7 @@
 	"item.minecraft.splash_potion.effect.quark.resistance": "Roiskahtava mielenlujuuden taikajuoma",
 	"item.minecraft.lingering_potion.effect.quark.resistance": "Viipyvä mielenlujuuden taikajuoma",
 	"item.minecraft.tipped_arrow.effect.quark.resistance": "Mielenlujuuden nuoli",
-	
+
 	"item.quark.biome_map.snowy_tundra": "Lumisen tundran seikkailijakartta",
 	"item.quark.biome_map.mountains": "Vuoriston seikkailijakartta",
 	"item.quark.biome_map.dark_forest": "Sysimetsän seikkailijakartta",
@@ -327,7 +328,7 @@
 	"item.quark.biome_map.badlands": "Pöytävuorten seikkailijakartta",
 	"item.quark.biome_map.mushroom_fields": "Sienistön seikkailijakartta",
 	"item.quark.biome_map.ice_spikes": "Jääpiikkitasankojen seikkailijakartta",
-	
+
 	"block.quark.charcoal_block": "Puuhiilikuutio",
 	"block.quark.black_quilted_wool": "Musta tikattu villa",
 	"block.quark.blue_quilted_wool": "Sininen tikattu villa",

@@ -17,6 +17,7 @@
 
 	"quark.gui.enchanting.min": "Min: %d",
 	"quark.gui.enchanting.influence": "Influenza della candela: +%d%%",
+	"quark.gui.enchanting.dampen": "Influenza della candela: %d%%",
 	"quark.gui.enchanting.upgrade": "Potenzia: %d/%d",
 	"quark.gui.enchanting.left_click": "Clic sinistro per selezionare",
 	"quark.gui.enchanting.right_click": "Clic destro per ruotare",
@@ -26,7 +27,7 @@
 	"quark.gui.keygroup.misc": "Miscellanea Quark",
 	"quark.gui.keygroup.inv": "Inventario Quark",
 	"quark.gui.keygroup.emote": "Emoticon Quark",
-	
+
 	"quark.gui.config.save": "Salva le modifiche",
 	"quark.gui.config.social.website": "Sito di Quark",
 	"quark.gui.config.social.discord": "Server Discord di Quark/Violet Moon",
@@ -78,9 +79,9 @@
 	"quark.gui.celebration.hrd": "Buona giornata dei diritti umani!",
 	"quark.gui.celebration.ny": "Buon anno!",
 	"quark.gui.celebration.doyouremember": "Ti ricordi?",
-	
+
 	"quark.category.general": "Impostazioni generali",
-	"quark.category.friends": "Config amico",	
+	"quark.category.friends": "Config amico",
 	"quark.category.automation": "Automazione",
 	"quark.category.building": "Costruzione",
 	"quark.category.management": "Gestione",
@@ -93,7 +94,7 @@
 	"quark.category.experimental": "Sperimentale",
 
 	"quark.camera.filter": "Filtro: ",
-	"quark.camera.filter.none": "Nessuno",	
+	"quark.camera.filter.none": "Nessuno",
 	"quark.camera.filter.grayscale": "Scala di grigi",
 	"quark.camera.filter.monochrome": "Monocromatico",
 	"quark.camera.filter.sepia": "Seppia",
@@ -150,7 +151,7 @@
 
 	"quark.jei.makes_copy": "Fa copia",
 	"quark.jei.any_enchanted": "Qualunque oggetto incantato",
-	
+
 	"quark.keybind.change_hotbar": "Scambia hotbar",
 	"quark.keybind.lock_rotation": "Blocco rotazione",
 	"quark.keybind.sort_container": "Ordina inventario del contenitore",
@@ -358,7 +359,7 @@
 	"item.minecraft.splash_potion.effect.quark.resistance": "Pozione da lancio di fortezza",
 	"item.minecraft.lingering_potion.effect.quark.resistance": "Pozione persistente di fortezza",
 	"item.minecraft.tipped_arrow.effect.quark.resistance": "Freccia di fortezza",
-	
+
 	"item.quark.biome_map.snowy_plains": "Mappa dell'esploratore delle pianure innevate",
 	"item.quark.biome_map.windswept_hills": "Mappa dell'esploratore delle colline ventose",
 	"item.quark.biome_map.dark_forest": "Mappa dell'esploratore della selva oscura",
@@ -372,7 +373,7 @@
 	"item.quark.biome_map.badlands": "Mappa dell'esploratore delle badlands",
 	"item.quark.biome_map.mushroom_fields": "Mappa dell'esploratore di campi fungosi",
 	"item.quark.biome_map.ice_spikes": "Mappa dell'esploratore dei spuntoni di ghiaccio",
-	
+
 	"block.quark.charcoal_block": "Blocco di carbonella",
 	"block.quark.thatch": "Paglia",
 	"block.quark.thatch_slab": "Lastra di paglia",
@@ -1004,7 +1005,7 @@
 	"block.quark.blossom_pressure_plate": "Pedana a pressione di fiore",
 	"block.quark.azalea_button": "Pulsante di azalea",
 	"block.quark.azalea_pressure_plate": "Pedana a pressione di azalea",
-	
+
 	"item.quark.stoneling_spawn_egg": "Uovo generatore di stoneling",
 	"item.quark.frog_spawn_egg": "Uovo generatore di rana",
 	"item.quark.crab_spawn_egg": "Uovo generatore di granchio",

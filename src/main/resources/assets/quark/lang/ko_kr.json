@@ -2,7 +2,7 @@
 	"____comment": "Colors are in #RRGGBB format",
 	"quark.gui.color.crate_count": "#404040",
 	"quark.gui.color.matrix_enchanting": "#404040",
-	
+
 	"quark.gui.button.sort": "정렬하기",
 	"quark.gui.button.sort_inventory": "보관함 정렬하기",
 	"quark.gui.button.sort_container": "저장공간 정렬하기",
@@ -17,6 +17,7 @@
 
 	"quark.gui.enchanting.min": "%d 레벨 필요",
 	"quark.gui.enchanting.influence": "양초 효과: +%d%%",
+	"quark.gui.enchanting.dampen": "양초 효과: %d%%",
 	"quark.gui.enchanting.upgrade": "강화: %d/%d",
 	"quark.gui.enchanting.left_click": "왼쪽 클릭하여 선택",
 	"quark.gui.enchanting.right_click": "오른쪽 클릭하여 회전",
@@ -43,7 +44,7 @@
 	"quark.gui.config.nchildren": "%d개의 자식 클래스",
 	"quark.gui.config.defaultvalue": "기본값: %s",
 	"quark.gui.config.missingaddon": "이 범주에 필요한 애드온 모드가 설치되지 않았습니다",
-	
+
 	"quark.gui.celebration.quark": "쿼크의 생일을 축하합니다!",
 	"quark.gui.celebration.vm": "바이올렛 문의 생일을 축하합니다!",
 	"quark.gui.celebration.minecraft": "마인크래프트의 생일을 축하합니다!",
@@ -78,9 +79,9 @@
 	"quark.gui.celebration.hrd": "행복한 인권의 날 보내세요!",
 	"quark.gui.celebration.ny": "새해 복 많이 받으세요!",
 	"quark.gui.celebration.doyouremember": "그 날을 기억하세요?",
-	
+
 	"quark.category.general": "일반 설정",
-	"quark.category.friends": "친구 모드들 컨피그",	
+	"quark.category.friends": "친구 모드들 컨피그",
 	"quark.category.automation": "자동화",
 	"quark.category.building": "건축",
 	"quark.category.management": "관리",
@@ -93,7 +94,7 @@
 	"quark.category.experimental": "실험적",
 
 	"quark.camera.filter": "필터: ",
-	"quark.camera.filter.none": "없음",	
+	"quark.camera.filter.none": "없음",
 	"quark.camera.filter.grayscale": "회색조",
 	"quark.camera.filter.monochrome": "흑백",
 	"quark.camera.filter.sepia": "세피아",
@@ -244,7 +245,7 @@
 	"quark.emote.zombie": "좀비",
 	"quark.emote.exorcist": "엑소시스트",
 	"quark.emote.jet": "제트",
-	
+
 	"quark.misc.shulker_box_shift": "내용물을 보려면 shift를 누르세요",
 	"quark.misc.map_shift": "지도를 보려면 shift를 누르세요",
 	"quark.misc.rotation_lock": "설치 방향 고정을 활성화하였습니다. 현재 바라보고 있는 방향으로 설치된 블록의 방향이 고정됩니다. 방향을 변경하거나 초기화하려면 [%s]을(를) 누르세요. 이 메시지는 한 번만 표시됩니다.",
@@ -328,7 +329,7 @@
 	"item.quark.forgotten_hat": "포거튼 모자",
 	"item.quark.soul_bead": "영혼 구슬",
 	"item.quark.abacus": "주판",
-	
+
 	"item.quark.music_disc_endermosh": "음반",
 	"item.quark.music_disc_endermosh.desc": "Kain Vinosec - Endermosh",
 	"item.quark.music_disc_drips": "음반",
@@ -347,7 +348,7 @@
 	"item.quark.music_disc_crickets.desc": "귀뚜라미 송",
 	"item.quark.music_disc_chatter": "음반",
 	"item.quark.music_disc_chatter.desc": "빽빽한 장소",
-	
+
 	"item.minecraft.potion.effect.quark.resilience": "안정의 물약",
 	"item.minecraft.splash_potion.effect.quark.resilience": "투척용 안정의 물약",
 	"item.minecraft.lingering_potion.effect.quark.resilience": "잔류형 안정의 물약",
@@ -955,7 +956,7 @@
 	"block.quark.iron_ladder": "철 사다리",
 	"block.quark.deepslate_furnace": "심층암 화로",
 	"block.quark.blackstone_furnace": "흑암 화로",
-	
+
 	"item.quark.stoneling_spawn_egg": "스톤링 생성 알",
 	"item.quark.frog_spawn_egg": "개구리 생성 알",
 	"item.quark.crab_spawn_egg": "게 생성 알",

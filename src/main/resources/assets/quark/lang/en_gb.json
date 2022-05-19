@@ -10,6 +10,7 @@
 
 	"quark.gui.enchanting.min": "Min: %d",
 	"quark.gui.enchanting.influence": "Candle Influence: +%d%%",
+	"quark.gui.enchanting.dampen": "Candle Influence: %d%%",
 	"quark.gui.enchanting.upgrade": "Upgrade: %d/%d",
 	"quark.gui.enchanting.left_click": "Left Click to Select",
 	"quark.gui.enchanting.right_click": "Right Click to Rotate",
@@ -19,14 +20,14 @@
 	"quark.gui.keygroup.misc": "Quark Misc",
 	"quark.gui.keygroup.inv": "Quark Inventory",
 	"quark.gui.keygroup.emote": "Quark Emotes",
-	
+
 	"quark.gui.qbutton_info.title": "q Button Info (READ ME)",
 	"quark.gui.qbutton_info.open": "Open File",
 	"quark.gui.qbutton_info.back": "Back",
 	"quark.gui.qbutton_info": "Ingame configuration in newer versions of the game is currently not possible. For now, this will only open the config folder. You'll have to find \"quark-common.toml\" and open it. This is a text file, so you can open it with any text editor (such as Notepad). Changes to the file will apply in real time to your world when you save it.",
 
 	"quark.camera.filter": "Filter: ",
-	"quark.camera.filter.none": "None",	
+	"quark.camera.filter.none": "None",
 	"quark.camera.filter.grayscale": "Grayscale",
 	"quark.camera.filter.monochrome": "Monochrome",
 	"quark.camera.filter.sepia": "Sepia",
@@ -77,7 +78,7 @@
 	"quark.camera.greetings": "Greetings from %s!",
 
 	"quark.jei.makes_copy": "Makes Copy",
-	
+
 	"quark.keybind.change_hotbar": "Hotbar Swapper",
 	"quark.keybind.lock_rotation": "Rotation Lock",
 	"quark.keybind.sort_container": "Sort Target Inventory",
@@ -251,7 +252,7 @@
 	"item.minecraft.splash_potion.effect.quark.resistance": "Splash Potion of Fortitude",
 	"item.minecraft.lingering_potion.effect.quark.resistance": "Lingering Potion of Fortitude",
 	"item.minecraft.tipped_arrow.effect.quark.resistance": "Arrow of Fortitude",
-	
+
 	"item.quark.biome_map.snowy_tundra": "Snowy Tundra Pathfinder Map",
 	"item.quark.biome_map.mountains": "Mountain Pathfinder Map",
 	"item.quark.biome_map.dark_forest": "Dark Forest Pathfinder Map",
@@ -265,7 +266,7 @@
 	"item.quark.biome_map.badlands": "Badlands Pathfinder Map",
 	"item.quark.biome_map.mushroom_fields": "Mushroom Fields Pathfinder Map",
 	"item.quark.biome_map.ice_spikes": "Ice Spikes Pathfinder Map",
-	
+
 	"block.quark.charcoal_block": "Charcoal Block",
 	"block.quark.black_quilted_wool": "Black Quilted Wool",
 	"block.quark.blue_quilted_wool": "Blue Quilted Wool",
@@ -907,7 +908,7 @@
 	"entity.quark.foxhound": "Foxhound",
 	"entity.quark.wrapped": "Wrapped",
 	"entity.quark.toretoise": "Toretoise",
-	
+
 	"block.quark.magnetized_block": "Magnetised Block",
 	"block.quark.potted_beetroot": "Potted Beetroots",
 	"block.quark.potted_berries": "Potted Sweet Berry Bush",
@@ -932,5 +933,5 @@
 	"block.quark.potted_sunflower": "Potted Sunflower",
 	"block.quark.potted_wheat": "Potted Wheat",
 	"block.quark.potted_yellow_blossom_sapling": "Potted Sunny Blossom Sapling"
-	
+
 }

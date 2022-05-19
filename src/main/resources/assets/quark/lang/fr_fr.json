@@ -15,6 +15,7 @@
 
 	"quark.gui.enchanting.min": "Min: %d",
 	"quark.gui.enchanting.influence": "Influence de la bougie: +%d%%",
+	"quark.gui.enchanting.dampen": "Influence de la bougie: %d%%",
 	"quark.gui.enchanting.upgrade": "Amélioration: %d/%d",
 	"quark.gui.enchanting.left_click": "Clic gauche pour sélectionner",
 	"quark.gui.enchanting.right_click": "Clic droit pour pivoter",

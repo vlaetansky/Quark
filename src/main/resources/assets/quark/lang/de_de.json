@@ -11,6 +11,7 @@
 
 	"quark.gui.enchanting.min": "Min: %d",
 	"quark.gui.enchanting.influence": "Kerzeneinfluss: +%d%%",
+	"quark.gui.enchanting.dampen": "Kerzeneinfluss: %d%%",
 	"quark.gui.enchanting.upgrade": "Upgrade: %d/%d",
 	"quark.gui.enchanting.left_click": "Linksklick zum Auswählen",
 	"quark.gui.enchanting.right_click": "Rechtsklick zum Drehen",
@@ -21,7 +22,7 @@
 	"quark.gui.keygroup.inv": "Quark-Inventar",
 	"quark.gui.keygroup.emote": "Quark-Emotes",
 	"quark.gui.keygroup.accessibility": "Quark-Barrierefreiheit",
-	
+
 	"quark.gui.config.save": "Änderungen speichern",
 	"quark.gui.config.social.website": "Quark-Website",
 	"quark.gui.config.social.discord": "Discord",
@@ -40,7 +41,7 @@
 	"quark.gui.config.defaultvalue": "Default: %s",
 	"quark.gui.config.missingaddon": "Du hast kein notwendiges Addon-Mod für diese Kategorie",
 
-	"quark.category.general": "Generale Einstellungen",	
+	"quark.category.general": "Generale Einstellungen",
 	"quark.category.friends": "Freundkonfigurationen",
 	"quark.category.automation": "Automation",
 	"quark.category.building": "Bauen",
@@ -52,7 +53,7 @@
 	"quark.category.client": "Client",
 	"quark.category.oddities": "Oddities",
 	"quark.category.experimental": "Experimentell",
-	
+
 	"quark.camera.filter": "Filter: ",
 	"quark.camera.filter.none": "Keine",
 	"quark.camera.filter.grayscale": "Graustufen",
@@ -215,11 +216,11 @@
 	"quark.misc.saturation4": "Kleine Zwischenmahlzeit",
 	"quark.misc.mod_disabled": "Ausgeschaltet. Installiere %s anzuschalten.",
 	"quark.misc.repaired": "(Ist repariert worden)",
-	
+
 	"quark.misc.reloaded0": "Dein Quark-Konfiguration wurde neu geladen.",
 	"quark.misc.reloaded1": "- Wenn du etwas geändert hast, das die Rezepte ändern würde, bitte führ /reload aus.",
 	"quark.misc.reloaded2": "- Wenn deine Änderungen nicht anwenden würde, lüd das Spiel neu.",
-	
+
 	"quark.container.feeding_trough": "Futtertrog",
 
 	"item.quark.trowel": "Kelle",
@@ -300,7 +301,7 @@
 	"item.quark.seed_pouch": "Schote",
 	"item.quark.forgotten_hat": "Vergessenhut",
 	"item.quark.soul_bead": "Seelenperle",
-	
+
 	"item.quark.music_disc_tedium": "Schallplatte",
 	"item.quark.music_disc_tedium.desc": "Kain Vinosec - Tedium",
 
@@ -1125,7 +1126,7 @@
 	"entity.quark.wraith": "Geist",
 	"entity.quark.soul_bead": "Seelenperle",
 	"entity.quark.shiba": "Shiba Inu",
-	
+
 	"block.quark.magnetized_block": "Magnetisierter Block",
 	"block.quark.potted_beetroot": "Eingetopfte Rote Bete",
 	"block.quark.potted_berries": "Eingetopfter Süßbeerstrauch",
@@ -1160,4 +1161,4 @@
 
 	"generator.quark.realistic": "Realistisch",
 	"generator.quark.realistic_large_biomes": "Realistic L.Biomes"
-} 
+}

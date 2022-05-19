@@ -17,6 +17,7 @@
 
 	"quark.gui.enchanting.min": "Min: %d",
 	"quark.gui.enchanting.influence": "+%d%% from ye Influencin' Candles",
+	"quark.gui.enchanting.dampen": "%d%% from ye Influencin' Candles",
 	"quark.gui.enchanting.upgrade": "Make Better: %d/%d",
 	"quark.gui.enchanting.left_click": "Use ye hand to choose",
 	"quark.gui.enchanting.right_click": "Use ye hook to twirl",

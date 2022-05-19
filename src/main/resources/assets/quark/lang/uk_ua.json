@@ -17,6 +17,7 @@
 
 	"quark.gui.enchanting.min": "Мін: %d",
 	"quark.gui.enchanting.influence": "Вплив свічки: +%d%%",
+	"quark.gui.enchanting.dampen": "Вплив свічки: %d%%",
 	"quark.gui.enchanting.upgrade": "Покращити: %d/%d",
 	"quark.gui.enchanting.left_click": "ЛКМ для вибору",
 	"quark.gui.enchanting.right_click": "ПКМ для повороту",
@@ -26,7 +27,7 @@
 	"quark.gui.keygroup.misc": "Quark - Різне",
 	"quark.gui.keygroup.inv": "Quark - Інвентар",
 	"quark.gui.keygroup.emote": "Quark - Емоції",
-	
+
 	"quark.gui.config.save": "Зберегти зміни",
 	"quark.gui.config.social.website": "Quark Website",
 	"quark.gui.config.social.discord": "Quark/Violet Moon Discord",
@@ -80,7 +81,7 @@
 	"quark.gui.celebration.doyouremember": "Do you remember?",
 
 	"quark.category.general": "Загальні налаштування",
-	"quark.category.friends": "Настройки друзів",	
+	"quark.category.friends": "Настройки друзів",
 	"quark.category.automation": "Автоматизація",
 	"quark.category.building": "Будування",
 	"quark.category.management": "Керування",
@@ -93,7 +94,7 @@
 	"quark.category.experimental": "Експериментальне",
 
 	"quark.camera.filter": "Фільтр: ",
-	"quark.camera.filter.none": "Нема",	
+	"quark.camera.filter.none": "Нема",
 	"quark.camera.filter.grayscale": "Grayscale",
 	"quark.camera.filter.monochrome": "Monochrome",
 	"quark.camera.filter.sepia": "Sepia",
@@ -150,7 +151,7 @@
 
 	"quark.jei.makes_copy": "Робить копію",
 	"quark.jei.any_enchanted": "Будь-який зачарований предмети",
-	
+
 	"quark.keybind.change_hotbar": "Зміна панелі швидкого доступу",
 	"quark.keybind.lock_rotation": "Блокування обертання",
 	"quark.keybind.sort_container": "Сортування контейнера",
@@ -328,7 +329,7 @@
 	"item.quark.forgotten_hat": "Капелюх Забутого",
 	"item.quark.soul_bead": "Бусина душі",
 	"item.quark.abacus": "Абак",
-	
+
 	"item.quark.music_disc_endermosh": "Музикальний диск",
 	"item.quark.music_disc_endermosh.desc": "Kain Vinosec - Endermosh",
 	"item.quark.music_disc_drips": "Ambience Disc",
@@ -356,7 +357,7 @@
 	"item.minecraft.splash_potion.effect.quark.resistance": "Вибухове зілля супротиву",
 	"item.minecraft.lingering_potion.effect.quark.resistance": "Хмарне зілля супротиву",
 	"item.minecraft.tipped_arrow.effect.quark.resistance": "Стріла супротиву",
-	
+
 	"item.quark.biome_map.snowy_plains": "Мапа до засніженої тундри",
 	"item.quark.biome_map.windswept_hills": "Мапа до вітряних вершин",
 	"item.quark.biome_map.dark_forest": "Мапа до темного лісу",
@@ -370,7 +371,7 @@
 	"item.quark.biome_map.badlands": "Мапа до безплідних земель",
 	"item.quark.biome_map.mushroom_fields": "Мапа до грибної долини",
 	"item.quark.biome_map.ice_spikes": "Мапа до крижаних шипів",
-	
+
 	"block.quark.charcoal_block": "Блок деревного вугулля",
 	"block.quark.thatch": "Блок соломи",
 	"block.quark.thatch_slab": "Плита з соломи",

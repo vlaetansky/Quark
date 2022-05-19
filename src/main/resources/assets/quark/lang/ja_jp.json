@@ -11,6 +11,7 @@
 
 	"quark.gui.enchanting.min": "最小: %d",
 	"quark.gui.enchanting.influence": "ろうそくの影響: +%d%%",
+	"quark.gui.enchanting.dampen": "ろうそくの影響: %d%%",
 	"quark.gui.enchanting.upgrade": "アップグレード: %d/%d",
 	"quark.gui.enchanting.left_click": "左クリックで選択",
 	"quark.gui.enchanting.right_click": "右クリックで回転",
@@ -21,7 +22,7 @@
 	"quark.gui.keygroup.inv": "Quarkのインベントリ",
 	"quark.gui.keygroup.emote": "Quarkのエモート",
 	"quark.gui.keygroup.accessibility": "Quarkのアクセシビリティ",
-	
+
 	"quark.gui.config.save": "変更を保存する",
 	"quark.gui.config.social.website": "Quarkのサイト",
 	"quark.gui.config.social.discord": "Discord",
@@ -41,7 +42,7 @@
 	"quark.gui.config.missingaddon": "このカテゴリーに必要なaddonがありません。",
 
 	"quark.category.general": "一般的な設定",
-	"quark.category.friends": "フレンドの設定",	
+	"quark.category.friends": "フレンドの設定",
 	"quark.category.automation": "自動化",
 	"quark.category.building": "建築",
 	"quark.category.management": "管理",
@@ -54,7 +55,7 @@
 	"quark.category.experimental": "実験的",
 
 	"quark.camera.filter": "フィルター: ",
-	"quark.camera.filter.none": "なし",	
+	"quark.camera.filter.none": "なし",
 	"quark.camera.filter.grayscale": "グレースケール",
 	"quark.camera.filter.monochrome": "モノクロ",
 	"quark.camera.filter.sepia": "セピア",
@@ -111,7 +112,7 @@
 
 	"quark.jei.makes_copy": "コピーを作る",
 	"quark.jei.any_enchanted": "いずれかのエンチャントされたアイテム",
-	
+
 	"quark.keybind.change_hotbar": "ホットバーの交換",
 	"quark.keybind.lock_rotation": "ブロックの設置方向の固定",
 	"quark.keybind.sort_container": "ターゲットのインベントリを整理する",
@@ -315,7 +316,7 @@
 	"item.minecraft.splash_potion.effect.quark.resistance": "不屈のスプラッシュポーション",
 	"item.minecraft.lingering_potion.effect.quark.resistance": "不屈の残留ポーション",
 	"item.minecraft.tipped_arrow.effect.quark.resistance": "不屈の矢",
-	
+
 	"item.quark.biome_map.snowy_tundra": "雪のツンドラの開拓地図",
 	"item.quark.biome_map.mountains": "山岳の開拓地図",
 	"item.quark.biome_map.dark_forest": "暗い森の開拓地図",
@@ -329,7 +330,7 @@
 	"item.quark.biome_map.badlands": "荒野の開拓地図",
 	"item.quark.biome_map.mushroom_fields": "キノコ島の開拓地図",
 	"item.quark.biome_map.ice_spikes": "氷樹の開拓地図",
-	
+
 	"block.quark.charcoal_block": "木炭ブロック",
 	"block.quark.black_quilted_wool": "黒色のキルティングされた羊毛",
 	"block.quark.blue_quilted_wool": "青色のキルティングされた羊毛",
@@ -1066,7 +1067,7 @@
 	"block.quark.dark_oak_hedge": "ダークオークの生垣",
 	"block.quark.matrix_enchanter": "マトリックスエンチャントテーブル",
 	"block.quark.crate": "木箱",
-	
+
 	"item.quark.stoneling_spawn_egg": "ストーンリングのスポーンエッグ",
 	"item.quark.frog_spawn_egg": "カエルのスポーンエッグ",
 	"item.quark.crab_spawn_egg": "カニのスポーンエッグ",

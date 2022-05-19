@@ -17,6 +17,7 @@
 
     "quark.gui.enchanting.min": "Мин.: %d",
     "quark.gui.enchanting.influence": "Влияние свечи: +%d%%",
+    "quark.gui.enchanting.dampen": "Влияние свечи: %d%%",
     "quark.gui.enchanting.upgrade": "Улучшение: %d/%d",
     "quark.gui.enchanting.left_click": "ЛКМ для выбора",
     "quark.gui.enchanting.right_click": "ПКМ для поворота",
@@ -167,7 +168,7 @@
     "quark.keybind.narrator_full_readout": "Полный вывод экранным диктором",
     "quark.keybind.shift_lock": "Блокировка Shift",
     "quark.keybind.autorun": "Автоматическая ходьба",
-    
+
     "quark.readout.not_ingame": "Не в игре",
     "quark.readout.looking": "Смотрит на %s",
     "quark.readout.holding": "Держит %dx %s",
@@ -328,7 +329,7 @@
     "item.quark.abacus": "Абак",
     "item.quark.azalea_boat": "Азалиевая лодка",
     "item.quark.blossom_boat": "Цветущая лодка",
-    
+
     "item.quark.music_disc_tedium": "Пластинка",
     "item.quark.music_disc_tedium.desc": "Kain Vinosec - Tedium",
     "item.quark.music_disc_drips": "Эмбиент пластинка",
@@ -347,7 +348,7 @@
     "item.quark.music_disc_crickets.desc": "Песня сверчка",
     "item.quark.music_disc_chatter": "Эмбиент пластинка",
     "item.quark.music_disc_chatter.desc": "Людное место",
-    
+
     "item.minecraft.potion.effect.quark.resilience": "Зелье стойкости",
     "item.minecraft.splash_potion.effect.quark.resilience": "Взрывное зелье стойкости",
     "item.minecraft.lingering_potion.effect.quark.resilience": "Туманное зелье стойкости",
@@ -1027,7 +1028,7 @@
     "entity.quark.forgotten": "Забытый",
     "entity.quark.wraith": "Видение",
     "entity.quark.soul_bead": "Бусина души",
-    "entity.quark.shiba": "Сиба-ину", 
+    "entity.quark.shiba": "Сиба-ину",
     "entity.quark.quark_boat": "Лодка",
 
     "block.quark.magnetized_block": "Намагниченный блок",

@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
-import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
@@ -14,6 +13,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.extensions.IForgeMenuType;
@@ -22,6 +22,7 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.addons.oddities.block.MatrixEnchantingTableBlock;
@@ -29,7 +30,10 @@ import vazkii.quark.addons.oddities.block.be.MatrixEnchantingTableBlockEntity;
 import vazkii.quark.addons.oddities.client.render.be.MatrixEnchantingTableRenderer;
 import vazkii.quark.addons.oddities.client.screen.MatrixEnchantingScreen;
 import vazkii.quark.addons.oddities.inventory.MatrixEnchantingMenu;
+import vazkii.quark.addons.oddities.util.CustomInfluence;
+import vazkii.quark.addons.oddities.util.Influence;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
@@ -94,7 +98,8 @@ public class MatrixEnchantingModule extends QuarkModule {
 	@Config(description = "A list of enchantment IDs you don't want the enchantment table to be able to create")
 	public static List<String> disallowedEnchantments = Lists.newArrayList();
 
-	@Config(description = "An array of influences each candle should apply. This list must be 16 elements long, and is in order of wool colors.")
+	@Config(description = "An array of influences each candle should apply. This list must be 16 elements long, and is in order of wool colors.\n" +
+			"A minus sign before an enchantment will make the influence decrease the probability of that enchantment.")
 	private static List<String> influencesList = Lists.newArrayList(
 			"minecraft:unbreaking", // White
 			"minecraft:fire_protection", // Orange
@@ -114,8 +119,15 @@ public class MatrixEnchantingModule extends QuarkModule {
 			"minecraft:smite,minecraft:projectile_protection" // Black
 			);
 
+
+	@Config(description = "An array of influences that other blocks should apply.\n" +
+			"Format is: \"blockstate;strength;color;enchantments\", i.e. \"minecraft:sea_pickle[pickles=1,waterlogged=false];1;#008000;minecraft:aqua_affinity,minecraft:depth_strider,minecraft:riptide\" (etc) or \"minecraft:anvil[facing=north];#808080;-minecraft:thorns,minecraft:unbreaking\" (etc)")
+	private static List<String> statesToInfluences = Lists.newArrayList();
+
 	@Config(description = "Set to false to disable the ability to influence enchantment outcomes with candles")
 	public static boolean allowInfluencing = true;
+
+	public static boolean candleInfluencingFailed = false;
 
 	@Config(description = "The max amount of candles that can influence a single enchantment")
 	public static int influenceMax = 4;
@@ -126,7 +138,8 @@ public class MatrixEnchantingModule extends QuarkModule {
 	@Config(description = "If you set this to false, the vanilla Enchanting Table will no longer automatically convert to the Matrix Enchanting table. You'll have to add a recipe for the Matrix Enchanting Table to make use of this.")
 	public static boolean automaticallyConvert = true;
 
-	public static Map<DyeColor, List<Enchantment>> candleInfluences;
+	public static Map<DyeColor, Influence> candleInfluences;
+	public static Map<BlockState, CustomInfluence> customInfluences;
 
 	public static Block matrixEnchanter;
 
@@ -176,32 +189,55 @@ public class MatrixEnchantingModule extends QuarkModule {
 		parseInfluences();
 	}
 
+	private Influence parseEnchantmentList(String enchantmentList) {
+		List<Enchantment> boost = new ArrayList<>();
+		List<Enchantment> dampen = new ArrayList<>();
+		String[] enchantments = enchantmentList.split(",");
+		for (String enchStr : enchantments) {
+			boolean damp = enchStr.startsWith("-");
+			if (damp)
+				enchStr = enchStr.substring(1);
+
+			Enchantment ench = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(enchStr));
+			if (ench != null) {
+				if (damp)
+					dampen.add(ench);
+				else
+					boost.add(ench);
+			} else {
+				Quark.LOG.error("Matrix Enchanting Influencing: Enchantment " + enchStr + " does not exist!");
+			}
+		}
+		return new Influence(boost, dampen);
+	}
+
 	private void parseInfluences() {
 		candleInfluences = new HashMap<>();
+		customInfluences = new HashMap<>();
+
+		for (String influence : statesToInfluences) {
+			String[] split = influence.split(";");
+			if (split.length == 4) {
+				int strength, color;
+				BlockState state = MiscUtil.fromString(split[0]);
+				try {
+					strength = Integer.parseInt(split[1]);
+					color = Integer.parseInt(split[2], 16);
+				} catch (NumberFormatException e) {
+					continue;
+				}
+				Influence boosts = parseEnchantmentList(split[3]);
+
+				customInfluences.put(state, new CustomInfluence(strength, color, boosts));
+			}
+		}
 
 		if(influencesList.size() != 16) {
 			(new IllegalArgumentException("Matrix Enchanting Influences must be of size 16, please fix this in the config.")).printStackTrace();
-			allowInfluencing = false;
-			return;
-		}
-
-		for (int i = 0; i < 16; i++) {
-			List<Enchantment> list = new LinkedList<>();
-			candleInfluences.put(DyeColor.values()[i], list);
-
-			String s = influencesList.get(i);
-			String[] tokens = s.split(",");
-
-			for (String enchStr : tokens) {
-				enchStr = enchStr.trim();
-
-				Optional<Enchantment> ench = Registry.ENCHANTMENT.getOptional(new ResourceLocation(enchStr));
-				if (ench.isPresent()) {
-					list.add(ench.get());
-				}
-				else {
-					Quark.LOG.error("Matrix Enchanting Influencing: Enchantment " + enchStr + " does not exist!");
-				}
+			candleInfluencingFailed = true;
+		} else {
+			for (int i = 0; i < 16; i++) {
+				candleInfluences.put(DyeColor.values()[i], parseEnchantmentList(influencesList.get(i)));
 			}
 		}
 	}
