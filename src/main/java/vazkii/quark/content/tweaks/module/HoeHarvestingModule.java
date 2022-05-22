@@ -66,6 +66,7 @@ public class HoeHarvestingModule extends QuarkModule {
 		BlockPos basePos = event.getPos();
 		ItemStack stack = player.getMainHandItem();
 		if (isHoe(stack) && canHarvest(player, world, basePos, event.getState())) {
+			boolean brokeNonInstant = false;
 			int range = getRange(stack);
 
 			for (int i = 1 - range; i < range; i++)
@@ -77,6 +78,9 @@ public class HoeHarvestingModule extends QuarkModule {
 					BlockState state = world.getBlockState(pos);
 					if (canHarvest(player, world, pos, state)) {
 						Block block = state.getBlock();
+
+						if (state.getDestroySpeed(world, pos) != 0.0F)
+							brokeNonInstant = true;
 						if (block.canHarvestBlock(state, world, pos, player))
 							block.playerDestroy((Level) world, player, pos, state, world.getBlockEntity(pos), stack);
 						world.destroyBlock(pos, false);
@@ -84,7 +88,8 @@ public class HoeHarvestingModule extends QuarkModule {
 					}
 				}
 
-			MiscUtil.damageStack(player, InteractionHand.MAIN_HAND, stack, 1);
+			if (brokeNonInstant)
+				MiscUtil.damageStack(player, InteractionHand.MAIN_HAND, stack, 1);
 		}
 	}
 
