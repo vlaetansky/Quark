@@ -189,7 +189,10 @@ public class GrateBlock extends QuarkBlock implements SimpleFluidloggedBlock {
 	@Nonnull
 	@Override
 	public FluidState getFluidState(@Nonnull BlockState state) {
-		return fluidContained(state).defaultFluidState();
+		FluidState contained = fluidContained(state).defaultFluidState();
+		if (contained.hasProperty(BlockStateProperties.FALLING))
+			contained = contained.setValue(BlockStateProperties.FALLING, false);
+		return contained;
 	}
 
 	@Override
