@@ -132,32 +132,36 @@ public class ParrotEggsModule extends QuarkModule {
 	@SubscribeEvent
 	public void entityInteract(PlayerInteractEvent.EntityInteract event) {
 		Entity e = event.getTarget();
-		if (e instanceof Parrot parrot && e.getPersistentData().getInt(EGG_TIMER) <= 0) {
-			if (!parrot.isTame())
-				return;
-
-			Player player = event.getPlayer();
+		Player player = event.getPlayer();
+		if (e instanceof Parrot parrot) {
 			ItemStack stack = player.getMainHandItem();
 			if (stack.isEmpty() || !stack.is(feedTag)) {
 				stack = player.getOffhandItem();
 			}
 
 			if (!stack.isEmpty() && stack.is(feedTag)) {
-				event.setCanceled(true);
-				if (parrot.level.isClientSide || event.getHand() == InteractionHand.OFF_HAND)
-					return;
+				if (e.getPersistentData().getInt(EGG_TIMER) <= 0) {
+					if (!parrot.isTame())
+						return;
 
-				if (!player.getAbilities().instabuild)
-					stack.shrink(1);
+					event.setCanceled(true);
+					if (parrot.level.isClientSide || event.getHand() == InteractionHand.OFF_HAND)
+						return;
 
-				if (parrot.level instanceof ServerLevel ws) {
-					ws.playSound(null, parrot.getX(), parrot.getY(), parrot.getZ(), SoundEvents.PARROT_EAT, SoundSource.NEUTRAL, 1.0F, 1.0F + (ws.random.nextFloat() - ws.random.nextFloat()) * 0.2F);
+					if (!player.getAbilities().instabuild)
+						stack.shrink(1);
 
-					if (ws.random.nextDouble() < chance) {
-						parrot.getPersistentData().putInt(EGG_TIMER, eggTime);
-						ws.sendParticles(ParticleTypes.HAPPY_VILLAGER, parrot.getX(), parrot.getY(), parrot.getZ(), 10, parrot.getBbWidth(), parrot.getBbHeight(), parrot.getBbWidth(), 0);
-					} else
-						ws.sendParticles(ParticleTypes.SMOKE, parrot.getX(), parrot.getY(), parrot.getZ(), 10, parrot.getBbWidth(), parrot.getBbHeight(), parrot.getBbWidth(), 0);
+					if (parrot.level instanceof ServerLevel ws) {
+						ws.playSound(null, parrot.getX(), parrot.getY(), parrot.getZ(), SoundEvents.PARROT_EAT, SoundSource.NEUTRAL, 1.0F, 1.0F + (ws.random.nextFloat() - ws.random.nextFloat()) * 0.2F);
+
+						if (ws.random.nextDouble() < chance) {
+							parrot.getPersistentData().putInt(EGG_TIMER, eggTime);
+							ws.sendParticles(ParticleTypes.HAPPY_VILLAGER, parrot.getX(), parrot.getY(), parrot.getZ(), 10, parrot.getBbWidth(), parrot.getBbHeight(), parrot.getBbWidth(), 0);
+						} else
+							ws.sendParticles(ParticleTypes.SMOKE, parrot.getX(), parrot.getY(), parrot.getZ(), 10, parrot.getBbWidth(), parrot.getBbHeight(), parrot.getBbWidth(), 0);
+					}
+				} else if (parrot.level instanceof ServerLevel ws) {
+					ws.sendParticles(ParticleTypes.HEART, parrot.getX(), parrot.getY(), parrot.getZ(), 1, parrot.getBbWidth(), parrot.getBbHeight(), parrot.getBbWidth(), 0);
 				}
 			}
 		}
