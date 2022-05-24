@@ -1,8 +1,5 @@
 package vazkii.quark.content.world.gen.structure.processor;
 
-import java.util.Optional;
-import java.util.Random;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.random.SimpleWeightedRandomList;
@@ -20,6 +17,9 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import vazkii.quark.content.world.module.BigDungeonModule;
 
+import java.util.Optional;
+import java.util.Random;
+
 public class BigDungeonSpawnerProcessor extends StructureProcessor {
 
 	public BigDungeonSpawnerProcessor() {
@@ -32,8 +32,7 @@ public class BigDungeonSpawnerProcessor extends StructureProcessor {
 			Random rand = placementSettingsIn.getRandom(blockInfo.pos);
 			BlockEntity tile = BlockEntity.loadStatic(blockInfo.pos, blockInfo.state, blockInfo.nbt);
 
-			if(tile instanceof SpawnerBlockEntity) {
-				SpawnerBlockEntity spawner = (SpawnerBlockEntity) tile;
+			if(tile instanceof SpawnerBlockEntity spawner) {
 				BaseSpawner logic = spawner.getSpawner();
 
 				EntityType<?> typeToSet = null;

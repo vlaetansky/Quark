@@ -103,17 +103,17 @@ public class ItemSharingModule extends QuarkModule {
 		if(!ModuleLoader.INSTANCE.isModuleEnabled(ItemSharingModule.class))
 			return;
 
-		if(!item.isEmpty() && player instanceof ServerPlayer) {
+		if(!item.isEmpty() && player instanceof ServerPlayer serverPlayer) {
 			Component comp = item.getDisplayName();
 			Component fullComp = new TranslatableComponent("chat.type.text", player.getDisplayName(), comp);
 
-			PlayerList players = ((ServerPlayer) player).server.getPlayerList();
+			PlayerList players = serverPlayer.server.getPlayerList();
 
-			ServerChatEvent event = new ServerChatEvent((ServerPlayer) player, comp.getString(), fullComp);
+			ServerChatEvent event = new ServerChatEvent(serverPlayer, comp.getString(), fullComp);
 			if (!MinecraftForge.EVENT_BUS.post(event)) {
 				players.broadcastMessage(event.getComponent(), ChatType.CHAT, player.getUUID());
 
-				ServerGamePacketListenerImpl handler = ((ServerPlayer) player).connection;
+				ServerGamePacketListenerImpl handler = serverPlayer.connection;
 				int threshold = handler.chatSpamTickCount;
 				threshold += 20;
 

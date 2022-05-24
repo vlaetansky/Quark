@@ -50,8 +50,8 @@ public class SpamlessChatMessage implements IMessage {
 	}
 
 	public static void sendToPlayer(Player player, int id, Component component) {
-		if (player instanceof ServerPlayer)
-			QuarkNetwork.sendToPlayer(new SpamlessChatMessage(component, id), (ServerPlayer) player);
+		if (player instanceof ServerPlayer serverPlayer)
+			QuarkNetwork.sendToPlayer(new SpamlessChatMessage(component, id), serverPlayer);
 	}
 
 }

@@ -87,8 +87,8 @@ public class CrateBlock extends QuarkBlock implements EntityBlock {
 	public void setPlacedBy(@Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
 		if(stack.hasCustomHoverName()) {
 			BlockEntity tileentity = worldIn.getBlockEntity(pos);
-			if(tileentity instanceof CrateBlockEntity)
-				((CrateBlockEntity) tileentity).setCustomName(stack.getHoverName());
+			if(tileentity instanceof CrateBlockEntity crate)
+				crate.setCustomName(stack.getHoverName());
 		}
 	}
 

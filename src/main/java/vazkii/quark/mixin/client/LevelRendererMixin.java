@@ -21,7 +21,7 @@ public class LevelRendererMixin {
 			locals = LocalCapture.CAPTURE_FAILSOFT,
 			cancellable = true)
 	public void playStreamingMusic(SoundEvent soundIn, BlockPos pos, RecordItem musicDiscItem, CallbackInfo info) {
-		if(musicDiscItem instanceof QuarkMusicDiscItem && ((QuarkMusicDiscItem) musicDiscItem).playAmbientSound(pos))
+		if(musicDiscItem instanceof QuarkMusicDiscItem quarkDisc && quarkDisc.playAmbientSound(pos))
 			info.cancel();
 	}
 

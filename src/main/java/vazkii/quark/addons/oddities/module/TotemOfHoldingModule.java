@@ -1,10 +1,6 @@
 package vazkii.quark.addons.oddities.module;
 
-import java.util.Collection;
-import java.util.Objects;
-
 import com.mojang.datafixers.util.Pair;
-
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -32,6 +28,9 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
+
+import java.util.Collection;
+import java.util.Objects;
 
 /**
  * @author WireSegal
@@ -98,13 +97,12 @@ public class TotemOfHoldingModule extends QuarkModule {
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onPlayerDrops(LivingDropsEvent event) {
 		LivingEntity entity = event.getEntityLiving();
-		if (!(entity instanceof Player))
+		if (!(entity instanceof Player player))
 			return;
 
 		Collection<ItemEntity> drops = event.getDrops();
 
 		if(!event.isCanceled() && (enableOnPK || !(event.getSource().getEntity() instanceof Player) || entity == event.getSource().getEntity())) {
-			Player player = (Player) entity;
 			CompoundTag data = player.getPersistentData();
 			CompoundTag persistent = data.getCompound(Player.PERSISTED_NBT_TAG);
 

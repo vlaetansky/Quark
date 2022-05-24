@@ -27,8 +27,8 @@ public class ScrollCrateMessage implements IMessage {
 			ServerPlayer player = context.getSender();
 			AbstractContainerMenu container = player.containerMenu;
 
-			if(container instanceof CrateMenu)
-				((CrateMenu) container).scroll(down, false);
+			if(container instanceof CrateMenu crate)
+				crate.scroll(down, false);
 		});
 
 		return true;

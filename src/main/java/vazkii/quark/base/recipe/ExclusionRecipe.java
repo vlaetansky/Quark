@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -14,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.crafting.IShapedRecipe;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
@@ -43,8 +43,8 @@ public class ExclusionRecipe implements CraftingRecipe {
 			Optional<? extends Recipe<?>> recipeHolder = worldIn.getRecipeManager().byKey(recipeLoc);
 			if (recipeHolder.isPresent()) {
 				Recipe<?> recipe = recipeHolder.get();
-				if (recipe instanceof CraftingRecipe &&
-						((CraftingRecipe) recipe).matches(inv, worldIn)) {
+				if (recipe instanceof CraftingRecipe craftingRecipe &&
+						craftingRecipe.matches(inv, worldIn)) {
 					return false;
 				}
 			}
@@ -158,10 +158,10 @@ public class ExclusionRecipe implements CraftingRecipe {
 					excludedRecipes.add(loc);
 			}
 
-			Optional<RecipeSerializer<?>> serializer = Registry.RECIPE_SERIALIZER.getOptional(new ResourceLocation(trueType));
-			if (serializer.isEmpty())
+			RecipeSerializer<?> serializer = ForgeRegistries.RECIPE_SERIALIZERS.getValue(new ResourceLocation(trueType));
+			if (serializer == null)
 				throw new JsonSyntaxException("Invalid or unsupported recipe type '" + trueType + "'");
-			Recipe<?> parent = serializer.get().fromJson(recipeId, json);
+			Recipe<?> parent = serializer.fromJson(recipeId, json);
 			if (!(parent instanceof CraftingRecipe))
 				throw new JsonSyntaxException("Type '" + trueType + "' is not a crafting recipe");
 
@@ -182,15 +182,16 @@ public class ExclusionRecipe implements CraftingRecipe {
 			}
 			String trueType = buffer.readUtf(32767);
 
-			RecipeSerializer<?> serializer = Registry.RECIPE_SERIALIZER.getOptional(new ResourceLocation(trueType))
-					.orElseThrow(() -> new IllegalArgumentException("Invalid or unsupported recipe type '" + trueType + "'"));
+			RecipeSerializer<?> serializer = ForgeRegistries.RECIPE_SERIALIZERS.getValue(new ResourceLocation(trueType));
+			if (serializer == null)
+				throw new IllegalArgumentException("Invalid or unsupported recipe type '" + trueType + "'");
 			Recipe<?> parent = serializer.fromNetwork(recipeId, buffer);
-			if (!(parent instanceof CraftingRecipe))
+			if (!(parent instanceof CraftingRecipe craftingRecipe))
 				throw new IllegalArgumentException("Type '" + trueType + "' is not a crafting recipe");
 
 			if (parent instanceof IShapedRecipe)
-				return new ShapedExclusionRecipe((CraftingRecipe) parent, excludedRecipes);
-			return new ExclusionRecipe((CraftingRecipe) parent, excludedRecipes);
+				return new ShapedExclusionRecipe(craftingRecipe, excludedRecipes);
+			return new ExclusionRecipe(craftingRecipe, excludedRecipes);
 		}
 
 		@Override

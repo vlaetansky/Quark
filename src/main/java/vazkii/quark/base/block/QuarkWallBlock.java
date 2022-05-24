@@ -20,7 +20,6 @@ import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Objects;
 import java.util.function.BooleanSupplier;
 
 public class QuarkWallBlock extends WallBlock implements IQuarkBlock, IBlockColorProvider {
@@ -70,13 +69,13 @@ public class QuarkWallBlock extends WallBlock implements IQuarkBlock, IBlockColo
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public BlockColor getBlockColor() {
-		return parent instanceof IBlockColorProvider ? ((IBlockColorProvider) parent).getBlockColor() : null;
+		return parent instanceof IBlockColorProvider provider ? provider.getBlockColor() : null;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public ItemColor getItemColor() {
-		return parent instanceof IItemColorProvider ? ((IItemColorProvider) parent).getItemColor() : null;
+		return parent instanceof IItemColorProvider provider ? provider.getItemColor() : null;
 	}
 
 }

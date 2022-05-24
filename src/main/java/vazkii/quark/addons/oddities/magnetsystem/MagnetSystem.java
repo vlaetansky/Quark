@@ -5,7 +5,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -27,6 +26,7 @@ import net.minecraftforge.event.TickEvent.WorldTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.addons.oddities.block.be.MagnetBlockEntity;
 import vazkii.quark.addons.oddities.module.MagnetsModule;
 import vazkii.quark.api.IMagnetMoveAction;
@@ -138,9 +138,9 @@ public class MagnetSystem {
 			}
 
 
-			List<Item> magneticDerivationList = MiscUtil.massRegistryGet(MagnetsModule.magneticDerivationList, Registry.ITEM);
-			List<Item> magneticWhitelist = MiscUtil.massRegistryGet(MagnetsModule.magneticWhitelist, Registry.ITEM);
-			List<Item> magneticBlacklist = MiscUtil.massRegistryGet(MagnetsModule.magneticBlacklist, Registry.ITEM);
+			List<Item> magneticDerivationList = MiscUtil.massRegistryGet(MagnetsModule.magneticDerivationList, ForgeRegistries.ITEMS);
+			List<Item> magneticWhitelist = MiscUtil.massRegistryGet(MagnetsModule.magneticWhitelist, ForgeRegistries.ITEMS);
+			List<Item> magneticBlacklist = MiscUtil.massRegistryGet(MagnetsModule.magneticBlacklist, ForgeRegistries.ITEMS);
 
 			Streams.concat(magneticDerivationList.stream(), magneticWhitelist.stream())
 				.filter(i -> i instanceof BlockItem)
@@ -159,8 +159,8 @@ public class MagnetSystem {
 							scanned.add(candidate);
 							magnetizableToScan.add(candidate);
 
-							if(candidate instanceof BlockItem && !magneticBlacklist.contains(candidate))
-								magnetizableBlocks.add(((BlockItem) candidate).getBlock());
+							if(candidate instanceof BlockItem blockItem && !magneticBlacklist.contains(candidate))
+								magnetizableBlocks.add(blockItem.getBlock());
 						}
 					}
 				}

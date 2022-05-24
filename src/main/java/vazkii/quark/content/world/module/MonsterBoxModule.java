@@ -67,11 +67,11 @@ public class MonsterBoxModule extends QuarkModule {
 	@SubscribeEvent
 	public void onDrops(LivingDropsEvent event) {
 		LivingEntity entity = event.getEntityLiving();
-		if(enableExtraLootTable && entity.getCommandSenderWorld() instanceof ServerLevel
+		if(enableExtraLootTable && entity.getCommandSenderWorld() instanceof ServerLevel serverLevel
 				&& entity.getPersistentData().getBoolean(TAG_MONSTER_BOX_SPAWNED)
 				&& entity.level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)
 				&& ((LivingEntityAccessor) entity).quark$lastHurtByPlayerTime() > 0) {
-			LootTable loot = ((ServerLevel) entity.getCommandSenderWorld()).getServer().getLootTables().get(MONSTER_BOX_LOOT_TABLE);
+			LootTable loot = serverLevel.getServer().getLootTables().get(MONSTER_BOX_LOOT_TABLE);
 			var generatedLoot = loot.getRandomItems(((LivingEntityAccessor) entity).quark$createLootContext(true, event.getSource()).create(LootContextParamSets.ENTITY));
 			entity.captureDrops(new ArrayList<>());
 			for (ItemStack stack : generatedLoot)

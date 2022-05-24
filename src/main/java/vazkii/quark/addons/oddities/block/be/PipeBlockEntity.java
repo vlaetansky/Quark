@@ -62,8 +62,8 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 
 	public void tick() {
 		boolean enabled = isPipeEnabled();
-		if(!enabled && level.getGameTime() % 10 == 0 && level instanceof ServerLevel)
-			((ServerLevel) level).sendParticles(new DustParticleOptions(new Vector3f(1.0F, 0.0F, 0.0F), 1.0F), worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5, 3, 0.2, 0.2, 0.2, 0);
+		if(!enabled && level.getGameTime() % 10 == 0 && level instanceof ServerLevel serverLevel)
+			serverLevel.sendParticles(new DustParticleOptions(new Vector3f(1.0F, 0.0F, 0.0F), 1.0F), worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5, 3, 0.2, 0.2, 0.2, 0);
 
 		BlockState blockAt = level.getBlockState(worldPosition);
 		if(!level.isClientSide && enabled && blockAt.getBlock() instanceof PipeBlock) {
@@ -186,8 +186,8 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 		} else {
 			BlockEntity tile = level.getBlockEntity(targetPos);
 			if(tile != null) {
-				if(tile instanceof PipeBlockEntity)
-					did = ((PipeBlockEntity) tile).passIn(item.stack, item.outgoingFace.getOpposite(), null, item.rngSeed, item.timeInWorld);
+				if(tile instanceof PipeBlockEntity pipe)
+					did = pipe.passIn(item.stack, item.outgoingFace.getOpposite(), null, item.rngSeed, item.timeInWorld);
 				else if (!level.isClientSide) {
 					ItemStack result = MiscUtil.putIntoInv(item.stack, level, targetPos, tile, item.outgoingFace.getOpposite(), false, false);
 					if(result.getCount() != item.stack.getCount()) {
@@ -307,8 +307,8 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 		if(tile == null)
 			return false;
 
-		if(tile instanceof PipeBlockEntity)
-			return ((PipeBlockEntity) tile).isPipeEnabled();
+		if(tile instanceof PipeBlockEntity pipe)
+			return pipe.isPipeEnabled();
 		else
 			return MiscUtil.canPutIntoInv(stack, level, pos, tile, face, false);
 	}

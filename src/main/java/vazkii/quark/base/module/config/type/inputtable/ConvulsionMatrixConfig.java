@@ -1,10 +1,5 @@
 package vazkii.quark.base.module.config.type.inputtable;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.quark.api.config.IConfigElement;
@@ -12,10 +7,13 @@ import vazkii.quark.base.client.config.screen.CategoryScreen;
 import vazkii.quark.base.client.config.screen.WidgetWrapper;
 import vazkii.quark.base.client.config.screen.inputtable.ConvulsionMatrixInputScreen;
 import vazkii.quark.base.client.config.screen.inputtable.IInputtableConfigType;
-import vazkii.quark.base.client.config.screen.widgets.PencilButton;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.ConfigFlagManager;
 import vazkii.quark.base.module.config.type.AbstractConfigType;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ConvulsionMatrixConfig extends AbstractConfigType implements IInputtableConfigType<ConvulsionMatrixConfig> {
 
@@ -63,7 +61,7 @@ public class ConvulsionMatrixConfig extends AbstractConfigType implements IInput
 			category.updateDirty();
 		}
 	}
-	
+
 	@Override
 	public void inheritDefaults(ConvulsionMatrixConfig other) {
 		colorMatrix = Arrays.copyOf(other.defaultMatrix, other.defaultMatrix.length);
@@ -95,7 +93,7 @@ public class ConvulsionMatrixConfig extends AbstractConfigType implements IInput
 
 	@Override
 	public boolean equals(Object obj) {
-		return obj == this || (obj instanceof ConvulsionMatrixConfig && Arrays.equals(((ConvulsionMatrixConfig) obj).colorMatrix, colorMatrix));
+		return obj == this || (obj instanceof ConvulsionMatrixConfig other && Arrays.equals(other.colorMatrix, colorMatrix));
 	}
 
 	@Override

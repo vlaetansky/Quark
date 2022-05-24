@@ -39,8 +39,8 @@ public abstract class ClusterBasedGenerator extends MultiChunkFeatureGenerator {
 				context.consume(pos, noise);
 		});
 
-		if(context instanceof IFinishableContext)
-			((IFinishableContext) context).finish();
+		if(context instanceof IFinishableContext finishableContext)
+			finishableContext.finish();
 	}
 
 	public abstract IGenerationContext createContext(BlockPos src, ChunkGenerator generator, Random random, BlockPos chunkCorner, WorldGenRegion world);

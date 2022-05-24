@@ -36,7 +36,7 @@ public interface IMyaliteColorProvider extends IBlockColorProvider {
 
 			BlockPos pos = mc.player.blockPosition();
 			HitResult res = mc.hitResult;
-			if(res instanceof BlockHitResult)
+			if(res != null && res.getType() == HitResult.Type.BLOCK)
 				pos = ((BlockHitResult) res).getBlockPos();
 
 			return getColor(pos, myaliteS(), myaliteB());

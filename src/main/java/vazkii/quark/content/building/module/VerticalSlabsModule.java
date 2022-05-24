@@ -63,8 +63,8 @@ public class VerticalSlabsModule extends QuarkModule {
 		}
 
 		VariantHandler.SLABS.forEach(b -> {
-			if(b instanceof IVerticalSlabProvider)
-				((IVerticalSlabProvider) b).getVerticalSlab(b, this);
+			if(b instanceof IVerticalSlabProvider provider)
+				provider.getVerticalSlab(b, this);
 			else new VerticalSlabBlock(b, this);
 		});
 	}

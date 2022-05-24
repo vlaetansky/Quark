@@ -1,7 +1,6 @@
 package vazkii.quark.content.mobs.entity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -36,6 +35,7 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.ToolActions;
+import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.handler.QuarkSounds;
 import vazkii.quark.content.automation.module.IronRodModule;
@@ -43,7 +43,7 @@ import vazkii.quark.content.mobs.module.ToretoiseModule;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.Random;
 
 public class Toretoise extends Animal {
@@ -98,9 +98,8 @@ public class Toretoise extends Animal {
 
 	private void computeGoodFood() {
 		goodFood = Ingredient.of(ToretoiseModule.foods.stream()
-				.map(loc -> Registry.ITEM.getOptional(new ResourceLocation(loc)))
-				.filter(Optional::isPresent)
-				.map(Optional::get)
+				.map(loc -> ForgeRegistries.ITEMS.getValue(new ResourceLocation(loc)))
+				.filter(Objects::nonNull)
 				.map(ItemStack::new));
 	}
 
@@ -167,11 +166,11 @@ public class Toretoise extends Animal {
 				double y = getY();
 				double z = getZ() + getBbWidth() / 2;
 
-				if(level instanceof ServerLevel) {
+				if(level instanceof ServerLevel serverLevel) {
 					if(angeryTicks == 3)
 						playSound(QuarkSounds.ENTITY_TORETOISE_ANGRY, 1F, 0.2F);
 					else if(angeryTicks == 0) {
-						((ServerLevel) level).sendParticles(ParticleTypes.CLOUD, x, y, z, 200, dangerRange, 0.5, dangerRange, 0);
+						serverLevel.sendParticles(ParticleTypes.CLOUD, x, y, z, 200, dangerRange, 0.5, dangerRange, 0);
 					}
 				}
 
@@ -290,8 +289,8 @@ public class Toretoise extends Animal {
 		if(!isTamed) {
 			isTamed = true;
 
-			if(level instanceof ServerLevel)
-				((ServerLevel) level).sendParticles(ParticleTypes.HEART, getX(), getY(), getZ(), 20, 0.5, 0.5, 0.5, 0);
+			if(level instanceof ServerLevel serverLevel)
+				serverLevel.sendParticles(ParticleTypes.HEART, getX(), getY(), getZ(), 20, 0.5, 0.5, 0.5, 0);
 		} else if (eatCooldown == 0) {
 			popOre(false);
 		}
@@ -307,8 +306,8 @@ public class Toretoise extends Animal {
 			if(!natural) {
 				eatCooldown = ToretoiseModule.cooldownTicks;
 
-				if(level instanceof ServerLevel) {
-					((ServerLevel) level).sendParticles(ParticleTypes.CLOUD, getX(), getY() + 0.5, getZ(), 100, 0.6, 0.6, 0.6, 0);
+				if(level instanceof ServerLevel serverLevel) {
+					serverLevel.sendParticles(ParticleTypes.CLOUD, getX(), getY() + 0.5, getZ(), 100, 0.6, 0.6, 0.6, 0);
 					playSound(QuarkSounds.ENTITY_TORETOISE_REGROW, 10F, 0.7F);
 				}
 			}

@@ -1,12 +1,9 @@
 package vazkii.quark.content.tools.module;
 
-import java.util.List;
-
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
-
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -35,6 +32,8 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.module.config.type.inputtable.RGBAColorConfig;
 import vazkii.quark.content.tools.item.AbacusItem;
+
+import java.util.List;
 
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class AbacusModule extends QuarkModule {
@@ -72,7 +71,7 @@ public class AbacusModule extends QuarkModule {
 						int y = window.getGuiScaledHeight() / 2 - 7;
 
 						mc.getItemRenderer().renderAndDecorateItem(stack, x, y);
-						
+
 						String distStr = distance < AbacusItem.MAX_COUNT ? Integer.toString(distance) : (AbacusItem.MAX_COUNT + "+");
 						mc.font.drawShadow(event.getMatrixStack(), distStr, x + 17, y + 5, 0xFFFFFF);
 					}
@@ -96,64 +95,64 @@ public class AbacusModule extends QuarkModule {
 				int distance = AbacusItem.getCount(stack, player);
 				if(distance > -1 && distance <= AbacusItem.MAX_COUNT) {
 					BlockPos target = AbacusItem.getBlockPos(stack);
+					if (target != null) {
 
-					Camera info = event.getCamera();
-					Vec3 view = info.getPosition();
+						Camera info = event.getCamera();
+						Vec3 view = info.getPosition();
 
-					VoxelShape shape = Shapes.create(new AABB(target));
+						VoxelShape shape = Shapes.create(new AABB(target));
 
-					HitResult result = mc.hitResult;
-					if(result instanceof BlockHitResult) {
-						BlockPos source = ((BlockHitResult) result).getBlockPos();
-						
-						int diffX = source.getX() - target.getX();
-						int diffY = source.getY() - target.getY();
-						int diffZ = source.getZ() - target.getZ();
-						
-						if(diffX != 0)
-							shape = Shapes.or(shape, Shapes.create(new AABB(target).expandTowards(diffX, 0, 0)));
-						if(diffY != 0)
-							shape = Shapes.or(shape, Shapes.create(new AABB(target.offset(diffX, 0, 0)).expandTowards(0, diffY, 0)));
-						if(diffZ != 0)
-							shape = Shapes.or(shape, Shapes.create(new AABB(target.offset(diffX, diffY, 0)).expandTowards(0, 0, diffZ)));
-					}
+						HitResult result = mc.hitResult;
+						if (result != null && result.getType() == HitResult.Type.BLOCK) {
+							BlockPos source = ((BlockHitResult) result).getBlockPos();
 
-					if(shape != null) {
-						List<AABB> list = shape.toAabbs();
-						PoseStack poseStack = event.getPoseStack();
-						
-						// everything from here is a vanilla copy pasta but tweaked to have the same colors
-						
-						double xIn = -view.x;
-						double yIn = -view.y;
-						double zIn = -view.z;
-						
-						for(int j = 0; j < list.size(); ++j) {
-							float r = (float) highlightColor.getElement(0);
-							float g = (float) highlightColor.getElement(1);
-							float b = (float) highlightColor.getElement(2);
-							float a = (float) highlightColor.getElement(3);
-							
-							AABB axisalignedbb = list.get(j);
+							int diffX = source.getX() - target.getX();
+							int diffY = source.getY() - target.getY();
+							int diffZ = source.getZ() - target.getZ();
 
-							VoxelShape individual = Shapes.create(axisalignedbb.move(0.0D, 0.0D, 0.0D));
-							PoseStack.Pose pose = poseStack.last();
-							Matrix4f matrix4f = pose.pose();
-							individual.forAllEdges((minX, minY, minZ, maxX, maxY, maxZ) -> {
-								 float f = (float)(maxX - minX);
-								 float f1 = (float)(maxY - minY);
-								 float f2 = (float)(maxZ - minZ);
-								 float f3 = Mth.sqrt(f * f + f1 * f1 + f2 * f2);
-								 f /= f3;
-								 f1 /= f3;
-								 f2 /= f3;
-								
-								bufferIn.vertex(matrix4f, (float)(minX + xIn), (float)(minY + yIn), (float)(minZ + zIn)).color(r, g, b, a).normal(pose.normal(), f, f1, f2).endVertex();
-								bufferIn.vertex(matrix4f, (float)(maxX + xIn), (float)(maxY + yIn), (float)(maxZ + zIn)).color(r, g, b, a).normal(pose.normal(), f, f1, f2).endVertex();
-							});
+							if (diffX != 0)
+								shape = Shapes.or(shape, Shapes.create(new AABB(target).expandTowards(diffX, 0, 0)));
+							if (diffY != 0)
+								shape = Shapes.or(shape, Shapes.create(new AABB(target.offset(diffX, 0, 0)).expandTowards(0, diffY, 0)));
+							if (diffZ != 0)
+								shape = Shapes.or(shape, Shapes.create(new AABB(target.offset(diffX, diffY, 0)).expandTowards(0, 0, diffZ)));
 						}
-						
-						event.setCanceled(true);
+
+						if (shape != null) {
+							List<AABB> list = shape.toAabbs();
+							PoseStack poseStack = event.getPoseStack();
+
+							// everything from here is a vanilla copy pasta but tweaked to have the same colors
+
+							double xIn = -view.x;
+							double yIn = -view.y;
+							double zIn = -view.z;
+
+							for (AABB aabb : list) {
+								float r = (float) highlightColor.getElement(0);
+								float g = (float) highlightColor.getElement(1);
+								float b = (float) highlightColor.getElement(2);
+								float a = (float) highlightColor.getElement(3);
+
+								VoxelShape individual = Shapes.create(aabb.move(0.0D, 0.0D, 0.0D));
+								PoseStack.Pose pose = poseStack.last();
+								Matrix4f matrix4f = pose.pose();
+								individual.forAllEdges((minX, minY, minZ, maxX, maxY, maxZ) -> {
+									float f = (float) (maxX - minX);
+									float f1 = (float) (maxY - minY);
+									float f2 = (float) (maxZ - minZ);
+									float f3 = Mth.sqrt(f * f + f1 * f1 + f2 * f2);
+									f /= f3;
+									f1 /= f3;
+									f2 /= f3;
+
+									bufferIn.vertex(matrix4f, (float) (minX + xIn), (float) (minY + yIn), (float) (minZ + zIn)).color(r, g, b, a).normal(pose.normal(), f, f1, f2).endVertex();
+									bufferIn.vertex(matrix4f, (float) (maxX + xIn), (float) (maxY + yIn), (float) (maxZ + zIn)).color(r, g, b, a).normal(pose.normal(), f, f1, f2).endVertex();
+								});
+							}
+
+							event.setCanceled(true);
+						}
 					}
 				}
 			}

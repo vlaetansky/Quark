@@ -196,7 +196,7 @@ public class ReacharoundPlacingModule extends QuarkModule {
 		rayPos = rayPos.add(0, leniency, 0);
 		HitResult take2Res = RayTraceHandler.rayTrace(player, world, rayPos, ray, Block.OUTLINE, Fluid.NONE);
 
-		if (take2Res.getType() == HitResult.Type.BLOCK && take2Res instanceof BlockHitResult) {
+		if (take2Res.getType() == HitResult.Type.BLOCK) {
 			BlockPos pos = ((BlockHitResult) take2Res).getBlockPos().below();
 			BlockState state = world.getBlockState(pos);
 
@@ -212,7 +212,7 @@ public class ReacharoundPlacingModule extends QuarkModule {
 		rayPos = rayPos.subtract(leniency * dir.getStepX(), 0, leniency * dir.getStepZ());
 		HitResult take2Res = RayTraceHandler.rayTrace(player, world, rayPos, ray, Block.OUTLINE, Fluid.NONE);
 
-		if (take2Res.getType() == HitResult.Type.BLOCK && take2Res instanceof BlockHitResult) {
+		if (take2Res.getType() == HitResult.Type.BLOCK) {
 			BlockPos pos = ((BlockHitResult) take2Res).getBlockPos().relative(dir);
 			BlockState state = world.getBlockState(pos);
 

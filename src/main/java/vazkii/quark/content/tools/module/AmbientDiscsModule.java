@@ -71,8 +71,8 @@ public class AmbientDiscsModule extends QuarkModule {
 				soundEngine.play(sound);
 			} else {
 				ItemStack stack = tile.getRecord();
-				if(stack.getItem() instanceof QuarkMusicDiscItem)
-					((QuarkMusicDiscItem) stack.getItem()).playAmbientSound(pos);
+				if(stack.getItem() instanceof QuarkMusicDiscItem disc)
+					disc.playAmbientSound(pos);
 			}
 		}
 	}

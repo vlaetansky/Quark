@@ -1,6 +1,7 @@
 package vazkii.quark.content.tools.module;
 
 import com.google.common.collect.Lists;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.core.Direction;
@@ -9,10 +10,15 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.VillagerTrades.ItemListing;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
@@ -26,8 +32,10 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
+import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.api.IRuneColorProvider;
 import vazkii.quark.api.QuarkCapabilities;
 import vazkii.quark.base.Quark;
@@ -47,6 +55,8 @@ import java.util.*;
 
 @LoadModule(category = ModuleCategory.TOOLS, hasSubscriptions = true)
 public class AncientTomesModule extends QuarkModule {
+
+	private static final Object mutex = new Object();
 
 	private static String loot(ResourceLocation lootLoc, int defaultWeight) {
 		return lootLoc.toString() + "," + defaultWeight;
@@ -79,6 +89,9 @@ public class AncientTomesModule extends QuarkModule {
 	@Config
 	public static boolean overleveledBooksGlowRainbow = true;
 
+	@Config(description = "Master Librarians will offer to exchange Ancient Tomes, provided you give them a max-level Enchanted Book of the Tome's enchantment too.")
+	public static boolean librariansExchangeAncientTomes = true;
+
 	public static Item ancient_tome;
 	public static final List<Enchantment> validEnchants = new ArrayList<>();
 	private static boolean initialized = false;
@@ -90,6 +103,16 @@ public class AncientTomesModule extends QuarkModule {
 		tomeEnchantType = new LootItemFunctionType(new EnchantTome.Serializer());
 		Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(Quark.MOD_ID, "tome_enchant"), tomeEnchantType);
 
+	}
+
+	@SubscribeEvent
+	public void onTradesLoaded(VillagerTradesEvent event) {
+		if(event.getType() == VillagerProfession.LIBRARIAN && librariansExchangeAncientTomes) {
+			synchronized (mutex) {
+				Int2ObjectMap<List<ItemListing>> trades = event.getTrades();
+				trades.get(5).add(new ExchangeAncientTomesTrade());
+			}
+		}
 	}
 
 	@Override
@@ -320,16 +343,51 @@ public class AncientTomesModule extends QuarkModule {
 		if (stack.getItem() != ancient_tome)
 			return null;
 
-		ListTag listnbt = EnchantedBookItem.getEnchantments(stack);
+		ListTag list = EnchantedBookItem.getEnchantments(stack);
 
-		for(int i = 0; i < listnbt.size(); ++i) {
-			CompoundTag compoundnbt = listnbt.getCompound(i);
-			Optional<Enchantment> opt = Registry.ENCHANTMENT.getOptional(ResourceLocation.tryParse(compoundnbt.getString("id")));
-			if(opt.isPresent())
-				return opt.orElse(null);
+		for(int i = 0; i < list.size(); ++i) {
+			CompoundTag nbt = list.getCompound(i);
+			Enchantment enchant = ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.tryParse(nbt.getString("id")));
+			if (enchant != null)
+				return enchant;
 		}
 
 		return null;
 	}
 
+	public static boolean matchWildcardEnchantedBook(MerchantOffer offer, ItemStack comparing, ItemStack reference) {
+		// Doesn't check if enabled, since this should apply to the trades that have already been generated regardless
+		if (offer.getCostA().is(ancient_tome) && offer.getCostB().is(Items.ENCHANTED_BOOK) && offer.getResult().is(ancient_tome) &&
+				comparing.is(Items.ENCHANTED_BOOK) && reference.is(Items.ENCHANTED_BOOK)) {
+			Map<Enchantment, Integer> referenceEnchants = EnchantmentHelper.getEnchantments(reference);
+			if (referenceEnchants.size() == 1) {
+				Enchantment enchantment = referenceEnchants.keySet().iterator().next();
+				int level = referenceEnchants.get(enchantment);
+
+				Map<Enchantment, Integer> comparingEnchants = EnchantmentHelper.getEnchantments(comparing);
+				for (var entry : comparingEnchants.entrySet()) {
+					if (entry.getKey() == enchantment && entry.getValue() >= level) {
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	private class ExchangeAncientTomesTrade implements ItemListing {
+		@Nullable
+		@Override
+		public MerchantOffer getOffer(@Nonnull Entity trader, @Nonnull Random random) {
+			if (validEnchants.isEmpty() || !enabled)
+				return null;
+			Enchantment target = validEnchants.get(random.nextInt(validEnchants.size()));
+
+			ItemStack anyTome = new ItemStack(ancient_tome);
+			ItemStack enchantedBook = EnchantedBookItem.createForEnchantment(new EnchantmentInstance(target, target.getMaxLevel()));
+			ItemStack outputTome = AncientTomeItem.getEnchantedItemStack(target);
+			return new MerchantOffer(anyTome, enchantedBook, outputTome, 3, 3, 0.2F);
+		}
+	}
 }

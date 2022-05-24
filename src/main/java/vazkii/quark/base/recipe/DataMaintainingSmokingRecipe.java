@@ -139,10 +139,10 @@ public class DataMaintainingSmokingRecipe extends SmokingRecipe {
 			if (serializer == null)
 				throw new JsonSyntaxException("Invalid or unsupported recipe type '" + trueType + "'");
 			Recipe<?> parent = serializer.fromJson(recipeId, json);
-			if (!(parent instanceof AbstractCookingRecipe))
+			if (!(parent instanceof AbstractCookingRecipe cookingRecipe))
 				throw new JsonSyntaxException("Type '" + trueType + "' is not a cooking recipe");
 
-			return new DataMaintainingSmokingRecipe((AbstractCookingRecipe) parent, pullFrom);
+			return new DataMaintainingSmokingRecipe(cookingRecipe, pullFrom);
 		}
 
 		@Nonnull
@@ -156,10 +156,10 @@ public class DataMaintainingSmokingRecipe extends SmokingRecipe {
 			if (serializer == null)
 				throw new IllegalArgumentException("Invalid or unsupported recipe type '" + trueType + "'");
 			Recipe<?> parent = serializer.fromNetwork(recipeId, buffer);
-			if (!(parent instanceof AbstractCookingRecipe))
+			if (!(parent instanceof AbstractCookingRecipe cookingRecipe))
 				throw new IllegalArgumentException("Type '" + trueType + "' is not a cooking recipe");
 
-			return new DataMaintainingSmokingRecipe((AbstractCookingRecipe) parent, pullFrom);
+			return new DataMaintainingSmokingRecipe(cookingRecipe, pullFrom);
 		}
 
 		@Override

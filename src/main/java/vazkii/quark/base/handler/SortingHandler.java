@@ -1,6 +1,5 @@
 package vazkii.quark.base.handler;
 
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionResult;
@@ -17,6 +16,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.addons.oddities.inventory.BackpackMenu;
 import vazkii.quark.addons.oddities.inventory.SlotCachingItemHandler;
 import vazkii.quark.api.ICustomSorting;
@@ -72,8 +72,8 @@ public final class SortingHandler {
 		for (Slot s : c.slots) {
 			Container inv = s.container;
 			if ((inv == player.getInventory()) == playerContainer) {
-				if (!playerContainer && s instanceof SlotItemHandler) {
-					sortInventory(((SlotItemHandler) s).getItemHandler());
+				if (!playerContainer && s instanceof SlotItemHandler slot) {
+					sortInventory(slot.getItemHandler());
 				} else {
 					InvWrapper wrapper = new InvWrapper(inv);
 					if (playerContainer)
@@ -291,14 +291,16 @@ public final class SortingHandler {
 		List<Item> itemList = new ArrayList<>();
 		for (Object o : items)
 			if (o != null) {
-				if (o instanceof Item)
-					itemList.add((Item) o);
-				else if (o instanceof Block)
-					itemList.add(((Block) o).asItem());
-				else if (o instanceof ItemStack)
-					itemList.add(((ItemStack) o).getItem());
-				else if (o instanceof String) {
-					Registry.ITEM.getOptional(new ResourceLocation((String) o)).ifPresent(itemList::add);
+				if (o instanceof Item item)
+					itemList.add(item);
+				else if (o instanceof Block block)
+					itemList.add(block.asItem());
+				else if (o instanceof ItemStack stack)
+					itemList.add(stack.getItem());
+				else if (o instanceof String s) {
+					Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(s));
+					if (item != null)
+						itemList.add(item);
 				}
 			}
 

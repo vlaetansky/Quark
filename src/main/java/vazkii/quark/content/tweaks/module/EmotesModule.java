@@ -1,20 +1,10 @@
 package vazkii.quark.content.tweaks.module;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.function.Consumer;
-
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -47,15 +37,14 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.RequestEmoteMessage;
-import vazkii.quark.content.tweaks.client.emote.CustomEmoteIconResourcePack;
-import vazkii.quark.content.tweaks.client.emote.EmoteBase;
-import vazkii.quark.content.tweaks.client.emote.EmoteDescriptor;
-import vazkii.quark.content.tweaks.client.emote.EmoteHandler;
-import vazkii.quark.content.tweaks.client.emote.ModelAccessor;
+import vazkii.quark.content.tweaks.client.emote.*;
 import vazkii.quark.content.tweaks.client.screen.widgets.EmoteButton;
 import vazkii.quark.content.tweaks.client.screen.widgets.TranslucentButton;
 
 import javax.annotation.Nonnull;
+import java.io.File;
+import java.util.*;
+import java.util.function.Consumer;
 
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class EmotesModule extends QuarkModule {
@@ -300,15 +289,15 @@ public class EmotesModule extends QuarkModule {
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	@OnlyIn(Dist.CLIENT)
 	public void preRenderLiving(RenderLivingEvent.Pre<Player, ?> event) {
-		if(event.getEntity() instanceof Player)
-			EmoteHandler.preRender(event.getPoseStack(), (Player) event.getEntity());
+		if(event.getEntity() instanceof Player player)
+			EmoteHandler.preRender(event.getPoseStack(), player);
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	@OnlyIn(Dist.CLIENT)
 	public void postRenderLiving(RenderLivingEvent.Post<Player, ?> event) {
-		if(event.getEntity() instanceof Player)
-			EmoteHandler.postRender(event.getPoseStack(), (Player) event.getEntity());
+		if(event.getEntity() instanceof Player player)
+			EmoteHandler.postRender(event.getPoseStack(), player);
 	}
 
 

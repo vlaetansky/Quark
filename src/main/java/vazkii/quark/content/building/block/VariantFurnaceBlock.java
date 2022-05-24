@@ -2,7 +2,6 @@ package vazkii.quark.content.building.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.stats.Stats;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.Level;
@@ -47,8 +46,8 @@ public class VariantFurnaceBlock extends FurnaceBlock implements IQuarkBlock {
 	@Override
 	protected void openContainer(Level world, @Nonnull BlockPos pos, @Nonnull Player player) {
 		BlockEntity blockentity = world.getBlockEntity(pos);
-		if(blockentity instanceof AbstractFurnaceBlockEntity) {
-			player.openMenu((MenuProvider) blockentity);
+		if(blockentity instanceof AbstractFurnaceBlockEntity furnace) {
+			player.openMenu(furnace);
 			player.awardStat(Stats.INTERACT_WITH_FURNACE);
 		}
 	}

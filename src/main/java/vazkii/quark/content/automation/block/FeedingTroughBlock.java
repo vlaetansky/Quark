@@ -58,7 +58,7 @@ public class FeedingTroughBlock extends QuarkBlock implements EntityBlock {
 	@Nonnull
 	@Override
 	public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
-		Entity entity = context instanceof EntityCollisionContext ? ((EntityCollisionContext) context).getEntity() : null;
+		Entity entity = context instanceof EntityCollisionContext ecc ? ecc.getEntity() : null;
 		if(entity instanceof Animal)
 			return ANIMAL_SHAPE;
 

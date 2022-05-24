@@ -35,17 +35,17 @@ public class DoubleDoorOpeningModule extends QuarkModule {
 
 		Level world = event.getWorld();
 		BlockPos pos = event.getPos();
-		
+
 		if(world.getBlockState(pos).getBlock() instanceof DoorBlock) {
 			openDoor(world, event.getPlayer(), pos);
 			QuarkNetwork.sendToServer(new DoubleDoorMessage(pos));
 		}
 	}
-	
+
 	public static void openDoor(Level world, Player player, BlockPos pos) {
 		if(!ModuleLoader.INSTANCE.isModuleEnabled(DoubleDoorOpeningModule.class) || world == null)
 			return;
-		
+
 		BlockState state = world.getBlockState(pos);
 		Direction direction = state.getValue(DoorBlock.FACING);
 		boolean isOpen = state.getValue(DoorBlock.OPEN);
@@ -56,10 +56,10 @@ public class DoubleDoorOpeningModule extends QuarkModule {
 		BlockState other = world.getBlockState(doorPos);
 
 		if(state.getMaterial() != Material.METAL && other.getBlock() == state.getBlock() && other.getValue(DoorBlock.FACING) == direction && other.getValue(DoorBlock.OPEN) == isOpen && other.getValue(DoorBlock.HINGE) != isMirrored) {
-			HitResult res = new BlockHitResult(new Vec3(doorPos.getX() + 0.5, doorPos.getY() + 0.5, doorPos.getZ() + 0.5), direction, doorPos, false);
-			if(res instanceof BlockHitResult)
-				other.use(world, player, InteractionHand.MAIN_HAND, (BlockHitResult) res);
+			BlockHitResult res = new BlockHitResult(new Vec3(doorPos.getX() + 0.5, doorPos.getY() + 0.5, doorPos.getZ() + 0.5), direction, doorPos, false);
+			if(res.getType() == HitResult.Type.BLOCK)
+				other.use(world, player, InteractionHand.MAIN_HAND, res);
 		}
 	}
-	
+
 }

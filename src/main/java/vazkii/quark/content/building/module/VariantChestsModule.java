@@ -1,22 +1,8 @@
 package vazkii.quark.content.building.module;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.BooleanSupplier;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableSet;
-
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -63,6 +49,13 @@ import vazkii.quark.content.building.block.be.VariantChestBlockEntity;
 import vazkii.quark.content.building.block.be.VariantTrappedChestBlockEntity;
 import vazkii.quark.content.building.client.render.be.VariantChestRenderer;
 import vazkii.quark.content.building.recipe.MixedExclusionRecipe;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.function.BooleanSupplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @LoadModule(category = ModuleCategory.BUILDING, hasSubscriptions = true, antiOverlap = { "woodworks" })
 public class VariantChestsModule extends QuarkModule {
@@ -282,11 +275,10 @@ public class VariantChestsModule extends QuarkModule {
 				String left = toks[0];
 				String right = toks[1];
 
-				Registry.BLOCK.getOptional(new ResourceLocation(right)).ifPresent(block -> {
-					if (block != Blocks.AIR) {
-						chestMappings.put(left, block);
-					}
-				});
+				Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(right));
+				if (block != null && block != Blocks.AIR) {
+					chestMappings.put(left, block);
+				}
 			}
 		}
 	}
@@ -422,7 +414,7 @@ public class VariantChestsModule extends QuarkModule {
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
 		Entity target = event.getEntity();
-		if (target instanceof ItemEntity && ((ItemEntity) target).getItem().getItem() == Items.CHEST) {
+		if (target instanceof ItemEntity item && item.getItem().getItem() == Items.CHEST) {
 			ItemStack local = WAIT_TO_REPLACE_CHEST.get();
 			if (local != null && !local.isEmpty())
 				((ItemEntity) target).setItem(local);

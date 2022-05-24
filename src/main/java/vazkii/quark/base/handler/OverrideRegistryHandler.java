@@ -10,12 +10,6 @@
  */
 package vazkii.quark.base.handler;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.Map;
-
-import javax.annotation.Nullable;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -29,8 +23,13 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 
+import javax.annotation.Nullable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Map;
+
 public final class OverrideRegistryHandler {
-	
+
 	public static void registerBlock(Block block, String baseName, @Nullable CreativeModeTab group) {
 		register(block, Blocks.class, baseName);
 		registerBlockItem(block, group);
@@ -40,11 +39,11 @@ public final class OverrideRegistryHandler {
 		Item.Properties props = new Item.Properties();
 		if(group != null)
 			props = props.tab(group);
-		
+
 		BlockItem item = new BlockItem(block, props);
 		registerItem(item, block.getRegistryName().getPath());
 	}
-	
+
 	public static void registerItem(Item item, String baseName) {
 		register(item, Items.class, baseName);
 	}
@@ -66,14 +65,14 @@ public final class OverrideRegistryHandler {
 				try {
 					IForgeRegistryEntry<?> fieldVal = (IForgeRegistryEntry<?>) declared.get(null);
 					if (regName.equals(fieldVal.getRegistryName())) {
-						if (obj instanceof Block && fieldVal instanceof Block) {
+						if (obj instanceof Block blockObj && fieldVal instanceof Block) {
 							Map<Block, Item> itemMap = GameData.getBlockItemMap();
-							itemMap.put((Block) obj, itemMap.get(fieldVal));
-						} else if (obj instanceof BlockItem) {
+							itemMap.put(blockObj, itemMap.get(fieldVal));
+						} else if (obj instanceof BlockItem blockItemObj) {
 							Map<Block, Item> itemMap = GameData.getBlockItemMap();
-							itemMap.put(((BlockItem) obj).getBlock(), (Item) obj);
+							itemMap.put(blockItemObj.getBlock(), blockItemObj);
 						}
-						
+
 						Quark.LOG.info("Overriding " + registryType + "." + declared + " with " + obj);
 						MiscUtil.editFinalField(declared, null, obj);
 					}

@@ -17,21 +17,19 @@ import vazkii.quark.content.tweaks.recipe.ElytraDuplicationRecipe;
 
 @LoadModule(category = ModuleCategory.TWEAKS, hasSubscriptions = true)
 public class DragonScalesModule extends QuarkModule {
-	
+
 	public static Item dragon_scale;
-	
+
 	@Override
 	public void register() {
 		ForgeRegistries.RECIPE_SERIALIZERS.register(ElytraDuplicationRecipe.SERIALIZER.setRegistryName("quark:elytra_duplication"));
-		
+
 		dragon_scale = new QuarkItem("dragon_scale", this, new Item.Properties().tab(CreativeModeTab.TAB_MATERIALS));
 	}
-	
+
 	@SubscribeEvent
 	public void onEntityTick(LivingUpdateEvent event) {
-		if(event.getEntityLiving() instanceof EnderDragon && !event.getEntity().getCommandSenderWorld().isClientSide) {
-			EnderDragon dragon = (EnderDragon) event.getEntity();
-
+		if(event.getEntityLiving() instanceof EnderDragon dragon && !event.getEntity().getCommandSenderWorld().isClientSide) {
 			if(dragon.getDragonFight() != null && dragon.getDragonFight().hasPreviouslyKilledDragon() && dragon.dragonDeathTime == 100) {
 				Vec3 pos = dragon.position();
 				ItemEntity item = new ItemEntity(dragon.level, pos.x, pos.y, pos.z, new ItemStack(dragon_scale, 1));
@@ -39,5 +37,5 @@ public class DragonScalesModule extends QuarkModule {
 			}
 		}
 	}
-	
+
 }

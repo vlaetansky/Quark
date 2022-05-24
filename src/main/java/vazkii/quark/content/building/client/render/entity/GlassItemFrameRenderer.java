@@ -173,8 +173,8 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrame> {
 					this.mc.gameRenderer.getMapRenderer().render(matrix, buff, mapID, mapdata, true, light);
 				} else {
 					float s = (float) GlassItemFrameModule.itemRenderScale;
-					if (stack.getItem() instanceof BannerItem) {
-						banner.fromItem(stack, ((BannerItem) stack.getItem()).getColor());
+					if (stack.getItem() instanceof BannerItem bannerItem) {
+						banner.fromItem(stack, bannerItem.getColor());
 						List<Pair<BannerPattern, DyeColor>> patterns = banner.getPatterns();
 
 						matrix.pushPose();

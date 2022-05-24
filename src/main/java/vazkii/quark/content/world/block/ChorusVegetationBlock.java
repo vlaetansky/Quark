@@ -69,8 +69,8 @@ public class ChorusVegetationBlock extends QuarkBlock implements BonemealableBlo
 
 	@Override
 	public void entityInside(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Entity entity) {
-		if(simple && worldIn instanceof ServerLevel && entity instanceof LivingEntity && !(entity instanceof EnderMan) && !(entity instanceof Endermite)) {
-			BlockPos target = teleport(pos, worldIn.random, (ServerLevel) worldIn, state);
+		if(simple && worldIn instanceof ServerLevel serverLevel && entity instanceof LivingEntity && !(entity instanceof EnderMan) && !(entity instanceof Endermite)) {
+			BlockPos target = teleport(pos, worldIn.random, serverLevel, state);
 
 			if(target != null && worldIn.random.nextDouble() < ChorusVegetationModule.endermiteSpawnChance) {
 				Endermite mite = new Endermite(EntityType.ENDERMITE, worldIn);
@@ -84,8 +84,8 @@ public class ChorusVegetationBlock extends QuarkBlock implements BonemealableBlo
 	public void neighborChanged(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Block blockIn, @Nonnull BlockPos fromPos, boolean isMoving) {
 		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
 
-		if(worldIn instanceof ServerLevel)
-			runAwayFromWater(pos, worldIn.random, (ServerLevel) worldIn, state);
+		if(worldIn instanceof ServerLevel serverLevel)
+			runAwayFromWater(pos, worldIn.random, serverLevel, state);
 	}
 
 	private void runAwayFromWater(BlockPos pos, Random random, ServerLevel worldIn, BlockState state) {

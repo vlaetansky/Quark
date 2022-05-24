@@ -53,8 +53,8 @@ public class SoulCompassItem extends QuarkItem {
 			if (entity == null)
 				return 0;
 
-			if(world == null && entity != null && entity.level instanceof ClientLevel)
-				world = (ClientLevel) entity.level;
+			if(world == null && entity != null && entity.level instanceof ClientLevel clientLevel)
+				world = clientLevel;
 
 			double angle;
 			BlockPos pos = getPos(stack);

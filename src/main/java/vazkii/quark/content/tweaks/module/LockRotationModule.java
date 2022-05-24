@@ -107,8 +107,8 @@ public class LockRotationModule extends QuarkModule {
 		Block block = state.getBlock();
 
 
-		if(block instanceof IRotationLockable)
-			setState = ((IRotationLockable) block).applyRotationLock(world, pos, state, face, half);
+		if(block instanceof IRotationLockable lockable)
+			setState = lockable.applyRotationLock(world, pos, state, face, half);
 
 		// General Facing
 		else if(props.containsKey(BlockStateProperties.FACING))

@@ -108,9 +108,9 @@ public class TotemOfHoldingEntity extends Entity {
 						spawnAtLocation(stack, 0);
 			}
 
-			if(level instanceof ServerLevel) {
-				((ServerLevel) level).sendParticles(ParticleTypes.DAMAGE_INDICATOR, getX(), getY() + 0.5, getZ(), drops, 0.1, 0.5, 0.1, 0);
-				((ServerLevel) level).sendParticles(ParticleTypes.ENCHANTED_HIT, getX(), getY() + 0.5, getZ(), drops, 0.4, 0.5, 0.4, 0);
+			if(level instanceof ServerLevel serverLevel) {
+				serverLevel.sendParticles(ParticleTypes.DAMAGE_INDICATOR, getX(), getY() + 0.5, getZ(), drops, 0.1, 0.5, 0.1, 0);
+				serverLevel.sendParticles(ParticleTypes.ENCHANTED_HIT, getX(), getY() + 0.5, getZ(), drops, 0.4, 0.5, 0.4, 0);
 			}
 		}
 

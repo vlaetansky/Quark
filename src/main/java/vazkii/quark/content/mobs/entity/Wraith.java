@@ -113,8 +113,8 @@ public class Wraith extends Zombie {
 	public boolean doHurtTarget(@Nonnull Entity entityIn) {
 		boolean did = super.doHurtTarget(entityIn);
 		if(did) {
-			if(entityIn instanceof LivingEntity)
-				((LivingEntity) entityIn).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 1));
+			if(entityIn instanceof LivingEntity living)
+				living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 1));
 
 			double dx = getX() - entityIn.getX();
 			double dz = getZ() - entityIn.getZ();

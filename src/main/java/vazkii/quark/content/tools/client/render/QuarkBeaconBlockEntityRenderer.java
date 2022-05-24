@@ -28,10 +28,10 @@ public class QuarkBeaconBlockEntityRenderer {
 		List<BeaconBlockEntity.BeaconBeamSection> list = tileEntityIn.getBeamSections();
 
 		for (BeaconBlockEntity.BeaconBeamSection segment : list) {
-			if (!(segment instanceof ExtendedBeamSegment))
+			if (!(segment instanceof ExtendedBeamSegment extension))
 				return false; // Defer back to the vanilla one
 
-			renderBeamSegment(matrixStackIn, bufferIn, (ExtendedBeamSegment) segment, partialTicks, i);
+			renderBeamSegment(matrixStackIn, bufferIn, extension, partialTicks, i);
 		}
 
 		return true;

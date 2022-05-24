@@ -1,6 +1,5 @@
 package vazkii.quark.addons.oddities.inventory;
 
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
@@ -445,7 +444,7 @@ public class EnchantmentMatrix {
 		public void readFromNBT(CompoundTag cmp) {
 			color = cmp.getInt(TAG_COLOR);
 			type = cmp.getInt(TAG_TYPE);
-			enchant = Registry.ENCHANTMENT.get(new ResourceLocation(cmp.getString(TAG_ENCHANTMENT)));
+			enchant = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(cmp.getString(TAG_ENCHANTMENT)));
 			level = cmp.getInt(TAG_LEVEL);
 			x = cmp.getInt(TAG_X);
 			y = cmp.getInt(TAG_Y);

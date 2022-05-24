@@ -13,7 +13,6 @@ import net.minecraft.core.*;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
@@ -55,6 +54,8 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.config.screen.AbstractQScreen;
 import vazkii.quark.content.experimental.module.EnchantmentsBegoneModule;
@@ -64,7 +65,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -162,15 +163,15 @@ public class MiscUtil {
 		return state.getMaterial() == Material.STONE && state.isValidSpawn(world, below, type);
 	}
 
-	public static <T> List<T> massRegistryGet(Collection<String> coll, Registry<T> registry) {
-		return coll.stream().map(ResourceLocation::new).map(registry::getOptional).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
+	public static <T extends IForgeRegistryEntry<T>> List<T> massRegistryGet(Collection<String> coll, IForgeRegistry<T> registry) {
+		return coll.stream().map(ResourceLocation::new).map(registry::getValue).filter(Objects::nonNull).collect(Collectors.toList());
 	}
 
 	public static void syncTE(BlockEntity tile) {
 		Packet<ClientGamePacketListener> packet = tile.getUpdatePacket();
 
-		if(packet != null && tile.getLevel() instanceof ServerLevel) {
-			((ServerChunkCache) tile.getLevel().getChunkSource()).chunkMap
+		if(packet != null && tile.getLevel() instanceof ServerLevel serverLevel) {
+			serverLevel.getChunkSource().chunkMap
 			.getPlayers(new ChunkPos(tile.getBlockPos()), false)
 			.forEach(e -> e.connection.send(packet));
 		}
@@ -185,10 +186,10 @@ public class MiscUtil {
 			LazyOptional<IItemHandler> opt = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, face);
 			if(opt.isPresent())
 				handler = opt.orElse(new ItemStackHandler());
-			else if(tile instanceof WorldlyContainer)
-				handler = new SidedInvWrapper((WorldlyContainer) tile, face);
-			else if(tile instanceof Container)
-				handler = new InvWrapper((Container) tile);
+			else if(tile instanceof WorldlyContainer container)
+				handler = new SidedInvWrapper(container, face);
+			else if(tile instanceof Container container)
+				handler = new InvWrapper(container);
 		}
 
 		if(handler != null)

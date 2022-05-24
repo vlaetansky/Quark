@@ -153,12 +153,12 @@ public class DataMaintainingRecipe implements CraftingRecipe {
 			if (serializer == null)
 				throw new JsonSyntaxException("Invalid or unsupported recipe type '" + trueType + "'");
 			Recipe<?> parent = serializer.fromJson(recipeId, json);
-			if (!(parent instanceof CraftingRecipe))
+			if (!(parent instanceof CraftingRecipe craftingRecipe))
 				throw new JsonSyntaxException("Type '" + trueType + "' is not a crafting recipe");
 
 			if (parent instanceof IShapedRecipe)
-				return new ShapedDataMaintainingRecipe((CraftingRecipe) parent, pullFrom);
-			return new DataMaintainingRecipe((CraftingRecipe) parent, pullFrom);
+				return new ShapedDataMaintainingRecipe(craftingRecipe, pullFrom);
+			return new DataMaintainingRecipe(craftingRecipe, pullFrom);
 		}
 
 		@Nonnull
@@ -172,12 +172,12 @@ public class DataMaintainingRecipe implements CraftingRecipe {
 			if (serializer == null)
 				throw new IllegalArgumentException("Invalid or unsupported recipe type '" + trueType + "'");
 			Recipe<?> parent = serializer.fromNetwork(recipeId, buffer);
-			if (!(parent instanceof CraftingRecipe))
+			if (!(parent instanceof CraftingRecipe craftingRecipe))
 				throw new IllegalArgumentException("Type '" + trueType + "' is not a crafting recipe");
 
 			if (parent instanceof IShapedRecipe)
-				return new ShapedDataMaintainingRecipe((CraftingRecipe) parent, pullFrom);
-			return new DataMaintainingRecipe((CraftingRecipe) parent, pullFrom);
+				return new ShapedDataMaintainingRecipe(craftingRecipe, pullFrom);
+			return new DataMaintainingRecipe(craftingRecipe, pullFrom);
 		}
 
 		@Override

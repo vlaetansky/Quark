@@ -61,7 +61,7 @@ public class BigStoneClusterGenerator extends ClusterBasedGenerator {
 	}
 
 	private boolean canPlaceBlock(ServerLevelAccessor world, BlockPos pos) {
-		if(config instanceof AirStoneClusterConfig && ((AirStoneClusterConfig) config).generateInAir)
+		if(config instanceof AirStoneClusterConfig clusterConfig && clusterConfig.generateInAir)
 			return world.getBlockState(pos).isAir();
 
 		return BigStoneClustersModule.blockReplacePredicate.test(world.getLevel(), world.getBlockState(pos).getBlock());

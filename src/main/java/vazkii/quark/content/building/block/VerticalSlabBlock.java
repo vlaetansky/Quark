@@ -53,8 +53,8 @@ public class VerticalSlabBlock extends QuarkBlock implements SimpleWaterloggedBl
 		if(!(parent instanceof SlabBlock))
 			throw new IllegalArgumentException("Can't rotate a non-slab block into a vertical slab.");
 
-		if(parent instanceof QuarkSlabBlock)
-			setCondition(((QuarkSlabBlock) parent).parent::isEnabled);
+		if(parent instanceof QuarkSlabBlock quarkSlab)
+			setCondition(quarkSlab.parent::isEnabled);
 
 		registerDefaultState(defaultBlockState().setValue(TYPE, VerticalSlabType.NORTH).setValue(WATERLOGGED, false));
 	}
@@ -169,13 +169,13 @@ public class VerticalSlabBlock extends QuarkBlock implements SimpleWaterloggedBl
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public BlockColor getBlockColor() {
-		return parent instanceof IBlockColorProvider ? ((IBlockColorProvider) parent).getBlockColor() : null;
+		return parent instanceof IBlockColorProvider provider ? provider.getBlockColor() : null;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public ItemColor getItemColor() {
-		return parent instanceof IItemColorProvider ? ((IItemColorProvider) parent).getItemColor() : null;
+		return parent instanceof IItemColorProvider provider ? provider.getItemColor() : null;
 	}
 
 	public enum VerticalSlabType implements StringRepresentable {

@@ -201,8 +201,8 @@ public class MagnetizedBlockBlockEntity extends BlockEntity {
 
 	private IMagnetMoveAction getMoveAction() {
 		Block block = magnetState.getBlock();
-		if(block instanceof IMagnetMoveAction)
-			return (IMagnetMoveAction) block;
+		if(block instanceof IMagnetMoveAction moveAction)
+			return moveAction;
 
 		return MagnetSystem.getMoveAction(block);
 	}

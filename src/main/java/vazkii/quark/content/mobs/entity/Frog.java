@@ -316,11 +316,11 @@ public class Frog extends Animal implements IEntityAdditionalSpawnData, IForgeSh
 			return null;
 
 		float sizeMod = getSizeModifier();
-		if (otherParent instanceof Frog) {
-			if (((Frog) otherParent).isDuplicate)
+		if (otherParent instanceof Frog otherFrog) {
+			if (otherFrog.isDuplicate)
 				return null;
 
-			sizeMod += ((Frog) otherParent).getSizeModifier();
+			sizeMod += otherFrog.getSizeModifier();
 			sizeMod /= 2;
 		}
 

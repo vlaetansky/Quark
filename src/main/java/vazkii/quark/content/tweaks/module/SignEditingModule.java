@@ -39,8 +39,8 @@ public class SignEditingModule extends QuarkModule {
 		Minecraft mc = Minecraft.getInstance();
 		BlockEntity tile = mc.level.getBlockEntity(pos);
 
-		if(tile instanceof SignBlockEntity)
-			mc.player.openTextEdit((SignBlockEntity) tile);
+		if(tile instanceof SignBlockEntity sign)
+			mc.player.openTextEdit(sign);
 	}
 
 	@SubscribeEvent
@@ -52,9 +52,9 @@ public class SignEditingModule extends QuarkModule {
 		Player player = event.getPlayer();
 		ItemStack stack = player.getMainHandItem();
 
-		if(player instanceof ServerPlayer
+		if(player instanceof ServerPlayer serverPlayer
 				&& tile instanceof SignBlockEntity sign
-				&& !doesSignHaveCommand((SignBlockEntity) tile)
+				&& !doesSignHaveCommand(sign)
 				&& (!requiresEmptyHand || stack.isEmpty())
 				&& !(stack.getItem() instanceof DyeItem)
 				&& !(stack.getItem() == Items.GLOW_INK_SAC)
@@ -65,7 +65,7 @@ public class SignEditingModule extends QuarkModule {
 			sign.setAllowedPlayerEditor(player.getUUID());
 			sign.isEditable = true;
 
-			QuarkNetwork.sendToPlayer(new EditSignMessage(event.getPos()), (ServerPlayer) player);
+			QuarkNetwork.sendToPlayer(new EditSignMessage(event.getPos()), serverPlayer);
 
 			event.setCanceled(true);
 			event.setCancellationResult(InteractionResult.SUCCESS);

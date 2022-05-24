@@ -97,8 +97,8 @@ public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements
 			worldIn.setBlockEntity(newBlockEntity(pos, state));
 
 		if(ModuleLoader.INSTANCE.isModuleEnabled(MatrixEnchantingModule.class)) {
-			if(player instanceof ServerPlayer)
-				NetworkHooks.openGui((ServerPlayer) player, (MatrixEnchantingTableBlockEntity) worldIn.getBlockEntity(pos), pos);
+			if(player instanceof ServerPlayer serverPlayer)
+				NetworkHooks.openGui(serverPlayer, (MatrixEnchantingTableBlockEntity) worldIn.getBlockEntity(pos), pos);
 		} else
 			worldIn.setBlockAndUpdate(pos, Blocks.ENCHANTING_TABLE.defaultBlockState());
 
@@ -165,8 +165,8 @@ public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements
 		if(stack.hasCustomHoverName()) {
 			BlockEntity tileentity = worldIn.getBlockEntity(pos);
 
-			if(tileentity instanceof MatrixEnchantingTableBlockEntity)
-				((MatrixEnchantingTableBlockEntity) tileentity).setCustomName(stack.getHoverName());
+			if(tileentity instanceof MatrixEnchantingTableBlockEntity matrixEnchanter)
+				matrixEnchanter.setCustomName(stack.getHoverName());
 		}
 	}
 

@@ -76,11 +76,11 @@ public class MagnetBlock extends QuarkBlock implements EntityBlock {
 		BlockState targetState = world.getBlockState(targetPos);
 
 		BlockEntity tile = world.getBlockEntity(pos);
-		if (!(tile instanceof MagnetBlockEntity))
+		if (!(tile instanceof MagnetBlockEntity be))
 			return false;
 
 		BlockPos endPos = targetPos.relative(moveDir);
-		PushReaction reaction = MagnetSystem.getPushAction((MagnetBlockEntity) tile, targetPos, targetState, moveDir);
+		PushReaction reaction = MagnetSystem.getPushAction(be, targetPos, targetState, moveDir);
 		if (reaction != PushReaction.IGNORE && reaction != PushReaction.DESTROY)
 			return false;
 

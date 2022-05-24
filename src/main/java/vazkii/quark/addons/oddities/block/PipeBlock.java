@@ -216,17 +216,17 @@ public class PipeBlock extends QuarkBlock implements SimpleWaterloggedBlock, Ent
 	@Override
 	public int getAnalogOutputSignal(@Nonnull BlockState blockState, Level worldIn, @Nonnull BlockPos pos) {
 		BlockEntity tile = worldIn.getBlockEntity(pos);
-		if(tile instanceof PipeBlockEntity)
-			return ((PipeBlockEntity) tile).getComparatorOutput();
+		if(tile instanceof PipeBlockEntity pipe)
+			return pipe.getComparatorOutput();
 		return 0;
 	}
 
 	@Override
 	public void onRemove(@Nonnull BlockState state, Level worldIn, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
-		BlockEntity tileentity = worldIn.getBlockEntity(pos);
+		BlockEntity be = worldIn.getBlockEntity(pos);
 
-		if(tileentity instanceof PipeBlockEntity)
-			((PipeBlockEntity) tileentity).dropAllItems();
+		if(be instanceof PipeBlockEntity pipe)
+			pipe.dropAllItems();
 
 		super.onRemove(state, worldIn, pos, newState, isMoving);
 	}

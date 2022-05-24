@@ -1,13 +1,6 @@
 package vazkii.quark.content.automation.block.be;
 
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-
-import javax.annotation.Nonnull;
-
 import com.mojang.authlib.GameProfile;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -36,6 +29,11 @@ import vazkii.quark.base.util.MovableFakePlayer;
 import vazkii.quark.content.automation.block.FeedingTroughBlock;
 import vazkii.quark.content.automation.module.FeedingTroughModule;
 
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
+
 /**
  * @author WireSegal
  * Created at 9:39 AM on 9/20/19.
@@ -57,8 +55,8 @@ public class FeedingTroughBlockEntity extends RandomizableContainerBlockEntity {
 	}
 
 	public FakePlayer getFoodHolder(TemptGoal goal) {
-		if (foodHolder == null && level instanceof ServerLevel)
-			foodHolder = new MovableFakePlayer((ServerLevel) level, DUMMY_PROFILE);
+		if (foodHolder == null && level instanceof ServerLevel serverLevel)
+			foodHolder = new MovableFakePlayer(serverLevel, DUMMY_PROFILE);
 
 		Animal entity = (Animal) goal.mob;
 

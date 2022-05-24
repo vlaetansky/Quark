@@ -1,15 +1,7 @@
 package vazkii.quark.base.recipe.ingredient;
 
-import java.util.Objects;
-import java.util.stream.Stream;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -19,7 +11,13 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
+import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.handler.BrewingHandler;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
  * @author WireSegal
@@ -70,23 +68,23 @@ public class PotionIngredient extends Ingredient {
 		@Nonnull
 		@Override
 		public PotionIngredient parse(@Nonnull FriendlyByteBuf buffer) {
-			Item item = Registry.ITEM.getOptional(buffer.readResourceLocation()).get();
-			Potion potion = Registry.POTION.getOptional(buffer.readResourceLocation()).get();
+			Item item = ForgeRegistries.ITEMS.getValue(buffer.readResourceLocation());
+			Potion potion = ForgeRegistries.POTIONS.getValue(buffer.readResourceLocation());
 			return new PotionIngredient(item, potion);
 		}
 
 		@Nonnull
 		@Override
 		public PotionIngredient parse(@Nonnull JsonObject json) {
-			Item item = Registry.ITEM.getOptional(new ResourceLocation(json.getAsJsonPrimitive("item").getAsString())).get();
-			Potion potion = Registry.POTION.getOptional(new ResourceLocation(json.getAsJsonPrimitive("item").getAsString())).get();
+			Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(json.getAsJsonPrimitive("item").getAsString()));
+			Potion potion = ForgeRegistries.POTIONS.getValue(new ResourceLocation(json.getAsJsonPrimitive("potion").getAsString()));
 			return new PotionIngredient(item, potion);
 		}
 
 		@Override
 		public void write(@Nonnull FriendlyByteBuf buffer, @Nonnull PotionIngredient ingredient) {
-			buffer.writeUtf(Objects.toString(Registry.ITEM.getId(ingredient.item)));
-			buffer.writeUtf(Objects.toString(Registry.POTION.getId(ingredient.potion)));
+			buffer.writeUtf(Objects.toString(ForgeRegistries.ITEMS.getKey(ingredient.item)));
+			buffer.writeUtf(Objects.toString(ForgeRegistries.POTIONS.getKey(ingredient.potion)));
 		}
 	}
 }

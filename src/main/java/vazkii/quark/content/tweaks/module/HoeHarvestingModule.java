@@ -59,7 +59,7 @@ public class HoeHarvestingModule extends QuarkModule {
 	@SubscribeEvent
 	public void onBlockBroken(BlockEvent.BreakEvent event) {
 		LevelAccessor world = event.getWorld();
-		if(!(world instanceof Level))
+		if(!(world instanceof Level level))
 			return;
 
 		Player player = event.getPlayer();
@@ -82,7 +82,7 @@ public class HoeHarvestingModule extends QuarkModule {
 						if (state.getDestroySpeed(world, pos) != 0.0F)
 							brokeNonInstant = true;
 						if (block.canHarvestBlock(state, world, pos, player))
-							block.playerDestroy((Level) world, player, pos, state, world.getBlockEntity(pos), stack);
+							block.playerDestroy(level, player, pos, state, world.getBlockEntity(pos), stack);
 						world.destroyBlock(pos, false);
 						world.levelEvent(2001, pos, Block.getId(state));
 					}

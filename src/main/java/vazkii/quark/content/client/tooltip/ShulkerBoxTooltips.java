@@ -112,8 +112,8 @@ public class ShulkerBoxTooltips {
 				}
 				BlockEntity te = BlockEntity.loadStatic(BlockPos.ZERO, ((BlockItem) stack.getItem()).getBlock().defaultBlockState(), cmp);
 				if (te != null) {
-					if (te instanceof RandomizableContainerBlockEntity)
-						((RandomizableContainerBlockEntity) te).setLootTable(null, 0);
+					if (te instanceof RandomizableContainerBlockEntity randomizable)
+						randomizable.setLootTable(null, 0);
 
 					LazyOptional<IItemHandler> handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 					handler.ifPresent((capability) -> {
@@ -141,8 +141,8 @@ public class ShulkerBoxTooltips {
 
 						int color = -1;
 
-						if (ImprovedTooltipsModule.shulkerBoxUseColors && ((BlockItem) currentBox.getItem()).getBlock() instanceof ShulkerBoxBlock) {
-							DyeColor dye = ((ShulkerBoxBlock) ((BlockItem) currentBox.getItem()).getBlock()).getColor();
+						if (ImprovedTooltipsModule.shulkerBoxUseColors && ((BlockItem) currentBox.getItem()).getBlock() instanceof ShulkerBoxBlock boxBlock) {
+							DyeColor dye = boxBlock.getColor();
 							if (dye != null) {
 								float[] colorComponents = dye.getTextureDiffuseColors();
 								color = ((int) (colorComponents[0] * 255) << 16) |

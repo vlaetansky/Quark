@@ -185,10 +185,10 @@ public class Forgotten extends Skeleton {
 	@Override
 	protected AbstractArrow getArrow(@Nonnull ItemStack arrowStack, float distanceFactor) {
 		AbstractArrow arrow = super.getArrow(arrowStack, distanceFactor);
-		if(arrow instanceof Arrow) {
+		if(arrow instanceof Arrow arrowInstance) {
 			ItemStack stack = new ItemStack(Items.TIPPED_ARROW);
 			PotionUtils.setCustomEffects(stack, ImmutableSet.of(new MobEffectInstance(MobEffects.BLINDNESS, 100, 0)));
-			((Arrow) arrow).setEffectsFromItem(stack);
+			arrowInstance.setEffectsFromItem(stack);
 		}
 
 		return arrow;

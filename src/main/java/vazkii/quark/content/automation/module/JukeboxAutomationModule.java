@@ -46,8 +46,8 @@ public class JukeboxAutomationModule extends QuarkModule {
 
 	@SubscribeEvent
 	public void attachCaps(AttachCapabilitiesEvent<BlockEntity> event) {
-		if(event.getObject() instanceof JukeboxBlockEntity)
-			event.addCapability(JUKEBOX_ITEM_HANDLER, new JukeboxItemHandler((JukeboxBlockEntity) event.getObject()));
+		if(event.getObject() instanceof JukeboxBlockEntity jukebox)
+			event.addCapability(JUKEBOX_ITEM_HANDLER, new JukeboxItemHandler(jukebox));
 	}
 
 	public record JukeboxItemHandler(JukeboxBlockEntity tile) implements ICapabilityProvider, IItemHandler {

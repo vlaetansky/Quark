@@ -109,7 +109,7 @@ public class NarratorReadoutModule extends QuarkModule {
 
 		if(mc.screen == null) {
 			HitResult ray = mc.hitResult;
-			if(ray instanceof BlockHitResult) {
+			if(ray != null && ray.getType() == HitResult.Type.BLOCK) {
 				BlockPos pos = ((BlockHitResult) ray).getBlockPos();
 				BlockState state = mc.level.getBlockState(pos);
 

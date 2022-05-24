@@ -1,12 +1,6 @@
 package vazkii.quark.content.building.entity;
 
-import java.util.UUID;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.mojang.authlib.GameProfile;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -23,11 +17,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BannerItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.MapItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,6 +31,10 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.network.NetworkHooks;
 import vazkii.quark.base.util.MovableFakePlayer;
 import vazkii.quark.content.building.module.GlassItemFrameModule;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.UUID;
 
 public class GlassItemFrame extends ItemFrame implements IEntityAdditionalSpawnData {
 
@@ -87,7 +81,7 @@ public class GlassItemFrame extends ItemFrame implements IEntityAdditionalSpawnD
 
 		if(GlassItemFrameModule.glassItemFramesUpdateMaps) {
 			ItemStack stack = getItem();
-			if(stack.getItem() instanceof MapItem && level instanceof ServerLevel sworld) {
+			if(stack.getItem() instanceof MapItem map && level instanceof ServerLevel sworld) {
 				ItemStack clone = stack.copy();
 
 				MapItemSavedData data = MapItem.getSavedData(clone, level);
@@ -95,13 +89,11 @@ public class GlassItemFrame extends ItemFrame implements IEntityAdditionalSpawnD
 					if(fakePlayer == null)
 						fakePlayer = new MovableFakePlayer(sworld, new GameProfile(UUID.randomUUID(), "ItemFrame"));
 
-					MapItem item = (MapItem) stack.getItem();
-
 					clone.setEntityRepresentation(null);
 					fakePlayer.setPos(getX(), getY(), getZ());
 					fakePlayer.getInventory().setItem(0, clone);
 
-					item.update(level, fakePlayer, data);
+					map.update(level, fakePlayer, data);
 				}
 			}
 		}

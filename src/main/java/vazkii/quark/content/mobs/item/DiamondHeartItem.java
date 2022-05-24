@@ -1,7 +1,5 @@
 package vazkii.quark.content.mobs.item;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,6 +23,8 @@ import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.mobs.entity.Stoneling;
 import vazkii.quark.content.mobs.entity.Stoneling.StonelingVariant;
 import vazkii.quark.content.mobs.module.StonelingsModule;
+
+import javax.annotation.Nonnull;
 
 public class DiamondHeartItem extends QuarkItem {
 
@@ -54,7 +54,7 @@ public class DiamondHeartItem extends QuarkItem {
 				}
 
 				if (variant != null) {
-					if (!world.isClientSide && world instanceof ServerLevelAccessor) {
+					if (!world.isClientSide && world instanceof ServerLevelAccessor serverLevel) {
 						world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 						world.levelEvent(2001, pos, Block.getId(stateAt));
 
@@ -62,11 +62,11 @@ public class DiamondHeartItem extends QuarkItem {
 						stoneling.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 						stoneling.setPlayerMade(true);
 						stoneling.setYRot(player.getYRot() + 180F);
-						stoneling.finalizeSpawn((ServerLevelAccessor) world, world.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, variant, null);
+						stoneling.finalizeSpawn(serverLevel, world.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, variant, null);
 						world.addFreshEntity(stoneling);
 
-						if(player instanceof ServerPlayer)
-							CriteriaTriggers.SUMMONED_ENTITY.trigger((ServerPlayer) player, stoneling);
+						if(player instanceof ServerPlayer serverPlayer)
+							CriteriaTriggers.SUMMONED_ENTITY.trigger(serverPlayer, stoneling);
 
 						if (!player.getAbilities().instabuild)
 							stack.shrink(1);

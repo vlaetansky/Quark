@@ -109,8 +109,8 @@ public class ConfigCategory extends AbstractConfigElement implements IConfigCate
 
 	@Override
 	public IConfigCategory addCategory(String name, @Nonnull String comment, Object holderObject) {
-		if(holderObject instanceof IConfigType)
-			((IConfigType) holderObject).setCategory(this);
+		if(holderObject instanceof IConfigType configType)
+			configType.setCategory(this);
 
 		return addCategory(new ConfigCategory(name, comment, this, holderObject));
 	}
@@ -139,8 +139,8 @@ public class ConfigCategory extends AbstractConfigElement implements IConfigCate
 
 	@Override
 	public void addWidgets(CategoryScreen parent, IConfigElement element, List<WidgetWrapper> widgets) {
-		if(holderObject != null && holderObject instanceof IWidgetProvider)
-			((IWidgetProvider) holderObject).addWidgets(parent, element, widgets);
+		if(holderObject instanceof IWidgetProvider widgetProvider)
+			widgetProvider.addWidgets(parent, element, widgets);
 		else widgets.add(new WidgetWrapper(new PencilButton(230, 3, parent.categoryLink(this))));
 	}
 
@@ -173,10 +173,10 @@ public class ConfigCategory extends AbstractConfigElement implements IConfigCate
 	public int compareTo(@Nonnull IConfigElement o) {
 		if(o == this)
 			return 0;
-		if(!(o instanceof ConfigCategory))
+		if(!(o instanceof ConfigCategory cat))
 			return 1;
 
-		return name.compareTo(((ConfigCategory) o).name);
+		return name.compareTo(cat.name);
 	}
 
 }

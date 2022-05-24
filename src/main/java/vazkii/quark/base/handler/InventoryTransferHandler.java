@@ -1,13 +1,5 @@
 package vazkii.quark.base.handler;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.BiPredicate;
-
-import javax.annotation.Nonnull;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -19,10 +11,16 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import org.apache.commons.lang3.tuple.Pair;
 import vazkii.quark.api.ITransferManager;
 import vazkii.quark.api.QuarkCapabilities;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.management.module.EasyTransferingModule;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiPredicate;
 
 public class InventoryTransferHandler {
 
@@ -69,7 +67,7 @@ public class InventoryTransferHandler {
 	//	}
 
 	private static boolean hasProvider(Object te) {
-		return te instanceof BlockEntity && ((BlockEntity) te).getCapability(QuarkCapabilities.TRANSFER).isPresent();
+		return te instanceof BlockEntity be && be.getCapability(QuarkCapabilities.TRANSFER).isPresent();
 	}
 
 	private static ITransferManager getProvider(Object te) {
@@ -202,7 +200,7 @@ public class InventoryTransferHandler {
 				ItemStack retStack = ItemHandlerHelper.insertItemStacked(handler, stack, false);
 				if(!retStack.isEmpty())
 					retStack = retStack.copy();
-				else 
+				else
 					return retStack;
 
 				return retStack;
@@ -266,8 +264,8 @@ public class InventoryTransferHandler {
 		private final AbstractContainerMenu container;
 
 		public static IItemHandler provideWrapper(Slot slot, AbstractContainerMenu container) {
-			if (slot instanceof SlotItemHandler) {
-				IItemHandler handler = ((SlotItemHandler) slot).getItemHandler();
+			if (slot instanceof SlotItemHandler slotItemHandler) {
+				IItemHandler handler = slotItemHandler.getItemHandler();
 				if (hasProvider(handler)) {
 					return getProvider(handler).getTransferItemHandler(() -> handler);
 				} else {

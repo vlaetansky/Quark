@@ -1,17 +1,13 @@
 package vazkii.quark.base.module.config.type;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.dimension.LevelStem;
 import vazkii.quark.base.module.config.Config;
+
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public class DimensionConfig extends AbstractConfigType {
 
@@ -44,12 +40,12 @@ public class DimensionConfig extends AbstractConfigType {
 	}
 
 	public boolean canSpawnHere(LevelAccessor world) {
-		if (world == null || !(world instanceof Level))
+		if (!(world instanceof Level level))
 			return false;
 
-		return canSpawnHere(((Level) world).dimension().location());
+		return canSpawnHere(level.dimension().location());
 	}
-	
+
 	public boolean canSpawnHere(ResourceLocation resloc) {
 		 return dimensions.contains(resloc.toString()) != isBlacklist;
 	}

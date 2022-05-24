@@ -25,7 +25,7 @@ public record WeightedGenerator(QuarkModule module,
 
 	@Override
 	public boolean equals(Object obj) {
-		return obj == this || (obj instanceof WeightedGenerator && ((WeightedGenerator) obj).generator == generator);
+		return obj == this || (obj instanceof WeightedGenerator gen && gen.generator == generator);
 	}
 
 }

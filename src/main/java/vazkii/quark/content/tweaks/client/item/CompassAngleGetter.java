@@ -84,8 +84,8 @@ public class CompassAngleGetter {
 			if (entity == null)
 				return 0;
 
-			if(worldIn == null && entity != null && entity.level instanceof ClientLevel)
-				worldIn = (ClientLevel) entity.level;
+			if(worldIn == null && entity != null && entity.level instanceof ClientLevel level)
+				worldIn = level;
 
 			double angle;
 

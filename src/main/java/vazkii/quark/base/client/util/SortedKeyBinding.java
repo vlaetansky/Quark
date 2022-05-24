@@ -21,8 +21,8 @@ public class SortedKeyBinding extends KeyMapping {
 
 	@Override
 	public int compareTo(KeyMapping keyBinding) {
-		if (this.getCategory().equals(keyBinding.getCategory()) && keyBinding instanceof SortedKeyBinding)
-			return Integer.compare(priority, ((SortedKeyBinding) keyBinding).priority);
+		if (this.getCategory().equals(keyBinding.getCategory()) && keyBinding instanceof SortedKeyBinding sorted)
+			return Integer.compare(priority, sorted.priority);
 		return super.compareTo(keyBinding);
 	}
 }

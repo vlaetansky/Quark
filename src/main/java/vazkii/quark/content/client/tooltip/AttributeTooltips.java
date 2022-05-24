@@ -300,12 +300,12 @@ public class AttributeTooltips {
 	}
 
 	private static TranslatableComponent getMatchingOrSibling(FormattedText component, String key) {
-		if (component instanceof TranslatableComponent)
-			return key.equals(((TranslatableComponent) component).getKey()) ?
-					(TranslatableComponent) component : null;
+		if (component instanceof TranslatableComponent translate)
+			return key.equals(translate.getKey()) ?
+					translate : null;
 
-		if(component instanceof Component)
-			for (Component sibling : ((Component) component).getSiblings()) {
+		if(component instanceof Component cmp)
+			for (Component sibling : cmp.getSiblings()) {
 				if (sibling instanceof TranslatableComponent)
 					return getMatchingOrSibling(sibling, key);
 			}

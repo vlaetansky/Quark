@@ -1,5 +1,10 @@
 package vazkii.quark.base.module.config;
 
+import net.minecraftforge.common.ForgeConfigSpec;
+import org.apache.commons.lang3.text.WordUtils;
+import vazkii.quark.base.module.QuarkModule;
+import vazkii.quark.base.module.config.type.IConfigType;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.text.DecimalFormat;
@@ -11,14 +16,8 @@ import java.util.Locale;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import org.apache.commons.lang3.text.WordUtils;
-
-import net.minecraftforge.common.ForgeConfigSpec;
-import vazkii.quark.base.module.QuarkModule;
-import vazkii.quark.base.module.config.type.IConfigType;
-
 public final class ConfigObjectSerializer {
-	
+
 	public static void serialize(IConfigBuilder builder, ConfigFlagManager flagManager, List<Runnable> callbacks, Object object) throws ReflectiveOperationException {
 		List<Field> fields = recursivelyGetFields(object.getClass());
 		for(Field f : fields) {
@@ -27,22 +26,22 @@ public final class ConfigObjectSerializer {
 				pushConfig(builder, flagManager, callbacks, object, f, config);
 		}
 	}
-	
+
 	private static List<Field> recursivelyGetFields(Class<?> clazz) {
 		List<Field> list = new LinkedList<>();
 		while(clazz != Object.class) {
 			Field[] fields = clazz.getDeclaredFields();
 			list.addAll(Arrays.asList(fields));
-				
-			clazz = clazz.getSuperclass();	
+
+			clazz = clazz.getSuperclass();
 		}
-		
+
 		return list;
 	}
-	
+
 	private static void pushConfig(IConfigBuilder builder, ConfigFlagManager flagManager, List<Runnable> callbacks, Object object, Field field, Config config) throws ReflectiveOperationException {
 		field.setAccessible(true);
-		
+
 		String name = config.name();
 		if(name.isEmpty())
 			name = WordUtils.capitalizeFully(field.getName().replaceAll("(?<=.)([A-Z])", " $1"));
@@ -91,7 +90,7 @@ public final class ConfigObjectSerializer {
 			String maxPart = max == null ? ")" : (format.format(max.value()) + (max.exclusive() ? ")" : "]"));
 			builder.comment(nl + "Allowed values: " + minPart + "," + maxPart);
 		}
-		
+
 		boolean isStatic = Modifier.isStatic(field.getModifiers());
 		Supplier<Object> supplier = () -> {
 			try {
@@ -100,25 +99,25 @@ public final class ConfigObjectSerializer {
 				throw new RuntimeException(e);
 			}
 		};
-		
+
 		Object defaultValue = supplier.get();
 		if(type == float.class)
 			throw new IllegalArgumentException("Floats can't be used in config, use double instead. Offender: " + field);
-		
-		if(defaultValue instanceof IConfigType) {
+
+		if(defaultValue instanceof IConfigType configType) {
 			name = name.toLowerCase(Locale.ROOT).replaceAll(" ", "_");
-			
+
 			builder.push(name, defaultValue);
 			serialize(builder, flagManager, callbacks, defaultValue);
-			callbacks.add(() -> ((IConfigType) defaultValue).onReload(flagManager));
+			callbacks.add(() -> configType.onReload(flagManager));
 			builder.pop();
-			
+
 			return;
 		}
-		
+
 		String flag = config.flag();
 		boolean useFlag = object instanceof QuarkModule && !flag.isEmpty();
-			
+
 		ForgeConfigSpec.ConfigValue<?> value;
 		if (defaultValue instanceof List) {
 			Supplier<List<?>> listSupplier = () -> (List<?>) supplier.get();
@@ -132,7 +131,7 @@ public final class ConfigObjectSerializer {
 				if(isStatic)
 					field.set(null, setObj);
 				else field.set(object, setObj);
-				
+
 				if(useFlag)
 					flagManager.putFlag((QuarkModule) object, flag, (boolean) setObj);
 			} catch(IllegalAccessException e) {
@@ -155,8 +154,8 @@ public final class ConfigObjectSerializer {
 		if (o == null)
 			return false;
 
-		if (o instanceof Number) {
-			double val = ((Number) o).doubleValue();
+		if (o instanceof Number num) {
+			double val = num.doubleValue();
 			if (minExclusive) {
 				if (minVal >= val)
 					return false;

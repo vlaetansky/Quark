@@ -68,7 +68,7 @@ public class BigDungeonStructure extends StructureFeature<JigsawConfiguration> {
 		int y = BigDungeonModule.minStartY + worldgenrandom.nextInt(BigDungeonModule.maxStartY - BigDungeonModule.minStartY);
 
 		BlockPos blockpos = context.chunkPos().getMiddleBlockPosition(y);
-		JigsawConfiguration newConfig = new JigsawConfiguration(Holder.direct(context.registryAccess().ownedRegistryOrThrow(Registry.TEMPLATE_POOL_REGISTRY) .get(new ResourceLocation(Quark.MOD_ID, NAMESPACE + "/starts"))), BigDungeonModule.maxRooms);
+		JigsawConfiguration newConfig = new JigsawConfiguration(Holder.direct(context.registryAccess().ownedRegistryOrThrow(Registry.TEMPLATE_POOL_REGISTRY).get(new ResourceLocation(Quark.MOD_ID, NAMESPACE + "/starts"))), BigDungeonModule.maxRooms);
 
 		PieceGeneratorSupplier.Context<JigsawConfiguration> newContext = new PieceGeneratorSupplier.Context<>(
 				context.chunkGenerator(),

@@ -32,8 +32,8 @@ public class MatrixEnchanterOperationMessage implements IMessage {
 			ServerPlayer player = context.getSender();
 			AbstractContainerMenu container = player.containerMenu;
 
-			if(container instanceof MatrixEnchantingMenu) {
-				MatrixEnchantingTableBlockEntity enchanter = ((MatrixEnchantingMenu) container).enchanter;
+			if(container instanceof MatrixEnchantingMenu matrixMenu) {
+				MatrixEnchantingTableBlockEntity enchanter = matrixMenu.enchanter;
 				enchanter.onOperation(player, operation, arg0, arg1, arg2);
 			}
 		});

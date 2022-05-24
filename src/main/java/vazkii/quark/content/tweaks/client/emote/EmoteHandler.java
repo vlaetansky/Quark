@@ -10,13 +10,7 @@
  */
 package vazkii.quark.content.tweaks.client.emote;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
@@ -34,6 +28,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @OnlyIn(Dist.CLIENT)
 public final class EmoteHandler {
@@ -67,8 +66,8 @@ public final class EmoteHandler {
 
 	@OnlyIn(Dist.CLIENT)
 	public static void putEmote(Entity player, String emoteName, int tier) {
-		if(player instanceof AbstractClientPlayer && emoteMap.containsKey(emoteName)) {
-			putEmote((AbstractClientPlayer) player, emoteMap.get(emoteName), tier);
+		if(player instanceof AbstractClientPlayer clientPlayer && emoteMap.containsKey(emoteName)) {
+			putEmote(clientPlayer, emoteMap.get(emoteName), tier);
 		}
 	}
 
@@ -160,8 +159,8 @@ public final class EmoteHandler {
 		EntityRenderDispatcher manager = mc.getEntityRenderDispatcher();
 
 		EntityRenderer<? extends Player> render = manager.getSkinMap().get(player.getModelName());
-		if(render instanceof PlayerRenderer)
-			return (PlayerRenderer) render;
+		if(render instanceof PlayerRenderer playerRenderer)
+			return playerRenderer;
 		return null;
 	}
 

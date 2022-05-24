@@ -23,7 +23,7 @@ public class AncientTomeItem extends QuarkItem {
 
 	public AncientTomeItem(QuarkModule module) {
 		super("ancient_tome", module,
-				new Item.Properties().stacksTo(1));
+				new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
 	}
 
 	@Override
@@ -41,15 +41,9 @@ public class AncientTomeItem extends QuarkItem {
 		return false;
 	}
 
-	@Nonnull
-	@Override
-	public Rarity getRarity(@Nonnull ItemStack stack) {
-		return EnchantedBookItem.getEnchantments(stack).isEmpty() ? super.getRarity(stack) : Rarity.UNCOMMON;
-	}
-
-	public static ItemStack getEnchantedItemStack(EnchantmentInstance ench) {
+	public static ItemStack getEnchantedItemStack(Enchantment ench) {
 		ItemStack newStack = new ItemStack(AncientTomesModule.ancient_tome);
-		EnchantedBookItem.addEnchantment(newStack, ench);
+		EnchantedBookItem.addEnchantment(newStack, new EnchantmentInstance(ench, ench.getMaxLevel()));
 		return newStack;
 	}
 
@@ -61,7 +55,7 @@ public class AncientTomeItem extends QuarkItem {
 					if (!EnchantmentsBegoneModule.shouldBegone(ench) && ench.getMaxLevel() != 1) {
 						if (!AncientTomesModule.isInitialized() || AncientTomesModule.validEnchants.contains(ench)) {
 							if (group == CreativeModeTab.TAB_SEARCH || group.hasEnchantmentCategory(ench.category)) {
-								items.add(getEnchantedItemStack(new EnchantmentInstance(ench, ench.getMaxLevel())));
+								items.add(getEnchantedItemStack(ench));
 							}
 						}
 					}

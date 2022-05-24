@@ -1,9 +1,5 @@
 package vazkii.quark.content.building.entity;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -18,6 +14,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import vazkii.quark.content.building.block.StoolBlock;
+
+import javax.annotation.Nonnull;
+import java.util.List;
 
 public class Stool extends Entity {
 
@@ -41,14 +40,14 @@ public class Stool extends Entity {
 				boolean didOffset = false;
 
 				BlockEntity tile = level.getBlockEntity(pos);
-				if(tile instanceof PistonMovingBlockEntity && ((PistonMovingBlockEntity) tile).getMovedState().getBlock() instanceof StoolBlock)
-					piston = (PistonMovingBlockEntity) tile;
+				if(tile instanceof PistonMovingBlockEntity pistonBE && pistonBE.getMovedState().getBlock() instanceof StoolBlock)
+					piston = pistonBE;
 				else for(Direction d : Direction.values()) {
 					BlockPos offPos = pos.relative(d);
 					tile = level.getBlockEntity(offPos);
 
-					if(tile instanceof PistonMovingBlockEntity && ((PistonMovingBlockEntity) tile).getMovedState().getBlock() instanceof StoolBlock) {
-						piston = (PistonMovingBlockEntity) tile;
+					if(tile instanceof PistonMovingBlockEntity pistonBE && pistonBE.getMovedState().getBlock() instanceof StoolBlock) {
+						piston = pistonBE;
 						break;
 					}
 				}

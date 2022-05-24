@@ -190,10 +190,10 @@ public class Stoneling extends PathfinderMob {
 						}
 
 						if (targetVariant != null) {
-							if (level instanceof ServerLevel) {
-								((ServerLevel) level).sendParticles(ParticleTypes.HEART, pos.x, pos.y + getBbHeight(), pos.z, 1, 0.1, 0.1, 0.1, 0.1);
+							if (level instanceof ServerLevel serverLevel) {
+								serverLevel.sendParticles(ParticleTypes.HEART, pos.x, pos.y + getBbHeight(), pos.z, 1, 0.1, 0.1, 0.1, 0.1);
 								if (targetVariant != currentVariant)
-									((ServerLevel) level).sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, targetBlock.defaultBlockState()), pos.x, pos.y + getBbHeight() / 2, pos.z, 16, 0.1, 0.1, 0.1, 0.25);
+									serverLevel.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, targetBlock.defaultBlockState()), pos.x, pos.y + getBbHeight() / 2, pos.z, 16, 0.1, 0.1, 0.1, 0.25);
 							}
 
 							if (targetVariant != currentVariant) {
@@ -250,8 +250,8 @@ public class Stoneling extends PathfinderMob {
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, @Nonnull DifficultyInstance difficulty, @Nonnull MobSpawnType spawnReason, @Nullable SpawnGroupData data, @Nullable CompoundTag compound) {
 		Random rand = world.getRandom();
 		byte variant;
-		if (data instanceof StonelingVariant)
-			variant = ((StonelingVariant) data).getIndex();
+		if (data instanceof StonelingVariant stonelingVariant)
+			variant = stonelingVariant.getIndex();
 		else
 			variant = (byte) rand.nextInt(StonelingVariant.values().length);
 

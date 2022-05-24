@@ -1,11 +1,11 @@
 package vazkii.quark.content.world.module;
 
 import com.google.common.collect.Lists;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
+import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
@@ -17,7 +17,6 @@ import vazkii.quark.content.world.gen.FairyRingGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @LoadModule(category = ModuleCategory.WORLD)
 public class FairyRingsModule extends QuarkModule {
@@ -40,9 +39,9 @@ public class FairyRingsModule extends QuarkModule {
 	public void configChanged() {
 		ores = new ArrayList<>();
 		for(String s : oresRaw) {
-			Optional<Block> b = Registry.BLOCK.getOptional(new ResourceLocation(s));
-			if (b.isPresent()) {
-				ores.add(b.get().defaultBlockState());
+			Block b = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(s));
+			if (b != null) {
+				ores.add(b.defaultBlockState());
 			}
 			else {
 				new IllegalArgumentException("Block " + s + " does not exist!").printStackTrace();

@@ -51,12 +51,12 @@ public class QuarkInheritedPaneBlock extends QuarkPaneBlock implements IQuarkBlo
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public BlockColor getBlockColor() {
-		return parent instanceof IBlockColorProvider ? ((IBlockColorProvider) parent).getBlockColor() : null;
+		return parent instanceof IBlockColorProvider provider ? provider.getBlockColor() : null;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public ItemColor getItemColor() {
-		return parent instanceof IItemColorProvider ? ((IItemColorProvider) parent).getItemColor() : null;
+		return parent instanceof IItemColorProvider provider ? provider.getItemColor() : null;
 	}
 }

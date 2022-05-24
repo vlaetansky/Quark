@@ -169,7 +169,7 @@ public class Foxhound extends Wolf implements Enemy {
 
 		if (WantLoveGoal.needsPets(this)) {
 			Entity owner = getOwner();
-			if (owner != null && owner.distanceToSqr(this) < 1 && !owner.isInWater() && !owner.fireImmune() && (!(owner instanceof Player) || !((Player) owner).getAbilities().invulnerable))
+			if (owner != null && owner.distanceToSqr(this) < 1 && !owner.isInWater() && !owner.fireImmune() && (!(owner instanceof Player player) || !player.getAbilities().invulnerable))
 				owner.setSecondsOnFire(5);
 		}
 

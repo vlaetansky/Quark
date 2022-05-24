@@ -228,8 +228,8 @@ public class QuarkPistonStructureResolver extends PistonStructureResolver {
 					else res = MoveResult.SKIP;
 				}
 				else {
-					if(block instanceof ICollateralMover)
-						res = ((ICollateralMover) block).getCollateralMovement(world, pistonPos, moveDirection, face, fromPos);
+					if(block instanceof ICollateralMover collateralMover)
+						res = collateralMover.getCollateralMovement(world, pistonPos, moveDirection, face, fromPos);
 					else res = getStickCompatibility(world, state, targetState, fromPos, targetPos);
 				}
 
@@ -268,8 +268,8 @@ public class QuarkPistonStructureResolver extends PistonStructureResolver {
 		BlockState state = world.getBlockState(pos);
 		Block block = state.getBlock();
 
-		if(block instanceof ICollateralMover)
-			return ((ICollateralMover) block).getCollateralMovement(world, pistonPos, moveDirection, moveDirection, pos);
+		if(block instanceof ICollateralMover collateralMover)
+			return collateralMover.getCollateralMovement(world, pistonPos, moveDirection, moveDirection, pos);
 
 		return MoveResult.MOVE;
 	}
@@ -289,8 +289,8 @@ public class QuarkPistonStructureResolver extends PistonStructureResolver {
 	private IConditionalSticky getStickCondition(BlockState state) {
 		Block block = state.getBlock();
 
-		if(block instanceof IConditionalSticky)
-			return (IConditionalSticky) block;
+		if(block instanceof IConditionalSticky sticky)
+			return sticky;
 
 		IIndirectConnector indirect = getIndirectStickiness(state);
 		if(indirect != null)

@@ -253,9 +253,9 @@ public class Shiba extends TamableAnimal {
 		Item item = itemstack.getItem();
 		if(player.isDiscrete() && player.getMainHandItem().isEmpty()) {
 			if(hand == InteractionHand.MAIN_HAND && WantLoveGoal.canPet(this)) {
-				if(player.level instanceof ServerLevel) {
+				if(player.level instanceof ServerLevel serverLevel) {
 					Vec3 pos = position();
-					((ServerLevel) player.level).sendParticles(ParticleTypes.HEART, pos.x, pos.y + 0.5, pos.z, 1, 0, 0, 0, 0.1);
+					serverLevel.sendParticles(ParticleTypes.HEART, pos.x, pos.y + 0.5, pos.z, 1, 0, 0, 0, 0.1);
 					playSound(SoundEvents.WOLF_WHINE, 0.6F, 0.5F + (float) Math.random() * 0.5F);
 				} else player.swing(InteractionHand.MAIN_HAND);
 
@@ -275,9 +275,9 @@ public class Shiba extends TamableAnimal {
 						if(!player.addItem(copy))
 							spawnAtLocation(copy);
 
-						if(player.level instanceof ServerLevel) {
+						if(player.level instanceof ServerLevel serverLevel) {
 							Vec3 pos = position();
-							((ServerLevel) player.level).sendParticles(ParticleTypes.HEART, pos.x, pos.y + 0.5, pos.z, 1, 0, 0, 0, 0.1);
+							serverLevel.sendParticles(ParticleTypes.HEART, pos.x, pos.y + 0.5, pos.z, 1, 0, 0, 0, 0.1);
 							playSound(SoundEvents.WOLF_WHINE, 0.6F, 0.5F + (float) Math.random() * 0.5F);
 						}
 						setMouthItem(ItemStack.EMPTY);

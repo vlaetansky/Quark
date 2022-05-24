@@ -46,11 +46,11 @@ public class SlimeInABucketItem extends QuarkItem {
 
 	@Override
 	public void inventoryTick(@Nonnull ItemStack stack, @Nonnull Level world, @Nonnull Entity entity, int itemSlot, boolean isSelected) {
-		if(world instanceof ServerLevel) {
+		if(world instanceof ServerLevel serverLevel) {
 			Vec3 pos = entity.position();
 			int x = Mth.floor(pos.x);
 			int z = Mth.floor(pos.z);
-			boolean slime = isSlimeChunk((ServerLevel) world, x, z);
+			boolean slime = isSlimeChunk(serverLevel, x, z);
 			boolean excited = ItemNBTHelper.getBoolean(stack, TAG_EXCITED, false);
 			if(excited != slime)
 				ItemNBTHelper.setBoolean(stack, TAG_EXCITED, slime);

@@ -68,7 +68,7 @@ public class ContributorRewardHandler {
 		String uuid = Player.createPlayerUUID(player.getGameProfile()).toString();
 		if(player instanceof AbstractClientPlayer clientPlayer && DEV_UUID.contains(uuid) && !done.contains(uuid)) {
 			if(clientPlayer.isCapeLoaded()) {
-				PlayerInfo info = ((AbstractClientPlayer) player).playerInfo;
+				PlayerInfo info = clientPlayer.playerInfo;
 				Map<MinecraftProfileTexture.Type, ResourceLocation> textures = info.textureLocations;
 				ResourceLocation loc = new ResourceLocation("quark", "textures/misc/dev_cape.png");
 				textures.put(MinecraftProfileTexture.Type.CAPE, loc);

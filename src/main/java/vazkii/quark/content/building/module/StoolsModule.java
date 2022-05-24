@@ -43,8 +43,8 @@ public class StoolsModule extends QuarkModule {
 	public void itemUsed(RightClickBlock event) {
 		if(event.getPlayer().isShiftKeyDown() && event.getItemStack().getItem() instanceof BlockItem && event.getFace() == Direction.UP) {
 			BlockState state = event.getWorld().getBlockState(event.getPos());
-			if(state.getBlock() instanceof StoolBlock)
-				((StoolBlock) state.getBlock()).blockClicked(event.getWorld(), event.getPos());
+			if(state.getBlock() instanceof StoolBlock stool)
+				stool.blockClicked(event.getWorld(), event.getPos());
 		}
 	}
 

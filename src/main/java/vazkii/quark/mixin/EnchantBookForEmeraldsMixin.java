@@ -1,5 +1,6 @@
 package vazkii.quark.mixin;
 
+import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.enchantment.Enchantment;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -8,7 +9,7 @@ import vazkii.quark.content.experimental.module.EnchantmentsBegoneModule;
 
 import java.util.List;
 
-@Mixin(targets = "net.minecraft.world.entity.npc.VillagerTrades$EnchantBookForEmeralds")
+@Mixin(VillagerTrades.EnchantBookForEmeralds.class)
 public class EnchantBookForEmeraldsMixin {
 
 	@ModifyVariable(method = "getOffer", at = @At("STORE"))
