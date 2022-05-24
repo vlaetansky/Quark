@@ -29,8 +29,11 @@ import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.client.handler.RequiredModTooltipHandler;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.item.IQuarkItem;
+import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.building.module.VariantFurnacesModule;
+import vazkii.quark.content.client.module.ImprovedTooltipsModule;
+import vazkii.quark.content.client.tooltip.EnchantedBookTooltips;
 import vazkii.quark.content.tools.item.AncientTomeItem;
 import vazkii.quark.content.tools.module.AncientTomesModule;
 import vazkii.quark.content.tools.module.ColorRunesModule;
@@ -92,8 +95,10 @@ public class QuarkJeiPlugin implements IModPlugin {
 		if (ModuleLoader.INSTANCE.isModuleEnabled(AncientTomesModule.class))
 			registerAncientTomeAnvilRecipes(registration, factory);
 
-		if (ModuleLoader.INSTANCE.isModuleEnabled(PickarangModule.class))
-			registerPickarangAnvilRepairs(registration, factory);
+		if (ModuleLoader.INSTANCE.isModuleEnabled(PickarangModule.class)) {
+			registerPickarangAnvilRepairs(PickarangModule.pickarang, Items.DIAMOND, registration, factory);
+			registerPickarangAnvilRepairs(PickarangModule.flamarang, Items.NETHERITE_INGOT, registration, factory);
+		}
 
 		if (ModuleLoader.INSTANCE.isModuleEnabled(ColorRunesModule.class))
 			registerRuneAnvilRecipes(registration, factory);
@@ -124,7 +129,7 @@ public class QuarkJeiPlugin implements IModPlugin {
 		for (Enchantment enchant : AncientTomesModule.validEnchants) {
 			EnchantmentInstance data = new EnchantmentInstance(enchant, enchant.getMaxLevel());
 			recipes.add(factory.createAnvilRecipe(EnchantedBookItem.createForEnchantment(data),
-					Collections.singletonList(AncientTomeItem.getEnchantedItemStack(data)),
+					Collections.singletonList(AncientTomeItem.getEnchantedItemStack(enchant)),
 					Collections.singletonList(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(data.enchantment, data.level + 1)))));
 		}
 		registration.addRecipes(RecipeTypes.ANVIL, recipes);
@@ -132,35 +137,39 @@ public class QuarkJeiPlugin implements IModPlugin {
 
 	private void registerRuneAnvilRecipes(@Nonnull IRecipeRegistration registration, @Nonnull IVanillaRecipeFactory factory) {
 		Random random = new Random();
-		List<ItemStack> used = Stream.of(Items.DIAMOND_SWORD, Items.DIAMOND_PICKAXE, Items.DIAMOND_AXE,
-			Items.DIAMOND_SHOVEL, Items.DIAMOND_HOE, Items.DIAMOND_HELMET, Items.DIAMOND_CHESTPLATE,
-			Items.DIAMOND_LEGGINGS, Items.DIAMOND_BOOTS, Items.ELYTRA, Items.SHIELD, Items.BOW, Items.CROSSBOW,
-			Items.CARROT_ON_A_STICK, Items.FISHING_ROD, Items.SHEARS)
-			.map(item -> makeEnchantedDisplayItem(item, random))
-			.collect(Collectors.toList());
-
-		if (ModuleLoader.INSTANCE.isModuleEnabled(PickarangModule.class)) {
-			used.add(makeEnchantedDisplayItem(PickarangModule.pickarang, random));
+		Stream<ItemStack> displayItems;
+		if (ModuleLoader.INSTANCE.isModuleEnabled(ImprovedTooltipsModule.class) && ImprovedTooltipsModule.enchantingTooltips) {
+			displayItems = EnchantedBookTooltips.getTestItems().stream();
+		} else {
+			displayItems = Stream.of(Items.DIAMOND_SWORD, Items.DIAMOND_PICKAXE, Items.DIAMOND_AXE,
+					Items.DIAMOND_SHOVEL, Items.DIAMOND_HOE, Items.DIAMOND_HELMET, Items.DIAMOND_CHESTPLATE,
+					Items.DIAMOND_LEGGINGS, Items.DIAMOND_BOOTS, Items.ELYTRA, Items.SHIELD, Items.BOW, Items.CROSSBOW,
+					Items.TRIDENT, Items.FISHING_ROD, Items.SHEARS, PickarangModule.pickarang).map(ItemStack::new);
 		}
+
+		List<ItemStack> used = displayItems
+				.filter(it -> !(it.getItem() instanceof QuarkItem qItem) || qItem.isEnabled())
+				.map(item -> makeEnchantedDisplayItem(item, random))
+				.collect(Collectors.toList());
 
 		List<IJeiAnvilRecipe> recipes = new ArrayList<>();
 		for (Item rune : MiscUtil.getTagValues(BuiltinRegistries.ACCESS, ColorRunesModule.runesTag)) {
 			ItemStack runeStack = new ItemStack(rune);
 			recipes.add(factory.createAnvilRecipe(used, Collections.singletonList(runeStack),
-				used.stream().map(stack -> {
-					ItemStack output = stack.copy();
-					ItemNBTHelper.setBoolean(output, ColorRunesModule.TAG_RUNE_ATTACHED, true);
-					ItemNBTHelper.setCompound(output, ColorRunesModule.TAG_RUNE_COLOR, runeStack.serializeNBT());
-					return output;
-				}).collect(Collectors.toList())));
+					used.stream().map(stack -> {
+						ItemStack output = stack.copy();
+						ItemNBTHelper.setBoolean(output, ColorRunesModule.TAG_RUNE_ATTACHED, true);
+						ItemNBTHelper.setCompound(output, ColorRunesModule.TAG_RUNE_COLOR, runeStack.serializeNBT());
+						return output;
+					}).collect(Collectors.toList())));
 		}
 		registration.addRecipes(RecipeTypes.ANVIL, recipes);
 	}
 
 	// Runes only show up and can be only anvilled on enchanted items, so make some random enchanted items
 	@Nonnull
-	private static ItemStack makeEnchantedDisplayItem(Item input, Random random) {
-		ItemStack stack = new ItemStack(input);
+	private static ItemStack makeEnchantedDisplayItem(ItemStack input, Random random) {
+		ItemStack stack = input.copy();
 		stack.setHoverName(new TranslatableComponent("quark.jei.any_enchanted"));
 		if (stack.getItemEnchantability() <= 0) { // If it can't take anything in ench. tables...
 			stack.enchant(Enchantments.UNBREAKING, 3); // it probably accepts unbreaking anyways
@@ -169,9 +178,9 @@ public class QuarkJeiPlugin implements IModPlugin {
 		return EnchantmentHelper.enchantItem(random, stack, 25, false);
 	}
 
-	private void registerPickarangAnvilRepairs(@Nonnull IRecipeRegistration registration, @Nonnull IVanillaRecipeFactory factory) {
+	private void registerPickarangAnvilRepairs(Item pickarang, Item repairMaterial, @Nonnull IRecipeRegistration registration, @Nonnull IVanillaRecipeFactory factory) {
 		//Repair ratios taken from JEI anvil maker
-		ItemStack nearlyBroken = new ItemStack(PickarangModule.pickarang);
+		ItemStack nearlyBroken = new ItemStack(pickarang);
 		nearlyBroken.setDamageValue(nearlyBroken.getMaxDamage());
 		ItemStack veryDamaged = nearlyBroken.copy();
 		veryDamaged.setDamageValue(veryDamaged.getMaxDamage() * 3 / 4);
@@ -179,7 +188,7 @@ public class QuarkJeiPlugin implements IModPlugin {
 		damaged.setDamageValue(damaged.getMaxDamage() * 2 / 4);
 
 		IJeiAnvilRecipe materialRepair = factory.createAnvilRecipe(nearlyBroken,
-				Collections.singletonList(new ItemStack(Items.DIAMOND)), Collections.singletonList(veryDamaged));
+				Collections.singletonList(new ItemStack(repairMaterial)), Collections.singletonList(veryDamaged));
 		IJeiAnvilRecipe toolRepair = factory.createAnvilRecipe(veryDamaged,
 				Collections.singletonList(veryDamaged), Collections.singletonList(damaged));
 

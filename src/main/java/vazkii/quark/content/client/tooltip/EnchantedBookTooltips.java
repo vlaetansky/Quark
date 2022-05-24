@@ -10,7 +10,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
@@ -24,6 +23,7 @@ import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.content.client.module.ImprovedTooltipsModule;
 import vazkii.quark.content.tools.item.AncientTomeItem;
@@ -33,7 +33,6 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public class EnchantedBookTooltips {
 
@@ -120,7 +119,7 @@ public class EnchantedBookTooltips {
 		return additionalStacks;
 	}
 
-	private static List<ItemStack> getTestItems() {
+	public static List<ItemStack> getTestItems() {
 		if (testItems == null)
 			computeTestItems();
 		return testItems;
@@ -130,7 +129,9 @@ public class EnchantedBookTooltips {
 		testItems = Lists.newArrayList();
 
 		for (String loc : ImprovedTooltipsModule.enchantingStacks) {
-			Registry.ITEM.getOptional(new ResourceLocation(loc)).ifPresent(item -> testItems.add(new ItemStack(item)));
+			Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(loc));
+			if (item != null)
+				testItems.add(new ItemStack(item));
 		}
 	}
 
@@ -145,12 +146,14 @@ public class EnchantedBookTooltips {
 			String left = tokens[0];
 			String right = tokens[1];
 
-			Optional<Enchantment> ench = Registry.ENCHANTMENT.getOptional(new ResourceLocation(left));
-			if(ench.isPresent()) {
+			Enchantment ench = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(left));
+			if(ench != null) {
 				tokens = right.split(",");
 
 				for(String itemId : tokens) {
-					Registry.ITEM.getOptional(new ResourceLocation(itemId)).ifPresent(item -> additionalStacks.put(ench.get(), new ItemStack(item)));
+					Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId));
+					if (item != null)
+						additionalStacks.put(ench, new ItemStack(item));
 				}
 			}
 		}
