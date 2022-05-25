@@ -26,10 +26,12 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -213,6 +215,11 @@ public class SimpleHarvestModule extends QuarkModule {
 
 	public static boolean click(Player player, InteractionHand hand, BlockPos pos) {
 		if (player == null || hand == null)
+			return false;
+
+		BlockHitResult pick = Item.getPlayerPOVHitResult(player.level, player, ClipContext.Fluid.ANY);
+
+		if(pick.getType() != HitResult.Type.BLOCK || !pick.getBlockPos().equals(pos))
 			return false;
 
 		ItemStack inHand = player.getItemInHand(hand);
