@@ -13,6 +13,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerTrades.ItemListing;
+import net.minecraft.world.inventory.MerchantContainer;
+import net.minecraft.world.inventory.MerchantMenu;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -355,10 +357,51 @@ public class AncientTomesModule extends QuarkModule {
 		return null;
 	}
 
+	private static boolean isAncientTomeOffer(MerchantOffer offer) {
+		return offer.getCostA().is(ancient_tome) && offer.getCostB().is(Items.ENCHANTED_BOOK) && offer.getResult().is(ancient_tome);
+	}
+
+	public static void moveVillagerItems(MerchantMenu menu, MerchantContainer container, MerchantOffer offer) {
+		// Doesn't check if enabled, since this should apply to the trades that have already been generated regardless
+		if (isAncientTomeOffer(offer)) {
+			if (container.getItem(0).isEmpty() && container.getItem(1).isEmpty()) {
+				ItemStack costA = offer.getCostA();
+				moveFromInventoryToPaymentSlot(menu, container, offer, 0, costA);
+				ItemStack costB = offer.getCostB();
+				moveFromInventoryToPaymentSlot(menu, container, offer, 1, costB);
+			}
+		}
+	}
+
+	private static void moveFromInventoryToPaymentSlot(MerchantMenu menu, MerchantContainer container, MerchantOffer offer, int tradeSlot, ItemStack targetStack) {
+		menu.moveFromInventoryToPaymentSlot(tradeSlot, targetStack);
+		// Do a second pass with a softer match severity, but don't put in books that are the same as the output
+		if (container.getItem(tradeSlot).isEmpty() && !targetStack.isEmpty()) {
+			for(int slot = 3; slot < 39; ++slot) {
+				ItemStack inSlot = menu.slots.get(slot).getItem();
+				ItemStack currentStack = container.getItem(tradeSlot);
+
+				if (!ItemStack.isSameItemSameTags(inSlot, offer.getResult()) &&
+						!inSlot.isEmpty() && (currentStack.isEmpty() ? offer.isRequiredItem(inSlot, targetStack) :
+						ItemStack.isSameItemSameTags(targetStack, inSlot))) {
+					int currentCount = currentStack.isEmpty() ? 0 : currentStack.getCount();
+					int amountToTake = Math.min(targetStack.getMaxStackSize() - currentCount, inSlot.getCount());
+					ItemStack newStack = inSlot.copy();
+					int newCount = currentCount + amountToTake;
+					inSlot.shrink(amountToTake);
+					newStack.setCount(newCount);
+					container.setItem(tradeSlot, newStack);
+					if (newCount >= targetStack.getMaxStackSize()) {
+						break;
+					}
+				}
+			}
+		}
+	}
+
 	public static boolean matchWildcardEnchantedBook(MerchantOffer offer, ItemStack comparing, ItemStack reference) {
 		// Doesn't check if enabled, since this should apply to the trades that have already been generated regardless
-		if (offer.getCostA().is(ancient_tome) && offer.getCostB().is(Items.ENCHANTED_BOOK) && offer.getResult().is(ancient_tome) &&
-				comparing.is(Items.ENCHANTED_BOOK) && reference.is(Items.ENCHANTED_BOOK)) {
+		if (isAncientTomeOffer(offer) && comparing.is(Items.ENCHANTED_BOOK) && reference.is(Items.ENCHANTED_BOOK)) {
 			Map<Enchantment, Integer> referenceEnchants = EnchantmentHelper.getEnchantments(reference);
 			if (referenceEnchants.size() == 1) {
 				Enchantment enchantment = referenceEnchants.keySet().iterator().next();

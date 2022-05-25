@@ -25,6 +25,7 @@
     "LanternBlockMixin",
     "LivingEntityAccessor",
     "LoomMenuMixin",
+    "MerchantMenuMixin",
     "MerchantOfferMixin",
     "OverworldBiomeBuilderMixin",
     "PigMixin",
