@@ -2,9 +2,11 @@ package vazkii.quark.content.tools.module;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
@@ -17,6 +19,7 @@ import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.network.NetworkDirection;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.api.IRuneColorProvider;
 import vazkii.quark.api.QuarkCapabilities;
@@ -26,11 +29,16 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
+import vazkii.quark.base.network.QuarkNetwork;
+import vazkii.quark.base.network.message.UpdateTridentMessage;
 import vazkii.quark.content.tools.client.render.GlintRenderTypes;
 import vazkii.quark.content.tools.item.RuneItem;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -120,6 +128,18 @@ public class ColorRunesModule extends QuarkModule {
 	private static RenderType renderType(List<RenderType> list, Supplier<RenderType> vanilla) {
 		int color = changeColor();
 		return color >= 0 && color <= RUNE_TYPES ? list.get(color) : vanilla.get();
+	}
+
+	private static final Map<ThrownTrident, ItemStack> TRIDENT_STACK_REFERENCES = new WeakHashMap<>();
+
+	public static void syncTrident(Consumer<Packet<?>> packetConsumer, ThrownTrident trident, boolean force) {
+		ItemStack stack = trident.getPickupItem();
+		ItemStack prev = TRIDENT_STACK_REFERENCES.get(trident);
+		if (force || prev == null || ItemStack.isSameItemSameTags(stack, prev)) {
+			packetConsumer.accept(QuarkNetwork.toVanillaPacket(new UpdateTridentMessage(trident.getId(), stack), NetworkDirection.PLAY_TO_CLIENT));
+		}
+
+		TRIDENT_STACK_REFERENCES.put(trident, stack);
 	}
 
 	@Override

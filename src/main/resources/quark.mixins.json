@@ -33,6 +33,7 @@
     "PistonMovingBlockEntityMixin",
     "PlayerAdvancementsMixin",
     "ServerAdvancementManagerMixin",
+    "ServerEntityMixin",
     "SpawnerBlockEntityMixin",
     "SpringFeatureMixin",
     "StructurePieceMixin",
