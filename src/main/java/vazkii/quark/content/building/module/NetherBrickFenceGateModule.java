@@ -2,6 +2,7 @@ package vazkii.quark.content.building.module;
 
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
@@ -18,7 +19,7 @@ import vazkii.quark.base.module.QuarkModule;
 public class NetherBrickFenceGateModule extends QuarkModule {
 	@Override
 	public void register() {
-		new QuarkFenceGateBlock("nether_brick_fence_gate", this, CreativeModeTab.TAB_REDSTONE,
+		new QuarkFenceGateBlock("nether_brick_fence_gate", Blocks.NETHER_BRICKS, this, CreativeModeTab.TAB_REDSTONE,
 				Block.Properties.of(Material.STONE, MaterialColor.NETHER)
 				.requiresCorrectToolForDrops()
 				.sound(SoundType.NETHER_BRICKS)

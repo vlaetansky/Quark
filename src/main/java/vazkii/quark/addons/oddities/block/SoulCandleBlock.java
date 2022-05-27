@@ -4,14 +4,23 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.Vec3;
 import vazkii.quark.base.block.QuarkCandleBlock;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
+import vazkii.quark.base.datagen.QuarkBlockTagsProvider;
+import vazkii.quark.base.datagen.QuarkItemTagsProvider;
+import vazkii.quark.base.datagen.QuarkLootTableProvider;
 import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nonnull;
+import java.util.Map;
 import java.util.Random;
 import java.util.function.ToIntFunction;
 
@@ -42,5 +51,25 @@ public class SoulCandleBlock extends QuarkCandleBlock {
 		}
 
 		world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, pos.x, pos.y, pos.z, 0.0D, 0.0D, 0.0D);
+	}
+
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		// TODO
+	}
+
+	@Override
+	public void dataGen(QuarkBlockTagsProvider blockTags) {
+		blockTags.tag(BlockTags.CANDLES).add(this);
+	}
+
+	@Override
+	public void dataGen(QuarkItemTagsProvider itemTags) {
+		itemTags.copyInto(BlockTags.CANDLES, ItemTags.CANDLES);
+	}
+
+	@Override
+	public void dataGen(QuarkLootTableProvider tableProvider, Map<Block, LootTable.Builder> lootTables) {
+		// TODO
 	}
 }

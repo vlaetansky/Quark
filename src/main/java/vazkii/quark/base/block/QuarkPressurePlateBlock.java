@@ -1,16 +1,21 @@
 package vazkii.quark.base.block;
 
-import java.util.function.BooleanSupplier;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.minecraft.core.NonNullList;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.PressurePlateBlock;
+import net.minecraft.world.level.material.Material;
 import vazkii.arl.util.RegistryHelper;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
+import vazkii.quark.base.datagen.QuarkBlockTagsProvider;
+import vazkii.quark.base.datagen.QuarkItemTagsProvider;
 import vazkii.quark.base.module.QuarkModule;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.function.BooleanSupplier;
 
 /**
  * @author WireSegal
@@ -53,4 +58,23 @@ public class QuarkPressurePlateBlock extends PressurePlateBlock implements IQuar
 		return module;
 	}
 
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		// TODO
+	}
+
+	@Override
+	public void dataGen(QuarkItemTagsProvider itemTags) {
+		if (material == Material.WOOD)
+			itemTags.copyInto(BlockTags.WOODEN_PRESSURE_PLATES, ItemTags.WOODEN_PRESSURE_PLATES);
+	}
+
+	@Override
+	public void dataGen(QuarkBlockTagsProvider blockTags) {
+		blockTags.tag(BlockTags.PRESSURE_PLATES).add(this);
+		if (material == Material.WOOD)
+			blockTags.tag(BlockTags.WOODEN_PRESSURE_PLATES).add(this);
+		else if (material == Material.STONE)
+			blockTags.tag(BlockTags.STONE_PRESSURE_PLATES).add(this);
+	}
 }

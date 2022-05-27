@@ -9,6 +9,7 @@ import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
+import vazkii.quark.content.building.block.QuarkSandstoneBlock;
 
 @LoadModule(category = ModuleCategory.BUILDING)
 public class SoulSandstoneModule extends QuarkModule {
@@ -18,11 +19,11 @@ public class SoulSandstoneModule extends QuarkModule {
 		Block.Properties props = Block.Properties.of(Material.STONE, MaterialColor.COLOR_BROWN)
 				.requiresCorrectToolForDrops()
 				.strength(0.8F);
-		
-		VariantHandler.addSlabStairsWall(new QuarkBlock("soul_sandstone", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props));
+
+		VariantHandler.addSlabStairsWall(new QuarkSandstoneBlock("soul_sandstone", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props));
 		new QuarkBlock("chiseled_soul_sandstone", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props);
-		VariantHandler.addSlab(new QuarkBlock("cut_soul_sandstone", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props));
+		VariantHandler.addSlab(new QuarkSandstoneBlock("cut_soul_sandstone", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props));
 		VariantHandler.addSlabAndStairs(new QuarkBlock("smooth_soul_sandstone", this, CreativeModeTab.TAB_BUILDING_BLOCKS, props));
 	}
-	
+
 }

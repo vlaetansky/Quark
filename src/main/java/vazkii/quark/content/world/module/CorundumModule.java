@@ -13,13 +13,13 @@ import net.minecraftforge.common.BiomeDictionary;
 import org.apache.commons.lang3.tuple.Pair;
 import vazkii.quark.api.IIndirectConnector;
 import vazkii.quark.base.Quark;
-import vazkii.quark.base.block.QuarkInheritedPaneBlock;
 import vazkii.quark.base.handler.ToolInteractionHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.config.Config;
 import vazkii.quark.content.world.block.CorundumBlock;
 import vazkii.quark.content.world.block.CorundumClusterBlock;
+import vazkii.quark.content.world.block.CorundumPaneBlock;
 import vazkii.quark.content.world.undergroundstyle.CorundumStyle;
 import vazkii.quark.content.world.undergroundstyle.base.AbstractUndergroundStyleModule;
 import vazkii.quark.content.world.undergroundstyle.base.UndergroundStyleConfig;
@@ -89,7 +89,7 @@ public class CorundumModule extends AbstractUndergroundStyleModule<CorundumStyle
 		CorundumBlock waxed = new CorundumBlock("waxed_" + name + "_corundum", color, this, material, true);
 		ToolInteractionHandler.registerWaxedBlock(crystal, waxed);
 
-		new QuarkInheritedPaneBlock(crystal);
+		new CorundumPaneBlock(crystal);
 		CorundumClusterBlock cluster = new CorundumClusterBlock(crystal);
 
 		ClusterConnection connection = new ClusterConnection(cluster);

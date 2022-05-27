@@ -23,6 +23,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.interf.IBlockColorProvider;
 import vazkii.quark.base.block.QuarkBlock;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
@@ -92,4 +93,8 @@ public class LeafCarpetBlock extends QuarkBlock implements IBlockColorProvider {
 		return (state, worldIn, pos, tintIndex) -> Minecraft.getInstance().getBlockColors().getColor(baseState, worldIn, pos, tintIndex);
 	}
 
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		// TODO
+	}
 }

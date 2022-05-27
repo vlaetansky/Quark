@@ -130,7 +130,7 @@ public class WoodPostBlock extends QuarkBlock implements SimpleWaterloggedBlock 
 	@Override
 	public void dataGen(QuarkBlockStateProvider states) {
 		ModelFile basePost = states.models().singleTexture(getRegistryName().getPath(), states.modLoc("block/post"),
-				states.mcLoc(getRegistryName().getPath().replace("_post", "_log")));
+				states.mcLoc("block/" + getRegistryName().getPath().replace("_post", "_log")));
 		ModelFile chain = states.models().getExistingFile(states.modLoc("block/chain_small"));
 		ModelFile chainTop = states.models().getExistingFile(states.modLoc("block/chain_small_top"));
 		states.getMultipartBuilder(this)

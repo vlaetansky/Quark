@@ -1,7 +1,5 @@
 package vazkii.quark.content.building.block;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.CreativeModeTab;
@@ -15,7 +13,10 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import vazkii.quark.base.block.QuarkBlock;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
 import vazkii.quark.base.module.QuarkModule;
+
+import javax.annotation.Nonnull;
 
 public class PaperLanternBlock extends QuarkBlock {
 
@@ -45,5 +46,10 @@ public class PaperLanternBlock extends QuarkBlock {
 	@Override
 	public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
 		return 60;
+	}
+
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		// TODO
 	}
 }

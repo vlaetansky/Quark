@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.block.QuarkInheritedPaneBlock;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
 
 public class PaperWallBlock extends QuarkInheritedPaneBlock {
 
@@ -34,5 +35,11 @@ public class PaperWallBlock extends QuarkInheritedPaneBlock {
 	@Override
 	public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
 		return 60;
+	}
+
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		states.paneBlock(this, states.blockTexture(this), states.modLoc(getRegistryName().getPath() + "_top"));
+		states.simpleBlockItem(this);
 	}
 }

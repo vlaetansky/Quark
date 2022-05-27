@@ -51,7 +51,7 @@ public class QuarkPillarBlock extends RotatedPillarBlock implements IQuarkBlock 
 
 	@Override
 	public void dataGen(QuarkBlockStateProvider states) {
-		states.axisBlock(this);
+		states.logBlock(this);
 		states.simpleBlockItem(this);
 	}
 }

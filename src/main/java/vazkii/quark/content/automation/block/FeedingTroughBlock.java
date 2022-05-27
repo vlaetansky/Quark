@@ -28,6 +28,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.*;
 import net.minecraftforge.common.util.ForgeSoundType;
 import vazkii.quark.base.block.QuarkBlock;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.automation.block.be.FeedingTroughBlockEntity;
 import vazkii.quark.content.automation.module.FeedingTroughModule;
@@ -159,4 +160,8 @@ public class FeedingTroughBlock extends QuarkBlock implements EntityBlock {
 		return createTickerHelper(type, FeedingTroughModule.blockEntityType, FeedingTroughBlockEntity::tick);
 	}
 
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		// TODO
+	}
 }

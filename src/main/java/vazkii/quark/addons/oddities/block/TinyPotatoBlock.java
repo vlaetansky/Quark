@@ -44,6 +44,7 @@ import vazkii.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
 import vazkii.quark.addons.oddities.item.TinyPotatoBlockItem;
 import vazkii.quark.addons.oddities.module.TinyPotatoModule;
 import vazkii.quark.base.block.QuarkBlock;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
 import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nonnull;
@@ -194,5 +195,10 @@ public class TinyPotatoBlock extends QuarkBlock implements SimpleWaterloggedBloc
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
 		return createTickerHelper(type, TinyPotatoModule.blockEntityType, TinyPotatoBlockEntity::commonTick);
+	}
+
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		// NO-OP, defer to complex model
 	}
 }

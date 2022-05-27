@@ -2,7 +2,7 @@
     "ambientocclusion": false,
     "textures": {
         "particle": "quark:block/gold_bars",
-        "bars": "quark:block/gold_bars_but_its_actually_just_one"
+        "bars": "quark:block/gold_bars_top"
     },
     "elements": [
         {   "from": [ 8, 0, 7 ],

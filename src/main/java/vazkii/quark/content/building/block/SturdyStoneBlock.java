@@ -7,6 +7,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.PushReaction;
 import vazkii.quark.base.block.QuarkBlock;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
 import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nonnull;
@@ -27,4 +28,8 @@ public class SturdyStoneBlock extends QuarkBlock {
 		return PushReaction.BLOCK;
 	}
 
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		states.blockAndItem(this, states.models().cubeAll(getRegistryName().getPath(), states.mcLoc("block/furnace_top")));
+	}
 }

@@ -28,6 +28,7 @@ import vazkii.quark.addons.oddities.block.be.MagnetizedBlockBlockEntity;
 import vazkii.quark.addons.oddities.magnetsystem.MagnetSystem;
 import vazkii.quark.addons.oddities.module.MagnetsModule;
 import vazkii.quark.base.block.QuarkBlock;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
 import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nonnull;
@@ -146,4 +147,8 @@ public class MagnetBlock extends QuarkBlock implements EntityBlock {
 		return createTickerHelper(type, MagnetsModule.magnetType, MagnetBlockEntity::tick);
 	}
 
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		// TODO
+	}
 }

@@ -27,6 +27,11 @@ public class QuarkBlockStateProvider extends BlockStateProvider {
 		simpleItem(block.getRegistryName());
 	}
 
+	public void simpleItem(Block block, ResourceLocation path) {
+		itemModels().singleTexture(block.getRegistryName().getPath(), new ResourceLocation("item/generated"),
+				"layer0", path);
+	}
+
 	public void simpleItem(ResourceLocation path) {
 		itemModels().singleTexture(path.getPath(), new ResourceLocation("item/generated"),
 				"layer0", modLoc("block/" + path.getPath()));
