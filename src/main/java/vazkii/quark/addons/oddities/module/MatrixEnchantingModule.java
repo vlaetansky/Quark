@@ -7,12 +7,14 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -26,6 +28,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.addons.oddities.block.MatrixEnchantingTableBlock;
+import vazkii.quark.addons.oddities.block.SoulCandleBlock;
 import vazkii.quark.addons.oddities.block.be.MatrixEnchantingTableBlockEntity;
 import vazkii.quark.addons.oddities.client.render.be.MatrixEnchantingTableRenderer;
 import vazkii.quark.addons.oddities.client.screen.MatrixEnchantingScreen;
@@ -33,6 +36,7 @@ import vazkii.quark.addons.oddities.inventory.MatrixEnchantingMenu;
 import vazkii.quark.addons.oddities.util.CustomInfluence;
 import vazkii.quark.addons.oddities.util.Influence;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.block.QuarkCandleBlock;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
@@ -43,6 +47,7 @@ import java.util.*;
 
 @LoadModule(category = ModuleCategory.ODDITIES, hasSubscriptions = true)
 public class MatrixEnchantingModule extends QuarkModule {
+	public static final List<Block> CANDLES = List.of(Blocks.WHITE_CANDLE, Blocks.ORANGE_CANDLE, Blocks.MAGENTA_CANDLE, Blocks.LIGHT_BLUE_CANDLE, Blocks.YELLOW_CANDLE, Blocks.LIME_CANDLE, Blocks.PINK_CANDLE, Blocks.GRAY_CANDLE, Blocks.LIGHT_GRAY_CANDLE, Blocks.CYAN_CANDLE, Blocks.PURPLE_CANDLE, Blocks.BLUE_CANDLE, Blocks.BROWN_CANDLE, Blocks.GREEN_CANDLE, Blocks.RED_CANDLE, Blocks.BLACK_CANDLE);
 
 	public static BlockEntityType<MatrixEnchantingTableBlockEntity> blockEntityType;
 	public static MenuType<MatrixEnchantingMenu> menuType;
@@ -127,6 +132,9 @@ public class MatrixEnchantingModule extends QuarkModule {
 	@Config(description = "Set to false to disable the ability to influence enchantment outcomes with candles")
 	public static boolean allowInfluencing = true;
 
+	@Config(flag = "soulfire_candles")
+	public static boolean enableSoulfireCandles = true;
+
 	public static boolean candleInfluencingFailed = false;
 
 	@Config(description = "The max amount of candles that can influence a single enchantment")
@@ -143,9 +151,23 @@ public class MatrixEnchantingModule extends QuarkModule {
 
 	public static Block matrixEnchanter;
 
+	public static Block soulCandle;
+
+	public static List<QuarkCandleBlock> soulCandles;
+
 	@Override
 	public void register() {
 		matrixEnchanter = new MatrixEnchantingTableBlock(this);
+
+		soulCandle = new SoulCandleBlock("soul_candle", this, CreativeModeTab.TAB_DECORATIONS,
+				BlockBehaviour.Properties.copy(Blocks.CANDLE).lightLevel(SoulCandleBlock.LIGHT_EMISSION)).setCondition(() -> enableSoulfireCandles);
+
+		soulCandles = Arrays.stream(DyeColor.values())
+				.map((it) -> new SoulCandleBlock(it.getSerializedName() + "_soul_candle", this, CreativeModeTab.TAB_DECORATIONS,
+						BlockBehaviour.Properties.copy(CANDLES.get(it.ordinal()))
+								.lightLevel(SoulCandleBlock.LIGHT_EMISSION))
+						.setCondition(() -> enableSoulfireCandles))
+				.toList();
 
 		menuType = IForgeMenuType.create(MatrixEnchantingMenu::fromNetwork);
 		RegistryHelper.register(menuType, "matrix_enchanting");
@@ -205,7 +227,7 @@ public class MatrixEnchantingModule extends QuarkModule {
 				else
 					boost.add(ench);
 			} else {
-				Quark.LOG.error("Matrix Enchanting Influencing: Enchantment " + enchStr + " does not exist!");
+				Quark.LOG.warn("Matrix Enchanting Influencing: Enchantment " + enchStr + " does not exist!");
 			}
 		}
 		return new Influence(boost, dampen);

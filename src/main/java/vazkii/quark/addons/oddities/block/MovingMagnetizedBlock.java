@@ -27,7 +27,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import vazkii.quark.addons.oddities.block.be.MagnetizedBlockBlockEntity;
 import vazkii.quark.addons.oddities.module.MagnetsModule;
-import vazkii.quark.base.block.QuarkBlock;
+import vazkii.quark.base.block.QuarkNoItemBlock;
 import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nonnull;
@@ -39,7 +39,7 @@ import java.util.List;
  * @author WireSegal
  * Created at 3:05 PM on 2/26/20.
  */
-public class MovingMagnetizedBlock extends QuarkBlock implements EntityBlock {
+public class MovingMagnetizedBlock extends QuarkNoItemBlock implements EntityBlock {
 	public static final DirectionProperty FACING = PistonHeadBlock.FACING;
 
 	public MovingMagnetizedBlock(QuarkModule module) {

@@ -14,10 +14,12 @@ import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.arl.util.ClientTicker;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.capability.CapabilityHandler;
+import vazkii.quark.base.datagen.*;
 import vazkii.quark.base.handler.*;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.config.IConfigCallback;
@@ -60,8 +62,25 @@ public class CommonProxy {
 		bus.addListener(this::loadComplete);
 		bus.addListener(this::configChanged);
 		bus.addListener(this::registerCapabilities);
+		bus.addListener(this::dataGen);
 
 		bus.register(RegistryListener.class);
+	}
+
+	public void dataGen(GatherDataEvent event) {
+		var gen = event.getGenerator();
+		if (event.includeClient()) {
+			gen.addProvider(new QuarkBlockStateProvider(gen, Quark.MOD_ID, event.getExistingFileHelper()));
+			gen.addProvider(new QuarkItemModelProvider(gen, Quark.MOD_ID, event.getExistingFileHelper()));
+		}
+		if (event.includeServer()) {
+			var blockTags = new QuarkBlockTagsProvider(gen, Quark.MOD_ID, event.getExistingFileHelper());
+			gen.addProvider(blockTags);
+			gen.addProvider(new QuarkItemTagsProvider(gen, blockTags, Quark.MOD_ID, event.getExistingFileHelper()));
+
+			gen.addProvider(new QuarkLootTableProvider(gen));
+			gen.addProvider(new QuarkRecipeProvider(gen, Quark.MOD_ID));
+		}
 	}
 
 	public void setup(FMLCommonSetupEvent event) {

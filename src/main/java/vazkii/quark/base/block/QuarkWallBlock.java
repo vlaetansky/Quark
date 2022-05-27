@@ -4,6 +4,9 @@ import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelReader;
@@ -14,6 +17,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.interf.IBlockColorProvider;
 import vazkii.arl.interf.IItemColorProvider;
 import vazkii.arl.util.RegistryHelper;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
+import vazkii.quark.base.datagen.QuarkBlockTagsProvider;
+import vazkii.quark.base.datagen.QuarkItemTagsProvider;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.QuarkModule;
@@ -76,6 +82,23 @@ public class QuarkWallBlock extends WallBlock implements IQuarkBlock, IBlockColo
 	@OnlyIn(Dist.CLIENT)
 	public ItemColor getItemColor() {
 		return parent instanceof IItemColorProvider provider ? provider.getItemColor() : null;
+	}
+
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		states.wallBlock(this, states.blockTexture(parent.getBlock()));
+		states.simpleBlockItem(this, states.models().getExistingFile(new ResourceLocation(parent.getBlock().getRegistryName().getNamespace(),
+				"block/" + getRegistryName().getPath() + "_post")));
+	}
+
+	@Override
+	public void dataGen(QuarkItemTagsProvider itemTags) {
+		itemTags.copyInto(BlockTags.WALLS, ItemTags.WALLS);
+	}
+
+	@Override
+	public void dataGen(QuarkBlockTagsProvider blockTags) {
+		blockTags.tag(BlockTags.WALLS).add(this);
 	}
 
 }

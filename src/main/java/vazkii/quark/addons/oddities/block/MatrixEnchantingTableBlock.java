@@ -24,12 +24,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.network.NetworkHooks;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.addons.oddities.block.be.MatrixEnchantingTableBlockEntity;
 import vazkii.quark.addons.oddities.module.MatrixEnchantingModule;
 import vazkii.quark.api.IEnchantmentInfluencer;
 import vazkii.quark.base.block.IQuarkBlock;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
 
@@ -182,4 +184,9 @@ public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements
 		super.onRemove(state, worldIn, pos, newState, isMoving);
 	}
 
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		ModelFile parent = states.models().getExistingFile(states.mcLoc("block/enchanting_table"));
+		states.simpleBlockItem(this, parent);
+	}
 }

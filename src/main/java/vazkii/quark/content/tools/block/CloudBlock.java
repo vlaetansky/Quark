@@ -25,14 +25,15 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import vazkii.quark.base.block.QuarkBlock;
+import vazkii.quark.base.block.QuarkNoItemBlock;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.tools.block.be.CloudBlockEntity;
 import vazkii.quark.content.tools.module.BottledCloudModule;
 
 import javax.annotation.Nonnull;
 
-public class CloudBlock extends QuarkBlock implements EntityBlock {
+public class CloudBlock extends QuarkNoItemBlock implements EntityBlock {
 
 	public CloudBlock(QuarkModule module) {
 		super("cloud", module, null,
@@ -113,4 +114,8 @@ public class CloudBlock extends QuarkBlock implements EntityBlock {
 		return createTickerHelper(type, BottledCloudModule.blockEntityType, CloudBlockEntity::tick);
 	}
 
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		states.simpleBlock(this, states.models().getBuilder(getRegistryName().getPath()).texture("particle", states.mcLoc("block/white_concrete")));
+	}
 }

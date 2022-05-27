@@ -3,15 +3,24 @@ package vazkii.quark.base.block;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraftforge.common.extensions.IForgeBlock;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
+import vazkii.quark.base.datagen.QuarkBlockTagsProvider;
+import vazkii.quark.base.datagen.QuarkItemTagsProvider;
+import vazkii.quark.base.datagen.QuarkLootTableProvider;
 import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nullable;
+import java.util.Map;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -20,16 +29,16 @@ import java.util.function.BooleanSupplier;
  */
 public interface IQuarkBlock extends IForgeBlock {
 
+	default Block getBlock() {
+		return (Block) this;
+	}
+
 	@Nullable
 	QuarkModule getModule();
 
 	IQuarkBlock setCondition(BooleanSupplier condition);
 
 	boolean doesConditionApply();
-
-	default Block getBlock() {
-		return (Block) this;
-	}
 
 	default boolean isEnabled() {
 		QuarkModule module = getModule();
@@ -59,5 +68,37 @@ public interface IQuarkBlock extends IForgeBlock {
 		if (material == Material.WOOL || material == Material.LEAVES)
 			return 30;
 		return state.getMaterial().isFlammable() ? 5 : 0;
+	}
+
+	@Nullable
+	default TagKey<Block> mineWith() {
+		Material material = getBlock().defaultBlockState().getMaterial();
+		if (material == Material.WOOD || material == Material.VEGETABLE || material == Material.BAMBOO)
+			return BlockTags.MINEABLE_WITH_AXE;
+		else if (material == Material.LEAVES || material == Material.SCULK)
+			return BlockTags.MINEABLE_WITH_HOE;
+		else if (material == Material.STONE || material == Material.METAL || material == Material.AMETHYST ||
+				material == Material.SHULKER_SHELL || material == Material.HEAVY_METAL || material == Material.ICE || material == Material.ICE_SOLID)
+			return BlockTags.MINEABLE_WITH_PICKAXE;
+		else if (material == Material.SAND || material == Material.CLAY || material == Material.DIRT || material == Material.GRASS)
+			return BlockTags.MINEABLE_WITH_SHOVEL;
+		return null;
+	}
+
+	default void dataGen(QuarkBlockStateProvider states) {
+		states.cubeBlockAndItem(getBlock());
+	}
+
+	default void dataGen(QuarkLootTableProvider tableProvider, Map<Block, LootTable.Builder> lootTables) {
+		if (getBlock().asItem() != Items.AIR)
+			tableProvider.dropSelfTable(lootTables, getBlock());
+	}
+
+	default void dataGen(QuarkItemTagsProvider itemTags) {
+		// NO-OP
+	}
+
+	default void dataGen(QuarkBlockTagsProvider blockTags) {
+		// NO-OP
 	}
 }

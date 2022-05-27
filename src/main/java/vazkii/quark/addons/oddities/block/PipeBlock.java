@@ -33,6 +33,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import vazkii.quark.addons.oddities.block.be.PipeBlockEntity;
 import vazkii.quark.addons.oddities.module.PipesModule;
 import vazkii.quark.base.block.QuarkBlock;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
@@ -241,4 +242,8 @@ public class PipeBlock extends QuarkBlock implements SimpleWaterloggedBlock, Ent
 		return createTickerHelper(type, PipesModule.blockEntityType, PipeBlockEntity::tick);
 	}
 
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		// Skip, use manual models
+	}
 }

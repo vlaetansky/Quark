@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.block.IQuarkBlock;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.building.block.be.VariantFurnaceBlockEntity;
 import vazkii.quark.content.building.module.VariantFurnacesModule;
@@ -67,4 +68,8 @@ public class VariantFurnaceBlock extends FurnaceBlock implements IQuarkBlock {
 		return true;
 	}
 
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		// todo
+	}
 }

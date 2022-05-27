@@ -62,6 +62,17 @@ minecraft {
                 }
             }
         }
+
+        data {
+            args '--mod', 'quark', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+
+            workingDirectory project.file('run')
+            mods {
+                quark {
+                    source sourceSets.main
+                }
+            }
+        }
     }
 }
 
@@ -142,6 +153,8 @@ task incrementBuildNumber {
     //file('web/versions.ini').append("\n${version}=${minecraft.version}")
     //file("${config.dir_repo}/version/${minecraft.version}.txt").write("${version}")
 }
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 import java.util.regex.Pattern
 task sortArtifacts(type: Copy) {

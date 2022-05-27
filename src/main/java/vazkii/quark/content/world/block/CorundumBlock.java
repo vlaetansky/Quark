@@ -6,6 +6,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -15,6 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import vazkii.quark.base.block.QuarkGlassBlock;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.ModuleLoader;
@@ -124,4 +127,15 @@ public class CorundumBlock extends QuarkGlassBlock {
 		return colorComponents;
 	}
 
+	@Override
+	public TagKey<Block> mineWith() {
+		return BlockTags.MINEABLE_WITH_PICKAXE;
+	}
+
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		if (waxed) {
+			states.simpleBlockItem(this, states.models().getExistingFile(states.modLoc(getRegistryName().getPath().replace("waxed_", ""))));
+		} else super.dataGen(states);
+	}
 }

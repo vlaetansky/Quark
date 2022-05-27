@@ -4,6 +4,8 @@ import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelReader;
@@ -14,6 +16,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.interf.IBlockColorProvider;
 import vazkii.arl.interf.IItemColorProvider;
 import vazkii.arl.util.RegistryHelper;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
+import vazkii.quark.base.datagen.QuarkBlockTagsProvider;
+import vazkii.quark.base.datagen.QuarkItemTagsProvider;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.VariantHandler;
 import vazkii.quark.base.module.QuarkModule;
@@ -21,6 +26,8 @@ import vazkii.quark.base.module.QuarkModule;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.BooleanSupplier;
+
+import static net.minecraft.world.level.material.Material.WOOD;
 
 public class QuarkStairsBlock extends StairBlock implements IQuarkBlock, IBlockColorProvider {
 
@@ -65,7 +72,7 @@ public class QuarkStairsBlock extends StairBlock implements IQuarkBlock, IBlockC
 	public float[] getBeaconColorMultiplier(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
 		return parent.getBlock().getBeaconColorMultiplier(parent.getBlock().defaultBlockState(), world, pos, beaconPos);
 	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public BlockColor getBlockColor() {
@@ -76,5 +83,25 @@ public class QuarkStairsBlock extends StairBlock implements IQuarkBlock, IBlockC
 	@OnlyIn(Dist.CLIENT)
 	public ItemColor getItemColor() {
 		return parent instanceof IItemColorProvider provider ? provider.getItemColor() : null;
+	}
+
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		states.stairsBlock(this, states.blockTexture(parent.getBlock()));
+		states.simpleBlockItem(this);
+	}
+
+	@Override
+	public void dataGen(QuarkItemTagsProvider itemTags) {
+		itemTags.copyInto(BlockTags.STAIRS, ItemTags.STAIRS);
+		if (material == WOOD)
+			itemTags.copyInto(BlockTags.WOODEN_STAIRS, ItemTags.WOODEN_STAIRS);
+	}
+
+	@Override
+	public void dataGen(QuarkBlockTagsProvider blockTags) {
+		blockTags.tag(BlockTags.STAIRS).add(this);
+		if (material == WOOD)
+			blockTags.tag(BlockTags.WOODEN_STAIRS).add(this);
 	}
 }

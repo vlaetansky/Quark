@@ -1,9 +1,9 @@
 package vazkii.quark.base.module;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -15,7 +15,12 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import vazkii.quark.api.event.ModuleLoadedEvent;
 import vazkii.quark.api.event.ModuleStateChangedEvent;
 import vazkii.quark.base.Quark;
+import vazkii.quark.base.datagen.*;
 import vazkii.quark.base.module.config.ConfigFlagManager;
+
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 public class QuarkModule {
 
@@ -87,12 +92,12 @@ public class QuarkModule {
 	public void modelBake(ModelBakeEvent event) {
 		// NO-OP
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public void modelLayers(EntityRenderersEvent.AddLayers event) {
 		// NO-OP
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public void textureStitch(TextureStitchEvent.Pre event) {
 		// NO-OP
@@ -104,6 +109,30 @@ public class QuarkModule {
 	}
 
 	public void loadComplete() {
+		// NO-OP
+	}
+
+	public void dataGen(QuarkItemModelProvider itemModels) {
+		// NO-OP
+	}
+
+	public void dataGen(QuarkBlockStateProvider states) {
+		// NO-OP
+	}
+
+	public void dataGen(QuarkItemTagsProvider itemTags) {
+		// NO-OP
+	}
+
+	public void dataGen(QuarkBlockTagsProvider blockTags) {
+		// NO-OP
+	}
+
+	public void dataGen(QuarkLootTableProvider tableProvider, Map<Block, LootTable.Builder> lootTables) {
+		// NO-OP
+	}
+
+	public void dataGen(QuarkRecipeProvider recipeProvider, Consumer<FinishedRecipe> recipes) {
 		// NO-OP
 	}
 
@@ -164,5 +193,4 @@ public class QuarkModule {
 			enabledStatusChanged(firstLoad, wasEnabled, enabled);
 		}
 	}
-
 }

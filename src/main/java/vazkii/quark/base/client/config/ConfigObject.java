@@ -126,7 +126,7 @@ public abstract class ConfigObject<T> extends AbstractConfigElement implements I
 	public int compareTo(@Nonnull IConfigElement o) {
 		if(o == this)
 			return 0;
-		if(!(o instanceof IConfigObject obj))
+		if(!(o instanceof IConfigObject<?>))
 			return -1;
 
 		return getName().compareTo(o.getName());

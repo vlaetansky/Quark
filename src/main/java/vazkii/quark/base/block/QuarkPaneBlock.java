@@ -6,6 +6,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.IronBarsBlock;
 import vazkii.arl.util.RegistryHelper;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
@@ -51,6 +52,13 @@ public class QuarkPaneBlock extends IronBarsBlock implements IQuarkBlock {
 	@Override
 	public boolean doesConditionApply() {
 		return enabledSupplier.getAsBoolean();
+	}
+
+
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		states.paneBlock(this, states.blockTexture(this), states.modLoc(getRegistryName().getPath() + "_top"));
+		states.simpleItem(this);
 	}
 
 

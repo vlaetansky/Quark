@@ -16,8 +16,8 @@ public class MetalButtonsModule extends QuarkModule {
 
 	@Override
 	public void register() {
-		new MetalButtonBlock("iron_button", this, 100).setCondition(() -> enableIron);
-		new MetalButtonBlock("gold_button", this, 4).setCondition(() -> enableGold);
+		new MetalButtonBlock("iron_button", this, 100, "iron_block").setCondition(() -> enableIron);
+		new MetalButtonBlock("gold_button", this, 4, "gold_block").setCondition(() -> enableGold);
 	}
-	
+
 }

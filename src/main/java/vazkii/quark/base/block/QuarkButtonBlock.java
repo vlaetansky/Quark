@@ -1,11 +1,18 @@
 package vazkii.quark.base.block;
 
 import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.ButtonBlock;
+import net.minecraft.world.level.material.Material;
 import vazkii.arl.util.RegistryHelper;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
+import vazkii.quark.base.datagen.QuarkBlockTagsProvider;
+import vazkii.quark.base.datagen.QuarkItemTagsProvider;
 import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nonnull;
@@ -60,4 +67,27 @@ public abstract class QuarkButtonBlock extends ButtonBlock implements IQuarkBloc
 		return module;
 	}
 
+	protected ResourceLocation gennedTexture() {
+		return getRegistryName();
+	}
+
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		states.buttonBlock(this, gennedTexture());
+		states.simpleBlockItem(this);
+	}
+
+	@Override
+	public void dataGen(QuarkItemTagsProvider itemTags) {
+		itemTags.copyInto(BlockTags.BUTTONS, ItemTags.BUTTONS);
+		if (material == Material.WOOD)
+			itemTags.copyInto(BlockTags.WOODEN_BUTTONS, ItemTags.WOODEN_BUTTONS);
+	}
+
+	@Override
+	public void dataGen(QuarkBlockTagsProvider blockTags) {
+		blockTags.tag(BlockTags.BUTTONS).add(this);
+		if (material == Material.WOOD)
+			blockTags.tag(BlockTags.WOODEN_BUTTONS).add(this);
+	}
 }

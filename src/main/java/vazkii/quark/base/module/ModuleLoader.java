@@ -1,9 +1,11 @@
 package vazkii.quark.base.module;
 
 import com.google.common.base.Preconditions;
+import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -16,6 +18,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.block.IQuarkBlock;
+import vazkii.quark.base.datagen.*;
 import vazkii.quark.base.item.IQuarkItem;
 import vazkii.quark.base.module.config.ConfigResolver;
 
@@ -29,7 +32,8 @@ public final class ModuleLoader {
 
 	private enum Step {
 		CONSTRUCT, CONSTRUCT_CLIENT, REGISTER, POST_REGISTER, CONFIG_CHANGED, CONFIG_CHANGED_CLIENT, SETUP, SETUP_CLIENT,
-		MODEL_REGISTRY, MODEL_BAKE, MODEL_LAYERS, TEXTURE_STITCH, POST_TEXTURE_STITCH, LOAD_COMPLETE, FIRST_CLIENT_TICK
+		MODEL_REGISTRY, MODEL_BAKE, MODEL_LAYERS, TEXTURE_STITCH, POST_TEXTURE_STITCH, LOAD_COMPLETE, FIRST_CLIENT_TICK,
+		GEN_ITEM_MODELS, GEN_BLOCK_STATES, GEN_ITEM_TAGS, GEN_BLOCK_TAGS, GEN_LOOT_TABLES, GEN_RECIPES
 	}
 
 	public static final ModuleLoader INSTANCE = new ModuleLoader();
@@ -131,6 +135,30 @@ public final class ModuleLoader {
 	public void loadComplete(ParallelDispatchEvent event) {
 		this.event = event;
 		dispatch(Step.LOAD_COMPLETE, QuarkModule::loadComplete);
+	}
+
+	public void dataGen(QuarkItemModelProvider itemModels) {
+		dispatch(Step.GEN_ITEM_MODELS, m -> m.dataGen(itemModels));
+	}
+
+	public void dataGen(QuarkBlockStateProvider states) {
+		dispatch(Step.GEN_BLOCK_STATES, m -> m.dataGen(states));
+	}
+
+	public void dataGen(QuarkBlockTagsProvider blockTags) {
+		dispatch(Step.GEN_BLOCK_TAGS, m -> m.dataGen(blockTags));
+	}
+
+	public void dataGen(QuarkItemTagsProvider itemTags) {
+		dispatch(Step.GEN_ITEM_TAGS, m -> m.dataGen(itemTags));
+	}
+
+	public void dataGen(QuarkLootTableProvider tableProvider, Map<Block, LootTable.Builder> lootTables) {
+		dispatch(Step.GEN_LOOT_TABLES, m -> m.dataGen(tableProvider, lootTables));
+	}
+
+	public void dataGen(QuarkRecipeProvider recipeProvider, Consumer<FinishedRecipe> recipes) {
+		dispatch(Step.GEN_RECIPES, m -> m.dataGen(recipeProvider, recipes));
 	}
 
 	@OnlyIn(Dist.CLIENT)

@@ -21,11 +21,14 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
 import vazkii.arl.interf.IBlockColorProvider;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.block.IQuarkBlock;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
+import vazkii.quark.base.datagen.QuarkBlockTagsProvider;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
@@ -141,4 +144,18 @@ public class HedgeBlock extends FenceBlock implements IQuarkBlock, IBlockColorPr
 		return enabledSupplier.getAsBoolean();
 	}
 
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		String baseName = getRegistryName().getPath();
+
+		ModelFile post = states.models().getExistingFile(states.modLoc("block/" + baseName + "_post"));
+
+		states.fourWayBlock(this, post, states.models().getExistingFile(states.modLoc("block/" + baseName + "_side")));
+		states.simpleBlockItem(this, post);
+	}
+
+	@Override
+	public void dataGen(QuarkBlockTagsProvider blockTags) {
+		blockTags.tag(HedgesModule.hedgesTag).add(this);
+	}
 }

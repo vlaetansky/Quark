@@ -16,7 +16,9 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.client.model.generators.ConfiguredModel;
 import vazkii.quark.base.block.QuarkBlock;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
@@ -79,4 +81,9 @@ public class ChuteBlock extends QuarkBlock implements EntityBlock {
 		return new ChuteBlockEntity(pos, state);
 	}
 
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		states.simpleBlock(this, new ConfiguredModel(states.models().getExistingFile(states.modLoc("block/chute"))));
+		states.simpleItem(this);
+	}
 }

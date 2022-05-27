@@ -28,8 +28,10 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.common.IForgeShearable;
 import vazkii.quark.base.block.QuarkBlock;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
@@ -183,4 +185,15 @@ public class ChorusVegetationBlock extends QuarkBlock implements BonemealableBlo
 		return BlockBehaviour.OffsetType.XZ;
 	}
 
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		ConfiguredModel[] models = new ConfiguredModel[3];
+		for (int i = 0; i < 3; i++) {
+			models[i] = new ConfiguredModel(states.models().singleTexture("chorus_weed" + i,
+					states.mcLoc("block/cross"), "cross", states.modLoc("block/chorus_weed" + i)));
+		}
+
+		states.simpleBlock(this, models);
+		states.simpleBlockItem(this, states.models().getExistingFile(states.modLoc("block/chorus_weed0")));
+	}
 }

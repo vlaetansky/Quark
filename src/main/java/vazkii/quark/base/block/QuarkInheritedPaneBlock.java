@@ -10,6 +10,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.interf.IBlockColorProvider;
 import vazkii.arl.interf.IItemColorProvider;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
 import vazkii.quark.base.handler.RenderLayerHandler;
 
 import javax.annotation.Nullable;
@@ -58,5 +59,11 @@ public class QuarkInheritedPaneBlock extends QuarkPaneBlock implements IQuarkBlo
 	@OnlyIn(Dist.CLIENT)
 	public ItemColor getItemColor() {
 		return parent instanceof IItemColorProvider provider ? provider.getItemColor() : null;
+	}
+
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		states.paneBlock(this, states.blockTexture(parent.getBlock()), states.modLoc(getRegistryName().getPath() + "_top"));
+		states.simpleItem(this);
 	}
 }

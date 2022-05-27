@@ -8,11 +8,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ChainBlock;
-import net.minecraft.world.level.block.LanternBlock;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -22,7 +18,9 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.client.model.generators.ModelFile;
 import vazkii.quark.base.block.QuarkBlock;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
@@ -129,4 +127,22 @@ public class WoodPostBlock extends QuarkBlock implements SimpleWaterloggedBlock 
 			builder.add(prop);
 	}
 
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		ModelFile basePost = states.models().singleTexture(getRegistryName().getPath(), states.modLoc("block/post"),
+				states.mcLoc(getRegistryName().getPath().replace("_post", "_log")));
+		ModelFile chain = states.models().getExistingFile(states.modLoc("block/chain_small"));
+		ModelFile chainTop = states.models().getExistingFile(states.modLoc("block/chain_small_top"));
+		states.getMultipartBuilder(this)
+				.part().modelFile(basePost).addModel().condition(AXIS, Axis.Y).end()
+				.part().modelFile(basePost).rotationX(90).rotationY(90).addModel().condition(AXIS, Axis.X).end()
+				.part().modelFile(basePost).rotationX(90).addModel().condition(AXIS, Axis.Z).end()
+				.part().modelFile(chain).addModel().condition(CHAINED[0], true).end()
+				.part().modelFile(chainTop).addModel().condition(CHAINED[1], true).end()
+				.part().modelFile(chainTop).rotationX(90).addModel().condition(CHAINED[2], true).end()
+				.part().modelFile(chain).rotationX(90).addModel().condition(CHAINED[3], true).end()
+				.part().modelFile(chainTop).rotationX(90).rotationY(90).addModel().condition(CHAINED[4], true).end()
+				.part().modelFile(chain).rotationX(90).rotationY(90).addModel().condition(CHAINED[5], true).end();
+		states.simpleBlockItem(this, basePost);
+	}
 }

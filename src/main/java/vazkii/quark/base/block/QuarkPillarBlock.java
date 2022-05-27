@@ -1,16 +1,16 @@
 package vazkii.quark.base.block;
 
-import java.util.function.BooleanSupplier;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import vazkii.arl.util.RegistryHelper;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
 import vazkii.quark.base.module.QuarkModule;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.function.BooleanSupplier;
 
 public class QuarkPillarBlock extends RotatedPillarBlock implements IQuarkBlock {
 
@@ -47,5 +47,11 @@ public class QuarkPillarBlock extends RotatedPillarBlock implements IQuarkBlock 
 	@Override
 	public boolean doesConditionApply() {
 		return enabledSupplier.getAsBoolean();
+	}
+
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		states.axisBlock(this);
+		states.simpleBlockItem(this);
 	}
 }

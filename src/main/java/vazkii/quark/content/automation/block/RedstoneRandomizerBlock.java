@@ -24,8 +24,11 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.TickPriority;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.event.ForgeEventFactory;
 import vazkii.quark.base.block.QuarkBlock;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
@@ -200,4 +203,28 @@ public class RedstoneRandomizerBlock extends QuarkBlock {
 		}
 	}
 
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		ModelFile off = states.models().getExistingFile(states.modLoc("block/randomizer_off"));
+		ModelFile left = states.models().getExistingFile(states.modLoc("block/randomizer_on_left"));
+		ModelFile right = states.models().getExistingFile(states.modLoc("block/randomizer_on_right"));
+
+		states.getVariantBuilder(this).forAllStates((state) -> {
+			ConfiguredModel model = new ConfiguredModel(switch (state.getValue(RedstoneRandomizerBlock.POWERED)) {
+				case OFF -> off;
+				case LEFT -> left;
+				case RIGHT -> right;
+			}, 0, switch (state.getValue(RedstoneRandomizerBlock.FACING)) {
+				case NORTH -> 180;
+				case WEST -> 90;
+				case EAST -> 270;
+				default -> 0;
+			}, false);
+
+			return new ConfiguredModel[]{model};
+		});
+
+		states.itemModels().singleTexture(getRegistryName().getPath(), states.mcLoc("item/generated"),
+				"layer0", states.modLoc("item/" + getRegistryName().getPath()));
+	}
 }

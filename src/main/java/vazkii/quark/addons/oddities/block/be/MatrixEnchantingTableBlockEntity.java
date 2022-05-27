@@ -1,6 +1,5 @@
 package vazkii.quark.addons.oddities.block.be;
 
-import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -28,6 +27,7 @@ import vazkii.quark.addons.oddities.inventory.EnchantmentMatrix;
 import vazkii.quark.addons.oddities.inventory.EnchantmentMatrix.Piece;
 import vazkii.quark.addons.oddities.inventory.MatrixEnchantingMenu;
 import vazkii.quark.addons.oddities.module.MatrixEnchantingModule;
+import vazkii.quark.addons.oddities.util.Influence;
 import vazkii.quark.api.IEnchantmentInfluencer;
 
 import javax.annotation.Nonnull;
@@ -347,16 +347,24 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 
 	private static class CandleInfluencer implements IEnchantmentInfluencer {
 
-		private static final List<Block> CANDLES = Lists.newArrayList(Blocks.WHITE_CANDLE, Blocks.ORANGE_CANDLE, Blocks.MAGENTA_CANDLE, Blocks.LIGHT_BLUE_CANDLE, Blocks.YELLOW_CANDLE, Blocks.LIME_CANDLE, Blocks.PINK_CANDLE, Blocks.GRAY_CANDLE, Blocks.LIGHT_GRAY_CANDLE, Blocks.CYAN_CANDLE, Blocks.PURPLE_CANDLE, Blocks.BLUE_CANDLE, Blocks.BROWN_CANDLE, Blocks.GREEN_CANDLE, Blocks.RED_CANDLE, Blocks.BLACK_CANDLE);
-		private static final CandleInfluencer INSTANCE = new CandleInfluencer();
+		private static final CandleInfluencer REGULAR_INSTANCE = new CandleInfluencer(false);
+		private static final CandleInfluencer INVERTED_INSTANCE = new CandleInfluencer(true);
+
+		private final boolean inverted;
+
+		public CandleInfluencer(boolean boosts) {
+			this.inverted = boosts;
+		}
 
 		@Nullable
 		public static CandleInfluencer forBlock(Block block) {
 			if (MatrixEnchantingModule.candleInfluencingFailed)
 				return null;
 
-			if(CANDLES.contains(block))
-				return INSTANCE;
+			if(MatrixEnchantingModule.CANDLES.contains(block))
+				return REGULAR_INSTANCE;
+			else if (MatrixEnchantingModule.soulCandles.contains(block))
+				return INVERTED_INSTANCE;
 
 			return null;
 		}
@@ -365,7 +373,9 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 			if (!state.getValue(CandleBlock.LIT))
 				return null;
 
-			int index = CANDLES.indexOf(state.getBlock());
+			int index = MatrixEnchantingModule.CANDLES.indexOf(state.getBlock());
+			if (index < 0)
+				index = MatrixEnchantingModule.soulCandles.indexOf(state.getBlock());
 			return index >= 0 ? DyeColor.values()[index] : null;
 		}
 
@@ -383,13 +393,23 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 		@Override
 		public boolean influencesEnchantment(BlockGetter world, BlockPos pos, BlockState state, Enchantment enchantment) {
 			DyeColor color = getColor(state);
-			return color != null && MatrixEnchantingModule.candleInfluences.get(color).boost().contains(enchantment);
+			if (color == null)
+				return false;
+
+			Influence influence = MatrixEnchantingModule.candleInfluences.get(color);
+
+			return (inverted ? influence.dampen() : influence.boost()).contains(enchantment);
 		}
 
 		@Override
 		public boolean dampensEnchantment(BlockGetter world, BlockPos pos, BlockState state, Enchantment enchantment) {
 			DyeColor color = getColor(state);
-			return color != null && MatrixEnchantingModule.candleInfluences.get(color).dampen().contains(enchantment);
+			if (color == null)
+				return false;
+
+			Influence influence = MatrixEnchantingModule.candleInfluences.get(color);
+
+			return (inverted ? influence.boost() : influence.dampen()).contains(enchantment);
 		}
 	}
 
