@@ -55,11 +55,6 @@ public class StonelingsModule extends QuarkModule {
 	public static Item diamondHeart;
 
 	@Override
-	public void setup() {
-		stonelingPathfindingTag = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Quark.MOD_ID, "stoneling_pathfinding"));
-	}
-
-	@Override
 	public void register() {
 		diamondHeart = new DiamondHeartItem("diamond_heart", this, new Item.Properties().tab(CreativeModeTab.TAB_MISC));
 
@@ -74,6 +69,8 @@ public class StonelingsModule extends QuarkModule {
 		EntitySpawnHandler.addEgg(stonelingType, 0xA1A1A1, 0x505050, spawnConfig);
 
 		EntityAttributeHandler.put(stonelingType, Stoneling::prepareAttributes);
+
+		stonelingPathfindingTag = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Quark.MOD_ID, "stoneling_pathfinding"));
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
 import vazkii.quark.base.block.QuarkButtonBlock;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
 import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nonnull;
@@ -43,7 +44,7 @@ public class MetalButtonBlock extends QuarkButtonBlock {
 	}
 
 	@Override
-	protected ResourceLocation gennedTexture() {
-		return new ResourceLocation("block/" + texName);
+	protected ResourceLocation gennedTexture(QuarkBlockStateProvider states) {
+		return states.mcLoc("block/" + texName);
 	}
 }

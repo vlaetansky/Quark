@@ -75,7 +75,7 @@ public class QuarkDoorBlock extends DoorBlock implements IQuarkBlock, IBlockItem
 	@Override
 	public void dataGen(QuarkBlockStateProvider states) {
 		states.doorBlock(this);
-		states.simpleItem(this);
+		states.simpleItem(this, states.modLoc("item/" + getRegistryName().getPath()));
 	}
 
 	@Override

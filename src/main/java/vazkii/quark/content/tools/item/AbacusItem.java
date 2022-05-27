@@ -16,6 +16,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.util.ItemNBTHelper;
+import vazkii.quark.base.datagen.QuarkItemModelProvider;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.QuarkModule;
 
@@ -101,4 +102,8 @@ public class AbacusItem extends QuarkItem {
 		return 0.01F * count + 0.005F;
 	}
 
+	@Override
+	public void dataGen(QuarkItemModelProvider models) {
+		// TODO
+	}
 }

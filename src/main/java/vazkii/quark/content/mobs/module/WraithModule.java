@@ -99,10 +99,7 @@ public class WraithModule extends QuarkModule {
 		EntitySpawnHandler.addEgg(wraithType, 0xececec, 0xbdbdbd, spawnConfig);
 
 		EntityAttributeHandler.put(wraithType, Wraith::registerAttributes);
-	}
 
-	@Override
-	public void setup() {
 		wraithSpawnableTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "wraith_spawnable"));
 		soulBeadTargetTag = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation(Quark.MOD_ID, "soul_bead_target"));
 	}

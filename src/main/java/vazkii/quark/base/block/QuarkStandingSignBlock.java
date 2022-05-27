@@ -1,13 +1,13 @@
 package vazkii.quark.base.block;
 
-import java.util.function.BooleanSupplier;
-
-import javax.annotation.Nullable;
-
 import net.minecraft.world.level.block.StandingSignBlock;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import vazkii.arl.util.RegistryHelper;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
 import vazkii.quark.base.module.QuarkModule;
+
+import javax.annotation.Nullable;
+import java.util.function.BooleanSupplier;
 
 public class QuarkStandingSignBlock extends StandingSignBlock implements IQuarkBlock {
 
@@ -38,4 +38,8 @@ public class QuarkStandingSignBlock extends StandingSignBlock implements IQuarkB
 		return module;
 	}
 
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		// TODO
+	}
 }

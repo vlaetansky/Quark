@@ -92,10 +92,7 @@ public class CrabsModule extends QuarkModule {
 		EntitySpawnHandler.addEgg(crabType, 0x893c22, 0x916548, spawnConfig);
 
 		EntityAttributeHandler.put(crabType, Crab::prepareAttributes);
-	}
 
-	@Override
-	public void setup() {
 		crabSpawnableTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "crab_spawnable"));
 	}
 

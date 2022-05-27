@@ -47,12 +47,12 @@ public class FoxhoundModule extends QuarkModule {
 
 	@Config
 	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(30, 1, 2, CompoundBiomeConfig.fromBiomeReslocs(false, "minecraft:nether_wastes", "minecraft:basalt_deltas"));
-	
+
 	@Config
 	public static EntitySpawnConfig lesserSpawnConfig = new CostSensitiveEntitySpawnConfig(2, 1, 1, 0.7, 0.15, CompoundBiomeConfig.fromBiomeReslocs(false, "minecraft:soul_sand_valley"));
-	
+
 	public static TagKey<Block> foxhoundSpawnableTag;
-	
+
 	@Override
 	public void register() {
 		foxhoundType = EntityType.Builder.of(Foxhound::new, MobCategory.CREATURE)
@@ -65,17 +65,14 @@ public class FoxhoundModule extends QuarkModule {
 
 		EntitySpawnHandler.registerSpawn(this, foxhoundType, MobCategory.MONSTER, Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Foxhound::spawnPredicate, spawnConfig);
 		EntitySpawnHandler.track(this, foxhoundType, MobCategory.MONSTER, lesserSpawnConfig, true);
-		
-		EntitySpawnHandler.addEgg(foxhoundType, 0x890d0d, 0xf2af4b, spawnConfig);
-		
-		EntityAttributeHandler.put(foxhoundType, Wolf::createAttributes);
-	}
 
-	@Override
-	public void setup() {		
+		EntitySpawnHandler.addEgg(foxhoundType, 0x890d0d, 0xf2af4b, spawnConfig);
+
+		EntityAttributeHandler.put(foxhoundType, Wolf::createAttributes);
+
 		foxhoundSpawnableTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "foxhound_spawnable"));
 	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void clientSetup() {
@@ -84,13 +81,13 @@ public class FoxhoundModule extends QuarkModule {
 
 	@SubscribeEvent
 	public void onAggro(LivingSetAttackTargetEvent event) {
-		if(event.getTarget() != null 
-				&& event.getEntityLiving().getType() == EntityType.IRON_GOLEM 
-				&& event.getTarget().getType() == foxhoundType 
+		if(event.getTarget() != null
+				&& event.getEntityLiving().getType() == EntityType.IRON_GOLEM
+				&& event.getTarget().getType() == foxhoundType
 				&& ((Foxhound) event.getTarget()).isTame())
 			((IronGolem) event.getEntityLiving()).setTarget(null);
 	}
-	
+
 	@SubscribeEvent
 	public void onSleepCheck(SleepingLocationCheckEvent event) {
 		if(event.getEntity() instanceof Foxhound) {

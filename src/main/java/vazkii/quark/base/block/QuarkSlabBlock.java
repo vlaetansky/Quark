@@ -5,9 +5,9 @@ import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelReader;
@@ -100,8 +100,7 @@ public class QuarkSlabBlock extends SlabBlock implements IQuarkBlock, IBlockColo
 
 	@Override
 	public void dataGen(QuarkBlockStateProvider states) {
-		ResourceLocation loc = states.blockTexture(parent.getBlock());
-		states.slabBlock(this, loc, loc);
+		states.slabBlock(this, states.baseBlockTexture(parent.getBlock()), states.blockTexture(parent.getBlock()));
 		states.simpleBlockItem(this);
 	}
 
@@ -114,6 +113,12 @@ public class QuarkSlabBlock extends SlabBlock implements IQuarkBlock, IBlockColo
 										.when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(this)
 												.setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SlabBlock.TYPE, SlabType.DOUBLE))))
 								.apply(ApplyExplosionDecay.explosionDecay()))));
+	}
+
+	@Nullable
+	@Override
+	public TagKey<Block> mineWith() {
+		return parent.mineWith();
 	}
 
 	@Override

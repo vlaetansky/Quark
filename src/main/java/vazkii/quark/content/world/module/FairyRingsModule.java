@@ -3,6 +3,7 @@ package vazkii.quark.content.world.module;
 import com.google.common.collect.Lists;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -40,7 +41,7 @@ public class FairyRingsModule extends QuarkModule {
 		ores = new ArrayList<>();
 		for(String s : oresRaw) {
 			Block b = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(s));
-			if (b != null) {
+			if (b != null && b != Blocks.AIR) {
 				ores.add(b.defaultBlockState());
 			}
 			else {

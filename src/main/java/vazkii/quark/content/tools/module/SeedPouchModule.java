@@ -41,10 +41,6 @@ public class SeedPouchModule extends QuarkModule {
 	@Override
 	public void register() {
 		seed_pouch = new SeedPouchItem(this);
-	}
-
-	@Override
-	public void setup() {
 		seedPouchHoldableTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "seed_pouch_holdable"));
 	}
 

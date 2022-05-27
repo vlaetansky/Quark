@@ -1,0 +1,6 @@
+{
+  "parent": "quark:item/blossom_fence",
+  "textures": {
+    "texture": "quark:block/blossom_planks"
+  }
+}

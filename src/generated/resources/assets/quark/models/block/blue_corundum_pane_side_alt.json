@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_glass_pane_side_alt",
+  "textures": {
+    "pane": "quark:block/blue_corundum",
+    "edge": "quark:block/blue_corundum"
+  }
+}

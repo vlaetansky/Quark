@@ -224,7 +224,6 @@ public class RedstoneRandomizerBlock extends QuarkBlock {
 			return new ConfiguredModel[]{model};
 		});
 
-		states.itemModels().singleTexture(getRegistryName().getPath(), states.mcLoc("item/generated"),
-				"layer0", states.modLoc("item/" + getRegistryName().getPath()));
+		states.simpleItem(this, states.modLoc("item/" + getRegistryName().getPath()));
 	}
 }

@@ -21,6 +21,7 @@ import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.datagen.*;
 import vazkii.quark.base.item.IQuarkItem;
 import vazkii.quark.base.module.config.ConfigResolver;
+import vazkii.quark.content.world.undergroundstyle.base.UndergroundStyle;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,6 +73,7 @@ public final class ModuleLoader {
 	}
 
 	public void register() {
+		UndergroundStyle.setupTag();
 		dispatch(Step.REGISTER, QuarkModule::register);
 		dispatch(Step.POST_REGISTER, QuarkModule::postRegister);
 		config.registerConfigBoundElements();

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "side": "quark:block/polished_myalite",
+    "bottom": "quark:block/polished_myalite",
+    "top": "quark:block/polished_myalite"
+  }
+}

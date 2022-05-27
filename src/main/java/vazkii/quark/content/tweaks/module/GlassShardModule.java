@@ -49,10 +49,7 @@ public class GlassShardModule extends QuarkModule {
 
 		for(DyeColor color : DyeColor.values())
 			shardColors.put(color, new QuarkItem(color.getSerializedName() + "_shard", this, new Item.Properties().tab(CreativeModeTab.TAB_MATERIALS)));
-	}
 
-	@Override
-	public void setup() {
 		shardTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "shards"));
 	}
 }

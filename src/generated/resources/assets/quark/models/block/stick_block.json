@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "quark:block/stick_block",
+    "end": "quark:block/stick_block_top"
+  }
+}

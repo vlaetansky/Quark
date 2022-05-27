@@ -67,27 +67,21 @@ public abstract class QuarkButtonBlock extends ButtonBlock implements IQuarkBloc
 		return module;
 	}
 
-	protected ResourceLocation gennedTexture() {
-		return getRegistryName();
-	}
+	protected abstract ResourceLocation gennedTexture(QuarkBlockStateProvider states);
 
 	@Override
 	public void dataGen(QuarkBlockStateProvider states) {
-		states.buttonBlock(this, gennedTexture());
+		states.buttonBlock(this, gennedTexture(states));
 		states.simpleBlockItem(this);
 	}
 
 	@Override
 	public void dataGen(QuarkItemTagsProvider itemTags) {
 		itemTags.copyInto(BlockTags.BUTTONS, ItemTags.BUTTONS);
-		if (material == Material.WOOD)
-			itemTags.copyInto(BlockTags.WOODEN_BUTTONS, ItemTags.WOODEN_BUTTONS);
 	}
 
 	@Override
 	public void dataGen(QuarkBlockTagsProvider blockTags) {
 		blockTags.tag(BlockTags.BUTTONS).add(this);
-		if (material == Material.WOOD)
-			blockTags.tag(BlockTags.WOODEN_BUTTONS).add(this);
 	}
 }

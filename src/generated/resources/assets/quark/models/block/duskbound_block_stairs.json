@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "side": "quark:block/duskbound_block",
+    "bottom": "quark:block/duskbound_block",
+    "top": "quark:block/duskbound_block"
+  }
+}

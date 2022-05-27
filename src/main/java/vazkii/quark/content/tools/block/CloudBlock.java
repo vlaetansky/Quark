@@ -2,6 +2,7 @@ package vazkii.quark.content.tools.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Inventory;
@@ -32,6 +33,7 @@ import vazkii.quark.content.tools.block.be.CloudBlockEntity;
 import vazkii.quark.content.tools.module.BottledCloudModule;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class CloudBlock extends QuarkNoItemBlock implements EntityBlock {
 
@@ -112,6 +114,12 @@ public class CloudBlock extends QuarkNoItemBlock implements EntityBlock {
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level world, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
 		return createTickerHelper(type, BottledCloudModule.blockEntityType, CloudBlockEntity::tick);
+	}
+
+	@Nullable
+	@Override
+	public TagKey<Block> mineWith() {
+		return null;
 	}
 
 	@Override

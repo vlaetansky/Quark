@@ -299,7 +299,7 @@ public final class SortingHandler {
 					itemList.add(stack.getItem());
 				else if (o instanceof String s) {
 					Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(s));
-					if (item != null)
+					if (item != null && item != Items.AIR)
 						itemList.add(item);
 				}
 			}

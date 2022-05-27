@@ -43,7 +43,6 @@ import vazkii.quark.content.mobs.module.ToretoiseModule;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 public class Toretoise extends Animal {
@@ -99,7 +98,7 @@ public class Toretoise extends Animal {
 	private void computeGoodFood() {
 		goodFood = Ingredient.of(ToretoiseModule.foods.stream()
 				.map(loc -> ForgeRegistries.ITEMS.getValue(new ResourceLocation(loc)))
-				.filter(Objects::nonNull)
+				.filter((it) -> it != null && it != Items.AIR)
 				.map(ItemStack::new));
 	}
 

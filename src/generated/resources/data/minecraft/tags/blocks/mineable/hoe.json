@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    "quark:glow_shroom",
+    "quark:glow_shroom_ring",
+    "quark:blue_blossom_leaves",
+    "quark:blue_blossom_sapling",
+    "quark:lavender_blossom_leaves",
+    "quark:lavender_blossom_sapling",
+    "quark:orange_blossom_leaves",
+    "quark:orange_blossom_sapling",
+    "quark:pink_blossom_leaves",
+    "quark:pink_blossom_sapling",
+    "quark:yellow_blossom_leaves",
+    "quark:yellow_blossom_sapling",
+    "quark:red_blossom_leaves",
+    "quark:red_blossom_sapling"
+  ]
+}

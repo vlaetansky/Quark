@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "side": "quark:block/jasper",
+    "bottom": "quark:block/jasper",
+    "top": "quark:block/jasper"
+  }
+}

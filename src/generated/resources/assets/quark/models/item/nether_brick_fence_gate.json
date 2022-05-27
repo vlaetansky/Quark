@@ -1,0 +1,6 @@
+{
+  "parent": "quark:item/nether_brick_fence_gate",
+  "textures": {
+    "texture": "minecraft:block/nether_bricks"
+  }
+}

@@ -66,7 +66,7 @@ public class ReacharoundPlacingModule extends QuarkModule {
 	public static TagKey<Item> reacharoundTag;
 
 	@Override
-	public void setup() {
+	public void register() {
 		reacharoundTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "reacharound_able"));
 	}
 

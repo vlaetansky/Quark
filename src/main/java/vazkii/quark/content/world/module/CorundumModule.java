@@ -74,6 +74,7 @@ public class CorundumModule extends AbstractUndergroundStyleModule<CorundumStyle
 		add("white", 0xffffff, MaterialColor.SNOW);
 		add("black", 0x000000, MaterialColor.COLOR_BLACK);
 
+		corundumTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "corundum"));
 		super.register();
 	}
 
@@ -94,12 +95,6 @@ public class CorundumModule extends AbstractUndergroundStyleModule<CorundumStyle
 
 		ClusterConnection connection = new ClusterConnection(cluster);
 		IIndirectConnector.INDIRECT_STICKY_BLOCKS.add(Pair.of(connection::isValidState, connection));
-	}
-
-	@Override
-	public void setup() {
-		super.setup();
-		corundumTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "corundum"));
 	}
 
 	@Override

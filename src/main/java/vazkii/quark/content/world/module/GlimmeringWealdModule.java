@@ -81,12 +81,12 @@ public class GlimmeringWealdModule extends QuarkModule {
 
 		RegistryHelper.register(makeBiome());
 		UndergroundBiomeHandler.addUndergroundBiome(this, Climate.parameters(FULL_RANGE, FULL_RANGE, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(1.55F, 2F), FULL_RANGE, 0F), BIOME_NAME);
+		
+		glowShroomFeedablesTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "glow_shroom_feedables"));
 	}
 
 	@Override
 	public void setup() {
-		glowShroomFeedablesTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "glow_shroom_feedables"));
-
 		enqueue(() -> {
 			ComposterBlock.COMPOSTABLES.put(glow_shroom.asItem(), 0.65F);
 			ComposterBlock.COMPOSTABLES.put(glow_shroom_block.asItem(), 0.65F);

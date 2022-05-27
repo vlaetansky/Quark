@@ -5,6 +5,8 @@ import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -29,6 +31,7 @@ import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class LeafCarpetBlock extends QuarkBlock implements IBlockColorProvider {
 
@@ -91,6 +94,12 @@ public class LeafCarpetBlock extends QuarkBlock implements IBlockColorProvider {
 	@OnlyIn(Dist.CLIENT)
 	public BlockColor getBlockColor() {
 		return (state, worldIn, pos, tintIndex) -> Minecraft.getInstance().getBlockColors().getColor(baseState, worldIn, pos, tintIndex);
+	}
+
+	@Nullable
+	@Override
+	public TagKey<Block> mineWith() {
+		return BlockTags.MINEABLE_WITH_HOE;
 	}
 
 	@Override

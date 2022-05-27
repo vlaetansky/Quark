@@ -50,10 +50,7 @@ public class ChestsInBoatsModule extends QuarkModule {
 				.setCustomClientFactory((spawnEntity, world) -> new ChestPassenger(chestPassengerEntityType, world))
 				.build("chest_passenger");
 		RegistryHelper.register(chestPassengerEntityType, "chest_passenger");
-	}
 
-	@Override
-	public void setup() {
 		boatableChestsTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "boatable_chests"));
 	}
 

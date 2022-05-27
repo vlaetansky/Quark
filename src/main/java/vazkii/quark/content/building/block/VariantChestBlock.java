@@ -25,6 +25,7 @@ import net.minecraftforge.fml.ModList;
 import vazkii.arl.interf.IBlockItemProvider;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.block.IQuarkBlock;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.building.block.be.VariantChestBlockEntity;
 import vazkii.quark.content.building.module.VariantChestsModule.IChestTextureProvider;
@@ -100,6 +101,11 @@ public class VariantChestBlock extends ChestBlock implements IBlockItemProvider,
 	@OnlyIn(Dist.CLIENT)
 	public BlockItem provideItemBlock(Block block, Item.Properties props) {
 		return new Item(block, props);
+	}
+
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		// TODO
 	}
 
 	public static class Item extends BlockItem {

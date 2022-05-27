@@ -147,10 +147,7 @@ public class ColorRunesModule extends QuarkModule {
 
 		rainbow_rune = new RuneItem("rainbow_rune", this, 16, true);
 		blank_rune = new RuneItem("blank_rune", this, 17, false);
-	}
 
-	@Override
-	public void setup() {
 		runesTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "runes"));
 		runesLootableTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "runes_lootable"));
 	}

@@ -1,0 +1,22 @@
+{
+  "replace": false,
+  "values": [
+    "quark:soul_candle",
+    "quark:white_soul_candle",
+    "quark:orange_soul_candle",
+    "quark:magenta_soul_candle",
+    "quark:light_blue_soul_candle",
+    "quark:yellow_soul_candle",
+    "quark:lime_soul_candle",
+    "quark:pink_soul_candle",
+    "quark:gray_soul_candle",
+    "quark:light_gray_soul_candle",
+    "quark:cyan_soul_candle",
+    "quark:purple_soul_candle",
+    "quark:blue_soul_candle",
+    "quark:brown_soul_candle",
+    "quark:green_soul_candle",
+    "quark:red_soul_candle",
+    "quark:black_soul_candle"
+  ]
+}

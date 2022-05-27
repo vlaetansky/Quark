@@ -42,7 +42,12 @@ public class QuarkItemModelProvider extends ItemModelProvider {
 			if (item instanceof IQuarkItem quarkItem) {
 				ResourceLocation loc = item.getRegistryName();
 				if (loc != null && loc.getNamespace().equals("quark")) {
-					quarkItem.dataGen(this);
+					try {
+						quarkItem.dataGen(this);
+					} catch (Exception e) {
+						System.err.println(e);
+						System.err.println("    While generating " + quarkItem);
+					}
 				}
 			}
 		}

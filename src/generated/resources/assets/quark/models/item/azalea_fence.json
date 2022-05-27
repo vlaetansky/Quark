@@ -1,0 +1,6 @@
+{
+  "parent": "quark:item/azalea_fence",
+  "textures": {
+    "texture": "quark:block/azalea_planks"
+  }
+}

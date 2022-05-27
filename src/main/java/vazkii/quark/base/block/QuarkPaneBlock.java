@@ -57,7 +57,7 @@ public class QuarkPaneBlock extends IronBarsBlock implements IQuarkBlock {
 
 	@Override
 	public void dataGen(QuarkBlockStateProvider states) {
-		states.paneBlock(this, states.blockTexture(this), states.modLoc(getRegistryName().getPath() + "_top"));
+		states.paneBlock(this, states.blockTexture(this), states.blockTexture(this, "_top"));
 		states.simpleItem(this);
 	}
 

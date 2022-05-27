@@ -28,6 +28,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import vazkii.quark.addons.oddities.block.be.MagnetizedBlockBlockEntity;
 import vazkii.quark.addons.oddities.module.MagnetsModule;
 import vazkii.quark.base.block.QuarkNoItemBlock;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
 import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nonnull;
@@ -147,4 +148,8 @@ public class MovingMagnetizedBlock extends QuarkNoItemBlock implements EntityBlo
 		return createTickerHelper(type, MagnetsModule.magnetizedBlockType, MagnetizedBlockBlockEntity::tick);
 	}
 
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		states.simpleBlock(this, states.models().getBuilder(getRegistryName().getPath()).texture("particle", states.mcLoc("block/cobblestone")));
+	}
 }

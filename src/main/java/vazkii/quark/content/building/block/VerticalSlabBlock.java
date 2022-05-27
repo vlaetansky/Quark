@@ -1,12 +1,15 @@
 package vazkii.quark.content.building.block;
 
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -24,20 +27,32 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.ApplyExplosionDecay;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.arl.interf.IBlockColorProvider;
 import vazkii.arl.interf.IItemColorProvider;
+import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.block.QuarkSlabBlock;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
+import vazkii.quark.base.datagen.QuarkLootTableProvider;
 import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Map;
 
 public class VerticalSlabBlock extends QuarkBlock implements SimpleWaterloggedBlock, IBlockColorProvider {
 
@@ -176,6 +191,46 @@ public class VerticalSlabBlock extends QuarkBlock implements SimpleWaterloggedBl
 	@OnlyIn(Dist.CLIENT)
 	public ItemColor getItemColor() {
 		return parent instanceof IItemColorProvider provider ? provider.getItemColor() : null;
+	}
+
+	@Nullable
+	@Override
+	public TagKey<Block> mineWith() {
+		return parent instanceof IQuarkBlock quarkBlock ? quarkBlock.mineWith() : super.mineWith();
+	}
+
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		Block trueParent = parent;
+		if (trueParent instanceof QuarkSlabBlock slab)
+			trueParent = slab.parent.getBlock();
+
+		ResourceLocation parentName = trueParent.getRegistryName();
+		ResourceLocation possibleTarget = new ResourceLocation(parentName.getNamespace(), parentName.getPath().replace("_slab", "").replace("waxed_", ""));
+		Block block = ForgeRegistries.BLOCKS.getValue(possibleTarget);
+		if (block != null && block != Blocks.AIR) {
+			ResourceLocation texture = states.blockTexture(block);
+			// Get around some vanilla naming
+			if (texture.getNamespace().equals("minecraft") && texture.getPath().contains("smooth_") && !texture.getPath().contains("smooth_stone")) {
+				texture = new ResourceLocation(texture.getNamespace(), texture.getPath().replace("smooth_", "") + "_top");
+				if (texture.getPath().contains("quartz"))
+					texture = new ResourceLocation(texture.getNamespace(), texture.getPath().replace("quartz", "quartz_block"));
+			}
+			states.verticalSlabBlock(this, states.baseBlockTexture(block), texture);
+		}
+		// If we can't find that block, just do it manually
+		states.simpleBlockItem(this);
+	}
+
+	@Override
+	public void dataGen(QuarkLootTableProvider tableProvider, Map<Block, LootTable.Builder> lootTables) {
+		lootTables.put(this, LootTable.lootTable()
+				.withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+						.add(LootItem.lootTableItem(this)
+								.apply(SetItemCountFunction.setCount(ConstantValue.exactly(2))
+										.when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(this)
+												.setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(VerticalSlabBlock.TYPE, VerticalSlabType.DOUBLE))))
+								.apply(ApplyExplosionDecay.explosionDecay()))));
 	}
 
 	public enum VerticalSlabType implements StringRepresentable {

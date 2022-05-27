@@ -3,6 +3,7 @@ package vazkii.quark.content.building.block;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -45,9 +46,14 @@ public class WoodPostBlock extends QuarkBlock implements SimpleWaterloggedBlock 
 			BooleanProperty.create("chain_east")
 	};
 
+	private final Block parent;
+	private final boolean nether;
+
 	public WoodPostBlock(QuarkModule module, Block parent, String prefix, boolean nether) {
 		super(prefix + parent.getRegistryName().getPath().replace("_fence", "_post"), module, CreativeModeTab.TAB_BUILDING_BLOCKS,
 				Properties.copy(parent).sound(nether ? SoundType.STEM : SoundType.WOOD));
+		this.parent = parent;
+		this.nether = nether;
 
 		BlockState state = stateDefinition.any().setValue(WATERLOGGED, false).setValue(AXIS, Axis.Y);
 		for(BooleanProperty prop : CHAINED)
@@ -130,7 +136,8 @@ public class WoodPostBlock extends QuarkBlock implements SimpleWaterloggedBlock 
 	@Override
 	public void dataGen(QuarkBlockStateProvider states) {
 		ModelFile basePost = states.models().singleTexture(getRegistryName().getPath(), states.modLoc("block/post"),
-				states.mcLoc("block/" + getRegistryName().getPath().replace("_post", "_log")));
+				new ResourceLocation(parent.getRegistryName().getNamespace(), "block/" + getRegistryName().getPath().replace("_post", nether ? "_stem" : "_log")));
+
 		ModelFile chain = states.models().getExistingFile(states.modLoc("block/chain_small"));
 		ModelFile chainTop = states.models().getExistingFile(states.modLoc("block/chain_small_top"));
 		states.getMultipartBuilder(this)

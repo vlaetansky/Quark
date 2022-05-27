@@ -23,6 +23,8 @@ import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
 
+import static net.minecraftforge.client.model.generators.ModelProvider.BLOCK_FOLDER;
+
 /**
  * @author WireSegal
  * Created at 1:14 PM on 9/19/19.
@@ -73,16 +75,21 @@ public interface IQuarkBlock extends IForgeBlock {
 	@Nullable
 	default TagKey<Block> mineWith() {
 		Material material = getBlock().defaultBlockState().getMaterial();
-		if (material == Material.WOOD || material == Material.VEGETABLE || material == Material.BAMBOO)
+		if (material == Material.WOOD || material == Material.VEGETABLE || material == Material.BAMBOO || material == Material.NETHER_WOOD)
 			return BlockTags.MINEABLE_WITH_AXE;
-		else if (material == Material.LEAVES || material == Material.SCULK)
+		else if (material == Material.LEAVES || material == Material.SCULK || material == Material.PLANT || material == Material.GRASS)
 			return BlockTags.MINEABLE_WITH_HOE;
 		else if (material == Material.STONE || material == Material.METAL || material == Material.AMETHYST ||
 				material == Material.SHULKER_SHELL || material == Material.HEAVY_METAL || material == Material.ICE || material == Material.ICE_SOLID)
 			return BlockTags.MINEABLE_WITH_PICKAXE;
-		else if (material == Material.SAND || material == Material.CLAY || material == Material.DIRT || material == Material.GRASS)
+		else if (material == Material.SAND || material == Material.CLAY || material == Material.DIRT)
 			return BlockTags.MINEABLE_WITH_SHOVEL;
 		return null;
+	}
+
+	default ResourceLocation blockTexture(QuarkBlockStateProvider states) {
+		ResourceLocation name = getBlock().getRegistryName();
+		return new ResourceLocation(name.getNamespace(), BLOCK_FOLDER + "/" + name.getPath());
 	}
 
 	default void dataGen(QuarkBlockStateProvider states) {

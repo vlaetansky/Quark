@@ -1,7 +1,5 @@
 package vazkii.quark.content.world.undergroundstyle.base;
 
-import java.util.function.Predicate;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
@@ -16,21 +14,24 @@ import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.MiscUtil;
 import vazkii.quark.content.world.undergroundstyle.base.UndergroundStyleGenerator.Context;
 
+import java.util.function.Predicate;
+
 public abstract class UndergroundStyle {
 
-	private static TagKey<Block> fillerTag = null;
+	private static TagKey<Block> fillerTag;
 
 	public static final Predicate<BlockState> STONE_TYPES_MATCHER = (state) -> {
 		if(state == null)
 			return false;
 
-		if(fillerTag == null)
-			fillerTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "underground_biome_replaceable"));
-
 		return state.is(fillerTag);
 	};
 
 	public double dungeonChance;
+
+	public static void setupTag() {
+		fillerTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "underground_biome_replaceable"));
+	}
 
 	public final void fill(Context context, BlockPos pos) {
 		LevelAccessor world = context.world;

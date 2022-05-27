@@ -39,5 +39,4 @@ public class BambooMatCarpetBlock extends BambooMatBlock {
 	public boolean canSurvive(@Nonnull BlockState state, LevelReader world, BlockPos pos) {
 		return !world.isEmptyBlock(pos.below());
 	}
-
 }

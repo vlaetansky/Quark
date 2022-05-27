@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "quark:iron_button",
+    "quark:gold_button",
+    "quark:blossom_button",
+    "quark:azalea_button"
+  ]
+}

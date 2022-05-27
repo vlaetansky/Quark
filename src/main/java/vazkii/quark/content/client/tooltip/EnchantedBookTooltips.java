@@ -130,7 +130,7 @@ public class EnchantedBookTooltips {
 
 		for (String loc : ImprovedTooltipsModule.enchantingStacks) {
 			Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(loc));
-			if (item != null)
+			if (item != null && item != Items.AIR)
 				testItems.add(new ItemStack(item));
 		}
 	}
@@ -152,7 +152,7 @@ public class EnchantedBookTooltips {
 
 				for(String itemId : tokens) {
 					Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId));
-					if (item != null)
+					if (item != null && item != Items.AIR)
 						additionalStacks.put(ench, new ItemStack(item));
 				}
 			}

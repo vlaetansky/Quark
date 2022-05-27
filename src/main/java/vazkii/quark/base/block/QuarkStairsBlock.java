@@ -6,9 +6,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
@@ -83,6 +85,12 @@ public class QuarkStairsBlock extends StairBlock implements IQuarkBlock, IBlockC
 	@OnlyIn(Dist.CLIENT)
 	public ItemColor getItemColor() {
 		return parent instanceof IItemColorProvider provider ? provider.getItemColor() : null;
+	}
+	
+	@Nullable
+	@Override
+	public TagKey<Block> mineWith() {
+		return parent.mineWith();
 	}
 
 	@Override

@@ -115,7 +115,7 @@ public class SimpleHarvestModule extends QuarkModule {
 
 		for (String blockName : rightClickableBlocks) {
 			Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(blockName));
-			if (block != null)
+			if (block != null && block != Blocks.AIR)
 				rightClickCrops.add(block);
 		}
 	}

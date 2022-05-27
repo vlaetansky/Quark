@@ -2,6 +2,8 @@ package vazkii.quark.addons.oddities.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -39,6 +41,7 @@ import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -240,6 +243,12 @@ public class PipeBlock extends QuarkBlock implements SimpleWaterloggedBlock, Ent
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level world, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
 		return createTickerHelper(type, PipesModule.blockEntityType, PipeBlockEntity::tick);
+	}
+
+	@Nullable
+	@Override
+	public TagKey<Block> mineWith() {
+		return BlockTags.MINEABLE_WITH_PICKAXE;
 	}
 
 	@Override

@@ -4,7 +4,6 @@ import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.CreativeModeTab;
@@ -87,8 +86,7 @@ public class QuarkWallBlock extends WallBlock implements IQuarkBlock, IBlockColo
 	@Override
 	public void dataGen(QuarkBlockStateProvider states) {
 		states.wallBlock(this, states.blockTexture(parent.getBlock()));
-		states.simpleBlockItem(this, states.models().getExistingFile(new ResourceLocation(parent.getBlock().getRegistryName().getNamespace(),
-				"block/" + getRegistryName().getPath() + "_post")));
+		states.simpleBlockItem(this, states.models().getExistingFile(states.blockTexture(this, "_post")));
 	}
 
 	@Override

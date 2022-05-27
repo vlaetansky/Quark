@@ -63,7 +63,7 @@ public class QuarkInheritedPaneBlock extends QuarkPaneBlock implements IQuarkBlo
 
 	@Override
 	public void dataGen(QuarkBlockStateProvider states) {
-		states.paneBlock(this, states.blockTexture(parent.getBlock()), states.modLoc("block/" + getRegistryName().getPath() + "_top"));
+		states.paneBlock(this, states.blockTexture(parent.getBlock()), states.blockTexture(this, "_top"));
 		states.simpleItem(this, states.blockTexture(parent.getBlock()));
 	}
 }

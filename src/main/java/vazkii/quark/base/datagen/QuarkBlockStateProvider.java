@@ -7,11 +7,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
+import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.block.IQuarkBlock;
 import vazkii.quark.base.module.ModuleLoader;
+import vazkii.quark.content.building.block.VerticalSlabBlock;
+import vazkii.quark.content.building.block.VerticalSlabBlock.VerticalSlabType;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
@@ -21,6 +24,21 @@ public class QuarkBlockStateProvider extends BlockStateProvider {
 	public QuarkBlockStateProvider(DataGenerator gen, String modid,
 								   ExistingFileHelper exFileHelper) {
 		super(gen, modid, exFileHelper);
+	}
+
+	public ResourceLocation blockTexture(Block block, String extension) {
+		ResourceLocation base = blockTexture(block);
+		return new ResourceLocation(base.getNamespace(), base.getPath() + extension);
+	}
+
+	@Override
+	public ResourceLocation blockTexture(Block block) {
+		if (block instanceof IQuarkBlock quarkBlock) return quarkBlock.blockTexture(this);
+		return super.blockTexture(block);
+	}
+
+	public ResourceLocation baseBlockTexture(Block block) {
+		return super.blockTexture(block);
 	}
 
 	public void simpleItem(Block block) {
@@ -48,7 +66,7 @@ public class QuarkBlockStateProvider extends BlockStateProvider {
 	}
 
 	public void doorBlock(DoorBlock block) {
-		doorBlock(block, modLoc("block/" + block + "_lower"), modLoc("block/" + block + "_lower"));
+		doorBlock(block, blockTexture(block, "_bottom"), blockTexture(block, "_top"));
 	}
 
 	public void cubeBlockAndItem(Block block, String name) {
@@ -66,7 +84,31 @@ public class QuarkBlockStateProvider extends BlockStateProvider {
 	}
 
 	public void simpleBlockItem(Block block) {
-		simpleBlockItem(block, models().getExistingFile(modLoc("block/" + block.getRegistryName().getPath())));
+		simpleBlockItem(block, models().getExistingFile(blockTexture(block)));
+	}
+
+	public void verticalSlabBlock(VerticalSlabBlock block, ResourceLocation doubleslab, ResourceLocation texture) {
+		verticalSlabBlock(block, doubleslab, texture, texture, texture);
+	}
+
+	public BlockModelBuilder verticalSlab(String name, ResourceLocation side, ResourceLocation bottom, ResourceLocation top) {
+		return models().withExistingParent(name, modLoc("block/vertical_slab"))
+				.texture("side", side)
+				.texture("bottom", bottom)
+				.texture("top", top);
+	}
+
+	public void verticalSlabBlock(VerticalSlabBlock block, ResourceLocation doubleslab, ResourceLocation side, ResourceLocation bottom, ResourceLocation top) {
+		verticalSlabBlock(block, verticalSlab(block.getRegistryName().getPath(), side, bottom, top), models().getExistingFile(doubleslab));
+	}
+
+	public void verticalSlabBlock(VerticalSlabBlock block, ModelFile slab, ModelFile doubleslab) {
+		getVariantBuilder(block)
+				.partialState().with(VerticalSlabBlock.TYPE, VerticalSlabType.NORTH).addModels(new ConfiguredModel(slab, 0, 0, true))
+				.partialState().with(VerticalSlabBlock.TYPE, VerticalSlabType.SOUTH).addModels(new ConfiguredModel(slab, 0, 180, true))
+				.partialState().with(VerticalSlabBlock.TYPE, VerticalSlabType.WEST).addModels(new ConfiguredModel(slab, 0, 90, true))
+				.partialState().with(VerticalSlabBlock.TYPE, VerticalSlabType.EAST).addModels(new ConfiguredModel(slab, 0, 270, true))
+				.partialState().with(VerticalSlabBlock.TYPE, VerticalSlabType.DOUBLE).addModels(new ConfiguredModel(doubleslab));
 	}
 
 	@Override
@@ -75,7 +117,12 @@ public class QuarkBlockStateProvider extends BlockStateProvider {
 			if (block instanceof IQuarkBlock quarkBlock) {
 				ResourceLocation loc = block.getRegistryName();
 				if (loc != null && loc.getNamespace().equals("quark")) {
-					quarkBlock.dataGen(this);
+					try {
+						quarkBlock.dataGen(this);
+					} catch (Exception e) {
+						System.err.println(e);
+						System.err.println("    While generating " + quarkBlock);
+					}
 				}
 			}
 		}

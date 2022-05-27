@@ -52,7 +52,7 @@ public class EnhancedLaddersModule extends QuarkModule {
 	private static TagKey<Item> laddersTag;
 
 	@Override
-	public void setup() {
+	public void register() {
 		laddersTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "ladders"));
 	}
 

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "quark:block/cactus_block",
+    "end": "quark:block/cactus_block_top"
+  }
+}

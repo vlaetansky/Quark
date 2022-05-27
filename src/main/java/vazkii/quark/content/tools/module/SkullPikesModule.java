@@ -48,10 +48,7 @@ public class SkullPikesModule extends QuarkModule {
 				.setCustomClientFactory((spawnEntity, world) -> new SkullPike(skullPikeType, world))
 				.build("skull_pike");
 		RegistryHelper.register(skullPikeType, "skull_pike");
-	}
 
-	@Override
-	public void setup() {
 		pikeTrophiesTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "pike_trophies"));
 	}
 

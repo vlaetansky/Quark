@@ -6,6 +6,7 @@ import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
@@ -72,7 +73,7 @@ public class GreenerGrassModule extends QuarkModule {
 
 		for(String id : ids) {
 			Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(id));
-			if (block != null) {
+			if (block != null && block != Blocks.AIR) {
 				if (block.delegate == null)
 					return;
 				BlockColor color = map.get(block.delegate);

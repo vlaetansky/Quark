@@ -146,11 +146,9 @@ public class HedgeBlock extends FenceBlock implements IQuarkBlock, IBlockColorPr
 
 	@Override
 	public void dataGen(QuarkBlockStateProvider states) {
-		String baseName = getRegistryName().getPath();
+		ModelFile post = states.models().getExistingFile(states.blockTexture(this, "_post"));
 
-		ModelFile post = states.models().getExistingFile(states.modLoc("block/" + baseName + "_post"));
-
-		states.fourWayBlock(this, post, states.models().getExistingFile(states.modLoc("block/" + baseName + "_side")));
+		states.fourWayBlock(this, post, states.models().getExistingFile(states.blockTexture(this, "_side")));
 		states.simpleBlockItem(this, post);
 	}
 

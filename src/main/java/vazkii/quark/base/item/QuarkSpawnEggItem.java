@@ -7,6 +7,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import vazkii.arl.util.RegistryHelper;
+import vazkii.quark.base.datagen.QuarkItemModelProvider;
 import vazkii.quark.base.module.QuarkModule;
 
 import javax.annotation.Nonnull;
@@ -47,4 +48,8 @@ public class QuarkSpawnEggItem extends ForgeSpawnEggItem implements IQuarkItem {
 		return enabledSupplier.getAsBoolean();
 	}
 
+	@Override
+	public void dataGen(QuarkItemModelProvider models) {
+		models.withExistingParent(getRegistryName().getPath(), models.mcLoc("item/template_spawn_egg"));
+	}
 }

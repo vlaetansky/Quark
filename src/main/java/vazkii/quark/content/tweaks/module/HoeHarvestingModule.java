@@ -52,7 +52,7 @@ public class HoeHarvestingModule extends QuarkModule {
 	}
 
 	@Override
-	public void setup() {
+	public void register() {
 		bigHarvestingHoesTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "big_harvesting_hoes"));
 	}
 

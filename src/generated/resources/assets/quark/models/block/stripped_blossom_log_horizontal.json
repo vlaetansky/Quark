@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column_horizontal",
+  "textures": {
+    "side": "quark:block/stripped_blossom_log",
+    "end": "quark:block/stripped_blossom_log_top"
+  }
+}

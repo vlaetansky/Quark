@@ -39,7 +39,7 @@ public class PaperWallBlock extends QuarkInheritedPaneBlock {
 
 	@Override
 	public void dataGen(QuarkBlockStateProvider states) {
-		states.paneBlock(this, states.blockTexture(this), states.modLoc(getRegistryName().getPath() + "_top"));
-		states.simpleBlockItem(this);
+		states.paneBlock(this, states.blockTexture(this), states.modLoc("block/paper_wall_top"));
+		states.simpleItem(this);
 	}
 }

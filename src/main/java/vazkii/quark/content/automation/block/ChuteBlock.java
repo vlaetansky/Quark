@@ -2,7 +2,6 @@ package vazkii.quark.content.automation.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -84,8 +83,7 @@ public class ChuteBlock extends QuarkBlock implements EntityBlock {
 
 	@Override
 	public void dataGen(QuarkBlockStateProvider states) {
-		states.simpleBlock(this, new ConfiguredModel(states.models().getExistingFile(states.modLoc("block/chute"))));
-		states.itemModels().singleTexture(getRegistryName().getPath(), new ResourceLocation("item/generated"),
-				"layer0", states.modLoc("item/" + getRegistryName().getPath()));
+		states.simpleBlock(this, new ConfiguredModel(states.models().getExistingFile(states.blockTexture(this))));
+		states.simpleItem(this, states.modLoc("item/" + getRegistryName().getPath()));
 	}
 }

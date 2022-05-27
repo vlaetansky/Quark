@@ -17,7 +17,7 @@ import vazkii.quark.content.world.module.BlossomTreesModule;
 public class HedgesModule extends QuarkModule {
 
 	public static TagKey<Block> hedgesTag;
-	
+
 	@Override
 	public void register() {
 		new HedgeBlock(this, Blocks.OAK_FENCE, Blocks.OAK_LEAVES);
@@ -26,9 +26,11 @@ public class HedgesModule extends QuarkModule {
 		new HedgeBlock(this, Blocks.JUNGLE_FENCE, Blocks.JUNGLE_LEAVES);
 		new HedgeBlock(this, Blocks.ACACIA_FENCE, Blocks.ACACIA_LEAVES);
 		new HedgeBlock(this, Blocks.DARK_OAK_FENCE, Blocks.DARK_OAK_LEAVES);
-		
+
 		new HedgeBlock(this, Blocks.OAK_FENCE, Blocks.AZALEA_LEAVES);
 		new HedgeBlock(this, Blocks.OAK_FENCE, Blocks.FLOWERING_AZALEA_LEAVES);
+
+		hedgesTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "hedges"));
 	}
 
 	@Override
@@ -36,10 +38,5 @@ public class HedgesModule extends QuarkModule {
 		for (BlossomTree tree : BlossomTreesModule.trees.keySet())
 			new HedgeBlock(this, Blocks.OAK_FENCE, tree.leaf.getBlock());
 	}
-	
-	@Override
-	public void setup() {
-		hedgesTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "hedges"));
-	}
-	
+
 }

@@ -97,10 +97,7 @@ public class ParrotEggsModule extends QuarkModule {
 			});
 
 		}
-	}
 
-	@Override
-	public void setup() {
 		feedTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "parrot_feed"));
 	}
 

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_glass_pane_side_alt",
+  "textures": {
+    "pane": "quark:block/dirty_glass",
+    "edge": "quark:block/dirty_glass_pane_top"
+  }
+}

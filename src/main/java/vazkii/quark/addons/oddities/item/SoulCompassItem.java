@@ -16,6 +16,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.addons.oddities.module.TotemOfHoldingModule;
+import vazkii.quark.base.datagen.QuarkItemModelProvider;
 import vazkii.quark.base.item.QuarkItem;
 import vazkii.quark.base.module.QuarkModule;
 
@@ -131,5 +132,8 @@ public class SoulCompassItem extends QuarkItem {
 		return Math.atan2(blockpos.getZ() - entity.getZ(), blockpos.getX() - entity.getX());
 	}
 
-
+	@Override
+	public void dataGen(QuarkItemModelProvider models) {
+		// TODO
+	}
 }
