@@ -1,8 +1,1 @@
-{
-  "parent": "quark:block/vertical_slab",
-  "textures": {
-    "side": "quark:block/iron_plate",
-    "bottom": "quark:block/iron_plate",
-    "top": "quark:block/iron_plate"
-  }
-}
+{}

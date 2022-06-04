@@ -1,0 +1,12 @@
+{
+  "type": "quark:maintaining_smelting",
+  "copy_data_from": {
+    "item": "quark:frog_leg"
+  },
+  "ingredient": {
+    "item": "quark:frog_leg"
+  },
+  "result": "quark:cooked_frog_leg",
+  "experience": 0.35,
+  "cookingtime": 200
+}

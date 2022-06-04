@@ -2,7 +2,7 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "name": "azalea_wall_sign",
+      "name": "azalea_sign",
       "rolls": 1.0,
       "bonus_rolls": 0.0,
       "entries": [

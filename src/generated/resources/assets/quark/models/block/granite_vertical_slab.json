@@ -1,8 +1,1 @@
-{
-  "parent": "quark:block/vertical_slab",
-  "textures": {
-    "side": "minecraft:block/granite",
-    "bottom": "minecraft:block/granite",
-    "top": "minecraft:block/granite"
-  }
-}
+{}

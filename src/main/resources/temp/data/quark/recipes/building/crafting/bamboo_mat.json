@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "MM",
+    "MM"
+  ],
+  "key": {
+    "M": {
+      "item": "quark:bamboo_mat_carpet"
+    }
+  },
+  "result": {
+    "item": "quark:bamboo_mat",
+    "count": 2
+  },
+  "conditions": [
+    {
+      "type": "quark:flag",
+      "flag": "bamboo_mat"
+    }
+  ]
+} 

@@ -74,7 +74,9 @@ public class QuarkBlockStateProvider extends BlockStateProvider {
 	}
 
 	public void cubeBlockAndItem(Block block) {
-		simpleBlockItem(block, cubeAll(block));
+		ModelFile file = cubeAll(block);
+		simpleBlock(block, file);
+		simpleBlockItem(block, file);
 	}
 
 	@Override

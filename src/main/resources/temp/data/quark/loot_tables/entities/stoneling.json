@@ -1,0 +1,21 @@
+{
+  "pools": [
+    {
+      "name": "quark:stoneling",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 1,
+          "name": "quark:diamond_heart",
+          "conditions": [
+            {
+              "condition": "quark:flag",
+              "flag": "stoneling_drop_diamond_heart"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

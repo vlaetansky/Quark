@@ -1,6 +1,1 @@
-{
-  "parent": "quark:block/vertical_planks",
-  "textures": {
-    "all": "minecraft:block/spruce_planks"
-  }
-}
+{}

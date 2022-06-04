@@ -1,8 +1,1 @@
-{
-  "parent": "quark:block/vertical_slab",
-  "textures": {
-    "side": "quark:block/cut_soul_sandstone",
-    "bottom": "quark:block/cut_soul_sandstone",
-    "top": "quark:block/cut_soul_sandstone"
-  }
-}
+{}

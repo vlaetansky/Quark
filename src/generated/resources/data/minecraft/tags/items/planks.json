@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
+    "quark:azalea_planks",
+    "quark:vertical_azalea_planks",
     "quark:vertical_oak_planks",
     "quark:vertical_spruce_planks",
     "quark:vertical_birch_planks",
@@ -9,7 +11,7 @@
     "quark:vertical_dark_oak_planks",
     "quark:vertical_crimson_planks",
     "quark:vertical_warped_planks",
-    "quark:vertical_blossom_planks",
-    "quark:vertical_azalea_planks"
+    "quark:blossom_planks",
+    "quark:vertical_blossom_planks"
   ]
 }

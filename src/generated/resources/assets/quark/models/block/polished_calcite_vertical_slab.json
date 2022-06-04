@@ -1,8 +1,1 @@
-{
-  "parent": "quark:block/vertical_slab",
-  "textures": {
-    "side": "quark:block/polished_calcite",
-    "bottom": "quark:block/polished_calcite",
-    "top": "quark:block/polished_calcite"
-  }
-}
+{}

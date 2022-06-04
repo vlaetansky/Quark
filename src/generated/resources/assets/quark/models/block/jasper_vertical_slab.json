@@ -1,8 +1,1 @@
-{
-  "parent": "quark:block/vertical_slab",
-  "textures": {
-    "side": "quark:block/jasper",
-    "bottom": "quark:block/jasper",
-    "top": "quark:block/jasper"
-  }
-}
+{}

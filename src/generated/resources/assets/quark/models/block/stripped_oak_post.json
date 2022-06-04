@@ -1,6 +1,1 @@
-{
-  "parent": "quark:block/post",
-  "textures": {
-    "texture": "minecraft:block/stripped_oak_log"
-  }
-}
+{}

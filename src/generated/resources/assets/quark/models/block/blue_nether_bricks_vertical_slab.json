@@ -1,8 +1,1 @@
-{
-  "parent": "quark:block/vertical_slab",
-  "textures": {
-    "side": "quark:block/blue_nether_bricks",
-    "bottom": "quark:block/blue_nether_bricks",
-    "top": "quark:block/blue_nether_bricks"
-  }
-}
+{}

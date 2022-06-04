@@ -5,12 +5,8 @@
     "quark:dirt_bricks_slab",
     "quark:dirt_bricks_stairs",
     "quark:dirt_bricks_wall",
-    "quark:thatch",
-    "quark:thatch_slab",
-    "quark:thatch_stairs",
     "quark:gravisand",
-    "quark:cloud",
-    "quark:dirt_bricks_vertical_slab",
-    "quark:thatch_vertical_slab"
+    "quark:gunpowder_sack",
+    "quark:dirt_bricks_vertical_slab"
   ]
 }
