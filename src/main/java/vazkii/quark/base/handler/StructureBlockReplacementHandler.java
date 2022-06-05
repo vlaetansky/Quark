@@ -1,14 +1,13 @@
 package vazkii.quark.base.handler;
 
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.PiecesContainer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiFunction;
 
 public class StructureBlockReplacementHandler {
 
@@ -16,13 +15,13 @@ public class StructureBlockReplacementHandler {
 
 	private static final ThreadLocal<StructureHolder> structureHolder = new ThreadLocal<>();
 
-	public static BlockState getResultingBlockState(BlockState blockstate) {
+	public static BlockState getResultingBlockState(ServerLevelAccessor level, BlockState blockstate) {
 		StructureHolder curr = getCurrentStructureHolder();
 
 		if(curr != null && curr.currentStructure != null)
 			for(StructureFunction fun : functions) {
 
-				BlockState res = fun.apply(blockstate, curr);
+				BlockState res = fun.transformBlockstate(level, blockstate, curr);
 				if(res != null)
 					return res;
 			}
@@ -41,14 +40,17 @@ public class StructureBlockReplacementHandler {
 			structureHolder.set(curr);
 		}
 
-		curr.currentStructure = structure == null ? null : structure.feature;
+		curr.currentStructure = structure;
 		curr.currentComponents = components == null ? null : components.pieces();
 	}
 
-	public interface StructureFunction extends BiFunction<BlockState, StructureHolder, BlockState> {}
+	@FunctionalInterface
+	public interface StructureFunction {
+		BlockState transformBlockstate(ServerLevelAccessor level, BlockState state, StructureHolder structureHolder);
+	}
 
 	public static class StructureHolder {
-		public StructureFeature<?> currentStructure;
+		public ConfiguredStructureFeature<?, ?> currentStructure;
 		public List<StructurePiece> currentComponents;
 	}
 

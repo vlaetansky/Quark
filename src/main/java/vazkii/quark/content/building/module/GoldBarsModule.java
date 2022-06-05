@@ -1,11 +1,14 @@
 package vazkii.quark.content.building.module;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
 import vazkii.quark.base.block.QuarkPaneBlock;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.handler.StructureBlockReplacementHandler;
@@ -14,6 +17,8 @@ import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
+
+import java.util.Optional;
 
 @LoadModule(category = ModuleCategory.BUILDING)
 public class GoldBarsModule extends QuarkModule {
@@ -36,22 +41,15 @@ public class GoldBarsModule extends QuarkModule {
 		staticEnabled = enabled;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static BlockState getGenerationBarBlockState(BlockState current, StructureHolder structure) {
+	private static BlockState getGenerationBarBlockState(ServerLevelAccessor accessor, BlockState current, StructureHolder structure) {
 		if(staticEnabled && generateInNetherFortress && current.getBlock() == Blocks.NETHER_BRICK_FENCE) {
-			ResourceLocation res = structure.currentStructure.getRegistryName();
-			if(res == null)
+			Optional<ResourceKey<ConfiguredStructureFeature<?, ?>>> res = accessor.registryAccess().registry(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY).flatMap(
+					(it) -> it.getResourceKey(structure.currentStructure));
+			if (res.isEmpty())
 				return null; // no change
-			String name = res.toString();
 
-			if("minecraft:fortress".equals(name)) {
-				BlockState newState = gold_bars.defaultBlockState();
-				for(Property prop : current.getProperties())
-					// both blocks have same properties in vanilla, so this check isn't needed,
-					// but some mods add additional block states to fences, then this would fail
-					if (newState.hasProperty(prop))
-					newState = newState.setValue(prop, current.getValue(prop));
-				return newState;
+			if(res.get().equals(BuiltinStructures.FORTRESS)) {
+				return gold_bars.withPropertiesOf(current);
 			}
 		}
 

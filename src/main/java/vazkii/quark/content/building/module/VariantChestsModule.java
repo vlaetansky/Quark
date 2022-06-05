@@ -3,6 +3,7 @@ package vazkii.quark.content.building.module;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -11,17 +12,13 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
-import net.minecraft.world.level.levelgen.structure.StructurePiece;
-import net.minecraft.world.level.levelgen.structure.pools.LegacySinglePoolElement;
-import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -54,13 +51,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.BooleanSupplier;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @LoadModule(category = ModuleCategory.BUILDING, hasSubscriptions = true, antiOverlap = { "woodworks" })
 public class VariantChestsModule extends QuarkModule {
-
-	private static final Pattern VILLAGE_PIECE_PATTERN = Pattern.compile("\\w+\\[\\w+\\[([a-z_]+):village/(.+?)/.+]]");
 
 	private static final String DONK_CHEST = "Quark:DonkChest";
 
@@ -74,7 +67,7 @@ public class VariantChestsModule extends QuarkModule {
 	private static final List<Supplier<Block>> trappedChestTypes = new LinkedList<>();
 
 	private static final List<Block> allChests = new LinkedList<>();
-	private static final Map<String, Block> chestMappings = new HashMap<>();
+	private static final Map<ResourceLocation, Block> chestMappings = new HashMap<>();
 
 	@Config
 	private static boolean replaceWorldgenChests = true;
@@ -277,48 +270,22 @@ public class VariantChestsModule extends QuarkModule {
 
 				Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(right));
 				if (block != null && block != Blocks.AIR) {
-					chestMappings.put(left, block);
+					chestMappings.put(new ResourceLocation(left), block);
 				}
 			}
 		}
 	}
 
-	private static BlockState getGenerationChestBlockState(BlockState current, StructureHolder structure) {
+	private static BlockState getGenerationChestBlockState(ServerLevelAccessor accessor, BlockState current, StructureHolder structure) {
 		if (staticEnabled && replaceWorldgenChests && current.getBlock() == Blocks.CHEST) {
-			ResourceLocation res = structure.currentStructure.getRegistryName();
-			if (res == null)
+			Optional<ResourceLocation> res = accessor.registryAccess().registry(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY).map(
+					(it) -> it.getKey(structure.currentStructure));
+			if (res.isEmpty())
 				return null; // no change
-			String name = res.toString();
 
-			if ("minecraft:village".equals(name)) {
-				if (structure.currentComponents != null && structure.currentComponents.size() > 0) {
-					StructurePiece first = structure.currentComponents.get(0);
-					if (first instanceof PoolElementStructurePiece avp) {
-						StructurePoolElement jigsaw = avp.getElement();
-						if (jigsaw instanceof LegacySinglePoolElement legacyJigsaw) {
-							String type = legacyJigsaw.toString();
-							Matcher match = VILLAGE_PIECE_PATTERN.matcher(type);
-							if (match.matches()) {
-								String namespace = match.group(1);
-								String villageType = match.group(2);
-
-								name += "_" + villageType;
-								if (!namespace.equals("minecraft"))
-									name = name.replace("minecraft\\:", namespace);
-							}
-
-						}
-					}
-				}
-			}
-
-			if (chestMappings.containsKey(name)) {
-				Block block = chestMappings.get(name);
-				BlockState placeState = block.defaultBlockState();
-				if (placeState.getProperties().contains(ChestBlock.TYPE)) {
-					placeState = placeState.setValue(ChestBlock.FACING, current.getValue(ChestBlock.FACING)).setValue(ChestBlock.TYPE, current.getValue(ChestBlock.TYPE)).setValue(ChestBlock.WATERLOGGED, current.getValue(ChestBlock.WATERLOGGED));
-					return placeState;
-				}
+			if (chestMappings.containsKey(res.get())) {
+				Block block = chestMappings.get(res.get());
+				return block.withPropertiesOf(current);
 			}
 		}
 
