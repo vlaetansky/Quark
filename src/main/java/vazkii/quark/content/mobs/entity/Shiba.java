@@ -367,7 +367,7 @@ public class Shiba extends TamableAnimal {
 	@Override
 	protected SoundEvent getAmbientSound() {
 		if(random.nextInt(3) == 0)
-			return getHealth() < 10.0F ? SoundEvents.WOLF_WHINE : SoundEvents.WOLF_PANT;
+			return (getHealth() / getMaxHealth()) < 0.5f ? SoundEvents.WOLF_WHINE : SoundEvents.WOLF_PANT;
 		else
 			return SoundEvents.WOLF_AMBIENT;
 	}
