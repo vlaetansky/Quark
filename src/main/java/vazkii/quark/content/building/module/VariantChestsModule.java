@@ -91,7 +91,7 @@ public class VariantChestsModule extends QuarkModule {
 			"minecraft:ruined_portal=quark:crimson_chest",
 			"minecraft:bastion_remnant=quark:crimson_chest",
 			"minecraft:fortress=quark:nether_brick_chest",
-			"minecraft:endcity=quark:purpur_chest");
+			"minecraft:end_city=quark:purpur_chest");
 
 	private static final List<String> BUILT_IN_MOD_STRUCTURES = Arrays.asList(
 			"bettermineshafts:mineshaft=quark:oak_chest",
