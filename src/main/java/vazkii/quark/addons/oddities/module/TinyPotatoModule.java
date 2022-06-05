@@ -21,7 +21,9 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @LoadModule(category = ModuleCategory.ODDITIES, antiOverlap = "botania", hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class TinyPotatoModule extends QuarkModule {
@@ -57,15 +59,26 @@ public class TinyPotatoModule extends QuarkModule {
 		if (bakery != null) {
 			ResourceManager rm = bakery.resourceManager;
 
-			for (ResourceLocation model : rm.listResources("models/tiny_potato", s -> s.endsWith(".json"))) {
-				if ("quark".equals(model.getNamespace())) {
-					String path = model.getPath();
-					if ("models/tiny_potato/base.json".equals(path))
-						continue;
+			Set<String> usedNames = new HashSet<>();
 
-					path = path.substring("models/".length(), path.length() - ".json".length());
-					ForgeModelBakery.addSpecialModel(new ResourceLocation("quark", path));
-				}
+			// Register bosnia taters in packs afterwards so that quark overrides for quark tater
+			registerTaters("quark", usedNames, rm);
+			registerTaters("botania", usedNames, rm);
+		}
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private void registerTaters(String mod, Set<String> usedNames, ResourceManager rm) {
+		for (ResourceLocation model : rm.listResources("models/tiny_potato", s -> s.endsWith(".json"))) {
+			if (mod.equals(model.getNamespace())) {
+				String path = model.getPath();
+				if ("models/tiny_potato/base.json".equals(path) || usedNames.contains(path))
+					continue;
+
+				usedNames.add(path);
+
+				path = path.substring("models/".length(), path.length() - ".json".length());
+				ForgeModelBakery.addSpecialModel(new ResourceLocation("quark", path));
 			}
 		}
 	}
