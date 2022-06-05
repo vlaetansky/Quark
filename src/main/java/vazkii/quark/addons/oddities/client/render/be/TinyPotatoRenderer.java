@@ -32,7 +32,7 @@ import vazkii.quark.addons.oddities.module.TinyPotatoModule;
 import vazkii.quark.addons.oddities.util.TinyPotatoInfo;
 import vazkii.quark.content.tools.item.RuneItem;
 import vazkii.quark.content.tools.module.ColorRunesModule;
-import vazkii.quark.mixin.client.ModelManagerMixin;
+import vazkii.quark.mixin.client.accessor.AccessorModelManager;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -68,7 +68,7 @@ public class TinyPotatoRenderer implements BlockEntityRenderer<TinyPotatoBlockEn
 
 	private static BakedModel getModel(String name, boolean angry) {
 		ModelManager bmm = Minecraft.getInstance().getModelManager();
-		Map<ResourceLocation, BakedModel> mm = ((ModelManagerMixin) bmm).getBakedRegistry();
+		Map<ResourceLocation, BakedModel> mm = ((AccessorModelManager) bmm).getBakedRegistry();
 		BakedModel missing = bmm.getMissingModel();
 		ResourceLocation location = taterLocation(name);
 		BakedModel model = mm.get(location);

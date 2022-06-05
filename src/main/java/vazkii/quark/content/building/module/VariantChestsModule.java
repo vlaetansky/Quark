@@ -27,10 +27,8 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.arl.util.RegistryHelper;
-import vazkii.quark.base.Quark;
 import vazkii.quark.base.handler.StructureBlockReplacementHandler;
 import vazkii.quark.base.handler.StructureBlockReplacementHandler.StructureHolder;
 import vazkii.quark.base.module.LoadModule;
@@ -46,9 +44,8 @@ import vazkii.quark.content.building.block.be.VariantChestBlockEntity;
 import vazkii.quark.content.building.block.be.VariantTrappedChestBlockEntity;
 import vazkii.quark.content.building.client.render.be.VariantChestRenderer;
 import vazkii.quark.content.building.recipe.MixedExclusionRecipe;
+import vazkii.quark.mixin.accessor.AccessorAbstractChestedHorse;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.BooleanSupplier;
 
@@ -220,8 +217,6 @@ public class VariantChestsModule extends QuarkModule {
 			"valhelsia_structures:tower_ruin=quark:spruce_chest",
 			"valhelsia_structures:witch_hut=quark:spruce_chest");
 
-	private static final Method CHEST_EQUIP = ObfuscationReflectionHelper.findMethod(AbstractChestedHorse.class, "m_7609_");
-
 	@Override
 	public void register() {
 		ForgeRegistries.RECIPE_SERIALIZERS.register(MixedExclusionRecipe.SERIALIZER);
@@ -355,11 +350,7 @@ public class VariantChestsModule extends QuarkModule {
 
 						horse.setChest(true);
 						horse.createInventory();
-						try {
-							CHEST_EQUIP.invoke(horse);
-						} catch (IllegalAccessException | InvocationTargetException e) {
-							Quark.LOG.error("Failed to play chest equip sound", e);
-						}
+						((AccessorAbstractChestedHorse) horse).quark$playChestEquipsSound();
 					}
 				}
 			}

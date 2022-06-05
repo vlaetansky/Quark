@@ -1,4 +1,4 @@
-package vazkii.quark.mixin.client;
+package vazkii.quark.mixin.client.accessor;
 
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import java.util.Map;
 
 @Mixin(ModelManager.class)
-public interface ModelManagerMixin {
+public interface AccessorModelManager {
 
 	@Accessor
 	Map<ResourceLocation, BakedModel> getBakedRegistry();

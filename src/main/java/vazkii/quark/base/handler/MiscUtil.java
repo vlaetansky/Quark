@@ -59,6 +59,7 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.client.config.screen.AbstractQScreen;
 import vazkii.quark.content.experimental.module.EnchantmentsBegoneModule;
+import vazkii.quark.mixin.accessor.AccessorLootTable;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
@@ -85,7 +86,7 @@ public class MiscUtil {
 	};
 
 	public static void addToLootTable(LootTable table, LootPoolEntryContainer entry) {
-		List<LootPool> pools = ObfuscationReflectionHelper.getPrivateValue(LootTable.class, table, "f_79109_"); // Can't AT
+		List<LootPool> pools = ((AccessorLootTable) table).quark$getPools();
 		if (pools != null && !pools.isEmpty()) {
 			LootPool firstPool = pools.get(0);
 			LootPoolEntryContainer[] entries = firstPool.entries;

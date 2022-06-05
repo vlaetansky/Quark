@@ -24,7 +24,7 @@ import vazkii.quark.base.world.WorldGenWeights;
 import vazkii.quark.content.world.block.MonsterBoxBlock;
 import vazkii.quark.content.world.block.be.MonsterBoxBlockEntity;
 import vazkii.quark.content.world.gen.MonsterBoxGenerator;
-import vazkii.quark.mixin.LivingEntityAccessor;
+import vazkii.quark.mixin.accessor.AccessorLivingEntity;
 
 import java.util.ArrayList;
 
@@ -70,9 +70,9 @@ public class MonsterBoxModule extends QuarkModule {
 		if(enableExtraLootTable && entity.getCommandSenderWorld() instanceof ServerLevel serverLevel
 				&& entity.getPersistentData().getBoolean(TAG_MONSTER_BOX_SPAWNED)
 				&& entity.level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)
-				&& ((LivingEntityAccessor) entity).quark$lastHurtByPlayerTime() > 0) {
+				&& ((AccessorLivingEntity) entity).quark$lastHurtByPlayerTime() > 0) {
 			LootTable loot = serverLevel.getServer().getLootTables().get(MONSTER_BOX_LOOT_TABLE);
-			var generatedLoot = loot.getRandomItems(((LivingEntityAccessor) entity).quark$createLootContext(true, event.getSource()).create(LootContextParamSets.ENTITY));
+			var generatedLoot = loot.getRandomItems(((AccessorLivingEntity) entity).quark$createLootContext(true, event.getSource()).create(LootContextParamSets.ENTITY));
 			entity.captureDrops(new ArrayList<>());
 			for (ItemStack stack : generatedLoot)
 				entity.spawnAtLocation(stack);

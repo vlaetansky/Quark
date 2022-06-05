@@ -8,6 +8,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -16,7 +17,7 @@ import org.apache.commons.lang3.tuple.Triple;
 import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.recipe.ingredient.FlagIngredient;
-import vazkii.quark.base.util.PotionReflection;
+import vazkii.quark.mixin.accessor.AccessorPotionBrewing;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -111,16 +112,20 @@ public class BrewingHandler {
 	public static void setup() {
 		isInjectionPrepared = true;
 		for (Triple<Potion, Supplier<Ingredient>, Potion> triple : toRegister)
-			PotionReflection.addBrewingRecipe(triple.getLeft(), triple.getMiddle().get(), triple.getRight());
+			addBrewingRecipe(triple.getLeft(), triple.getMiddle().get(), triple.getRight());
 
 		toRegister.clear();
 	}
 
 	private static void add(String flag, Potion potion, Supplier<Ingredient> reagent, Potion to) {
 		if (isInjectionPrepared)
-			PotionReflection.addBrewingRecipe(potion, new FlagIngredient(reagent.get(), flag), to);
+			addBrewingRecipe(potion, new FlagIngredient(reagent.get(), flag), to);
 		else
 			toRegister.add(new ImmutableTriple<>(potion, () -> new FlagIngredient(reagent.get(), flag), to));
+	}
+
+	private static void addBrewingRecipe(Potion input, Ingredient reagent, Potion output) {
+		AccessorPotionBrewing.quark$getPotionMixes().add(new PotionBrewing.Mix<>(input, reagent, output));
 	}
 
 	private static Potion addPotion(MobEffectInstance eff, String baseName, String name) {

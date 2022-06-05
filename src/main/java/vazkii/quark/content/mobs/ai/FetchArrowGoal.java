@@ -4,11 +4,9 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.AbstractArrow.Pickup;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import vazkii.quark.content.mobs.entity.Shiba;
+import vazkii.quark.mixin.accessor.AccessorAbstractArrow;
 
-import java.lang.reflect.Method;
 import java.util.EnumSet;
 
 public class FetchArrowGoal extends Goal {
@@ -40,16 +38,8 @@ public class FetchArrowGoal extends Goal {
 		}
 
 		double dist = shiba.distanceTo(fetching);
-		if(dist < 3 && fetching.isAlive()) {
-			try {
-				// getArrowStack is non AT-able
-				Method m = ObfuscationReflectionHelper.findMethod(fetching.getClass(), "m_7941_"); // getPickupItem
-				m.setAccessible(true);
-				ItemStack stack = (ItemStack) m.invoke(fetching);
-				shiba.setMouthItem(stack);
-			} catch (ReflectiveOperationException e) {
-				e.printStackTrace();
-			}
+		if(dist < 3 && fetching.isAlive() && fetching.pickup == Pickup.ALLOWED) {
+			shiba.setMouthItem(((AccessorAbstractArrow) fetching).quark$getPickupItem());
 			fetching.discard();
 		}
 
