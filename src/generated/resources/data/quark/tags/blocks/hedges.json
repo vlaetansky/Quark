@@ -1,6 +1,16 @@
 {
   "replace": false,
   "values": [
+    "quark:golden_apple_crate",
+    "quark:apple_crate",
+    "quark:potato_crate",
+    "quark:carrot_crate",
+    "quark:beetroot_crate",
+    "quark:cocoa_beans_sack",
+    "quark:nether_wart_sack",
+    "quark:gunpowder_sack",
+    "quark:berry_sack",
+    "quark:glowberry_sack",
     "quark:oak_hedge",
     "quark:birch_hedge",
     "quark:spruce_hedge",
@@ -9,11 +19,11 @@
     "quark:dark_oak_hedge",
     "quark:azalea_hedge",
     "quark:flowering_azalea_hedge",
-    "quark:blue_blossom_hedge",
     "quark:pink_blossom_hedge",
+    "quark:lavender_blossom_hedge",
     "quark:red_blossom_hedge",
     "quark:yellow_blossom_hedge",
-    "quark:lavender_blossom_hedge",
+    "quark:blue_blossom_hedge",
     "quark:orange_blossom_hedge"
   ]
 }

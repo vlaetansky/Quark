@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "quark:azalea_door",
-    "quark:blossom_door"
+    "quark:blossom_door",
+    "quark:azalea_door"
   ]
 }

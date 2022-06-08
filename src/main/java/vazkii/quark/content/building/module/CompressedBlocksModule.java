@@ -9,13 +9,13 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import vazkii.quark.base.block.QuarkBlock;
-import vazkii.quark.base.block.QuarkFlammableBlock;
 import vazkii.quark.base.block.QuarkFlammablePillarBlock;
 import vazkii.quark.base.handler.FuelHandler;
 import vazkii.quark.base.module.LoadModule;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.base.module.config.Config;
+import vazkii.quark.content.building.block.CrateLikeBlock;
 
 import java.util.List;
 import java.util.function.BooleanSupplier;
@@ -141,7 +141,7 @@ public class CompressedBlocksModule extends QuarkModule {
 	}
 
 	private Block crate(String name, MaterialColor color, boolean compost, BooleanSupplier cond) {
-		Block block = new QuarkFlammableBlock(name + "_crate", this, CreativeModeTab.TAB_DECORATIONS, 150,
+		Block block = new CrateLikeBlock(name + "_crate", this, CreativeModeTab.TAB_DECORATIONS, 150,
 				Block.Properties.of(Material.WOOD, color)
 				.strength(1.5F)
 				.sound(SoundType.WOOD))
@@ -157,7 +157,7 @@ public class CompressedBlocksModule extends QuarkModule {
 	}
 
 	private Block sack(String name, Material material, MaterialColor color, int light, boolean compost, BooleanSupplier cond) {
-		Block block = new QuarkFlammableBlock(name + "_sack", this, CreativeModeTab.TAB_DECORATIONS, 150,
+		Block block = new CrateLikeBlock(name + "_sack", this, CreativeModeTab.TAB_DECORATIONS, 150,
 				Block.Properties.of(material, color)
 				.strength(0.5F)
 				.lightLevel(s -> light)

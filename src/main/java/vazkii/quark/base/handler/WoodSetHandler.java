@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.CreativeModeTab;
@@ -105,7 +106,7 @@ public class WoodSetHandler {
 		set.strippedPost = new WoodPostBlock(module, set.fence, "stripped_", false).setCondition(() -> ModuleLoader.INSTANCE.isModuleEnabledOrOverlapping(WoodenPostsModule.class));
 		set.verticalPlanks = VerticalPlanksModule.add(name, set.planks, module).setCondition(() -> ModuleLoader.INSTANCE.isModuleEnabledOrOverlapping(VerticalPlanksModule.class));
 
-		VariantChestsModule.addChest(name, module, Block.Properties.copy(Blocks.CHEST), true);
+		VariantChestsModule.addChest(name, module, new ResourceLocation(Quark.MOD_ID, "block/" + name + "_planks"), Block.Properties.copy(Blocks.CHEST), true);
 
 		set.signItem = new QuarkSignItem(module, set.sign, set.wallSign);
 		set.boatItem = new QuarkBoatItem(name, module);

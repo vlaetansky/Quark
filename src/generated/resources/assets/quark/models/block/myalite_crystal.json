@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "quark:block/cube_all_tinted",
   "textures": {
     "all": "quark:block/myalite_crystal"
   }

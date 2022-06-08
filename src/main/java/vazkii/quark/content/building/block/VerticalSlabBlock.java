@@ -49,6 +49,7 @@ import vazkii.quark.base.block.QuarkSlabBlock;
 import vazkii.quark.base.datagen.QuarkBlockStateProvider;
 import vazkii.quark.base.datagen.QuarkLootTableProvider;
 import vazkii.quark.base.module.QuarkModule;
+import vazkii.quark.content.world.block.IMyaliteColorProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -216,7 +217,10 @@ public class VerticalSlabBlock extends QuarkBlock implements SimpleWaterloggedBl
 				if (texture.getPath().contains("quartz"))
 					texture = new ResourceLocation(texture.getNamespace(), texture.getPath().replace("quartz", "quartz_block"));
 			}
-			states.verticalSlabBlock(this, states.baseBlockTexture(block), texture);
+			if (trueParent instanceof IMyaliteColorProvider)
+				states.tintedVerticalSlabBlock(this, states.baseBlockTexture(block), texture);
+			else
+				states.verticalSlabBlock(this, states.baseBlockTexture(block), texture);
 		}
 		// If we can't find that block, just do it manually
 		states.simpleBlockItem(this);

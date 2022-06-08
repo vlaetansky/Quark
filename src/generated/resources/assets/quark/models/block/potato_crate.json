@@ -1,6 +1,8 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube_bottom_top",
   "textures": {
-    "all": "quark:block/potato_crate"
+    "side": "quark:block/potato_crate",
+    "bottom": "quark:block/potato_crate_bottom",
+    "top": "quark:block/potato_crate_top"
   }
 }

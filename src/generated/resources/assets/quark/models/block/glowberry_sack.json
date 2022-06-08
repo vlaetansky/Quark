@@ -1,6 +1,8 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube_bottom_top",
   "textures": {
-    "all": "quark:block/glowberry_sack"
+    "side": "quark:block/glowberry_sack",
+    "bottom": "quark:block/glowberry_sack_bottom",
+    "top": "quark:block/glowberry_sack_top"
   }
 }

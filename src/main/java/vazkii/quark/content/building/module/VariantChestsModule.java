@@ -233,12 +233,12 @@ public class VariantChestsModule extends QuarkModule {
 	public void register() {
 		ForgeRegistries.RECIPE_SERIALIZERS.register(MixedExclusionRecipe.SERIALIZER);
 
-		VANILLA_WOODS.forEach(s -> addChest(s.name(), Blocks.CHEST));
+		VANILLA_WOODS.forEach(s -> addChest(s.name(), new ResourceLocation("blocks/" + s.name() + "_planks"), Blocks.CHEST));
 		MOD_WOODS.forEach(s -> addModChest(s, Blocks.CHEST));
 
-		addChest("nether_brick", Blocks.NETHER_BRICKS);
-		addChest("purpur", Blocks.PURPUR_BLOCK);
-		addChest("prismarine", Blocks.PRISMARINE);
+		addChest("nether_brick", new ResourceLocation("blocks/nether_bricks"), Blocks.NETHER_BRICKS);
+		addChest("purpur", new ResourceLocation("blocks/purpur_block"), Blocks.PURPUR_BLOCK);
+		addChest("prismarine", new ResourceLocation("blocks/prismarine"), Blocks.PRISMARINE);
 
 		StructureBlockReplacementHandler.functions.add(VariantChestsModule::getGenerationChestBlockState);
 	}
@@ -325,18 +325,18 @@ public class VariantChestsModule extends QuarkModule {
 		return null; // no change
 	}
 
-	private void addChest(String name, Block from) {
-		addChest(name, Block.Properties.copy(from));
+	private void addChest(String name, ResourceLocation particleName, Block from) {
+		addChest(name, particleName, Block.Properties.copy(from));
 	}
 
-	public void addChest(String name, Block.Properties props) {
-		addChest(name, this, props, false);
+	public void addChest(String name, ResourceLocation particleName, Block.Properties props) {
+		addChest(name, this, particleName, props, false);
 	}
 
-	public static void addChest(String name, QuarkModule module, Block.Properties props, boolean external) {
-		BooleanSupplier cond = external ? (() -> ModuleLoader.INSTANCE.isModuleEnabled(VariantChestsModule.class)) : (() -> true);
+	public static void addChest(String name, QuarkModule module, ResourceLocation particleName, Block.Properties props, boolean internal) {
+		BooleanSupplier cond = internal ? (() -> ModuleLoader.INSTANCE.isModuleEnabled(VariantChestsModule.class)) : (() -> true);
 
-		chestTypes.add(() -> new VariantChestBlock(name, module, () -> chestTEType, props).setCondition(cond));
+		chestTypes.add(() -> new VariantChestBlock(name, module, () -> chestTEType, particleName, props).setCondition(cond));
 		trappedChestTypes.add(() -> new VariantTrappedChestBlock(name, module, () -> trappedChestTEType, props).setCondition(cond));
 	}
 
@@ -348,7 +348,7 @@ public class VariantChestsModule extends QuarkModule {
 	}
 
 	private void addModChest(String name, String mod, Block.Properties props) {
-		chestTypes.add(() -> new VariantChestBlock.Compat(name, mod, this, () -> chestTEType, props));
+		chestTypes.add(() -> new VariantChestBlock.Compat(name, mod, this, () -> chestTEType, new ResourceLocation(mod, name + "_planks"), props));
 		trappedChestTypes.add(() -> new VariantTrappedChestBlock.Compat(name, mod, this, () -> trappedChestTEType, props));
 	}
 

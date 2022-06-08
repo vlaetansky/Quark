@@ -1,6 +1,8 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube_bottom_top",
   "textures": {
-    "all": "quark:block/cocoa_beans_sack"
+    "side": "quark:block/cocoa_beans_sack",
+    "bottom": "quark:block/cocoa_beans_sack_bottom",
+    "top": "quark:block/cocoa_beans_sack_top"
   }
 }

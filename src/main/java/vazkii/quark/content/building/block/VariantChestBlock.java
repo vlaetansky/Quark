@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -40,16 +41,18 @@ import java.util.function.Supplier;
 public class VariantChestBlock extends ChestBlock implements IBlockItemProvider, IQuarkBlock, IChestTextureProvider {
 
 	private final QuarkModule module;
+	private final ResourceLocation particleName;
 	private BooleanSupplier enabledSupplier = () -> true;
 
 	private final String path;
 
-	public VariantChestBlock(String type, QuarkModule module, Supplier<BlockEntityType<? extends ChestBlockEntity>> supplier, Properties props) {
+	public VariantChestBlock(String type, QuarkModule module, Supplier<BlockEntityType<? extends ChestBlockEntity>> supplier, ResourceLocation particleName, Properties props) {
 		super(props, supplier);
 		RegistryHelper.registerBlock(this, type + "_chest");
 		RegistryHelper.setCreativeTab(this, CreativeModeTab.TAB_DECORATIONS);
 
 		this.module = module;
+		this.particleName = particleName;
 
 		path = (this instanceof Compat ? "compat/" : "") + type + "/";
 	}
@@ -105,7 +108,7 @@ public class VariantChestBlock extends ChestBlock implements IBlockItemProvider,
 
 	@Override
 	public void dataGen(QuarkBlockStateProvider states) {
-		// TODO
+		states.simpleBlock(this, states.models().getBuilder(getRegistryName().getPath()).texture("particle", particleName));
 	}
 
 	public static class Item extends BlockItem {
@@ -140,11 +143,10 @@ public class VariantChestBlock extends ChestBlock implements IBlockItemProvider,
 
 	public static class Compat extends VariantChestBlock {
 
-		public Compat(String type, String mod, QuarkModule module, Supplier<BlockEntityType<? extends ChestBlockEntity>> supplier, Properties props) {
-			super(type, module, supplier, props);
+		public Compat(String type, String mod, QuarkModule module, Supplier<BlockEntityType<? extends ChestBlockEntity>> supplier, ResourceLocation particleName, Properties props) {
+			super(type, module, supplier, particleName, props);
 			setCondition(() -> ModList.get().isLoaded(mod));
 		}
-
 	}
 
 }

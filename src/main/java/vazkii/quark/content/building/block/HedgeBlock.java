@@ -8,6 +8,7 @@ import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -41,16 +42,24 @@ import java.util.function.BooleanSupplier;
 public class HedgeBlock extends FenceBlock implements IQuarkBlock, IBlockColorProvider {
 
 	private final QuarkModule module;
+	private final ResourceLocation woodBase;
+	private final Block fence;
 	private final Block leaf;
 	private BooleanSupplier enabledSupplier = () -> true;
 
 	public static final BooleanProperty EXTEND = BooleanProperty.create("extend");
 
 	public HedgeBlock(QuarkModule module, Block fence, Block leaf) {
+		this(module, fence, fence.getRegistryName(), leaf);
+	}
+
+	public HedgeBlock(QuarkModule module, Block fence, ResourceLocation woodBase, Block leaf) {
 		super(Block.Properties.copy(fence));
 
 		this.module = module;
+		this.fence = fence;
 		this.leaf = leaf;
+		this.woodBase = woodBase;
 
 		if (leaf instanceof BlossomLeavesBlock) {
 			String colorName = leaf.getRegistryName().getPath().replaceAll("_blossom_leaves", "");
@@ -146,7 +155,10 @@ public class HedgeBlock extends FenceBlock implements IQuarkBlock, IBlockColorPr
 
 	@Override
 	public void dataGen(QuarkBlockStateProvider states) {
-		ModelFile post = states.models().getExistingFile(states.blockTexture(this, "_post"));
+		ModelFile post = states.models().getBuilder(getRegistryName().getPath() + "_post")
+				.parent(states.models().getExistingFile(states.modLoc("block/hedge_post")))
+					.texture("log", new ResourceLocation(woodBase.getNamespace(), "block/" + woodBase.getPath().replace("_fence", "_planks")))
+					.texture("leaf", states.blockTexture(leaf));
 
 		states.fourWayBlock(this, post, states.models().getExistingFile(states.blockTexture(this, "_side")));
 		states.simpleBlockItem(this, post);

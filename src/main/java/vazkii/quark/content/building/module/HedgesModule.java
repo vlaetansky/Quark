@@ -27,8 +27,8 @@ public class HedgesModule extends QuarkModule {
 		new HedgeBlock(this, Blocks.ACACIA_FENCE, Blocks.ACACIA_LEAVES);
 		new HedgeBlock(this, Blocks.DARK_OAK_FENCE, Blocks.DARK_OAK_LEAVES);
 
-		new HedgeBlock(this, Blocks.OAK_FENCE, Blocks.AZALEA_LEAVES);
-		new HedgeBlock(this, Blocks.OAK_FENCE, Blocks.FLOWERING_AZALEA_LEAVES);
+		new HedgeBlock(this, Blocks.OAK_FENCE, new ResourceLocation(Quark.MOD_ID, "azalea_planks"), Blocks.AZALEA_LEAVES);
+		new HedgeBlock(this, Blocks.OAK_FENCE, new ResourceLocation(Quark.MOD_ID, "azalea_planks"), Blocks.FLOWERING_AZALEA_LEAVES);
 
 		hedgesTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "hedges"));
 	}
@@ -36,7 +36,7 @@ public class HedgesModule extends QuarkModule {
 	@Override
 	public void postRegister() {
 		for (BlossomTree tree : BlossomTreesModule.trees.keySet())
-			new HedgeBlock(this, Blocks.OAK_FENCE, tree.leaf.getBlock());
+			new HedgeBlock(this, Blocks.OAK_FENCE, new ResourceLocation(Quark.MOD_ID, "blossom_planks"), tree.leaf.getBlock());
 	}
 
 }

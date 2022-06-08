@@ -1,6 +1,8 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube_bottom_top",
   "textures": {
-    "all": "quark:block/carrot_crate"
+    "side": "quark:block/carrot_crate",
+    "bottom": "quark:block/carrot_crate_bottom",
+    "top": "quark:block/carrot_crate_top"
   }
 }

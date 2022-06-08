@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "quark:azalea_planks_slab",
-    "quark:blossom_planks_slab"
+    "quark:blossom_planks_slab",
+    "quark:azalea_planks_slab"
   ]
 }

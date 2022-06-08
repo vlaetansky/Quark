@@ -26,6 +26,11 @@ public class QuarkBlockStateProvider extends BlockStateProvider {
 		super(gen, modid, exFileHelper);
 	}
 
+	public ResourceLocation blockTexture(Block block, String replace, String with) {
+		ResourceLocation base = blockTexture(block);
+		return new ResourceLocation(base.getNamespace(), base.getPath().replace(replace, with));
+	}
+
 	public ResourceLocation blockTexture(Block block, String extension) {
 		ResourceLocation base = blockTexture(block);
 		return new ResourceLocation(base.getNamespace(), base.getPath() + extension);
@@ -98,6 +103,21 @@ public class QuarkBlockStateProvider extends BlockStateProvider {
 				.texture("side", side)
 				.texture("bottom", bottom)
 				.texture("top", top);
+	}
+
+	public void tintedVerticalSlabBlock(VerticalSlabBlock block, ResourceLocation doubleslab, ResourceLocation texture) {
+		tintedVerticalSlabBlock(block, doubleslab, texture, texture, texture);
+	}
+
+	public BlockModelBuilder tintedVerticalSlab(String name, ResourceLocation side, ResourceLocation bottom, ResourceLocation top) {
+		return models().withExistingParent(name, modLoc("block/vertical_slab_tinted"))
+			.texture("side", side)
+			.texture("bottom", bottom)
+			.texture("top", top);
+	}
+
+	public void tintedVerticalSlabBlock(VerticalSlabBlock block, ResourceLocation doubleslab, ResourceLocation side, ResourceLocation bottom, ResourceLocation top) {
+		verticalSlabBlock(block, tintedVerticalSlab(block.getRegistryName().getPath(), side, bottom, top), models().getExistingFile(doubleslab));
 	}
 
 	public void verticalSlabBlock(VerticalSlabBlock block, ResourceLocation doubleslab, ResourceLocation side, ResourceLocation bottom, ResourceLocation top) {

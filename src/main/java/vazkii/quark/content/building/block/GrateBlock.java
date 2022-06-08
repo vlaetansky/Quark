@@ -37,6 +37,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.event.ForgeEventFactory;
 import vazkii.quark.base.block.QuarkBlock;
 import vazkii.quark.base.block.SimpleFluidloggedBlock;
+import vazkii.quark.base.datagen.QuarkBlockStateProvider;
 import vazkii.quark.base.handler.RenderLayerHandler;
 import vazkii.quark.base.handler.RenderLayerHandler.RenderTypeSkeleton;
 import vazkii.quark.base.module.QuarkModule;
@@ -217,5 +218,10 @@ public class GrateBlock extends QuarkBlock implements SimpleFluidloggedBlock {
 			return Fluids.LAVA;
 		else
 			return Fluids.EMPTY;
+	}
+
+	@Override
+	public void dataGen(QuarkBlockStateProvider states) {
+		states.simpleBlock(this, states.models().getExistingFile(states.blockTexture(this)));
 	}
 }
