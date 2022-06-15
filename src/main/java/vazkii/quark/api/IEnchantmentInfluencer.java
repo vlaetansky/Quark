@@ -1,6 +1,7 @@
 package vazkii.quark.api;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
@@ -15,6 +16,15 @@ public interface IEnchantmentInfluencer {
 	float[] getEnchantmentInfluenceColor(BlockGetter world, BlockPos pos, BlockState state);
 
 	default int getInfluenceStack(BlockGetter world, BlockPos pos, BlockState state) {
+		return 1;
+	}
+
+	@Nullable
+	default ParticleOptions getExtraParticleOptions(BlockGetter world, BlockPos pos, BlockState state) {
+		return null;
+	}
+
+	default double getExtraParticleChance(BlockGetter world, BlockPos pos, BlockState state) {
 		return 1;
 	}
 

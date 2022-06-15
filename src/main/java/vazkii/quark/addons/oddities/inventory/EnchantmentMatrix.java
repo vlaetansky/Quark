@@ -53,8 +53,11 @@ public class EnchantmentMatrix {
 		computeMatrix();
 	}
 
-	public boolean canGeneratePiece(int bookshelfPower, int enchantability) {
+	public boolean canGeneratePiece(Map<Enchantment, Integer> influences, int bookshelfPower, int enchantability) {
 		if(enchantability == 0)
+			return false;
+
+		if (!generatePiece(influences, bookshelfPower, true))
 			return false;
 
 		if(book) {
@@ -91,7 +94,7 @@ public class EnchantmentMatrix {
 		return 1 + (MatrixEnchantingModule.piecePriceScale == 0 ? 0 : count / MatrixEnchantingModule.piecePriceScale);
 	}
 
-	public boolean generatePiece(Map<Enchantment, Integer> influences, int bookshelfPower) {
+	public boolean generatePiece(Map<Enchantment, Integer> influences, int bookshelfPower, boolean simulate) {
 		EnchantmentDataWrapper data = generateRandomEnchantment(influences, bookshelfPower);
 		if (data == null)
 			return false;
@@ -103,21 +106,24 @@ public class EnchantmentMatrix {
 
 		if(type == -1) {
 			type = typeCount % PIECE_VARIANTS;
-			typeCount++;
+			if (!simulate)
+				typeCount++;
 		}
 
 		Piece piece = new Piece(data, type);
 		piece.generateBlocks();
 
-		pieces.put(count, piece);
-		totalValue.put(piece.enchant, totalValue.getOrDefault(piece.enchant, 0) + piece.getValue());
-		benchedPieces.add(count);
-		count++;
+		if (!simulate) {
+			pieces.put(count, piece);
+			totalValue.put(piece.enchant, totalValue.getOrDefault(piece.enchant, 0) + piece.getValue());
+			benchedPieces.add(count);
+			count++;
 
-		if(book && count == 1) {
-			for (int i = 0; i < 2; i++)
-				if (rng.nextBoolean())
-					count++;
+			if (book && count == 1) {
+				for (int i = 0; i < 2; i++)
+					if (rng.nextBoolean())
+						count++;
+			}
 		}
 
 		return true;

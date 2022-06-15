@@ -4,6 +4,7 @@ import com.mojang.math.Vector3f;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
@@ -126,26 +127,33 @@ public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements
 							break;
 
 						if(showInfluences) {
-							IEnchantmentInfluencer influencer = MatrixEnchantingTableBlockEntity.getInfluencerFromBlock(state);
+							IEnchantmentInfluencer influencer = MatrixEnchantingTableBlockEntity.getInfluencerFromBlock(state, worldIn, blockpos);
 
 							if (influencer != null) {
 								float[] comp = influencer.getEnchantmentInfluenceColor(worldIn, blockpos, state);
+								ParticleOptions extra = influencer.getExtraParticleOptions(worldIn, blockpos, state);
+								double chance = influencer.getExtraParticleChance(worldIn, blockpos, state);
 
-								if (comp != null) {
+								if (comp != null || extra != null) {
 									int steps = 20;
 									double dx = (double) (pos.getX() - blockpos.getX()) / steps;
 									double dy = (double) (pos.getY() - blockpos.getY()) / steps;
 									double dz = (double) (pos.getZ() - blockpos.getZ()) / steps;
 
 									for (int p = 0; p < steps; p++) {
-										if (rand.nextDouble() < 0.5)
+										boolean doDust = comp != null && rand.nextDouble() < 0.5;
+										boolean doExtra = extra != null && rand.nextDouble() < chance;
+										if (!doDust && !doExtra)
 											continue;
 
 										double px = blockpos.getX() + 0.5 + dx * p + rand.nextDouble() * 0.2 - 0.1;
 										double py = blockpos.getY() + 0.5 + dy * p + Math.sin((double) p / steps * Math.PI) * 0.5 + rand.nextDouble() * 0.2 - 0.1;
 										double pz = blockpos.getZ() + 0.5 + dz * p + rand.nextDouble() * 0.2 - 0.1;
 
-										worldIn.addParticle(new DustParticleOptions(new Vector3f(comp[0], comp[1], comp[2]), 1F), px, py, pz, 0, 0, 0);
+										if (doDust)
+											worldIn.addParticle(new DustParticleOptions(new Vector3f(comp[0], comp[1], comp[2]), 1F), px, py, pz, 0, 0, 0);
+										if (doExtra)
+											worldIn.addParticle(extra, px, py, pz, 0, 0, 0);
 									}
 								}
 							}

@@ -95,6 +95,9 @@ public class MatrixEnchantingModule extends QuarkModule {
 	@Config(description = "Matrix Enchanting can be done with water instead of air around the enchanting table. Set this to false to disable this behaviour.")
 	public static boolean allowUnderwaterEnchanting = true;
 
+	@Config(description = "Candles with soul sand below them or below the bookshelves dampen enchantments instead of influence them.")
+	public static boolean soulCandlesInvert = true;
+
 	@Config(description = "A list of enchantment IDs you don't want the enchantment table to be able to create")
 	public static List<String> disallowedEnchantments = Lists.newArrayList();
 

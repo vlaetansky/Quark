@@ -2,8 +2,11 @@ package vazkii.quark.addons.oddities.block.be;
 
 import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -28,6 +31,7 @@ import vazkii.quark.addons.oddities.inventory.EnchantmentMatrix;
 import vazkii.quark.addons.oddities.inventory.EnchantmentMatrix.Piece;
 import vazkii.quark.addons.oddities.inventory.MatrixEnchantingMenu;
 import vazkii.quark.addons.oddities.module.MatrixEnchantingModule;
+import vazkii.quark.addons.oddities.util.Influence;
 import vazkii.quark.api.IEnchantmentInfluencer;
 
 import javax.annotation.Nonnull;
@@ -120,11 +124,11 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 	}
 
 	private boolean generateAndPay(EnchantmentMatrix matrix, Player player) {
-		if(matrix.canGeneratePiece(bookshelfPower, enchantability) && matrix.validateXp(player, bookshelfPower)) {
+		if(matrix.canGeneratePiece(influences, bookshelfPower, enchantability) && matrix.validateXp(player, bookshelfPower)) {
 			boolean creative = player.getAbilities().instabuild;
 			int cost = matrix.getNewPiecePrice();
 			if(charge > 0 || creative) {
-				if (matrix.generatePiece(influences, bookshelfPower)) {
+				if (matrix.generatePiece(influences, bookshelfPower, false)) {
 					if (!creative) {
 						player.giveExperienceLevels(-cost);
 						charge = Math.max(charge - 1, 0);
@@ -259,7 +263,7 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 		BlockState state = world.getBlockState(pos);
 
 		if(MatrixEnchantingModule.allowInfluencing) {
-			IEnchantmentInfluencer influencer = getInfluencerFromBlock(state);
+			IEnchantmentInfluencer influencer = getInfluencerFromBlock(state, world, pos);
 
 			if(influencer != null) {
 				int count = influencer.getInfluenceStack(world, pos, state);
@@ -271,13 +275,15 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 				if(!influencedEnchants.isEmpty() || !dampenedEnchants.isEmpty()) {
 					for(Enchantment e : influencedEnchants) {
 						int curr = influences.getOrDefault(e, 0);
-						influences.put(e, Mth.clamp(curr + count, -MatrixEnchantingModule.influenceMax, MatrixEnchantingModule.influenceMax));
+						influences.put(e, curr + count);
 					}
 
 					for(Enchantment e : dampenedEnchants) {
 						int curr = influences.getOrDefault(e, 0);
-						influences.put(e, Mth.clamp(curr - count, -MatrixEnchantingModule.influenceMax, MatrixEnchantingModule.influenceMax));
+						influences.put(e, curr - count);
 					}
+
+					influences.replaceAll((e, v) -> Mth.clamp(v, -MatrixEnchantingModule.influenceMax, MatrixEnchantingModule.influenceMax));
 
 					return 1;
 				}
@@ -337,26 +343,41 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 	}
 
 	@Nullable
-	public static IEnchantmentInfluencer getInfluencerFromBlock(BlockState state) {
+	public static IEnchantmentInfluencer getInfluencerFromBlock(BlockState state, Level world, BlockPos pos) {
 		if (state.getBlock() instanceof IEnchantmentInfluencer influencer)
 			return influencer;
 		else if (MatrixEnchantingModule.customInfluences.containsKey(state))
 			return MatrixEnchantingModule.customInfluences.get(state);
-		return CandleInfluencer.forBlock(state.getBlock());
+		return CandleInfluencer.forBlock(state.getBlock(), world, pos);
 	}
 
-	private static class CandleInfluencer implements IEnchantmentInfluencer {
+	private record CandleInfluencer(boolean inverted) implements IEnchantmentInfluencer {
 
 		private static final List<Block> CANDLES = Lists.newArrayList(Blocks.WHITE_CANDLE, Blocks.ORANGE_CANDLE, Blocks.MAGENTA_CANDLE, Blocks.LIGHT_BLUE_CANDLE, Blocks.YELLOW_CANDLE, Blocks.LIME_CANDLE, Blocks.PINK_CANDLE, Blocks.GRAY_CANDLE, Blocks.LIGHT_GRAY_CANDLE, Blocks.CYAN_CANDLE, Blocks.PURPLE_CANDLE, Blocks.BLUE_CANDLE, Blocks.BROWN_CANDLE, Blocks.GREEN_CANDLE, Blocks.RED_CANDLE, Blocks.BLACK_CANDLE);
-		private static final CandleInfluencer INSTANCE = new CandleInfluencer();
+		private static final CandleInfluencer INSTANCE = new CandleInfluencer(false);
+		private static final CandleInfluencer INVERTED_INSTANCE = new CandleInfluencer(true);
 
 		@Nullable
-		public static CandleInfluencer forBlock(Block block) {
+		public static CandleInfluencer forBlock(Block block, Level world, BlockPos pos) {
 			if (MatrixEnchantingModule.candleInfluencingFailed)
 				return null;
 
-			if(CANDLES.contains(block))
+			if (CANDLES.contains(block)) {
+				if (MatrixEnchantingModule.soulCandlesInvert) {
+					BlockPos posBelow = pos.below();
+					BlockState below = world.getBlockState(posBelow);
+					if (below.is(BlockTags.SOUL_FIRE_BASE_BLOCKS))
+						return INVERTED_INSTANCE;
+					else if (below.getEnchantPowerBonus(world, posBelow) > 0) {
+						posBelow = posBelow.below();
+						below = world.getBlockState(posBelow);
+						if (below.is(BlockTags.SOUL_FIRE_BASE_BLOCKS))
+							return INVERTED_INSTANCE;
+					}
+				}
+
 				return INSTANCE;
+			}
 
 			return null;
 		}
@@ -375,6 +396,19 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 			return color == null ? null : color.getTextureDiffuseColors();
 		}
 
+		@Nullable
+		@Override
+		public ParticleOptions getExtraParticleOptions(BlockGetter world, BlockPos pos, BlockState state) {
+			if (inverted)
+				return ParticleTypes.SOUL;
+			return null;
+		}
+
+		@Override
+		public double getExtraParticleChance(BlockGetter world, BlockPos pos, BlockState state) {
+			return 0.25;
+		}
+
 		@Override
 		public int getInfluenceStack(BlockGetter world, BlockPos pos, BlockState state) {
 			return state.getValue(CandleBlock.LIT) ? state.getValue(CandleBlock.CANDLES) : 0;
@@ -383,13 +417,21 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 		@Override
 		public boolean influencesEnchantment(BlockGetter world, BlockPos pos, BlockState state, Enchantment enchantment) {
 			DyeColor color = getColor(state);
-			return color != null && MatrixEnchantingModule.candleInfluences.get(color).boost().contains(enchantment);
+			if (color == null)
+				return false;
+			Influence influence = MatrixEnchantingModule.candleInfluences.get(color);
+			List<Enchantment> boosts = inverted ? influence.dampen() : influence.boost();
+			return boosts.contains(enchantment);
 		}
 
 		@Override
 		public boolean dampensEnchantment(BlockGetter world, BlockPos pos, BlockState state, Enchantment enchantment) {
 			DyeColor color = getColor(state);
-			return color != null && MatrixEnchantingModule.candleInfluences.get(color).dampen().contains(enchantment);
+			if (color == null)
+				return false;
+			Influence influence = MatrixEnchantingModule.candleInfluences.get(color);
+			List<Enchantment> dampens = inverted ? influence.boost() : influence.dampen();
+			return dampens.contains(enchantment);
 		}
 	}
 
