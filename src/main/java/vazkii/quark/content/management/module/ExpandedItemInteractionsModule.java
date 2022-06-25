@@ -93,14 +93,18 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 				Slot under = containerGui.getSlotUnderMouse();
 
 				if (under != null) {
+					ItemStack underStack = under.getItem();
+
 					int x = event.getMouseX();
 					int y = event.getMouseY();
-					if (canTrashItem(under.getItem(), held, under, mc.player)) {
+					if (enableLavaInteraction && canTrashItem(underStack, held, under, mc.player)) {
 						gui.renderComponentTooltip(event.getPoseStack(), List.of(new TranslatableComponent("quark.misc.trash_item").withStyle(ChatFormatting.RED)), x, y);
-					} else if (tryAddToShulkerBox(mc.player, under.getItem(), held, under, true, true, true) != null) {
+					} else if (enableShulkerBoxInteraction && tryAddToShulkerBox(mc.player, underStack, held, under, true, true, true) != null) {
 						gui.renderComponentTooltip(event.getPoseStack(), List.of(new TranslatableComponent(
 							 SimilarBlockTypeHandler.isShulkerBox(held) ? "quark.misc.merge_shulker_box" : "quark.misc.insert_shulker_box"
-						).withStyle(ChatFormatting.YELLOW)), x, y);
+						).withStyle(ChatFormatting.YELLOW)), x, y, underStack);
+					} else if (enableShulkerBoxInteraction && SimilarBlockTypeHandler.isShulkerBox(underStack)) {
+						gui.renderComponentTooltip(event.getPoseStack(), gui.getTooltipFromItem(underStack), x, y, underStack);
 					}
 				}
 
