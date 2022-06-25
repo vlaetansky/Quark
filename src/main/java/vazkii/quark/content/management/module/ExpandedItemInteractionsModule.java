@@ -1,5 +1,6 @@
 package vazkii.quark.content.management.module;
 
+import com.mojang.datafixers.util.Either;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -22,8 +23,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -109,6 +112,28 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 				}
 
 			}
+		}
+	}
+
+	@SubscribeEvent(priority = EventPriority.LOW)
+	@OnlyIn(Dist.CLIENT)
+	public void gatherTooltip(RenderTooltipEvent.GatherComponents event) {
+		if (!enableArmorInteraction)
+			return;
+
+		Minecraft mc = Minecraft.getInstance();
+		Screen gui = mc.screen;
+		if (mc.player != null && gui instanceof AbstractContainerScreen<?> containerGui && containerGui.getMenu().getCarried().isEmpty()) {
+			Slot under = containerGui.getSlotUnderMouse();
+
+			if (under != null) {
+				ItemStack underStack = under.getItem();
+
+				if (event.getItemStack() == underStack && armorOverride(underStack, ItemStack.EMPTY, under, ClickAction.SECONDARY, mc.player, true)) {
+					event.getTooltipElements().add(Either.left(new TranslatableComponent("quark.misc.equip_armor").withStyle(ChatFormatting.YELLOW)));
+				}
+			}
+
 		}
 	}
 
