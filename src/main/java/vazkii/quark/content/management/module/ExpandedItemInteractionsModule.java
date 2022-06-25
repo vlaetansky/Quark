@@ -60,7 +60,7 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 			return false;
 
 		ItemStack stackAt = slot.getItem();
-		if (enableShulkerBoxInteraction && shulkerOverride(stack, stackAt, slot, action, player, false)) {
+		if (enableShulkerBoxInteraction && shulkerOverride(stack, stackAt, slot, action, player, false, false)) {
 			if (player.containerMenu != null)
 				player.containerMenu.slotsChanged(slot.container);
 			return true;
@@ -76,10 +76,10 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 		if (enableLavaInteraction && lavaBucketOverride(stack, incoming, slot, action, player))
 			return true;
 
-		if (enableArmorInteraction && armorOverride(stack, incoming, slot, action, player))
+		if (enableArmorInteraction && armorOverride(stack, incoming, slot, action, player, false))
 			return true;
 
-		return enableShulkerBoxInteraction && shulkerOverride(stack, incoming, slot, action, player, true);
+		return enableShulkerBoxInteraction && shulkerOverride(stack, incoming, slot, action, player, true, true);
 	}
 
 	@SubscribeEvent
@@ -92,10 +92,16 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 			if (!held.isEmpty()) {
 				Slot under = containerGui.getSlotUnderMouse();
 
-				if (under != null && canTrashItem(under.getItem(), held, under, mc.player)) {
+				if (under != null) {
 					int x = event.getMouseX();
 					int y = event.getMouseY();
-					gui.renderComponentTooltip(event.getPoseStack(), List.of(new TranslatableComponent("quark.misc.trash_item").withStyle(ChatFormatting.RED)), x, y);
+					if (canTrashItem(under.getItem(), held, under, mc.player)) {
+						gui.renderComponentTooltip(event.getPoseStack(), List.of(new TranslatableComponent("quark.misc.trash_item").withStyle(ChatFormatting.RED)), x, y);
+					} else if (tryAddToShulkerBox(mc.player, under.getItem(), held, under, true, true, true) != null) {
+						gui.renderComponentTooltip(event.getPoseStack(), List.of(new TranslatableComponent(
+							 SimilarBlockTypeHandler.isShulkerBox(held) ? "quark.misc.merge_shulker_box" : "quark.misc.insert_shulker_box"
+						).withStyle(ChatFormatting.YELLOW)), x, y);
+					}
 				}
 
 			}
@@ -103,7 +109,7 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 	}
 
 
-	private static boolean armorOverride(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player) {
+	private static boolean armorOverride(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player, boolean simulate) {
 		if (incoming.isEmpty()) {
 			EquipmentSlot equipSlot = null;
 
@@ -119,10 +125,12 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 					if (currArmor.isEmpty() || (!EnchantmentHelper.hasBindingCurse(currArmor) && currArmor != stack)) {
 						int index = slot.getSlotIndex();
 						if (index < slot.container.getContainerSize()) {
-							player.setItemSlot(equipSlot, stack.copy());
+							if (!simulate) {
+								player.setItemSlot(equipSlot, stack.copy());
 
-							slot.container.setItem(index, currArmor.copy());
-							slot.onQuickCraft(stack, currArmor);
+								slot.container.setItem(index, currArmor.copy());
+								slot.onQuickCraft(stack, currArmor);
+							}
 							return true;
 						}
 					}
@@ -155,9 +163,9 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 		return false;
 	}
 
-	private static boolean shulkerOverride(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player, boolean setSlot) {
-		if (!incoming.isEmpty() && tryAddToShulkerBox(player, stack, incoming, slot, true, setSlot) != null) {
-			ItemStack finished = tryAddToShulkerBox(player, stack, incoming, slot, false, setSlot);
+	private static boolean shulkerOverride(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player, boolean setSlot, boolean allowDump) {
+		if (!incoming.isEmpty() && tryAddToShulkerBox(player, stack, incoming, slot, true, true, allowDump) != null) {
+			ItemStack finished = tryAddToShulkerBox(player, stack, incoming, slot, false, setSlot, allowDump);
 
 			if (finished != null) {
 				if (setSlot)
@@ -169,45 +177,81 @@ public class ExpandedItemInteractionsModule extends QuarkModule {
 		return false;
 	}
 
-	private static ItemStack tryAddToShulkerBox(Player player, ItemStack shulkerBox, ItemStack stack, Slot slot, boolean simulate, boolean useCopy) {
-		if (!SimilarBlockTypeHandler.isShulkerBox(shulkerBox) || !slot.mayPickup(player))
-			return null;
-
+	private static BlockEntity getShulkerBoxEntity(ItemStack shulkerBox) {
 		CompoundTag cmp = ItemNBTHelper.getCompound(shulkerBox, "BlockEntityTag", false);
 		if (cmp.contains("LootTable"))
 			return null;
 
-		if (cmp != null) {
-			BlockEntity te = null;
-			cmp = cmp.copy();
-			cmp.putString("id", "minecraft:shulker_box");
-			if (shulkerBox.getItem() instanceof BlockItem) {
-				Block shulkerBoxBlock = Block.byItem(shulkerBox.getItem());
-				BlockState defaultState = shulkerBoxBlock.defaultBlockState();
-				if (shulkerBoxBlock instanceof EntityBlock) {
-					te = ((EntityBlock) shulkerBoxBlock).newBlockEntity(BlockPos.ZERO, defaultState);
+		BlockEntity te = null;
+		cmp = cmp.copy();
+		cmp.putString("id", "minecraft:shulker_box");
+		if (shulkerBox.getItem() instanceof BlockItem) {
+			Block shulkerBoxBlock = Block.byItem(shulkerBox.getItem());
+			BlockState defaultState = shulkerBoxBlock.defaultBlockState();
+			if (shulkerBoxBlock instanceof EntityBlock) {
+				te = ((EntityBlock) shulkerBoxBlock).newBlockEntity(BlockPos.ZERO, defaultState);
+				if (te != null)
 					te.load(cmp);
-				}
 			}
+		}
 
-			if (te != null) {
-				LazyOptional<IItemHandler> handlerHolder = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-				if (handlerHolder.isPresent()) {
-					IItemHandler handler = handlerHolder.orElseGet(EmptyHandler::new);
-					ItemStack result = ItemHandlerHelper.insertItem(handler, stack.copy(), simulate);
-					boolean did = result.isEmpty() || result.getCount() != stack.getCount();
+		return te;
+	}
 
-					if (did) {
-						ItemStack workStack = useCopy ? shulkerBox.copy() : shulkerBox;
-						if (!simulate)
-							stack.setCount(result.getCount());
+	private static ItemStack tryAddToShulkerBox(Player player, ItemStack shulkerBox, ItemStack stack, Slot slot, boolean simulate, boolean useCopy, boolean allowDump) {
+		if (!SimilarBlockTypeHandler.isShulkerBox(shulkerBox) || !slot.mayPickup(player))
+			return null;
 
-						cmp = te.saveWithFullMetadata();
-						ItemNBTHelper.setCompound(workStack, "BlockEntityTag", cmp);
+		BlockEntity tile = getShulkerBoxEntity(shulkerBox);
 
-						if (slot.mayPlace(workStack))
-							return workStack;
+		if (tile != null) {
+			LazyOptional<IItemHandler> handlerHolder = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+			if (handlerHolder.isPresent()) {
+				IItemHandler handler = handlerHolder.orElseGet(EmptyHandler::new);
+				if (SimilarBlockTypeHandler.isShulkerBox(stack) && allowDump) {
+					BlockEntity otherShulker = getShulkerBoxEntity(stack);
+					if (otherShulker != null) {
+						LazyOptional<IItemHandler> otherHolder = otherShulker.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+						if (otherHolder.isPresent()) {
+							IItemHandler otherHandler = otherHolder.orElseGet(EmptyHandler::new);
+							boolean any = false;
+							for (int i = 0; i < otherHandler.getSlots(); i++) {
+								ItemStack inserting = otherHandler.extractItem(i, 64, simulate);
+								if (!inserting.isEmpty()) {
+									ItemStack result = ItemHandlerHelper.insertItem(handler, inserting, simulate);
+									if (result.isEmpty() || result.getCount() != inserting.getCount()) {
+										if (simulate) {
+											return shulkerBox;
+										}
+										any = true;
+									}
+								}
+							}
+
+							if (any) {
+								ItemStack workStack = useCopy ? shulkerBox.copy() : shulkerBox;
+
+								ItemNBTHelper.setCompound(workStack, "BlockEntityTag", tile.saveWithFullMetadata());
+								ItemNBTHelper.setCompound(stack, "BlockEntityTag", otherShulker.saveWithFullMetadata());
+
+								if (slot.mayPlace(workStack))
+									return workStack;
+							}
+						}
 					}
+				}
+				ItemStack result = ItemHandlerHelper.insertItem(handler, stack.copy(), simulate);
+				boolean did = result.isEmpty() || result.getCount() != stack.getCount();
+
+				if (did) {
+					ItemStack workStack = useCopy ? shulkerBox.copy() : shulkerBox;
+					if (!simulate)
+						stack.setCount(result.getCount());
+
+					ItemNBTHelper.setCompound(workStack, "BlockEntityTag", tile.saveWithFullMetadata());
+
+					if (slot.mayPlace(workStack))
+						return workStack;
 				}
 			}
 		}
