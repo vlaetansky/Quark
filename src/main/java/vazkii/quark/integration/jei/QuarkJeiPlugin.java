@@ -17,6 +17,7 @@ import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.registration.IVanillaCategoryExtensionRegistration;
+import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
@@ -32,6 +33,7 @@ import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.addons.oddities.client.screen.CrateScreen;
 import vazkii.quark.base.Quark;
 import vazkii.quark.base.module.ModuleLoader;
+import vazkii.quark.content.management.module.ItemSharingModule;
 import vazkii.quark.content.tools.item.AncientTomeItem;
 import vazkii.quark.content.tools.module.AncientTomesModule;
 import vazkii.quark.content.tools.module.ColorRunesModule;
@@ -55,6 +57,11 @@ public class QuarkJeiPlugin implements IModPlugin {
 	@Override
 	public void registerVanillaCategoryExtensions(IVanillaCategoryExtensionRegistration registration) {
 		registration.getCraftingCategory().addCategoryExtension(ElytraDuplicationRecipe.class, ElytraDuplicationExtension::new);
+	}
+
+	@Override
+	public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
+		ItemSharingModule.jeiRuntime = jeiRuntime;
 	}
 
 	@Override

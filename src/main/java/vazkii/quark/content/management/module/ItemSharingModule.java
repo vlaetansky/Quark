@@ -11,10 +11,14 @@
 package vazkii.quark.content.management.module;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import mezz.jei.api.runtime.IJeiRuntime;
+import mezz.jei.api.runtime.IRecipesGui;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
@@ -57,39 +61,70 @@ import vazkii.quark.base.module.config.Config;
 import vazkii.quark.base.network.QuarkNetwork;
 import vazkii.quark.base.network.message.LinkItemMessage;
 
+import javax.annotation.Nullable;
+
 @LoadModule(category = ModuleCategory.MANAGEMENT, hasSubscriptions = true, subscribeOn = Dist.CLIENT)
 public class ItemSharingModule extends QuarkModule {
 
 	@Config
 	public static boolean renderItemsInChat = true;
+	public static IJeiRuntime jeiRuntime;
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public void keyboardEvent(GuiScreenEvent.KeyboardKeyPressedEvent.Pre event) {
 		Minecraft mc = Minecraft.getInstance();
 		GameSettings settings = mc.gameSettings;
+		Screen screen = event.getGui();
 		if(InputMappings.isKeyDown(mc.getMainWindow().getHandle(), settings.keyBindChat.getKey().getKeyCode()) &&
-				event.getGui() instanceof ContainerScreen && Screen.hasShiftDown()) {
-			ContainerScreen<?> gui = (ContainerScreen<?>) event.getGui();
-			
-			List<? extends IGuiEventListener> children = gui.getEventListeners();
-			for(IGuiEventListener c : children)
-				if(c instanceof TextFieldWidget) {
-					TextFieldWidget tf = (TextFieldWidget) c;
-					if(tf.isFocused())
-						return;
-				}
-			
-			Slot slot = gui.getSlotUnderMouse();
-			if(slot != null && slot.inventory != null) {
-				ItemStack stack = slot.getStack();
+				isContainerOrRecipeOpened(screen) && Screen.hasShiftDown()) {
 
-				if(!stack.isEmpty() && !MinecraftForge.EVENT_BUS.post(new ClientChatEvent(stack.getTextComponent().getString()))) {
-					QuarkNetwork.sendToServer(new LinkItemMessage(stack));
-					event.setCanceled(true);
+			Optional<ItemStack> optionalItemStack = Optional.empty();
+
+			if (screen instanceof ContainerScreen) {
+				ContainerScreen<?> gui = (ContainerScreen<?>) event.getGui();
+
+				List<? extends IGuiEventListener> children = gui.getEventListeners();
+				for (IGuiEventListener c : children)
+					if (c instanceof TextFieldWidget) {
+						TextFieldWidget tf = (TextFieldWidget) c;
+						if (tf.isFocused())
+							return;
+					}
+
+				Slot slot = gui.getSlotUnderMouse();
+
+				if(slot != null && slot.inventory != null) {
+					optionalItemStack = Optional.of(slot.getStack());
 				}
 			}
+
+			if (!optionalItemStack.isPresent()) {
+				Object hoveredIngredient = getJeiHoveredIngredient();
+				if (hoveredIngredient instanceof ItemStack) {
+					optionalItemStack = Optional.of((ItemStack) hoveredIngredient);
+				}
+			}
+
+			optionalItemStack.ifPresent(itemStack -> {
+				if(!itemStack.isEmpty() && !MinecraftForge.EVENT_BUS.post(new ClientChatEvent(itemStack.getTextComponent().getString()))) {
+					QuarkNetwork.sendToServer(new LinkItemMessage(itemStack));
+					event.setCanceled(true);
+				}
+			});
 		}
+	}
+
+	@Nullable
+	private static Object getJeiHoveredIngredient() {
+		return Stream.of(jeiRuntime.getIngredientListOverlay().getIngredientUnderMouse(),
+				jeiRuntime.getBookmarkOverlay().getIngredientUnderMouse(), jeiRuntime.getRecipesGui().getIngredientUnderMouse())
+				.filter(Objects::nonNull)
+				.findFirst().orElse(null);
+	}
+
+	private static boolean isContainerOrRecipeOpened(Screen screen) {
+		return screen instanceof ContainerScreen || screen instanceof IRecipesGui;
 	}
 
 	public static void linkItem(PlayerEntity player, ItemStack item) {
